@@ -1,4 +1,41 @@
 <?php
+
+class _Element{
+constant _none = "NONE";
+constant lt = "<";
+constant gt = ">";
+constant eq = "=";
+constant sq = "'";
+constant dq = '"';
+private _markup = "";
+private _tag = "elementTag";
+private _id  = "";
+private _name = "";
+private _css = "";
+
+private _attribs = "";
+private _cData = false;
+
+public function _Attribute($name, $value){
+
+
+}
+
+private function setTag($tag){
+
+_tag = $tag;
+
+}
+
+public function getNode{
+
+
+
+}
+
+}
+
+
 function doctypeHtml(){
 	$declare = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">';
 	return $declare;	
