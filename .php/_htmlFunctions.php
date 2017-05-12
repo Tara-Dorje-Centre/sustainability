@@ -1,20 +1,21 @@
 <?php
 
-class _Element{
-constant _none = "NONE";
-constant lt = "<";
-constant gt = ">";
-constant eq = "=";
-constant sq = "'";
-constant dq = '"';
-private _markup = "";
-private _tag = "elementTag";
-private _id  = "";
-private _name = "";
-private _css = "";
+class 
+_element{
+const _none = "NONE";
+const _lt = "<";
+const _gt = ">";
+const _eq = "=";
+const _sq = "'";
+const _dq = '"';
+private $_markup = "";
+private $_tag = "elementTag";
+private $_id  = "";
+private $_name = "";
+private $_css = "";
 
-private _attribs = "";
-private _cData = false;
+private $_attribs = "";
+private $_cData = false;
 
 public function _Attribute($name, $value){
 
@@ -23,18 +24,18 @@ public function _Attribute($name, $value){
 
 private function setTag($tag){
 
-_tag = $tag;
+$_tag = $tag;
 
 }
 
-public function getNode{
+ function getNode(){
 
 
-
+return $_markup;
 }
 
 }
-
+//end class _element
 
 function doctypeHtml(){
 	$declare = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">';
