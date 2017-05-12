@@ -6,49 +6,137 @@ function sqlLimitClause($resultPage, $rowsPerPage){
 	return $limitSQL;	
 }
 
+function getScalarQueryResult($sql, $field){
+
+
+//mysqli
+	$result = $db->query($sql);
+	if($result){
+	  	while ($row = $result->fetch_object()){
+		
+			$value = $row[$field];
+		}
+	    // Free result set
+	    $result->close();
+	    $db->next_result();
+	}
+
+
+	return $value;
+
+}
 function getSQLCount($sqlCount, $fieldName){
 	$i = 0;
-	$result = mysql_query($sqlCount) or die(mysql_error());
-	while ($row = mysql_fetch_array($result))
-	{
-		$i = $row[$fieldName];
+	
+	//mysql deprecated php 7
+//	$result = mysql_query($sqlCount) or die(mysql_error());
+//	while ($row = mysql_fetch_array($result))
+//	{
+//	$i = $row[$fieldName];
+//	}
+//	mysql_free_result($result);
+	
+	//mysqli
+	$result = $db->query($sqlCount);
+	if($result){
+	  	while ($row = $result->fetch_object()){
+		
+			$i = $row[$fieldName];
+		}
+	    // Free result set
+	    $result->close();
+	    $db->next_result();
 	}
-	mysql_free_result($result);
+	
 	return $i;
 }
 
 function getSessionYear(){
 	
 	$sql = "select year(CURRENT_TIMESTAMP) as db_year from DUAL";
-	$result = mysql_query($sql) or exit(mysql_error());
-	while($row = mysql_fetch_array($result))
-	{
-		$currentYear = $row['db_year'];
+	
+	//mysql deprecated php 7
+	//$result = mysql_query($sql) or exit(mysql_error());
+	//while($row = mysql_fetch_array($result))
+	//{
+	//	$currentYear = $row['db_year'];
+	//}
+	//mysql_free_result($result);
+	
+	//mysqli
+	$result = $db->query($sql);
+	if($result){
+    	 // Cycle through results
+    	while ($row = $result->fetch_object()){
+    	
+    		$currentYear = $row['db_year'];
+    		
+    	}
+    // Free result set
+    $result->close();
+    $db->next_result();
 	}
-	mysql_free_result($result);
+	
 	return $currentYear;
 }
 
 function getSessionTime(){
 	
 	$sql = "select CURRENT_TIMESTAMP as db_time from DUAL";
-	$result = mysql_query($sql) or exit(mysql_error());
-	while($row = mysql_fetch_array($result))
-	{
-		$currentTimestamp = $row['db_time'];	
+	
+	
+	//mysql deprecated php 7
+	//$result = mysql_query($sql) or exit(mysql_error());
+	//while($row = mysql_fetch_array($result))
+	//{
+	//	$currentTimestamp = $row['db_time'];	
+	//}
+//	mysql_free_result($result);
+	
+	//mysqli
+	$result = $db->query($sql);
+	if($result){
+    	 // Cycle through results
+    	while ($row = $result->fetch_object()){
+    	
+    		$currentTimestamp = $row['db_time'];
+    		
+    	}
+    // Free result set
+    $result->close();
+    $db->next_result();
 	}
-	mysql_free_result($result);
+	
 	return $currentTimestamp;
 }
 
 function getSessionTimeZone(){
 	$sql = "select @@session.TIME_ZONE as db_time_zone from DUAL";
-	$result = mysql_query($sql) or exit(mysql_error());
-	while($row = mysql_fetch_array($result))
-	{
-		$currentTimeZone = $row['db_time_zone'];	
+	
+	//deprecated php7
+	//$result = mysql_query($sql) or exit(mysql_error());
+	//while($row = mysql_fetch_array($result))
+	//{
+	//	$currentTimeZone = $row['db_time_zone'];	
+	//}
+	//mysql_free_result($result);
+	
+	
+	//mysqli
+	$result = $db->query($sql);
+	if($result){
+    	 // Cycle through results
+    	while ($row = $result->fetch_object()){
+    	
+    		$currentTimeZone = $row['db_time_zone'];
+    		
+    	}
+    // Free result set
+    $result->close();
+    $db->next_result();
 	}
-	mysql_free_result($result);
+	
+	
 	return $currentTimeZone;
 }
 
@@ -56,7 +144,10 @@ function setSessionTimeZone($utcOffset){
 	//example call setSessionTimeZone('-7:00');
 
 	$sql = "set @@session.time_zone='".$utcOffset."'";
-	mysql_query($sql) or exit(mysql_error());
+	//mysql_query($sql) or exit(mysql_error());
+	
+		$result = $db->query($sql);
+	
 	//return new client time zone to confirm function
 	return getSessionTimeZone();
 }
