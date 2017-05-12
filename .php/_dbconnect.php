@@ -5,6 +5,8 @@ $dbServer  = "localhost";
 $dbDatabase  = "NameOfDatabase";
 $dbUser  = "NameOfDatabaseUser";
 $dbPass  = "DatabaseUserPassword";
+
+//mysql_* functions deprecated php 7
 //
 //open a php connection to mysql
 $sqlConnection = mysql_connect($dbServer, $dbUser, $dbPass)
