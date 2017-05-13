@@ -174,6 +174,7 @@ protected function setPageContents(){
 		$content = $this->getSiteTemplate();
 		echo $content;	
 
+//close db conection
 		mysql_close();
 	}
 

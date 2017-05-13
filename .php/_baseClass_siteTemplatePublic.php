@@ -29,6 +29,8 @@ class _SiteTemplatePublic{
 		
 		$content = $this->buildSiteTemplate();
 		echo $content;	
+		
+		//close database connection
 		mysql_close();
 	}
 	

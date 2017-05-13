@@ -1,5 +1,7 @@
 <?php
 // Set Database connection variables
+global $db_mysqli;
+
 $dbTime;
 $dbServer  = "127.0.0.1";
 $dbDatabase  = "projects_dev";
@@ -16,9 +18,9 @@ $dbPort = 3306;
 //or die("Couldn't connect to database $dbDatabase");
 
 //convert to mysqli for php 7
-$db = new mysqli($dbServer, $dbUser, $dbPass, $dbDatabase, $dbPort);
-if ($db->connect_error) {
-	$msg = 'Connect Error ['.$db->connect_errno.'] '.$db->connect_error;
+$db_mysqli = new mysqli($dbServer, $dbUser, $dbPass, $dbDatabase, $dbPort);
+if ($db_mysqli->connect_error) {
+	$msg = 'Connect Error ['.$db_mysqli->connect_errno.'] '.$db_mysqli->connect_error;
     die($msg);
 }
 
@@ -36,50 +38,8 @@ if (isset($_SESSION['logged-in']) && isset($_SESSION['client-time-zone'])){
 $sessionTimeZone = setSessionTimeZone($offset);
 $sessionTime = getSessionTime();
 
-//$sql = "set @@session.time_zone='-7:00'";
-//mysql_query( $sql ) or exit(mysql_error());
-//SELECT current_timestamp, the_time, @@session.time_zone FROM test_rows WHERE id = 1;
 
 
-//$sql = "select CURRENT_TIMESTAMP as db_time from DUAL";
-//$result = mysql_query($sql) or exit(mysql_error());
-//	while($row = mysql_fetch_array($result))
-//{
-//$dbTime = $row['db_time'];	
-//}
-
-//$mysqli = new mysqli('localhost', 'my_user', 'my_password', 'my_db');
-//if (mysqli_connect_error()) {
-//    die('Connect Error ('.mysqli_connect_errno().') '. mysqli_connect_error());
-//}
-//echo 'Success... ' . $mysqli->host_info . "\n";
-//$mysqli->close();
-
-//  $link = mysqli_connect('localhost', 'myusr', 'mypass') or die ('Error connecting to mysql: ' . mysqli_error($link));
-//  mysqli_select_db($link, 'clips');
-//  
-//  while ($row = mysqli_fetch_assoc($result))
-//  {
-//    echo "session_id : {$row['session_id']} <br>";
-//    echo "msg        : {$row['msg']} <br>";
-//  }
 
 
-//prepared statement syntax with bind variables
-//$mysqli = new mysqli('localhost', 'my_user', 'my_password', 'world');
-//if (mysqli_connect_errno()) {
-//    printf("Connect failed: %s\n", mysqli_connect_error());
-//    exit();
-//}
-//
-//$stmt = $mysqli->prepare("INSERT INTO CountryLanguage VALUES (?, ?, ?, ?)");
-//$stmt->bind_param('sssd', $code, $language, $official, $percent);
-//$code = 'DEU';
-//$language = 'Bavarian';
-//$official = "F";
-//$percent = 11.2;
-//
-//$stmt->execute();
-//$stmt->close();
-//$mysqli->close();
 ?>
