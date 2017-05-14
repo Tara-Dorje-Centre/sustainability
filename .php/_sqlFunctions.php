@@ -1,4 +1,8 @@
 <?php
+
+
+
+
 function sqlLimitClause($resultPage, $rowsPerPage){
 	$limitSQL = " LIMIT ";
 	$limitOffset = ($resultPage - 1) * $rowsPerPage;
@@ -71,7 +75,7 @@ function setSessionTimeZone($utcOffset){
 	$sql = "set @@session.TIME_ZONE='".$utcOffset."'";
 	//mysql_query($sql) or exit(mysql_error());
 	
-	//	$result = $db_mysqli->query($sql);
+	$result = $db_mysqli->query($sql);
 	
 	//return new client time zone to confirm function
 	return getSessionTimeZone();

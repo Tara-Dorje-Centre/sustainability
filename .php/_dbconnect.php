@@ -12,7 +12,7 @@ $dbPort = 3306;
 //
 //open a php connection to mysql
 //$sqlConnection  = mysql_connect($dbServer, $dbUser, $dbPass)
-//or die("Couldn't connect to da tabase server");
+//or die("Couldn't connect to database server");
 //open the database
 //$db = mysql_select_db($dbDatabase, $sqlConnection )
 //or die("Couldn't connect to database $dbDatabase");
