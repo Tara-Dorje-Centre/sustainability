@@ -95,8 +95,8 @@ class _form extends _element{
 	public function __construct(){
 		parent::__construct('form');
 	}
-	public function __construct($action, $idName, $css = 'none'){
-		parent::__construct('form', $idName, $css);
+	public function __construct1($action, $idName, $css = 'none'){
+		parent::__construct1('form', $idName, $css);
 		$this->addAttribute('enctype', 'multipart/form-data');
 		$this->addAttribute('action', $action);
 		$this->addAttribute('method', 'post');

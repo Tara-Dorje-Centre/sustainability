@@ -30,12 +30,12 @@ public function __construct($tag) {
 	$this->setTag($tag);
 }
 
-public function __construct($tag, $attributes = "none") {
+public function __construct0($tag, $attributes = "none") {
 	$this->__construct($tag);
 	$this->setAttributes($attributes);
 }
 
-public function __construct($tag, $idName, $css) {
+public function __construct1($tag, $idName, $css) {
 	$this->__construct($tag);
 	$this->setIdName($idName);
 	$this->setCSS($css);
@@ -231,7 +231,7 @@ function spanStyled($content, $style = 'none'){
 
 class _div extends _element{
 	public function __construct($idName, $css = 'none'){
-		parent::__construct('div', $idName, $css);
+		parent::__construct1('div', $idName, $css);
 	}
 }
 
@@ -255,7 +255,7 @@ function wrapDiv($content, $nameId, $css = 'none'){
 
 class _table extends _element{
 	public function __construct($idName, $css = 'none'){
-		parent::__construct('table', $idName, $css);
+		parent::__construct1('table', $idName, $css);
 	}
 }
 
@@ -273,13 +273,13 @@ function closeTable(){
 
 class _ul extends _element{
 	public function __construct($idName, $css = 'none'){
-		parent::__construct('ul', $idName, $css);
+		parent::__construct1('ul', $idName, $css);
 	}
 }
 
 class _ol extends _element{
 	public function __construct($idName, $css = 'none'){
-		parent::__construct('ol', $idName, $css);
+		parent::__construct1('ol', $idName, $css);
 	}
 }
 
@@ -371,7 +371,7 @@ function getHref($url, $displayText, $css = 'none',$target = '_self',$onClickJS 
 		$content = $displayText;
 	}
 
-	return $e->wrap($content),
+	return $e->wrap($content);
 }
 
 //use bold freely in code
@@ -394,7 +394,7 @@ function br($lines = 1){
 
 function hr(){
 	$e = new _element('hr');
-	return $e.empty();
+	return $e->empty();
 }
 
 function paragraph($content, $id, $css = 'none'){
