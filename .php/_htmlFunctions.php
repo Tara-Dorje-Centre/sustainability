@@ -2,36 +2,130 @@
 
 class 
 _element{
+
 const _none = "NONE";
 const _lt = "<";
 const _gt = ">";
+const _sl = "/";
 const _eq = "=";
 const _sq = "'";
 const _dq = '"';
-private $_markup = "";
-private $_tag = "elementTag";
-private $_id  = "";
-private $_name = "";
-private $_css = "";
+const _sp = ' ';
+const _emptyString = '';
 
-private $_attribs = "";
-private $_cData = false;
-
-public function _Attribute($name, $value){
+protected $_markup = "";
+protected $_tag = "undefined-node";
+protected $_attribs = "";
 
 
+protected $_id  = "";
+protected $_name = "";
+protected $_css = "";
+
+
+protected $_cData = false;
+
+public function __construct($tag) {
+	$this->reset();
+	$this->setTag($tag);
 }
 
-private function setTag($tag){
-
-$_tag = $tag;
-
+public function __construct($tag, $attributes = "none") {
+	$this->__construct($tag);
+	$this->setAttributes($attributes);
 }
 
- function getNode(){
+public function __construct($tag, $idName, $css) {
+	$this->__construct($tag);
+	$this->setIdName($idName);
+	$this->setCSS($css);
+}
 
+public function __destruct() {
+     $this->reset();
+}
 
-return $_markup;
+public function reset(){
+	$this->_tag = self::_emptyString;
+	$this->_attribs = self::_emptyString;
+	$this->_markup = self::_emptyString;
+	
+	$this->_id = self::_emptyString;
+	$this->_name = self::_emptyString;
+	$this->_css = self::_emptyString;
+	
+}
+
+public function formatAttribute($name, $value = NULL){
+	if (!is_null($value)){
+		$a = self::_sp.$name.self::_eq.self::_dq.$value.self::_dq;
+	} else {
+		$a = self::_emptyString;
+	}
+	return $a;
+}
+
+public function addAttribute($name, $value = NULL){
+	$a = $this->formatAttribute($name, $value);
+	$this->_attribs .= $a;
+}
+
+protected function setTag($tag){
+	$this->_tag = $tag;
+}
+
+public function setIdName($idName){
+	$this->_id = $idName;
+	$this->_name = $idName;
+	$this->addAttribute('id', $this->_id);
+	$this->addAttribute('name', $this->_name);
+}
+
+public function setCSS($css){
+		$this->_css = $css;
+		$this->addAttribute('class', $this->_css);
+}-
+
+protected function setAttributes($attributes = "none"){
+	if ($attributes != 'none' && !is_null($attributes)){
+		$this->_attribs = $attributes;
+	}
+}
+
+protected function start(){
+	$this->_markup = self::_lt.$this->_tag;
+	if ($this->_attribs != 'none' && !is_null($this->_attribs)){
+		$this->_markup .= $_attribs;
+	}
+}
+
+function open(){
+	$this->start();
+	$this->_markup .= self::_gt;
+	return $this->_markup;
+}
+
+function empty(){
+	$this->start();
+	$this->_markup .= self::_sp.self::_sl.self::_gt;
+	return $this->_markup;
+}
+
+public function close(){
+	$this->_markup = self::_lt.$this->_tag.self::_gt;
+	return $this->_markup;
+}
+
+public function wrap($content = NULL){
+	if (is_null($content)){
+		$value = $this->empty();
+		 emptyTag($element, $attributes);
+	} else {
+		$value = $this->open();
+		$value .= $content;
+		$value = $this->close();
+	}
+	return $value;
 }
 
 }
@@ -41,15 +135,16 @@ function doctypeHtml(){
 	$declare = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">';
 	return $declare;	
 }
-function metaEquiv($equiv, $content){
-	$a = attribute('http-equiv',$equiv);
-	$a .= attribute('content',$content);
-	$meta = emptyTag('meta', $a);
-	return $meta;
+
+function meta($equiv, $content){
+	$e = new _element('meta');
+	$e->addAttribute('http-equiv',$equiv);
+	$e->addAttribute('content',$content);
+	return $e->empty();
 }
 function metaHttpEquivs(){
-	$metaTags = metaEquiv('Content-Style-Type','text/css');
-	$metaTags .= metaEquiv('content-type','text/html; charset=UTF-8');
+	$metaTags = meta('Content-Style-Type','text/css');
+	$metaTags .= meta('content-type','text/html; charset=UTF-8');
 	return $metaTags;
 }
 function htmlCommentOpen(){
@@ -66,6 +161,7 @@ function openScript($language = 'JavaScript', $htmlComment = true){
 	}
 	return $tag;
 }
+
 function closeScript($htmlComment = true){
 	$tag = '';
 	if ($htmlComment == true){
@@ -103,196 +199,145 @@ function sessionVariableSESSION($urlVariable,$defaultValue){
 
 function displayLines($value){
 	$value = nl2br($value);
-//	$value = str_replace(array( "\r", "\n", "%0a", "%0d"), '<br/>', $value);
 	return $value;
 }
 
-function attribute($name, $value = NULL){
-	if (!is_null($value)){
-		$a = ' '.$name.'="'.$value.'"';
-	} else {
-		$a = null;
+function stylesheet($cssFile){
+	$e = new _element('link');
+	$e->addAttribute('rel','stylesheet');
+	$e->addAttribute('type','text/css');
+	$e->addAttribute('href',$cssFile);
+	return $e->empty();
+	
+	//$a = attribute('rel','stylesheet');
+	//$a .= attribute('type','text/css');
+	//$a .= attribute('href',$styleSheetFile);
+	//$value = wrapTag('link',$a);
+	//return $value;
+}
+
+
+function span($content, $css = 'none'){
+	$e = new _element('span');
+	$e->setCSS($css);
+	return $e->wrap($content);
+}
+
+function spanStyled($content, $style = 'none'){
+	$e = new _element('span');
+	$e->addAttribute('style', $style);
+	return $e->wrap($content);
+}
+
+class _div extends _element{
+	public function __construct($idName, $css = 'none'){
+		parent::__construct('div', $idName, $css);
 	}
-	return $a;
 }
 
-function startTag($element, $attributes = 'none'){
-	$tag = '<'.$element;
-	if ($attributes != 'none' && !is_null($attributes)){
-		$tag .= $attributes;
-	}
-	return $tag;	
-}
-
-function openTag($element, $attributes = 'none'){
-	$tag = startTag($element, $attributes);
-	$tag .= '>';
-	return $tag;
-}
-
-function emptyTag($element, $attributes = 'none'){
-	$tag = startTag($element, $attributes);
-	$tag .= ' />';
-	return $tag;
-}
-
-function closeTag($element){
-	$tag = '</'.$element.'>';
-	return $tag;
-}
-
-function wrapTag($element, $attributes = 'none', $content = NULL){
-	if (is_null($content)){
-		$value = emptyTag($element, $attributes);
-	} else {
-		$value = openTag($element, $attributes);
-		$value .= $content;
-		$value .= closeTag($element);
-	}
-	return $value;
-}
-
-function stylesheet($styleSheetFile){
-	$a = attribute('rel','stylesheet');
-	$a .= attribute('type','text/css');
-	$a .= attribute('href',$styleSheetFile);
-	$value = wrapTag('link',$a);
-	return $value;
-}
-
-function getClass($cssClass = 'none'){
-	if ($cssClass != 'none'){
-		$a = attribute('class',$cssClass);
-	} else {
-		$a = null;
-	}
-	return $a;
-}
-
-function getIdName($name){
-	$a = attribute('id',$name);
-	$a .= attribute('name',$name);
-	return $a;
-}
-
-function span($value, $cssClass = 'none'){
-	$a = getClass($cssClass);
-	$s = openTag('span',$a);
-	$s .= $value;
-	$s .= closeTag('span');
-	return $s;
-}
-
-function spanStyled($value, $styleArguments = 'none'){
-	$a = attribute('style', $styleArguments);
-	$s = openTag('span', $a);
-	$s .= $value;
-	$s .= closeTag('span');
-	return $s;
-}
-
-function openDiv($divId, $cssClass = 'none'){
-	$a = getIdName($divId);
-	$a .= getClass($cssClass);
-	$div = openTag('div',$a);
-	return $div;
+function openDiv($nameId, $css = 'none'){
+	//$e = new _div($nameId, $css);
+	$e = new _element('div', $nameId, $css);
+	return $e->open();
 }
 
 function closeDiv(){
-	$div = closeTag('div');
-	return $div;
+	//$e = new _div();
+	$e = new _element('div');
+	return $e->close();
 }
 
-function wrapDiv($divContent, $divId, $cssClass = 'none'){
-	$data = openDiv($divId, $cssClass);
-	$data .= $divContent;
-	$data .= closeDiv();
-	return $data;
+function wrapDiv($content, $nameId, $css = 'none'){
+	//$e = new _div($nameId, $css);
+	$e = new _element('div', $nameId, $css);
+	return $e->wrap($content);
 }
 
-function openTable($tableId, $cssClass = 'none'){
-	$element = 'table';
-//	$element = 'div';
-	$a = getIdName($tableId);
-	$a .= getClass($cssClass);
-	$table = openTag($element, $a);
-	return $table;
+class _table extends _element{
+	public function __construct($idName, $css = 'none'){
+		parent::__construct('table', $idName, $css);
+	}
+}
+
+function openTable($nameId, $css = 'none'){
+	//$e = new _table($nameId, $css);
+	$e = new _element('table', $nameId, $css);
+	return $e->open();
 }
 
 function closeTable(){
-	$element = 'table';
-//	$element = 'div';
-	$table = closeTag($element);
-	return $table;
+	//$e = new _table();
+	$e = new _element('table');
+	return $e->close();
 }
 
-function openList($listId, $cssClass = 'none'){
-	$a = getIdName($listId);
-	$a .= getClass($cssClass);
-	$list = openTag('ul', $a);
-	return $list; 
+class _ul extends _element{
+	public function __construct($idName, $css = 'none'){
+		parent::__construct('ul', $idName, $css);
+	}
+}
+
+class _ol extends _element{
+	public function __construct($idName, $css = 'none'){
+		parent::__construct('ol', $idName, $css);
+	}
+}
+
+function openList($nameId, $css = 'none'){
+	//$e = new _ul($nameId, $css);
+	$e = new _element('ul',$nameId,$css);
+	return $e->open();
 }
 
 function closeList(){
-	$list = closeTag('ul');
-	return $list;
+	//$e = new _ul();
+	$e = new _element('ul');
+	return $e->close();
 }
 
-function openListOrdered($listId, $cssClass = 'none'){
-	$a = getIdName($listId);
-	$a .= getClass($cssClass);
-	$list = openTag('ol', $a);
-	return $list; 
+function openListOrdered($nameId, $css = 'none'){
+	//$e = new _ol($nameId, $css);
+	$e = new _element('ol',$nameId,$css);
+	return $e->open();
 }
 
 function closeListOrdered(){
-	$list = closeTag('ol');
-	return $list;
+	//$e = new _ol();
+	$e = new _element('ol');
+	return $e->close();
 }
 
-function listItem($value,$cssClass = 'none'){
-	$a = getClass($cssClass);
-	$item = openTag('li',$a);
-	$item .= $value;
-	$item .= closeTag('li');
-	return $item;
+function listItem($value,$css = 'none'){
+	$e = new _element('li');
+	$e->setCSS($css);
+	return $e->wrap($value);
 }
 
-function wrapTh($caption, $cssClass = 'none',$colSpan = 0){
-	$element = 'th';
-//	$element = 'div';
-	$a = getClass($cssClass);
+function wrapTh($caption, $css = 'none',$colSpan = 0){
+	$e = new element('th');
+	$e->setCSS($css);
 	if ($colSpan != 0){
-		$a .= attribute('colspan',$colSpan);
+		$e->addAttribute('colspan',$colSpan);
 	}	
-	$h = openTag($element,$a).$caption.closeTag($element);
-	return $h;
+	return $e->wrap($caption);
 }
 
-function wrapTd($value, $width = 0, $cssClass='none',$colSpan = 0){
-	$element = 'td';
-//	$element = 'div';	
-	$a = getClass($cssClass);
+function wrapTd($value, $width = 0, $css='none',$colSpan = 0){
+	$e = new element('td');
+	$e->setCSS($css);
 	if ($width!=0){
-		$a .= attribute('width', $width.'%');
+		$e->addAttribute('width', $width.'%');
 	}
 	if ($colSpan != 0){
-		$a .= attribute('colspan',$colSpan);
+		$e->addAttribute('colspan',$colSpan);
 	}
-	$data = openTag($element, $a);
-	$data .= $value;
-	$data .= closeTag($element);
-	return $data;
+	return $e->wrap($value);
 }
 
-function wrapTr($value, $cssClass = 'none'){
-	$element = 'tr';
-//	$element = 'div';	
-	$a = getClass($cssClass);
-	$data = openTag($element,$a);
-	$data .= $value;
-	$data .= closeTag($element);
-	return $data;
+function wrapTr($content, $css = 'none'){
+	$e = new _element('tr');
+	$e->setCSS($css);
+	return $e->wrap($content);
 }
 
 function spacer($spaces = 1){
@@ -310,52 +355,51 @@ function linkSpacer($separator = '|'){
 	return $spacer;
 }
 
-function getHref($url, $displayText, $cssClass = 'none',$target = '_self',$onClickJS = NULL){
-	$a = attribute('href',$url);
-	$a .= getClass($cssClass);
+function getHref($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
+	$e = new _element('a');
+	$e->setCSS($css);
+	$e->addAttribute('href',$url);
 	if ($target <> '_self'){
-		$a .= attribute('target',$target);
+		$e->addAttribute('target',$target);
 	}
 	if (!is_null($onClickJS)){
-		$a .= attribute('onclick',$onClickJS);
+		$e->addAttribute('onclick',$onClickJS);
 	}
-	$link = openTag('a', $a);
 	if (is_null($displayText) or $displayText == ''){
-		$link .= '...';
+		$content = '...';
 	} else {
-		$link .= $displayText;
+		$content = $displayText;
 	}
-	$link .= closeTag('a');
-	return $link;
+
+	return $e->wrap($content),
 }
 
 //use bold freely in code
 //update to span with bold class to deprecate bold
 function bold($text){
-	return openTag('b').$text.closeTag('b');
+	$e = new _element('b');
+	return $e->wrap($text);
 }
 
 function br($lines = 1){
+	$e = new _element('br');
 	$content = '';
 	$i = 0;
 	while ($i < $lines){
 		$i++;
-		$content .= emptyTag('br');
+		$content .= $e->empty();
 	}
 	return $content;
 }
 
 function hr(){
-	return emptyTag('hr');
+	$e = new _element('hr');
+	return $e.empty();
 }
 
-function paragraph($content, $id, $cssClass = 'none'){
-	$a = attribute('id',$id);
-	$a .= getClass($cssClass);
-	$data = openTag('p', $a);
-	$data .= $content;
-	$data .= closeTag('p');
-	return $data;
+function paragraph($content, $id, $css = 'none'){
+	$e = new _element('p', $id, $css);
+	return $e->wrap($content);
 }
 
 function captionedParagraph($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption'){
@@ -364,13 +408,33 @@ function captionedParagraph($id, $caption, $content, $cssParagraph = 'none',$css
 	return $data;
 }
 
-function image($src, $alt, $width = 0, $height = 0, $border = 0, $cssClass = 'none'){
-	$a = attribute('src',$src);
-	$a .= attribute('alt',$alt);
-	$a .= attribute('width',$width);
-	$a .= attribute('height',$height);
-	$a .= attribute('border',$border);
-	$tag = emptyTag('img',$a);
-	return $tag;
+function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
+	$e = new _element('img');
+	$e->setCSS($css);
+	$e->addAttribute('src',$src);
+	$e->addAttribute('alt',$alt);
+	$e->addAttribute('width',$width);
+	$e->addAttribute('height',$height);
+	$e->addAttribute('border',$border);
+	return $e->emptyTag();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ?>

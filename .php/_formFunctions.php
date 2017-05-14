@@ -91,19 +91,26 @@ function wrapDivSubmit($entity,$formSubmit){
 	return $div;
 }
 
-function openForm($formName, $formAction, $cssStyle = 'none'){
-	$a = getIdName($formName);
-	$a .= attribute('enctype','multipart/form-data');
-	$a .= attribute('action',$formAction);
-	$a .= attribute('method','post');
-	$a .= getClass($cssStyle);
-	$tag = openTag('form',$a);
-	return $tag;
+class _form extends _element{
+	public function __construct(){
+		parent::__construct('form');
+	}
+	public function __construct($action, $idName, $css = 'none'){
+		parent::__construct('form', $idName, $css);
+		$this->addAttribute('enctype', 'multipart/form-data');
+		$this->addAttribute('action', $action);
+		$this->addAttribute('method', 'post');
+	}
+}
+
+function openForm($idName, $action, $css = 'none'){
+	$e = new _form($action, $idName, $css);
+	return $e->open();
 }
 
 function closeForm(){
-	$tag = closeTag('form');
-	return $tag;
+	$e = new _form();
+	return $e->close();
 }
 
 function openFieldset($legend = 'none',$cssFieldset = 'none',$cssLegend = 'display-caption'){
@@ -390,6 +397,7 @@ function getSubmitResetButtons($submitCaption = 'Submit',$submitName = 'submit',
 	$b .= getResetButton($resetCaption, 'reset');
 	return $b;	
 }
+ 
 
 function getLoginLogoutButton($submitCaption = 'Login',$submitName='submit-login'){
 	$b = getSubmitButton($submitCaption, $submitName);
