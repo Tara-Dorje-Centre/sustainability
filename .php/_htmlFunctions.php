@@ -84,7 +84,7 @@ public function setIdName($idName){
 public function setCSS($css){
 		$this->_css = $css;
 		$this->addAttribute('class', $this->_css);
-}-
+}
 
 protected function setAttributes($attributes = "none"){
 	if ($attributes != 'none' && !is_null($attributes)){
