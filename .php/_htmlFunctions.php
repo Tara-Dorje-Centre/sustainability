@@ -24,20 +24,12 @@ protected $_id  = "";
 protected $_name = "";
 protected $_css = "";
 
-
 protected $_cData = false;
 
-public function __construct($tag) {
+
+public function __construct($tag, $idName = 'none', $css = 'none') {
 	$this->reset();
 	$this->setTag($tag);
-}
-
-public function __construct0($tag, $attributes = "none") {
-	$this->__construct($tag);
-	$this->setAttributes($attributes);
-}
-
-public function __construct1($tag, $idName, $css) {
 	$this->__construct($tag);
 	$this->setIdName($idName);
 	$this->setCSS($css);
