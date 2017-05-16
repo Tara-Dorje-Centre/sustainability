@@ -1,7 +1,7 @@
 <?php
 
 function printLine($msg){
-	echo $msg.'<br />';
+	//echo $msg.'<br />';
 }
 
 

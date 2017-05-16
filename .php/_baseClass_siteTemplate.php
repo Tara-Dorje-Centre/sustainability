@@ -169,7 +169,7 @@ protected function setPageContents(){
 		echo $content;	
 
 //close db conection
-		mysql_close();
+	//	mysql_close();
 	}
 
 	protected function getSiteTemplate(){		

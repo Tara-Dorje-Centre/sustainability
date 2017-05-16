@@ -1,5 +1,7 @@
 <?php
 
+global $conn;
+
 
 class WebSiteLinks extends _Links{
 	public function __construct($menuType = 'LIST',$styleBase = 'site'){
@@ -54,16 +56,16 @@ class PublicWebSite extends _SiteTemplatePublic{
 		$this->getPageDetails();
 	}
 
-	private function getStyleDetails(){
+	protected function getStyleDetails(){
 		$sql = $this->sql->siteStyles();
 		
 		//mysqli_* library implemented for php7
 		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
 		$locale = 'publicWebSite->styleDetails:';
-		//$result = $conn->query($sql) or exit($locale.$conn->error);
-		
-		$result = runQuery($sql);
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		//run query from standalone function
+		//$result = runQuery($sql);
 
 	
 		if($result){
