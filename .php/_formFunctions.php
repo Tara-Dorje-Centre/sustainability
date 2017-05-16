@@ -2,7 +2,12 @@
 
 include_once("_htmlFunctions.php");
 
-function openDisplayList($entityName, $legend, $pagingLinks, $quickEdit = NULL,$contextMenu = NULL){
+function openDisplayList(
+	$entityName, 
+	$legend, 
+	$pagingLinks, 
+	$quickEdit = NULL,
+	$contextMenu = NULL){
 	
 	$list = openDisplayDetails($entityName, $legend,$quickEdit,'List',$contextMenu);
 	

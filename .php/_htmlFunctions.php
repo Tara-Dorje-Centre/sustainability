@@ -1,17 +1,19 @@
 <?php
 
-class 
-_element{
+class _element{
 
-const _none = "NONE";
-const _lt = "<";
-const _gt = ">";
-const _sl = "/";
-const _eq = "=";
-const _sq = "'";
-const _dq = '"';
-const _sp = ' ';
-const _emptyString = '';
+protected const _none = "NONE";
+protected const _lt = "<";
+protected const _gt = ">";
+protected const _sl = "/";
+protected const _eq = "=";
+protected const _sq = "'";
+protected const _dq = '"';
+protected const _sp = ' ';
+protected const _emptyString = '';
+
+protected const _htmlCommentOpen = '<!--';
+protected const _htmlCommentClose = '-->';
 
 protected $_markup = "";
 protected $_tag = "undefined-node";
@@ -119,7 +121,7 @@ public function close(){
 public function wrap($content = NULL){
 	if (is_null($content)){
 		$value = $this->empty();
-		 emptyTag($element, $attributes);
+
 	} else {
 		$value = $this->open();
 		$value .= $content;
@@ -127,6 +129,14 @@ public function wrap($content = NULL){
 	}
 	return $value;
 }
+
+function commentOpen(){
+	return self::_htmlCommentOpen;
+}
+function commentClose(){
+	return self::_htmlCommentClose;
+}
+
 
 }
 //end class _element
@@ -147,29 +157,46 @@ function metaHttpEquivs(){
 	$metaTags .= meta('content-type','text/html; charset=UTF-8');
 	return $metaTags;
 }
-function htmlCommentOpen(){
-	return '<!--';
-}
-function htmlCommentClose(){
-	return '-->';
-}
-function openScript($language = 'JavaScript', $htmlComment = true){
-	$a = attribute('language', $language);
-	$tag = openTag('script', $a);
-	if ($htmlComment == true){
-		$tag .= htmlCommentOpen();
+
+
+
+class _script extends _element{
+	protected $useComment = true;
+
+	public function __construct($language = 'JavaScript', $useComment = true){
+		parent::__construct('script');
+		$this->useComment = $useComment;
+		$this->addAttribute('language', $language);
 	}
-	return $tag;
+	public function open(){
+		$element = parent::open();
+		if ($this->useComment == true){
+			$element .= $this->commentOpen();
+		}
+		return $element;
+	}
+	public function close(){
+		if ($this->useComment == true){
+			$element = $this->commentClose();
+		} else {
+			$element = parent::_emptyString;
+		}
+		$element .= parent::close();
+		return $element;
+	}
 }
 
-function closeScript($htmlComment = true){
-	$tag = '';
-	if ($htmlComment == true){
-		$tag .= htmlCommentClose();
-	}
-	$tag .= closeTag('script');
-	return $tag;	
+
+function openScript($language = 'JavaScript', $useComment = true){
+	$e = new _script($language, $useComment);
+	return $e->open();
 }
+
+function closeScript($useComment = true){
+	$e = new _script($useComment);
+	return $e->close();
+}
+
 function sessionVariableGET($urlVariable,$defaultValue){
 	if (isset($_GET[$urlVariable])){
 		$returnValue = $_GET[$urlVariable];
