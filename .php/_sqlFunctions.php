@@ -1,6 +1,8 @@
 <?php
 
-
+function printLine($msg){
+	echo $msg.'<br />';
+}
 
 
 function sqlLimitClause($resultPage, $rowsPerPage){
@@ -12,19 +14,12 @@ function sqlLimitClause($resultPage, $rowsPerPage){
 
 function getScalarQueryResult($sql, $field){
 
-	//mysql_* library deprecated php 7
-	//$result = mysql_query($sql) or exit(mysql_error());
-	//while($row = mysql_fetch_array($result))
-	//{
-	//	$currentYear = $row[$field];
-	//}
-	//mysql_free_result($result);
-
+printLine('in getScalarQueryResult');
 
 	//mysqli_* library implemented for php7
 	//redirect$conn reference to global in _dbconnect.php
 	global $conn;
-	$result = $conn->query($sql);
+	$result = $conn->query($sql) or exit($conn->error);
 	
 	if($result){
 	  	while ($row = $result->fetch_row()){
@@ -89,8 +84,8 @@ if (isset($_SESSION['logged-in']) && isset($_SESSION['client-time-zone'])){
 	
 	//redirect$conn reference to global in _dbconnect.php
 	global $conn;
-	$result = $conn->query($sql);
-	
+	$result = $conn->query($sql) or exit($conn->error);
+	//$result->close();
 	//return new client time zone to confirm function
 	return getSessionTimeZone();
 }

@@ -1,11 +1,5 @@
 ﻿<?php 
-include_once("_formFunctions.php");
-include_once("_htmlFunctions.php");
-include_once("_cssFunctions.php");
-include_once("_sqlFunctions.php");
-
-include_once("pr_Activity_Classes.php");
-include_once("pr_Task_Classes.php");
+include_once("_includes.php");
 
 class _SiteTemplate{
 	private $htmlPageTitle = 'myPage';

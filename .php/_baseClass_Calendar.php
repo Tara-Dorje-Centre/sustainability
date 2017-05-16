@@ -1,5 +1,5 @@
 <?php 
-require_once("_htmlFunctions.php");
+include_once("_includes.php");
 class _Calendar{
 	private $title;
 	private $year;

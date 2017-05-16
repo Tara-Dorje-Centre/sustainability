@@ -1,10 +1,5 @@
 <?php
-include_once("_formFunctions.php");
-include_once("_htmlFunctions.php");
-include_once("_cssFunctions.php");
-include_once("_sqlFunctions.php");
-include_once("_baseClass_Links.php");
-include_once("_baseClass_siteTemplatePublic.php");
+
 
 class WebSiteLinks extends _Links{
 	public function __construct($menuType = 'LIST',$styleBase = 'site'){
@@ -42,6 +37,8 @@ class PublicWebSite extends _SiteTemplatePublic{
 	public function __construct(){
 		$this->links = new WebSiteLinks;
 		$this->sql = new WebSiteSQL;
+		
+		
 	}
 
 	public function setDetails($viewMode = 'MAIN', $viewId = 0, $paging = 0){
@@ -63,7 +60,8 @@ class PublicWebSite extends _SiteTemplatePublic{
 		//mysqli_* library implemented for php7
 		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
-		$result = $conn->query($sql);
+		$locale = 'publicWebSite->styleDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
 	
 		if($result){
 		
@@ -85,6 +83,7 @@ class PublicWebSite extends _SiteTemplatePublic{
 					
 		}
 		
+		//free db results object
 		$result->close;
 		}
 
@@ -98,14 +97,13 @@ class PublicWebSite extends _SiteTemplatePublic{
 		//mysqli_* library implemented for php7
 		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
-		$result = $conn->query($sql);
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
 	
 		if($result){
 		
 	  	while ($row = $result->fetch_row())
-
-		//$result = mysql_query($sql) or die(mysql_error());
-		//while($row = mysql_fetch_array($result))
 		{	
 			$org = stripslashes($row['organization']);
 			$orgUrl = stripslashes($row['organization_url']);
@@ -113,6 +111,7 @@ class PublicWebSite extends _SiteTemplatePublic{
 			$contactEmail = stripslashes($row['contact_email']);
 			$showPublicSite = stripslashes($row['show_public_site']);
 		}
+		//free db results object
 		$result->close;
 		}
 		
@@ -141,6 +140,7 @@ class PublicWebSite extends _SiteTemplatePublic{
 		
 		global $conn;
 		$result = $conn->query($sql);
+		
 		if($result){
 		
 	  	while ($row = $result->fetch_row())
@@ -167,6 +167,7 @@ class PublicWebSite extends _SiteTemplatePublic{
 
 
 			}
+			
 			if ($this->viewMode == $viewMode && $this->viewId == $viewId){
 				//menu item is for current page
 				$cssSuffix = '-current';	

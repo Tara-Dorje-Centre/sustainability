@@ -1,7 +1,7 @@
 ﻿<?php 
 include_once("_includes.php");
-include_once("_htmlFunctions.php");
-include_once("_formFunctions.php");
+
+
 
 $ajaxFunction = sessionVariableGET('ajaxFunction','NONE');
 $ajaxId = sessionVariableGET('ajaxId',0);

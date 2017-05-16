@@ -5,33 +5,43 @@
 
 class db extends mysqli
 {
-
-
 protected $dbTime;
 protected $dbServer  = "127.0.0.1";
 protected $dbDatabase  = "projects_dev";
 protected $dbUser  = "dev_usr";
 protected $dbPass  = "dev_pwd";
 protected $dbPort = 3306;
-//mysql_* functions deprecated php 7
-//
-//open a php connection to mysql
-//$sqlConnection  = mysql_connect($dbServer, $dbUser, $dbPass)
-//or die("Couldn't connect to database server");
-//open the database
-//$db = mysql_select_db($dbDatabase, $sqlConnection )
-//or die("Couldn't connect to database $dbDatabase");
 
-//convert to mysqli for php 7
 
 public function __construct(){
+
+	printLine('in db->__construct, creating connection');
 	parent::__construct($dbServer, $dbUser, $dbPass, $dbDatabase, $dbPort);
-if ($this->connect_error) {
-	$msg = 'Connect Error ['.$this->connect_errno.'] '.$this->connect_error;
-    die($msg);
-} 
+
+	if ($this->connect_error) {
+		$msg = 'Connect Error ['.$this->connect_errno.'] ';
+		$msg .= $this->connect_error;
+    	exit($msg);
+	} 
 
 }
+
+//overload close method
+public function close(){
+
+	printLine('in db->close, releasing connection');
+	parent::close();
+
+}
+
+public function query($sql){
+
+	printLine('in db->query');
+	printLine($sql);
+	return parent::query($sql);
+	
+}
+
 
 }
 //end class db
@@ -51,8 +61,8 @@ $conn = new db;
 $sessionTimeZone = setSessionTimeZone();
 $sessionTime = getSessionTime();
 
- 
 
 
+printLine('exiting dbconnect');
 
 ?>

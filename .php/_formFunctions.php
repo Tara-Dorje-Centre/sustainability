@@ -1,6 +1,6 @@
 <?php
 
-include_once("_htmlFunctions.php");
+include_once("_includes.php");
 
 function openDisplayList(
 	$entityName, 

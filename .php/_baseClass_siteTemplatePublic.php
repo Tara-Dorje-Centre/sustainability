@@ -1,8 +1,5 @@
 ﻿<?php 
-include_once("_formFunctions.php");
-include_once("_htmlFunctions.php");
-include_once("_cssFunctions.php");
-include_once("_sqlFunctions.php");
+include_once("_includes.php");
 
 class _SiteTemplatePublic{
 	public $mainTitle;
@@ -31,7 +28,12 @@ class _SiteTemplatePublic{
 		echo $content;	
 		
 		//close database connection
-		mysql_close();
+		
+		
+		
+		//global $conn;
+		//$conn->close();
+
 	}
 	
 	protected function buildSiteTemplate(){
@@ -246,7 +248,7 @@ class _SiteTemplatePublic{
 
 	protected function siteStyles(){
 		//use internal stylesheet
-		$content = $this->buildInternalStyles();
+		//$content = $this->buildInternalStyles();
 
 		//use external stylesheet
 		$content .= stylesheet('css/publicOverrides.css');

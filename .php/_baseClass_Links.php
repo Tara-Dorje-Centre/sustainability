@@ -1,5 +1,5 @@
 <?php 
-include_once("_htmlFunctions.php");
+include_once("_includes.php");
 class _Links{
 	private $cssStyleBase;
 	public $cssItem;

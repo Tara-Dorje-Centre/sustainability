@@ -13,6 +13,9 @@ include_once("_sqlFunctions.php");
 include_once("_baseClass_Links.php");
 include_once("_baseClass_Calendar.php");
 include_once("_baseClass_siteTemplate.php");
+include_once("_baseClass_siteTemplatePublic.php");
+
+include_once("_publicSite_Classes.php");
 
 //support secure login system
 include_once("sys_Menu_Class.php");

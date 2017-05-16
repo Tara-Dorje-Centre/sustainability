@@ -1,7 +1,5 @@
 <?php
-include_once("_htmlFunctions.php");
-include_once("_formFunctions.php");
-include_once("_sqlFunctions.php");
+include_once("_includes.php");
 //css style format
 //.public-detail-item{
 //	font-size:14px;

@@ -20,11 +20,11 @@ protected $_tag = "undefined-node";
 protected $_attribs = "";
 
 
-protected $_id  = "";
-protected $_name = "";
-protected $_css = "";
+protected $_id  = "none";
+protected $_name = "none";
+protected $_css = "none";
 
-protected $_cData = false;
+// protected $_cData = false;
 
 
 public function __construct($tag, $idName = 'none', $css = 'none') {
@@ -49,16 +49,29 @@ public function reset(){
 	
 }
 
-public function formatAttribute($name, $value = NULL){
-	if (!is_null($value)){
-		$a = self::_sp.$name.self::_eq.self::_dq.$value.self::_dq;
+public function formatAttribute($name = 'none', $value = 'none'){
+
+
+	if ($name != 'none' && !is_null($name)){
+
+		if ($value != 'none' && !is_null($value)){
+
+			$a = self::_sp.$name.self::_eq.self::_dq.$value.self::_dq;
+		
+		} else {
+			//no attribute value
+			$a = self::_emptyString;
+		}
+	
 	} else {
+		//no attribute name
 		$a = self::_emptyString;
 	}
+
 	return $a;
 }
 
-public function addAttribute($name, $value = NULL){
+public function addAttribute($name = 'none', $value = 'none'){
 	$a = $this->formatAttribute($name, $value);
 	$this->_attribs .= $a;
 }
@@ -79,16 +92,17 @@ public function setCSS($css){
 		$this->addAttribute('class', $this->_css);
 }
 
-protected function setAttributes($attributes = "none"){
-	if ($attributes != 'none' && !is_null($attributes)){
-		$this->_attribs = $attributes;
-	}
-}
+//protected function setAttributes($attributes = "none"){
+//
+//	if ($attributes != 'none' && !is_null()){
+	//	$this->_attribs = $attributes;
+//	}
+//{
 
 protected function start(){
 	$this->_markup = self::_lt.$this->_tag;
 	if ($this->_attribs != 'none' && !is_null($this->_attribs)){
-		$this->_markup .= $_attribs;
+		$this->_markup .= $this->_attribs;
 	}
 }
 
@@ -105,7 +119,7 @@ function empty(){
 }
 
 public function close(){
-	$this->_markup = self::_lt.$this->_tag.self::_gt;
+	$this->_markup = self::_lt.self::_sl.$this->_tag.self::_gt;
 	return $this->_markup;
 }
 
@@ -116,7 +130,7 @@ public function wrap($content = NULL){
 	} else {
 		$value = $this->open();
 		$value .= $content;
-		$value = $this->close();
+		$value .= $this->close();
 	}
 	return $value;
 }
@@ -282,8 +296,8 @@ function wrapDiv($content, $nameId, $css = 'none'){
 }
 
 class _table extends _element{
-	public function __construct($idName, $css = 'none'){
-		parent::__construct1('table', $idName, $css);
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('table', $idName, $css);
 	}
 }
 
@@ -301,13 +315,13 @@ function closeTable(){
 
 class _ul extends _element{
 	public function __construct($idName, $css = 'none'){
-		parent::__construct1('ul', $idName, $css);
+		parent::__construct('ul', $idName, $css);
 	}
 }
 
 class _ol extends _element{
 	public function __construct($idName, $css = 'none'){
-		parent::__construct1('ol', $idName, $css);
+		parent::__construct('ol', $idName, $css);
 	}
 }
 

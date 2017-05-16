@@ -1,8 +1,5 @@
 <?php
-require_once("_formFunctions.php");
-require_once("_htmlFunctions.php");
-require_once("_baseClass_Links.php");
-require_once("_baseClass_Calendar.php");
+
 
 class CropLinks extends _Links {
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
