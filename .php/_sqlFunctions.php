@@ -22,14 +22,21 @@ function getScalarQueryResult($sql, $field){
 
 
 	//mysqli_* library implemented for php7
-	$result = $db_mysqli->query($sql);
+	//redirect$conn reference to global in _dbconnect.php
+	global $conn;
+	$result = $conn->query($sql);
+	
+	
+
+
+	
 	if($result){
-	  	while ($row = $result->fetch_object()){
+	  	while ($row = $result->fetch_row()){
 			$value = $row[$field];
 		}
 	    // Free result set
 	    $result->close();
-	    $db_mysqli->next_result();
+
 	}
 	return $value;
 }
@@ -84,6 +91,8 @@ if (isset($_SESSION['logged-in']) && isset($_SESSION['client-time-zone'])){
 	$sql = "set @@session.TIME_ZONE='".$utcOffset."'";
 	//mysql_query($sql) or exit(mysql_error());
 	
+	//redirect$conn reference to global in _dbconnect.php
+	global $conn;
 	$result = $conn->query($sql);
 	
 	//return new client time zone to confirm function
