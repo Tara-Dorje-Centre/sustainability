@@ -30,7 +30,6 @@ protected $_cData = false;
 public function __construct($tag, $idName = 'none', $css = 'none') {
 	$this->reset();
 	$this->setTag($tag);
-	$this->__construct($tag);
 	$this->setIdName($idName);
 	$this->setCSS($css);
 }
@@ -132,6 +131,16 @@ function commentClose(){
 
 }
 //end class _element
+
+function openTag($tag){
+$e = new _element($tag);
+return $e->open();
+}
+
+function closeTag($tag){
+$e = new _element($tag);
+return $e->close();
+}
 
 function doctypeHtml(){
 	$declare = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">';

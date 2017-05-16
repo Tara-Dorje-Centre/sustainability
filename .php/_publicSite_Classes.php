@@ -59,8 +59,15 @@ class PublicWebSite extends _SiteTemplatePublic{
 
 	private function getStyleDetails(){
 		$sql = $this->sql->siteStyles();
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$result = $conn->query($sql);
+	
+		if($result){
+		
+	  	while ($row = $result->fetch_row())
 		{	
 		
 			$this->fillColor = stripslashes($row["public_fill_color"]);
@@ -77,6 +84,9 @@ class PublicWebSite extends _SiteTemplatePublic{
 			$this->fontSizeText = stripslashes($row["public_font_size_text"]);
 					
 		}
+		
+		$result->close;
+		}
 
 	}
 
@@ -84,14 +94,26 @@ class PublicWebSite extends _SiteTemplatePublic{
 	
 	private function getSiteContents(){
 		$sql = $this->sql->siteContent();
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$result = $conn->query($sql);
+	
+		if($result){
+		
+	  	while ($row = $result->fetch_row())
+
+		//$result = mysql_query($sql) or die(mysql_error());
+		//while($row = mysql_fetch_array($result))
 		{	
 			$org = stripslashes($row['organization']);
 			$orgUrl = stripslashes($row['organization_url']);
 			$contactName = stripslashes($row['contact_name']);
 			$contactEmail = stripslashes($row['contact_email']);
 			$showPublicSite = stripslashes($row['show_public_site']);
+		}
+		$result->close;
 		}
 		
 		if ($showPublicSite == 'no'){
@@ -116,8 +138,12 @@ class PublicWebSite extends _SiteTemplatePublic{
 		$menu .= $this->links->menuHref('Main Menu');
 		
 		$sql = $this->sql->menuItems($this->viewMode, $this->viewId);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		
+		global $conn;
+		$result = $conn->query($sql);
+		if($result){
+		
+	  	while ($row = $result->fetch_row())
 		{	
 
 //		view_id
@@ -150,6 +176,9 @@ class PublicWebSite extends _SiteTemplatePublic{
 				
 			$menu .= $this->links->menuHref($caption,$viewMode,$viewId,$cssSuffix);
 		}		
+		//free db results object
+		$result->close;
+		}
 		
 		$menu .= $this->links->closeMenu();
 		
@@ -158,19 +187,37 @@ class PublicWebSite extends _SiteTemplatePublic{
 
 	private function getPageContents(){
 		$sql = $this->sql->pageContent($this->viewMode, $this->viewId);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+	
+	
+		global $conn;
+		$result = $conn->query($sql);
+		if($result){
+		
+	  	while ($row = $result->fetch_row())
+		
 		{			
 			$this->pageTitle = stripslashes($row['title']);
 			$this->pageContents = displaylines(stripslashes($row['content']));	
 		}
+
+		//free db results object
+		$result->close;
+		}
+		
 	}
 	
 	private function getPageDetails(){
 		$allDetails = br();
 		$sql = $this->sql->detailContent($this->viewMode, $this->viewId);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+
+
+
+
+		global $conn;
+		$result = $conn->query($sql);
+		if($result){
+		
+	  	while ($row = $result->fetch_row())
 		{			
 			
 			$heading = displaylines(stripslashes($row["heading"]));
@@ -195,6 +242,11 @@ class PublicWebSite extends _SiteTemplatePublic{
 			//$item = paragraph($contents,'detail-item','public-detail-item');	
 			//$allDetails .= $item;
 		}
+		
+		//free db results object
+		$result->close;
+		}
+		
 
 		$this->pageDetails = $allDetails;	
 	}

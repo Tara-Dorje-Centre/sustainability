@@ -273,7 +273,7 @@ class _SiteTemplatePublic{
 		$content .= openTag('head');
 		$content .= metaHttpEquivs();
 		$content .= $this->siteStyles();
-		$content .= wrapTag('title',null,$this->mainTitle);
+		//$content .= openTag('title',null,$this->mainTitle).closeTag('title');
 		//$content .= $this->siteScripts();
 		$content .= closeTag('head');
 		$content .= openTag('body');

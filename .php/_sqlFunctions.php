@@ -26,18 +26,14 @@ function getScalarQueryResult($sql, $field){
 	global $conn;
 	$result = $conn->query($sql);
 	
-	
-
-
-	
 	if($result){
 	  	while ($row = $result->fetch_row()){
 			$value = $row[$field];
 		}
 	    // Free result set
 	    $result->close();
-
 	}
+	
 	return $value;
 }
 
