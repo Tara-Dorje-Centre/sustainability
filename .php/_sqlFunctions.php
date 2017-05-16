@@ -69,13 +69,22 @@ function getSessionTimeZone(){
 	return $currentTimeZone;
 }
 
-function setSessionTimeZone($utcOffset){
+function setSessionTimeZone(){
+//user login should set user time zone preference
+//select user time zone, then set for all user sessions
+//will need to compensate for daylight savings time and standard time automatically
+if (isset($_SESSION['logged-in']) && isset($_SESSION['client-time-zone'])){
+	$utcOffset = $_SESSION['client-time-zone'];
+} else {
+	$utcOffset = '-0:00';
+}
+
 	//example call setSessionTimeZone('-7:00');
 
 	$sql = "set @@session.TIME_ZONE='".$utcOffset."'";
 	//mysql_query($sql) or exit(mysql_error());
 	
-	$result = $db_mysqli->query($sql);
+	$result = $conn->query($sql);
 	
 	//return new client time zone to confirm function
 	return getSessionTimeZone();
