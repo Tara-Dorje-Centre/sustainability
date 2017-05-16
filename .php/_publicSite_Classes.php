@@ -61,7 +61,10 @@ class PublicWebSite extends _SiteTemplatePublic{
 		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
 		$locale = 'publicWebSite->styleDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		//$result = $conn->query($sql) or exit($locale.$conn->error);
+		
+		$result = runQuery($sql);
+
 	
 		if($result){
 		

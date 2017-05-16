@@ -43,6 +43,9 @@ public function query($sql){
 }
 
 
+
+
+
 }
 //end class db
 
@@ -58,6 +61,9 @@ public function query($sql){
 global $conn;
 $conn = new db;
 
+
+//$conn is referencable in stand alone functions
+//add pseudo var to get pointer   global $conn;
 $sessionTimeZone = setSessionTimeZone();
 $sessionTime = getSessionTime();
 
