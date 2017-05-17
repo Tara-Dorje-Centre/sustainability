@@ -108,13 +108,22 @@ class PublicWebSite extends _SiteTemplatePublic{
 	
 		if($result){
 		
-	  	while ($row = $result->fetch_row())
+	  	while ($row = $result->fetch_assoc())
 		{	
+			$org = ($row['organization']);
+			$orgUrl = ($row['organization_url']);
+			$contactName = ($row['contact_name']);
+			$contactEmail = ($row['contact_email']);
+			$showPublicSite = ($row['show_public_site']);
+			
+			/**
 			$org = stripslashes($row['organization']);
 			$orgUrl = stripslashes($row['organization_url']);
 			$contactName = stripslashes($row['contact_name']);
 			$contactEmail = stripslashes($row['contact_email']);
 			$showPublicSite = stripslashes($row['show_public_site']);
+			**/
+			
 		}
 		//free db results object
 		$result->close;
@@ -130,6 +139,7 @@ class PublicWebSite extends _SiteTemplatePublic{
 		$mailto = getHref('mailto:'.$contactEmail,$contactName,'none');
 
 		$year = getSessionYear();
+		
 		$this->mainTitle = $org;
 		//$this->mainImage = image('images/logo.gif','current site image',150,75,0,'public-site-image');
 		$this->mainFooter = '&copy;'.$year.spacer().$link.spacer(4);
