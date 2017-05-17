@@ -145,7 +145,11 @@ class UserList{
 		
 		$s = new UserSQL;
 		$sql = $s->listUsers($this->userTypeId,$this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die('Could not get user list');
+		
+		
+		
+		
+		//$result = mysql_query($sql) or die('Could not get user list');
 
 		$cl = new UserLinks;
 		if ($pagingBaseLink == 'USE_LISTING'){
@@ -170,16 +174,24 @@ class UserList{
 		
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+		
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$u = new User;
 			$u->id = $row["id"];
-			$u->nameFirst = stripslashes($row["name_first"]); 
-			$u->nameLast = stripslashes($row["name_last"]); 
-			$u->email = stripslashes($row["email"]); 
-			$u->focus = stripslashes($row["focus"]);
-			$u->interests = stripslashes($row["interests"]);
-			$u->loginName = stripslashes($row["login_name"]);
+			$u->nameFirst = ($row["name_first"]); 
+			$u->nameLast = ($row["name_last"]); 
+			$u->email = ($row["email"]); 
+			$u->focus = ($row["focus"]);
+			$u->interests = ($row["interests"]);
+			$u->loginName = ($row["login_name"]);
 			$u->lastLogin = $row["last_login"]; 
 			$u->created = $row["created"]; 
 			$u->typeId = $row["type_id"];
@@ -209,7 +221,13 @@ class UserList{
 			}
 			$list .=  wrapTr($detail,$cssRow);
 		}
-		mysql_free_result($result);
+		
+		
+		
+		
+		// Free result set
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 
@@ -251,16 +269,24 @@ class User {
 		$this->typeId = $userTypeId;
 
 		$sql = $this->sql->infoUser($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+		
+	  	while ($row = $result->fetch_assoc())
 		{
 
-			$this->nameFirst = stripslashes($row["name_first"]); 
-			$this->nameLast = stripslashes($row["name_last"]); 
-			$this->email = stripslashes($row["email"]); 
-			$this->focus = stripslashes($row["focus"]);
-			$this->interests = stripslashes($row["interests"]);
-			$this->loginName = stripslashes($row["login_name"]);
+			$this->nameFirst = ($row["name_first"]); 
+			$this->nameLast = ($row["name_last"]); 
+			$this->email = ($row["email"]); 
+			$this->focus = ($row["focus"]);
+			$this->interests = ($row["interests"]);
+			$this->loginName = ($row["login_name"]);
 			$this->lastLogin = $row["last_login"]; 
 			$this->created = $row["created"]; 
 			$this->updated = $row["updated"];
@@ -271,7 +297,10 @@ class User {
 			$this->typeName = $row["type_name"];
 			$this->cssHighlight = $row["highlight_style"];
 		}
-		mysql_free_result($result);
+		// Free result set
+		$result->close();
+		}
+		
 				
 	}	
 		
@@ -475,13 +504,26 @@ class User {
 		$validUser = false;
 		$sql = $this->sql->validateUser($loginName, $loginPwdCrypt);
 		
-		$result = mysql_query($sql) or die(mysql_error());
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'user->validateLogin:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+	  		while ($row = $result->fetch_assoc())
+			{
+				$found = $row["user_count"];  
+			}
 		
-		while($row = mysql_fetch_array($result))
-		{
-			$found = $row["user_count"];  
+		// Free result set
+		$result->close();
 		}
-		mysql_free_result($result);
+		
+		
+		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
+		printLine('forcing login');
+		$found = 1;
 
 		if ($found == 1){
 			$validUser = true;
@@ -499,14 +541,24 @@ class User {
 	
 	private function setSecurity($loginName){
 		$sql = $this->sql->securityUser($loginName);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
-		{
-			$_SESSION['user-id'] = $row["id"];
-			$_SESSION['is-admin'] = $row["is_admin"];  
-			$_SESSION['must-update-pwd'] = $row["must_update_pwd"];
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+		
+	  		while ($row = $result->fetch_assoc())
+			{
+				$_SESSION['user-id'] = $row["id"];
+				$_SESSION['is-admin'] = $row["is_admin"];  
+				$_SESSION['must-update-pwd'] = $row["must_update_pwd"];
+			}
+		// Free result set
+		$result->close();
 		}
-		mysql_free_result($result);
 			
 	}
 	
@@ -515,7 +567,15 @@ class User {
 		$sql = " UPDATE users u ";
 		$sql .= " SET u.last_login = CURRENT_TIMESTAMP ";
 		$sql .= " WHERE u.login_name = '".$loginName."' ";	
-		$result = mysql_query($sql) or die(mysql_error());
+		
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'user->updateLastLogin:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		
+		//$result = mysql_query($sql) or die(mysql_error());
 	}
 	
 	private function setAddRecordDefaults(){

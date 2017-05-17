@@ -20,20 +20,22 @@ function runQuery($sql){
 
  function getScalarQueryResult($sql, $field){
 
-	//mysqli_* library implemented for php7
-	//redirect$conn reference to global in _dbconnect.php
-	//global $conn;
-	//$result = $conn->query($sql) or exit($conn->error);
-	$result = runQuery($sql);
-	
-	if($result){
-	  	while ($row = $result->fetch_row())
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+		
+	  	while ($row = $result->fetch_assoc())
 	  	{
 			$value = $row[$field];
 		}
-	// Free result set
-	$result->close();
-	}
+		
+		// Free result set
+		$result->close();
+		}
 	
 	return $value;
 }
@@ -69,25 +71,22 @@ function getSessionTimeZone(){
 
 function setSessionTimeZone(){
 
-//user login should set user time zone preference
-//select user time zone, then set for all user sessions
-//will need to compensate for daylight savings time and standard time automatically
-if (isset($_SESSION['logged-in']) && isset($_SESSION['client-time-zone'])){
-	$utcOffset = $_SESSION['client-time-zone'];
-} else {
-	$utcOffset = '-0:00';
-}
-
-	//example call setSessionTimeZone();
+	if (isset($_SESSION['logged-in']) && isset($_SESSION['client-time-zone'])){
+		$utcOffset = $_SESSION['client-time-zone'];
+	} else {
+		$utcOffset = '-0:00';
+	}
 
 	$sql = "set @@session.TIME_ZONE='".$utcOffset."'";
 
 	
-	//redirect$conn reference to global in _dbconnect.php
-	//global $conn;
-	//$result = $conn->query($sql) or exit($conn->error);
-	
-	$result = runQuery($sql);
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'setSessionTimeZone:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		//$result = runQuery($sql);
 	
 	//return new client time zone to confirm function
 	return getSessionTimeZone();
@@ -111,15 +110,15 @@ function getSelectOptionsSQL($sql,$selectedValue, $disabled, $defaultValue,$defa
 	}
 	
 	
-	//redirect$conn reference to global in _dbconnect.php
-//	global $conn;
-//	$result = $conn->query($sql) or exit($conn->error);
-	
-	$result = runQuery($sql);
-	
-	if ($result){
-	
-	  	while ($row = $result->fetch_row())
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+		
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$optionValue = $row["value"];
 			$optionCaption = $row["caption"];
@@ -127,8 +126,9 @@ function getSelectOptionsSQL($sql,$selectedValue, $disabled, $defaultValue,$defa
 			$allOptions .= $option;
 		}
 
-	$result->close();
-	}
+		// Free result set
+		$result->close();
+		}
 	
 	return $allOptions;	
 }

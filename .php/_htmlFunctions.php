@@ -92,13 +92,6 @@ public function setCSS($css){
 		$this->addAttribute('class', $this->_css);
 }
 
-//protected function setAttributes($attributes = "none"){
-//
-//	if ($attributes != 'none' && !is_null()){
-	//	$this->_attribs = $attributes;
-//	}
-//{
-
 protected function start(){
 	$this->_markup = self::_lt.$this->_tag;
 	if ($this->_attribs != 'none' && !is_null($this->_attribs)){
@@ -138,6 +131,7 @@ public function wrap($content = NULL){
 function commentOpen(){
 	return self::_htmlCommentOpen;
 }
+
 function commentClose(){
 	return self::_htmlCommentClose;
 }
@@ -146,14 +140,40 @@ function commentClose(){
 }
 //end class _element
 
-function openTag($tag){
-$e = new _element($tag);
-return $e->open();
+function openHTML(){
+	$e = new _element('html');
+	return $e->open();
 }
 
-function closeTag($tag){
-$e = new _element($tag);
-return $e->close();
+function closeHTML(){
+	$e = new _element('html');
+	return $e->close();
+}
+
+function openHead(){
+	$e = new _element('head');
+	return $e->open();
+}
+
+function closeHead(){
+	$e = new _element('head');
+	return $e->close();
+}
+
+function htmlTitle($text){
+	$e = new _element('title');
+	return $e->wrap($text);
+}
+
+function openBody($onLoad = 'none'){
+	$e = new _element('body');
+	$e->addAttribute('onload', $onLoad);
+	return $e->open();
+}
+
+function closeBody(){
+	$e = new _element('body');
+	return $e->close();
 }
 
 function doctypeHtml(){
@@ -167,12 +187,12 @@ function meta($equiv, $content){
 	$e->addAttribute('content',$content);
 	return $e->empty();
 }
+
 function metaHttpEquivs(){
 	$metaTags = meta('Content-Style-Type','text/css');
 	$metaTags .= meta('content-type','text/html; charset=UTF-8');
 	return $metaTags;
 }
-
 
 
 class _script extends _element{
@@ -201,6 +221,18 @@ class _script extends _element{
 	}
 }
 
+function openInlineStyles(){
+
+	$e = new _element('style');
+	return $e->open();
+
+
+}
+
+function closeInlineStyles(){
+	$e = new _element('style');
+	return $e->close();
+}
 
 function openScript($language = 'JavaScript', $useComment = true){
 	$e = new _script($language, $useComment);
@@ -250,12 +282,6 @@ function stylesheet($cssFile){
 	$e->addAttribute('type','text/css');
 	$e->addAttribute('href',$cssFile);
 	return $e->empty();
-	
-	//$a = attribute('rel','stylesheet');
-	//$a .= attribute('type','text/css');
-	//$a .= attribute('href',$styleSheetFile);
-	//$value = wrapTag('link',$a);
-	//return $value;
 }
 
 
@@ -272,26 +298,23 @@ function spanStyled($content, $style = 'none'){
 }
 
 class _div extends _element{
-	public function __construct($idName, $css = 'none'){
-		parent::__construct1('div', $idName, $css);
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('div', $idName, $css);
 	}
 }
 
 function openDiv($nameId, $css = 'none'){
-	//$e = new _div($nameId, $css);
-	$e = new _element('div', $nameId, $css);
+	$e = new _div($nameId, $css);
 	return $e->open();
 }
 
 function closeDiv(){
-	//$e = new _div();
-	$e = new _element('div');
+	$e = new _div();
 	return $e->close();
 }
 
 function wrapDiv($content, $nameId, $css = 'none'){
-	//$e = new _div($nameId, $css);
-	$e = new _element('div', $nameId, $css);
+	$e = new _div($nameId, $css);
 	return $e->wrap($content);
 }
 
@@ -302,62 +325,62 @@ class _table extends _element{
 }
 
 function openTable($nameId, $css = 'none'){
-	//$e = new _table($nameId, $css);
-	$e = new _element('table', $nameId, $css);
+	$e = new _table($nameId, $css);
+
 	return $e->open();
 }
 
 function closeTable(){
-	//$e = new _table();
-	$e = new _element('table');
+	$e = new _table();
+
 	return $e->close();
 }
 
 class _ul extends _element{
-	public function __construct($idName, $css = 'none'){
+	public function __construct($idName = 'none', $css = 'none'){
 		parent::__construct('ul', $idName, $css);
 	}
 }
 
 class _ol extends _element{
-	public function __construct($idName, $css = 'none'){
+	public function __construct($idName = 'none', $css = 'none'){
 		parent::__construct('ol', $idName, $css);
 	}
 }
 
 function openList($nameId, $css = 'none'){
-	//$e = new _ul($nameId, $css);
-	$e = new _element('ul',$nameId,$css);
+	$e = new _ul($nameId, $css);
+
 	return $e->open();
 }
 
 function closeList(){
-	//$e = new _ul();
-	$e = new _element('ul');
+	$e = new _ul();
+
 	return $e->close();
 }
 
 function openListOrdered($nameId, $css = 'none'){
-	//$e = new _ol($nameId, $css);
-	$e = new _element('ol',$nameId,$css);
+	$e = new _ol($nameId, $css);
+
 	return $e->open();
 }
 
 function closeListOrdered(){
-	//$e = new _ol();
-	$e = new _element('ol');
+	$e = new _ol();
+
 	return $e->close();
 }
 
 function listItem($value,$css = 'none'){
-	$e = new _element('li');
-	$e->setCSS($css);
+	$e = new _element('li','none',$css);
+
 	return $e->wrap($value);
 }
 
 function wrapTh($caption, $css = 'none',$colSpan = 0){
-	$e = new element('th');
-	$e->setCSS($css);
+	$e = new element('th','none',$css);
+
 	if ($colSpan != 0){
 		$e->addAttribute('colspan',$colSpan);
 	}	
@@ -365,8 +388,8 @@ function wrapTh($caption, $css = 'none',$colSpan = 0){
 }
 
 function wrapTd($value, $width = 0, $css='none',$colSpan = 0){
-	$e = new element('td');
-	$e->setCSS($css);
+	$e = new element('td','none',$css);
+
 	if ($width!=0){
 		$e->addAttribute('width', $width.'%');
 	}
@@ -377,8 +400,8 @@ function wrapTd($value, $width = 0, $css='none',$colSpan = 0){
 }
 
 function wrapTr($content, $css = 'none'){
-	$e = new _element('tr');
-	$e->setCSS($css);
+	$e = new _element('tr','none',$css);
+
 	return $e->wrap($content);
 }
 
@@ -398,8 +421,8 @@ function linkSpacer($separator = '|'){
 }
 
 function getHref($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
-	$e = new _element('a');
-	$e->setCSS($css);
+	$e = new _element('a','none',$css);
+
 	$e->addAttribute('href',$url);
 	if ($target <> '_self'){
 		$e->addAttribute('target',$target);
@@ -451,8 +474,8 @@ function captionedParagraph($id, $caption, $content, $cssParagraph = 'none',$css
 }
 
 function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
-	$e = new _element('img');
-	$e->setCSS($css);
+	$e = new _element('img','none',$css);
+
 	$e->addAttribute('src',$src);
 	$e->addAttribute('alt',$alt);
 	$e->addAttribute('width',$width);

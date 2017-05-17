@@ -167,8 +167,10 @@ protected function setPageContents(){
 	public function printSite(){		
 		$content = $this->getSiteTemplate();
 		echo $content;	
+		
+		
 
-//close db conection
+//close db connection
 	//	mysql_close();
 	}
 
@@ -204,22 +206,25 @@ protected function setPageContents(){
 		$scripts .= closeScript();
 		return $scripts;
 	}
+	
+
 
 	protected function siteContainerOpen(){
 		$content = doctypeHtml();
-		$content .= openTag('html');
-		$content .= openTag('head');
+		$content .= openHTML();
+		$content .= openHead();
 		$content .= metaHttpEquivs();		
 		$content .= $this->siteStyles();
-		$content .= wrapTag('title',null,$this->htmlPageTitle);
+		$content .= htmlTitle($this->htmlPageTitle);
 		$content .= $this->siteScripts();
-		$content .= closeTag('head');
+		$content .= closeHead();
 
 		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){	
-			$content .= '<body>';
+			$onLoad = 'none';
 		} else {
-			$content .= '<body onload="displayClientTime();">';
+			$onLoad='displayClientTime();';
 		}
+		$content .= openBody($onLoad);
 		$content .= openDiv('site-container');
 		return $content;	
 	}
@@ -286,8 +291,8 @@ protected function setPageContents(){
 	protected function siteContainerClose(){
 		//close site page container
 		$content = closeDiv();
-		$content .= closeTag('body');
-		$content .= closeTag('html');
+		$content .= closeBody();
+		$content .= closeHTML();
 		return $content;
 	}
 	

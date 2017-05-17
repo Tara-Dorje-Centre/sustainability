@@ -69,39 +69,49 @@ class SitewideSettings {
     // set class properties with record values from database
 	public function setDetails($inputMode){
 		$this->pageMode = $inputMode;
-
 		$this->verifySettings();
 
 		$sql = $this->sql->infoSitewideSettings();
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+		
+	  	while ($row = $result->fetch_assoc())
 		{		
-			$this->siteTitle = stripslashes($row["site_title"]);
-			$this->siteUrl = stripslashes($row["site_url"]);
-			$this->loginNotice = stripslashes($row["login_notice"]);
-			$this->organization = stripslashes($row["organization"]);
-			$this->organizationUrl = stripslashes($row["organization_url"]);
-			$this->organizationDescription = stripslashes($row["organization_description"]);
-			$this->contactName = stripslashes($row["contact_name"]);
-			$this->contactEmail = stripslashes($row["contact_email"]);
-			$this->showPublicSite = stripslashes($row["show_public_site"]);
-			$this->showCostReports = stripslashes($row["show_cost_reports"]);
-			$this->showRevenueReports = stripslashes($row["show_revenue_reports"]);
-			$this->publicFillColor = stripslashes($row["public_fill_color"]);
-			$this->publicSiteColor = stripslashes($row["public_site_color"]);
-			$this->publicPageColor = stripslashes($row["public_page_color"]);
-			$this->publicMenuColor = stripslashes($row["public_menu_color"]);
-			$this->publicMenuColorHover = stripslashes($row["public_menu_color_hover"]);
-			$this->publicTextColor = stripslashes($row["public_text_color"]);
-			$this->publicTextColorHover = stripslashes($row["public_text_color_hover"]);
-			$this->publicFontFamily = stripslashes($row["public_font_family"]);
-			$this->publicFontSizeTitle = stripslashes($row["public_font_size_title"]);
-			$this->publicFontSizeHeading = stripslashes($row["public_font_size_heading"]);
-			$this->publicFontSizeMenu = stripslashes($row["public_font_size_menu"]);
-			$this->publicFontSizeText = stripslashes($row["public_font_size_text"]);
+			$this->siteTitle = ($row["site_title"]);
+			$this->siteUrl = ($row["site_url"]);
+			$this->loginNotice = ($row["login_notice"]);
+			$this->organization = ($row["organization"]);
+			$this->organizationUrl = ($row["organization_url"]);
+			$this->organizationDescription = ($row["organization_description"]);
+			$this->contactName = ($row["contact_name"]);
+			$this->contactEmail = ($row["contact_email"]);
+			$this->showPublicSite = ($row["show_public_site"]);
+			$this->showCostReports = ($row["show_cost_reports"]);
+			$this->showRevenueReports = ($row["show_revenue_reports"]);
+			$this->publicFillColor = ($row["public_fill_color"]);
+			$this->publicSiteColor = ($row["public_site_color"]);
+			$this->publicPageColor = ($row["public_page_color"]);
+			$this->publicMenuColor = ($row["public_menu_color"]);
+			$this->publicMenuColorHover = ($row["public_menu_color_hover"]);
+			$this->publicTextColor = ($row["public_text_color"]);
+			$this->publicTextColorHover = ($row["public_text_color_hover"]);
+			$this->publicFontFamily = ($row["public_font_family"]);
+			$this->publicFontSizeTitle = ($row["public_font_size_title"]);
+			$this->publicFontSizeHeading = ($row["public_font_size_heading"]);
+			$this->publicFontSizeMenu = ($row["public_font_size_menu"]);
+			$this->publicFontSizeText = ($row["public_font_size_text"]);
 						
 		}
-		mysql_free_result($result);		
+		
+		// Free result set
+		$result->close();
+		}
 		
 		$this->setSessionDetails();	
 	}	

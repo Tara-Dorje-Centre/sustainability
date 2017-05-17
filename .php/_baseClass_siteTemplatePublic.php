@@ -99,7 +99,9 @@ class _SiteTemplatePublic{
 
 
 	protected function buildInternalStyles(){
-		$css = openTag('style');
+	
+		$css = openInlineStyles();
+	
 
 
 		$clearMarginPadding = clearMarginPadding();		
@@ -240,15 +242,18 @@ class _SiteTemplatePublic{
 		$p = $fontNormal;
 		$p .= $marginThin;
 		$css .= wrapStyle('.public-detail-item', $p);
+		
 
-		$css .= closeTag('style');
+		$css .= closeInlineStyles();
+		
+
 		return $css;
 
 	}
 
 	protected function siteStyles(){
 		//use internal stylesheet
-		//$content = $this->buildInternalStyles();
+		$content = $this->buildInternalStyles();
 
 		//use external stylesheet
 		$content .= stylesheet('css/publicOverrides.css');
@@ -271,14 +276,14 @@ class _SiteTemplatePublic{
 
 	protected function siteContainerOpen(){
 		$content = doctypeHtml();
-		$content .= openTag('html');
-		$content .= openTag('head');
+		$content .= openHTML();
+		$content .= openHead();
 		$content .= metaHttpEquivs();
 		$content .= $this->siteStyles();
-		//$content .= openTag('title',null,$this->mainTitle).closeTag('title');
+		$content .= htmlTitle($this->mainTitle);
 		//$content .= $this->siteScripts();
-		$content .= closeTag('head');
-		$content .= openTag('body');
+		$content .= closeHead();
+		$content .= openBody();
 		$content .= openDiv('public-site-container');
 		return $content;	
 	}
@@ -287,8 +292,8 @@ class _SiteTemplatePublic{
 	protected function siteContainerClose(){
 		//close site page container
 		$content = closeDiv();
-		$content .= closeTag('body');
-		$content .= closeTag('html');
+		$content .= closeBody();
+		$content .= closeHTML();
 		return $content;
 	}
 	

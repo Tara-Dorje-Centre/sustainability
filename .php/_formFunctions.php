@@ -97,11 +97,8 @@ function wrapDivSubmit($entity,$formSubmit){
 }
 
 class _form extends _element{
-	public function __construct(){
-		parent::__construct('form');
-	}
-	public function __construct1($action, $idName, $css = 'none'){
-		parent::__construct1('form', $idName, $css);
+	public function __construct($action = 'none', $idName = 'none', $css = 'none'){
+		parent::__construct('form', $idName, $css);
 		$this->addAttribute('enctype', 'multipart/form-data');
 		$this->addAttribute('action', $action);
 		$this->addAttribute('method', 'post');
@@ -119,17 +116,18 @@ function closeForm(){
 }
 
 function openFieldset($legend = 'none',$cssFieldset = 'none',$cssLegend = 'display-caption'){
-	$a = getClass($cssFieldset);
-	$fields = openTag('fieldset', $a);
+	$e = new _element('fieldset','none',$cssFieldset);
+	$fields = $e->open();
 	if ($legend != 'none'){
-		$a = getClass($cssLegend);
-		$fields .= wrapTag('legend', $a, $legend);
+		$l = new _element('legend','none',$cssLegend);
+		$fields .= $l->wrap($legend);
 	}
 	return $fields;	
 }
 
 function closeFieldset(){
-	return closeTag('fieldset');
+	$e = new _element('fieldset');
+	return $e->close();
 }
 
 function wrapFieldset($content, $legend = 'none', $cssFieldset = 'none',$cssLegend = 'display-caption'){
@@ -139,99 +137,94 @@ function wrapFieldset($content, $legend = 'none', $cssFieldset = 'none',$cssLege
 	return $fields;
 }
 
-function getInputType($type = 'text'){
-	$a = attribute('type',$type);
-	return $a;
-}
-
-function getInputValue($value){
-	$a = attribute('value',$value);
-	return $a;	
-}
-
-function getTooltip($tooltipText = 'none'){
-	if ($tooltipText != 'none'){
-		$a = attribute('title',$tooltipText);
-	} else {
-		$a = null;
-	}
-	return $a;
-}
-
-function getDisabled($disabled = 'false'){
-	if ($disabled != 'false'){
-		$a = attribute('disabled','true');
-	} else {
-		$a = null;
-	}
-	return $a;
-}
-
-function getMaxLength($maxLength = 10){
-	$a = attribute('maxlength',$maxLength);
-	return $a;
-}
 
 function getTextArea($inputName, $inputValue, $maxLength = 1000, $rows = 4, $cols = 60,$tooltip = 'none',$disabled = 'false',$css = 'editing-input-textarea'){
-	$a = getIdName($inputName);
-	$a .= getClass($css);
-	$a .= getDisabled($disabled);
-	$a .= getTooltip($tooltip);
-	$a .= getMaxLength($maxLength);	
-	$a .= attribute('rows',$rows);
-	$a .= attribute('cols',$cols);
-	$input = openTag('textarea',$a);
+
+	$e = new _element('textarea',$inputName, $css);
+	$e->addAttribute('title',$tooltipText);
+	$e->addAttribute('maxlength',$maxLength);
+	$e->addAttribute('rows',$rows);
+	$e->addAttribute('cols',$cols);
+	
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
+	}
+	
+	$input = $e->open();
 	$input .= $inputValue;
-	$input .= closeTag('textarea');
+	$input .= $e->close();
 	return $input;
-//	return wrapDiv($input,$inputName.'-inputDiv','inputDiv-textarea');
+
 }
 
 function getTextInput($inputName, $inputValue, $size = 100, $maxLength = 100, $tooltip = 'none', $disabled = 'false',$css = 'editing-input-text'){
-	$a = getIdName($inputName);
-	$a .= getClass($css);
-	$a .= getInputType('text');
-	$a .= getDisabled($disabled);
-	$a .= getTooltip($tooltip);
-	$a .= getInputValue($inputValue);
-	$a .= getMaxLength($maxLength);
-	$a .= attribute('size',$size);
-	$input = emptyTag('input',$a);
-//	return wrapDiv($input,$inputName.'-inputDiv','inputDiv-text');
-	return $input;
+	$e = new _element('input',$inputName, $css);
+	$e->addAttribute('title',$tooltip);
+	$e->addAttribute('maxlength',$maxLength);
+	$e->addAttribute('size',$size);
+	
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
+	}
+
+	$e->addAttribute('type','text');
+	$e->addAttribute('value',$inputValue);
+
+	return $e->empty();
 }
 
 function getPasswordInput($inputName, $size = 10, $maxLength = 50,$tooltip = 'Enter Password'){
-	$a = getIdName($inputName);
-	$a .= getClass('editing-input-password');
-	$a .= getInputType('password');
-	$a .= attribute('size', $size);
-	$a .= getMaxLength($maxLength);	
-	$a .= getTooltip($tooltip);
-	$input = emptyTag('input',$a);
-	return $input;
-//	return wrapDiv($input,$inputName.'-inputDiv','inputDiv-password');
+	$e = new _element('input',$inputName, 'editing-input-password');
+	$e->addAttribute('title',$tooltip);
+	$e->addAttribute('maxlength',$maxLength);
+	$e->addAttribute('size',$size);
+
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
+	}
+
+	$e->addAttribute('type','password');
+	
+	return $e->empty();
+
 }
 
 function getHiddenInput($inputName, $inputValue){
-	$a = getIdName($inputName);
-	$a .= getInputType('hidden');
-	$a .= getInputValue($inputValue);
-	$input = emptyTag('input',$a);
-	return $input;
-//	return wrapDiv($input,$inputName.'-inputDiv','inputDiv-hidden');
+	$e = new _element('input',$inputName, $css);
+	$e->addAttribute('title',$tooltip);
+	$e->addAttribute('maxlength',$maxLength);
+	//$e->addAttribute('size',$size);
+	//$e->addAttribute('cols',$cols);
+	
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
+	}
+
+	$e->addAttribute('type','hidden');
+	$e->addAttribute('value',$inputValue);
+	
+	return $e->empty();
+
 }
 
 
 
 function getButton($inputType,$inputValue,$inputName){
-	$a = getIdName($inputName);
-	$a .= getClass('editing-button');
-	$a .= getInputType($inputType);
-	$a .= getInputValue($inputValue);
-	$input = emptyTag('input',$a);
-	return $input;
-//	return wrapDiv($input,$inputName.'-inputDiv','inputDiv-button');
+
+	$e = new _element('input',$inputName, 'editing-button');
+	$e->addAttribute('title',$tooltip);
+	$e->addAttribute('maxlength',$maxLength);
+	$e->addAttribute('size',$size);
+	$e->addAttribute('cols',$cols);
+	
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
+	}
+
+	$e->addAttribute('type',$inputType);
+	$e->addAttribute('value',$inputValue);
+
+	return $e->empty();
 }
 
 function getSubmitButton($submitCaption = 'Submit',$submitName = 'submit'){
@@ -426,31 +419,37 @@ function captionedInput($caption, $input){
 
 
 function getSelectOption($optionValue, $optionCaption, $selectedValue){
-	$a = attribute('value',$optionValue);
+
+	$e = new _element('option');
+	$e->addAttribute('value',$optionValue);
 	if ($selectedValue == $optionValue){
-		$a .= attribute('selected','selected');
+		$e->addAttribute('selected','selected');
 	}
-	$option = openTag('option',$a);
-	$option .= $optionCaption;
-	$option .= closeTag('option');
-	return $option;
+	
+	return $e->wrap($optionCaption);
+	
+
 }
 
 function getSelectList($selectName, $selectOptions, $tooltip = 'none', $disabled = 'false',$onChangeJS = NULL,$css = 'editing-input-select'){
-	$a = getIdName($selectName);
-	$a .= getClass($css);
-	$a .= getDisabled($disabled);
-	$a .= getTooltip($tooltip);
-	if (!is_null($onChangeJS)){
-		$a .= attribute('onChange',$onChangeJS);	
+	
+	$e = new _element('select',$selectName, $css);
+	$e->addAttribute('title',$tooltip);
+	//$e->addAttribute('maxlength',$maxLength);
+	//$e->addAttribute('size',$size);
+	//$e->addAttribute('cols',$cols);
+	
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
 	}
 
+	$e->addAtribute('onChange',$onChangeJS);	
 	
-	$select = openTag('select', $a);
+	$select = $e->open();
 	$select .= $selectOptions;
-	$select .= closeTag('select');
+	$select .= $e->close();
 	return $select;
-//	return wrapDiv($select,$selectName.'-inputDiv','inputDiv');
+
 	
 }
 

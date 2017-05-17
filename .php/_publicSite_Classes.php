@@ -38,8 +38,7 @@ class PublicWebSite extends _SiteTemplatePublic{
 	
 	public function __construct(){
 		$this->links = new WebSiteLinks;
-		$this->sql = new WebSiteSQL;
-		
+		$this->sql = new WebSiteSQL;	
 		
 	}
 
@@ -62,29 +61,26 @@ class PublicWebSite extends _SiteTemplatePublic{
 		//mysqli_* library implemented for php7
 		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
-		$locale = 'publicWebSite->styleDetails:';
+		$locale = 'publicWebSite->getStyleDetails:';
 		$result = $conn->query($sql) or exit($locale.$conn->error);
-		//run query from standalone function
-		//$result = runQuery($sql);
 
-	
 		if($result){
 		
-	  	while ($row = $result->fetch_row())
+	  	while ($row = $result->fetch_assoc())
 		{	
 		
-			$this->fillColor = stripslashes($row["public_fill_color"]);
-			$this->siteColor = stripslashes($row["public_site_color"]);
-			$this->pageColor = stripslashes($row["public_page_color"]);
-			$this->menuColor = stripslashes($row["public_menu_color"]);
-			$this->menuColorHover = stripslashes($row["public_menu_color_hover"]);
-			$this->textColor = stripslashes($row["public_text_color"]);
-			$this->textColorHover = stripslashes($row["public_text_color_hover"]);
-			$this->fontFamily = stripslashes($row["public_font_family"]);
-			$this->fontSizeTitle = stripslashes($row["public_font_size_title"]);
-			$this->fontSizeHeading = stripslashes($row["public_font_size_heading"]);
-			$this->fontSizeMenu = stripslashes($row["public_font_size_menu"]);
-			$this->fontSizeText = stripslashes($row["public_font_size_text"]);
+			$this->fillColor = $row["public_fill_color"];
+			$this->siteColor = $row["public_site_color"];
+			$this->pageColor = $row["public_page_color"];
+			$this->menuColor = $row["public_menu_color"];
+			$this->menuColorHover = $row["public_menu_color_hover"];
+			$this->textColor = $row["public_text_color"];
+			$this->textColorHover = $row["public_text_color_hover"];
+			$this->fontFamily = $row["public_font_family"];
+			$this->fontSizeTitle = $row["public_font_size_title"];
+			$this->fontSizeHeading = $row["public_font_size_heading"];
+			$this->fontSizeMenu = $row["public_font_size_menu"];
+			$this->fontSizeText = $row["public_font_size_text"];
 					
 		}
 		
@@ -105,26 +101,17 @@ class PublicWebSite extends _SiteTemplatePublic{
 		$locale = 'publicWebSite->getSiteContents:';
 		$result = $conn->query($sql) or exit($locale.$conn->error);
 
-	
 		if($result){
 		
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$org = ($row['organization']);
-			$orgUrl = ($row['organization_url']);
-			$contactName = ($row['contact_name']);
-			$contactEmail = ($row['contact_email']);
-			$showPublicSite = ($row['show_public_site']);
-			
-			/**
-			$org = stripslashes($row['organization']);
-			$orgUrl = stripslashes($row['organization_url']);
-			$contactName = stripslashes($row['contact_name']);
-			$contactEmail = stripslashes($row['contact_email']);
-			$showPublicSite = stripslashes($row['show_public_site']);
-			**/
-			
+			$org = $row['organization'];
+			$orgUrl = $row['organization_url'];
+			$contactName = $row['contact_name'];
+			$contactEmail = $row['contact_email'];
+			$showPublicSite = $row['show_public_site'];
 		}
+		
 		//free db results object
 		$result->close;
 		}
@@ -133,7 +120,6 @@ class PublicWebSite extends _SiteTemplatePublic{
 			include('sys_Login.php');
 			die;
 		}
-		
 		
 		$link = getHref($orgUrl,$org,'none','_blank');
 		$mailto = getHref('mailto:'.$contactEmail,$contactName,'none');
@@ -153,12 +139,15 @@ class PublicWebSite extends _SiteTemplatePublic{
 		
 		$sql = $this->sql->menuItems($this->viewMode, $this->viewId);
 		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
-		$result = $conn->query($sql);
-		
+		$locale = 'publicWebSite->getMenuItems:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
 		if($result){
 		
-	  	while ($row = $result->fetch_row())
+	  	while ($row = $result->fetch_assoc())
 		{	
 
 //		view_id
@@ -166,22 +155,17 @@ class PublicWebSite extends _SiteTemplatePublic{
 //		caption
 //		sort_order
 
-			$caption = stripslashes($row['caption']);
+			$caption = $row['caption'];
 			$viewMode = $row['view_mode'];
 			$viewId = $row['view_id'];
 
+			/**
 			if ($viewMode == 'PROJECT_TYPE'){
-
 			} elseif ($viewMode == 'PROJECT'){
-
-
 			} elseif ($viewMode == 'TASK'){
-
-
 			} else {
-
-
 			}
+			**/
 			
 			if ($this->viewMode == $viewMode && $this->viewId == $viewId){
 				//menu item is for current page
@@ -192,6 +176,7 @@ class PublicWebSite extends _SiteTemplatePublic{
 				
 			$menu .= $this->links->menuHref($caption,$viewMode,$viewId,$cssSuffix);
 		}		
+		
 		//free db results object
 		$result->close;
 		}
@@ -202,18 +187,21 @@ class PublicWebSite extends _SiteTemplatePublic{
 	}
 
 	private function getPageContents(){
+	
 		$sql = $this->sql->pageContent($this->viewMode, $this->viewId);
 	
-	
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
-		$result = $conn->query($sql);
+		$locale = 'publicWebSite->getPageContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
 		if($result){
 		
-	  	while ($row = $result->fetch_row())
-		
+	  	while ($row = $result->fetch_assoc())
 		{			
-			$this->pageTitle = stripslashes($row['title']);
-			$this->pageContents = displaylines(stripslashes($row['content']));	
+			$this->pageTitle = $row['title'];
+			$this->pageContents = displaylines($row['content']);	
 		}
 
 		//free db results object
@@ -226,30 +214,31 @@ class PublicWebSite extends _SiteTemplatePublic{
 		$allDetails = br();
 		$sql = $this->sql->detailContent($this->viewMode, $this->viewId);
 
-
-
-
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
 		global $conn;
-		$result = $conn->query($sql);
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
 		if($result){
 		
-	  	while ($row = $result->fetch_row())
+	  	while ($row = $result->fetch_assoc())
 		{			
 			
-			$heading = displaylines(stripslashes($row["heading"]));
+			$heading = displaylines($row["heading"]);
 			if (strlen($heading) > 0){
 				$item = paragraph($heading,'detail-heading','public-detail-title');
 				$allDetails .= $item;
 			}
 			
-			$contents = displaylines(stripslashes($row["content"]));
+			$contents = displaylines($row["content"]);
 			if (strlen($contents) > 0){
 				$item = paragraph($contents,'detail-item','public-detail-item');
 				$allDetails .= $item;
 			}
 
-			$linkText = stripslashes($row["link_text"]);
-			$linkUrl = stripslashes($row["link_url"]);
+			$linkText = $row["link_text"];
+			$linkUrl = $row["link_url"];
 			if (strlen($linkText) > 0 && strlen($linkUrl) > 0){
 				$link = getHref($linkUrl, $linkText, 'none', '_blank');
 				$item = paragraph($link,'detail-link','public-detail-item');	
