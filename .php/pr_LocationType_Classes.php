@@ -395,6 +395,7 @@ class LocationType {
 			$sql .= " p.display_order = ".$this->displayOrder.", ";
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
+			
 			$result = dbRunSQL($sql);
 
 		} else {
@@ -414,6 +415,7 @@ class LocationType {
 			$sql .= "'".$this->highlightStyle."', ";
 			$sql .= " ".$this->displayOrder.", ";
 			$sql .= "'".$this->notes."') ";
+			
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();

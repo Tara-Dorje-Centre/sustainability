@@ -73,14 +73,9 @@ class SitewideSettings {
 
 		$sql = $this->sql->infoSitewideSettings();
 		
-		$locale = 'sitewideSettings->setDetails:';
-		$result = dbGetResult($sql, $locale);
-		//global $conn;
-		//$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
-		
-	  	while ($row = $result->fetch_assoc())
+		while ($row = $result->fetch_assoc())
 		{		
 			$this->siteTitle = ($row["site_title"]);
 			$this->siteUrl = ($row["site_url"]);
@@ -105,10 +100,7 @@ class SitewideSettings {
 			$this->publicFontSizeHeading = ($row["public_font_size_heading"]);
 			$this->publicFontSizeMenu = ($row["public_font_size_menu"]);
 			$this->publicFontSizeText = ($row["public_font_size_text"]);
-						
 		}
-		
-		// Free result set
 		$result->close();
 		}
 		
@@ -386,31 +378,30 @@ class SitewideSettings {
 	}
 	
 	public function collectPostValues(){
-global $conn;
 
-		$this->siteTitle = $conn>escape_string($_POST['siteTitle']);
-		$this->siteUrl = $conn>escape_string($_POST['siteUrl']); 
-		$this->loginNotice = $conn>escape_string($_POST['loginNotice']);
-		$this->organization = $conn>escape_string($_POST['organization']); 
-		$this->organizationUrl = $conn>escape_string($_POST['organizationUrl']);
-		$this->organizationDescription = $conn>escape_string($_POST['organizationDescription']);
-		$this->contactName = $conn>escape_string($_POST['contactName']); 		
-		$this->contactEmail = $conn>escape_string($_POST['contactEmail']);
-		$this->showPublicSite = $conn>escape_string($_POST["showPublicSite"]);
-		$this->showCostReports = $conn>escape_string($_POST["showCostReports"]);
-		$this->showRevenueReports = $conn>escape_string($_POST["showRevenueReports"]); 		
-		$this->publicFillColor = $conn>escape_string($_POST["publicFillColor"]);
-		$this->publicSiteColor = $conn>escape_string($_POST["publicSiteColor"]);
-		$this->publicPageColor = $conn>escape_string($_POST["publicPageColor"]);
-		$this->publicMenuColor = $conn>escape_string($_POST["publicMenuColor"]);
-		$this->publicMenuColorHover = $conn>escape_string($_POST["publicMenuColorHover"]);
-		$this->publicTextColor = $conn>escape_string($_POST["publicTextColor"]);
-		$this->publicTextColorHover = $conn>escape_string($_POST["publicTextColorHover"]);
-		$this->publicFontFamily = $conn>escape_string($_POST["publicFontFamily"]);
-		$this->publicFontSizeTitle = $conn>escape_string($_POST["publicFontSizeTitle"]);
-		$this->publicFontSizeHeading = $conn>escape_string($_POST["publicFontSizeHeading"]);
-		$this->publicFontSizeMenu = $conn>escape_string($_POST["publicFontSizeMenu"]);
-		$this->publicFontSizeText = $conn>escape_string($_POST["publicFontSizeText"]);
+		$this->siteTitle = dbEscapeString($_POST['siteTitle']);
+		$this->siteUrl = dbEscapeString($_POST['siteUrl']); 
+		$this->loginNotice = dbEscapeString($_POST['loginNotice']);
+		$this->organization = dbEscapeString($_POST['organization']); 
+		$this->organizationUrl = dbEscapeString($_POST['organizationUrl']);
+		$this->organizationDescription = dbEscapeString($_POST['organizationDescription']);
+		$this->contactName = dbEscapeString($_POST['contactName']); 		
+		$this->contactEmail = dbEscapeString($_POST['contactEmail']);
+		$this->showPublicSite = dbEscapeString($_POST["showPublicSite"]);
+		$this->showCostReports = dbEscapeString($_POST["showCostReports"]);
+		$this->showRevenueReports = dbEscapeString($_POST["showRevenueReports"]); 		
+		$this->publicFillColor = dbEscapeString($_POST["publicFillColor"]);
+		$this->publicSiteColor = dbEscapeString($_POST["publicSiteColor"]);
+		$this->publicPageColor = dbEscapeString($_POST["publicPageColor"]);
+		$this->publicMenuColor = dbEscapeString($_POST["publicMenuColor"]);
+		$this->publicMenuColorHover = dbEscapeString($_POST["publicMenuColorHover"]);
+		$this->publicTextColor = dbEscapeString($_POST["publicTextColor"]);
+		$this->publicTextColorHover = dbEscapeString($_POST["publicTextColorHover"]);
+		$this->publicFontFamily = dbEscapeString($_POST["publicFontFamily"]);
+		$this->publicFontSizeTitle = dbEscapeString($_POST["publicFontSizeTitle"]);
+		$this->publicFontSizeHeading = dbEscapeString($_POST["publicFontSizeHeading"]);
+		$this->publicFontSizeMenu = dbEscapeString($_POST["publicFontSizeMenu"]);
+		$this->publicFontSizeText = dbEscapeString($_POST["publicFontSizeText"]);
 		$this->pageMode = $_POST['mode'];	
 	}
 
@@ -464,10 +455,7 @@ global $conn;
 			$sql .= " '".$this->showRevenueReports."' ";			
 			$sql .= " ) ";
 			
-		$locale = 'sitewideSettings->createSettings:';
-		//$result = dbRunSQL($sql, $locale);
-		global $conn;
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		$result = dbRunSQL($sql);
 
 	}
 	
@@ -500,10 +488,7 @@ global $conn;
 			$sql .= " sw.show_cost_reports = '".$this->showCostReports."', ";
 			$sql .= " sw.show_revenue_reports = '".$this->showRevenueReports."' ";
 
-		$locale = 'sitewideSettings->createSettings:';
-		//$result = dbRunSQL($sql, $locale);
-		global $conn;
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+			$result = dbRunSQL($sql, $locale);
 		
 			$this->setSessionDetails();
 		}

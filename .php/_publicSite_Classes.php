@@ -57,18 +57,11 @@ class PublicWebSite extends _SiteTemplatePublic{
 
 	protected function getStyleDetails(){
 		$sql = $this->sql->siteStyles();
-		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getStyleDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
 
+		$result = dbGetResult($sql);
 		if($result){
-		
-	  	while ($row = $result->fetch_assoc())
+		while ($row = $result->fetch_assoc())
 		{	
-		
 			$this->fillColor = $row["public_fill_color"];
 			$this->siteColor = $row["public_site_color"];
 			$this->pageColor = $row["public_page_color"];
@@ -83,27 +76,17 @@ class PublicWebSite extends _SiteTemplatePublic{
 			$this->fontSizeText = $row["public_font_size_text"];
 					
 		}
-		
-		//free db results object
 		$result->close;
 		}
 
 	}
 
-
-	
 	private function getSiteContents(){
 		$sql = $this->sql->siteContent();
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
-		
-	  	while ($row = $result->fetch_assoc())
+		while ($row = $result->fetch_assoc())
 		{	
 			$org = $row['organization'];
 			$orgUrl = $row['organization_url'];
@@ -111,8 +94,6 @@ class PublicWebSite extends _SiteTemplatePublic{
 			$contactEmail = $row['contact_email'];
 			$showPublicSite = $row['show_public_site'];
 		}
-		
-		//free db results object
 		$result->close;
 		}
 		
@@ -139,15 +120,9 @@ class PublicWebSite extends _SiteTemplatePublic{
 		
 		$sql = $this->sql->menuItems($this->viewMode, $this->viewId);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getMenuItems:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
-		
-	  	while ($row = $result->fetch_assoc())
+		while ($row = $result->fetch_assoc())
 		{	
 
 //		view_id
@@ -176,8 +151,6 @@ class PublicWebSite extends _SiteTemplatePublic{
 				
 			$menu .= $this->links->menuHref($caption,$viewMode,$viewId,$cssSuffix);
 		}		
-		
-		//free db results object
 		$result->close;
 		}
 		
@@ -190,21 +163,13 @@ class PublicWebSite extends _SiteTemplatePublic{
 	
 		$sql = $this->sql->pageContent($this->viewMode, $this->viewId);
 	
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
-		
-	  	while ($row = $result->fetch_assoc())
+		while ($row = $result->fetch_assoc())
 		{			
 			$this->pageTitle = $row['title'];
 			$this->pageContents = displaylines($row['content']);	
 		}
-
-		//free db results object
 		$result->close;
 		}
 		
@@ -214,15 +179,9 @@ class PublicWebSite extends _SiteTemplatePublic{
 		$allDetails = br();
 		$sql = $this->sql->detailContent($this->viewMode, $this->viewId);
 
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
-		
-	  	while ($row = $result->fetch_assoc())
+		while ($row = $result->fetch_assoc())
 		{			
 			
 			$heading = displaylines($row["heading"]);
@@ -247,11 +206,8 @@ class PublicWebSite extends _SiteTemplatePublic{
 			//$item = paragraph($contents,'detail-item','public-detail-item');	
 			//$allDetails .= $item;
 		}
-		
-		//free db results object
 		$result->close;
 		}
-		
 
 		$this->pageDetails = $allDetails;	
 	}

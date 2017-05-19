@@ -139,7 +139,7 @@ class MeasureTypeUnitList{
 	private function setFoundCount(){
 		$s = new MeasureTypeUnitSQL;
 		$sql = $s->countMeasureTypeUnits($this->measureType->id);
-		$this->found = getSQLCount($sql, 'total_units');
+		$this->found = dbGetCount($sql, 'total_units');
 	}		
 	
 	public function printPage(){
@@ -164,7 +164,7 @@ class MeasureTypeUnitList{
 	public function getListing(){
 		$s = new MeasureTypeUnitSQL;
 		$sql = $s->listMeasureTypeUnits($this->measureType->id,$this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die("Couldn't get measure type units list ($sql)");		
+
 		
 		$ml = new MeasureTypeUnitLinks;
 		$pagingLinks = $ml->listingPaged($this->measureType->id, $this->found,$this->resultPage,$this->perPage);
@@ -183,7 +183,9 @@ class MeasureTypeUnitList{
 		$heading .=  wrapTh('Unit Symbol');
 		$list .=  wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
 		{	
 			$m = new MeasureTypeUnit;
 			$m->id = $row["id"];
@@ -201,7 +203,8 @@ class MeasureTypeUnitList{
 			$detail .=  wrapTd($m->unitSymbol);
 			$list .=  wrapTr($detail);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .=  closeDisplayList();
 		return $list;
@@ -236,10 +239,11 @@ class MeasureTypeUnit {
 		$this->measureTypeId = $parentMeasureTypeId;
 		
 		$sql = $this->sql->infoMeasureTypeUnit($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
 
-		while($row = mysql_fetch_array($result))
-			{	
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+		{	
 			$this->measureTypeId = $row["measure_type_id"];
 			$this->unitOfMeasureId = $row["unit_measure_id"];
 			$this->created = $row["created"];
@@ -249,7 +253,8 @@ class MeasureTypeUnit {
 			$this->unitSymbol = stripslashes($row["unit_symbol"]);
 			$this->unitType = stripslashes($row["unit_type"]);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$this->measureType->setDetails($this->measureTypeId, 'VIEW');
 	}	
@@ -418,7 +423,7 @@ class MeasureTypeUnit {
 			$sql .= " m.updated = CURRENT_TIMESTAMP ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
 		} else {
 	
@@ -433,8 +438,9 @@ class MeasureTypeUnit {
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP) ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$this->id = mysql_insert_id();
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
 		}
 	
 	}

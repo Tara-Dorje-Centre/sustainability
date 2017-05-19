@@ -116,7 +116,7 @@ class CropList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countCrops($this->parentCropId);
-		$this->found = getSQLCount($sql, 'total_crops');
+		$this->found = dbGetCount($sql, 'total_crops');
 	}
 	
 	public function printPage(){
@@ -140,7 +140,7 @@ class CropList{
 	
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
 		$sql = $this->sql->listCrops($this->parentCropId,$this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
+
 
 		$cl = new CropLinks;		
 		if ($pagingBaseLink == 'USE_LISTING'){
@@ -160,7 +160,9 @@ class CropList{
 		$heading .= wrapTh('Seeds On Hand');
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 		{	
 			$c = new Crop;
 			
@@ -195,7 +197,8 @@ class CropList{
 			}
 			$list .=  wrapTr($detail,$cssRow);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;
@@ -250,17 +253,18 @@ class Crop {
 		} else {
 			$sql = $this->sql->infoCrop($this->id);
 		}
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 			{
 			if ($this->pageMode <> 'ADD'){	
 				$this->id = $row["id"]; 
 				$this->parentId = $row["parent_id"]; 
 			}
-			$this->commonName = stripslashes($row["common_name"]); 
-			$this->varietyName = stripslashes($row["variety_name"]); 
-			$this->botanicalName = stripslashes($row["botanical_name"]); 
-			$this->familyName = stripslashes($row["family_name"]);
+			$this->commonName = ($row["common_name"]); 
+			$this->varietyName = ($row["variety_name"]); 
+			$this->botanicalName = ($row["botanical_name"]); 
+			$this->familyName = ($row["family_name"]);
 			$this->daysMature = $row["days_mature"];
 			$this->daysMatureMax = $row["days_mature_max"];
 			$this->daysTransplant = $row["days_transplant"]; 
@@ -272,15 +276,16 @@ class Crop {
 			$this->thinningHeightInches = $row["thinning_height_inches"];
 			$this->inrowSpacingInches = $row["inrow_spacing_inches"]; 
 			$this->rowSpacingInches = $row["row_spacing_inches"];
-			$this->siteNotes = stripslashes($row["site_notes"]); 
-			$this->plantingNotes = stripslashes($row["planting_notes"]); 
-			$this->transplantingNotes = stripslashes($row["transplanting_notes"]);
-			$this->thinningNotes = stripslashes($row["thinning_notes"]);
-			$this->careNotes = stripslashes($row["care_notes"]);
-			$this->certifications = stripslashes($row["certifications"]);
-			$this->seedsOnHand = stripslashes($row["seeds_on_hand"]);
+			$this->siteNotes = ($row["site_notes"]); 
+			$this->plantingNotes = ($row["planting_notes"]); 
+			$this->transplantingNotes = ($row["transplanting_notes"]);
+			$this->thinningNotes = ($row["thinning_notes"]);
+			$this->careNotes = ($row["care_notes"]);
+			$this->certifications = ($row["certifications"]);
+			$this->seedsOnHand = ($row["seeds_on_hand"]);
 		}
-		mysql_free_result($result);				
+		$result->close();
+		}	
 	}	
 		
 	private function pageTitle(){
@@ -611,13 +616,14 @@ class Crop {
 	}
 	
 	public function collectPostValues(){
+	
 		$this->id = $_POST['cropId'];
 		$this->parentId = $_POST['parentCropId'];
-		$this->commonName = $conn>escape_string($_POST['commonName']); 
-		$this->varietyName = $conn>escape_string($_POST['varietyName']); 
-		$this->botanicalName = $conn>escape_string($_POST['botanicalName']); 
-		$this->familyName = $conn>escape_string($_POST['familyName']); 
-		$this->certifications = $conn>escape_string($_POST['certifications']);
+		$this->commonName = dbEscapeString($_POST['commonName']); 
+		$this->varietyName = dbEscapeString($_POST['varietyName']); 
+		$this->botanicalName = dbEscapeString($_POST['botanicalName']); 
+		$this->familyName = dbEscapeString($_POST['familyName']); 
+		$this->certifications = dbEscapeString($_POST['certifications']);
 		$this->daysMature = $_POST['daysMature'];
 		$this->daysMatureMax = $_POST['daysMatureMax'];
 		$this->daysTransplant = $_POST['daysTransplant'];
@@ -629,11 +635,11 @@ class Crop {
 		$this->thinningHeightInches = $_POST['thinningHeightInches'];
 		$this->inrowSpacingInches = $_POST['inrowSpacingInches'];
 		$this->rowSpacingInches = $_POST['rowSpacingInches'];
-		$this->plantingNotes = $conn>escape_string($_POST['plantingNotes']); 
-		$this->transplantingNotes = $conn>escape_string($_POST['transplantingNotes']); 
-		$this->thinningNotes = $conn>escape_string($_POST['thinningNotes']); 
-		$this->careNotes = $conn>escape_string($_POST['careNotes']); 
-		$this->siteNotes = $conn>escape_string($_POST['siteNotes']); 
+		$this->plantingNotes = dbEscapeString($_POST['plantingNotes']); 
+		$this->transplantingNotes = dbEscapeString($_POST['transplantingNotes']); 
+		$this->thinningNotes = dbEscapeString($_POST['thinningNotes']); 
+		$this->careNotes = dbEscapeString($_POST['careNotes']); 
+		$this->siteNotes = dbEscapeString($_POST['siteNotes']); 
 		if ($_POST['seedsOnHand'] != 'no'){
 			$this->seedsOnHand = 'yes';
 		} else {
@@ -670,7 +676,7 @@ class Crop {
 			$sql .= " c.care_notes = '".$this->careNotes."', ";
 			$sql .= " c.seeds_on_hand = '".$this->seedsOnHand."' ";
 			$sql .= " WHERE c.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 
 			//if updating a parent crop (planting information applies to all varieties)
 			//update all variety records after updating crop			
@@ -679,7 +685,7 @@ class Crop {
 				$sql = " UPDATE crops c set c.parent_id = ".$this->id." ";
 				$sql .= " WHERE c.common_name = '".$this->commonName."' ";
 				$sql .= " AND c.id <> ".$this->id;
-				$result = mysql_query($sql) or die(mysql_error());
+				$result = dbRunSQL($sql);
 
 				$sql = " UPDATE crops c set ";
 				$sql .= " c.family_name = '".$this->familyName."', ";
@@ -692,7 +698,7 @@ class Crop {
 				$sql .= " c.days_transplant = ".$this->daysTransplant.", ";
 				$sql .= " c.days_transplant_max = ".$this->daysTransplantMax." ";
 				$sql .= " WHERE c.parent_id = ".$this->id." ";
-				$result = mysql_query($sql) or die(mysql_error());
+				$result = dbRunSQL($sql);
 				
 				//if days germinate not set for a variety, update it now
 				$sql = " UPDATE crops c set ";
@@ -700,7 +706,7 @@ class Crop {
 				$sql .= " c.days_germinate_max = ".$this->daysGerminateMax." ";
 				$sql .= " WHERE c.parent_id = ".$this->id." ";
 				$sql .= " AND c.days_germinate = 0 ";
-				$result = mysql_query($sql) or die(mysql_error());
+				$result = dbRunSQL($sql);
 				
 				//if days mature not set for a variety, update it now
 				$sql = " UPDATE crops c set ";
@@ -708,7 +714,7 @@ class Crop {
 				$sql .= " c.days_mature_max = ".$this->daysMatureMax." ";
 				$sql .= " WHERE c.parent_id = ".$this->id." ";
 				$sql .= " AND c.days_mature = 0 ";
-				$result = mysql_query($sql) or die(mysql_error());
+				$result = dbRunSQL($sql);
 			}
 		} else {
 	
@@ -760,9 +766,9 @@ class Crop {
 			$sql .= " '".$this->thinningNotes."', ";
 			$sql .= " '".$this->seedsOnHand."', ";			
 			$sql .= " '".$this->careNotes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertId();
 		}
 	
 	}

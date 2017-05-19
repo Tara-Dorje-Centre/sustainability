@@ -173,15 +173,16 @@ class LocationList{
 			$sortKey = $l->getSortKey($this->parentId);
 			$sql = $this->sql->listLocationsByParentSortKey($sortKey,$this->parentId, $this->resultPage,$this->perPage);
 		}
+		
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
 			$l = new Location;
 			$l->id = $row["id"];
-			$l->name = stripslashes($row["name"]);
-			$l->sortKey = stripslashes($row["sort_key"]);
-			$l->description = stripslashes($row["description"]);
+			$l->name = ($row["name"]);
+			$l->sortKey = ($row["sort_key"]);
+			$l->description = ($row["description"]);
 			$l->formatForDisplay();
 			$link = $ll->detailViewEditHref($l->id,$l->sortKey);
 			
@@ -472,6 +473,7 @@ class Location {
 		}
 		$sql .= " SET l.sort_key = '".$sortKey."' ";	
 		$sql .= " WHERE l.id = ".$this->id." ";
+		
 		$result = dbRunSQL($sql);
 	
 	}
@@ -487,7 +489,7 @@ class Location {
 			$sql .= " l.description = '".$this->description."' ";
 			$sql .= " WHERE l.id = ".$this->id."  ";			
 			
-		$result = dbRunSQL($sql);
+			$result = dbRunSQL($sql);
 			
 			$this->updateSortKey();
 		} else {
@@ -507,7 +509,8 @@ class Location {
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= "'".$this->description."') ";
-		$result = dbRunSQL($sql);
+			
+			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
 			

@@ -1,6 +1,6 @@
 <?php
 function printLine($msg){
-	//echo $msg.'<br />';
+	echo $msg.'<br />';
 }
 
 function dbEscapeString($value){
@@ -10,9 +10,10 @@ function dbEscapeString($value){
 	return $conn->escape_string($value);
 }
 
-function dbInsertedId ($sql, $callingFunction = 'dbInsertedId'){
+function dbInsertedId ($callingFunction = 'dbInsertedId'){
 	printLine($callingFunction);
-	
+	global $conn;
+	return $conn->insert_id;
 }
 
  function sqlLimitClause($resultPage, $rowsPerPage){
@@ -23,27 +24,23 @@ function dbInsertedId ($sql, $callingFunction = 'dbInsertedId'){
 }
 
 function dbRunSQL($sql, $callingFunction = 'dbRunSQL'){
-	//printLine($callingFunction);
+	printLine($callingFunction);
 	global $conn;
-	$result = $conn->query($sql) or exit($conn>error);
+	$conn->query($sql);
+	
 	return true;
 }
 
 function dbGetResult($sql, $callingFunction = 'dbGetResult'){
-	//printLine($callingFunction);
+	printLine($callingFunction);
 	global $conn;
 	$result = $conn->query($sql) or exit($conn->error);
 	return $result;
 }
 
 function dbGetScalar($sql, $field, $default = '', $callingFunction = 'dbGetScalar'){
-	//printLine($callingFunction);
-	//global $conn;
-	//$result = $conn->query($sql) or exit($conn->error);
 	
 	$result = dbGetResult($sql, $callingFunction);
-	
-	
 	if($result){
 	  	while ($row = $result->fetch_assoc())
 	  	{

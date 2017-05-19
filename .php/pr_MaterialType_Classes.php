@@ -109,7 +109,7 @@ class MaterialTypeList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countMaterialTypes();
-		$this->found = getSQLCount($sql, 'total_types');
+		$this->found = dbGetCount($sql, 'total_types');
 	}
 
 	public function printPage(){
@@ -132,9 +132,6 @@ class MaterialTypeList{
 
 		
 	public function getListing(){
-		$sql = $this->sql->listMaterialTypes($this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
-
 		$typeL = new MaterialTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
 		$mt = new MaterialType;
@@ -149,22 +146,12 @@ class MaterialTypeList{
 		$heading .= wrapTh('Highlight Style');		
 		$list .= wrapTr($heading);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		
+		$sql = $this->sql->listMaterialTypes($this->resultPage,$this->perPage);
+
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-
-		while($row = mysql_fetch_array($result))
 		{	
 			$u = new MaterialType;
 			$u->id = $row["id"];
@@ -183,7 +170,8 @@ class MaterialTypeList{
 			$detail .= wrapTd($u->highlightStyle);			
 			$list .=  wrapTr($detail,$u->highlightStyle);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 
@@ -216,25 +204,10 @@ class MaterialType {
 
 		$sql = $this->sql->infoMaterialType($this->id);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-		
-		
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
-			{	
+		{	
 			$this->name = stripslashes($row["name"]);
 			$this->description = stripslashes($row["description"]);
 			$this->notes = stripslashes($row["notes"]);
@@ -243,7 +216,8 @@ class MaterialType {
 			$this->created = stripslashes($row["created"]);			
 			$this->updated = stripslashes($row["updated"]);			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 	}	
 		
@@ -397,11 +371,11 @@ class MaterialType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['materialTypeId'];
-		$this->name = $conn>escape_string($_POST['name']); 
-		$this->description = $conn>escape_string($_POST['description']); 
-		$this->notes = $conn>escape_string($_POST['notes']); 		
-		$this->highlightStyle = $conn>escape_string($_POST['highlightStyle']); 		
-		$this->displayOrder = $conn>escape_string($_POST['displayOrder']); 		
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		$this->displayOrder = dbEscapeString($_POST['displayOrder']); 		
 		
 		$this->pageMode = $_POST['mode'];	
 	}
@@ -418,6 +392,7 @@ class MaterialType {
 			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
+			
 			$result = mysql_query($sql) or die(mysql_error());
 		} else {
 			$sql = " INSERT INTO material_types ";
@@ -436,9 +411,10 @@ class MaterialType {
 			$sql .= " ".$this->displayOrder.", ";			
 			$sql .= "'".$this->highlightStyle."', ";
 			$sql .= "'".$this->notes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
 			
-			$this->id = mysql_insert_id();
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
 		}
 	
 	}

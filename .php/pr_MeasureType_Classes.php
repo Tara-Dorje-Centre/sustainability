@@ -135,9 +135,6 @@ class MeasureTypeList{
 
 	
 	public function getListing(){
-		$sql = $this->sql->listMeasureTypes($this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
-
 		$mtl = new MeasureTypeLinks;
 		$pagingLinks = $mtl->listingPaged($this->found,$this->resultPage,$this->perPage);
 		
@@ -151,7 +148,11 @@ class MeasureTypeList{
 		$heading .= wrapTh('Notes');
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$sql = $this->sql->listMeasureTypes($this->resultPage,$this->perPage);
+
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
 		{	
 			$mt = new MeasureType;
 			$mt->id = $row["id"];
@@ -167,8 +168,9 @@ class MeasureTypeList{
 			$detail .= wrapTd($mt->notes);
 			$list .=  wrapTr($detail);
 		}
-		mysql_free_result($result);
-
+		$result->close();
+		}
+		
 		$list .= closeDisplayList();
 		return $list;
 	}
@@ -198,16 +200,19 @@ class MeasureType {
 		$this->id = $detailMeasureTypeId;
 
 		$sql = $this->sql->infoMeasureType($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
 			{	
-			$this->name = stripslashes($row["name"]);
-			$this->type = stripslashes($row["description"]);
-			$this->notes = stripslashes($row["notes"]);
-			$this->created = stripslashes($row["created"]);			
-			$this->updated = stripslashes($row["updated"]);			
+			$this->name = ($row["name"]);
+			$this->type = ($row["description"]);
+			$this->notes = ($row["notes"]);
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 	}	
 		
@@ -348,12 +353,12 @@ class MeasureType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['measureTypeId'];
-		$this->name = $conn>escape_string($_POST['name']); 
-		$this->description = $conn>escape_string($_POST['description']); 
-		$this->highlightStyle = $conn>escape_string($_POST['highlightStyle']); 		
-		$this->displayOrder = $conn>escape_string($_POST['displayOrder']);
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		$this->displayOrder = dbEscapeString($_POST['displayOrder']);
 		
-		$this->notes = $conn>escape_string($_POST['notes']); 		
+		$this->notes = dbEscapeString($_POST['notes']); 		
 		$this->pageMode = $_POST['mode'];	
 	}
 
@@ -366,8 +371,9 @@ class MeasureType {
 			$sql .= " mt.description = '".$this->description."', ";
 			$sql .= " mt.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " mt.notes = '".$this->notes."' ";
-			$sql .= " WHERE mt.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			$sql .= " WHERE mt.id = ".$this->id."  ";		
+				
+			$result = dbRunSQL($sql);
 		} else {
 	
 			$sql = " INSERT INTO measure_types ";
@@ -382,9 +388,10 @@ class MeasureType {
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= "'".$this->description."', ";
 			$sql .= "'".$this->notes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
 			
-			$this->id = mysql_insert_id();
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
 		}
 	
 	}

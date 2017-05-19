@@ -126,14 +126,16 @@ class CropPlantingList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countCropPlantings($this->cropPlanId);
-		$this->found = getSQLCount($sql, 'total_plantings');
+		$this->found = dbGetCount($sql, 'total_plantings');
 	}
 	
 	public function updateByPlanType(){
 		if ($this->cropPlan->planType != 'LOCKED'){
 			$sql = $this->sql->listCropPlantingsPlanTypeUpdate($this->cropPlanId);
-			$result = mysql_query($sql) or die(mysql_error());
-			while($row = mysql_fetch_array($result))
+		
+			$result = dbGetResult($sql);
+			if ($result){
+			while($row = $result->fetch_assoc())
 			{	
 				$plantingId = $row["id"];
 				$plantedByStart = $row["planted_by_start"];
@@ -148,15 +150,20 @@ class CropPlantingList{
 				} elseif ($this->cropPlan->planType == 'TRANSPLANT'){
 					$planted = $plantedByTransplant;				
 				}
+				
+				//nested update may cause issues
+				//could load an array with updates
+				//and pass array to cleanup function
 			
 				$updateSQL = " UPDATE crop_plantings cp SET cp.planted = '".$planted."', ";
 				$updateSQL .= "cp.updated = CURRENT_TIMESTAMP ";
 				$updateSQL .= " WHERE cp.id = ".$plantingId." ";
 			
-				$updateResult = mysql_query($updateSQL) or die(mysql_error());
-				mysql_free_result($updateResult);
+				$updateResult = dbRunSQL($updateSQL);
+
 			}
-			mysql_free_result($result);	
+			$result->close();
+			}
 		}
 	}
 
@@ -172,13 +179,16 @@ class CropPlantingList{
 	
 	private function setMinCalendarRange(){
 		$sql = $this->sql->calendarRangePlantings($this->cropPlanId,$this->sortMethod);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 		{	
 			$month = $row["month_item"];
 			$year = $row["year_item"];
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
+		
 		$this->year = $year;
 		$this->month = $month;				
 	}
@@ -189,8 +199,9 @@ class CropPlantingList{
 		$links = $l->openMenu('calendar-links');
 				
 		$sql = $this->sql->calendarLinksPlantings($this->cropPlanId,$this->sortMethod);
-		$result = mysql_query($sql) or die("Couldn't get planting links list ($sql)");
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 		{	
 			$month = $row["month_item"];
 			$year = $row["year_item"];
@@ -203,7 +214,9 @@ class CropPlantingList{
 			}
 			$links .= $link;
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
+		
 		$links .= $l->closeMenu();
 		return $links;
 	}
@@ -220,11 +233,13 @@ class CropPlantingList{
 		$cal = new _Calendar($this->year,$this->month,$title);
 
 		$sql = $this->sql->calendarDetailsPlantings($this->cropPlanId,$this->sortMethod,$this->year,$this->month);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 		{	
-			$commonName = stripslashes($row["common_name"]);
-			$varietyName = stripslashes($row["variety_name"]);
+			$commonName = ($row["common_name"]);
+			$varietyName = ($row["variety_name"]);
 			$name = $commonName.'['.$varietyName.']';
 			$dateItem = $row["date_item"];
 			$plantingId = $row["planting_id"];
@@ -234,7 +249,8 @@ class CropPlantingList{
 			$calendarItem = $plantingLink;
 			$cal->addItemByTimestamp($dateItem,$calendarItem);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$content = openDiv('planting-calendar');
 		$links = $this->getCalendarLinks();		
@@ -272,9 +288,6 @@ class CropPlantingList{
 
 		$sql = $this->sql->listCropPlantings($this->cropPlanId, $this->sortMethod,$this->resultPage,$this->perPage);
 		
-		
-		$result = mysql_query($sql) or die(mysql_error());
-		
 		$cl = new CropPlantingLinks;
 		if ($pagingBaseLink == 'USE_LISTING'){
 			$base = $cl->listing($this->cropPlanId,$this->sortMethod);
@@ -282,16 +295,11 @@ class CropPlantingList{
 			$base = $pagingBaseLink;
 		}
 		$pagingLinks = $cl->listingPaged($base,$this->found,$this->resultPage,$this->perPage);
-		//echo 'safe cropplanid='.$this->cropPlan->id;
 		
 		$cpl = new CropPlanting;
 		$cpl->setDetails(0,$this->cropPlanId,'ADD');
-		//echo 'safe after set details for add';
 		$quickEdit = $cpl->editform();
-		//echo 'safe after edit form';
 		$list = openDisplayList('crop-plantings','Crop Plantings:'.$this->sortMethod,$pagingLinks,$quickEdit);
-		//echo 'after new edit form';
-
 		
 		$heading = wrapTh('Crop');
 		$heading .= wrapTh('Location');
@@ -302,16 +310,18 @@ class CropPlantingList{
 		$heading .= wrapTh('Matures (week)');
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 		{	
 			$c = new CropPlanting;
 			
 			$c->id = $row["id"]; 
 			$c->cropId = $row["crop_id"]; 
-			$c->commonName = stripslashes($row["common_name"]); 
-			$c->varietyName = stripslashes($row["variety_name"]); 
-			$c->cropPlanId = stripslashes($row["crop_plan_id"]); 
-			$c->locationName = stripslashes($row["location_name"]);
+			$c->commonName = ($row["common_name"]); 
+			$c->varietyName = ($row["variety_name"]); 
+			$c->cropPlanId = ($row["crop_plan_id"]); 
+			$c->locationName = ($row["location_name"]);
 			$c->planted = $row["planted"];
 			$c->germinated = $row["germinated"];
 			$c->estimatedGermination = $row["estimated_germination"];
@@ -335,7 +345,8 @@ class CropPlantingList{
 
 			$list .=  wrapTr($detail);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;
@@ -386,17 +397,18 @@ class CropPlanting {
 		$this->cropPlanId = $cropPlanId;
 
 		$sql = $this->sql->infoCropPlanting($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 			{	
 			$this->id = $row["id"]; 
 			$this->cropId = $row["crop_id"]; 
-			$this->commonName = stripslashes($row["common_name"]); 
-			$this->varietyName = stripslashes($row["variety_name"]); 
-			$this->method = stripslashes($row["method"]); 
-			$this->cropPlanId = stripslashes($row["crop_plan_id"]); 
+			$this->commonName = ($row["common_name"]); 
+			$this->varietyName = ($row["variety_name"]); 
+			$this->method = ($row["method"]); 
+			$this->cropPlanId = ($row["crop_plan_id"]); 
 			$this->locationId = $row["location_id"];
-			$this->locationName = stripslashes($row["location_name"]);
+			$this->locationName = ($row["location_name"]);
 			$this->planted = $row["planted"];
 			$this->germinated = $row["germinated"];
 			$this->daysMature = $row["days_mature"];
@@ -410,9 +422,10 @@ class CropPlanting {
 			$this->thinnedCount = $row["thinned_count"];
 			$this->rowsPlanted = $row["rows_planted"];
 			$this->perRowPlanted = $row["per_row_planted"];
-			$this->notes = stripslashes($row["notes"]);
+			$this->notes = ($row["notes"]);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 		$this->cropPlan->setDetails($this->cropPlanId,"VIEW");				
 	}	
@@ -586,13 +599,14 @@ class CropPlanting {
 	}
 	
 	public function collectPostValues(){
+	
 		$this->pageMode = $_POST['mode'];	
 		$this->id = $_POST['cropPlantingId'];
 		$this->cropPlanId = $_POST['cropPlanId'];
 		$this->cropId = $_POST['cropId'];
 		$this->locationId = $_POST['locationId'];
-		$this->method = $conn>escape_string($_POST['method']); 
-		$this->notes = $conn>escape_string($_POST['notes']); 
+		$this->method = dbEscapeString($_POST['method']); 
+		$this->notes = dbEscapeString($_POST['notes']); 
 		$this->planted = getTimestampPostValues('planted');
 		
 		$this->plantedCount = $_POST['plantedCount'];
@@ -626,7 +640,7 @@ class CropPlanting {
 			$sql .= " c.updated = CURRENT_TIMESTAMP, ";			
 			$sql .= " c.notes = '".$this->notes."' ";
 			$sql .= " WHERE c.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
 		} else {
 
@@ -652,9 +666,9 @@ class CropPlanting {
 			$sql .= " ".$this->rowsPlanted.", ";
 			$sql .= " ".$this->perRowPlanted.", ";
 			$sql .= " '".$this->notes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertedId();
 		}
 	
 	}

@@ -218,29 +218,18 @@ class MaterialList{
 		} else {
 			$sql = $this->sql->summarizeMaterialByTask($this->task->id,$this->year,$this->month);
 		}
-		$result = mysql_query($sql) or die(mysql_error());
-	
-			//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
+		
+		$result = dbGetResult($sql);
 		$result = $conn->query($sql) or exit($locale.$conn->error);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-	
-	
-		while ($row = mysql_fetch_array($result))
-		{
 			$this->costActual = $row["sum_cost_actual"];
 			$this->costEstimated = $row["sum_cost_estimated"];
 		}
-		mysql_free_result($result);			
+		$result->close();
+		}
+	
 	}
 
 
@@ -249,33 +238,20 @@ class MaterialList{
 //		$baseUrl = $l->listing($this->task->id,$this->task->project->id,$this->displayProject,$this->approved);
 		$links = $l->openMenu('calendar-links');
 				
+		$this->prevCalendarLink = '';
+		$this->nextCalendarLink = '';
+		$foundCurrent = false;
+		$foundNext = false;
+				
 		if ($this->displayProject == 'PROJECT' or $this->displayProject == 'PROJECT-SUMMARY') {
 			$sql = $this->sql->calendarLinksProjectMaterials($this->task->project->id);
 		} else {  //if ($this->displayProject == 'TASK' or $this->displayProject == 'TASK-SUMMARY') {
 			$sql = $this->sql->calendarLinksTaskMaterials($this->task->project->id, $this->task->id);			
 		}
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-		
-		
-		$result = mysql_query($sql) or die(mysql_error());
-		$this->prevCalendarLink = '';
-		$this->nextCalendarLink = '';
-		$foundCurrent = false;
-		$foundNext = false;
-		while($row = mysql_fetch_array($result))
 		{	
 			$month = $row["month"];
 			$year = $row["year"];
@@ -297,7 +273,9 @@ class MaterialList{
 			}
 			$links .= $link;
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
+		
 		if ($foundCurrent == false && $this->year > 0 && $this->month > 0){
 			$caption = $this->year.'-'.$this->month;
 			$link = $l->formatCalendarHref($caption,$baseUrl,$this->year,$this->month);
@@ -364,24 +342,11 @@ class MaterialList{
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		$sql = $this->sql->listMaterialSummaryByTask($this->task->id,$this->task->project->id,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-		
-		
-
-		while($row = mysql_fetch_array($result))
 		{
 			$type = $row['material_type'];
 			$est = $row['sum_cost_estimated'];
@@ -403,7 +368,8 @@ class MaterialList{
 			$cssItem = 'none';
 			$list .=  wrapTr($detail, $cssItem);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 		
 		$detail = wrapTh('Totals');			
 		$detail .= wrapTh($this->costEstimated);
@@ -411,11 +377,6 @@ class MaterialList{
 		$list .=  wrapTr($detail);
 
 		$list .= closeDisplayList();
-
-
-		$sql = $this->sql->listMaterialSummaryByTaskDoneBy($this->task->id,$this->task->project->id,$this->year,$this->month);		
-		
-		$result = mysql_query($sql) or die(mysql_error());		
 
 //		$base = $this->getBaseUrl($pagingBaseLink);
 		$pagingLinks = NULL;
@@ -428,23 +389,11 @@ class MaterialList{
 		$list .=  wrapTr($heading);
 
 
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		$sql = $this->sql->listMaterialSummaryByTaskDoneBy($this->task->id,$this->task->project->id,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-
-
-
-		while($row = mysql_fetch_array($result))
 		{
 			$type = $row['done_by'];
 			$est = $row['sum_cost_estimated'];
@@ -465,7 +414,8 @@ class MaterialList{
 			$cssItem = 'none';
 			$list .=  wrapTr($detail, $cssItem);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 		
 		$detail = wrapTh('Totals');			
 		$detail .= wrapTh($this->costEstimated);
@@ -473,22 +423,13 @@ class MaterialList{
 		$list .=  wrapTr($detail);
 
 		$list .= closeDisplayList();
-
-
 		
 		return $list;
-		
-		
-	
-
-
 	}
 
 	private function getSummaryProjectMonthly($pagingBaseLink = 'USE_LISTING'){
 
 		$id = $this->task->project->id;
-		$sql = $this->sql->listMaterialSummaryByProject($id, $this->year,$this->month);		
-		$result = mysql_query($sql) or die(mysql_error());		
 						
 		$base = $this->getBaseUrl($pagingBaseLink);
 		$pagingLinks = $this->getCalendarLinks($base);					
@@ -501,22 +442,11 @@ class MaterialList{
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		$sql = $this->sql->listMaterialSummaryByProject($id, $this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-
-		while($row = mysql_fetch_array($result))
 		{
 			$type = $row['material_type'];
 			$est = $row['sum_cost_estimated'];
@@ -538,7 +468,8 @@ class MaterialList{
 			$cssItem = 'none';
 			$list .=  wrapTr($detail, $cssItem);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 		
 		$detail = wrapTh('Totals');			
 		$detail .= wrapTh($this->costEstimated);
@@ -546,10 +477,6 @@ class MaterialList{
 		$list .=  wrapTr($detail);
 		$list .= closeDisplayList();
 
-
-		$sql = $this->sql->listMaterialSummaryByProjectDoneBy($this->task->project->id,$this->year,$this->month);		
-		
-		$result = mysql_query($sql) or die(mysql_error());		
 
 //		$base = $this->getBaseUrl($pagingBaseLink);
 		$pagingLinks = NULL;
@@ -561,23 +488,11 @@ class MaterialList{
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		$sql = $this->sql->listMaterialSummaryByProjectDoneBy($this->task->project->id,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-		
-
-		while($row = mysql_fetch_array($result))
 		{
 			$type = $row['done_by'];
 			$est = $row['sum_cost_estimated'];
@@ -599,7 +514,8 @@ class MaterialList{
 			$cssItem = 'none';
 			$list .=  wrapTr($detail, $cssItem);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 		
 		$detail = wrapTh('Totals');			
 		$detail .= wrapTh($this->costEstimated);
@@ -608,21 +524,13 @@ class MaterialList{
 
 		$list .= closeDisplayList();
 
-
-
-
 		return $list;
-		
-	
-	
 	}
 
 
 	private function getListingProject($pagingBaseLink = 'USE_LISTING'){
 
-		$id = $this->task->project->id;
-		$sql = $this->sql->listMaterialsByProject($id,$this->resultPage, $this->perPage,$this->year,$this->month);		
-		$result = mysql_query($sql) or die(mysql_error());		
+
 		
 		$materialL = new MaterialLinks;
 		$taskL = new TaskLinks;
@@ -640,9 +548,9 @@ class MaterialList{
 		$list = openDisplayList('material','Materials',$pagingLinks,$quickEdit);
 
 		$heading = '';
-		//if ($this->displayProject == 'PROJECT'){
-			$heading = wrapTh('Task');	
-		//}
+
+		$heading = wrapTh('Task');	
+		
 		$heading .=  wrapTh('Material');
 		$heading .= wrapTh('Type');
 		$heading .=  wrapTh('Date Reported');
@@ -655,23 +563,13 @@ class MaterialList{
 		//$heading .=  wrapTh('Cost Actual');
 		$heading .=  wrapTh('Links');		
 		$list .=  wrapTr($heading);
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		
+		
+		$sql = $this->sql->listMaterialsByProject($this->task->project->id,$this->resultPage, $this->perPage,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-		
-
-		while($row = mysql_fetch_array($result))
 		{	
 			$m = new Material;
 			$m->id = $row["id"];
@@ -722,7 +620,8 @@ class MaterialList{
 
 			$list .=  wrapTr($detail, $cssItem);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 
@@ -735,11 +634,6 @@ class MaterialList{
 	}
 
 	private function getListingTask($pagingBaseLink = 'USE_LISTING'){
-	
-		
-		$sql = $this->sql->listMaterialsByTask($this->task->id,$this->resultPage,$this->perPage,$this->year,$this->month);		
-		
-		$result = mysql_query($sql) or die(mysql_error());		
 		
 		$materialL = new MaterialLinks;
 		$taskL = new TaskLinks;
@@ -776,45 +670,33 @@ class MaterialList{
 		$list .=  wrapTr($heading);
 		
 		
+		$sql = $this->sql->listMaterialsByTask($this->task->id,$this->resultPage,$this->perPage,$this->year,$this->month);		
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-		if($result){
+		$result = dbGetResult($sql);
+		if ($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-		
-
-		while($row = mysql_fetch_array($result))
 		{	
 			$m = new Material;
 			$m->id = $row["id"];
 			$m->task->id = $row["task_id"];
 			$m->task->name = $row["task_name"];
 			$m->locationId = $row["location_id"];
-			$m->name = stripslashes($row["name"]);
-			$m->typeName = stripslashes($row["type_name"]);
-			//$m->description = stripslashes($row["description"]);
+			$m->name = ($row["name"]);
+			$m->typeName = ($row["type_name"]);
+			//$m->description = ($row["description"]);
 			$m->dateReported = $row["date_reported"];
-			$m->doneBy = stripslashes($row["done_by"]);
-			$m->paidTo = stripslashes($row["paid_to"]);
+			$m->doneBy = ($row["done_by"]);
+			$m->paidTo = ($row["paid_to"]);
 			$m->updated = $row["updated"];	
-			$m->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
+			$m->quantityUnitMeasureName = ($row["qty_unit_measure_name"]);
 			$m->quantity = $row["quantity"];	
 			$m->costEstimated = $row["cost_estimated"];						
 			$m->costActual = $row["cost_actual"];
 			$m->costUnit = $row["cost_unit"];
-			//$m->notes = stripslashes($row["notes"]);
-			$m->linkText = stripslashes($row["link_text"]);
-			$m->linkUrl = stripslashes($row["link_url"]);
-			$cssItem = stripslashes($row["highlight_style"]);
+			//$m->notes = ($row["notes"]);
+			$m->linkText = ($row["link_text"]);
+			$m->linkUrl = ($row["link_url"]);
+			$cssItem = ($row["highlight_style"]);
 
 			$m->formatForDisplay();
 			
@@ -843,23 +725,21 @@ class MaterialList{
 
 			$list .=  wrapTr($detail, $cssItem);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		
 		
 		return $list;
 		
-
 	
 	}
 	
 	
 		
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
-
-
-echo $this->year.$this->month;
+//printLine(this->year.$this->month);
 
 		if ($this->displayProject == 'PROJECT-SUMMARY'){
 			$list = $this->getSummaryProjectMonthly($pagingBaseLink);			
@@ -872,113 +752,6 @@ echo $this->year.$this->month;
 		}
 		
 		return $list;
-
-
-
-
-
-//		if ($this->displayProject == 'PROJECT'){
-//			$id = $this->task->project->id;
-//			$sql = $this->sql->listMaterialsByProject($id, $this->resultPage, $this->perPage, $this->approved);		
-//		} elseif ($this->displayProject == 'TASK'){
-//			$sql = $this->sql->listMaterialsByTask($this->task->id,$this->resultPage,$this->perPage);		
-//		}
-//		$result = mysql_query($sql) or die(mysql_error());		
-//		
-//		$materialL = new MaterialLinks;
-//		$taskL = new TaskLinks;
-//				
-//		if ($pagingBaseLink == 'USE_LISTING'){
-//			$base = $materialL->listing($this->task->id, $this->task->project->id,$this->displayProject,$this->approved);
-//		} else { 
-//			$base = $pagingBaseLink;
-//		}
-//		$pagingLinks = $materialL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
-//		
-//		if ($this->displayProject == 'TASK'){
-//			//on task materials list, show quick edit form
-//			$m = new Material;
-//			$m->setDetails(0,$this->task->id,'ADD');
-//			$quickEdit = $m->editForm();
-//		} else {
-//			$quickEdit = NULL;
-//		}
-//		
-//		$list = openDisplayList('material','Materials',$pagingLinks,$quickEdit);
-//
-//		$heading = '';
-//		if ($this->displayProject == 'PROJECT'){
-//			$heading = wrapTh('Task');	
-//		}
-//		$heading .=  wrapTh('Material');
-//		$heading .= wrapTh('Type');
-//		$heading .=  wrapTh('Date Reported');
-//		$heading .=  wrapTh('Done By');
-//		$heading .= wrapTh('Qty Units');
-//		$heading .=  wrapTh('Qty');
-//		$heading .=  wrapTh('Unit Cost');
-//		$heading .=  wrapTh('Cost Est');
-//		$heading .= wrapTh('Paid To');
-//		//$heading .=  wrapTh('Cost Actual');
-//		$heading .=  wrapTh('Links');		
-//		$list .=  wrapTr($heading);
-//
-//		while($row = mysql_fetch_array($result))
-//		{	
-//			$m = new Material;
-//			$m->id = $row["id"];
-//			$m->task->id = $row["task_id"];
-//			$m->task->name = $row["task_name"];
-//			$m->locationId = $row["location_id"];
-//			$m->name = stripslashes($row["name"]);
-//			$m->typeName = stripslashes($row["type_name"]);
-//			//$m->description = stripslashes($row["description"]);
-//			$m->dateReported = $row["date_reported"];
-//			$m->doneBy = stripslashes($row["done_by"]);
-//			$m->paidTo = stripslashes($row["paid_to"]);
-//			$m->updated = $row["updated"];	
-//			$m->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
-//			$m->quantity = $row["quantity"];	
-//			$m->costEstimated = $row["cost_estimated"];						
-//			$m->costActual = $row["cost_actual"];
-//			$m->costUnit = $row["cost_unit"];
-//			//$m->notes = stripslashes($row["notes"]);
-//			$m->linkText = stripslashes($row["link_text"]);
-//			$m->linkUrl = stripslashes($row["link_url"]);
-//			$cssItem = stripslashes($row["highlight_style"]);
-//
-//			$m->formatForDisplay();
-//			
-//			$detail = '';
-//			if ($this->displayProject == 'PROJECT'){
-//				$link = $taskL->detailViewEditHref($m->task->id, $m->task->name);
-//				$detail = wrapTd($link);
-//			}
-//			$link = $materialL->detailViewEditHref($m->id,$m->name);
-//			$detail .= wrapTd($link);
-//			$detail .= wrapTd($m->typeName);			
-//			$detail .= wrapTd($m->dateReported);
-//			$detail .= wrapTd($m->doneBy);
-//			$detail .= wrapTd($m->quantityUnitMeasureName);
-//			$detail .= wrapTd($m->quantity);
-//			$detail .= wrapTd($m->costUnit);
-//			$detail .= wrapTd($m->costEstimated);
-//			$detail .= wrapTd($m->paidTo);
-//			//$detail .= wrapTd($m->costActual);
-//			if ($m->linkText != '' && $m->linkUrl != ''){
-//				$link = $materialL->formatHref($m->linkText,$m->linkUrl,'_blank');
-//				$detail .= wrapTd($link);
-//			} else {
-//				$detail .= wrapTd(spacer());
-//			}
-//
-//			$list .=  wrapTr($detail, $cssItem);
-//		}
-//		mysql_free_result($result);
-//
-//		$list .= closeDisplayList();
-//		return $list;
-		
 	}
 }
 
@@ -1020,31 +793,17 @@ class Material {
 		$this->task->id = $parentTaskId;
 		
 		$sql = $this->sql->infoMaterial($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
-	  	{
-			$value = $row[$field];
-		}
-		// Free result set
-		$result->close();
-		}
-
-
-
-		while($row = mysql_fetch_array($result))
-			{	
+		{	
 			$this->task->id = $row["task_id"];
 			$this->locationId = $row["location_id"];
 			$this->typeId = $row["type_id"];
-			$this->typeName = stripslashes($row["type_name"]);
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
+			$this->typeName = ($row["type_name"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
 			$this->dateReported = $row["date_reported"];
 			$this->doneBy = stripslashes($row["done_by"]);
 			$this->paidTo = stripslashes($row["paid_to"]);
@@ -1055,12 +814,13 @@ class Material {
 			$this->costEstimated = $row["cost_estimated"];						
 			$this->costActual = $row["cost_actual"];
 			$this->costUnit = $row["cost_unit"];
-			$this->notes = stripslashes($row["notes"]);
-			$this->linkText = stripslashes($row["link_text"]);
-			$this->linkUrl = stripslashes($row["link_url"]);
+			$this->notes = ($row["notes"]);
+			$this->linkText = ($row["link_text"]);
+			$this->linkUrl = ($row["link_url"]);
 			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$this->setParentTask();				
 	}	
@@ -1305,12 +1065,12 @@ class Material {
 		$this->id = $_POST['materialId'];
 		$this->locationId = $_POST['locationId'];
 		$this->typeId = $_POST['typeId'];
-		$this->name = $conn>escape_string($_POST['name']);
-		$this->description = $conn>escape_string($_POST['description']); 
-		$this->notes = $conn>escape_string($_POST['notes']); 
+		$this->name = dbEscapeString($_POST['name']);
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 
 		$this->dateReported = getTimestampPostValues('dateReported');
-		$this->doneBy = $conn>escape_string($_POST['doneBy']);
-		$this->paidTo = $conn>escape_string($_POST['paidTo']);
+		$this->doneBy = dbEscapeString($_POST['doneBy']);
+		$this->paidTo = dbEscapeString($_POST['paidTo']);
 		$_SESSION['last-material-paid-to'] = $this->paidTo;
 		$_SESSION['last-material-done-by'] = $this->doneBy;
 		$_SESSION['last-material-date'] = $this->dateReported;
@@ -1319,8 +1079,8 @@ class Material {
 		$this->costUnit = $_POST['costUnit']; 
 		//$this->costEstimated = $_POST['costEstimated']; 
 //		$this->costActual = $_POST['costActual']; 
-		$this->linkText = $conn>escape_string($_POST['linkText']);
-		$this->linkUrl = $conn>escape_string($_POST['linkUrl']);
+		$this->linkText = dbEscapeString($_POST['linkText']);
+		$this->linkUrl = dbEscapeString($_POST['linkUrl']);
 		
 		$this->setEstimatedCost();
 
@@ -1351,7 +1111,7 @@ class Material {
 			//$sql .= " m.cost_actual = ".$this->costActual." ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
 			$this->task->resetMaterialsAuthorization();
 			
@@ -1394,9 +1154,9 @@ class Material {
 			$sql .= " ".$this->quantityUnitMeasureId.", ";
 			$sql .= "'".$this->notes."') ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$this->id = mysql_insert_id();
-
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
 			$this->task->resetMaterialsAuthorization();
 		}
 	

@@ -79,7 +79,7 @@ protected function setSiteLinksItems(){
 				$content .= $a->linkGroupActivities();
 			}
 		}
-include_once("pr_Project_Classes.php");
+
 		//always show current open tasks;
 		$content .= $t->linkPeriodicTasksOpen();		
 		//always show projects link
@@ -171,7 +171,9 @@ protected function setPageContents(){
 		
 
 //close db connection
-	//	mysql_close();
+//global $conn;
+//conn->close;
+
 	}
 
 	protected function getSiteTemplate(){		

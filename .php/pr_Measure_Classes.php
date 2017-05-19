@@ -119,7 +119,7 @@ class MeasureList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countMeasuresByTask($this->task->id);
-		$this->found = getSQLCount($sql, 'total_measures');
+		$this->found = dbGetCount($sql, 'total_measures');
 	}
 		
 		
@@ -144,7 +144,7 @@ class MeasureList{
 		
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
 		$sql = $this->sql->listMeasuresByTask($this->task->id,$this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());		
+
 		
 		$ml = new MeasureLinks;		
 		if ($pagingBaseLink == 'USE_LISTING'){
@@ -166,7 +166,10 @@ class MeasureList{
 
 		$list .=  wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$m = new Measure;
 			$m->id = $row["id"];
@@ -188,8 +191,9 @@ class MeasureList{
 			
 			$list .=  wrapTr($detail);
 		}
-		mysql_free_result($result);
-
+		$result->close();
+		}
+		
 		$list .= closeDisplayList();
 		return $list;
 	}
@@ -226,10 +230,10 @@ class Measure {
 		$this->task->id = $parentTaskId;
 		
 		$sql = $this->sql->infoMeasure($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-
-		while($row = mysql_fetch_array($result))
-			{	
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
 			$this->task->id = $row["task_id"];
 			$this->locationId = $row["location_id"];
 			$this->name = stripslashes($row["name"]);
@@ -243,8 +247,9 @@ class Measure {
 			$this->unitType = stripslashes($row["unit_type"]);
 			$this->notes = stripslashes($row["notes"]);
 		}
-		mysql_free_result($result);
-
+		$result->close();
+		}
+		
 		$this->setParentTask();				
 	}	
 	
@@ -410,10 +415,10 @@ class Measure {
 		$this->task->id = $_POST['taskId'];
 		$this->id = $_POST['measureId'];
 		$this->locationId = $_POST['locationId'];
-		$this->description = $conn>escape_string($_POST['description']);
-		$this->name = $conn>escape_string($_POST['name']);
-		$this->value = $conn>escape_string($_POST['value']); 
-		$this->notes = $conn>escape_string($_POST['notes']); 
+		$this->description = dbEscapeString($_POST['description']);
+		$this->name = dbEscapeString($_POST['name']);
+		$this->value = dbEscapeString($_POST['value']); 
+		$this->notes = dbEscapeString($_POST['notes']); 
 		$this->dateReported = getTimestampPostValues('dateReported');
 		$this->measureTypeUnitId = $_POST['measureTypeUnitId']; 
 
@@ -436,7 +441,7 @@ class Measure {
 			$sql .= " m.measure_type_unit_id = ".$this->measureTypeUnitId." ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
 		} else {
 	
@@ -459,8 +464,9 @@ class Measure {
 			$sql .= "'".$this->description."', ";
 			$sql .= "'".$this->notes."') ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$this->id = mysql_insert_id();
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
 		}
 	
 	}

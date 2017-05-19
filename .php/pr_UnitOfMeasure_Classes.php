@@ -114,7 +114,7 @@ class UnitOfMeasureList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countUnitsOfMeasure();
-		$this->found = getSQLCount($sql, 'total_units');
+		$this->found = dbGetCount($sql, 'total_units');
 	}	
 	
 	public function printPage(){
@@ -137,7 +137,7 @@ class UnitOfMeasureList{
 	
 	public function getListing(){
 		$sql = $this->sql->listUnitsOfMeasure($this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
+
 
 		$uml = new UnitOfMeasureLinks;
 		$pagingLinks = $uml->listingPaged($this->found,$this->resultPage,$this->perPage);
@@ -152,7 +152,9 @@ class UnitOfMeasureList{
 		$heading .= wrapTh('Notes');
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
 		{	
 			$u = new UnitOfMeasure;
 			$u->id = $row["id"];
@@ -169,7 +171,8 @@ class UnitOfMeasureList{
 			$detail .= wrapTd($u->notes);
 			$list .=  wrapTr($detail);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;
@@ -198,17 +201,20 @@ class UnitOfMeasure {
 		$this->id = $detailUnitId;
 
 		$sql = $this->sql->infoUnitOfMeasure($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
 			{	
-			$this->name = stripslashes($row["name"]);
-			$this->type = stripslashes($row["type"]);
-			$this->notes = stripslashes($row["notes"]);
-			$this->symbol = stripslashes($row["symbol"]);	
-			$this->created = stripslashes($row["created"]);			
-			$this->updated = stripslashes($row["updated"]);			
+			$this->name = ($row["name"]);
+			$this->type = ($row["type"]);
+			$this->notes = ($row["notes"]);
+			$this->symbol = ($row["symbol"]);	
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 	}	
 		
@@ -368,12 +374,11 @@ class UnitOfMeasure {
 	}
 	
 	public function collectPostValues(){
-
 		$this->id = $_POST['unitOfMeasureId'];
-		$this->name = $conn>escape_string($_POST['name']); 
-		$this->type = $conn>escape_string($_POST['type']); 
-		$this->symbol = $conn>escape_string($_POST['symbol']); 
-		$this->notes = $conn>escape_string($_POST['notes']); 		
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->type = dbEscapeString($_POST['type']); 
+		$this->symbol = dbEscapeString($_POST['symbol']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
 		$this->pageMode = $_POST['mode'];	
 	}
 
@@ -388,7 +393,8 @@ class UnitOfMeasure {
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
+
 		} else {
 	
 			$sql = " INSERT INTO units_of_measure ";
@@ -405,9 +411,9 @@ class UnitOfMeasure {
 			$sql .= "'".$this->type."', ";
 			$sql .= "'".$this->symbol."', ";
 			$sql .= "'".$this->notes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertedId();
 		}
 	
 	}

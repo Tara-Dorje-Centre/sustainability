@@ -222,11 +222,9 @@ class TaskList{
 		} else {
 			$sql = $this->sql->listPeriodicTasks($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
 		}
-		//$result = mysql_query($sql) or die("Couldn't get task list ($sql)");
 		
 		$result = dbGetResult($sql);
 		if ($result){
-
 		while($row = $result->fetch_assoc())
 		{	
 			$t = new Task;		
@@ -343,9 +341,7 @@ class Task {
 		
 		$sql = $this->sql->infoTask($this->id);
 		$result = dbGetResult($sql);
-		//$result = mysql_query($sql) or die(mysql_error());
 		if ($result){
-		
 		while($row = $result->fetch_assoc())
 		{	
 			$this->project->id = $row["project_id"];
@@ -367,7 +363,6 @@ class Task {
 			$this->receiptsAuthBy = ($row["receipts_auth_by"]);
 
 		}
-		
 		$result->close();
 		}
 		
@@ -757,13 +752,9 @@ class Task {
 
 		$formRequired = $fields;
 
-
-
-
-		//if ($_SESSION['is-admin'] == 'yes' && $this->pageMode == 'EDIT'){
 		$input = $this->project->getProjectSelectList($this->project->id,'projectId','false',false);
 		$fields = captionedInput('Task Project', $input);
-		//}
+		
 		
 		$l = new Location;
 		$select = $l->getLocationSelectList($this->locationId,'locationId','false',false);
@@ -858,22 +849,22 @@ class Task {
 		
 		$this->order = $_POST['order']; 
 		$this->started = getTimestampPostValues('started');
-		$this->name = $conn>escape_string($_POST['name']); 
-		$this->description = $conn>escape_string($_POST['description']); 
-		$this->summary = $conn>escape_string($_POST['summary']); 
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->summary = dbEscapeString($_POST['summary']); 
 		$this->pctDone = $_POST['pctDone']; 
 		$this->hoursEstimated = $_POST['hoursEstimated']; 
 		//$this->hoursActual = $_POST['hoursActual']; 
-		$this->hoursNotes = $conn>escape_string($_POST['hoursNotes']); 
-		$this->materialsAuthProject = $conn>escape_string($_POST['materialsAuthProject']);
+		$this->hoursNotes = dbEscapeString($_POST['hoursNotes']); 
+		$this->materialsAuthProject = dbEscapeString($_POST['materialsAuthProject']);
 		if ($this->materialsAuthProject == 'yes'){
-			$this->materialsAuthBy = $conn>escape_string($_POST['materialsAuthBy']);
+			$this->materialsAuthBy = dbEscapeString($_POST['materialsAuthBy']);
 		} else {
 			$this->materialsAuthBy = 'Not Approved';			
 		}
-		$this->receiptsAuthProject = $conn>escape_string($_POST['receiptsAuthProject']);
+		$this->receiptsAuthProject = dbEscapeString($_POST['receiptsAuthProject']);
 		if ($this->receiptsAuthProject == 'yes'){
-			$this->receiptsAuthBy = $conn>escape_string($_POST['receiptsAuthBy']);
+			$this->receiptsAuthBy = dbEscapeString($_POST['receiptsAuthBy']);
 		} else {
 			$this->receiptsAuthBy = 'Not Approved';			
 		}
@@ -979,7 +970,7 @@ class Task {
 			$sql .= " 'n/a copied project' ";
 			$sql .= " FROM tasks t WHERE t.id = ".$this->id." ";
 			
-		$result = dbRunSQL($sql);
+			$result = dbRunSQL($sql);
 		
 			$this->id = dbInsertedId();
 		
@@ -988,8 +979,6 @@ class Task {
 			$this->name = 'COPY OF '.$this->name;
 			
 		}
-
-		
 	}
 
 	public function saveChanges(){

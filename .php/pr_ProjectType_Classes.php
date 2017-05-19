@@ -131,13 +131,6 @@ class ProjectTypeList{
 	
 	
 	public function getListing(){
-	
-	
-	
-	
-
-
-
 		$typeL = new ProjectTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
 		
@@ -153,8 +146,9 @@ class ProjectTypeList{
 		$heading .= wrapTh('Highlight Style');		
 		$list .= wrapTr($heading);
 		$sql = $this->sql->listProjectTypes($this->resultPage,$this->perPage);
+		
 		$result = dbGetResult($sql);
-		if ($result);
+		if ($result){
 		while($row = $result->fetch_assoc())
 		{	
 			$u = new ProjectType;
@@ -175,6 +169,7 @@ class ProjectTypeList{
 			$list .=  wrapTr($detail,$u->highlightStyle);
 		}
 		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;
@@ -394,7 +389,8 @@ class ProjectType {
 			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
 			$sql .= " p.display_order = ".$this->displayOrder.", ";
 			$sql .= " p.notes = '".$this->notes."' ";
-			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$sql .= " WHERE p.id = ".$this->id."  ";		
+				
 			$result = dbRunSQL($sql);
 			
 		} else {
@@ -414,6 +410,7 @@ class ProjectType {
 			$sql .= "'".$this->highlightStyle."', ";
 			$sql .= " ".$this->displayOrder.", ";
 			$sql .= "'".$this->notes."') ";
+			
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();

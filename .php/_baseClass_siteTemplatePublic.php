@@ -22,17 +22,14 @@ class _SiteTemplatePublic{
 	public $fontSizeMenu = 16;
 	public $fontSizeText = 14;
 	
-	public function printSite(){
+public function printSite(){
 		
 		$content = $this->buildSiteTemplate();
 		echo $content;	
 		
 		//close database connection
-		
-		
-		
-		//global $conn;
-		//$conn->close();
+		global $conn;
+		$conn->close();
 
 	}
 	
@@ -256,6 +253,7 @@ class _SiteTemplatePublic{
 		$content = $this->buildInternalStyles();
 
 		//use external stylesheet
+		$content .= stylesheet('css/public.css');
 		$content .= stylesheet('css/publicOverrides.css');
 		return $content;
 		

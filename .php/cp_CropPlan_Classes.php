@@ -106,7 +106,7 @@ class CropPlanList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countCropPlans();
-		$this->found = getSQLCount($sql, 'total_plans');
+		$this->found = dbGetCount($sql, 'total_plans');
 	}
 	
 	public function printPage(){
@@ -131,7 +131,6 @@ class CropPlanList{
 	
 	public function getListing(){
 		$sql = $this->sql->listCropPlans($this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
 
 		$cl = new CropPlanLinks;
 		$pagingLinks = $cl->listingPaged($this->found,$this->resultPage,$this->perPage);
@@ -147,7 +146,9 @@ class CropPlanList{
 		$heading .= wrapTh('Description');		
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 		{	
 			$c = new CropPlan;
 			
@@ -170,7 +171,8 @@ class CropPlanList{
 
 			$list .=  wrapTr($detail);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;		
@@ -208,8 +210,9 @@ class CropPlan {
 		$sql = $this->sql->infoCropPlan($this->id);
 		//echo 'in cropPlan.setDetails '.$sql;
 		
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 			{	
 			$this->id = $row["id"]; 
 			$this->planNumber = $row["plan_number"]; 
@@ -223,7 +226,8 @@ class CropPlan {
 			$this->transplanted = $row["transplanted"];
 			$this->planType = $row["plan_type"];
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 	}	
 		
@@ -365,15 +369,19 @@ class CropPlan {
 	
 	public function getCropPlanTypeHelp(){
 		$sql = $this->sql->listCropPlanTypes();
-		$result = mysql_query($sql) or die(mysql_error());
+
 		$help = br().'Change plan type to update planting dates:';
-		while($row = mysql_fetch_array($result))
-			{	
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
 			$planType = $row["plan_type"];
-			$description = stripslashes($row["description"]);
+			$description = ($row["description"]);
 			$help .= br().$planType.' '.$description;
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
+		
 		return $help;
 	}
 	
@@ -439,11 +447,11 @@ class CropPlan {
 		$this->id = $_POST['cropPlanId'];
 		$this->planNumber = $_POST['planNumber'];
 		$this->planYear = $_POST['planYear'];
-		$this->planName = $conn>escape_string($_POST['planName']); 
-		$this->planType = $conn>escape_string($_POST['planType']);
-		$this->description = $conn>escape_string($_POST['description']); 
-		$this->started = getTimestampPostValues('started');
-		$this->finished = getTimestampPostValues('finished');
+		$this->planName = dbEscapeString($_POST['planName']); 
+		$this->planType = dbEscapeString($_POST['planType']);
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->started = dbEscapeString('started');
+		$this->finished = dbEscapeString('finished');
 		$this->mature = getTimestampPostValues('mature');
 		$this->transplanted = getTimestampPostValues('transplanted');
 
@@ -476,8 +484,7 @@ class CropPlan {
 			$sql .= " c.updated = CURRENT_TIMESTAMP, ";			
 			$sql .= " c.description = '".$this->description."' ";
 			$sql .= " WHERE c.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
-			
+			$result = dbRunSQL(sql);
 			
 			$this->updatePlantingDates();
 		} else {
@@ -504,9 +511,9 @@ class CropPlan {
 			$sql .= " '".$this->finished."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " '".$this->description."') ";
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertId();
 		}
 	
 	}

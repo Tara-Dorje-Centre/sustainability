@@ -111,7 +111,7 @@ class UserTypeList{
 	private function setFoundCount(){
 		$s = new UserTypeSQL;
 		$sql = $s->countUserTypes();
-		$this->found = getSQLCount($sql, 'total_types');
+		$this->found = dbGetCount($sql, 'total_types');
 	}
 	
 	public function printPage(){
@@ -136,7 +136,7 @@ class UserTypeList{
 		
 		$s = new UserTypeSQL;
 		$sql = $s->listUserTypes($this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
+
 
 		$typeL = new UserTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
@@ -151,14 +151,16 @@ class UserTypeList{
 		$heading .= wrapTh('Highlight Style');
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 		{	
 			$u = new UserType;
 			$u->id = $row["id"];
-			$u->name = stripslashes($row["name"]);
-			$u->description = stripslashes($row["description"]);
-			$u->notes = stripslashes($row["notes"]);
-			$u->highlightStyle = stripslashes($row["highlight_style"]);
+			$u->name = ($row["name"]);
+			$u->description = ($row["description"]);
+			$u->notes = ($row["notes"]);
+			$u->highlightStyle = ($row["highlight_style"]);
 			$u->formatForDisplay();
 
 			$link = $typeL->detailViewEditHref($u->id,$u->name);
@@ -168,7 +170,8 @@ class UserTypeList{
 			$detail .= wrapTd($u->highlightStyle);			
 			$list .=  wrapTr($detail,$u->highlightStyle);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;
@@ -197,8 +200,9 @@ class UserType {
 		$this->id = $detailId;
 
 		$sql = $this->sql->infoUserType($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
 			{	
 			$this->name = stripslashes($row["name"]);
 			$this->description = stripslashes($row["description"]);
@@ -207,7 +211,8 @@ class UserType {
 			$this->created = stripslashes($row["created"]);			
 			$this->updated = stripslashes($row["updated"]);			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 	}	
 		
@@ -362,10 +367,10 @@ class UserType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['userTypeId'];
-		$this->name = $conn>escape_string($_POST['name']); 
-		$this->description = $conn>escape_string($_POST['description']); 
-		$this->notes = $conn>escape_string($_POST['notes']); 		
-		$this->highlightStyle = $conn>escape_string($_POST['highlightStyle']); 		
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
 		
 		$this->pageMode = $_POST['mode'];	
 	}
@@ -381,7 +386,7 @@ class UserType {
 			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 		} else {
 			$sql = " INSERT INTO user_types ";
 			$sql .= " (name, ";
@@ -397,9 +402,9 @@ class UserType {
 			$sql .= "'".$this->description."', ";
 			$sql .= "'".$this->highlightStyle."', ";
 			$sql .= "'".$this->notes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertedId();
 		}
 	
 	}

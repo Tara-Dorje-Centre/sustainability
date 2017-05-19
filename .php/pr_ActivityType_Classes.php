@@ -106,7 +106,7 @@ class ActivityTypeList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countActivityTypes();
-		$this->found = getSQLCount($sql, 'total_types');
+		$this->found = dbGetCount($sql, 'total_types');
 	}
 	
 	public function printPage(){
@@ -129,9 +129,6 @@ class ActivityTypeList{
 	
 	
 	public function getListing(){
-		$sql = $this->sql->listActivityTypes($this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
-
 		$typeL = new ActivityTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);	
 		$at = new ActivityType;
@@ -146,6 +143,8 @@ class ActivityTypeList{
 		$heading .= wrapTh('Highlight Style');
 		$list .= wrapTr($heading);
 		
+		$sql = $this->sql->listActivityTypes($this->resultPage,$this->perPage);
+				
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())

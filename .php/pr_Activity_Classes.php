@@ -266,8 +266,8 @@ class ActivityList{
 
 		$cal = new _Calendar($this->year,$this->month,$title);
 		$sql = $this->sql->calendarSummaryProjectActivity($this->task->project->id,$this->year,$this->month);
-		$result = dbGetResult($sql);
 		
+		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
@@ -308,6 +308,7 @@ class ActivityList{
 		$cal = new _Calendar($this->year,$this->month,$title);
 
 		$sql = $this->sql->calendarSummaryMyActivity($this->getActivityDoneBy(),$this->year,$this->month);
+		
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -458,11 +459,6 @@ class ActivityList{
 		$heading .= wrapTh('Comments');
 		$heading .=  wrapTh('Links');
 		$list .=  wrapTr($heading);
-
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getPageDetails:';
 		
 		if ($this->myActivity == 'NO'){
 			$sql = $this->sql->listActivityByTask($this->task->id,$this->resultPage,$this->perPage);
@@ -471,6 +467,7 @@ class ActivityList{
 		} else {
 			$sql = $this->sql->listActivityByDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			
 		}
+		
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -480,15 +477,15 @@ class ActivityList{
 			$a->task->id = $row["task_id"];
 			$a->task->name = stripslashes($row["task_name"]);
 			$a->task->project->id = $row["project_id"];
-			$a->task->project->name = stripslashes($row["project_name"]);
+			$a->task->project->name = ($row["project_name"]);
 			//$a->order = $row["activity_order"];
 			$a->doneBy = $row["done_by"];
 			$a->started = $row["started"];
 			$a->updated = $row["updated"];
 			$a->hoursActual =$row["hours_actual"]; 			
-			$a->comments = stripslashes($row["comments"]);
-			$a->linkText = stripslashes($row["link_text"]);
-			$a->linkUrl = stripslashes($row["link_url"]);
+			$a->comments = ($row["comments"]);
+			$a->linkText = ($row["link_text"]);
+			$a->linkUrl = ($row["link_url"]);
 						
 			$a->formatForDisplay();
 

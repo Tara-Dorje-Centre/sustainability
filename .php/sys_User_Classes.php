@@ -119,7 +119,7 @@ class UserList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countUsers($this->userTypeId);
-		$this->found = getSQLCount($sql, 'total_users');
+		$this->found = dbGetCount($sql, 'total_users');
 	}	
 	
 	public function printPage(){
@@ -145,11 +145,6 @@ class UserList{
 		
 		$s = new UserSQL;
 		$sql = $s->listUsers($this->userTypeId,$this->resultPage,$this->perPage);
-		
-		
-		
-		
-		//$result = mysql_query($sql) or die('Could not get user list');
 
 		$cl = new UserLinks;
 		if ($pagingBaseLink == 'USE_LISTING'){
@@ -171,17 +166,10 @@ class UserList{
 		$heading .= wrapTh('Interests');
 		$heading .= wrapTh('Last Login');
 		
-		
 		$list .= wrapTr($heading);
 
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
-		
 	  	while ($row = $result->fetch_assoc())
 		{	
 			$u = new User;
@@ -222,10 +210,6 @@ class UserList{
 			$list .=  wrapTr($detail,$cssRow);
 		}
 		
-		
-		
-		
-		// Free result set
 		$result->close();
 		}
 
@@ -270,17 +254,10 @@ class User {
 
 		$sql = $this->sql->infoUser($this->id);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
-		
 	  	while ($row = $result->fetch_assoc())
 		{
-
 			$this->nameFirst = ($row["name_first"]); 
 			$this->nameLast = ($row["name_last"]); 
 			$this->email = ($row["email"]); 
@@ -297,7 +274,7 @@ class User {
 			$this->typeName = $row["type_name"];
 			$this->cssHighlight = $row["highlight_style"];
 		}
-		// Free result set
+
 		$result->close();
 		}
 		
@@ -448,17 +425,8 @@ class User {
 			$sql .= " u.login_pwd = '".$newPassCrypt."', ";
 			$sql .= " u.must_update_pwd = 'yes' ";
 			$sql .= " WHERE u.login_name = '".$loginName."' ";
-		//	$result = mysql_query($sql) or die(mysql_error());
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
-		//if($result){
-		
-	  	//while ($row = $result->fetch_assoc())
 			
+			$result = dbRunSQL($sql);
 			
 			$links = new UserLinks;	
 			$message = $_SESSION['site-title'].br();
@@ -495,16 +463,9 @@ class User {
 	public function validateLoginAndEmail($loginName, $loginEmail){
 		$validLoginEmail = false;
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
-		$result = mysql_query($sql) or die(mysql_error());
-		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+	
+		$result = dbGetResult($sql);
 		if($result){
-		
 	  	while ($row = $result->fetch_assoc())
 		{
 			$found = $row["user_count"];  
@@ -523,26 +484,21 @@ class User {
 		$validUser = false;
 		$sql = $this->sql->validateUser($loginName, $loginPwdCrypt);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'user->validateLogin:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
+		$result = dbGetResult($sql);
 		if($result){
 	  		while ($row = $result->fetch_assoc())
 			{
 				$found = $row["user_count"];  
 			}
 		
-		// Free result set
 		$result->close();
 		}
 		
 		
 		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
-		printLine('forcing login');
-		$found = 1;
+		//then comment this line
+		//printLine('forcing login');
+		//$found = 1;
 
 		if ($found == 1){
 			$validUser = true;
@@ -560,22 +516,15 @@ class User {
 	
 	private function setSecurity($loginName){
 		$sql = $this->sql->securityUser($loginName);
-		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
 
+		$result = dbGetResult($sql);
 		if($result){
-		
 	  		while ($row = $result->fetch_assoc())
 			{
 				$_SESSION['user-id'] = $row["id"];
 				$_SESSION['is-admin'] = $row["is_admin"];  
 				$_SESSION['must-update-pwd'] = $row["must_update_pwd"];
 			}
-		// Free result set
 		$result->close();
 		}
 			
@@ -587,14 +536,9 @@ class User {
 		$sql .= " SET u.last_login = CURRENT_TIMESTAMP ";
 		$sql .= " WHERE u.login_name = '".$loginName."' ";	
 		
+		$result = 
+		dbRunSQL($sql);
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'user->updateLastLogin:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-		
-
 	}
 	
 	private function setAddRecordDefaults(){
@@ -760,25 +704,23 @@ class User {
 	
 	public function collectPostValues(){
 
-
-
 		$this->id = $_POST['userId'];
 		$this->typeId = $_POST['typeId'];
 		
-		$this->nameFirst = $conn>escape_string($_POST['nameFirst']); 
-		$this->nameLast = $conn>escape_string($_POST['nameLast']); 
-		$this->email = $conn>escape_string($_POST['email']); 
-		$this->focus = $conn>escape_string($_POST['focus']); 
-		$this->interests = $conn>escape_string($_POST['interests']); 
-		$this->isAdmin = $conn>escape_string($_POST['isAdmin']);
-		$this->isActive = $conn>escape_string($_POST['isActive']);
-		$this->mustUpdatePwd = $conn>escape_string($_POST['mustUpdatePwd']);
+		$this->nameFirst = dbEscapeString($_POST['nameFirst']); 
+		$this->nameLast = dbEscapeString($_POST['nameLast']); 
+		$this->email = dbEscapeString($_POST['email']); 
+		$this->focus = dbEscapeString($_POST['focus']); 
+		$this->interests = dbEscapeString($_POST['interests']); 
+		$this->isAdmin = dbEscapeString($_POST['isAdmin']);
+		$this->isActive = dbEscapeString($_POST['isActive']);
+		$this->mustUpdatePwd = dbEscapeString($_POST['mustUpdatePwd']);
 		$this->pageMode = $_POST['mode'];	
 		
-		$this->loginName = $conn>escape_string($_POST['loginName']); 
+		$this->loginName = dbEscapeString($_POST['loginName']); 
 		//get password for local validation
-		$pwd = $conn>escape_string($_POST['loginPwd']);
-		$pwdConfirm = $conn>escape_string($_POST['loginPwdConfirm']);
+		$pwd = dbEscapeString($_POST['loginPwd']);
+		$pwdConfirm = dbEscapeString($_POST['loginPwdConfirm']);
 		//clear the password from post variables if canceling form post
 		$_POST['loginPwd'] = 'password';
 		$_POST['loginPwdConfirm'] = 'password';
@@ -840,18 +782,8 @@ class User {
 			$sql .= " u.type_id = ".$this->typeId." ";
 			$sql .= " WHERE u.id = ".$this->id."  ";			
 
-			
-			
-					//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+			$result = dbRunSQL($sql);
 
-
-		
-
-			
 			$this->mailUser('Your User Profile Has Been Updated');
 			
 			if ($this->loginName == $_SESSION['login-name']){
@@ -888,17 +820,10 @@ class User {
 			$sql .= " ".$this->typeId.") ";
 
 			
-					//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
-
-
-		
+			$result = dbRunSQL($sql);
 
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertedId();
 		}
 	
 	}

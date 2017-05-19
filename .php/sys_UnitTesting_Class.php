@@ -18,9 +18,6 @@ class _UnitTest{
 	}
 	
 
-
-
-
 	private function getTestMenu($menuType,$menuStyle,$menuName){
 		
 		
@@ -79,104 +76,7 @@ class _UnitTest{
 		return $menu;		
 		
 	}
-//	private function displayCalendar(){
-//		if ($this->month == 0 || $this->year == 0){
-//			global $sessionTime;
-//			$this->year = getTimestampYear($sessionTime);
-//			$this->month = getTimestampMonth($sessionTime,'YES');
-//		}
-//		if ($this->month == 12){
-//			$nextMonth = 1;
-//			$nextYear = $this->year + 1;
-//		} else {
-//			$nextMonth = $this->month + 1;
-//			$nextYear = $this->year;
-//		}
-//		if ($this->month == 1){
-//			$prevMonth = 12;
-//			$prevYear = $this->year - 1;
-//		} else {
-//			$prevMonth = $this->month - 1;
-//			$prevYear = $this->year;
-//		}
-//
-//		$menuL = new MenuLinks('LIST','menu');
-//		$prevMonthLink = $menuL->detailHref('CALENDAR', 'Previous', $prevYear, $prevMonth);
-//		$nextMonthLink = $menuL->detailHref('CALENDAR', 'Next', $nextYear, $nextMonth);
-//
-//		$c = new _Calendar($this->year,$this->month,'Calendar');	
-//		$c->setLinks($nextMonthLink, $prevMonthLink);
-//		return $c->buildCalendar();
-//	}
-	
-//	private function runUpdates(){
-//		
-////$sql = "set @@session.time_zone='-7:00'";
-//$content = 'add activity to materials'.br();
-//$sql = "ALTER TABLE `materials`  ADD `activity_id` BIGINT(20) NOT NULL DEFAULT '0'";
-//mysql_query( $sql );// or exit(
-//$content .= 'errors:'.mysql_error().br();
-//
-//$content .= 'add activity to measures'.br();
-//$sql = "ALTER TABLE `measures`  ADD `activity_id` BIGINT(20) NOT NULL DEFAULT '0'";
-//mysql_query( $sql );// or exit(mysql_error());
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'add activity to receipts'.br();
-//$sql = "ALTER TABLE `receipts`  ADD `activity_id` BIGINT(20) NOT NULL DEFAULT '0'";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'add highlight style to measure types'.br();
-//$sql = "ALTER TABLE `measure_types`  ADD `highlight_style` VARCHAR(100) NOT NULL";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'add display order to measure types'.br();
-//$sql = "ALTER TABLE `measure_types`  ADD `display_order` INT(4) NOT NULL DEFAULT '0'";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//
-//$content .= 'add highlight style to activity types'.br();
-//$sql = "ALTER TABLE `activity_types`  ADD `highlight_style` VARCHAR(100) NOT NULL";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'add display order to activity types'.br();
-//$sql = "ALTER TABLE `activity_types`  ADD `display_order` INT(4) NOT NULL DEFAULT '0'";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'Modify activity comments to store up to 4000 characters'.br();
-//$sql = "ALTER TABLE `activities` CHANGE `comments` `comments` VARCHAR(4000) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'Modify task description to store up to 4000 characters'.br();
-//$sql = "ALTER TABLE `tasks` CHANGE `description` `description` VARCHAR(4000) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'Modify task summary to store up to 4000 characters'.br();
-//$sql = "ALTER TABLE `tasks` CHANGE `summary` `summary` VARCHAR(4000) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//
-//$content .= 'Modify project description to store up to 4000 characters'.br();
-//$sql = "ALTER TABLE `projects` CHANGE `description` `description` VARCHAR(4000) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//$content .= 'Modify project summary to store up to 4000 characters'.br();
-//$sql = "ALTER TABLE `projects` CHANGE `summary` `summary` VARCHAR(4000) CHARACTER SET latin1 COLLATE latin1_general_ci NOT NULL";
-//mysql_query( $sql );
-//$content .= 'errors:'.mysql_error().br();//);
-//
-//	
-//	return $content;
-//	}
+
 	private function displayTesting(){
 		$entity = 'unit-test';
 		$legend = 'unit tests';

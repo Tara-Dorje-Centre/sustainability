@@ -286,7 +286,7 @@ class Project {
 			$this->parentId = $row["parent_id"];
 			$this->locationId = $row["location_id"];
 			$this->name = ($row["name"]);
-			$this->description = stripslashes($row["description"]);
+			$this->description = ($row["description"]);
 			$this->summary = ($row["summary"]);
 			$this->started = ($row["started"]);	
 			$this->updated = ($row["updated"]);			

@@ -159,7 +159,7 @@ class ReceiptList{
 		} else {
 			$sql = $this->sql->countReceiptsByTask($this->task->id);
 		}
-		$this->found = getSQLCount($sql, 'total_receipts');
+		$this->found = dbGetCount($sql, 'total_receipts');
 	}
 	
 	private function setSummary(){
@@ -168,12 +168,15 @@ class ReceiptList{
 		} else {
 			$sql = $this->sql->summarizeReceiptsByTask($this->task->id);
 		}
-		$result = mysql_query($sql) or die(mysql_error());
-		while ($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
 		{
 			$this->costActual = $row["sum_cost_actual"];
 		}
-		mysql_free_result($result);			
+		$result->close();		
+		}	
 	}
 
 	public function printPage(){
@@ -202,7 +205,6 @@ class ReceiptList{
 		} elseif ($this->displayProject == 'TASK'){
 			$sql = $this->sql->listReceiptsByTask($this->task->id,$this->resultPage,$this->perPage);		
 		}
-		$result = mysql_query($sql) or die(mysql_error());		
 		
 		$receiptL = new ReceiptLinks;
 		$taskL = new TaskLinks;
@@ -234,7 +236,9 @@ class ReceiptList{
 		$heading .= wrapTh('Received From');
 		$list .=  wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
 		{	
 			$m = new Receipt;
 			$m->id = $row["id"];
@@ -275,8 +279,9 @@ class ReceiptList{
 
 			$list .=  wrapTr($detail, $cssItem);
 		}
-		mysql_free_result($result);
-
+		$result->close();
+		}
+		
 		$list .= closeDisplayList();
 		return $list;
 		
@@ -318,29 +323,31 @@ class Receipt {
 		$this->task->id = $parentTaskId;
 		
 		$sql = $this->sql->infoReceipt($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-
-		while($row = mysql_fetch_array($result))
-			{	
+		
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+		{	
 			$this->task->id = $row["task_id"];
 			$this->activityId = $row["activity_id"];
 			$this->typeId = $row["type_id"];
-			$this->typeName = stripslashes($row["type_name"]);
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
+			$this->typeName = ($row["type_name"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
 			$this->dateReported = $row["date_reported"];
-			$this->receivedBy = stripslashes($row["received_by"]);
-			$this->receivedFrom = stripslashes($row["received_from"]);
+			$this->receivedBy = ($row["received_by"]);
+			$this->receivedFrom = ($row["received_from"]);
 			$this->updated = $row["updated"];	
 			$this->quantity = $row["quantity"];	
 			$this->quantityUnitMeasureId = $row["qty_unit_measure_id"];
 			$this->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
 			$this->costActual = $row["cost_actual"];
 			$this->costUnit = $row["cost_unit"];
-			$this->notes = stripslashes($row["notes"]);
+			$this->notes = ($row["notes"]);
 			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$this->setParentTask();				
 	}	
@@ -542,12 +549,12 @@ class Receipt {
 		$this->id = $_POST['receiptId'];
 		$this->receiptId = $_POST['receiptId'];
 		$this->typeId = $_POST['typeId'];
-		$this->name = $conn>escape_string($_POST['name']);
-		$this->description = $conn>escape_string($_POST['description']); 
-		$this->notes = $conn>escape_string($_POST['notes']); 
+		$this->name = dbEscapeString($_POST['name']);
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 
 		$this->dateReported = getTimestampPostValues('dateReported');
-		$this->receivedBy = $conn>escape_string($_POST['receivedBy']);
-		$this->receivedFrom = $conn>escape_string($_POST['receivedFrom']);
+		$this->receivedBy = dbEscapeString($_POST['receivedBy']);
+		$this->receivedFrom = dbEscapeString($_POST['receivedFrom']);
 		$this->quantity = $_POST['quantity']; 
 		$this->quantityUnitMeasureId = $_POST['quantityUnitMeasureId'];
 		$this->costUnit = $_POST['costUnit']; 
@@ -578,7 +585,7 @@ class Receipt {
 			$sql .= " m.cost_actual = ".$this->costActual." ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
 			$this->task->resetReceiptsAuthorization();
 			
@@ -615,8 +622,9 @@ class Receipt {
 			$sql .= " ".$this->quantityUnitMeasureId.", ";
 			$sql .= "'".$this->notes."') ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$this->id = mysql_insert_id();
+			$result = dbRunSQL($sql);
+
+			$this->id = dbInsertedId();
 
 			$this->task->resetReceiptsAuthorization();
 		}
