@@ -219,6 +219,22 @@ class MaterialList{
 			$sql = $this->sql->summarizeMaterialByTask($this->task->id,$this->year,$this->month);
 		}
 		$result = mysql_query($sql) or die(mysql_error());
+	
+			//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+	
+	
 		while ($row = mysql_fetch_array($result))
 		{
 			$this->costActual = $row["sum_cost_actual"];
@@ -238,6 +254,22 @@ class MaterialList{
 		} else {  //if ($this->displayProject == 'TASK' or $this->displayProject == 'TASK-SUMMARY') {
 			$sql = $this->sql->calendarLinksTaskMaterials($this->task->project->id, $this->task->id);			
 		}
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
+		
+		
 		$result = mysql_query($sql) or die(mysql_error());
 		$this->prevCalendarLink = '';
 		$this->nextCalendarLink = '';
@@ -331,6 +363,23 @@ class MaterialList{
 		$heading .=  wrapTh('Cost Est');
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
+		
+		
 
 		while($row = mysql_fetch_array($result))
 		{
@@ -377,6 +426,23 @@ class MaterialList{
 		$heading .=  wrapTh('Cost Est');
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
+
+
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+
+
 
 		while($row = mysql_fetch_array($result))
 		{
@@ -434,6 +500,21 @@ class MaterialList{
 		$heading .=  wrapTh('Cost Est');
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
 
 		while($row = mysql_fetch_array($result))
 		{
@@ -479,6 +560,22 @@ class MaterialList{
 		$heading .=  wrapTh('Cost Est');
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
+		
 
 		while($row = mysql_fetch_array($result))
 		{
@@ -558,6 +655,21 @@ class MaterialList{
 		//$heading .=  wrapTh('Cost Actual');
 		$heading .=  wrapTh('Links');		
 		$list .=  wrapTr($heading);
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
+		
 
 		while($row = mysql_fetch_array($result))
 		{	
@@ -662,6 +774,23 @@ class MaterialList{
 		//$heading .=  wrapTh('Cost Actual');
 		$heading .=  wrapTh('Links');		
 		$list .=  wrapTr($heading);
+		
+		
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
 
 		while($row = mysql_fetch_array($result))
 		{	
@@ -892,6 +1021,21 @@ class Material {
 		
 		$sql = $this->sql->infoMaterial($this->id);
 		$result = mysql_query($sql) or die(mysql_error());
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+
+
 
 		while($row = mysql_fetch_array($result))
 			{	
@@ -1161,12 +1305,12 @@ class Material {
 		$this->id = $_POST['materialId'];
 		$this->locationId = $_POST['locationId'];
 		$this->typeId = $_POST['typeId'];
-		$this->name = mysql_real_escape_string($_POST['name']);
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 
+		$this->name = $conn>escape_string($_POST['name']);
+		$this->description = $conn>escape_string($_POST['description']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 
 		$this->dateReported = getTimestampPostValues('dateReported');
-		$this->doneBy = mysql_real_escape_string($_POST['doneBy']);
-		$this->paidTo = mysql_real_escape_string($_POST['paidTo']);
+		$this->doneBy = $conn>escape_string($_POST['doneBy']);
+		$this->paidTo = $conn>escape_string($_POST['paidTo']);
 		$_SESSION['last-material-paid-to'] = $this->paidTo;
 		$_SESSION['last-material-done-by'] = $this->doneBy;
 		$_SESSION['last-material-date'] = $this->dateReported;
@@ -1175,8 +1319,8 @@ class Material {
 		$this->costUnit = $_POST['costUnit']; 
 		//$this->costEstimated = $_POST['costEstimated']; 
 //		$this->costActual = $_POST['costActual']; 
-		$this->linkText = mysql_real_escape_string($_POST['linkText']);
-		$this->linkUrl = mysql_real_escape_string($_POST['linkUrl']);
+		$this->linkText = $conn>escape_string($_POST['linkText']);
+		$this->linkUrl = $conn>escape_string($_POST['linkUrl']);
 		
 		$this->setEstimatedCost();
 

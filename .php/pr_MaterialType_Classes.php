@@ -148,6 +148,21 @@ class MaterialTypeList{
 		$heading .= wrapTh('Notes');
 		$heading .= wrapTh('Highlight Style');		
 		$list .= wrapTr($heading);
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
 
 		while($row = mysql_fetch_array($result))
 		{	
@@ -200,6 +215,23 @@ class MaterialType {
 		$this->id = $detailId;
 
 		$sql = $this->sql->infoMaterialType($this->id);
+		
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$value = $row[$field];
+		}
+		// Free result set
+		$result->close();
+		}
+		
+		
+		
 		$result = mysql_query($sql) or die(mysql_error());
 		while($row = mysql_fetch_array($result))
 			{	
@@ -365,11 +397,11 @@ class MaterialType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['materialTypeId'];
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 		
-		$this->highlightStyle = mysql_real_escape_string($_POST['highlightStyle']); 		
-		$this->displayOrder = mysql_real_escape_string($_POST['displayOrder']); 		
+		$this->name = $conn>escape_string($_POST['name']); 
+		$this->description = $conn>escape_string($_POST['description']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 		
+		$this->highlightStyle = $conn>escape_string($_POST['highlightStyle']); 		
+		$this->displayOrder = $conn>escape_string($_POST['displayOrder']); 		
 		
 		$this->pageMode = $_POST['mode'];	
 	}

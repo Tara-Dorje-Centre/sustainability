@@ -390,12 +390,12 @@ class TaskType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['taskTypeId'];
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 		
-		$this->highlightStyle = mysql_real_escape_string($_POST['highlightStyle']); 		
-		$this->frequency = mysql_real_escape_string($_POST['frequency']);
-		$this->displayOrder = mysql_real_escape_string($_POST['displayOrder']);
+		$this->name = $conn>escape_string($_POST['name']); 
+		$this->description = $conn>escape_string($_POST['description']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 		
+		$this->highlightStyle = $conn>escape_string($_POST['highlightStyle']); 		
+		$this->frequency = $conn>escape_string($_POST['frequency']);
+		$this->displayOrder = $conn>escape_string($_POST['displayOrder']);
 		$this->pageMode = $_POST['mode'];	
 	}
 

@@ -362,10 +362,10 @@ class UserType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['userTypeId'];
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 		
-		$this->highlightStyle = mysql_real_escape_string($_POST['highlightStyle']); 		
+		$this->name = $conn>escape_string($_POST['name']); 
+		$this->description = $conn>escape_string($_POST['description']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 		
+		$this->highlightStyle = $conn>escape_string($_POST['highlightStyle']); 		
 		
 		$this->pageMode = $_POST['mode'];	
 	}

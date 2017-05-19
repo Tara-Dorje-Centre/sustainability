@@ -142,7 +142,7 @@ class LocationList{
 			$sortKey = $l->getSortKey($this->parentId);
 			$sql = $this->sql->countLocationsByParentSortKey($sortKey,$this->parentId);
 		}
-		$this->found = getSQLCount($sql, 'total_locations');
+		$this->found = dbGetCount($sql, 'total_locations');
 	}
 	
 	public function printPage(){
@@ -165,6 +165,7 @@ class LocationList{
 	
 	public function getListingRows(){
 		$ll = new LocationLinks;
+		$list = '';
 		if ($this->parentId <= 0){
 			$sql = $this->sql->listLocationsByParent($this->parentId,$this->resultPage,$this->perPage);
 		} else {
@@ -172,10 +173,9 @@ class LocationList{
 			$sortKey = $l->getSortKey($this->parentId);
 			$sql = $this->sql->listLocationsByParentSortKey($sortKey,$this->parentId, $this->resultPage,$this->perPage);
 		}
-		$result = mysql_query($sql) or die(mysql_error());
-
-		$list = '';
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$l = new Location;
 			$l->id = $row["id"];
@@ -189,7 +189,9 @@ class LocationList{
 			$detail .= wrapTd($l->description);
 			$list .=  wrapTr($detail);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
+		
 		return $list;
 	}
 
@@ -251,18 +253,21 @@ class Location {
 		} else {
 			//EDIT OR VIEW
 			$sql = $this->sql->infoLocation($this->id);
-			$result = mysql_query($sql) or die(mysql_error());
-			while($row = mysql_fetch_array($result))
+			
+			$result = dbGetResult($sql);
+			if($result){
+	  		while ($row = $result->fetch_assoc())
 				{	
 				$this->parentId = $row["parent_id"];
 				$this->typeId = $row["type_id"];
-				$this->name = stripslashes($row["name"]);
-				$this->sortKey = stripslashes($row["sort_key"]);
-				$this->description = stripslashes($row["description"]);
-				$this->created = stripslashes($row["created"]);	
-				$this->updated = stripslashes($row["updated"]);			
+				$this->name = ($row["name"]);
+				$this->sortKey = ($row["sort_key"]);
+				$this->description = ($row["description"]);
+				$this->created = ($row["created"]);	
+				$this->updated = ($row["updated"]);			
 			}
-			mysql_free_result($result);
+			$result->close();
+			}
 			
 			$this->setChildLocationsCount();
 		}
@@ -438,21 +443,23 @@ class Location {
 		$this->id = $_POST['locationId'];
 		$this->typeId = $_POST['typeId'];
 		$this->parentId = $_POST['parentLocationId'];
-		$this->name = mysql_real_escape_string($_POST['locationName']); 
-		$this->description = mysql_real_escape_string($_POST['locationDescription']); 		
+		$this->name = dbEscapeString($_POST['locationName']); 
+		$this->description = dbEscapeString($_POST['locationDescription']); 		
 		$this->pageMode = $_POST['mode'];	
 	}
  	
 	public function getSortKey($locationId){
 		$sql = " SELECT l.sort_key FROM locations l WHERE l.id = ".$locationId;
-			
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$sortKey = stripslashes($row["sort_key"]);
 		}
-		mysql_free_result($result);
-
+		$result->close();
+		}
+		
 		return $sortKey;		
 	}
 
@@ -465,7 +472,7 @@ class Location {
 		}
 		$sql .= " SET l.sort_key = '".$sortKey."' ";	
 		$sql .= " WHERE l.id = ".$this->id." ";
-		$result = mysql_query($sql) or die(mysql_error());
+		$result = dbRunSQL($sql);
 	
 	}
 
@@ -479,7 +486,9 @@ class Location {
 			$sql .= " l.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " l.description = '".$this->description."' ";
 			$sql .= " WHERE l.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			
+		$result = dbRunSQL($sql);
+			
 			$this->updateSortKey();
 		} else {
 	
@@ -498,9 +507,9 @@ class Location {
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= "'".$this->description."') ";
-			$result = mysql_query($sql) or die(mysql_error());
+		$result = dbRunSQL($sql);
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertedId();
 			
 			$this->updateSortKey();
 		}

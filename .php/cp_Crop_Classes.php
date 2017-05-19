@@ -613,11 +613,11 @@ class Crop {
 	public function collectPostValues(){
 		$this->id = $_POST['cropId'];
 		$this->parentId = $_POST['parentCropId'];
-		$this->commonName = mysql_real_escape_string($_POST['commonName']); 
-		$this->varietyName = mysql_real_escape_string($_POST['varietyName']); 
-		$this->botanicalName = mysql_real_escape_string($_POST['botanicalName']); 
-		$this->familyName = mysql_real_escape_string($_POST['familyName']); 
-		$this->certifications = mysql_real_escape_string($_POST['certifications']);
+		$this->commonName = $conn>escape_string($_POST['commonName']); 
+		$this->varietyName = $conn>escape_string($_POST['varietyName']); 
+		$this->botanicalName = $conn>escape_string($_POST['botanicalName']); 
+		$this->familyName = $conn>escape_string($_POST['familyName']); 
+		$this->certifications = $conn>escape_string($_POST['certifications']);
 		$this->daysMature = $_POST['daysMature'];
 		$this->daysMatureMax = $_POST['daysMatureMax'];
 		$this->daysTransplant = $_POST['daysTransplant'];
@@ -629,11 +629,11 @@ class Crop {
 		$this->thinningHeightInches = $_POST['thinningHeightInches'];
 		$this->inrowSpacingInches = $_POST['inrowSpacingInches'];
 		$this->rowSpacingInches = $_POST['rowSpacingInches'];
-		$this->plantingNotes = mysql_real_escape_string($_POST['plantingNotes']); 
-		$this->transplantingNotes = mysql_real_escape_string($_POST['transplantingNotes']); 
-		$this->thinningNotes = mysql_real_escape_string($_POST['thinningNotes']); 
-		$this->careNotes = mysql_real_escape_string($_POST['careNotes']); 
-		$this->siteNotes = mysql_real_escape_string($_POST['siteNotes']); 
+		$this->plantingNotes = $conn>escape_string($_POST['plantingNotes']); 
+		$this->transplantingNotes = $conn>escape_string($_POST['transplantingNotes']); 
+		$this->thinningNotes = $conn>escape_string($_POST['thinningNotes']); 
+		$this->careNotes = $conn>escape_string($_POST['careNotes']); 
+		$this->siteNotes = $conn>escape_string($_POST['siteNotes']); 
 		if ($_POST['seedsOnHand'] != 'no'){
 			$this->seedsOnHand = 'yes';
 		} else {

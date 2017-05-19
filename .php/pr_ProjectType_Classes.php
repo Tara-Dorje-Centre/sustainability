@@ -108,7 +108,7 @@ class ProjectTypeList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countProjectTypes();
-		$this->found = getSQLCount($sql, 'total_types');
+		$this->found = dbGetCount($sql, 'total_types');
 	}	
 	
 	public function printPage(){
@@ -131,8 +131,12 @@ class ProjectTypeList{
 	
 	
 	public function getListing(){
-		$sql = $this->sql->listProjectTypes($this->resultPage,$this->perPage);
-		$result = mysql_query($sql) or die(mysql_error());
+	
+	
+	
+	
+
+
 
 		$typeL = new ProjectTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
@@ -148,8 +152,10 @@ class ProjectTypeList{
 		$heading .= wrapTh('Notes');
 		$heading .= wrapTh('Highlight Style');		
 		$list .= wrapTr($heading);
-
-		while($row = mysql_fetch_array($result))
+		$sql = $this->sql->listProjectTypes($this->resultPage,$this->perPage);
+		$result = dbGetResult($sql);
+		if ($result);
+		while($row = $result->fetch_assoc())
 		{	
 			$u = new ProjectType;
 			$u->id = $row["id"];
@@ -168,7 +174,7 @@ class ProjectTypeList{
 			$detail .= wrapTd($u->highlightStyle);			
 			$list .=  wrapTr($detail,$u->highlightStyle);
 		}
-		mysql_free_result($result);
+		$result->close();
 
 		$list .= closeDisplayList();
 		return $list;
@@ -198,18 +204,21 @@ class ProjectType {
 		$this->id = $detailId;
 
 		$sql = $this->sql->infoProjectType($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
-			{	
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
-			$this->notes = stripslashes($row["notes"]);
-			$this->highlightStyle = stripslashes($row["highlight_style"]);
+		
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->notes = ($row["notes"]);
+			$this->highlightStyle = ($row["highlight_style"]);
 			$this->displayOrder = $row["display_order"];
-			$this->created = stripslashes($row["created"]);			
-			$this->updated = stripslashes($row["updated"]);			
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 	}	
 		
@@ -254,7 +263,6 @@ class ProjectType {
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
-		
 	}
 	
 	public function printPage(){
@@ -366,10 +374,10 @@ class ProjectType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['projectTypeId'];
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 		
-		$this->highlightStyle = mysql_real_escape_string($_POST['highlightStyle']); 		
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
 		$this->displayOrder = $_POST['displayOrder'];
 		
 		$this->pageMode = $_POST['mode'];	
@@ -387,7 +395,8 @@ class ProjectType {
 			$sql .= " p.display_order = ".$this->displayOrder.", ";
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
+			
 		} else {
 			$sql = " INSERT INTO project_types ";
 			$sql .= " (name, ";
@@ -405,9 +414,9 @@ class ProjectType {
 			$sql .= "'".$this->highlightStyle."', ";
 			$sql .= " ".$this->displayOrder.", ";
 			$sql .= "'".$this->notes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 			
-			$this->id = mysql_insert_id();
+			$this->id = dbInsertedId();
 		}
 	
 	}

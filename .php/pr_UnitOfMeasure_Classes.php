@@ -370,10 +370,10 @@ class UnitOfMeasure {
 	public function collectPostValues(){
 
 		$this->id = $_POST['unitOfMeasureId'];
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->type = mysql_real_escape_string($_POST['type']); 
-		$this->symbol = mysql_real_escape_string($_POST['symbol']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 		
+		$this->name = $conn>escape_string($_POST['name']); 
+		$this->type = $conn>escape_string($_POST['type']); 
+		$this->symbol = $conn>escape_string($_POST['symbol']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 		
 		$this->pageMode = $_POST['mode'];	
 	}
 

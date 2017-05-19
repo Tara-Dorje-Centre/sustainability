@@ -435,15 +435,12 @@ function getSelectList($selectName, $selectOptions, $tooltip = 'none', $disabled
 	
 	$e = new _element('select',$selectName, $css);
 	$e->addAttribute('title',$tooltip);
-	//$e->addAttribute('maxlength',$maxLength);
-	//$e->addAttribute('size',$size);
-	//$e->addAttribute('cols',$cols);
 	
 	if ($disabled != 'false'){
 		$e->addAttribute('disabled',$disabled);
 	}
 
-	$e->addAtribute('onChange',$onChangeJS);	
+	$e->addAttribute('onChange',$onChangeJS);	
 	
 	$select = $e->open();
 	$select .= $selectOptions;

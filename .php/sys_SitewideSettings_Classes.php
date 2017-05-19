@@ -73,11 +73,10 @@ class SitewideSettings {
 
 		$sql = $this->sql->infoSitewideSettings();
 		
-		//mysqli_* library implemented for php7
-		//redirect$conn reference to global in _dbconnect.php
-		global $conn;
-		$locale = 'publicWebSite->getSiteContents:';
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+		$locale = 'sitewideSettings->setDetails:';
+		$result = dbGetResult($sql, $locale);
+		//global $conn;
+		//$result = $conn->query($sql) or exit($locale.$conn->error);
 
 		if($result){
 		
@@ -119,7 +118,7 @@ class SitewideSettings {
 	public function verifySettings(){
 		$sql = " SELECT COUNT(*) AS count_settings ";
 		$sql .= " FROM sitewide_settings ";
-		$i = getSQLCount($sql, 'count_settings');
+		$i = dbGetCount($sql, 'count_settings', 0, 'verifySettings');
 		if ($i == 0){
 			$this->createSettings();	
 		}
@@ -150,7 +149,6 @@ class SitewideSettings {
 		unset($_SESSION['show-public-site']);
 		unset($_SESSION['show-cost-reports']);
 		unset($_SESSION['show-revenue-reports']);
-
 	}
 	
 		
@@ -388,35 +386,35 @@ class SitewideSettings {
 	}
 	
 	public function collectPostValues(){
+global $conn;
 
-		$this->siteTitle = mysql_real_escape_string($_POST['siteTitle']);
-		$this->siteUrl = mysql_real_escape_string($_POST['siteUrl']); 
-		$this->loginNotice = mysql_real_escape_string($_POST['loginNotice']);
-		$this->organization = mysql_real_escape_string($_POST['organization']); 
-		$this->organizationUrl = mysql_real_escape_string($_POST['organizationUrl']);
-		$this->organizationDescription = mysql_real_escape_string($_POST['organizationDescription']);
-		$this->contactName = mysql_real_escape_string($_POST['contactName']); 		
-		$this->contactEmail = mysql_real_escape_string($_POST['contactEmail']);
-		$this->showPublicSite = mysql_real_escape_string($_POST["showPublicSite"]);
-		$this->showCostReports = mysql_real_escape_string($_POST["showCostReports"]);
-		$this->showRevenueReports = mysql_real_escape_string($_POST["showRevenueReports"]); 		
-		$this->publicFillColor = mysql_real_escape_string($_POST["publicFillColor"]);
-		$this->publicSiteColor = mysql_real_escape_string($_POST["publicSiteColor"]);
-		$this->publicPageColor = mysql_real_escape_string($_POST["publicPageColor"]);
-		$this->publicMenuColor = mysql_real_escape_string($_POST["publicMenuColor"]);
-		$this->publicMenuColorHover = mysql_real_escape_string($_POST["publicMenuColorHover"]);
-		$this->publicTextColor = mysql_real_escape_string($_POST["publicTextColor"]);
-		$this->publicTextColorHover = mysql_real_escape_string($_POST["publicTextColorHover"]);
-		$this->publicFontFamily = mysql_real_escape_string($_POST["publicFontFamily"]);
-		$this->publicFontSizeTitle = mysql_real_escape_string($_POST["publicFontSizeTitle"]);
-		$this->publicFontSizeHeading = mysql_real_escape_string($_POST["publicFontSizeHeading"]);
-		$this->publicFontSizeMenu = mysql_real_escape_string($_POST["publicFontSizeMenu"]);
-		$this->publicFontSizeText = mysql_real_escape_string($_POST["publicFontSizeText"]);
+		$this->siteTitle = $conn>escape_string($_POST['siteTitle']);
+		$this->siteUrl = $conn>escape_string($_POST['siteUrl']); 
+		$this->loginNotice = $conn>escape_string($_POST['loginNotice']);
+		$this->organization = $conn>escape_string($_POST['organization']); 
+		$this->organizationUrl = $conn>escape_string($_POST['organizationUrl']);
+		$this->organizationDescription = $conn>escape_string($_POST['organizationDescription']);
+		$this->contactName = $conn>escape_string($_POST['contactName']); 		
+		$this->contactEmail = $conn>escape_string($_POST['contactEmail']);
+		$this->showPublicSite = $conn>escape_string($_POST["showPublicSite"]);
+		$this->showCostReports = $conn>escape_string($_POST["showCostReports"]);
+		$this->showRevenueReports = $conn>escape_string($_POST["showRevenueReports"]); 		
+		$this->publicFillColor = $conn>escape_string($_POST["publicFillColor"]);
+		$this->publicSiteColor = $conn>escape_string($_POST["publicSiteColor"]);
+		$this->publicPageColor = $conn>escape_string($_POST["publicPageColor"]);
+		$this->publicMenuColor = $conn>escape_string($_POST["publicMenuColor"]);
+		$this->publicMenuColorHover = $conn>escape_string($_POST["publicMenuColorHover"]);
+		$this->publicTextColor = $conn>escape_string($_POST["publicTextColor"]);
+		$this->publicTextColorHover = $conn>escape_string($_POST["publicTextColorHover"]);
+		$this->publicFontFamily = $conn>escape_string($_POST["publicFontFamily"]);
+		$this->publicFontSizeTitle = $conn>escape_string($_POST["publicFontSizeTitle"]);
+		$this->publicFontSizeHeading = $conn>escape_string($_POST["publicFontSizeHeading"]);
+		$this->publicFontSizeMenu = $conn>escape_string($_POST["publicFontSizeMenu"]);
+		$this->publicFontSizeText = $conn>escape_string($_POST["publicFontSizeText"]);
 		$this->pageMode = $_POST['mode'];	
 	}
 
 	private function createSettings(){
-
 
 		
 			$sql = " INSERT INTO sitewide_settings ";
@@ -465,7 +463,12 @@ class SitewideSettings {
 			$sql .= " '".$this->showCostReports."', ";			
 			$sql .= " '".$this->showRevenueReports."' ";			
 			$sql .= " ) ";
-			$result = mysql_query($sql) or die(mysql_error());		
+			
+		$locale = 'sitewideSettings->createSettings:';
+		//$result = dbRunSQL($sql, $locale);
+		global $conn;
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
 	}
 	
 	public function saveChanges(){
@@ -497,7 +500,10 @@ class SitewideSettings {
 			$sql .= " sw.show_cost_reports = '".$this->showCostReports."', ";
 			$sql .= " sw.show_revenue_reports = '".$this->showRevenueReports."' ";
 
-			$result = mysql_query($sql) or die(mysql_error());
+		$locale = 'sitewideSettings->createSettings:';
+		//$result = dbRunSQL($sql, $locale);
+		global $conn;
+		$result = $conn->query($sql) or exit($locale.$conn->error);
 		
 			$this->setSessionDetails();
 		}

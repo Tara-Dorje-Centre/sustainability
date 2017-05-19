@@ -118,8 +118,6 @@ class ProjectList{
 		$projectL = new ProjectLinks($menuType,$menuStyle);
 		$activityL = new ActivityLinks($menuType,$menuStyle);
 
-		
-		
 		$menu = $projectL->openMenu('section-heading-links');
 		
 		if ($this->status == 'CLOSED'){
@@ -151,7 +149,7 @@ class ProjectList{
 		} else {
 			$sql = $this->sql->countProjectsByStatus($this->status);
 		}
-		$this->found = getSQLCount($sql, 'total_projects');
+		$this->found = dbGetCount($sql, 'total_projects');
 	}
 	
 	public function printPage(){
@@ -173,14 +171,7 @@ class ProjectList{
 	}
 	
 	public function getListing(){		
-		if ($this->showMyProjects == 'YES'){
-			$user = $_SESSION['login-name'];
-			$sql = $this->sql->listProjectsByDoneBy($user,$this->status,$this->resultPage,$this->perPage);
-		} else {
-			$sql = $this->sql->listProjectsByStatus($this->status,$this->resultPage,$this->perPage);
-		}
-		$result = mysql_query($sql) or die('Could not get '.$this->status.' project list ('.$sql.')');
-
+	
 		$pl = new ProjectLinks;		
 		$pagingLinks = $pl->listingPaged($this->status,$this->showMyProjects,$this->found,$this->resultPage,$this->perPage);
 
@@ -196,16 +187,27 @@ class ProjectList{
 		$heading .= wrapTh('Description');
 		$list .= wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+
+		
+		if ($this->showMyProjects == 'YES'){
+			$user = $_SESSION['login-name'];
+			$sql = $this->sql->listProjectsByDoneBy($user,$this->status,$this->resultPage,$this->perPage);
+		} else {
+			$sql = $this->sql->listProjectsByStatus($this->status,$this->resultPage,$this->perPage);
+		}
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$p = new Project;
 			$p->id = $row["id"];
 			$p->priority = $row["priority"];
 			$p->pctDone = $row["pct_done"];
-			$p->name = stripslashes($row["name"]);
-			$p->locationName = stripslashes($row["location_name"]);
-			$p->description = stripslashes($row["description"]);
-			$p->projectType = stripslashes($row["project_type"]);
+			$p->name = $row["name"];
+			$p->locationName = $row["location_name"];
+			$p->description = $row["description"];
+			$p->projectType = $row["project_type"];
 			$p->highlightStyle = $row["highlight_style"];
 			$p->formatForDisplay();
 
@@ -217,7 +219,8 @@ class ProjectList{
 			$detail .= wrapTd($p->description);
 			$list .=  wrapTr($detail,$p->highlightStyle);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();		
 		return $list;
@@ -271,31 +274,37 @@ class Project {
 		$this->pageMode = $inputMode;
 		$this->resultPage = $resultPage;
 		$this->id = $detailProjectId;
-
-		$sql = $this->sql->infoProject($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
 		
 		if ($detailProjectId > 0){
-		while($row = mysql_fetch_array($result))
+
+		$sql = $this->sql->infoProject($this->id);
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$this->parentId = $row["parent_id"];
 			$this->locationId = $row["location_id"];
-			$this->name = stripslashes($row["name"]);
+			$this->name = ($row["name"]);
 			$this->description = stripslashes($row["description"]);
-			$this->summary = stripslashes($row["summary"]);
-			$this->started = stripslashes($row["started"]);	
-			$this->updated = stripslashes($row["updated"]);			
+			$this->summary = ($row["summary"]);
+			$this->started = ($row["started"]);	
+			$this->updated = ($row["updated"]);			
 			$this->pctDone = $row["pct_done"];	
 			$this->priority = $row["priority"];						
-			$this->goals = stripslashes($row["goals"]);
-			$this->lessons = stripslashes($row["lessons_learned"]);	
+			$this->goals = ($row["goals"]);
+			$this->lessons = ($row["lessons_learned"]);	
 			$this->typeId = $row["type_id"];
-			$this->locationName = stripslashes($row['location_name']);
-			$this->purpose = stripslashes($row["purpose"]);		
-			$this->showAlways = stripslashes($row["show_always"]);			
+			$this->locationName = ($row['location_name']);
+			$this->purpose = ($row["purpose"]);		
+			$this->showAlways = ($row["show_always"]);			
 		}
-		mysql_free_result($result);
+		$result->close();
 		}
+		
+		}
+		
+		
 		$this->setTaskSummary();
 		$this->setMaterialSummary();
 		$this->setReceiptSummary();		
@@ -305,13 +314,16 @@ class Project {
 	private function setMaterialSummary(){
 		$s = new MaterialSQL;
 		$sql = $s->summarizeMaterialByProject($this->id, 'yes');
-		$result = mysql_query($sql) or die(mysql_error());		
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$this->materialsCount = $row["total_materials"];
 			$this->materialsCost = $row["sum_cost_actual"];
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$this->setMaterialSummaryByType();	
 	}
@@ -336,13 +348,17 @@ class Project {
 	private function setReceiptSummary(){
 		$s = new ReceiptSQL;
 		$sql = $s->summarizeReceiptsByProject($this->id, 'yes');
-		$result = mysql_query($sql) or die(mysql_error());		
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$this->receiptsCount = $row["total_receipts"];
 			$this->receiptsCost = $row["sum_cost_actual"];
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$this->setReceiptSummaryByType();	
 	}
@@ -358,16 +374,20 @@ class Project {
 		
 			$s = new ReceiptSQL;
 			$sql = $s->summarizeReceiptsByProjectAndType($this->id, 'yes');
-			$result = mysql_query($sql) or die(mysql_error());		
-			while($row = mysql_fetch_array($result))
+			
+			$result = dbGetResult($sql);
+			if($result){
+		  	while ($row = $result->fetch_assoc())
 			{	
-				$type = stripslashes($row["receipt_type"]);
+				$type = ($row["receipt_type"]);
 				$costActual = $row["sum_cost_actual"];
 				$item = wrapTd($type);
 				$item .= wrapTd($costActual);
 				$costs .= wrapTr($item);
 			}
-			mysql_free_result($result);
+			$result->close();
+			}
+			
 			$item = wrapTh('Totals');
 			$item .= wrapTd($this->receiptsCost);
 			$costs .= wrapTr($item);
@@ -384,15 +404,18 @@ class Project {
 	private function setTaskSummary(){
 		$s = new TaskSQL;
 		$sql = $s->infoTaskSummaryByProject($this->id);
-		$result = mysql_query($sql) or die(mysql_error());		
-		while($row = mysql_fetch_array($result))
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$this->tasksHoursEstimated = $row["sum_hours_estimated"];
 			$this->tasksHoursActual = $row["sum_hours_actual"];	
 			$this->tasksPctDone = $row["overall_pct_done"];			
 			$this->tasksCount = $row["total_tasks"];	
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$effort = openTable('hours-info','displayListTable');
 		if ($this->tasksCount == '0'){
@@ -500,7 +523,6 @@ class Project {
 			$this->copyProject();
 			$_SESSION['currentProjectId'] = $this->id;
 		}
-		
 		
 		$heading = $this->getPageHeading();
 		$details = $this->getPageDetails();
@@ -691,15 +713,15 @@ class Project {
 		$this->parentId = $_POST['parentId'];
 		$this->typeId = $_POST['projectTypeId'];
 		$this->locationId = $_POST['locationId'];		
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		//$this->goals = mysql_real_escape_string($_POST['projectGoals']); 
-		$this->summary = mysql_real_escape_string($_POST['summary']); 
-		//$this->lessons = mysql_real_escape_string($_POST['projectLessonsLearned']); 
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		//$this->goals = dbEscapeString($_POST['projectGoals']); 
+		$this->summary = dbEscapeString($_POST['summary']); 
+		//$this->lessons = dbEscapeString($_POST['projectLessonsLearned']); 
 		$this->started = getTimestampPostValues('started');
 		$this->priority = $_POST['priority']; 
 		$this->pctDone = $_POST['pctDone']; 
-		$this->purpose = mysql_real_escape_string($_POST['purpose']); 
+		$this->purpose = dbEscapeString($_POST['purpose']); 
 		$this->showAlways = $_POST['showAlways']; 
 		
 		$this->pageMode = $_POST['mode'];	
@@ -716,7 +738,9 @@ class Project {
 			$sql .= " p.hours_estimated = ".$this->tasksHoursEstimated.",  ";
 			$sql .= " p.hours_actual = ".$this->tasksHoursActual." ";
 			$sql .= " where p.id = ".$this->id." ";
-			$result = mysql_query($sql) or die(mysql_error());
+			
+			$result = dbRunSQL($sql);
+	
 		}
 	}
 
@@ -756,8 +780,9 @@ class Project {
 			$sql .= " purpose ";
 			$sql .= " FROM projects p WHERE p.id = ".$sourceProjectId." ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$copyProjectId = mysql_insert_id();
+			$result = dbRunSQL($sql);
+			
+			$copyProjectId = dbInsertedId();
 		
 			//insert all tasks from source project to copy project substituting the copy project id		
 			$sql = " INSERT INTO tasks ";
@@ -795,8 +820,8 @@ class Project {
 			$sql .= " 'no', ";
 			$sql .= " 'n/a copied project' ";
 			$sql .= " FROM tasks t WHERE t.project_id = ".$sourceProjectId." ";
-			
-			$result = mysql_query($sql) or die(mysql_error());
+
+			$result = dbRunSQL($sql);
 		
 			//reset page mode from COPY to EDIT and set details using the copied id
 			$this->id = $copyProjectId;
@@ -826,7 +851,9 @@ class Project {
 			//$sql .= "`p`.`lessons_learned = '".$this->lessons."', ";
 			$sql .= " p.summary = '".$this->summary."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			
+			$result = dbRunSQL($sql);
+			
 		} else {
 	
 			$sql = " INSERT INTO projects ";
@@ -853,9 +880,10 @@ class Project {
 			$sql .= "'".$this->showAlways."', ";
 			$sql .= " ".$this->typeId.", ";
 			$sql .= "'".$this->purpose."') ";
-			$result = mysql_query($sql) or die(mysql_error());
 			
-			$this->id = mysql_insert_id();
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
 		}
 	
 	}

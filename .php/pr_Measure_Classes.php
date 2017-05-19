@@ -410,10 +410,10 @@ class Measure {
 		$this->task->id = $_POST['taskId'];
 		$this->id = $_POST['measureId'];
 		$this->locationId = $_POST['locationId'];
-		$this->description = mysql_real_escape_string($_POST['description']);
-		$this->name = mysql_real_escape_string($_POST['name']);
-		$this->value = mysql_real_escape_string($_POST['value']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 
+		$this->description = $conn>escape_string($_POST['description']);
+		$this->name = $conn>escape_string($_POST['name']);
+		$this->value = $conn>escape_string($_POST['value']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 
 		$this->dateReported = getTimestampPostValues('dateReported');
 		$this->measureTypeUnitId = $_POST['measureTypeUnitId']; 
 

@@ -591,8 +591,8 @@ class CropPlanting {
 		$this->cropPlanId = $_POST['cropPlanId'];
 		$this->cropId = $_POST['cropId'];
 		$this->locationId = $_POST['locationId'];
-		$this->method = mysql_real_escape_string($_POST['method']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 
+		$this->method = $conn>escape_string($_POST['method']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 
 		$this->planted = getTimestampPostValues('planted');
 		
 		$this->plantedCount = $_POST['plantedCount'];

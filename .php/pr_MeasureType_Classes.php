@@ -348,12 +348,12 @@ class MeasureType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['measureTypeId'];
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->highlightStyle = mysql_real_escape_string($_POST['highlightStyle']); 		
-		$this->displayOrder = mysql_real_escape_string($_POST['displayOrder']);
+		$this->name = $conn>escape_string($_POST['name']); 
+		$this->description = $conn>escape_string($_POST['description']); 
+		$this->highlightStyle = $conn>escape_string($_POST['highlightStyle']); 		
+		$this->displayOrder = $conn>escape_string($_POST['displayOrder']);
 		
-		$this->notes = mysql_real_escape_string($_POST['notes']); 		
+		$this->notes = $conn>escape_string($_POST['notes']); 		
 		$this->pageMode = $_POST['mode'];	
 	}
 

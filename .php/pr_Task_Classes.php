@@ -156,7 +156,7 @@ class TaskList{
 			$this->found = $this->project->tasksCount;
 		} else {
 			$sql = $this->sql->countPeriodicTasks($this->getPeriodicTasksComplete());
-			$this->found = getSQLCount($sql, 'total_tasks');			
+			$this->found = dbGetCount($sql, 'total_tasks');			
 		}
 	}
 	
@@ -180,14 +180,7 @@ class TaskList{
 	
 	
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
-		if ($this->periodicTasks == 'NO'){
-			$sql = $this->sql->listTasksByProject($this->project->id,$this->resultPage,$this->perPage);
-		} else {
-			$sql = $this->sql->listPeriodicTasks($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
-		}
-		$result = mysql_query($sql) or die("Couldn't get task list ($sql)");
-		
-		
+
 		$taskL = new TaskLinks;	
 		$projectL = new ProjectLinks;					
 		if ($pagingBaseLink == 'USE_LISTING'){
@@ -224,7 +217,17 @@ class TaskList{
 		$measuresL = new MeasureLinks('DIV','button');
 		$receiptsL = new ReceiptLinks('DIV','button');
 
-		while($row = mysql_fetch_array($result))
+		if ($this->periodicTasks == 'NO'){
+			$sql = $this->sql->listTasksByProject($this->project->id,$this->resultPage,$this->perPage);
+		} else {
+			$sql = $this->sql->listPeriodicTasks($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
+		}
+		//$result = mysql_query($sql) or die("Couldn't get task list ($sql)");
+		
+		$result = dbGetResult($sql);
+		if ($result){
+
+		while($row = $result->fetch_assoc())
 		{	
 			$t = new Task;		
 			$t->id = $row["id"];
@@ -250,6 +253,7 @@ class TaskList{
 					$cssItem = 'none';
 				}
 			}
+
 
 			$t->formatForDisplay();
 			//for each row, format the table cells
@@ -278,7 +282,9 @@ class TaskList{
 			}
 			$list .=  wrapTr($detail,$cssItem);
 		}
-		mysql_free_result($result);
+		
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;
@@ -336,30 +342,34 @@ class Task {
 		$this->month = $month;
 		
 		$sql = $this->sql->infoTask($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-	
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		//$result = mysql_query($sql) or die(mysql_error());
+		if ($result){
+		
+		while($row = $result->fetch_assoc())
 		{	
 			$this->project->id = $row["project_id"];
 			$this->locationId = $row["location_id"];
 			$this->typeId = $row["type_id"];
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
-			$this->summary = stripslashes($row["summary"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->summary = ($row["summary"]);
 			$this->started = $row["started"];	
 			$this->updated = $row["updated"];
 			$this->pctDone = $row["pct_done"];	
 			$this->order = $row["task_order"];						
 			$this->hoursEstimated = $row["hours_estimated"];
 			$this->hoursActual = $row["hours_actual"];
-			$this->hoursNotes = stripslashes($row["hours_notes"]);			
+			$this->hoursNotes = ($row["hours_notes"]);			
 			$this->materialsAuthProject = $row["materials_auth_project"];
-			$this->materialsAuthBy = stripslashes($row["materials_auth_by"]);
+			$this->materialsAuthBy = ($row["materials_auth_by"]);
 			$this->receiptsAuthProject = $row["receipts_auth_project"];
-			$this->receiptsAuthBy = stripslashes($row["receipts_auth_by"]);
+			$this->receiptsAuthBy = ($row["receipts_auth_by"]);
 
 		}
-		mysql_free_result($result);
+		
+		$result->close();
+		}
 		
 		$this->setParentProject();
 		$this->setMeasureCount();
@@ -374,16 +384,13 @@ class Task {
 		$pageMeasure = 1, 
 		$pageReceipt = 1){
 
-
 		$this->resultsPageMeasure = $pageMeasure;
 		$this->resultsPageActivity = $pageActivity;
 		$this->resultsPageMaterial = $pageMaterial;
 		$this->resultsPageReceipt = $pageReceipt;
 	
-	
 	}
 
-	
 	function setParentProject(){
 		$this->project->setDetails($this->project->id, $this->pageMode);		
 	}
@@ -391,19 +398,22 @@ class Task {
 	function setMeasureCount(){
 		$s = new MeasureSQL;
 		$sql = $s->countMeasuresByTask($this->id);
-		$this->measureCount = getSQLCount($sql, 'total_measures');
+		$this->measureCount = dbGetCount($sql, 'total_measures', 0);
 	}
 	
 	function summarizeActivity(){
 		$s = new ActivitySQL;
 		$sql = $s->summarizeActivityByTask($this->id);
-		$result = mysql_query($sql) or die("couldn't get task activities count ($sql)");
-		while ($row = mysql_fetch_array($result))
+		
+		$result = dbGetResult($sql);
+		if ($result){
+		while ($row = $result->fetch_assoc())
 		{
 			$this->activityCount = $row["total_activities"];	
 			$this->hoursActual = $row["total_hours_actual"];
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 		
 		//if activity records with hours exist
 		//update estimated effort to reflect current average of actual hours
@@ -415,26 +425,32 @@ class Task {
 	function summarizeMaterial(){		
 		$s = new MaterialSQL;
 		$sql = $s->summarizeMaterialByTask($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while ($row = mysql_fetch_array($result))
+		
+		$result = dbGetResult($sql);
+		if ($result){
+		while ($row = $result->fetch_assoc())
 		{
 			$this->materialCount = $row["total_materials"];	
 			$this->costActual = $row["sum_cost_actual"];
 			$this->costEstimated = $row["sum_cost_estimated"];
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 	}
 
 	function summarizeReceipt(){		
 		$s = new ReceiptSQL;
 		$sql = $s->summarizeReceiptsByTask($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while ($row = mysql_fetch_array($result))
+		
+		$result = dbGetResult($sql);
+		if ($result){
+		while ($row = $result->fetch_assoc())
 		{
 			$this->receiptCount = $row["total_receipts"];	
 			$this->receiptCostActual = $row["sum_cost_actual"];
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 	}
 
 	
@@ -842,22 +858,22 @@ class Task {
 		
 		$this->order = $_POST['order']; 
 		$this->started = getTimestampPostValues('started');
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->summary = mysql_real_escape_string($_POST['summary']); 
+		$this->name = $conn>escape_string($_POST['name']); 
+		$this->description = $conn>escape_string($_POST['description']); 
+		$this->summary = $conn>escape_string($_POST['summary']); 
 		$this->pctDone = $_POST['pctDone']; 
 		$this->hoursEstimated = $_POST['hoursEstimated']; 
 		//$this->hoursActual = $_POST['hoursActual']; 
-		$this->hoursNotes = mysql_real_escape_string($_POST['hoursNotes']); 
-		$this->materialsAuthProject = mysql_real_escape_string($_POST['materialsAuthProject']);
+		$this->hoursNotes = $conn>escape_string($_POST['hoursNotes']); 
+		$this->materialsAuthProject = $conn>escape_string($_POST['materialsAuthProject']);
 		if ($this->materialsAuthProject == 'yes'){
-			$this->materialsAuthBy = mysql_real_escape_string($_POST['materialsAuthBy']);
+			$this->materialsAuthBy = $conn>escape_string($_POST['materialsAuthBy']);
 		} else {
 			$this->materialsAuthBy = 'Not Approved';			
 		}
-		$this->receiptsAuthProject = mysql_real_escape_string($_POST['receiptsAuthProject']);
+		$this->receiptsAuthProject = $conn>escape_string($_POST['receiptsAuthProject']);
 		if ($this->receiptsAuthProject == 'yes'){
-			$this->receiptsAuthBy = mysql_real_escape_string($_POST['receiptsAuthBy']);
+			$this->receiptsAuthBy = $conn>escape_string($_POST['receiptsAuthBy']);
 		} else {
 			$this->receiptsAuthBy = 'Not Approved';			
 		}
@@ -874,8 +890,9 @@ class Task {
 		$sql .= " t.hours_actual = 	".$this->hoursActual.", ";
 		$sql .= " t.hours_estimated = ".$this->hoursEstimated." ";
 		$sql .= " WHERE t.id = ".$this->id." ";
+		
+		$result = dbRunSQL($sql);
 
-		$result = mysql_query($sql) or die(mysql_error());
 		$this->project->UpdateTaskSummary();
 
 	}
@@ -889,7 +906,9 @@ class Task {
 		$sql .= " t.materials_auth_project = '".$this->materialsAuthProject."', ";
 		$sql .= " t.materials_auth_by = '".$this->materialsAuthBy."' ";
 		$sql .= " WHERE t.id = ".$this->id." ";
-		$result = mysql_query($sql) or die(mysql_error());
+		
+		$result = dbRunSQL($sql);
+		
 		$this->setMaterialsActualCost();
 	}
 	
@@ -903,7 +922,7 @@ class Task {
 			$sql .= " SET m.cost_actual = 0 ";
 			$sql .= " WHERE m.task_id = ".$this->id." ";			
 		}
-		$result = mysql_query($sql) or die(mysql_error());		
+		$result = dbRunSQL($sql);
 	}
 
 	public function resetReceiptsAuthorization(){	
@@ -915,7 +934,8 @@ class Task {
 		$sql .= " t.receipts_auth_project = '".$this->receiptsAuthProject."', ";
 		$sql .= " t.receipts_auth_by = '".$this->receiptsAuthBy."' ";
 		$sql .= " WHERE t.id = ".$this->id." ";
-		$result = mysql_query($sql) or die(mysql_error());
+		
+		$result = dbRunSQL($sql);
 	}
 
 	private function copyTask(){
@@ -959,8 +979,9 @@ class Task {
 			$sql .= " 'n/a copied project' ";
 			$sql .= " FROM tasks t WHERE t.id = ".$this->id." ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$this->id = mysql_insert_id();
+		$result = dbRunSQL($sql);
+		
+			$this->id = dbInsertedId();
 		
 			//reset page mode from COPY to EDIT and set details using the copied id
 			$this->setDetails($this->id,$this->project->id,'EDIT');
@@ -996,7 +1017,7 @@ class Task {
 
 			$sql .= " WHERE t.id = ".$this->id." ";	
 		
-			$result = mysql_query($sql) or die(mysql_error());
+		$result = dbRunSQL($sql);
 			
 			$this->setMaterialsActualCost();			
 			$this->project->UpdateTaskSummary();
@@ -1038,8 +1059,8 @@ class Task {
 			$sql .= " '".$this->receiptsAuthProject."', ";
 			$sql .= " '".$this->receiptsAuthBy."') ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$this->id = mysql_insert_id();
+		$result = dbRunSQL($sql);
+			$this->id = dbInsertedId();
 
 			$this->project->UpdateTaskSummary();
 

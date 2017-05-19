@@ -16,6 +16,7 @@ protected const _port = 3306;
 public function __construct(){
 
 	printLine('in db->__construct, creating connection');
+
 	parent::__construct($this::_server, $this::_user, $this::_pwd, $this::_database, $this::_port);
 
 	if ($this->connect_error) {

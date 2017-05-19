@@ -145,15 +145,17 @@ class ActivityTypeList{
 		$heading .= wrapTh('Notes');
 		$heading .= wrapTh('Highlight Style');
 		$list .= wrapTr($heading);
-
-		while($row = mysql_fetch_array($result))
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$u = new ActivityType;
 			$u->id = $row["id"];
-			$u->name = stripslashes($row["name"]);
-			$u->description = stripslashes($row["description"]);
-			$u->notes = stripslashes($row["notes"]);
-			$u->highlightStyle = stripslashes($row["highlight_style"]);
+			$u->name = ($row["name"]);
+			$u->description = ($row["description"]);
+			$u->notes = ($row["notes"]);
+			$u->highlightStyle = ($row["highlight_style"]);
 			$u->displayOrder = $row["display_order"];
 			$u->formatForDisplay();
 
@@ -165,7 +167,8 @@ class ActivityTypeList{
 			$detail .= wrapTd($u->highlightStyle);			
 			$list .=  wrapTr($detail,$u->highlightStyle);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;		
@@ -195,18 +198,21 @@ class ActivityType {
 		$this->id = $detailId;
 
 		$sql = $this->sql->infoActivityType($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
-			{	
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
-			$this->notes = stripslashes($row["notes"]);
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->notes = ($row["notes"]);
 			$this->displayOrder = $row["display_order"];			
-			$this->highlightStyle = stripslashes($row["highlight_style"]);
-			$this->created = stripslashes($row["created"]);			
-			$this->updated = stripslashes($row["updated"]);			
+			$this->highlightStyle = ($row["highlight_style"]);
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 				
 	}	
 		
@@ -357,10 +363,10 @@ class ActivityType {
 	public function collectPostValues(){
 
 		$this->id = $_POST['activityTypeId'];
-		$this->name = mysql_real_escape_string($_POST['name']); 
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 		
-		$this->highlightStyle = mysql_real_escape_string($_POST['highlightStyle']); 		
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
 		$this->displayOrder = $_POST['displayOrder'];
 		$this->pageMode = $_POST['mode'];	
 	}
@@ -376,8 +382,10 @@ class ActivityType {
 			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
 			$sql .= " p.display_order = ".$this->displayOrder.", ";
 			$sql .= " p.notes = '".$this->notes."' ";
-			$sql .= " WHERE p.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+			$sql .= " WHERE p.id = ".$this->id."  ";		
+				
+			$result = dbRunSQL($sql);
+			
 		} else {
 			$sql = " INSERT INTO activity_types ";
 			$sql .= " (name, ";
@@ -395,9 +403,10 @@ class ActivityType {
 			$sql .= $this->displayOrder.", ";
 			$sql .= "'".$this->highlightStyle."', ";
 			$sql .= "'".$this->notes."') ";
-			$result = mysql_query($sql) or die(mysql_error());
 			
-			$this->id = mysql_insert_id();
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
 		}
 	
 	}
@@ -445,12 +454,13 @@ public function countActivityTypes(){
 public function selectOptions_ActivityTypes($selectedValue, $disabled){
 	$q = " SELECT ";
 	$q .= " pt.id as value, ";
-	$q .= " pt.name as caption ";
+	$q .= " pt.name as caption, ";
+	$q .= " pt.display_order ";
 	$q .= " FROM activity_types pt ";
 	if ($disabled == 'true'){
 		$q .= " WHERE pt.id = ".$selectedValue." ";
 	}
-	$q .= " ORDER BY display_order, name ";
+	$q .= " ORDER BY display_order, caption ";
 	return $q;	
 }
 }

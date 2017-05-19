@@ -448,7 +448,17 @@ class User {
 			$sql .= " u.login_pwd = '".$newPassCrypt."', ";
 			$sql .= " u.must_update_pwd = 'yes' ";
 			$sql .= " WHERE u.login_name = '".$loginName."' ";
-			$result = mysql_query($sql) or die(mysql_error());
+		//	$result = mysql_query($sql) or die(mysql_error());
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		//if($result){
+		
+	  	//while ($row = $result->fetch_assoc())
+			
 			
 			$links = new UserLinks;	
 			$message = $_SESSION['site-title'].br();
@@ -487,11 +497,20 @@ class User {
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
 		$result = mysql_query($sql) or die(mysql_error());
 		
-		while($row = mysql_fetch_array($result))
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+		if($result){
+		
+	  	while ($row = $result->fetch_assoc())
 		{
 			$found = $row["user_count"];  
 		}
-		mysql_free_result($result);
+		$result->close;
+		}
 
 		if ($found == 1){
 			$validLoginEmail = true;
@@ -575,7 +594,7 @@ class User {
 		$locale = 'user->updateLastLogin:';
 		$result = $conn->query($sql) or exit($locale.$conn->error);
 		
-		//$result = mysql_query($sql) or die(mysql_error());
+
 	}
 	
 	private function setAddRecordDefaults(){
@@ -741,23 +760,25 @@ class User {
 	
 	public function collectPostValues(){
 
+
+
 		$this->id = $_POST['userId'];
 		$this->typeId = $_POST['typeId'];
 		
-		$this->nameFirst = mysql_real_escape_string($_POST['nameFirst']); 
-		$this->nameLast = mysql_real_escape_string($_POST['nameLast']); 
-		$this->email = mysql_real_escape_string($_POST['email']); 
-		$this->focus = mysql_real_escape_string($_POST['focus']); 
-		$this->interests = mysql_real_escape_string($_POST['interests']); 
-		$this->isAdmin = mysql_real_escape_string($_POST['isAdmin']);
-		$this->isActive = mysql_real_escape_string($_POST['isActive']);
-		$this->mustUpdatePwd = mysql_real_escape_string($_POST['mustUpdatePwd']);
+		$this->nameFirst = $conn>escape_string($_POST['nameFirst']); 
+		$this->nameLast = $conn>escape_string($_POST['nameLast']); 
+		$this->email = $conn>escape_string($_POST['email']); 
+		$this->focus = $conn>escape_string($_POST['focus']); 
+		$this->interests = $conn>escape_string($_POST['interests']); 
+		$this->isAdmin = $conn>escape_string($_POST['isAdmin']);
+		$this->isActive = $conn>escape_string($_POST['isActive']);
+		$this->mustUpdatePwd = $conn>escape_string($_POST['mustUpdatePwd']);
 		$this->pageMode = $_POST['mode'];	
 		
-		$this->loginName = mysql_real_escape_string($_POST['loginName']); 
+		$this->loginName = $conn>escape_string($_POST['loginName']); 
 		//get password for local validation
-		$pwd = mysql_real_escape_string($_POST['loginPwd']);
-		$pwdConfirm = mysql_real_escape_string($_POST['loginPwdConfirm']);
+		$pwd = $conn>escape_string($_POST['loginPwd']);
+		$pwdConfirm = $conn>escape_string($_POST['loginPwdConfirm']);
 		//clear the password from post variables if canceling form post
 		$_POST['loginPwd'] = 'password';
 		$_POST['loginPwdConfirm'] = 'password';
@@ -818,7 +839,18 @@ class User {
 			$sql .= " u.must_update_pwd = '".$this->mustUpdatePwd."', ";
 			$sql .= " u.type_id = ".$this->typeId." ";
 			$sql .= " WHERE u.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
+
+			
+			
+					//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+
+		
+
 			
 			$this->mailUser('Your User Profile Has Been Updated');
 			
@@ -854,7 +886,17 @@ class User {
 			$sql .= " '".$this->mustUpdatePwd."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";			
 			$sql .= " ".$this->typeId.") ";
-			$result = mysql_query($sql) or die(mysql_error());
+
+			
+					//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getSiteContents:';
+		$result = $conn->query($sql) or exit($locale.$conn->error);
+
+
+		
+
 			
 			$this->id = mysql_insert_id();
 		}

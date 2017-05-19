@@ -439,9 +439,9 @@ class CropPlan {
 		$this->id = $_POST['cropPlanId'];
 		$this->planNumber = $_POST['planNumber'];
 		$this->planYear = $_POST['planYear'];
-		$this->planName = mysql_real_escape_string($_POST['planName']); 
-		$this->planType = mysql_real_escape_string($_POST['planType']);
-		$this->description = mysql_real_escape_string($_POST['description']); 
+		$this->planName = $conn>escape_string($_POST['planName']); 
+		$this->planType = $conn>escape_string($_POST['planType']);
+		$this->description = $conn>escape_string($_POST['description']); 
 		$this->started = getTimestampPostValues('started');
 		$this->finished = getTimestampPostValues('finished');
 		$this->mature = getTimestampPostValues('mature');

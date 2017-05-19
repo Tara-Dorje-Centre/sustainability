@@ -209,7 +209,7 @@ class ActivityList{
 				$sql = $this->sql->countProjectActivity($this->task->project->id);
 			}
 		}
-		$this->found = getSQLCount($sql, 'total_activities');
+		$this->found = dbGetCount($sql, 'total_activities');
 	}
 
 	private function getCalendarLinks(){
@@ -217,17 +217,20 @@ class ActivityList{
 		$baseUrl = $l->listing(-1,$this->myActivity,$this->showCalendar,$this->task->project->id);
 		$links = $l->openMenu('calendar-links');
 				
+		$this->prevCalendarLink = '';
+		$this->nextCalendarLink = '';
+		$foundCurrent = false;
+		$foundNext = false;
+				
 		if ($this->myActivity == 'PROJECT') {
 			$sql = $this->sql->calendarLinksProjectActivity($this->task->project->id);
 		} else {
 			$sql = $this->sql->calendarLinksMyActivity($this->getActivityDoneBy());			
 		}
-		$result = mysql_query($sql) or die(mysql_error());
-		$this->prevCalendarLink = '';
-		$this->nextCalendarLink = '';
-		$foundCurrent = false;
-		$foundNext = false;
-		while($row = mysql_fetch_array($result))
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$month = $row["month"];
 			$year = $row["year"];
@@ -249,7 +252,9 @@ class ActivityList{
 			}
 			$links .= $link;
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
+		
 		$links .= $l->closeMenu();
 		return $links;
 	}
@@ -261,14 +266,16 @@ class ActivityList{
 
 		$cal = new _Calendar($this->year,$this->month,$title);
 		$sql = $this->sql->calendarSummaryProjectActivity($this->task->project->id,$this->year,$this->month);
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$sumHours = $row["sum_hours"];
 			$started = $row["started"];
 			$taskId = $row['id'];
-			$taskName = stripslashes($row['name']);
-			$doneBy   = stripslashes($row['done_by']);
+			$taskName = ($row['name']);
+			$doneBy   = ($row['done_by']);
 			//highlight scheduled but incomplete activities
 			if ($sumHours == 0){
 				$highlightStyle = 'highlight-yellow';
@@ -281,7 +288,8 @@ class ActivityList{
 			//	$calendarItem = $sumHours.spacer().$taskLink;
 			$cal->addItemByTimestamp($started,$calendarItem,$highlightStyle);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$content = openDiv('my-calendar');
 		$links = $this->getCalendarLinks();	
@@ -300,14 +308,14 @@ class ActivityList{
 		$cal = new _Calendar($this->year,$this->month,$title);
 
 		$sql = $this->sql->calendarSummaryMyActivity($this->getActivityDoneBy(),$this->year,$this->month);
-		$result = mysql_query($sql) or die(mysql_error());
-
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$sumHours = $row["sum_hours"];
 			$started = $row["started"];
 			$projectId = $row['id'];
-			$projectName = stripslashes($row['name']);
+			$projectName = ($row['name']);
 			$doneBy = $row['done_by'];
 			if ($sumHours == 0){
 				$highlightStyle = 'highlight-yellow';
@@ -326,7 +334,8 @@ class ActivityList{
 			$cal->addItemByTimestamp($started,$calendarItem,$highlightStyle);
 
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$content = openDiv('group-calendar');
 		$links = $this->getCalendarLinks();		
@@ -345,8 +354,9 @@ class ActivityList{
 
 		$sql = $this->sql->calendarSummaryMyActivity($this->getActivityDoneBy(),$this->year,$this->month);
 
-		$result = mysql_query($sql) or die(mysql_error());
-		while($row = mysql_fetch_array($result))
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$sumHours = $row["sum_hours"];
 			$started = $row["started"];
@@ -368,7 +378,8 @@ class ActivityList{
 			$cal->addItemByTimestamp($started,$calendarItem,$highlightStyle);
 
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$content = openDiv('my-calendar');
 		$links = $this->getCalendarLinks();		
@@ -414,15 +425,6 @@ class ActivityList{
 	}
 
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
-	
-		if ($this->myActivity == 'NO'){
-			$sql = $this->sql->listActivityByTask($this->task->id,$this->resultPage,$this->perPage);
-		} elseif ($this->myActivity == 'PROJECT'){
-			$sql = $this->sql->listProjectActivity($this->task->project->id,$this->resultPage,$this->perPage);	
-		} else {
-			$sql = $this->sql->listActivityByDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			
-		}
-		$result = mysql_query($sql) or die(mysql_error());
 				
 		$activityL = new ActivityLinks('DIV','menu');
 		$taskL = new TaskLinks('DIV','menu');
@@ -457,7 +459,21 @@ class ActivityList{
 		$heading .=  wrapTh('Links');
 		$list .=  wrapTr($heading);
 
-		while($row = mysql_fetch_array($result))
+		//mysqli_* library implemented for php7
+		//redirect$conn reference to global in _dbconnect.php
+		global $conn;
+		$locale = 'publicWebSite->getPageDetails:';
+		
+		if ($this->myActivity == 'NO'){
+			$sql = $this->sql->listActivityByTask($this->task->id,$this->resultPage,$this->perPage);
+		} elseif ($this->myActivity == 'PROJECT'){
+			$sql = $this->sql->listProjectActivity($this->task->project->id,$this->resultPage,$this->perPage);	
+		} else {
+			$sql = $this->sql->listActivityByDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			
+		}
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
 		{	
 			$a = new Activity;
 			$a->id = $row["id"];
@@ -509,7 +525,8 @@ class ActivityList{
 
 			$list .=  wrapTr($detail,$cssRow);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$list .= closeDisplayList();
 		return $list;		
@@ -545,10 +562,11 @@ class Activity {
 		$this->task->id = $parentTaskId;
 		
 		$sql = $this->sql->infoActivity($this->id);
-		$result = mysql_query($sql) or die(mysql_error());
 
-		while($row = mysql_fetch_array($result)){
-	
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
 			$this->task->id = $row["task_id"];
 			$this->typeId = $row["type_id"];
 			$this->doneBy = stripslashes($row["done_by"]);
@@ -561,15 +579,14 @@ class Activity {
 			$this->linkText = stripslashes($row["link_text"]);
 			$this->linkUrl = stripslashes($row["link_url"]);
 		}
-		mysql_free_result($result);
+		$result->close();
+		}
 
 		$this->setParentTask();				
 	}	
 	
 	public function setParentTask(){
-
 		$this->task->setDetails($this->task->id, $this->task->project->id, $this->pageMode);
-		
 	}
 		
 	function pageTitle(){	
@@ -772,11 +789,11 @@ class Activity {
 		//$this->order = $_POST['activityOrder']; 
 		$this->started = getTimestampPostValues('started');
 		
-		$this->doneBy = mysql_real_escape_string($_POST['activityDoneBy']); 
-		$this->comments = mysql_real_escape_string($_POST['activityComments']); 
+		$this->doneBy = dbEscapeString($_POST['activityDoneBy']); 
+		$this->comments = dbEscapeString($_POST['activityComments']); 
 		$this->hoursActual = $_POST['activityHoursActual']; 
-		$this->linkText = mysql_real_escape_string($_POST['linkText']);
-		$this->linkUrl = mysql_real_escape_string($_POST['linkUrl']);
+		$this->linkText = dbEscapeString($_POST['linkText']);
+		$this->linkUrl = dbEscapeString($_POST['linkUrl']);
 		
 		$this->setParentTask();
 		$this->hoursEstimated = $this->task->hoursEstimated;
@@ -800,7 +817,7 @@ class Activity {
 			$sql .= " a.task_id = ".$this->task->id." ";
 			$sql .= " WHERE a.id = ".$this->id." ";
 
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSql($sql);
 			
 			$this->task->updateActivitySummary();
 			
@@ -832,8 +849,9 @@ class Activity {
 			$sql .= " '".$this->linkText."', ";			
 			$sql .= " '".$this->comments."') ";
 			
-			$result = mysql_query($sql) or die(mysql_error());
-			$this->id = mysql_insert_id();
+			$result = dbRunSql($sql);
+			
+			$this->id = dbInsertedId();
 
 			$this->task->updateActivitySummary();
 

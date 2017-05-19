@@ -379,7 +379,7 @@ function listItem($value,$css = 'none'){
 }
 
 function wrapTh($caption, $css = 'none',$colSpan = 0){
-	$e = new element('th','none',$css);
+	$e = new _element('th','none',$css);
 
 	if ($colSpan != 0){
 		$e->addAttribute('colspan',$colSpan);
@@ -388,7 +388,7 @@ function wrapTh($caption, $css = 'none',$colSpan = 0){
 }
 
 function wrapTd($value, $width = 0, $css='none',$colSpan = 0){
-	$e = new element('td','none',$css);
+	$e = new _element('td','none',$css);
 
 	if ($width!=0){
 		$e->addAttribute('width', $width.'%');

@@ -542,12 +542,12 @@ class Receipt {
 		$this->id = $_POST['receiptId'];
 		$this->receiptId = $_POST['receiptId'];
 		$this->typeId = $_POST['typeId'];
-		$this->name = mysql_real_escape_string($_POST['name']);
-		$this->description = mysql_real_escape_string($_POST['description']); 
-		$this->notes = mysql_real_escape_string($_POST['notes']); 
+		$this->name = $conn>escape_string($_POST['name']);
+		$this->description = $conn>escape_string($_POST['description']); 
+		$this->notes = $conn>escape_string($_POST['notes']); 
 		$this->dateReported = getTimestampPostValues('dateReported');
-		$this->receivedBy = mysql_real_escape_string($_POST['receivedBy']);
-		$this->receivedFrom = mysql_real_escape_string($_POST['receivedFrom']);
+		$this->receivedBy = $conn>escape_string($_POST['receivedBy']);
+		$this->receivedFrom = $conn>escape_string($_POST['receivedFrom']);
 		$this->quantity = $_POST['quantity']; 
 		$this->quantityUnitMeasureId = $_POST['quantityUnitMeasureId'];
 		$this->costUnit = $_POST['costUnit']; 
