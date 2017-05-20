@@ -1,10 +1,79 @@
 ﻿<?php 
 
-
-
-
+class MeasureTypeUnitSQL{
+	public function createView_MeasureTypeUnits(){
+		$s = "CREATE OR REPLACE VIEW measure_type_units_v AS
+		SELECT
+		mtu.id,
+		mtu.id measure_type_unit_id,
+		mtu.measure_type_id,
+		mtu.unit_measure_id,
+		mtu.created,
+		mtu.updated,
+		mt.name measure_type,
+		u.name unit_of_measure,
+		u.type unit_type,
+		u.symbol unit_symbol
+		from
+		measure_types mt
+		join measure_type_units mtu
+		on mtu.measure_type_id = mt.id
+		join units_of_measure u
+		on mtu.unit_measure_id = u.id
+		order by
+		unit_type, measure_type, unit_of_measure ";
+		return $s;
+	}
+public function columnsMeasureTypeUnit(){
+	$c = " mtu.id, ";
+	$c .= " mtu.measure_type_id, ";
+	$c .= " mtu.unit_measure_id, ";
+	$c .= " mtu.updated, ";
+	$c .= " mtu.created, ";
+	$c .= " mtu.measure_type, ";
+	$c .= " mtu.unit_type, ";
+	$c .= " mtu.unit_of_measure, ";
+	$c .= " mtu.unit_symbol ";
+	return $c;	
+}
+public function infoMeasureTypeUnit($measureTypeUnitId){
+	$q = " SELECT ";	
+	$q .= $this->columnsMeasureTypeUnit();
+	$q .= " FROM measure_type_units_v mtu ";
+	$q .= " WHERE mtu.id = '".$measureTypeUnitId."' ";
+	return $q;
+}
+public function listMeasureTypeUnits($measureTypeId,$resultPage, $rowsPerPage){
+	$q = " SELECT ";	
+	$q .= $this->columnsMeasureTypeUnit();
+	$q .= " FROM measure_type_units_v mtu ";
+	if ($measureTypeId > 0){
+		$q .= " WHERE mtu.measure_type_id = ".$measureTypeId." ";
+	}
+	$q .= " ORDER BY unit_type, measure_type, unit_of_measure ";
+	$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	return $q;	
+}
+public function countMeasureTypeUnits($measureTypeId){
+	$q = " SELECT ";	
+	$q .= " COUNT(*) total_units ";
+	$q .= " FROM measure_type_units_v mtu ";
+	if ($measureTypeId > 0){
+		$q .= " WHERE mtu.measure_type_id = ".$measureTypeId." ";
+	}
+	return $q;	
+}
+public function selectOptions_MeasureTypeUnits($selectedValue,$disabled){
+	$q = " SELECT ";
+	$q .= " mtu.unit_type, ";
+	$q .= " mtu.id as value, ";
+	$q .= " concat(mtu.measure_type,'(',mtu.unit_symbol,')') as caption ";
+	$q .= " FROM measure_type_units_v mtu ";
+	if ($disabled == 'true'){
+		$q .= " WHERE mtu.id = ".$selectedValue." ";	
+	}
+	$q .= " ORDER BY unit_type, caption ";
+	return $q;	
+}
+}
 ?>
-
-
-
-

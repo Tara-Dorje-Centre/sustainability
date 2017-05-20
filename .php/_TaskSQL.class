@@ -1,10 +1,167 @@
 ﻿<?php 
 
+class TaskSQL{
+	
+function columnsTasks(){
+$c = " t.id,  ";
+$c .= " t.project_id,  ";
+$c .= " p.name project_name, ";
+$c .= " pt.name project_type, ";
+$c .= " pt.highlight_style project_highlight_style, ";
+$c .= " t.location_id,  ";
+$c .= " t.type_id,  ";
+$c .= " tt.highlight_style, ";
+$c .= " tt.name task_type, ";
+$c .= " tt.frequency, ";
+$c .= " t.task_order,  ";
+$c .= " t.name,  ";
+$c .= " t.description,  ";
+$c .= " t.summary,  ";
+$c .= " t.started,  ";
+$c .= " t.updated,  ";
+$c .= " t.pct_done,  ";
+$c .= " t.hours_estimated,  ";
+$c .= " t.hours_actual,  ";
+$c .= " t.hours_notes, ";
+$c .= " t.materials_auth_project, ";
+$c .= " t.materials_auth_by, ";
+$c .= " t.receipts_auth_project, ";
+$c .= " t.receipts_auth_by ";
+return $c;
+}
+function listTasksByProject($selectedProjectId, $resultPage, $rowsPerPage){
+$q = " SELECT  ";
+$q .= $this->columnsTasks();
+	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
+	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
+	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
+$q .= " WHERE  ";
+$q .= " p.id = ".$selectedProjectId." ";
+$q .= " ORDER BY ";
+$q .= " t.task_order, t.started, t.id ";
+$q .= sqlLimitClause($resultPage, $rowsPerPage);
+return $q;
+}
 
+function infoTask($selectedTaskId){
+$q = " SELECT  ";
+$q .= $this->columnsTasks();
+	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
+	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
+	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
+$q .= " WHERE  ";
+$q .= " t.id = ".$selectedTaskId." ";
+return $q;
+}
 
+function infoTaskSummaryByProject($selectedProjectId){
+$q = " SELECT  ";
+$q .= " COUNT(*) as total_tasks, ";
+$q .= " sum(t.hours_estimated) as sum_hours_estimated, ";
+$q .= " sum(t.hours_actual) as sum_hours_actual, ";
+$q .= " sum(t.pct_done)/count(*) as overall_pct_done ";
+$q .= " FROM tasks AS t ";
+$q .= " WHERE t.project_id = ".$selectedProjectId." ";
+return $q;
+}
+function countTasksByProject($selectedProjectId){
+$q = " SELECT  ";
+$q .= " COUNT(*) total_tasks ";
+$q .= " FROM tasks AS t ";
+$q .= " WHERE t.project_id = ".$selectedProjectId." ";
+return $q;	
+}
+function countTasksByProjectByStatus($selectedProjectId, $taskStatus = 'OPEN'){
+$q = " SELECT  ";
+$q .= " COUNT(*) AS total_tasks ";
+$q .= " FROM tasks AS t ";
+$q .= " WHERE t.project_id = ".$selectedProjectId." ";
+if ($taskStatus == 'OPEN'){
+	$q .= " AND t.pct_done < 1 "; 
+}
+if ($taskStatus == 'CLOSED'){
+	$q .= " AND t.pct_done = 1 ";
+}
+return $q;
+}
 
+public function listPeriodicTasks($complete = 'NO',$resultPage,$rowsPerPage){
+	$q = " SELECT ";
+	$q .= $this->columnsTasks();
+	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
+	$q .= " JOIN project_types pt on p.type_id = pt.id ";
+	$q .= " JOIN task_types tt on t.type_id = tt.id ";
+	$q .= " WHERE t.id IN ";
+	$q .= $this->periodicTasksSubquery($complete);
+	$q .= " ORDER BY ";
+	$q .= " project_type, project_name, t.task_order ";
+	$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	return $q;
+}
+public function countPeriodicTasks($complete = 'NO'){
+	$q = " SELECT count(*) AS total_tasks ";
+	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
+	$q .= " JOIN project_types pt on p.type_id = pt.id ";
+	$q .= " JOIN task_types tt on t.type_id = tt.id ";
+	$q .= " WHERE t.id IN ";
+	$q .= $this->periodicTasksSubquery($complete);
+	return $q;
+}
+private function periodicTasksBaseSubquery($frequency, $where){
+$q = " ( select a.task_id ";
+$q .= " from activities a join tasks t on a.task_id = t.id ";
+$q .= " join task_types tt on t.type_id = tt.id ";
+$q .= " where tt.frequency = '".$frequency."' ";
+$q .= " and a.hours_actual > 0 ";
+$q .= $where." ) ";
+return $q;	
+}
+private function periodicTasksBaseSelect($frequency,$subqueryWhere, $complete = 'NO'){
+$q = " SELECT t.id ";
+$q .= " FROM projects p JOIN tasks t ON p.id = t.project_id ";
+$q .= " JOIN task_types tt ON t.type_id = tt.id ";
+$q .= " WHERE p.pct_done != 1 AND tt.frequency = '".$frequency."' ";
+if ($complete == 'YES'){
+	$q .= " AND t.id IN ";
+} else {
+	$q .= " AND t.id NOT IN ";
+}
+$q .= $this->periodicTasksBaseSubquery($frequency,$subqueryWhere);
+return $q;
+}
+private function periodicTasksSubquery($complete = 'NO'){
+	$q = " (";
+	$subqueryWhere = " and date(a.started) = date(CURRENT_TIMESTAMP) ";	
+	$q .= $this->periodicTasksBaseSelect('daily', $subqueryWhere,$complete);
+	$q .= " UNION ALL ";
+	$subqueryWhere = " and yearweek(a.started) = yearweek(CURRENT_TIMESTAMP) ";
+	$q .= $this->periodicTasksBaseSelect('weekly', $subqueryWhere,$complete);
+	$q .= " UNION ALL ";
+	$subqueryWhere = " and year(a.started) = year(CURRENT_TIMESTAMP) ";
+	$subqueryWhere .= " and month(a.started) = month(CURRENT_TIMESTAMP) ";
+	$q .= $this->periodicTasksBaseSelect('monthly', $subqueryWhere,$complete);
+	$q .= " UNION ALL ";
+	$subqueryWhere = " and year(a.started) = year(CURRENT_TIMESTAMP) ";
+	$subqueryWhere .= " and quarter(a.started) = quarter(CURRENT_TIMESTAMP) ";
+	$q .= $this->periodicTasksBaseSelect('quarterly', $subqueryWhere,$complete);
+	$q .= " UNION ALL ";
+	$subqueryWhere = " and year(a.started) = year(CURRENT_TIMESTAMP) ";
+	$q .= $this->periodicTasksBaseSelect('annual',$subqueryWhere,$complete);
+	$q .= ") ";
+	return $q;
+}
+public function selectOptions_Tasks($projectId,$selectedTaskId,$disabled){
+	$q = " SELECT ";
+	$q .= " p.id as value, ";
+	$q .= " concat_ws(' ',p.task_order,p.name) as caption ";
+	$q .= " FROM tasks p ";
+	$q .= " WHERE p.project_id = ".$projectId." AND p.pct_done < 1 ";
+	if ($disabled == 'true'){
+		$q .= " AND p.id = ".$selectedTaskId." ";	
+	}
+	$q .= " ORDER BY caption ";
+	return $q;	
+}
+
+}
 ?>
-
-
-
-

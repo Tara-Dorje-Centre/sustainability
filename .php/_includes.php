@@ -32,7 +32,13 @@ include_once("_UserTypeList.class");
 include_once("_UserTypeLinks.class");
 include_once("_UserTypeSQL.class");
 
-include_once("sys_SitewideSettings_Classes.php");
+//include_once("sys_SiteSettings_Classes.php");
+include_once("_SiteSettings.class");
+include_once("_SiteSettingsList.class");
+include_once("_SiteSettingsLinks.class");
+include_once("_SiteSettingsSQL.class");
+
+
 
 //support project planning system
 include_once("_includes_pr.php");

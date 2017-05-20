@@ -1,8 +1,412 @@
 ﻿<?php 
 
+class Material {
+    public $id = 0;
+    public $locationId = 0;	
+	public $typeId = 0;
+	public $typeName = '';
+	public $name;
+    public $description;
+    public $dateReported;
+	public $doneBy;
+	public $paidTo;
+    public $updated;
+    public $quantity = 1;	
+	public $quantityUnitMeasureId = 0;
+	public $quantityUnitMeasureName = '';
+    public $costUnit = 0;	
+	public $costEstimated = 0;
+	public $costActual = 0;
+    public $notes;
+	public $linkUrl;
+	public $linkText;
+	public $task;
+	private $sql;
+	// property to support edit/view/add mode of calling page
+    public $pageMode;
+
+	public function __construct(){
+		$this->task = new Task;
+		$this->sql = new MaterialSQL;
+	}
 
 
+	public function setDetails($detailMaterialId, $parentTaskId, $inputMode){
+		$this->pageMode = $inputMode;
+		$this->id = $detailMaterialId;
+		$this->task->id = $parentTaskId;
+		
+		$sql = $this->sql->infoMaterial($this->id);
 
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$this->task->id = $row["task_id"];
+			$this->locationId = $row["location_id"];
+			$this->typeId = $row["type_id"];
+			$this->typeName = ($row["type_name"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->dateReported = $row["date_reported"];
+			$this->doneBy = stripslashes($row["done_by"]);
+			$this->paidTo = stripslashes($row["paid_to"]);
+			$this->updated = $row["updated"];	
+			$this->quantity = $row["quantity"];	
+			$this->quantityUnitMeasureId = $row["qty_unit_measure_id"];
+			$this->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
+			$this->costEstimated = $row["cost_estimated"];						
+			$this->costActual = $row["cost_actual"];
+			$this->costUnit = $row["cost_unit"];
+			$this->notes = ($row["notes"]);
+			$this->linkText = ($row["link_text"]);
+			$this->linkUrl = ($row["link_url"]);
+			
+		}
+		$result->close();
+		}
+
+		$this->setParentTask();				
+	}	
+	
+	public function setParentTask(){
+		$this->task->setDetails($this->task->id, 0, $this->pageMode);
+	}
+		
+	function pageTitle(){	
+		$title = openDiv('section-heading-title','none');
+		//show page mode for debugging
+		//$heading .= '['.$this->pageMode.']';
+		$title .= $this->task->project->name.br();
+		$title .= 'Task: '.$this->task->name;		
+		$title .= closeDiv();
+		return $title;
+		
+	}
+	
+	
+	function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$projects = new ProjectLinks($menuType,$menuStyle);
+		$tasks = new TaskLinks($menuType,$menuStyle);
+		$materials = new MaterialLinks($menuType,$menuStyle);
+					
+		$menu = $projects->openMenu('section-heading-links');
+
+		$menu .= $projects->detailViewHref($this->task->project->id);
+		if ($this->task->project->materialsCount > 0){
+//			$menu .= $projects->resetMenu();
+			$menu .= $materials->listingHref(0,'ProjectMaterials',$this->task->project->id,'PROJECT','YES');
+		}
+		
+		$menu .= $projects->resetMenu();
+		$menu .= $tasks->detailViewHref($this->task->id);
+		if ($this->task->materialCount > 0){
+			$menu .= $materials->listingHref($this->task->id,'TaskMaterials',0,'TASK','NO');
+		}
+		$menu .= $projects->resetMenu();
+		
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $materials->detailEditHref($this->id);
+		} elseif ($this->pageMode == 'EDIT'){
+			
+			$menu .= $materials->detailViewHref($this->id);
+		}
+		
+		$menu .= $projects->closeMenu();
+		return $menu;
+	}
+
+		
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	public function formatForDisplay(){
+		$this->name = displayLines($this->name);
+		$this->description = displayLines($this->description);
+		$this->notes = displayLines($this->notes);
+		$this->dateReported = getTimestampDate($this->dateReported);
+		$this->updated = getTimestampDate($this->updated);
+	}
+
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+
+	
+	public function getPageDetails(){			
+
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+	
+	
+	public function display(){
+		$this->formatForDisplay();
+		
+		$detail = openDisplayDetails('material','Material Details');
+
+		$detail .= captionedParagraph('name','Material',$this->name);
+		$detail .= captionedParagraph('type-name','Type',$this->typeName);
+		$detail .= captionedParagraph('description','Description',$this->description);
+		
+		$detail .= captionedParagraph('reported','Reported',$this->dateReported);
+		$detail .= captionedParagraph('doneBy','Done By', $this->doneBy);
+		$detail .= captionedParagraph('paidTo','Paid To', $this->paidTo);
+		$detail .= captionedParagraph('updated','Updated',$this->updated);	
+		$detail .= captionedParagraph('quantity-units','Quantity Units',$this->quantityUnitMeasureName);	
+		$detail .= captionedParagraph('quantity','Quantity',$this->quantity);
+		$detail .= captionedParagraph('cost-unit','Cost Unit',$this->costUnit);
+		$detail .= captionedParagraph('cost-estimated','Cost Estimated',$this->costEstimated);
+		$detail .= captionedParagraph('cost-actual','Cost Actual',$this->costActual);
+		if ($this->linkText != '' && $this->linkUrl != ''){
+			$l = new MaterialLinks('DIV','menu');
+			$link = $l->formatHref($this->linkText,$this->linkUrl,'_blank');
+			$detail .= captionedParagraph('a-weblink','Web Link',$link);
+		}		
+ 		$detail .= captionedParagraph('notes','Notes',$this->notes);
+
+		$detail .= closeDisplayDetails();
+
+		
+		return $detail;
+	}	
+	
+	private function setAddRecordDefaults(){
+		$this->locationId = $this->task->locationId;
+		$this->quantity = 1;
+		$this->quantityUnitMeasureId = 0;
+		$this->costUnit = 0;
+		$this->costEstimated = 0;
+		$this->costActual = 0;		
+
+		if (isset($_SESSION['last-material-date'])){
+			 $this->dateReported = $_SESSION['last-material-date'];
+		} else {
+			global $sessionTime;
+			$this->dateReported = $sessionTime;				
+		}
+
+		if (isset($_SESSION['last-material-paid-to'])){
+			 $this->paidTo = $_SESSION['last-material-paid-to'];
+		}
+		
+		if (isset($_SESSION['last-material-done-by'])){
+			 $this->doneBy = $_SESSION['last-material-done-by'];
+		} else {
+			$this->doneBy = $_SESSION['login-name'];
+		}
+
+	}
+	
+	public function editForm(){
+		if ($this->pageMode == 'ADD'){		
+			$this->setAddRecordDefaults();
+		}
+		
+		if ($this->pageMode == 'ADD'){
+			$legendText = 'Add Material';
+		} else if ($this->pageMode == 'EDIT'){
+			$legendText =  'Edit Material';
+		} else {
+			$legendText = 'Material Details';
+		}
+		
+		$entity = 'material';
+		$c = new MaterialLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$form = openEditForm($entity,$legendText,'pr_Material_Save.php',$contextMenu);
+
+		$fields = inputFieldName($entity,$this->name,'name','Material');
+
+		//done by user
+		$fields .= inputFieldUser($entity,$this->doneBy,'doneBy','Done By');
+
+		//paid to
+		$fields .= inputFieldUser($entity,$this->paidTo,'paidTo','Paid To');
+
+		
+
+		
+		//quantity
+		$fields .= inputFieldNumber($entity,$this->quantity,'quantity','Quantity');
+		
+		//unit cost
+		$fields .= inputFieldNumber($entity,$this->costUnit,'costUnit','Unit Cost');
+
+		//quantity unit type
+		$u = new UnitOfMeasure;
+		$select = $u->getUnitOfMeasureSelectList($this->quantityUnitMeasureId,'quantityUnitMeasureId','false',false);
+		$fields .= captionedInput('Quantity Units',$select);
+
+		$m = new MaterialType;
+		$select = $m->getMaterialTypeSelectList($this->typeId,'typeId','false',false);
+		$fields .= captionedInput('Material Type',$select);
+
+
+		//date of materials purchase
+		$fields .= inputFieldTimestamp($entity, 'dateReported', $this->dateReported, 'Reported'); 		
+		
+		
+		$formRequired = $fields;
+		
+		//estimated cost
+		$tooltip = 'Based on unit cost and quantity';
+		$fields = inputFieldNumber($entity,$this->costEstimated,'costEstimated','Estimate',$tooltip,'true');
+
+		//estimated cost
+		$tooltip = 'Set when task costs are approved';
+		$fields .= inputFieldNumber($entity,$this->costActual,'costActual','Actual',$tooltip,'true');
+
+		$fields .= inputGroupWebLink($entity,$this->linkText,$this->linkUrl);
+		
+		$fields .= inputFieldDescription($entity,$this->description,'description');
+		
+		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+
+		$formOptional = $fields;
+
+		//hidden fields and submit,reset buttons
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('taskId', $this->task->id);
+		$hidden .= getHiddenInput('materialId', $this->id);
+		$hidden .= getHiddenInput('locationId', $this->locationId);
+
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+			
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);	
+
+		return $form;
+	}
+	
+	private function setEstimatedCost(){
+			$this->costEstimated = $this->costUnit * $this->quantity;
+	}
+	
+	public function collectPostValues(){
+		//called by save form prior to running adds/updates
+		$this->pageMode = $_POST['mode'];
+		
+		$this->task->id = $_POST['taskId'];
+		$this->id = $_POST['materialId'];
+		$this->locationId = $_POST['locationId'];
+		$this->typeId = $_POST['typeId'];
+		$this->name = dbEscapeString($_POST['name']);
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 
+		$this->dateReported = getTimestampPostValues('dateReported');
+		$this->doneBy = dbEscapeString($_POST['doneBy']);
+		$this->paidTo = dbEscapeString($_POST['paidTo']);
+		$_SESSION['last-material-paid-to'] = $this->paidTo;
+		$_SESSION['last-material-done-by'] = $this->doneBy;
+		$_SESSION['last-material-date'] = $this->dateReported;
+		$this->quantity = $_POST['quantity']; 
+		$this->quantityUnitMeasureId = $_POST['quantityUnitMeasureId'];
+		$this->costUnit = $_POST['costUnit']; 
+		//$this->costEstimated = $_POST['costEstimated']; 
+//		$this->costActual = $_POST['costActual']; 
+		$this->linkText = dbEscapeString($_POST['linkText']);
+		$this->linkUrl = dbEscapeString($_POST['linkUrl']);
+		
+		$this->setEstimatedCost();
+
+		$this->setParentTask();
+	}
+
+	public function saveChanges(){
+	
+		if ($this->pageMode == 'EDIT'){
+			
+			$sql = " UPDATE materials m ";
+			$sql .= " SET ";
+			$sql .= " m.name = '".$this->name."', ";
+			$sql .= " m.description = '".$this->description."', ";
+			$sql .= " m.notes = '".$this->notes."', ";
+			$sql .= " m.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " m.date_reported = '".$this->dateReported."', ";
+			$sql .= " m.done_by = '".$this->doneBy."', ";
+			$sql .= " m.paid_to = '".$this->paidTo."', ";			
+			$sql .= " m.link_text = '".$this->linkText."', ";
+			$sql .= " m.link_url = '".$this->linkUrl."', ";
+			$sql .= " m.type_id = ".$this->typeId.", ";
+			$sql .= " m.location_id = ".$this->locationId.", ";
+			$sql .= " m.quantity = ".$this->quantity.", ";
+			$sql .= " m.qty_unit_measure_id = ".$this->quantityUnitMeasureId.", ";
+			$sql .= " m.cost_unit = ".$this->costUnit.", ";
+			$sql .= " m.cost_estimated = ".$this->costEstimated." ";
+			//$sql .= " m.cost_actual = ".$this->costActual." ";
+			$sql .= " WHERE m.id = ".$this->id." ";
+
+			$result = dbRunSQL($sql);
+			
+			$this->task->resetMaterialsAuthorization();
+			
+		} else {
+	
+			$sql = " INSERT INTO materials ";
+			$sql .= " (name, ";
+			$sql .= " description, ";
+			$sql .= " task_id, ";
+			$sql .= " location_id, ";
+			$sql .= " date_reported, ";
+			$sql .= " done_by, ";
+			$sql .= " paid_to, ";
+			$sql .= " updated, ";
+			$sql .= " link_url, ";
+			$sql .= " link_text, ";			
+			$sql .= " quantity, ";
+			$sql .= " cost_unit, ";
+			$sql .= " cost_estimated, ";
+			//$sql .= " cost_actual, ";
+			$sql .= " type_id, ";
+			$sql .= " qty_unit_measure_id, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= "'".$this->description."', ";
+			$sql .= "".$this->task->id.", ";
+			$sql .= "".$this->locationId.", ";
+			$sql .= " '".$this->dateReported."', ";
+			$sql .= " '".$this->doneBy."', ";
+			$sql .= " '".$this->paidTo."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " '".$this->linkUrl."', ";
+			$sql .= " '".$this->linkText."', ";						
+			$sql .= "".$this->quantity.", ";
+			$sql .= "".$this->costUnit.", ";
+			$sql .= "".$this->costEstimated.", ";
+			//$sql .= "".$this->costActual.", ";
+			$sql .= " ".$this->typeId.", ";
+			$sql .= " ".$this->quantityUnitMeasureId.", ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+			$this->task->resetMaterialsAuthorization();
+		}
+	
+	}
+	
+} 
 ?>
 
 

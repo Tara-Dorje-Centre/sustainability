@@ -1,8 +1,242 @@
 ﻿<?php 
 
+class ActivityType {
+    public $id = 0;
+    public $name;		
+    public $description;	
+    public $notes;
+	public $displayOrder = 0;
+	public $highlightStyle = 'none';
+    public $created;
+    public $updated;
+	// property to support edit/view/add mode of calling page
+    public $pageMode;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = New ActivityTypeSQL;
+	}
+
+    // set class properties with record values from database
+	public function setDetails($detailId, $inputMode){
+		$this->pageMode = $inputMode;
+		$this->id = $detailId;
+
+		$sql = $this->sql->infoActivityType($this->id);
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->notes = ($row["notes"]);
+			$this->displayOrder = $row["display_order"];			
+			$this->highlightStyle = ($row["highlight_style"]);
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
+		}
+		$result->close();
+		}
+				
+	}	
+		
+	function pageTitle(){
+		$heading = openDiv('section-heading-title');
+		if ($this->pageMode != 'ADD'){
+			$heading .= $this->name;
+		} else {
+			$heading .= 'Add New Activity Type';
+		}
+		$heading .= closeDiv();		
+		return $heading;
+	}
+	
+	
+	function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		$typesL = new ActivityTypeLinks($menuType,$menuStyle);		
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $typesL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $typesL->resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $typesL->detailEditHref($this->id);
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $typesL->detailViewHref($this->id);
+		}
+		$menu .= $typesL->listingHref();	
+			
+		$menu .= $typesL->closeMenu();
+		return $menu;
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	public function formatForDisplay(){
+		$this->name = displayLines($this->name);
+		$this->description = displayLines($this->description);
+		$this->notes = displayLines($this->notes);
+		$this->created = getTimestampDate($this->created);
+		$this->updated = getTimestampDate($this->updated);
+	}
+	
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
 
 
+	public function getPageDetails(){			
 
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+	
+	
+	public function display(){
+		$this->formatForDisplay();
+		
+		$detail = openDisplayDetails('activity-type', 'Activity Type Details');
+	 						
+		$detail .= captionedParagraph('name', 'Name', $this->name);
+		$detail .= captionedParagraph('description', 'Description', $this->description);
+		$detail .= captionedParagraph('created', 'Created', $this->created);
+		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
+		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
+		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
+		$detail .= captionedParagraph('display-order', 'Display Order', $this->displayOrder);
+
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+
+
+	public function getActivityTypeSelectList(
+		$selectedValue = '0', 
+		$idName = 'activityTypeId', 
+		$disabled = 'false',
+		$showLink = true,
+		$onChangeJS = NULL){
+
+	
+		
+		$sql = $this->sql->selectOptions_ActivityTypes($selectedValue, $disabled);
+		
+		$defaultValue = 0;
+		$defaultCaption = '-select Activity Type';
+		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+		
+		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);
+		if ($showLink == true){
+			$l = new ActivityTypeLinks;	
+			$links =$l->detailViewEditHref($selectedValue);
+			$select .= $links;
+		}
+		return $select;
+	}	
+		
+	public function editForm(){
+		if ($this->pageMode == 'ADD'){
+			$legend = 'Add Activity Type';
+		} else {
+			$legend = 'Edit Activity Type';
+		}
+		$entity = 'activity-type';
+		$c = new ActivityTypeLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$form = openEditForm('activity-type',$legend,'pr_ActivityType_Save.php',$contextMenu);
+
+		//formRequired fields		
+		$fields = inputFieldName($entity,$this->name,'name','Activity Type');
+		$fields .= inputFieldNumber($entity,$this->displayOrder,'displayOrder','Display Order');
+		$fields .= inputFieldHighlightStyle($entity,$this->highlightStyle,'highlightStyle');
+		$formRequired = $fields;
+		
+		//formOptional fields
+		$fields = inputFieldDescription($entity,$this->description,'description');
+		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+		$formOptional = $fields;
+
+		//formSubmit fields
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('activityTypeId', $this->id);
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+	
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);	
+		return $form;
+	}
+	
+	public function collectPostValues(){
+
+		$this->id = $_POST['activityTypeId'];
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		$this->displayOrder = $_POST['displayOrder'];
+		$this->pageMode = $_POST['mode'];	
+	}
+
+	public function saveChanges(){
+	
+		if ($this->pageMode == 'EDIT'){
+			$sql = " UPDATE activity_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.display_order = ".$this->displayOrder.", ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";		
+				
+			$result = dbRunSQL($sql);
+			
+		} else {
+			$sql = " INSERT INTO activity_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " display_order, ";
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= $this->displayOrder.", ";
+			$sql .= "'".$this->highlightStyle."', ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+		}
+	
+	}
+	
+}
 ?>
 
 

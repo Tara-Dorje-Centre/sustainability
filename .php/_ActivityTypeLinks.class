@@ -1,8 +1,59 @@
 ﻿<?php 
 
-
-
-
+class ActivityTypeLinks extends _Links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($caption = 'AllActivityTypes'){
+		$link = $this->listing();
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $activityTypeId = 0, $caption = 'ActivityType'){
+		$link = $this->detail($pageAction,$activityTypeId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	public function listing(){
+		$link = 'pr_ActivityType_List.php';
+		return $link;
+	}
+	public function listingPaged($found, $resultPage, $perPage){
+		$l = $this->listing().'?resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+	public function detail($pageAction, $activityTypeId = 0){
+		$link = 'pr_ActivityType_Detail.php?pageAction='.$pageAction;
+		if ($activityTypeId != 0){
+			$link .= '&activityTypeId='.$activityTypeId;
+		}
+		return $link;
+	}	
+	public function detailAddHref($caption = '+ActivityType'){
+		$l = $this->detailHref('ADD',0,$caption);
+		return $l;	
+	}
+	public function detailViewHref($activityTypeId,$caption = 'ViewActivityType'){
+		$l = $this->detailHref('VIEW',$activityTypeId,$caption);
+		return $l;	
+	}
+	public function detailEditHref($activityTypeId,$caption = 'EditActivityType'){
+		$l = $this->detailHref('EDIT',$activityTypeId,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($activityTypeId = 0, $viewCaption = 'ViewActivityType'){
+		
+		if ($activityTypeId != 0){
+			$links = $this->detailViewHref($activityTypeId,$viewCaption);
+			$links .= $this->detailEditHref($activityTypeId,'#');
+		} else {
+			$links = $this->listingHref();
+		}
+		return $links;
+	}	
+	
+}
 ?>
 
 

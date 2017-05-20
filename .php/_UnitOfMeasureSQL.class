@@ -1,8 +1,51 @@
 ﻿<?php 
 
-
-
-
+class UnitOfMeasureSQL{                  
+public function columnsUnitOfMeasure(){
+$query = "um.id, ";
+$query .= " um.type, ";
+$query .= " um.name, ";
+$query .= " um.updated, ";
+$query .= " um.created, ";
+$query .= " um.notes, ";
+$query .= " um.symbol ";
+return $query;	
+}
+public function infoUnitOfMeasure($unitId){
+$query = " SELECT ";	
+$query .= $this->columnsUnitOfMeasure();
+$query .= " FROM units_of_measure um ";
+$query .= " WHERE  ";
+$query .= " um.id = '".$unitId."' ";
+return $query;
+}
+public function listUnitsOfMeasure($resultPage, $rowsPerPage){
+$query = " SELECT ";	
+$query .= $this->columnsUnitOfMeasure();
+$query .= " FROM units_of_measure um ";
+$query .= " ORDER BY type, name ";
+$query .= sqlLimitClause($resultPage, $rowsPerPage);
+return $query;	
+}
+public function countUnitsOfMeasure(){
+$query = " SELECT ";	
+$query .= " COUNT(*) total_units ";
+$query .= " FROM units_of_measure um ";
+return $query;	
+}
+public function selectOptions_UnitsOfMeasure($selectedValue,$disabled){
+	$q = " SELECT ";
+	$q .= " um.type, ";
+	$q .= " um.id as value, ";
+	$q .= " concat(um.name,'(',um.symbol,')') as caption ";
+	$q .= " FROM units_of_measure um ";
+	if ($disabled == 'true'){
+		$q .= " WHERE um.id = ".$selectedValue." ";	
+	}
+	$q .= " ORDER BY type, caption ";
+	return $q;	
+}
+}
 ?>
 
 

@@ -61,8 +61,6 @@ class UserLinks extends _Links {
 		return $links;
 	}	
 }
-//end class UserLinks
-
 ?>
 
 

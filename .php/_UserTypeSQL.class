@@ -46,9 +46,3 @@ public function selectOptions_UserTypes($selectedValue,$disabled){
 }
 }
 ?>
-
-?>
-
-
-
-

@@ -1,10 +1,121 @@
 ﻿<?php 
 
+class ReceiptTypeList{
+	public $found = 0;
+	public $resultPage = 1;
+	public $perPage = 10;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new ReceiptTypeSQL;
+	}
+	
+	public function setDetails($resultPage = 1, $resultsPerPage = 10){
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;
+		
+		$this->setFoundCount();
+	}
+	
+	public function pageTitle(){
+		$title = openDiv('section-heading-title','none');
+		$title .= 'Receipt Types';
+		$title .= closeDiv();
+		return $title;	
+	}
+
+	public function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		$typeL = new ReceiptTypeLinks($menuType,$menuStyle);		
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $typeL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $typeL->resetMenu();
+		$menu .= $typeL->detailAddHref();
+		$menu .= $typeL->listingHref();		
+		$menu .= $typeL->closeMenu();
+		return $menu;			
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}	
+	
+	private function setFoundCount(){
+		$sql = $this->sql->countReceiptTypes();
+		$this->found = dbGetCount($sql, 'total_types');
+	}
+
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+
+	public function getPageDetails(){
+	
+		$details = $this->getListing();
+		return $details;
+		
+	}
+
+		
+	public function getListing(){
+		$sql = $this->sql->listReceiptTypes($this->resultPage,$this->perPage);
 
 
+		$typeL = new ReceiptTypeLinks;
+		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
+		$rt = new ReceiptType;
+		$rt->setDetails(0,'ADD');
+		$quickEdit = $rt->editForm();
+		$list = openDisplayList('receipt-types','Receipt Types',$pagingLinks,$quickEdit);
 
+		$heading = wrapTh('Display Order');
+		$heading .= wrapTh('Receipt Type');
+		$heading .= wrapTh('Description');
+		$heading .= wrapTh('Notes');
+		$heading .= wrapTh('Highlight Style');		
+		$list .= wrapTr($heading);
+
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+		{	
+			$u = new ReceiptType;
+			$u->id = $row["id"];
+			$u->name = stripslashes($row["name"]);
+			$u->description = stripslashes($row["description"]);
+			$u->notes = stripslashes($row["notes"]);
+			$u->displayOrder = $row["display_order"];			
+			$u->highlightStyle = stripslashes($row["highlight_style"]);
+			
+			$u->formatForDisplay();
+			
+			$detail = wrapTd($u->displayOrder);
+			$link = $typeL->detailViewEditHref($u->id,$u->name);
+			$detail .= wrapTd($link);
+			$detail .=  wrapTd($u->description);			
+			$detail .= wrapTd($u->notes);
+			$detail .= wrapTd($u->highlightStyle);			
+			$list .=  wrapTr($detail,$u->highlightStyle);
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();
+
+		return $list;
+		
+	}
+}
 ?>
-
-
-
-

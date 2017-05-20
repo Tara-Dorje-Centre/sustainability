@@ -1,12 +1,5 @@
 <?php
 
-
-
-
-
-
-
-
 class LocationTypeSQL{
 	public function columnsLocationType(){
 		$c = "lt.id, ";

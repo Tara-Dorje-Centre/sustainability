@@ -1,10 +1,121 @@
 ﻿<?php 
 
+class ReceiptSQL{
+function columnsReceipts(){
+$c = " m.id, ";
+$c .= " m.task_id, ";
+$c .= " t.task_order, ";
+$c .= " t.name task_name, ";
+$c .= " m.activity_id, ";
+$c .= " m.name, ";
+$c .= " m.description, ";
+$c .= " m.date_reported, ";
+$c .= " m.received_by, ";
+$c .= " m.received_from, ";
+$c .= " m.updated, ";
+$c .= " m.quantity, ";
+$c .= " m.qty_unit_measure_id, ";
+$c .= " uom.name qty_unit_measure_name, ";
+$c .= " m.cost_unit, ";
+$c .= " m.cost_actual, ";
+$c .= " m.type_id, ";
+$c .= " mt.name type_name, ";
+$c .= " mt.highlight_style, ";
+$c .= " m.notes ";
+return $c;	
+}
+public function infoReceipt($receiptId){
+$q = " SELECT ";	
+$q .= $this->columnsReceipts();
+$q .= " FROM receipts AS m ";
+$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " LEFT OUTER JOIN receipt_types AS mt ON m.type_id = mt.id ";
+$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+$q .= " WHERE  ";
+$q .= " m.id = ".$receiptId." ";
+return $q;
+}
+public function listReceiptsByTask($selectedTaskId, $resultPage, $rowsPerPage){
+$q = " SELECT ";	
+$q .= $this->columnsReceipts();
+$q .= " FROM receipts AS m ";
+$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " LEFT OUTER JOIN receipt_types AS mt ON m.type_id = mt.id ";
+$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+$q .= " WHERE  ";
+$q .= " m.task_id = ".$selectedTaskId." ";
+$q .= " ORDER BY ";
+$q .= " date(m.date_reported) desc, m.name ";
+$q .= sqlLimitClause($resultPage, $rowsPerPage);
+return $q;
+}
+public function countReceiptsByTask($selectedTaskId){
+$q = " SELECT  ";
+$q .= " COUNT(*) total_receipts";
+$q .= " FROM receipts AS m ";
+$q .= " WHERE  ";
+$q .= " m.task_id = ".$selectedTaskId." ";
+return $q;
+}
+public function summarizeReceiptsByTask($selectedTaskId){
+$q = " SELECT  ";
+$q .= " COUNT(*) total_receipts, ";
+$q .= " SUM(m.cost_actual) sum_cost_actual ";
+$q .= " FROM receipts AS m ";
+$q .= " WHERE  ";
+$q .= " m.task_id = ".$selectedTaskId." ";
+return $q;
+}
+public function listReceiptsByProject($projectId, $resultPage, $rowsPerPage, $approved = 'yes'){
+$q = " SELECT ";	
+$q .= $this->columnsReceipts();
+$q .= " FROM receipts AS m ";
+$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " LEFT OUTER JOIN receipt_types AS mt ON m.type_id = mt.id ";
+$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+$q .= " WHERE  ";
+$q .= " t.project_id = ".$projectId." ";
+$q .= " AND t.receipts_auth_project = '".$approved."' ";
+$q .= " ORDER BY ";
+$q .= " date(m.date_reported) desc, t.task_order, m.name ";
+$q .= sqlLimitClause($resultPage, $rowsPerPage);
+return $q;
+}
+public function countReceiptsByProject($projectId, $approved = 'yes'){
+$q = " SELECT  ";
+$q .= " COUNT(*) total_receipts";
+$q .= " FROM receipts AS m ";
+$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " WHERE  ";
+$q .= " t.project_id = ".$projectId." ";
+$q .= " AND t.receipts_auth_project = '".$approved."' ";
+return $q;
+}
+public function summarizeReceiptsByProject($projectId, $approved = 'yes'){
+$q = " SELECT  ";
+$q .= " COUNT(*) total_receipts, ";
+$q .= " SUM(m.cost_actual) sum_cost_actual ";
+$q .= " FROM receipts AS m ";
+$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " WHERE  ";
+$q .= " t.project_id = ".$projectId." ";
+$q .= " AND t.receipts_auth_project = '".$approved."' ";
+return $q;
+}
+public function summarizeReceiptsByProjectAndType($projectId, $approved = 'yes'){
+$q = " SELECT  ";
+$q .= " IFNULL(mt.name, 'Unspecified') receipt_type, ";
+$q .= " COUNT(*) total_receipts, ";
+$q .= " SUM(m.cost_actual) sum_cost_actual ";
+$q .= " FROM receipts AS m ";
+$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " LEFT OUTER JOIN receipt_types mt on m.type_id = mt.id ";
+$q .= " WHERE  ";
+$q .= " t.project_id = ".$projectId." ";
+$q .= " AND t.receipts_auth_project = '".$approved."' ";
+$q .= " GROUP BY receipt_type ";
+return $q;
+}
 
-
-
+}
 ?>
-
-
-
-

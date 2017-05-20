@@ -195,7 +195,6 @@ public function selectOptions_ProjectsByTypeId($typeId){
 	return $q;	
 }
 
-
 }
 ?>
 

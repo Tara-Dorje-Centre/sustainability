@@ -1,8 +1,65 @@
 ﻿<?php 
 
+class MeasureTypeUnitLinks extends _Links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($measureTypeId = 0, $caption = 'AllMeasureTypeUnits'){
+		$link = $this->listing($measureTypeId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $measureTypeUnitId = 0, $measureTypeId = 0, $caption = 'MeasureTypeUnit'){
+		$link = $this->detail($pageAction,$measureTypeUnitId,$measureTypeId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	
+	public function listing($measureTypeId = 0){
+		$link = 'pr_MeasureTypeUnit_List.php?measureTypeId='.$measureTypeId;
+		return $link;
+	}
+	
+	public function listingPaged($measureTypeId, $found, $resultPage, $perPage){
+		$l = $this->listing($measureTypeId).'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
 
+	public function detail($pageAction, $measureTypeUnitId, $measureTypeId = 0){
+		$link = 'pr_MeasureTypeUnit_Detail.php?pageAction='.$pageAction;
+		if($measureTypeId != 0){
+			$link .= '&measureTypeId='.$measureTypeId;			
+		}
+		if ($measureTypeUnitId != 0){
+			$link .= '&measureTypeUnitId='.$measureTypeUnitId;
+		}
+		return $link;
+	}	
+	public function detailAddHref($measureTypeId, $caption = '+MeasureTypeUnit'){
+		$l = $this->detailHref('ADD',0,$measureTypeId,$caption);
+		return $l;	
+	}
+	public function detailViewHref($measureTypeUnitId,$caption = 'ViewMeasureTypeUnit'){
+		$l = $this->detailHref('VIEW',$measureTypeUnitId,0,$caption);
+		return $l;	
+	}
+	public function detailEditHref($measureTypeUnitId,$caption = 'EditMeasureTypeUnit'){
+		$l = $this->detailHref('EDIT',$measureTypeUnitId,0,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($measureTypeUnitId = 0, $viewCaption = 'MeasureTypeUnit'){
+		
+		if ($measureTypeUnitId != 0){
+			$links = $this->detailViewHref($measureTypeUnitId,$viewCaption);
+			$links .= $this->detailEditHref($measureTypeUnitId,'#');
+		} else {
+			$links = $this->listingHref();
+		}
+		return $links;
+	}	
 
-
+}
 ?>
 
 

@@ -1,28 +1,25 @@
 <?php
-require_once("_formFunctions.php");
-require_once("_htmlFunctions.php");
-require_once("_baseClass_Links.php");
-require_once("_baseClass_Calendar.php");
 
-class SitewideSettingsLinks extends _Links {
+
+class SiteSettingsLinks extends _Links {
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
 	}
-	private function detailHref($pageAction = 'VIEW', $caption = 'SitewideSettings'){
+	private function detailHref($pageAction = 'VIEW', $caption = 'SiteSettings'){
 		$link = $this->detail($pageAction);
 		$href = $this->formatHref($caption,$link);
 		return $href;	
 	}
 	
 	public function detail($pageAction){
-		$link = 'sys_SitewideSettings_Detail.php?pageAction='.$pageAction;
+		$link = 'sys_SiteSettings_Detail.php?pageAction='.$pageAction;
 		return $link;
 	}	
-	public function detailViewHref($caption = 'ViewSitewideSettings'){
+	public function detailViewHref($caption = 'ViewSiteSettings'){
 		$l = $this->detailHref('VIEW',$caption);
 		return $l;	
 	}
-	public function detailEditHref($caption = 'EditSitewideSettings'){
+	public function detailEditHref($caption = 'EditSiteSettings'){
 		$l = $this->detailHref('EDIT',$caption);
 		return $l;	
 	}
@@ -34,7 +31,7 @@ class SitewideSettingsLinks extends _Links {
 	
 }
 
-class SitewideSettings {
+class SiteSettings {
 	public $siteTitle = 'MyProjects';
 	public $siteUrl = 'MyUrl';
 	public $loginNotice = '';
@@ -63,7 +60,7 @@ class SitewideSettings {
 	private $publicFontSizeText = 12;
 	
 	public function __construct(){
-		$this->sql = new SitewideSettingsSQL;
+		$this->sql = new SiteSettingsSQL;
 	}
 	
     // set class properties with record values from database
@@ -146,7 +143,7 @@ class SitewideSettings {
 		
 	function pageTitle(){
 		$heading = openDiv('section-heading-title');
-		$heading .= 'Sitewide Settings';
+		$heading .= 'Site Settings';
 		$heading .= closeDiv();		
 		return $heading;
 	}
@@ -154,7 +151,7 @@ class SitewideSettings {
 	function pageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';		
-		$settingsL = new SitewideSettingsLinks($menuType,$menuStyle);
+		$settingsL = new SiteSettingsLinks($menuType,$menuStyle);
 		$menuL = new MenuLinks($menuType,$menuStyle);
 
 		$menu = $settingsL->openMenu('section-heading-links');
@@ -209,7 +206,7 @@ class SitewideSettings {
 	public function display(){
 		$this->formatForDisplay();
 				
-		$detail = openDisplayDetails('sitewide-settings','Sitewide Settings');
+		$detail = openDisplayDetails('site-settings','Sitewide Settings');
 	 						
 		$detail .= captionedParagraph('siteTitle', 'Projects Title', $this->siteTitle);
 		$detail .= captionedParagraph('siteUrl', 'Projects URL', $this->siteUrl);
@@ -319,17 +316,17 @@ class SitewideSettings {
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
 			$this->setAddRecordDefaults();
-			$legend = 'Add Sitewide Settings';
+			$legend = 'Add Site Settings';
 		} else {
-			$legend = 'Edit Sitewide Settings';	
+			$legend = 'Edit Site Settings';	
 		}
 
-		$entity = 'sitewide-settings';
+		$entity = 'site-settings';
 		$c = new ProjectLinks;
 		$contextMenu = $c->formatToggleLink('formOptional','+Options');
 
 
-		$form = openEditForm($entity,$legend,'sys_SitewideSettings_Save.php',$contextMenu);
+		$form = openEditForm($entity,$legend,'sys_SiteSettings_Save.php',$contextMenu);
 		
 		//start required fields
 		$fields = inputFieldName($entity,$this->siteTitle,'siteTitle','Projects Title');

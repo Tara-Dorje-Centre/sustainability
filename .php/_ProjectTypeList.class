@@ -114,7 +114,6 @@ class ProjectTypeList{
 		return $list;
 	}
 } 
-
 ?>
 
 

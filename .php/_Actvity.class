@@ -1,8 +1,333 @@
 ﻿<?php 
 
+class Activity {             
+    public $id = 0;
+	public $typeId = 0;
+	public $doneBy;
+    public $started;
+    public $updated;
+    //public $order = 0;	
+    //public $hoursEstimated = 0;	
+	public $hoursActual = 0;
+    public $comments;
+	public $linkUrl;
+	public $linkText;
+	public $task;	
+	private $sql;
+	
+	// property to support edit/view/add mode of calling page
+    public $pageMode;
+	
+	public function __construct(){
+		$this->task = new Task;
+		$this->sql = new ActivitySQL;
+	}
+	
+	public function setDetails($detailActivityId, $parentTaskId, $inputMode){
+		$this->pageMode = $inputMode;
+		$this->id = $detailActivityId;
+		$this->task->id = $parentTaskId;
+		
+		$sql = $this->sql->infoActivity($this->id);
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$this->task->id = $row["task_id"];
+			$this->typeId = $row["type_id"];
+			$this->doneBy = stripslashes($row["done_by"]);
+			$this->started = $row["started"];
+			$this->updated = $row["updated"];	
+			//$this->order = $row["activity_order"];	
+			//$this->hoursEstimated = $row["hours_estimated"];						
+			$this->hoursActual = $row["hours_actual"];						
+			$this->comments = stripslashes($row["comments"]);
+			$this->linkText = stripslashes($row["link_text"]);
+			$this->linkUrl = stripslashes($row["link_url"]);
+		}
+		$result->close();
+		}
+
+		$this->setParentTask();				
+	}	
+	
+	public function setParentTask(){
+		$this->task->setDetails($this->task->id, $this->task->project->id, $this->pageMode);
+	}
+		
+	function pageTitle(){	
+		$title = openDiv('section-heading-title','none');
+		//show page mode for debugging
+		//$heading .= '['.$this->pageMode.']';
+		$title .= $this->task->project->name.br();
+		$title .= 'Task: '.$this->task->name;		
+		$title .= closeDiv();
+		return $title;
+	}	
+	
+	function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$projects = new ProjectLinks($menuType,$menuStyle);
+		$tasks = new TaskLinks($menuType,$menuStyle);
+		$activities = new ActivityLinks($menuType,$menuStyle);
+					
+		$menu = $projects->openMenu('section-heading-links');
+
+		$menu .= $tasks->detailViewHref($this->task->id);
+		$menu .= $projects->detailViewHref($this->task->project->id);
+		
+		$menu .= $projects->resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $activities->detailEditHref($this->id);
+		}		
+		
+		if ($this->pageMode == 'EDIT'){
+			$menu .= $activities->detailViewHref($this->id);
+		}
+		//$menu .= $activities->listingHref($this->task->id);
+
+		$menu .= $projects->closeMenu();
+		return $menu;
+	}
+		
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	public function formatForDisplay(){
+		$this->doneBy = displayLines($this->doneBy);
+		$this->comments = displayLines($this->comments);		
+		$this->started = getTimestampDate($this->started);
+		$this->updated = getTimestampDate($this->updated);		
+	}
+
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+
+		
+	public function getPageDetails(){			
+
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+		
+		
+	public function display(){
+		$this->formatForDisplay();
+		
+		$detail = openDisplayDetails('activity','Activity Details');
+		
+		//$detail .= captionedParagraph('a-order','Order',$this->order);
+		$detail .= captionedParagraph('a-started','Started',$this->started);
+		$detail .= captionedParagraph('a-updated','Updated',$this->updated);		
+		$detail .= captionedParagraph('a-done-by','Done By',$this->doneBy);
+		//$detail .= captionedParagraph('a-h-est','Estimated',$this->hoursEstimated);
+		$detail .= captionedParagraph('a-h-actual','Actual',$this->hoursActual);
+ 		$detail .= captionedParagraph('a-comments','Comments',$this->comments);
+		if ($this->linkText != '' && $this->linkUrl != ''){
+			$l = new ActivityLinks('DIV','menu');
+			$link = $l->formatHref($this->linkText,$this->linkUrl,'_blank');
+			$detail .= captionedParagraph('a-weblink','Web Link',$link);
+		}
+		$activityType = new ActivityType;
+		$input = $activityType->getActivityTypeSelectList($this->typeId,'typeId','true');
+	
+		$detail .= closeDisplayDetails();	
+		
+		return $detail;
+	}	
+	
+	public function setAddRecordDefaults(){
+		global $sessionTime;
+		$this->started = $sessionTime;	
+		$this->order = $this->task->activityCount + 1;
+		//$this->hoursEstimated = $this->task->hoursEstimated;
+		$this->hoursActual = $this->task->hoursEstimated;
+		$this->doneBy = $_SESSION['login-name'];
+		$this->typeId = 0;
+	}
+	
+	public function editForm($editContext = 'ActivityDetail'){
+		if ($this->pageMode == 'ADD'){		
+			$this->setAddRecordDefaults();
+			$legend = 'Add Activity';	
+		} else if ($this->pageMode == 'EDIT'){
+			$legend =  'Edit Activity';
+		} else {
+			$legend = 'View Activity';
+		}
+		$entity = 'activity';
+		$c = new ActivityLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$form = openEditForm($entity,$legend,'pr_Activity_Save.php',$contextMenu);
+		
+		$_ptId = $this->task->project->typeId;
+		$_pId = $this->task->project->id;
+		$_tId = $this->task->id;		
+		//$form .= $_ptId.'.'.$_pId.'.'.$_tId;
+
+		//project type
+		$pt = new ProjectType;
+		$pt->setDetails($_ptId,'VIEW');
+		$changeJs = "ajaxRefresh('PROJECTS_BY_TYPE_SELECT',this,'projectId');";
+		$input = $pt->getProjectTypeSelectList($_ptId,'projectTypeId','false',false,$changeJs);
+		$fields = captionedInput('Project Type',$input);
+				
+		//project
+		$changeJs = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'taskId');";
+		$input = $this->task->project->getProjectSelectListByTypeId($_ptId,$_pId,'projectId','false',false,$changeJs);
+		$fields .= captionedInput('Project',$input);
+
+		$changeJs = "ajaxRefresh('TASK_EST_EFFORT',this,'activityHoursActual');";		
+		$input = $this->task->getTaskSelectList($_tId,'taskId','false',false,$changeJs);
+		$fields .= captionedInput('Task',$input);
+		
+		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
+		$fields .= inputFieldNumber($entity,$this->hoursActual,'activityHoursActual','Actual',$tooltip);
+
+
+//$fields .= br();
+
+		$fields .= inputFieldTimestamp($entity,'started',$this->started,'Started');
+
+		$fields .= inputFieldUser($entity,$this->doneBy,'activityDoneBy','Done By');
+
+
+		
+		//activity weblink
+		$fields .= inputGroupWebLink($entity,$this->linkText,$this->linkUrl);		
+
+		$fields .= inputFieldComments($entity,$this->comments,'activityComments');
+
+		$formRequired = $fields;
 
 
 
+	
+		$activityType = new ActivityType;
+		$input = $activityType->getActivityTypeSelectList($this->typeId,'typeId','false',false);
+		$fields = captionedInput('Activity Type',$input);
+
+		//$tooltip = 'Task Estimated Hours Per Activity';
+		//$fields .= inputFieldNumber($entity,$this->hoursEstimated,'activityHoursEstimated','Estimated',$tooltip,'true');
+
+		//$fields .= inputFieldNumber($entity,$this->order,'activityOrder','Order');
+
+
+		$formOptional = $fields;
+
+		//hidden fields and submit,reset buttons
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('activityId', $this->id);
+		$hidden .= getHiddenInput('editContext',$editContext);
+		
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+			
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+		return $form;
+	}
+	
+	public function collectPostValues(){
+		//called by save form prior to running adds/updates
+		$this->pageMode = $_POST['mode'];
+		
+		$this->task->id = $_POST['taskId'];
+		$this->id = $_POST['activityId'];
+		$this->typeId = $_POST['typeId'];
+		//$this->order = $_POST['activityOrder']; 
+		$this->started = getTimestampPostValues('started');
+		
+		$this->doneBy = dbEscapeString($_POST['activityDoneBy']); 
+		$this->comments = dbEscapeString($_POST['activityComments']); 
+		$this->hoursActual = $_POST['activityHoursActual']; 
+		$this->linkText = dbEscapeString($_POST['linkText']);
+		$this->linkUrl = dbEscapeString($_POST['linkUrl']);
+		
+		$this->setParentTask();
+		$this->hoursEstimated = $this->task->hoursEstimated;
+	}
+	
+	
+	public function saveChanges(){
+	
+		if ($this->pageMode == 'EDIT'){
+
+			$sql = " UPDATE activities a ";
+			$sql .= " SET ";
+			$sql .= " a.done_by = '".$this->doneBy."', ";
+			$sql .= " a.comments = '".$this->comments."', ";
+			$sql .= " a.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " a.started = '".$this->started."', ";
+			$sql .= " a.link_text = '".$this->linkText."', ";
+			$sql .= " a.link_url = '".$this->linkUrl."', ";
+			$sql .= " a.hours_actual = ".$this->hoursActual.", ";			
+			//$sql .= " a.activity_order = ".$this->order.", ";
+			$sql .= " a.type_id = ".$this->typeId.", ";
+			$sql .= " a.task_id = ".$this->task->id." ";
+			$sql .= " WHERE a.id = ".$this->id." ";
+
+			$result = dbRunSql($sql);
+			
+			$this->task->updateActivitySummary();
+			
+		} else {
+		
+			$sql = " INSERT INTO activities ";
+			$sql .= " ( ";
+			//$sql .= " activity_order, ";
+			$sql .= " task_id, ";
+			$sql .= " type_id, ";
+			$sql .= " done_by, ";
+			$sql .= " started, ";
+			$sql .= " updated, ";
+			//$sql .= " hours_estimated, ";
+			$sql .= " hours_actual, ";
+			$sql .= " link_url, ";
+			$sql .= " link_text, ";
+			$sql .= " comments) ";
+			$sql .= " VALUES (";
+			//$sql .= " ".$this->order.", ";
+			$sql .= " ".$this->task->id.", ";
+			$sql .= " ".$this->typeId.", ";
+			$sql .= " '".$this->doneBy."', ";
+			$sql .= " '".$this->started."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			//$sql .= " ".$this->hoursEstimated.", ";
+			$sql .= " ".$this->hoursActual.", ";
+			$sql .= " '".$this->linkUrl."', ";
+			$sql .= " '".$this->linkText."', ";			
+			$sql .= " '".$this->comments."') ";
+			
+			$result = dbRunSql($sql);
+			
+			$this->id = dbInsertedId();
+
+			$this->task->updateActivitySummary();
+
+		}
+	
+	}
+	
+} 
 ?>
 
 

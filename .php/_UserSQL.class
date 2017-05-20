@@ -70,5 +70,4 @@ public function validateLoginAndEmail($loginName, $loginEmail){
 	return $q;
 }
 }
-//end class UserSQL
 ?>

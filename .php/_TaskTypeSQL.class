@@ -1,10 +1,50 @@
 ﻿<?php 
 
-
-
-
+class TaskTypeSQL{
+public function columnsTaskType(){
+$c = " pt.id, ";
+$c .= " pt.description, ";
+$c .= " pt.name, ";
+$c .= " pt.updated, ";
+$c .= " pt.created, ";
+$c .= " pt.highlight_style, ";
+$c .= " pt.frequency, ";
+$c .= " pt.display_order, ";
+$c .= " pt.notes ";
+return $c;	
+}
+public function infoTaskType($typeId){
+$q = " SELECT ";	
+$q .= $this->columnsTaskType();
+$q .= " FROM task_types pt ";
+$q .= " WHERE  ";
+$q .= " pt.id = '".$typeId."' ";
+return $q;
+}
+public function listTaskTypes($resultPage, $rowsPerPage){
+$q = " SELECT ";	
+$q .= $this->columnsTaskType();
+$q .= " FROM task_types pt ";
+$q .= " ORDER BY display_order ";
+$q .= sqlLimitClause($resultPage, $rowsPerPage);
+return $q;	
+}
+public function countTaskTypes(){
+$q = " SELECT ";	
+$q .= " COUNT(*) total_types ";
+$q .= " FROM task_types pt ";
+return $q;	
+}
+public function selectOptions_TaskTypes($selectedValue,$disabled){
+	$q = " SELECT ";
+	$q .= " pt.id as value, ";
+	$q .= " pt.name as caption ";
+	$q .= " FROM task_types pt ";
+	if ($disabled == 'true'){
+		$q .= " WHERE pt.id = ".$selectedValue." ";	
+	}
+	$q .= " ORDER BY display_order ";
+	return $q;	
+}
+}
 ?>
-
-
-
-

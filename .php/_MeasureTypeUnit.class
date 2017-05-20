@@ -1,10 +1,237 @@
 ﻿<?php 
 
+class MeasureTypeUnit {
+    public $id = 0;
+    public $measureTypeId = 0;
+    public $unitOfMeasureId = 0;	
+	public $measureType;
+	public $measureTypeName;
+    public $unitType;
+    public $unitOfMeasure;
+    public $unitSymbol;
+    public $created;	
+    public $updated;
 
+	// property to support edit/view/add mode of calling page
+    public $pageMode;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new MeasureTypeUnitSQL;
+		$this->measureType = new MeasureType;
+	}
+	
+	public function setDetails($detailMeasureTypeUnitId, $parentMeasureTypeId, $inputMode){
+		$this->pageMode = $inputMode;
+		$this->id = $detailMeasureTypeUnitId;
+		$this->measureTypeId = $parentMeasureTypeId;
+		
+		$sql = $this->sql->infoMeasureTypeUnit($this->id);
 
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+		{	
+			$this->measureTypeId = $row["measure_type_id"];
+			$this->unitOfMeasureId = $row["unit_measure_id"];
+			$this->created = $row["created"];
+			$this->updated = $row["updated"];	
+			$this->measureTypeName = ($row["measure_type"]);
+			$this->unitOfMeasure = ($row["unit_of_measure"]);
+			$this->unitSymbol = ($row["unit_symbol"]);
+			$this->unitType = ($row["unit_type"]);
+		}
+		$result->close();
+		}
 
+		$this->measureType->setDetails($this->measureTypeId, 'VIEW');
+	}	
+			
+	function pageTitle(){	
+		$title = openDiv('section-heading-title','none');
+		//show page mode for debugging
+		//$heading .= '['.$this->pageMode.']';
+		$title .= 'Measure Type:&nbsp;'.$this->measureType->name.br();
+		$title .= 'Units:'.$this->unitOfMeasure;		
+		$title .= closeDiv();
+		return $title;
+	}
+	
+	
+	function pageMenu(){
+		
+		$mtul = new MeasureTypeUnitLinks;
+		
+		$menu = openDiv('section-heading-links','menu-links-list');
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $mtul->detailEditHref($this->id,'Edit');
+		}
+		if ($this->pageMode == 'EDIT'){
+			$menu .= $mtul->detailViewHref($this->id,'View');
+		}
+		if ($this->pageMode != 'ADD'){
+			$menu .= $mtul->detailAddHref($this->measureType->id);
+		}
+		$menu .= $mtul->listingHref($this->measureType->id,'MeasureType Units');
+		$menu .= $mtul->listingHref(0,'All MeasureType Units');
+
+		$menu .= closeDiv();
+		return $menu;
+	}
+		
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	public function getMeasureTypeAndUnitSymbol(){
+		$text = $this->measureTypeName.'('.$this->unitSymbol.')';
+		return $text;
+	}
+	
+	public function formatForDisplay(){
+//		$this->name = displayLines($this->name);
+	//	$this->description = displayLines($this->description);
+		//$this->notes = displayLines($this->notes);
+	}
+
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+	
+	public function getPageDetails(){			
+
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+	
+	public function display(){
+		$this->formatForDisplay();
+		
+		$detail = openDisplayDetails('measure-type-unit','Measure Type Unit Details');		
+
+		$detail .= captionedParagraph('measure-type','Measure Type',$this->getMeasureTypeAndUnitSymbol());
+		$u = new UnitOfMeasure;
+		$select = $u->getUnitOfMeasureSelectList($this->unitOfMeasureId,'unitOfMeasureId','true');
+		$detail .= captionedParagraph('units','Units',$select);		
+		$detail .= captionedParagraph('unit-type','Unit Type',$this->unitType);
+		$detail .= captionedParagraph('updated','Updated',$this->updated);		
+		$detail .= captionedParagraph('created','Created',$this->created);
+
+		$detail .= closeDisplayDetails();
+		
+		return $detail;
+	}
+
+	public function getMeasureTypeUnitSelectList(
+		$selectedValue = 0, 
+		$idName = 'measureTypeUnitId', 
+		$disabled = 'false',
+		$showLink = false,
+		$changeJS = NULL){
+		
+		$sql = $this->sql->selectOptions_MeasureTypeUnits($selectedValue,$disabled);
+		
+		$defaultValue = '0';
+		$defaultCaption = '-select Measure Type Units';
+		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+		
+		$select = getSelectList($idName,$allOptions,'none',$disabled,$changeJS);
+		if ($showLink === true){
+			$l = new MeasureTypeUnitLinks;
+			$links =$l->detailViewEditHref($selectedValue);
+			$select .= $links;
+		}
+		return $select;
+	}
+		
+	public function editForm(){
+		if ($this->pageMode == 'ADD'){
+			$legend = 'Add Measure Type Unit';
+		} else {
+			$legend = 'Edit Measure Type Unit';
+		}
+
+		$entity = 'measure-type-unit';
+		$c = new ProjectTypeLinks;
+		//$contextMenu = $c->formatToggleLink('formOptional','+Measure Type Unit Options');
+		$contextMenu = NULL;
+		$form = openEditForm($entity,$legend,'pr_MeasureTypeUnit_Save.php',$contextMenu);
+
+		$u = new UnitOfMeasure;
+		$select = $u->getUnitOfMeasureSelectList($this->unitOfMeasureId,'unitOfMeasureId','false');
+		$fields =inputFieldSelect($entity, $select,'Unit Type');
+		
+		$formRequired = $fields;
+		
+		$formOptional = NULL;
+		
+		//hidden fields and submit,reset buttons
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('measureTypeId', $this->measureTypeId);
+		$hidden .= getHiddenInput('measureTypeUnitId', $this->id);
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+			
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+		return $form;
+	}
+	
+	public function collectPostValues(){
+		//called by save form prior to running adds/updates
+		$this->pageMode = $_POST['mode'];
+		
+		$this->measureTypeId = $_POST['measureTypeId'];
+		$this->id = $_POST['measureTypeUnitId'];
+		$this->unitOfMeasureId = $_POST['unitOfMeasureId']; 
+
+	}
+
+	public function saveChanges(){
+	
+		if ($this->pageMode == 'EDIT'){
+			
+			$sql = " UPDATE measure_type_units m ";
+			$sql .= " SET ";
+			$sql .= " m.measure_type_id = ".$this->measureTypeId.", ";
+			$sql .= " m.unit_measure_id = ".$this->unitOfMeasureId.", ";
+			$sql .= " m.updated = CURRENT_TIMESTAMP ";
+			$sql .= " WHERE m.id = ".$this->id." ";
+
+			$result = dbRunSQL($sql);
+			
+		} else {
+	
+			$sql = " INSERT INTO measure_type_units ";
+			$sql .= " (measure_type_id, ";
+			$sql .= " unit_measure_id, ";
+			$sql .= " updated, ";
+			$sql .= " created) ";
+			$sql .= " VALUES (";
+			$sql .= " ".$this->measureTypeId.", ";
+			$sql .= " ".$this->unitOfMeasureId.", ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP) ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+		}
+	
+	}
+	
+} 
 ?>
-
-
-
-
