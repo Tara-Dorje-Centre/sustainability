@@ -595,7 +595,7 @@ class Project {
 		$onChangeJS = NULL){
 	
 		$sql = $this->sql->selectOptions_Projects($selectedValue, $disabled);	
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Project';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);
@@ -616,7 +616,7 @@ class Project {
 		$onChangeJS = NULL){
 	
 		$sql = $this->sql->selectOptions_ProjectsByTypeId($projectTypeId);
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Project';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);			
 		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);

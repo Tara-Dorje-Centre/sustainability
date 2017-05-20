@@ -334,7 +334,7 @@ class TaskType {
 		$changeJS = NULL){
 		$sql = $this->sql->selectOptions_TaskTypes($selectedValue,$disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Task Type';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		

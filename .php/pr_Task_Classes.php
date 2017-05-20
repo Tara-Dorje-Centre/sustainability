@@ -702,7 +702,7 @@ class Task {
 		
 		$sql = $this->sql->selectOptions_Tasks($this->project->id, $selectedValue, $disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Task';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		

@@ -315,7 +315,7 @@ class MaterialType {
 		
 		$sql = $this->sql->selectOptions_MaterialTypes($selectedValue, $disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Material Type';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		
@@ -375,8 +375,8 @@ class MaterialType {
 		$this->description = dbEscapeString($_POST['description']); 
 		$this->notes = dbEscapeString($_POST['notes']); 		
 		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		$this->displayOrder = dbEscapeString($_POST['displayOrder']); 		
-		
+		$this->displayOrder = ($_POST['displayOrder']); 		
+		printLine($this->displayOrder);
 		$this->pageMode = $_POST['mode'];	
 	}
 

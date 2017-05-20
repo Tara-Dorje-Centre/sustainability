@@ -43,7 +43,7 @@ public function query($sql){
 	printLine('in db->query');
 
 	
-	printLine($sql);
+//	printLine($sql);
 	return parent::query($sql);
 	
 }

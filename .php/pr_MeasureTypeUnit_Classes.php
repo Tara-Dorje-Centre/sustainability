@@ -248,10 +248,10 @@ class MeasureTypeUnit {
 			$this->unitOfMeasureId = $row["unit_measure_id"];
 			$this->created = $row["created"];
 			$this->updated = $row["updated"];	
-			$this->measureTypeName = stripslashes($row["measure_type"]);
-			$this->unitOfMeasure = stripslashes($row["unit_of_measure"]);
-			$this->unitSymbol = stripslashes($row["unit_symbol"]);
-			$this->unitType = stripslashes($row["unit_type"]);
+			$this->measureTypeName = ($row["measure_type"]);
+			$this->unitOfMeasure = ($row["unit_of_measure"]);
+			$this->unitSymbol = ($row["unit_symbol"]);
+			$this->unitType = ($row["unit_type"]);
 		}
 		$result->close();
 		}
@@ -357,7 +357,7 @@ class MeasureTypeUnit {
 		
 		$sql = $this->sql->selectOptions_MeasureTypeUnits($selectedValue,$disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Measure Type Units';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		

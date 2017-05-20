@@ -309,10 +309,10 @@ class ProjectType {
 			
 		$sql = $this->sql->selectOptions_ProjectTypes($selectedValue, $disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Project Type';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
-		
+
 		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);
 		if ($showLink === true){
 			$l = new ProjectTypeLinks;	

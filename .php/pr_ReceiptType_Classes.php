@@ -209,13 +209,13 @@ class ReceiptType {
 		if($result){
 		while ($row = $result->fetch_assoc())
 			{	
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
-			$this->notes = stripslashes($row["notes"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->notes = ($row["notes"]);
 			$this->displayOrder = $row["display_order"];			
-			$this->highlightStyle = stripslashes($row["highlight_style"]);
-			$this->created = stripslashes($row["created"]);			
-			$this->updated = stripslashes($row["updated"]);			
+			$this->highlightStyle = ($row["highlight_style"]);
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
 		}
 		$result->close();
 		}
@@ -315,7 +315,7 @@ class ReceiptType {
 	
 		$sql = $this->sql->selectOptions_ReceiptTypes($selectedValue, $disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Receipt Type';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		

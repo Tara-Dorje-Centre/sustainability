@@ -7,13 +7,16 @@ function dbEscapeString($value){
 	//mysqli_* library implemented for php7
 	//redirect$conn reference to global in _dbconnect.php
 	global $conn;
-	return $conn->escape_string($value);
+	return $conn->real_escape_string($value);
+	
 }
 
 function dbInsertedId ($callingFunction = 'dbInsertedId'){
 	printLine($callingFunction);
 	global $conn;
-	return $conn->insert_id;
+	$id = $conn->insert_id;
+	printLine($id);
+	return $id;
 }
 
  function sqlLimitClause($resultPage, $rowsPerPage){
@@ -25,14 +28,22 @@ function dbInsertedId ($callingFunction = 'dbInsertedId'){
 
 function dbRunSQL($sql, $callingFunction = 'dbRunSQL'){
 	printLine($callingFunction);
+	printLine($sql);
 	global $conn;
-	$conn->query($sql);
+	$success = $conn->query($sql);
+	
+	if ($success != true){
+		//printLine($conn->error);
+		exit($conn->error);
+	}
+		
 	
 	return true;
 }
 
 function dbGetResult($sql, $callingFunction = 'dbGetResult'){
 	printLine($callingFunction);
+	//printLine($sql);
 	global $conn;
 	$result = $conn->query($sql) or exit($conn->error);
 	return $result;

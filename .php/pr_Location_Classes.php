@@ -394,7 +394,7 @@ class Location {
 		
 		$sql = $this->sql->selectOptions_Locations($selectedValue,$disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Location';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		
@@ -434,7 +434,7 @@ class Location {
 		$hidden .= getHiddenInput('parentLocationId', $this->parentId);
 		$hidden .= getHiddenInput('locationId', $this->id);
 		$input = getSaveChangesResetButtons();
-		$formSubmit = formInputRow($input, $hidden);
+		$formSubmit = $input.$hidden;
 		
 		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
 		return $form;

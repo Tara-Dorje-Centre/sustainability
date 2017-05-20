@@ -314,7 +314,7 @@ class UnitOfMeasure {
 	
 		$sql = $this->sql->selectOptions_UnitsOfMeasure($selectedValue,$disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Unit Type';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 				

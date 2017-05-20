@@ -318,7 +318,7 @@ class LocationType {
 		
 		$sql = $this->sql->selectOptions_LocationTypes($selectedValue, $disabled);
 		
-		$defaultValue = 0;
+		$defaultValue = '0';
 		$defaultCaption = '-select Location Type';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		
@@ -329,7 +329,7 @@ class LocationType {
 			$select .= $links;
 		}
 		return $select;
-	}	
+	}
 	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){

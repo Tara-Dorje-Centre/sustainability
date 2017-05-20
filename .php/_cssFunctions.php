@@ -211,7 +211,7 @@ function getFontFamilySelectList($selectedValue = 'none', $idName = 'cssFont', $
 }	
 
 function getFontSizeSelectList($selectedValue = 0, $idName = 'cssFontSize', $disabled = 'false'){
-	$defaultValue = 0;
+	$defaultValue = '11';
 	$defaultCaption = '-select font size';
 	$allOptions = getSelectOption($defaultValue,$defaultCaption,$selectedValue);
 	$allOptions .= getSelectRange(60,$selectedValue,0,10);
