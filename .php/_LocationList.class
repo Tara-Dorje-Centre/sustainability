@@ -1,0 +1,164 @@
+﻿<?php 
+
+class LocationList{
+	public $parentId = -1;
+	public $found = 0;
+	public $resultPage = 1;
+	public $perPage = 10;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new LocationSQL;	
+	}
+	
+	public function setDetails($parentLocationId=-1, $resultPage = 1, $resultsPerPage = 10){
+		$this->parentId = $parentLocationId;	
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;		
+		$this->setFoundCount();
+	}
+	
+	public function pageTitle(){
+		$title = openDiv('section-heading-title','none');
+		if ($this->parentId <= 0){	
+			$title .= 'All Locations';
+		} else {
+			$l = new Location;
+			$title .= 'Sub Locations: '.$l->getSortKey($this->parentId);
+		}
+		$title .= closeDiv();
+		return $title;	
+	}
+	
+	public function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$locations = new LocationLinks($menuType,$menuStyle);
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $locations->openMenu('section-heading-links');
+ 		$menu .= $menuL->linkReference();
+		$menu .= $locations->resetMenu();
+		if ($this->parentId > 0){
+			$menu .= $locations->detailViewHref($this->parentId,'Up');	
+		} else {
+			$menu .= $locations->detailAddHref(0);
+		}
+		$menu .= $locations->listingHref(-1);
+				
+		if ($this->parentId > 0){
+			$menu .= $locations->resetMenu();
+			//showing sub locations for a parent
+			if ($this->found != 0){	
+				$menu .= $locations->listingHref($this->parentId,'SubLocations('.$this->found.')');
+			} else {
+				$menu .= 'No Sublocations';
+			}
+			//add new sublocation to current parent
+			$menu .= $locations->detailAddHref($this->parentId);
+		}
+		
+		$menu .= $locations->closeMenu();
+		return $menu;			
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}	
+	
+	private function setFoundCount(){
+		if ($this->parentId <= 0){
+			$sql = $this->sql->countLocationsByParent($this->parentId);
+		} else {
+			$l = new Location;
+			$sortKey = $l->getSortKey($this->parentId);
+			$sql = $this->sql->countLocationsByParentSortKey($sortKey,$this->parentId);
+		}
+		$this->found = dbGetCount($sql, 'total_locations');
+	}
+	
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+	
+	public function getPageDetails(){
+	
+		$details = $this->getListing();
+		return $details;
+		
+	}
+	
+	public function getListingRows(){
+		$ll = new LocationLinks;
+		$list = '';
+		if ($this->parentId <= 0){
+			$sql = $this->sql->listLocationsByParent($this->parentId,$this->resultPage,$this->perPage);
+		} else {
+			$l = new Location;
+			$sortKey = $l->getSortKey($this->parentId);
+			$sql = $this->sql->listLocationsByParentSortKey($sortKey,$this->parentId, $this->resultPage,$this->perPage);
+		}
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$l = new Location;
+			$l->id = $row["id"];
+			$l->name = ($row["name"]);
+			$l->sortKey = ($row["sort_key"]);
+			$l->description = ($row["description"]);
+			$l->formatForDisplay();
+			$link = $ll->detailViewEditHref($l->id,$l->sortKey);
+			
+			$detail = wrapTd($link);
+			$detail .= wrapTd($l->description);
+			$list .=  wrapTr($detail);
+		}
+		$result->close();
+		}
+		
+		return $list;
+	}
+
+	public function getListing(){		
+
+		if ($this->found > 0){
+			$ll = new LocationLinks;
+			$pagingLinks = $ll->listingPaged($this->parentId,$this->found,$this->resultPage,$this->perPage);
+			$list = openDisplayList('location','Locations',$pagingLinks);
+
+			$heading = wrapTh('Location');
+			$heading .= wrapTh('Description');
+			$list .= wrapTr($heading);
+
+			$list .= $this->getListingRows();
+
+			$list .= closeDisplayList();
+		} else {
+			$list = openDiv('location-list','none');
+			$list .= 'No Locations Found';
+			$list .= closeDiv();
+		}
+		
+		return $list;
+		
+	}
+}
+
+
+?>
+
+
+
+

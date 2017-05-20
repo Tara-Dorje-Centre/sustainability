@@ -1,0 +1,204 @@
+﻿<?php 
+
+class ProjectSQL{
+//projects table fields displayed in listing
+function columnsProjects(){
+$cols = " p.id, ";
+$cols .= " p.type_id, ";
+$cols .= " pt.name project_type, ";
+$cols .= " pt.highlight_style, ";
+$cols .= " p.parent_id, ";
+$cols .= " p.name, ";
+$cols .= " p.description, ";
+$cols .= " p.summary, ";
+$cols .= " p.priority, ";
+$cols .= " p.started, ";
+$cols .= " p.updated, ";
+$cols .= " p.pct_done, ";
+$cols .= " p.goals, ";
+$cols .= " p.lessons_learned, ";
+$cols .= " p.show_always, ";
+$cols .= " p.location_id, ";
+$cols .= " l.sort_key location_name, ";
+$cols .= " p.purpose, ";
+$cols .= " p.hours_estimated, ";
+$cols .= " p.hours_actual, ";
+$cols .= " p.budget_estimated, ";
+$cols .= " p.budget_notes, ";
+$cols .= " p.hours_notes ";
+return $cols;
+}
+//projects table fields displayed in detail
+public function listProjectsByStatus($projectStatus, $resultPage, $rowsPerPage){
+$q = " SELECT  ";
+$q .= $this->columnsProjects();
+$q .= " FROM projects p ";
+$q .= " LEFT OUTER JOIN locations l ";
+$q .= " ON p.location_id = l.id ";
+$q .= " LEFT OUTER JOIN project_types pt ";
+$q .= " ON p.type_id = pt.id ";
+if ($projectStatus=='CLOSED'){
+	$q .= " WHERE p.pct_done = '1.00' "; 
+} else {
+	$q .= " WHERE p.pct_done != '1.00' "; 
+}
+$q .= " ORDER BY l.sort_key, p.priority, p.id ";
+$q .= sqlLimitClause($resultPage, $rowsPerPage);
+return $q;
+}
+public function listProjectsByDoneBy($activityDoneBy, $projectStatus, $resultPage, $rowsPerPage){
+$q = " SELECT  ";
+$q .= $this->columnsProjects();
+$q .= " FROM projects p ";
+$q .= " LEFT OUTER JOIN locations l ";
+$q .= " ON p.location_id = l.id ";
+$q .= " LEFT OUTER JOIN project_types pt ";
+$q .= " ON p.type_id = pt.id ";
+
+if ($projectStatus=='CLOSED'){
+	$q .= " WHERE p.pct_done = '1.00' "; 
+} else {
+	
+	$q .= " WHERE p.pct_done != '1.00' "; 
+}
+$q .= " AND p.id IN ";
+$q .= " (select t.project_id from ";
+$q .= " activities a JOIN tasks t ON a.task_id = t.id ";
+$q .= " WHERE UPPER(a.done_by) = UPPER('".$activityDoneBy."') ) ";
+$q .= " ORDER BY l.sort_key, p.priority, p.id ";
+$q .= sqlLimitClause($resultPage, $rowsPerPage);
+return $q;
+}
+public function countProjectsByDoneBy($activityDoneBy, $projectStatus){
+$q = " SELECT  count(*) total_projects ";
+$q .= " FROM projects p ";
+if ($projectStatus=='CLOSED'){
+	$q .= " WHERE p.pct_done = '1.00' "; 
+} else {
+	
+	$q .= " WHERE p.pct_done != '1.00' "; 
+}
+$q .= " AND p.id IN ";
+$q .= " (select t.project_id from ";
+$q .= " activities a JOIN tasks t ON a.task_id = t.id ";
+$q .= " WHERE UPPER(a.done_by) = UPPER('".$activityDoneBy."') ) ";
+return $q;	
+}
+
+public function countProjectsByStatus($projectStatus){
+$q = " SELECT  ";
+$q .= " COUNT(*) total_projects ";
+$q .= " FROM projects AS p ";
+if ($projectStatus=='CLOSED'){
+	$q .= " WHERE p.pct_done = '1.00' "; 
+} else {
+	$q .= " WHERE p.pct_done != '1.00' "; 
+}
+return $q;
+}
+function listChildProjects($selectedProjectId){
+$q = " SELECT  ";
+$q .= $this->columnsProjects();
+$q .= " FROM projects p ";
+$q .= " LEFT OUTER JOIN locations l ";
+$q .= " ON p.location_id = l.id ";
+$q .= " LEFT OUTER JOIN project_types pt ";
+$q .= " ON p.type_id = pt.id ";
+
+$q .= " WHERE p.parent_id = ".$selectedProjectId." "; 
+$q .= " ORDER BY p.sort_key, p.priority, p.id ";
+return $q;
+}
+public function infoProject($selectedProjectId){
+$q = " SELECT  ";
+$q .= $this->columnsProjects();
+$q .= " FROM projects p ";
+$q .= " LEFT OUTER JOIN locations l ";
+$q .= " ON p.location_id = l.id ";
+$q .= " LEFT OUTER JOIN project_types pt ";
+$q .= " ON p.type_id = pt.id ";
+
+$q .= " WHERE p.id = ".$selectedProjectId." "; 
+return $q;
+}
+public function createViewProjectStatus(){
+$q = "CREATE OR REPLACE VIEW project_status_v AS 
+SELECT 'OPEN' AS status,
+count(distinct p.id) AS projects,
+count(*) AS project_tasks,
+sum(t.hours_estimated) AS task_hours_estimated,
+sum(t.hours_actual) AS task_hours_actual
+FROM (projects p join tasks t 
+on((p.id = t.project_id))) 
+where (p.pct_done < 1) 
+union 
+select 'DONE' AS status,
+count(distinct p.id) AS projects,
+count(0) AS project_tasks,
+sum(t.hours_estimated) AS task_hours_estimated,
+sum(t.hours_actual) AS task_hours_actual 
+from (projects p join tasks t 
+on((p.id = t.project_id))) where (p.pct_done = 1) ";
+
+return $q;
+	
+}
+public function createViewProjectSummary(){
+$q = "CREATE OR REPLACE VIEW project_task_summary_v AS 
+select p.id AS project_id,
+min(p.pct_done) AS project_pct_done,
+count(*) AS total_tasks,
+sum(t.hours_estimated) AS sum_hours_estimated,
+sum(t.hours_actual) AS sum_hours_actual,
+(sum(t.pct_done) / count(0)) AS overall_pct_done 
+from (projects p join tasks t on((p.id = t.project_id))) 
+group by p.id ";
+return $q;	
+	
+}
+//project summary base query
+//SELECT 
+//p.id, p.name, count(t.id) tasks, 
+//sum(ifnull(t.hours_actual,0)) hours_actual,
+//sum(ifnull(t.hours_estimated,0)) hours_estimated,
+//count(a.id) activity_details,
+//sum(ifnull(a.hours_actual,0)) activity_hours_actual,
+//count(m.id) measure_details
+// FROM projects p left outer join tasks t on p.id = t.project_id
+//left outer join activities a on t.id = a.task_id`1
+//left outer join measures m on t.id = m.task_id
+//group by p.id, p.name
+
+public function selectOptions_Projects($selectedValue,$disabled){
+	$q = " SELECT ";
+	$q .= " p.id as value, ";
+	$q .= " p.name as caption ";
+	$q .= " FROM projects p ";
+	$q .= " WHERE p.pct_done < 1 ";
+	if ($disabled == 'true'){
+		$q .= " AND p.id = ".$selectedValue." ";	
+	}
+	$q .= " ORDER BY name ";
+	return $q;	
+}
+public function selectOptions_ProjectsByTypeId($typeId){
+	$q = " SELECT ";
+	$q .= " p.id as value, ";
+	$q .= " p.name as caption ";
+	$q .= " FROM projects p ";
+	$q .= " WHERE p.pct_done < 1 ";
+	$q .= " AND (p.type_id > 0 AND p.type_id = ".$typeId.") ";
+//	if ($disabled == 'true'){
+//		$q .= " AND p.id = ".$selectedValue." ";	
+//	}
+	$q .= " ORDER BY name ";
+	return $q;	
+}
+
+
+}
+?>
+
+
+
+

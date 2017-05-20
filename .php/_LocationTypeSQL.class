@@ -1,0 +1,61 @@
+<?php
+
+
+
+
+
+
+
+
+class LocationTypeSQL{
+	public function columnsLocationType(){
+		$c = "lt.id, ";
+		$c .= " lt.description, ";
+		$c .= " lt.name, ";
+		$c .= " lt.updated, ";
+		$c .= " lt.created, ";
+		$c .= " lt.highlight_style, ";
+		$c .= " lt.display_order, ";
+		$c .= " lt.notes ";
+		return $c;	
+	}
+
+	public function infoLocationType($typeId){
+		$q = " SELECT ";	
+		$q .= $this->columnsLocationType();
+		$q .= " FROM location_types lt ";
+		$q .= " WHERE  ";
+		$q .= " lt.id = ".$typeId." ";
+		return $q;
+	}
+
+	public function listLocationTypes($resultPage, $rowsPerPage){
+		$q = " SELECT ";	
+		$q .= $this->columnsLocationType();
+		$q .= " FROM location_types lt ";
+		$q .= " ORDER BY display_order, name ";
+		$q .= sqlLimitClause($resultPage, $rowsPerPage);
+		return $q;	
+	}
+
+	public function countLocationTypes(){
+		$q = " SELECT ";	
+		$q .= " COUNT(*) total_types ";
+		$q .= " FROM location_types lt ";
+		return $q;	
+	}
+
+	public function selectOptions_LocationTypes($selectedValue, $disabled){
+		$q = " SELECT ";
+		$q .= " lt.id as value, ";
+		$q .= " lt.name as caption, ";
+		$q .= " lt.display_order as sort_key ";
+		$q .= " FROM location_types lt ";
+		if ($disabled == 'true'){
+			$q .= " WHERE lt.id = ".$selectedValue." ";
+		}
+		$q .= " ORDER BY sort_key, name ";
+		return $q;	
+	}
+}
+?>

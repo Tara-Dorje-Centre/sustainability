@@ -1,0 +1,66 @@
+﻿<?php 
+
+class UserTypeLinks extends _Links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($caption = 'AllUserTypes'){
+		$link = $this->listing();
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $userTypeId = 0, $caption = 'UserType'){
+		$link = $this->detail($pageAction,$userTypeId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	
+	public function listing(){
+		$link = 'sys_UserType_List.php';
+		return $link;
+	}
+		
+	public function listingPaged($found, $resultPage, $perPage){
+		$l = $this->listing().'?resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+
+	public function detail($pageAction, $userTypeId = 0){
+		$link = 'sys_UserType_Detail.php?pageAction='.$pageAction;
+		if ($userTypeId != 0){
+			$link .= '&userTypeId='.$userTypeId;
+		}
+		return $link;
+	}	
+	public function detailAddHref($caption = '+UserType'){
+		$l = $this->detailHref('ADD',0,$caption);
+		return $l;	
+	}
+	public function detailViewHref($userTypeId,$caption = 'ViewUserType'){
+		$l = $this->detailHref('VIEW',$userTypeId,$caption);
+		return $l;	
+	}
+	public function detailEditHref($userTypeId,$caption = 'EditUserType'){
+		$l = $this->detailHref('EDIT',$userTypeId,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($userTypeId = 0, $viewCaption = 'ViewUserType'){
+		
+		if ($userTypeId != 0){
+			$links = $this->detailViewHref($userTypeId,$viewCaption);
+			$links .= $this->detailEditHref($userTypeId,'#');
+		} else {
+			$links = $this->listingHref();
+		}
+		return $links;
+	}	
+	
+}
+
+
+?>
+
+
+
+

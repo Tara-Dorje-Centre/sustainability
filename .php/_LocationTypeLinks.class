@@ -1,0 +1,66 @@
+﻿<?php 
+
+class LocationTypeLinks extends _Links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($caption = 'AllLocationTypes'){
+		$link = $this->listing();
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $locationTypeId = 0, $caption = 'LocationType'){
+		$link = $this->detail($pageAction,$locationTypeId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	
+	public function listing(){
+		$link = 'pr_LocationType_List.php';
+		return $link;
+	}
+		
+	public function listingPaged($found, $resultPage, $perPage){
+		$l = $this->listing().'?resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+
+	public function detail($pageAction, $locationTypeId = 0){
+		$link = 'pr_LocationType_Detail.php?pageAction='.$pageAction;
+		if ($locationTypeId != 0){
+			$link .= '&locationTypeId='.$locationTypeId;
+		}
+		return $link;
+	}	
+	public function detailAddHref($caption = '+LocationType'){
+		$l = $this->detailHref('ADD',0,$caption);
+		return $l;	
+	}
+	public function detailViewHref($locationTypeId,$caption = 'ViewLocationType'){
+		$l = $this->detailHref('VIEW',$locationTypeId,$caption);
+		return $l;	
+	}
+	public function detailEditHref($locationTypeId,$caption = 'EditLocationType'){
+		$l = $this->detailHref('EDIT',$locationTypeId,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($locationTypeId = 0, $viewCaption = 'ViewLocationType'){
+		
+		if ($locationTypeId != 0){
+			$links = $this->detailViewHref($locationTypeId,$viewCaption);
+			$links .= $this->detailEditHref($locationTypeId,'#');
+		} else {
+			$links = $this->listingHref();
+		}
+		return $links;
+	}	
+	
+}
+
+
+?>
+
+
+
+

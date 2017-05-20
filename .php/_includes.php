@@ -19,8 +19,19 @@ include_once("_publicSite_Classes.php");
 
 //support secure login system
 include_once("sys_Menu_Class.php");
-include_once("sys_User_Classes.php");
-include_once("sys_UserType_Classes.php");
+
+//include_once("sys_User_Classes.php");
+include_once("_User.class");
+include_once("_UserList.class");
+include_once("_UserLinks.class");
+include_once("_UserSQL.class");
+
+//include_once("sys_UserType_Classes.php");
+include_once("_UserType.class");
+include_once("_UserTypeList.class");
+include_once("_UserTypeLinks.class");
+include_once("_UserTypeSQL.class");
+
 include_once("sys_SitewideSettings_Classes.php");
 
 //support project planning system

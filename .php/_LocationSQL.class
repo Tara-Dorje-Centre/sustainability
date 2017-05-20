@@ -1,0 +1,80 @@
+<?php
+
+class LocationSQL{
+function columnsLocations(){
+	$c = " l.id, ";
+	$c .= " l.parent_id, ";
+	$c .= " l.type_id, ";
+	$c .= " l.name, ";
+	$c .= " l.sort_key, ";
+	$c .= " l.description, ";
+	$c .= " l.created, ";
+	$c .= " l.updated ";
+	return $c;
+}
+
+public function listLocationsByParent($parentLocationId, $resultPage, $rowsPerPage){
+	$q = " SELECT  ";
+	$q .= $this->columnsLocations();
+	$q .= " FROM locations AS l ";
+	if ($parentLocationId != -1){
+		$q .= " WHERE l.parent_id = ".$parentLocationId." "; 
+	} 
+	$q .= " ORDER BY l.sort_key ";
+
+	$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	return $q;
+}
+
+public function countLocationsByParent($parentLocationId = 0){
+	$q = " SELECT  ";
+	$q .= " COUNT(*) total_locations ";
+	$q .= " FROM locations AS l ";
+	if ($parentLocationId != -1){
+		$q .= " WHERE l.parent_id = ".$parentLocationId." "; 
+	} 
+	return $q;
+}
+
+public function listLocationsByParentSortKey($parentSortKey, $parentLocationId, $resultPage, $rowsPerPage){
+	$q = " SELECT  ";
+	$q .= $this->columnsLocations();
+	$q .= " FROM locations AS l ";
+	$q .= " WHERE l.sort_key LIKE '".$parentSortKey."%' "; 
+	$q .= " AND l.id != ".$parentLocationId." ";
+	$q .= " ORDER BY l.sort_key ";
+	$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	return $q;
+}
+
+public function countLocationsByParentSortKey($parentSortKey, $parentLocationId){
+	$q = " SELECT  ";
+	$q .= " COUNT(*) total_locations ";
+	$q .= " FROM locations AS l ";
+	$q .= " WHERE l.sort_key LIKE '".$parentSortKey."%' ";  
+	$q .= " AND l.id != ".$parentLocationId." ";	
+	return $q;
+}
+
+public function infoLocation($selectedLocationId){
+	$q = " SELECT  ";
+	$q .= $this->columnsLocations();
+	$q .= " FROM locations AS l ";
+	$q .= " WHERE l.id = ".$selectedLocationId." "; 
+	return $q;
+}
+
+public function selectOptions_Locations($selectedValue,$disabled){
+	$q = " SELECT ";
+	$q .= " l.id as value, ";
+	$q .= " l.sort_key as caption ";
+	$q .= " FROM locations l ";
+	if ($disabled == 'true'){
+		$q .= " WHERE l.id = ".$selectedValue." ";
+	}
+	$q .= " ORDER BY caption ";
+	return $q;	
+}
+
+}
+?> 

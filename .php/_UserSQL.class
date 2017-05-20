@@ -1,0 +1,74 @@
+<?php
+
+class UserSQL{
+private function columnsUser(){
+	$c = " u.id, "; 
+	$c .= " u.name_first, "; 
+	$c .= " u.name_last, "; 
+	$c .= " u.email, "; 
+	$c .= " u.focus, ";
+	$c .= " u.interests, "; 
+	$c .= " u.login_name, ";
+	$c .= " u.last_login, "; 
+	$c .= " u.created, "; 
+	$c .= " u.updated, ";
+	$c .= " u.is_admin, ";
+	$c .= " u.is_active, ";
+	$c .= " u.must_update_pwd, ";
+	$c .= " u.type_id, "; 
+	$c .= " ut.name type_name, ";
+	$c .= " ut.highlight_style ";
+	return $c;	
+}
+public function securityUser($loginName){
+	$q = " SELECT ";
+	$q .= " u.id, u.is_admin, u.is_active, u.must_update_pwd ";
+	$q .= " FROM users u ";
+	$q .= " WHERE u.login_name = '".$loginName."' ";	
+	return $q;
+}
+public function infoUser($userId){
+	$q = " SELECT ";	
+	$q .= $this->columnsUser();
+	$q .= " FROM users u LEFT OUTER JOIN user_types ut ON u.type_id = ut.id ";
+	$q .= " WHERE  ";
+	$q .= " u.id = ".$userId." ";
+	return $q;
+}
+public function listUsers($userTypeId,$resultPage, $rowsPerPage){
+	$q = " SELECT ";	
+	$q .= $this->columnsUser();
+	$q .= " FROM users u LEFT OUTER JOIN user_types ut ON u.type_id = ut.id ";
+	if ($userTypeId > 0){
+		$q .= " WHERE u.type_id = ".$userTypeId." ";
+	}
+	$q .= " ORDER BY login_name, name_first, name_last ";
+	$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	return $q;	
+}
+public function countUsers($userTypeId = 0){
+	$q = " SELECT ";	
+	$q .= " COUNT(*) total_users ";
+	$q .= " FROM users u ";
+	if ($userTypeId > 0){
+		$q .= " WHERE u.type_id = ".$userTypeId." ";
+	}
+	return $q;	
+}
+public function validateUser($loginName, $loginPwdCrypt){
+	$q = " SELECT count(*) AS user_count FROM users u ";
+	$q .= " WHERE u.login_name = '".$loginName."' ";
+	$q .= " AND u.login_pwd = '".$loginPwdCrypt."' ";
+	$q .= " AND u.is_active = 'yes' ";	
+	return $q;
+}
+public function validateLoginAndEmail($loginName, $loginEmail){
+	$q = " SELECT count(*) AS user_count FROM users u ";
+	$q .= " WHERE u.login_name = '".$loginName."' ";
+	$q .= " AND u.email = '".$loginEmail."' ";
+	$q .= " AND u.is_active = 'yes' ";	
+	return $q;
+}
+}
+//end class UserSQL
+?>

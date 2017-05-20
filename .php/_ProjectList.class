@@ -1,0 +1,154 @@
+﻿<?php 
+
+class ProjectList{
+	public $showMyProjects = 'NO';
+	public $status = 'OPEN';
+	public $found = 0;
+	public $resultPage = 1;
+	public $perPage = 10;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new ProjectSQL;	
+	}
+	public function setDetails($projectStatus, $showMyProjects = 'NO', $resultPage = 1, $resultsPerPage = 10){
+		$this->status = $projectStatus;	
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;
+		$this->showMyProjects = $showMyProjects;
+		
+		$this->setFoundCount();
+	}
+	
+	public function pageTitle(){
+		$title = openDiv('section-heading-title','none');
+		if ($this->showMyProjects == 'YES'){
+			$title .= 'My ';
+		}
+		$title .= $this->status.' Projects';
+		$title .= closeDiv();
+		return $title;	
+	}
+
+	public function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$projectL = new ProjectLinks($menuType,$menuStyle);
+		$activityL = new ActivityLinks($menuType,$menuStyle);
+
+		$menu = $projectL->openMenu('section-heading-links');
+		
+		if ($this->status == 'CLOSED'){
+			$menu .= $projectL->listingAllProjects(true);	
+		} else {
+			$menu .= $projectL->listingAllProjects();
+		}
+		$menu .= $projectL->resetMenu();		
+		if ($this->status == 'CLOSED'){
+			$menu .= $projectL->listingMyProjects(true);
+		} else {
+			$menu .= $projectL->listingMyProjects();	
+		}
+		$menu .= $projectL->resetMenu();
+		$menu .= $projectL->detailAddHref();					
+		$menu .= $projectL->closeMenu();
+		return $menu;			
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}	
+	
+	private function setFoundCount(){
+		if ($this->showMyProjects == 'YES'){
+			$sql = $this->sql->countProjectsByDoneBy($_SESSION['login-name'],$this->status);
+		} else {
+			$sql = $this->sql->countProjectsByStatus($this->status);
+		}
+		$this->found = dbGetCount($sql, 'total_projects');
+	}
+	
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+
+	public function getPageDetails(){
+	
+		$details = $this->getListing();
+		return $details;
+		
+	}
+	
+	public function getListing(){		
+	
+		$pl = new ProjectLinks;		
+		$pagingLinks = $pl->listingPaged($this->status,$this->showMyProjects,$this->found,$this->resultPage,$this->perPage);
+
+		$p = new Project;
+		$p->setDetails(0,'ADD');
+		$quickEdit = $p->editForm();
+		$list = openDisplayList('project','Projects',$pagingLinks,$quickEdit);
+
+		$heading = wrapTh('Location');
+		$heading .= wrapTh('Priority');
+		$heading .= wrapTh('%Done');
+		$heading .= wrapTh('Project Name');
+		$heading .= wrapTh('Description');
+		$list .= wrapTr($heading);
+
+
+		
+		if ($this->showMyProjects == 'YES'){
+			$user = $_SESSION['login-name'];
+			$sql = $this->sql->listProjectsByDoneBy($user,$this->status,$this->resultPage,$this->perPage);
+		} else {
+			$sql = $this->sql->listProjectsByStatus($this->status,$this->resultPage,$this->perPage);
+		}
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$p = new Project;
+			$p->id = $row["id"];
+			$p->priority = $row["priority"];
+			$p->pctDone = $row["pct_done"];
+			$p->name = $row["name"];
+			$p->locationName = $row["location_name"];
+			$p->description = $row["description"];
+			$p->projectType = $row["project_type"];
+			$p->highlightStyle = $row["highlight_style"];
+			$p->formatForDisplay();
+
+			$detail =  wrapTd($p->locationName);
+			$detail .=  wrapTd($p->priority);
+			$detail .=  wrapTd($p->pctDone);
+			$link = $pl->detailViewEditHref($p->id,$p->name);
+			$detail .= wrapTd($link);
+			$detail .= wrapTd($p->description);
+			$list .=  wrapTr($detail,$p->highlightStyle);
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();		
+		return $list;
+	}
+}
+
+
+?>
+
+
+
+

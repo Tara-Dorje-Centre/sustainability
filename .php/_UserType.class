@@ -1,0 +1,240 @@
+﻿<?php 
+
+class UserType {
+    public $id = 0;
+    public $name;		
+    public $description;	
+    public $notes;
+	public $highlightStyle = 'none';
+    public $created;
+    public $updated;
+	// property to support edit/view/add mode of calling page
+    public $pageMode;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new UserTypeSQL;
+	}
+	
+    // set class properties with record values from database
+	public function setDetails($detailId, $inputMode){
+		$this->pageMode = $inputMode;
+		$this->id = $detailId;
+
+		$sql = $this->sql->infoUserType($this->id);
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+			{	
+			$this->name = stripslashes($row["name"]);
+			$this->description = stripslashes($row["description"]);
+			$this->notes = stripslashes($row["notes"]);
+			$this->highlightStyle = stripslashes($row["highlight_style"]);
+			$this->created = stripslashes($row["created"]);			
+			$this->updated = stripslashes($row["updated"]);			
+		}
+		$result->close();
+		}
+				
+	}	
+		
+	function pageTitle(){
+		$heading = openDiv('section-heading-title');
+		if ($this->pageMode != 'ADD'){
+			$heading .= $this->name;
+		} else {
+			$heading .= 'Add New User Type';
+		}
+		$heading .= closeDiv();		
+		return $heading;
+	}
+	
+	
+	function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$typesL = new UserTypeLinks($menuType,$menuStyle);
+		$menuL = new MenuLinks($menuType,$menuStyle);
+
+		
+		$menu = $typesL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $typesL->resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $typesL->detailEditHref($this->id);
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $typesL->detailViewHref($this->id);
+		}
+		$menu .= $typesL->listingHref();		
+		$menu .= $typesL->closeMenu();
+		return $menu;
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	public function formatForDisplay(){
+		$this->name = displayLines($this->name);
+		$this->description = displayLines($this->description);
+		$this->notes = displayLines($this->notes);
+		$this->created = getTimestampDate($this->created);
+		$this->updated = getTimestampDate($this->updated);
+	}
+
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+	
+	public function getPageDetails(){			
+
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+	
+	
+	public function display(){
+		$this->formatForDisplay();
+				
+		$detail = openDisplayDetails('user-type','User Profile Type Details');
+	 						
+		$detail .= captionedParagraph('name', 'Name', $this->name);
+		$detail .= captionedParagraph('description', 'Description', $this->description);
+		$detail .= captionedParagraph('created', 'Created', $this->created);
+		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
+		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
+		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
+
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+
+	public function getUserTypeSelectList(
+		$selectedValue = '0', 
+		$idName = 'userTypeId', 
+		$disabled = 'false',
+		$showLink = false,
+		$changeJS = NULL){
+	
+		$sql = $this->sql->selectOptions_UserTypes($selectedValue,$disabled);
+		
+		$defaultValue = 0;
+		$defaultCaption = '-select User Type';
+		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+				
+		$select = getSelectList($idName,$allOptions,'none',$disabled,$changeJS);
+		if ($showLink == true){
+			$l = new UserTypeLinks;			
+			$links =$l->detailViewEditHref($selectedValue);
+			$select .= $links;
+		}
+		return $select;
+	}	
+	
+	
+	public function editForm(){
+		if ($this->pageMode == 'ADD'){
+			$legend = 'Add User Type';
+		} else {
+			$legend = 'Edit User Type';
+		}
+		$entity = 'user-type';
+		$c = new ProjectTypeLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$form = openEditForm($entity,$legend,'sys_UserType_Save.php',$contextMenu);
+		
+		//formRequired fields	
+		$fields = inputFieldName($entity,$this->name,'name','User Type');
+
+		//end required fields		
+		$formRequired = $fields;
+		
+		//formOptional fields
+		$fields = inputFieldDescription($entity,$this->description,'description');
+				
+		//$fields .= inputFieldNumber($entity,$this->displayOrder,'displayOrder','Display Order');
+
+		$fields .= inputFieldHighlightStyle($entity,$this->highlightStyle,'highlightStyle');
+
+		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+
+		//end optional fields
+		$formOptional = $fields;
+		
+		//formsubmit
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('userTypeId', $this->id);
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+		
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+		return $form;
+	}
+	
+	public function collectPostValues(){
+
+		$this->id = $_POST['userTypeId'];
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		
+		$this->pageMode = $_POST['mode'];	
+	}
+
+	public function saveChanges(){
+	
+		if ($this->pageMode == 'EDIT'){
+			$sql = " UPDATE user_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$result = dbRunSQL($sql);
+		} else {
+			$sql = " INSERT INTO user_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= "'".$this->highlightStyle."', ";
+			$sql .= "'".$this->notes."') ";
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+		}
+	
+	}
+	
+} 
+
+?>
+
+
+
+
