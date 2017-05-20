@@ -112,7 +112,7 @@ class MeasureTypeList{
 	
 	private function setFoundCount(){
 		$sql = $this->sql->countMeasureTypes();
-		$this->found = getSQLCount($sql, 'total_types');
+		$this->found = dbGetCount($sql, 'total_types');
 	}	
 
 	public function printPage(){
