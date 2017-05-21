@@ -242,36 +242,64 @@ class SiteSettings {
 	}
 	
 	public function publicSiteSample(){
-		//include_once("_cssFunctions.php");
-		//include_once("_htmlFunctions.php");
+		
+		
 		//sample is inserted into the editing td just after the first color select list
 		//force a close on the td and reopen a td with rowspan set to all seven selects
 		//this inserts the sample neatly beside all select lists
-		$x = closeTag('td');
-		$a = attribute('width', '50%');
-		$a .= attribute('rowspan',11);
-		$a .= attribute('class','editing-td');
-		$x .= openTag('td',$a);
+		
+		$td = new _td();
+		$x = $td->close();
+		
+		$td = new _td('none','editing-td');
+		$td->addAttribute('width', '50%');
+		$td->addAttribute('rowspan',11);
+		$x .= $td->open();
+		
 		$style = minHeightPixels(200).setPadding(10).setFontFamily($this->publicFontFamily);
 		$style .= setFont($this->publicFontSizeText,'normal','normal').colorBackground($this->publicFillColor);
-		$x .= openTag('div',attribute('style',$style));
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+
 		$style = setPadding(10).colorBackground($this->publicSiteColor);
-		$x .= openTag('div',attribute('style',$style));
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+		
+
 		$style = setPadding(10).widthPixels(75).setFloat('left');
 		$style .= colorBackground($this->publicMenuColor).setFont($this->publicFontSizeMenu,'normal','normal');
-		$x .= openTag('div',attribute('style',$style));
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+		
+		
 		$style = clearListStyle().clearMarginPadding();
-		$x .= openTag('ul',attribute('style',$style));
+		$list = new _ul();
+		$list->setStyle($style);
+		$x .= $list->open();
+		
 		$style = setDisplay('block').colorText($this->publicTextColor);
-		$x .= wrapTag('li',attribute('style',$style),'Menu Item');
+		$li = new _li();
+		$li->setStyle($style);
+		$x .= $li->wrap('Menu Item');
+	
 		$style = setDisplay('block').colorText($this->publicTextColorHover);
 		$style .= colorBackground($this->publicMenuColorHover);
-		$x .= wrapTag('li',attribute('style',$style),'Menu Item');
-		$x .= closeTag('ul');
+		$li = new _li();
+		$li->setStyle($style);
+		$x .= $li->wrap('Menu Item');
+	
+		$x .= closeList();
 		$x .= closeDiv();
+	
 		$style = setPadding(10).setMarginCustom('left',100);
 		$style .= colorBackground($this->publicPageColor).colorText($this->publicTextColor);
-		$x .= openTag('div',attribute('style',$style));
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+		
 		$x .= spanStyled('Titles',setFont($this->publicFontSizeTitle,'normal','bold')).br();
 		$x .= spanStyled('Headings',setFont($this->publicFontSizeHeading,'normal','bold')).br();
 		$x .= spanStyled('Content Text'.br().'...',setFont($this->publicFontSizeText,'normal','normal')).br();

@@ -30,7 +30,7 @@ public function setSiteTemplateDetails($contentHeading = 'page heading', $conten
 }
 
 protected function getSitewideSettings(){
-	$settings = new SitewideSettings;
+	$settings = new SiteSettings;
 	$settings->setDetails('VIEW');
 }
 
@@ -190,8 +190,8 @@ protected function setPageContents(){
 		//$content = $this->buildInternalStyles();
 
 		//use external stylesheet
-		$content = stylesheet('css/styles.css');
-		$content .= stylesheet('css/override.css');
+		$content = LinkStylesheet('css/styles.css');
+		//$content .= stylesheet('css/override.css');
 		
 		return $content;
 		

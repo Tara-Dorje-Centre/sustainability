@@ -1,31 +1,28 @@
 <?php
 
-class _element{
-
-protected const _none = "NONE";
-protected const _lt = "<";
-protected const _gt = ">";
-protected const _sl = "/";
-protected const _eq = "=";
-protected const _sq = "'";
-protected const _dq = '"';
-protected const _sp = ' ';
-protected const _emptyString = '';
-
+class _element
+{
+protected const _NONE = 'none';
+protected const _EMPTY = '';
+protected const LT = '<';
+protected const GT = '>';
+protected const SL = '/';
+protected const EQ = '=';
+protected const SQ = "'";
+protected const DQ = '"';
+protected const SP = ' ';
 protected const _htmlCommentOpen = '<!--';
 protected const _htmlCommentClose = '-->';
 
-protected $_markup = "";
-protected $_tag = "undefined-node";
-protected $_attribs = "";
+protected $_markup = '';
+protected $_attribs = '';
+protected $_tag = '';
 
-
-protected $_id  = "none";
-protected $_name = "none";
-protected $_css = "none";
-
-// protected $_cData = false;
-
+protected $_id = '';
+protected $_name = '';
+protected $_css = '';
+protected $_style = '';
+protected $_cData = false;
 
 public function __construct($tag, $idName = 'none', $css = 'none') {
 	$this->reset();
@@ -39,33 +36,27 @@ public function __destruct() {
 }
 
 public function reset(){
-	$this->_tag = self::_emptyString;
-	$this->_attribs = self::_emptyString;
-	$this->_markup = self::_emptyString;
+	$this->_tag = self::_NONE;
+	$this->_attribs = self::_EMPTY;
+	$this->_markup = self::_EMPTY;
 	
-	$this->_id = self::_emptyString;
-	$this->_name = self::_emptyString;
-	$this->_css = self::_emptyString;
-	
+	$this->_id = self::_NONE;
+	$this->_name = self::_NONE;
+	$this->_css = self::_NONE;
+	$this->$_cData = false;
 }
 
-public function formatAttribute($name = 'none', $value = 'none'){
-
-
+public function formatAttribute($name = 'none', $value = null){
 	if ($name != 'none' && !is_null($name)){
-
 		if ($value != 'none' && !is_null($value)){
-
-			$a = self::_sp.$name.self::_eq.self::_dq.$value.self::_dq;
-		
+			$a = self::SP.$name.self::EQ.self::DQ.$value.self::DQ;
 		} else {
 			//no attribute value
-			$a = self::_emptyString;
+			$a = self::_EMPTY;
 		}
-	
 	} else {
 		//no attribute name
-		$a = self::_emptyString;
+		$a = self::_EMPTY;
 	}
 
 	return $a;
@@ -92,8 +83,17 @@ public function setCSS($css){
 		$this->addAttribute('class', $this->_css);
 }
 
+public function setStyle($style){
+		$this->_style = $style;
+		$this->addAttribute('style', $this->_style);
+}
+
+public function setCData($isCData = false){
+		$this->$_cData = $css;
+}
+
 protected function start(){
-	$this->_markup = self::_lt.$this->_tag;
+	$this->_markup = self::LT.$this->_tag;
 	if ($this->_attribs != 'none' && !is_null($this->_attribs)){
 		$this->_markup .= $this->_attribs;
 	}
@@ -101,25 +101,24 @@ protected function start(){
 
 function open(){
 	$this->start();
-	$this->_markup .= self::_gt;
+	$this->_markup .= self::GT;
 	return $this->_markup;
 }
 
 function empty(){
 	$this->start();
-	$this->_markup .= self::_sp.self::_sl.self::_gt;
+	$this->_markup .= self::SP.self::SL.self::GT;
 	return $this->_markup;
 }
 
 public function close(){
-	$this->_markup = self::_lt.self::_sl.$this->_tag.self::_gt;
+	$this->_markup = self::LT.self::SL.$this->_tag.self::GT;
 	return $this->_markup;
 }
 
-public function wrap($content = NULL){
+public function wrap($content = null){
 	if (is_null($content)){
 		$value = $this->empty();
-
 	} else {
 		$value = $this->open();
 		$value .= $content;
@@ -214,24 +213,30 @@ class _script extends _element{
 		if ($this->useComment == true){
 			$element = $this->commentClose();
 		} else {
-			$element = parent::_emptyString;
+			$element = parent::EMPTY;
 		}
 		$element .= parent::close();
 		return $element;
 	}
 }
 
-function openInlineStyles(){
-
+function openInlineStyle(){
 	$e = new _element('style');
 	return $e->open();
-
-
 }
 
-function closeInlineStyles(){
+function closeInlineStyle(){
 	$e = new _element('style');
 	return $e->close();
+}
+
+
+function LinkStylesheet($cssFile){
+	$e = new _element('link');
+	$e->addAttribute('rel','stylesheet');
+	$e->addAttribute('type','text/css');
+	$e->addAttribute('href',$cssFile);
+	return $e->empty();
 }
 
 function openScript($language = 'JavaScript', $useComment = true){
@@ -276,15 +281,6 @@ function displayLines($value){
 	return $value;
 }
 
-function stylesheet($cssFile){
-	$e = new _element('link');
-	$e->addAttribute('rel','stylesheet');
-	$e->addAttribute('type','text/css');
-	$e->addAttribute('href',$cssFile);
-	return $e->empty();
-}
-
-
 function span($content, $css = 'none'){
 	$e = new _element('span');
 	$e->setCSS($css);
@@ -293,7 +289,7 @@ function span($content, $css = 'none'){
 
 function spanStyled($content, $style = 'none'){
 	$e = new _element('span');
-	$e->addAttribute('style', $style);
+	$e->setStyle($style);
 	return $e->wrap($content);
 }
 
@@ -303,8 +299,9 @@ class _div extends _element{
 	}
 }
 
-function openDiv($nameId, $css = 'none'){
+function openDiv($nameId, $css = 'none',$style = 'none'){
 	$e = new _div($nameId, $css);
+	$e->setStyle($style);
 	return $e->open();
 }
 
@@ -313,28 +310,13 @@ function closeDiv(){
 	return $e->close();
 }
 
-function wrapDiv($content, $nameId, $css = 'none'){
+function wrapDiv($content, $nameId, $css = 'none',$style = 'none'){
 	$e = new _div($nameId, $css);
+	$e->setStyle($style);
 	return $e->wrap($content);
 }
 
-class _table extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('table', $idName, $css);
-	}
-}
 
-function openTable($nameId, $css = 'none'){
-	$e = new _table($nameId, $css);
-
-	return $e->open();
-}
-
-function closeTable(){
-	$e = new _table();
-
-	return $e->close();
-}
 
 class _ul extends _element{
 	public function __construct($idName = 'none', $css = 'none'){
@@ -347,63 +329,126 @@ class _ol extends _element{
 		parent::__construct('ol', $idName, $css);
 	}
 }
+class _li extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('li', $idName, $css);
+	}
+}
+
 
 function openList($nameId, $css = 'none'){
 	$e = new _ul($nameId, $css);
-
 	return $e->open();
 }
 
 function closeList(){
 	$e = new _ul();
-
 	return $e->close();
 }
 
 function openListOrdered($nameId, $css = 'none'){
 	$e = new _ol($nameId, $css);
-
 	return $e->open();
 }
 
 function closeListOrdered(){
 	$e = new _ol();
-
 	return $e->close();
 }
 
 function listItem($value,$css = 'none'){
-	$e = new _element('li','none',$css);
-
+	$e = new _li('none',$css);
 	return $e->wrap($value);
+}
+
+class _table extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('table', $idName, $css);
+	}
+}
+
+
+class _th extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('th', $idName, $css);
+	}
+	
+	public function setColspan($colspan = 0){
+		if ($colSpan != 0){
+			$e->addAttribute('colspan',$colSpan);
+		}
+	}
+	
+}
+
+class _tr extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('td', $idName, $css);
+	}
+	public function setWidth($width = 0){
+		if ($width!=0){
+			$e->addAttribute('width', $width.'%');
+		}
+	}
+	public function setColspan($colspan = 0){
+		if ($colSpan != 0){
+			$e->addAttribute('colspan',$colSpan);
+		}
+	}
+}
+
+class _td extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('td', $idName, $css);
+	}
+	public function setWidth($width = 0){
+		if ($width!=0){
+			$this->addAttribute('width', $width.'%');
+		}
+	}
+	public function setColspan($colspan = 0){
+		if ($colSpan != 0){
+			$this->addAttribute('colspan',$colSpan);
+		}
+	}
+}
+
+function openTable($nameId, $css = 'none'){
+	$e = new _table($nameId, $css);
+	return $e->open();
+}
+
+function closeTable(){
+	$e = new _table();
+	return $e->close();
 }
 
 function wrapTh($caption, $css = 'none',$colSpan = 0){
-	$e = new _element('th','none',$css);
-
-	if ($colSpan != 0){
-		$e->addAttribute('colspan',$colSpan);
-	}	
+	$e = new _th('none',$css);
+	$e->setColspan($colSpan);
 	return $e->wrap($caption);
 }
 
-function wrapTd($value, $width = 0, $css='none',$colSpan = 0){
-	$e = new _element('td','none',$css);
+function wrapTr($content, $css = 'none', $colspan = 0){
+	$e = new _tr('none',$css);
+	$e->setColspan($colSpan);
+	return $e->wrap($content);
+}
 
-	if ($width!=0){
-		$e->addAttribute('width', $width.'%');
-	}
-	if ($colSpan != 0){
-		$e->addAttribute('colspan',$colSpan);
-	}
+function wrapTd($value, $width = 0, $css='none',$colSpan = 0){
+	$e = new td('none',$css);
+	$e->setWidth($width);
+	$e->setColspan($colspan);
 	return $e->wrap($value);
 }
 
-function wrapTr($content, $css = 'none'){
-	$e = new _element('tr','none',$css);
-
-	return $e->wrap($content);
+function openTd($idName = 'none', $css = 'none', $width = 0, $colSpan = 0){
+	$td = new _td($idName, $css);
+	$e->setWidth($width);
+	$e->setColspan($colspan);
+	return $e->wrap($value);
 }
+
 
 function spacer($spaces = 1){
 	$content = '';
@@ -431,7 +476,7 @@ function getHref($url, $displayText, $css = 'none',$target = '_self',$onClickJS 
 		$e->addAttribute('onclick',$onClickJS);
 	}
 	if (is_null($displayText) or $displayText == ''){
-		$content = '...';
+		$content = '[]';
 	} else {
 		$content = $displayText;
 	}

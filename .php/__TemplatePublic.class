@@ -1,7 +1,6 @@
 ﻿<?php 
-include_once("_includes.php");
 
-class _SiteTemplatePublic{
+class _TemplatePublic{
 	public $mainTitle;
 	public $mainImage;
 	public $mainFooter;
@@ -250,11 +249,11 @@ public function printSite(){
 
 	protected function siteStyles(){
 		//use internal stylesheet
-		$content = $this->buildInternalStyles();
+		//$content = $this->buildInternalStyles();
 
 		//use external stylesheet
 		$content .= stylesheet('css/public.css');
-		$content .= stylesheet('css/publicOverrides.css');
+		//$content .= stylesheet('css/publicOverrides.css');
 		return $content;
 		
 	}

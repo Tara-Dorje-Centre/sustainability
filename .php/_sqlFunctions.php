@@ -4,18 +4,15 @@ function printLine($msg){
 }
 
 function dbEscapeString($value){
-	//mysqli_* library implemented for php7
-	//redirect$conn reference to global in _dbconnect.php
 	global $conn;
 	return $conn->real_escape_string($value);
-	
 }
 
 function dbInsertedId ($callingFunction = 'dbInsertedId'){
-	printLine($callingFunction);
+	//printLine($callingFunction);
 	global $conn;
 	$id = $conn->insert_id;
-	printLine($id);
+	//printLine($id);
 	return $id;
 }
 
@@ -36,13 +33,11 @@ function dbRunSQL($sql, $callingFunction = 'dbRunSQL'){
 		//printLine($conn->error);
 		exit($conn->error);
 	}
-		
-	
 	return true;
 }
 
 function dbGetResult($sql, $callingFunction = 'dbGetResult'){
-	printLine($callingFunction);
+	//printLine($callingFunction);
 	//printLine($sql);
 	global $conn;
 	$result = $conn->query($sql) or exit($conn->error);
@@ -50,14 +45,12 @@ function dbGetResult($sql, $callingFunction = 'dbGetResult'){
 }
 
 function dbGetScalar($sql, $field, $default = '', $callingFunction = 'dbGetScalar'){
-	
 	$result = dbGetResult($sql, $callingFunction);
 	if($result){
 	  	while ($row = $result->fetch_assoc())
 	  	{
 			$value = $row[$field];
 		}
-		// Free result set
 		$result->close();
 	} else {
 		$value = $default;

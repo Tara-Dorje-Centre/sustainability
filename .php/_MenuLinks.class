@@ -1,0 +1,37 @@
+<?php
+
+class MenuLinks extends _Links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function detailHref($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
+		$link = $this->detail($displayMode, $year, $month);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	public function logoutHref(){
+		$link = 'sys_Logout.php';
+		$href = $this->formatHref('Logout',$link);	
+		return $href;
+	}
+	public function detail($displayMode = 'MODULES', $year = 0, $month = 0){
+		$baseUrl = 'sys_Menu.php?displayMode='.$displayMode;
+		if ($year != 0 && $month != 0){
+			$link = $this->formatCalendarLink($baseUrl, $year, $month);
+		} else {
+			$link = $baseUrl;
+		}
+		return $link;
+	}
+	
+	public function linkReference(){	
+			return $this->detailHref('REFERENCE', 'Reference');		
+	}
+	public function linkMain(){	
+			return $this->detailHref('MODULES', 'Main');		
+	}
+	public function linkMyLinks(){	
+			return $this->detailHref('MY_LINKS', 'My Links');		
+	}
+}
+?>
