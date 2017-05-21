@@ -1,8 +1,292 @@
 ﻿<?php 
 
+class CropPlantingList{      
+	public $found = 0;
+	public $resultPage = 1;
+	public $perPage = 10;
+	public $cropPlanId = 0;
+	public $cropPlan;
+	public $sortMethod = 'CROP';
+	public $showCalendar = 'NO';
+	public $year = -1;
+	public $month = -1;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new CropPlantingSQL;
+		$this->cropPlan = new CropPlan;	
+	}
+	
+	public function setDetails($cropPlanId, $resultPage = 1, $resultsPerPage = 10){
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;
+		$this->cropPlanId = $cropPlanId;
+		$this->setFoundCount();
+		
+		$this->cropPlan->setDetails($this->cropPlanId, 'VIEW');
+	}
+	
+	public function pageTitle(){
+		$title = openDiv('section-heading-title','none');
+		$title .= $this->cropPlan->planYear.spacer().$this->cropPlan->planName.': Plantings';
+		$title .= closeDiv();
+		return $title;	
+	}
+
+	public function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$plans = new CropPlanLinks($menuType,$menuStyle);
+		$plantings = new CropPlantingLinks($menuType,$menuStyle);
+		$crops = new CropLinks($menuType,$menuStyle);
+		
+		$menu = $plans->openMenu('section-heading-links');
+		$menu .= $plans->resetMenu();
+		$menu .= $plans->detailViewHref($this->cropPlanId);
+		$menu .= $plans->resetMenu();
+		$menu .= 'Calendars:'.$plantings->listingHref($this->cropPlanId,'Plant','PLANTED','YES');
+		$menu .= $plantings->listingHref($this->cropPlanId,'Transplant','TRANSPLANTED','YES');
+		$menu .= $plantings->listingHref($this->cropPlanId,'Harvest','MATURE','YES');
+			
+		$menu .= $plans->closeMenu();
+		return $menu;			
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}	
+	
+	private function setFoundCount(){
+		$sql = $this->sql->countCropPlantings($this->cropPlanId);
+		$this->found = dbGetCount($sql, 'total_plantings');
+	}
+	
+	public function updateByPlanType(){
+		if ($this->cropPlan->planType != 'LOCKED'){
+			$sql = $this->sql->listCropPlantingsPlanTypeUpdate($this->cropPlanId);
+		
+			$result = dbGetResult($sql);
+			if ($result){
+			while($row = $result->fetch_assoc())
+			{	
+				$plantingId = $row["id"];
+				$plantedByStart = $row["planted_by_start"];
+				$plantedByMature = $row["planted_by_mature"];
+				$plantedByTransplant = $row["planted_by_transplant"];
+				$method = $this->cropPlan->planType;
+			
+				if ($this->cropPlan->planType == 'PLANTING'){
+					$planted = $plantedByStart;				
+				} elseif ($this->cropPlan->planType == 'MATURITY'){
+					$planted = $plantedByMature;				
+				} elseif ($this->cropPlan->planType == 'TRANSPLANT'){
+					$planted = $plantedByTransplant;				
+				}
+				
+				//nested update may cause issues
+				//could load an array with updates
+				//and pass array to cleanup function
+			
+				$updateSQL = " UPDATE crop_plantings cp SET cp.planted = '".$planted."', ";
+				$updateSQL .= "cp.updated = CURRENT_TIMESTAMP ";
+				$updateSQL .= " WHERE cp.id = ".$plantingId." ";
+			
+				$updateResult = dbRunSQL($updateSQL);
+
+			}
+			$result->close();
+			}
+		}
+	}
+
+	public function setCalendarRange($year, $month){
+
+		if ($year != -1 && $month != -1){
+			$this->year = $year;
+			$this->month = $month;
+		} else {
+			$this->setMinCalendarRange();
+		}
+	}
+	
+	private function setMinCalendarRange(){
+		$sql = $this->sql->calendarRangePlantings($this->cropPlanId,$this->sortMethod);
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
+			$month = $row["month_item"];
+			$year = $row["year_item"];
+		}
+		$result->close();
+		}
+		
+		$this->year = $year;
+		$this->month = $month;				
+	}
+	
+	private function getCalendarLinks(){
+		$l = new CropPlantingLinks('DIV','paged');
+		$baseUrl = $l->listing($this->cropPlanId,$this->sortMethod,'YES');
+		$links = $l->openMenu('calendar-links');
+				
+		$sql = $this->sql->calendarLinksPlantings($this->cropPlanId,$this->sortMethod);
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
+			$month = $row["month_item"];
+			$year = $row["year_item"];
+			$caption = $year.'-'.$month;
+			if ($year == $this->year && $month == $this->month){
+				//skip link and show caption if link for current display monthyear
+				$link = span($caption,$l->cssItem.'-current');
+			} else {
+				$link = $l->formatCalendarHref($caption,$baseUrl,$year,$month);
+			}
+			$links .= $link;
+		}
+		$result->close();
+		}
+		
+		$links .= $l->closeMenu();
+		return $links;
+	}
+	
+	public function getCalendar(){	
+		$pl = new CropPlantingLinks();
+		if ($this->sortMethod == 'CROP' || $this->sortMethod == 'PLANTED'){
+			$title = 'Plantings';
+		} elseif ($this->sortMethod == 'TRANSPLANTED'){
+			$title = 'Transplantings';
+		} elseif ($this->sortMethod == 'MATURE'){
+			$title = 'Estimated Harvests';
+		}
+		$cal = new _Calendar($this->year,$this->month,$title);
+
+		$sql = $this->sql->calendarDetailsPlantings($this->cropPlanId,$this->sortMethod,$this->year,$this->month);
+
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
+			$commonName = ($row["common_name"]);
+			$varietyName = ($row["variety_name"]);
+			$name = $commonName.'['.$varietyName.']';
+			$dateItem = $row["date_item"];
+			$plantingId = $row["planting_id"];
+			$cropId = $row["crop_id"];
+			$plantingLink = $pl->detailViewHref($plantingId,$name);
+
+			$calendarItem = $plantingLink;
+			$cal->addItemByTimestamp($dateItem,$calendarItem);
+		}
+		$result->close();
+		}
+
+		$content = openDiv('planting-calendar');
+		$links = $this->getCalendarLinks();		
+		$content .= $links;
+		$content .= $cal->buildCalendar();
+		$content .= closeDiv();
+		return $content;		
+	}
+	
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+	
+	public function getPageDetails(){
+	
+		if ($this->showCalendar == 'YES'){
+			$details = $this->getCalendar();
+		} else {
+			$details = $this->getListing();
+		}
+		return $details;
+		
+	}
+	
+	public function getListing($pagingBaseLink = 'USE_LISTING'){
 
 
 
+		$sql = $this->sql->listCropPlantings($this->cropPlanId, $this->sortMethod,$this->resultPage,$this->perPage);
+		
+		$cl = new CropPlantingLinks;
+		if ($pagingBaseLink == 'USE_LISTING'){
+			$base = $cl->listing($this->cropPlanId,$this->sortMethod);
+		} else { 
+			$base = $pagingBaseLink;
+		}
+		$pagingLinks = $cl->listingPaged($base,$this->found,$this->resultPage,$this->perPage);
+		
+		$cpl = new CropPlanting;
+		$cpl->setDetails(0,$this->cropPlanId,'ADD');
+		$quickEdit = $cpl->editform();
+		$list = openDisplayList('crop-plantings','Crop Plantings:'.$this->sortMethod,$pagingLinks,$quickEdit);
+		
+		$heading = wrapTh('Crop');
+		$heading .= wrapTh('Location');
+		$heading .= wrapTh('Planted (week)');
+		$heading .= wrapTh('Count');
+		$heading .= wrapTh('Germinates');
+		$heading .= wrapTh('Transplant (week)');
+		$heading .= wrapTh('Matures (week)');
+		$list .= wrapTr($heading);
+
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
+			$c = new CropPlanting;
+			
+			$c->id = $row["id"]; 
+			$c->cropId = $row["crop_id"]; 
+			$c->commonName = ($row["common_name"]); 
+			$c->varietyName = ($row["variety_name"]); 
+			$c->cropPlanId = ($row["crop_plan_id"]); 
+			$c->locationName = ($row["location_name"]);
+			$c->planted = $row["planted"];
+			$c->germinated = $row["germinated"];
+			$c->estimatedGermination = $row["estimated_germination"];
+			$c->estimatedMaturity = $row["estimated_maturity"];			
+			$c->estimatedTransplant = $row["estimated_transplant"];
+			$c->plantedCount = $row["planted_count"];
+			$c->weekPlant = $row["week_plant"];
+			$c->weekTransplant = $row["week_transplant"];
+			$c->weekMature = $row["week_mature"];
+
+			$c->formatForDisplay();
+			
+			$link = $cl->detailViewEditHref($c->id,$c->commonName.'{'.$c->varietyName.'}');
+			$detail = wrapTd($link);
+			$detail .=  wrapTd($c->locationName);			
+			$detail .=  wrapTd($c->planted.'('.$c->weekPlant.')');
+			$detail .= wrapTd($c->plantedCount);			
+			$detail .=  wrapTd($c->estimatedGermination);
+			$detail .=  wrapTd($c->estimatedTransplant.'('.$c->weekTransplant.')');
+			$detail .= wrapTd($c->estimatedMaturity.'('.$c->weekMature.')');			
+
+			$list .=  wrapTr($detail);
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();
+		return $list;
+	}
+}
 ?>
 
 

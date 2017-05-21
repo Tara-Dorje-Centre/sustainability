@@ -1,8 +1,124 @@
 ﻿<?php 
 
+class CropPlanList{
+	public $found = 0;
+	public $resultPage = 1;
+	public $perPage = 10;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new CropPlanSQL;	
+	}
+	
+	public function setDetails($resultPage = 1, $resultsPerPage = 10){
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;
+		$this->setFoundCount();
+	}
+	
+	public function pageTitle(){
+		$title = openDiv('section-heading-title','none');
+		$title .= 'Crop Plans';
+		$title .= closeDiv();
+		return $title;	
+	}
 
+	public function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
 
+		$plans = new CropPlanLinks($menuType,$menuStyle);
+		$crops = new CropLinks($menuType,$menuStyle);
+		
+		$menu = $plans->openMenu('section-heading-links');
+		$menu .= $plans->detailAddHref();
+		$menu .= $plans->listingHref();
+		$menu .= $plans->resetMenu();
+		$menu .= $crops->listingHref();		
+		$menu .= $plans->closeMenu();
+		return $menu;			
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}	
+	
+	private function setFoundCount(){
+		$sql = $this->sql->countCropPlans();
+		$this->found = dbGetCount($sql, 'total_plans');
+	}
+	
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
 
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+	
+	
+	public function getPageDetails(){
+	
+		$details = $this->getListing();
+		return $details;
+		
+	}
+	
+	
+	public function getListing(){
+		$sql = $this->sql->listCropPlans($this->resultPage,$this->perPage);
+
+		$cl = new CropPlanLinks;
+		$pagingLinks = $cl->listingPaged($this->found,$this->resultPage,$this->perPage);
+		$cp = new CropPlan;
+		$cp->setDetails(0,'ADD');
+		$quickEdit = $cp->editForm();
+		//$quickEdit = NULL;
+		$list = openDisplayList('crop-plans','Crop Plans',$pagingLinks,$quickEdit);
+
+		$heading = wrapTh('Plan');
+		$heading .= wrapTh('Plan Year');
+		$heading .= wrapTh('Plan Number');
+		$heading .= wrapTh('Description');		
+		$list .= wrapTr($heading);
+
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
+			$c = new CropPlan;
+			
+			$c->id = $row["id"]; 
+			$c->planNumber = $row["plan_number"]; 
+			$c->planName = stripslashes($row["plan_name"]); 
+			$c->planYear = stripslashes($row["plan_year"]); 
+			
+			$c->description = stripslashes($row["description"]); 
+			$c->started = stripslashes($row["started"]); 
+			$c->updated = stripslashes($row["updated"]); 
+
+			$c->formatForDisplay();
+
+			$link = $cl->detailViewEditHref($c->id,$c->planName);
+			$detail = wrapTd($link);
+			$detail .=  wrapTd($c->planYear);						
+			$detail .=  wrapTd($c->planNumber);			
+			$detail .=  wrapTd($c->description);			
+
+			$list .=  wrapTr($detail);
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();
+		return $list;		
+	}
+}
 ?>
 
 

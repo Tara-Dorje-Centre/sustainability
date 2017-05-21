@@ -10,15 +10,17 @@ include_once("_formFunctions.php");
 include_once("_sqlFunctions.php");
 
 
-include_once("_baseClass_Links.php");
-include_once("_baseClass_Calendar.php");
-include_once("_baseClass_siteTemplate.php");
-include_once("_baseClass_siteTemplatePublic.php");
+include_once("__Links.class");
+include_once("__Calendar.class");
+include_once("__Template.class");
+include_once("__TemplatePublic.class");
 
 include_once("_publicSite_Classes.php");
 
 //support secure login system
 include_once("sys_Menu_Class.php");
+
+
 
 //include_once("sys_User_Classes.php");
 include_once("_User.class");
@@ -34,7 +36,6 @@ include_once("_UserTypeSQL.class");
 
 //include_once("sys_SiteSettings_Classes.php");
 include_once("_SiteSettings.class");
-include_once("_SiteSettingsList.class");
 include_once("_SiteSettingsLinks.class");
 include_once("_SiteSettingsSQL.class");
 

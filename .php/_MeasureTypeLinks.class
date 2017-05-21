@@ -1,8 +1,60 @@
 ﻿<?php 
 
+class MeasureTypeLinks extends _Links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($caption = 'AllMeasureTypes'){
+		$link = $this->listing();
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $measureTypeId = 0, $caption = 'MeasureType'){
+		$link = $this->detail($pageAction,$measureTypeId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	
+	public function listing(){
+		$link = 'pr_MeasureType_List.php';
+		return $link;
+	}
+	
+	public function listingPaged($found, $resultPage, $perPage){
+		$l = $this->listing().'?resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
 
-
-
+	public function detail($pageAction, $measureTypeId = 0){
+		$link = 'pr_MeasureType_Detail.php?pageAction='.$pageAction;
+		if ($measureTypeId != 0){
+			$link .= '&measureTypeId='.$measureTypeId;
+		}
+		return $link;
+	}	
+	public function detailAddHref($caption = '+MeasureType'){
+		$l = $this->detailHref('ADD',0,$caption);
+		return $l;	
+	}
+	public function detailViewHref($measureTypeId,$caption = 'ViewMeasureType'){
+		$l = $this->detailHref('VIEW',$measureTypeId,$caption);
+		return $l;	
+	}
+	public function detailEditHref($measureTypeId,$caption = 'EditMeasureType'){
+		$l = $this->detailHref('EDIT',$measureTypeId,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($measureTypeId = 0, $viewCaption = 'MeasureType'){
+		
+		if ($measureTypeId != 0){
+			$links = $this->detailViewHref($measureTypeId,$viewCaption);
+			$links .= $this->detailEditHref($measureTypeId,'#');
+		}
+		return $links;
+	}	
+	
+}
 ?>
 
 

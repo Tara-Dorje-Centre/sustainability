@@ -28,7 +28,7 @@ class WebSiteLinks extends _Links{
 	
 }
 
-class PublicWebSite extends _SiteTemplatePublic{
+class PublicSite extends _TemplatePublic{
 	private $links;
 	private $sql;
 	private $viewMode = 'MAIN';

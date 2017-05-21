@@ -1,8 +1,120 @@
 ﻿<?php 
 
+class MeasureTypeList{
+	public $found = 0;
+	public $resultPage = 1;
+	public $perPage = 10;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new MeasureTypeSQL;
+	}
+	
+	public function setDetails($resultPage = 1, $resultsPerPage = 10){
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;
+		
+		$this->setFoundCount();
+	}
+	
+	public function pageTitle(){
+		$title = openDiv('section-heading-title','none');
+		$title .= 'Measure Types';
+		$title .= closeDiv();
+		return $title;	
+	}
 
+	public function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		//$units = new UnitOfMeasureLinks($menuType,$menuStyle);
+		$measureTypesL = new MeasureTypeLinks($menuType,$menuStyle);
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		
+		$menu = $measureTypesL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $measureTypesL->resetMenu();
+		$menu .= $measureTypesL->detailAddHref();
+		$menu .= $measureTypesL->listingHref();
+		//$menu .= $units->resetMenu();
+		//$menu .= $units->listingHref();
 
+		$menu .= $measureTypesL->closeMenu();
+		return $menu;			
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}	
+	
+	private function setFoundCount(){
+		$sql = $this->sql->countMeasureTypes();
+		$this->found = dbGetCount($sql, 'total_types');
+	}	
 
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+
+	public function getPageDetails(){
+	
+		$details = $this->getListing();
+		return $details;
+		
+	}
+
+	
+	public function getListing(){
+		$mtl = new MeasureTypeLinks;
+		$pagingLinks = $mtl->listingPaged($this->found,$this->resultPage,$this->perPage);
+		
+		$mt = new MeasureType;
+		$mt->setDetails(0,'ADD');
+		$quickEdit = $mt->editForm();
+		$list = openDisplayList('measure-type','Measure Types',$pagingLinks,$quickEdit);
+		
+		$heading = wrapTh('Name');
+		$heading .= wrapTh('Description');
+		$heading .= wrapTh('Notes');
+		$list .= wrapTr($heading);
+
+		$sql = $this->sql->listMeasureTypes($this->resultPage,$this->perPage);
+
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+		{	
+			$mt = new MeasureType;
+			$mt->id = $row["id"];
+			$mt->name = stripslashes($row["name"]);
+			$mt->description = stripslashes($row["description"]);
+			$mt->notes = stripslashes($row["notes"]);
+			$mt->formatForDisplay();
+
+			//$detail =  wrapTd($u->type);
+			$link = $mtl->detailViewEditHref($mt->id,$mt->name);
+			$detail = wrapTd($link);
+			$detail .=  wrapTd($mt->description);			
+			$detail .= wrapTd($mt->notes);
+			$list .=  wrapTr($detail);
+		}
+		$result->close();
+		}
+		
+		$list .= closeDisplayList();
+		return $list;
+	}
+}
 ?>
 
 

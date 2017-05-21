@@ -1,10 +1,224 @@
 ﻿<?php 
 
+class MeasureType {
+    public $id = 0;
+    public $name;	
+    public $description;
+    public $notes;
+    public $created;
+    public $updated;
+	public $highlightStyle = 'none';
+	public $displayOrder = 0;
+	
+	// property to support edit/view/add mode of calling page
+    public $pageMode;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new MeasureTypeSQL;
+	}
+	
+    // set class properties with record values from database
+	public function setDetails($detailMeasureTypeId, $inputMode){
+		$this->pageMode = $inputMode;
+		$this->id = $detailMeasureTypeId;
+
+		$sql = $this->sql->infoMeasureType($this->id);
+
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+			{	
+			$this->name = ($row["name"]);
+			$this->type = ($row["description"]);
+			$this->notes = ($row["notes"]);
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
+		}
+		$result->close();
+		}
+				
+	}	
+		
+	function pageTitle(){
+		$heading = openDiv('section-heading-title');
+		if ($this->pageMode != 'ADD'){
+			$heading .= $this->name;
+		} else {
+			$heading .= 'Add New Measure Type';
+		}
+		$heading .= closeDiv();		
+		return $heading;
+	}
+	
+	
+	function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		//$units = new UnitOfMeasureLinks($menuType,$menuStyle);
+		$measureTypesL = new MeasureTypeLinks($menuType,$menuStyle);
+		$measureTypeUnitsL = new MeasureTypeUnitLinks($menuType,$menuStyle);
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $measureTypesL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $measureTypesL->detailEditHref($this->id);
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $measureTypesL->detailViewHref($this->id);
+		}
+		if ($this->pageMode != 'ADD'){
+			$menu .= $measureTypeUnitsL->listingHref($this->id);
+		}
+		$menu .= $measureTypesL->resetMenu();
+		$menu .= $measureTypesL->listingHref();	
+	
+		$menu .= $measureTypesL->closeMenu();
+		return $menu;
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	public function formatForDisplay(){
+		$this->name = displayLines($this->name);
+		$this->description = displayLines($this->description);
+		$this->notes = displayLines($this->notes);
+	}
+
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+	
+	public function getPageDetails(){			
+
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+	
+	
+	public function display(){
+		$this->formatForDisplay();
+		$detail = openDisplayDetails('measure-type','Measure Type Details');		
+	 						
+		$detail .= captionedParagraph('name', 'Name', $this->name);
+		$detail .= captionedParagraph('description', 'Description', $this->description);
+		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
+		$detail .= captionedParagraph('created', 'Created', $this->created);
+		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
+		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
+		$detail .= captionedParagraph('display-order-style', 'Display Order', $this->displayOrder);
 
 
+		$measureunits = new MeasureTypeUnitList;
+		$measureunits->setDetails($this->id);
+		$detail .= $measureunits->getListing();
+		
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+	
+	public function editForm(){
+		if ($this->pageMode == 'ADD'){
+			$legend = 'Add Measure Type';
+		} else {
+			$legend = 'Edit Measure Type';
+		}
 
+		$entity = 'measure-type';
+		$c = new ProjectTypeLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$form = openEditForm($entity,$legend, 'pr_MeasureType_Save.php',$contextMenu);
+		
+		//formRequired fields	
+		$fields = inputFieldName($entity,$this->name,'name','Measure Type');
+ 		
+		//end formRequired
+		$formRequired = $fields;
+		
+		//formOptional
+		$fields = inputFieldDescription($entity,$this->description,'description');
+		
+		$fields .= inputFieldNumber($entity,$this->displayOrder,'displayOrder','Display Order');
+
+		$fields .= inputFieldHighlightStyle($entity,$this->highlightStyle,'highlightStyle');
+		
+
+		$fields = inputFieldNotes($entity,$this->notes,'notes');
+		
+		//end optional fields
+		$formOptional = $fields;
+		
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('measureTypeId', $this->id);
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+			
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+		return $form;
+	}
+	
+	public function collectPostValues(){
+
+		$this->id = $_POST['measureTypeId'];
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		$this->displayOrder = dbEscapeString($_POST['displayOrder']);
+		
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->pageMode = $_POST['mode'];	
+	}
+
+	public function saveChanges(){
+	
+		if ($this->pageMode == 'EDIT'){
+			$sql = " UPDATE measure_types AS mt ";
+			$sql .= " SET ";
+			$sql .= " mt.name = '".$this->name."', ";
+			$sql .= " mt.description = '".$this->description."', ";
+			$sql .= " mt.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " mt.notes = '".$this->notes."' ";
+			$sql .= " WHERE mt.id = ".$this->id."  ";		
+				
+			$result = dbRunSQL($sql);
+		} else {
+	
+			$sql = " INSERT INTO measure_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+		}
+	
+	}
+	
+} 
 ?>
-
-
-
-
