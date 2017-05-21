@@ -58,7 +58,3 @@ class CropLinks extends _Links {
 	}	
 }
 ?>
-
-
-
-

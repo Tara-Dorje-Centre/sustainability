@@ -96,7 +96,7 @@ public function printSite(){
 
 	protected function buildInternalStyles(){
 	
-		$css = openInlineStyles();
+		$css = openInlineStyle();
 	
 
 
@@ -240,7 +240,7 @@ public function printSite(){
 		$css .= wrapStyle('.public-detail-item', $p);
 		
 
-		$css .= closeInlineStyles();
+		$css .= closeInlineStyle();
 		
 
 		return $css;
@@ -249,10 +249,10 @@ public function printSite(){
 
 	protected function siteStyles(){
 		//use internal stylesheet
-		//$content = $this->buildInternalStyles();
+		$content = $this->buildInternalStyles();
 
 		//use external stylesheet
-		$content .= stylesheet('css/public.css');
+		$content .= LinkStylesheet('css/public.css');
 		//$content .= stylesheet('css/publicOverrides.css');
 		return $content;
 		

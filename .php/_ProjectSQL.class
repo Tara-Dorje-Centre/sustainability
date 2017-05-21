@@ -197,7 +197,3 @@ public function selectOptions_ProjectsByTypeId($typeId){
 
 }
 ?>
-
-
-
-

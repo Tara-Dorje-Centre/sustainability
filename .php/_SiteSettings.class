@@ -323,7 +323,7 @@ class SiteSettings {
 		$contextMenu = $c->formatToggleLink('formOptional','+Options');
 
 
-		$form = openEditForm($entity,$legend,'sys_SitewideSettings_Save.php',$contextMenu);
+		$form = openEditForm($entity,$legend,'sys_SiteSettings_Save.php',$contextMenu);
 		
 		//start required fields
 		$fields = inputFieldName($entity,$this->siteTitle,'siteTitle','Projects Title');

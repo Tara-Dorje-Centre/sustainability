@@ -47,7 +47,3 @@ public function selectOptions_MaterialTypes($selectedValue, $disabled){
 }
 }
 ?>
-
-
-
-

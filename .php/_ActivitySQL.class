@@ -243,7 +243,3 @@ public function calendarLinksProjectActivity($projectId){
 }
 }
 ?>
-
-
-
-

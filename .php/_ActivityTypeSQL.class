@@ -52,7 +52,3 @@ public function selectOptions_ActivityTypes($selectedValue, $disabled){
 }
 }
 ?>
-
-
-
-

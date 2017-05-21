@@ -280,7 +280,3 @@ public function calendarLinksTaskMaterials($projectId,$taskId){
 
 }
 ?>
-
-
-
-

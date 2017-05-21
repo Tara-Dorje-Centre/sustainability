@@ -58,7 +58,3 @@ class UserTypeLinks extends _Links {
 	
 }
 ?>
-
-
-
-

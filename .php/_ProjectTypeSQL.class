@@ -50,7 +50,3 @@ public function selectOptions_ProjectTypes($selectedValue,$disabled){
 }
 }
 ?>
-
-
-
-
