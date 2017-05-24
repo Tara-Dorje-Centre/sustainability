@@ -1,36 +1,39 @@
 ﻿<?php 
 
-class ProjectList{
+class ProjectList extends __EntityList{
 	public $showMyProjects = 'NO';
 	public $status = 'OPEN';
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+	
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new ProjectSQL;	
 	}
-	public function setDetails($projectStatus, $showMyProjects = 'NO', $resultPage = 1, $resultsPerPage = 10){
-		$this->status = $projectStatus;	
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		$this->showMyProjects = $showMyProjects;
-		
+	public function setDetails(){
 		$this->setFoundCount();
 	}
 	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	public function setMyProjects($showMyProjects = 'NO'){
+		$this->showMyProjects = $showMyProjects;
+	}
+	
+	public function setStatus($projectStatus = 'OPEN'){
+		$this->status = $projectStatus;	
+	}
+	
+	
+	protected function setPageTitle(){
+
 		if ($this->showMyProjects == 'YES'){
 			$title .= 'My ';
 		}
 		$title .= $this->status.' Projects';
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -53,16 +56,11 @@ class ProjectList{
 		$menu .= $projectL->resetMenu();
 		$menu .= $projectL->detailAddHref();					
 		$menu .= $projectL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
 	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		if ($this->showMyProjects == 'YES'){
 			$sql = $this->sql->countProjectsByDoneBy($_SESSION['login-name'],$this->status);
 		} else {
@@ -71,31 +69,15 @@ class ProjectList{
 		$this->found = dbGetCount($sql, 'total_projects');
 	}
 	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
 	
-		$details = $this->getListing();
-		return $details;
-		
-	}
 	
 	public function getListing(){		
 	
 		$pl = new ProjectLinks;		
 		$pagingLinks = $pl->listingPaged($this->status,$this->showMyProjects,$this->found,$this->resultPage,$this->perPage);
 
-		$p = new Project;
-		$p->setDetails(0,'ADD');
+		$p = new Project('ADD');
+		$p->setDetails();
 		$quickEdit = $p->editForm();
 		$list = openDisplayList('project','Projects',$pagingLinks,$quickEdit);
 
@@ -119,7 +101,7 @@ class ProjectList{
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$p = new Project;
+			$p = new Project('VIEW');
 			$p->id = $row["id"];
 			$p->priority = $row["priority"];
 			$p->pctDone = $row["pct_done"];

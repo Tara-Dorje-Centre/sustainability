@@ -5,7 +5,7 @@ $detailsPerPage = 10;
 $resultPage = sessionVariableGET('resultsPage', 1);
 
 $t = new ProjectTypeList;
-$t->setDetails($resultPage, $detailsPerPage);
-
+$t->setPaging($resultPage, $detailsPerPage);
+$t->setDetails();
 $t->printPage();
 ?>

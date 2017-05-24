@@ -10,8 +10,9 @@ $resultPage = sessionVariableGET('resultsPageMaterial',1);
 $month = sessionVariableGET('month',-1);
 $year = sessionVariableGET('year',-1);
 
-$ml = new MaterialList;
-$ml->setDetails($taskId, $resultPage, $detailsPerPage, $displayProject, $approvedCosts, $projectId,$year, $month);
-
+$ml = new MaterialList('VIEW', 0, $taskId);
+$ml->setPaging($resultPage, $detailsPerPage);
+$ml->setCalendar($year, $month);
+$ml->setDetails(, , , $displayProject, $approvedCosts);
 $ml->printPage();
 ?>

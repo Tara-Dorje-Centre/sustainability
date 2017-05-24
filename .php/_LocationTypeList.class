@@ -1,30 +1,20 @@
 ﻿<?php 
 
-class LocationTypeList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class LocationTypeList extends __EntityList{
+	
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new LocationTypeSQL;	
 	}
 	
-	public function setDetails($resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->setFoundCount();
-	}
-	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	protected function setPageTitle(){
 		$title .= 'Location Types';
-		$title .= closeDiv();
-		return $title;	
+		$this->_pageTitle = $title;	
 	}
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -37,45 +27,19 @@ class LocationTypeList{
 		$menu .= $typeL->detailAddHref();
 		$menu .= $typeL->listingHref();		
 		$menu .= $typeL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		$sql = $this->sql->countLocationTypes();
 		$this->found = dbGetCount($sql, 'total_types');
 	}
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
-	}
-
 	
 	public function getListing(){
 		$typeL = new LocationTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
-		$lt = new LocationType;
-		$lt->setDetails(0,'ADD');
+		$lt = new LocationType('ADD');
+		$lt->setDetails();
 		$quickEdit = $lt->editForm();
 		$list = openDisplayList('location-types','Location Types',$pagingLinks,$quickEdit);
 
@@ -95,10 +59,10 @@ class LocationTypeList{
 		{	
 			$u = new LocationType;
 			$u->id = $row["id"];
-			$u->name = stripslashes($row["name"]);
-			$u->description = stripslashes($row["description"]);
-			$u->notes = stripslashes($row["notes"]);
-			$u->highlightStyle = stripslashes($row["highlight_style"]);
+			$u->name = $row["name"];
+			$u->description = $row["description"];
+			$u->notes = $row["notes"];
+			$u->highlightStyle = $row["highlight_style"];
 			$u->displayOrder = $row["display_order"];
 			$u->formatForDisplay();
 

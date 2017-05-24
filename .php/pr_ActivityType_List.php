@@ -5,7 +5,7 @@ $detailsPerPage = 10;
 $resultPage = sessionVariableGET('resultsPage', 1);
 
 $t = new ActivityTypeList;
-$t->setDetails($resultPage, $detailsPerPage);
+$t->setPaging($resultPage, $detailsPerPage);
 
 $t->printPage();
 ?>

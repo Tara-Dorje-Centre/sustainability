@@ -1,26 +1,18 @@
 ﻿<?php 
 
-class ReceiptType {
-    public $id = 0;
-    public $name;		
-    public $description;	
-    public $notes;
-	public $highlightStyle = 'none';
-	public $displayOrder = 0;
-    public $created;
-    public $updated;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+class ReceiptType extends __EntityType{
+  
 	private $sql;
-	
-	public function __construct(){
+
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+
 		$this->sql = new ReceiptTypeSQL;
 	}
+	
+	public function setDetails(){
+		//parent::setDetails($mode, $id, $idParent);
 
-    // set class properties with record values from database
-	public function setDetails($detailId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailId;
 
 		$sql = $this->sql->infoReceiptType($this->id);
 
@@ -72,11 +64,14 @@ class ReceiptType {
 		return $menu;
 	}
 	
+	/*
+	
 	public function getPageHeading(){
 		$heading = $this->pageTitle();
 		$heading .= $this->pageMenu();
 		return $heading;
 	}
+	*/
 	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
@@ -85,6 +80,7 @@ class ReceiptType {
 		$this->created = getTimestampDate($this->created);
 		$this->updated = getTimestampDate($this->updated);
 	}
+	/*
 
 	public function printPage(){
 		
@@ -96,6 +92,7 @@ class ReceiptType {
 		$site->printSite();
 		
 	}
+	*/
 	
 	public function getPageDetails(){			
 

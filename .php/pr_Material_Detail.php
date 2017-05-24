@@ -5,8 +5,8 @@ $pageAction = sessionVariableGET('pageAction','VIEW');
 $materialId = sessionVariableGET('materialId',0);
 $taskId = sessionVariableGET('taskId',0);
 
-$m = new Material;
-$m->setDetails($materialId, $taskId, $pageAction);
+$m = new Material($pageAction, $materialId, $taskId);
+$m->setDetails();
 
 $m->printPage();
 ?>

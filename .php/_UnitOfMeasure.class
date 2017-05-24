@@ -1,25 +1,23 @@
 ﻿<?php 
 
-class UnitOfMeasure {
-    public $id = 0;
+class UnitOfMeasure extends __Entity{
+    
     public $type;	
     public $name;	
     public $symbol;
     public $notes;
     public $created;
     public $updated;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+	
+    
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new UnitOfMeasureSQL;
 	}
 	
-    // set class properties with record values from database
-	public function setDetails($detailUnitId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailUnitId;
+    public function setDetails(){
 
 		$sql = $this->sql->infoUnitOfMeasure($this->id);
 
@@ -39,7 +37,7 @@ class UnitOfMeasure {
 				
 	}	
 		
-	function pageTitle(){
+	protected function pageTitle(){
 		$heading = openDiv('section-heading-title');
 		if ($this->pageMode != 'ADD'){
 			$heading .= $this->name;
@@ -51,15 +49,13 @@ class UnitOfMeasure {
 	}
 	
 	
-	function pageMenu(){
+	protected function pageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
 		$units = new UnitOfMeasureLinks($menuType,$menuStyle);
 		$measureTypes = new MeasureTypeLinks($menuType,$menuStyle);
 		$menuL = new MenuLinks($menuType,$menuStyle);
-		
-
 		
 		$menu = $units->openMenu('section-heading-links');
 		$menu .= $menuL->linkReference();
@@ -76,40 +72,13 @@ class UnitOfMeasure {
 		return $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
+	
 	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->type = displayLines($this->type);
 		$this->notes = displayLines($this->notes);
 	}
-	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
-	
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -203,9 +172,8 @@ class UnitOfMeasure {
 		$this->pageMode = $_POST['mode'];	
 	}
 
-	public function saveChanges(){
+	public function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
 			$sql = " UPDATE units_of_measure AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -216,7 +184,9 @@ class UnitOfMeasure {
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			$result = dbRunSQL($sql);
 
-		} else {
+	}
+	
+	protected function saveInsert(){
 	
 			$sql = " INSERT INTO units_of_measure ";
 			$sql .= " (name, ";
@@ -232,12 +202,10 @@ class UnitOfMeasure {
 			$sql .= "'".$this->type."', ";
 			$sql .= "'".$this->symbol."', ";
 			$sql .= "'".$this->notes."') ";
+			
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
-	
 	}
-	
 } 
 ?>

@@ -2,7 +2,7 @@
 
 class TaskSQL{
 	
-function columnsTasks(){
+	protected function columns(){
 $c = " t.id,  ";
 $c .= " t.project_id,  ";
 $c .= " p.name project_name, ";
@@ -27,11 +27,12 @@ $c .= " t.materials_auth_project, ";
 $c .= " t.materials_auth_by, ";
 $c .= " t.receipts_auth_project, ";
 $c .= " t.receipts_auth_by ";
-return $c;
-}
-function listTasksByProject($selectedProjectId, $resultPage, $rowsPerPage){
+		return $c;
+	}
+	
+	public function listByProject($selectedProjectId, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
-$q .= $this->columnsTasks();
+$q .= $this->columns();
 	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
 	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
@@ -43,9 +44,9 @@ $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
 
-function infoTask($selectedTaskId){
+public function info($selectedTaskId){
 $q = " SELECT  ";
-$q .= $this->columnsTasks();
+$q .= $this->columns();
 	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
 	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
@@ -54,7 +55,7 @@ $q .= " t.id = ".$selectedTaskId." ";
 return $q;
 }
 
-function infoTaskSummaryByProject($selectedProjectId){
+public function summaryByProject($selectedProjectId){
 $q = " SELECT  ";
 $q .= " COUNT(*) as total_tasks, ";
 $q .= " sum(t.hours_estimated) as sum_hours_estimated, ";
@@ -64,14 +65,15 @@ $q .= " FROM tasks AS t ";
 $q .= " WHERE t.project_id = ".$selectedProjectId." ";
 return $q;
 }
-function countTasksByProject($selectedProjectId){
+
+public function countByProject($selectedProjectId){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_tasks ";
 $q .= " FROM tasks AS t ";
 $q .= " WHERE t.project_id = ".$selectedProjectId." ";
 return $q;	
 }
-function countTasksByProjectByStatus($selectedProjectId, $taskStatus = 'OPEN'){
+function countByProjectByStatus($selectedProjectId, $taskStatus = 'OPEN'){
 $q = " SELECT  ";
 $q .= " COUNT(*) AS total_tasks ";
 $q .= " FROM tasks AS t ";
@@ -85,9 +87,9 @@ if ($taskStatus == 'CLOSED'){
 return $q;
 }
 
-public function listPeriodicTasks($complete = 'NO',$resultPage,$rowsPerPage){
+public function listPeriodic($complete = 'NO',$resultPage,$rowsPerPage){
 	$q = " SELECT ";
-	$q .= $this->columnsTasks();
+	$q .= $this->columns();
 	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " JOIN project_types pt on p.type_id = pt.id ";
 	$q .= " JOIN task_types tt on t.type_id = tt.id ";
@@ -98,7 +100,7 @@ public function listPeriodicTasks($complete = 'NO',$resultPage,$rowsPerPage){
 	$q .= sqlLimitClause($resultPage, $rowsPerPage);
 	return $q;
 }
-public function countPeriodicTasks($complete = 'NO'){
+public function countPeriodic($complete = 'NO'){
 	$q = " SELECT count(*) AS total_tasks ";
 	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " JOIN project_types pt on p.type_id = pt.id ";
@@ -150,6 +152,7 @@ private function periodicTasksSubquery($complete = 'NO'){
 	$q .= ") ";
 	return $q;
 }
+
 public function selectOptions_Tasks($projectId,$selectedTaskId,$disabled){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
@@ -162,6 +165,76 @@ public function selectOptions_Tasks($projectId,$selectedTaskId,$disabled){
 	$q .= " ORDER BY caption ";
 	return $q;	
 }
+
+
+	public function updateReceiptsAuth($id, $project, $by){
+		$sql = " UPDATE tasks as t ";
+		$sql .= " SET ";
+		$sql .= "t.updated = CURRENT_TIMESTAMP, ";		
+		$sql .= " t.receipts_auth_project = '".$project."', ";
+		$sql .= " t.receipts_auth_by = '".$by."' ";
+		$sql .= " WHERE t.id = ".$id." ";
+		return $sql;
+
+	}
+	
+
+	public function updateMaterialsAuth($id, $project, $by){
+		$sql = " UPDATE tasks as t ";
+		$sql .= " SET ";
+		$sql .= "t.updated = CURRENT_TIMESTAMP, ";		
+		$sql .= " t.materials_auth_project = '".$project."', ";
+		$sql .= " t.materials_auth_by = '".$by."' ";
+		$sql .= " WHERE t.id = ".$id." ";
+		return $sql;
+	}
+		
+
+	public function copy($sourceId){
+	
+			$sql = " INSERT INTO tasks ";
+			$sql .= " (name, ";
+			$sql .= " project_id, ";
+			$sql .= " location_id, ";
+			$sql .= " type_id, ";			
+			$sql .= " task_order, ";
+			$sql .= " description, ";
+			$sql .= " summary, ";
+			$sql .= " started, ";
+			$sql .= " updated, ";
+			$sql .= " hours_estimated, ";
+			$sql .= " hours_actual, ";
+			$sql .= " hours_notes, ";
+			$sql .= " materials_auth_project, ";
+			$sql .= " materials_auth_by, ";
+			$sql .= " receipts_auth_project, ";
+			$sql .= " receipts_auth_by) ";
+			$sql .= " SELECT ";
+			$sql .= " name, ";
+			$sql .= " project_id, ";
+			$sql .= " location_id, ";
+			$sql .= " type_id, ";			
+			$sql .= " task_order, ";
+			$sql .= " description, ";
+			$sql .= " summary, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " hours_estimated, ";
+			$sql .= " 0, ";
+			$sql .= " hours_notes, ";
+			$sql .= " 'no', ";
+			$sql .= " 'n/a copied project', ";
+			$sql .= " 'no', ";
+			$sql .= " 'n/a copied project' ";
+			$sql .= " FROM tasks t WHERE t.id = ".$sourceId." ";
+			
+			return $sql;
+			
+	}
+	
+	
+	
+	
 
 }
 ?>

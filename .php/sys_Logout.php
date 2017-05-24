@@ -12,7 +12,7 @@ include_once("_includes.php");
 	unset($_SESSION['currentProjectId']);
 	unset($_SESSION['currentTaskId']);	
 	unset($_SESSION['currentView']);
-	$sw = new SitewideSettings;
+	$sw = new SiteSettings;
 	$sw->unsetSessionDetails();
 
 $site = new _SiteTemplate;

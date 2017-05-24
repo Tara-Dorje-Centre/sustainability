@@ -5,8 +5,8 @@ $detailsPerPage = 10;
 $resultPage = sessionVariableGET('resultsPage', 1);
 $measureTypeId = sessionVariableGET('measureTypeId',0);
 
-$mtu = new MeasureTypeUnitList;
-$mtu->setDetails($measureTypeId,$resultPage, $detailsPerPage);
-
+$mtu = new MeasureTypeUnitList('VIEW', 0, $measureTypeId);
+$mtu->setPaging($resultPage, $detailsPerPage);
+$mtu->setDetails();
 $mtu->printPage();
 ?>

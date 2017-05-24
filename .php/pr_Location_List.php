@@ -6,8 +6,8 @@ $detailsPerPage = 10;
 $parentLocationId = sessionVariableGET('parentLocationId', -1);
 $resultPage = sessionVariableGET('resultsPage', 1);
 
-$l = new LocationList;
-$l->setDetails($parentLocationId, $resultPage, $detailsPerPage);
-
+$l = new LocationList('VIEW', 0, $parentLocationId);
+$l->setPaging($resultPage, $detailsPerPage);
+$l->setDetails();
 $l->printPage();
 ?>

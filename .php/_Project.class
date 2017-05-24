@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class Project {
-    public $id = 0;
-    public $parentId = 0;
+class Project extends __Entity{
+    //public $id = 0;
+    //public $parentId = 0;
 	public $locationId = 0;
     public $name;	
 	public $projectType;
@@ -31,25 +31,25 @@ class Project {
 	public $receiptsCost = 0;
 	public $receiptsSummary = '';
 
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
 	private $sql;
 	public $resultPage = 1;
 	
 
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new ProjectSQL;
 	}
 
-    // set class properties with record values from database
-	public function setDetails($detailProjectId, $inputMode, $resultPage = 1){
-		$this->pageMode = $inputMode;
-		$this->resultPage = $resultPage;
-		$this->id = $detailProjectId;
-		
-		if ($detailProjectId > 0){
+    public function setDetails(){
 
-		$sql = $this->sql->infoProject($this->id);
+		if ($this->id != 0){
+		
+		if ($this->pageMode == 'COPY'){
+			$this->copyProject();
+			$_SESSION['currentProjectId'] = $this->id;
+		}
+
+		$sql = $this->sql->info($this->id);
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -74,12 +74,10 @@ class Project {
 		$result->close();
 		}
 		
-		}
-		
-		
 		$this->setTaskSummary();
 		$this->setMaterialSummary();
 		$this->setReceiptSummary();		
+		}
 	}	
 	
 	
@@ -175,8 +173,7 @@ class Project {
 	
 	private function setTaskSummary(){
 		$s = new TaskSQL;
-		$sql = $s->infoTaskSummaryByProject($this->id);
-		
+		$sql = $s->summaryByProject($this->id);
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -214,19 +211,19 @@ class Project {
 		$this->tasksSummary = $effort;		
 	}
 	
-	function pageTitle(){
-		$heading = openDiv('section-heading-title');
+	protected function setPageTitle(){
+
 		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
+			$heading = $this->name;
 		} else {
-			$heading .= 'Add New Project';
+			$heading = 'Add New Project';
 		}
-		$heading .= closeDiv();		
-		return $heading;
+
+		$this->_pageTitle = $heading;
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -265,13 +262,7 @@ class Project {
 			$menu .= $taskL->detailAddHref($this->id);
 		}
 		$menu .= $projectL->closeMenu();
-		return $menu;
-	}
-	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
+		$this->_pageMenu = $menu;
 	}
 	
 	public function formatForDisplay(){
@@ -288,34 +279,7 @@ class Project {
 		}
 	}
 
-	public function printPage(){
-		
-		
-		if ($this->pageMode == 'COPY'){
-			$this->copyProject();
-			$_SESSION['currentProjectId'] = $this->id;
-		}
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
+	
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -349,8 +313,9 @@ class Project {
 		$effortAndCost .= closeTable();
 		$detail .= captionedParagraph('effort-and-cost','Time, Materials and Receipts',$effortAndCost);			
 
-		$tasks = new TaskList;
-		$tasks->setDetails($this->id,$this->resultPage,10);
+		$tasks = new TaskList('VIEW', 0, $this->id);
+		$tasks->setPaging($this->resultPage,10);
+		$tasks->setDetails();
 		$pl = new ProjectLinks();
 		$link = $pl->detail('VIEW',$this->id);
 		$detail .= $tasks->getListing($link);
@@ -471,7 +436,7 @@ class Project {
 		
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('parentId', $this->parentId);
+		$hidden .= getHiddenInput('parentId', $this->idParent);
 		$hidden .= getHiddenInput('projectId', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
@@ -504,6 +469,7 @@ class Project {
 		//refresh current project task summary values
 		$this->setTaskSummary();
 		if ($this->tasksCount > 0){
+		
 			$sql = " update projects p ";
 			$sql .= " set p.pct_done = ".$this->tasksPctDone.", ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
@@ -517,97 +483,27 @@ class Project {
 	}
 
 
-	private function copyProject(){
-		$sourceProjectId = $this->id;
-		$copyProjectId = 0;
-
-
-		if ($this->pageMode == 'COPY'){
+	protected function copyProject(){
+		$sourceId = $this->id;
+		$copyId = 0;
 		
-			$this->name = 'COPY OF '.substr($this->name,0,90);
-
-			$sql = " INSERT INTO projects ";
-			$sql .= " (name, ";
-			$sql .= " parent_id, ";
-			$sql .= " location_id, ";
-			$sql .= " started, ";
-			$sql .= " updated, ";
-			$sql .= " description, ";
-			$sql .= " summary, ";
-			//$sql .= " lessons_learned, ";
-			$sql .= " show_always, ";
-			$sql .= " type_id, ";
-			$sql .= " purpose) ";
-			$sql .= " SELECT ";
-			$sql .= " '".$this->name."', ";
-			$sql .= " id, ";
-			$sql .= " location_id, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " description, ";
-			$sql .= " summary, ";
-			//$sql .= " lessons_learned, ";
-			$sql .= " show_always, ";
-			$sql .= " type_id, ";
-			$sql .= " purpose ";
-			$sql .= " FROM projects p WHERE p.id = ".$sourceProjectId." ";
+			$sql = $this->sql->copy($sourceId);
 			
 			$result = dbRunSQL($sql);
+			$copyId = dbInsertedId();
 			
-			$copyProjectId = dbInsertedId();
-		
-			//insert all tasks from source project to copy project substituting the copy project id		
-			$sql = " INSERT INTO tasks ";
-			$sql .= " (name, ";
-			$sql .= " project_id, ";
-			$sql .= " location_id, ";
-			$sql .= " type_id, ";			
-			$sql .= " task_order, ";
-			$sql .= " description, ";
-			$sql .= " summary, ";
-			$sql .= " started, ";
-			$sql .= " updated, ";
-			$sql .= " hours_estimated, ";
-			$sql .= " hours_actual, ";
-			$sql .= " hours_notes, ";
-			$sql .= " materials_auth_project, ";
-			$sql .= " materials_auth_by, ";
-			$sql .= " receipts_auth_project, ";
-			$sql .= " receipts_auth_by) ";
-			$sql .= " SELECT ";
-			$sql .= " name, ";
-			$sql .= " ".$copyProjectId.", ";
-			$sql .= " location_id, ";
-			$sql .= " type_id, ";			
-			$sql .= " task_order, ";
-			$sql .= " description, ";
-			$sql .= " summary, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " hours_estimated, ";
-			$sql .= " 0, ";
-			$sql .= " hours_notes, ";
-			$sql .= " 'no', ";
-			$sql .= " 'n/a copied project', ";
-			$sql .= " 'no', ";
-			$sql .= " 'n/a copied project' ";
-			$sql .= " FROM tasks t WHERE t.project_id = ".$sourceProjectId." ";
-
+			$sql = copyTasks($sourceId, $copyId);
 			$result = dbRunSQL($sql);
 		
-			//reset page mode from COPY to EDIT and set details using the copied id
-			$this->id = $copyProjectId;
-			$this->setDetails($this->id,'EDIT');
-						
-		}
-
-		
+			//reset page mode from COPY to EDIT
+			//continue in setdetails using the copied id
+			$this->setId($copyProjectId);
+			$this->setPageMode('EDIT');
 	}
 
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
 			$sql = " UPDATE projects AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -626,7 +522,9 @@ class Project {
 			
 			$result = dbRunSQL($sql);
 			
-		} else {
+	}
+			
+	protected function saveInsert(){
 	
 			$sql = " INSERT INTO projects ";
 			$sql .= " (name, ";
@@ -656,7 +554,6 @@ class Project {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
 	
 	}
 	

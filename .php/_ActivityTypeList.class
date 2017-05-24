@@ -1,30 +1,20 @@
 ﻿<?php 
 
-class ActivityTypeList{       
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class ActivityTypeList extends __EntityList{    
+
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new ActivityTypeSQL;	
 	}
 	
-	public function setDetails($resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->setFoundCount();
-	}
-	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
-		$title .= 'Activity Types';
-		$title .= closeDiv();
-		return $title;	
+	protected function setPageTitle(){
+
+		$this->_pageTitle .= 'Activity Types';
 	}
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$typeL = new ActivityTypeLinks($menuType,$menuStyle);		
@@ -36,44 +26,19 @@ class ActivityTypeList{
 		$menu .= $typeL->detailAddHref();
 		$menu .= $typeL->listingHref();		
 		$menu .= $typeL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		$sql = $this->sql->countActivityTypes();
 		$this->found = dbGetCount($sql, 'total_types');
 	}
 	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
-	}
-	
-	
 	public function getListing(){
 		$typeL = new ActivityTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);	
-		$at = new ActivityType;
-		$at->setDetails(0,'ADD');
+		$at = new ActivityType('ADD');
+		
 		$quickEdit =$at->editForm();			
 		$list = openDisplayList('activity-types','Activity Types',$pagingLinks,$quickEdit);
 

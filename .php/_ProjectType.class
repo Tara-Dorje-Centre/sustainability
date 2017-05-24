@@ -1,27 +1,18 @@
 ﻿<?php 
 
-class ProjectType {
-    public $id = 0;
-    public $name;		
-    public $description;	
-    public $notes;
-	public $highlightStyle = 'none';
-	public $displayOrder = 0;
-    public $created;
-    public $updated;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+class ProjectType extends __EntityType{
+   
 	private $sql;
 
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new ProjectTypeSQL;
 	}
 	
-    // set class properties with record values from database
-	public function setDetails($detailId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailId;
+	public function setDetails(){
 
+		if ($this->id != 0){
+		
 		$sql = $this->sql->infoProjectType($this->id);
 		
 		$result = dbGetResult($sql);
@@ -38,22 +29,23 @@ class ProjectType {
 		}
 		$result->close();
 		}
+		
+		
+		}
 				
 	}	
 		
-	function pageTitle(){
-		$heading = openDiv('section-heading-title');
+	protected function setPageTitle(){
 		if ($this->pageMode != 'ADD'){
 			$heading .= $this->name;
 		} else {
-			$heading .= 'Add New Project Type';
+			$heading = 'Add New Project Type';
 		}
-		$heading .= closeDiv();		
-		return $heading;
+		$this->_pageTitle = $heading;
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$typesL = new ProjectTypeLinks($menuType,$menuStyle);
@@ -69,43 +61,15 @@ class ProjectType {
 		}
 		$menu .= $typesL->listingHref();		
 		$menu .= $typesL->closeMenu();
-		return $menu;
+		$ths->_pageMenu = $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
 	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
 	}
-	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
-	
 	
 	public function display(){
 		$this->formatForDisplay();

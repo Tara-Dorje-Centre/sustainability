@@ -1,0 +1,148 @@
+<?php 
+
+class __Entity{
+    public $pageMode = 'VIEW';
+	public $id = 0;
+	public $idParent = 0;
+	
+	protected $_pageTitle = 'entity.pageTitle';
+	protected $_pageMenu = 'entity.pageMenu';
+	
+	
+	 public $resultPage = 1;
+	 public $perPage = 10;
+	 
+	
+	public $month = -1;
+	public $year = -1;
+	protected $showCalendar = 'NO';
+	
+	public $_getSummary = true;
+	public $_runUpdates = true;
+	
+    
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->setMode($mode);
+		$this->setId($id);
+		$this->setIdParent($idParent);
+	}
+
+	public function setDetails(){
+	
+	printLine('entity.setDetails not overridden');
+	
+	}
+	
+	
+
+	 public function setPaging($resultPage = 1, $resultsPerPage = 10){
+	 $this->resultPage = $resultPage;
+	 $this->perPage = $resultsPerPage;
+	 }
+	 
+	
+	
+	public function setCalendar($year = -1, $month = -1, $show = 'NO'){
+		$this->showCalendar = $show;
+	
+		 if ($year != 0 && $year != 0){
+		 	$this->year = $year;
+		 	$this->month = $month;
+		 } else {
+		 //dates not set, use current month and year
+		 	global $sessionTime;
+		 	$this->year = getTimestampYear($sessionTime);
+		 	$this->month = getTimestampMonth($sessionTime);
+		 }
+		 
+	}
+	
+	public function setMode($mode = 'VIEW'){
+		$this->pageMode = $mode;
+	}
+	
+	public function setId($id = 0){
+		$this->id = $id;
+	}
+	
+	public function setIdParent($idParent = 0){
+		$this->idParent = $idParent;
+	}
+
+
+	protected function setPageTitle(){
+	 	$this->_pageTitle = 'entity._pageTitle not set';
+	}
+	
+	protected function setPageMenu(){
+		$this->_pageMenu = 'entity._pageMenu not set.';
+	}
+	
+	protected function pageTitle(){
+		$heading = openDiv('section-heading-title');
+		$heading .= $this->_pageTitle;
+		$heading .= closeDiv();		
+		return $heading;
+	}
+
+
+
+	 protected function pageMenu(){
+	 	return $this->_pageMenu;
+	 }
+	 
+	public function editForm(){
+		return ('__Entity.editForm not overridden in child');
+	}
+	
+	protected function display(){
+		return ('__Entity.display not overridden in child');
+	}
+	
+	public function printPage(){
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+	}
+	
+	protected function getPageHeading(){
+		$this->setPageTitle();
+		$this->setPageMenu();
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	protected function getPageDetails(){			
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+	}
+	
+	protected function copy(){
+		printLine('__Entity.copy not overridden');
+	}
+	
+	protected function saveUpdate(){
+		printLine('__Entity.saveUpdate not overridden in child');
+	}
+	
+	protected function saveInsert(){
+		printLine ('__Entity.saveInsert not overridden in child');
+	}
+	
+	public function saveChanges(){
+		if ($this->pageMode == 'EDIT'){
+			$this->saveUpdate();
+		} else {
+			$this->saveInsert();
+		}
+	}
+	
+}
+?>

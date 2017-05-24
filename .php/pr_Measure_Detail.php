@@ -5,8 +5,8 @@ $pageAction = sessionVariableGET('pageAction','VIEW');
 $measureId = sessionVariableGET('measureId',0);
 $taskId = sessionVariableGET('taskId',0);
 
-$m = new Measure;
-$m->setDetails($measureId, $taskId, $pageAction);
+$m = new Measure($pageAction, $measureId, $taskId);
+$m->setDetails();
 
 $m->printPage();
 ?>

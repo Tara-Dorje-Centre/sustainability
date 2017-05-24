@@ -1,11 +1,12 @@
 ﻿<?php 
 
-class Task {
-	public $locationId = 0;
+class Task extends __Entity{
+    
+	//public $locationId = 0;
 	public $typeId = 0;
 	public $highlightStyle = 'none';
-    public $id = 0;
-	public $order = 0;
+
+	public $order = '0';
     public $name;	
     public $description;
     public $summary;
@@ -21,7 +22,7 @@ class Task {
 	public $receiptsAuthBy = '';
 	public $project;
 	private $sql;
-    public $pageMode;
+
 	
 	public $measureCount = 0;
 	public $activityCount = 0;
@@ -34,23 +35,24 @@ class Task {
 	public $resultsPageMeasure = 1;
 	public $resultsPageMaterial = 1;
 	public $resultsPageReceipt = 1;
-	public $year = -1;
-	public $month = -1;
+	
+	/*public $year = -1;
+	public $month = -1;*/
 	
 	
-	public function __construct(){
-		$this->project = new Project;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->project = new Project($this->pageMode, $this>idParent);
 		$this->sql = new TaskSQL;
 	}
 	
-	public function setDetails($detailTaskId, $detailProjectId, $inputMode,$year = -1, $month = -1){
-		$this->pageMode = $inputMode;
-		$this->id = $detailTaskId;
-		$this->project->id = $detailProjectId;
-		$this->year = $year;
-		$this->month = $month;
+	public function setDetails(){
 		
-		$sql = $this->sql->infoTask($this->id);
+		if ($this->pageMode == 'COPY'){
+			$this->copyTask();
+		}
+		
+		$sql = $this->sql->info($this->id);
 		$result = dbGetResult($sql);
 		if ($result){
 		while($row = $result->fetch_assoc())
@@ -84,7 +86,9 @@ class Task {
 		$this->summarizeReceipt();
 	}	
 	
-	public function setPagingState(
+
+	
+	public function setPagingDetails(
 		$pageActivity = 1, 
 		$pageMaterial = 1, 
 		$pageMeasure = 1, 
@@ -94,20 +98,37 @@ class Task {
 		$this->resultsPageActivity = $pageActivity;
 		$this->resultsPageMaterial = $pageMaterial;
 		$this->resultsPageReceipt = $pageReceipt;
+	}
+	/*
 	
+	public function setPagingActivity($page = 1){
+		$this->resultsPageActivity = $page;
 	}
 
-	function setParentProject(){
-		$this->project->setDetails($this->project->id, $this->pageMode);		
+	public function setPagingMaterial($page = 1){
+		$this->resultsPageMaterial = $page;
 	}
 	
-	function setMeasureCount(){
+	public function setPagingReceipt($page = 1){
+		$this->resultsPageReceipt = $page;
+	}
+	
+	public function setPagingMeasure($page = 1){
+		$this->resultsPageMeasure = $page;
+	}
+	*/
+
+	protected function setParentProject(){
+		$this->project->setDetails();		
+	}
+	
+	protected function setMeasureCount(){
 		$s = new MeasureSQL;
 		$sql = $s->countMeasuresByTask($this->id);
 		$this->measureCount = dbGetCount($sql, 'total_measures', 0);
 	}
 	
-	function summarizeActivity(){
+	protected function summarizeActivity(){
 		$s = new ActivitySQL;
 		$sql = $s->summarizeActivityByTask($this->id);
 		
@@ -128,7 +149,7 @@ class Task {
 		}
 	}
 
-	function summarizeMaterial(){		
+	protected function summarizeMaterial(){		
 		$s = new MaterialSQL;
 		$sql = $s->summarizeMaterialByTask($this->id);
 		
@@ -144,7 +165,7 @@ class Task {
 		}
 	}
 
-	function summarizeReceipt(){		
+	protected function summarizeReceipt(){		
 		$s = new ReceiptSQL;
 		$sql = $s->summarizeReceiptsByTask($this->id);
 		
@@ -160,21 +181,21 @@ class Task {
 	}
 
 	
-	function pageTitle(){
-		$title = openDiv('section-heading-title','none');
-		$title .= $this->project->name.br();
+	protected function setPageTitle(){
+
+		$title = $this->project->name.br();
 		if ($this->pageMode != 'ADD'){
 			$title .= 'Task: '.$this->name;
 		} else {
 			$title .= 'Add New Task.';
 		}
-		$title .= closeDiv();	
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}
 	
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -231,14 +252,9 @@ class Task {
 		}
 				
 		$menu .= $projects->closeMenu();
-		return $menu;		
+		$this->_pageMenu = $menu;		
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
 	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
@@ -250,35 +266,6 @@ class Task {
 		$this->updated = getTimestampDate($this->updated);
 		
 	}
-		
-	public function printPage(){
-		
-		
-		if ($this->pageMode == 'COPY'){
-			$this->copyTask();
-		}
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-		
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
-		
 		
 	public function display(){
 		$this->formatForDisplay();
@@ -373,27 +360,41 @@ class Task {
 
 		$l = new TaskLinks();
 		$baseLink = $l->detail('VIEW',$this->id);
+		
+		die('fix _task detail lists');
 
 		if ($this->activityCount > 0){
-			$activities = new ActivityList;
-			$activities->setDetails($this->id,$this->resultsPageActivity,10);
+			$activities = new ActivityList($this->pageMode, 0, $this->id);
+			$activities->setPaging($this->resultsPageActivity,10);
+			$activities->setDetails();
 			$detail .= $activities->getListing($baseLink);
 		}
 
 		if ($this->measureCount > 0){
+			$activities = new MeasureList($this->pageMode, 0, $this->id);
 			$measures = new MeasureList;
-			$measures->setDetails($this->id, $this->resultsPageMeasure, 10);
+			$measures->setPaging($this->resultsPageMeasure, 10);
+			$measures->setDetails();
 			$detail .= $measures->getListing($baseLink);
 		}
 		
 		if ($this->materialCount > 0){
-			$materials = new MaterialList;
-			$materials->setDetails($this->id, $this->resultsPageMaterial, 10,'TASK','no',$this->project->id,$this->year,$this->month);
+			$materials = new MaterialList($this->pageMode, 0, $this->id);
+			$materials->setPaging($this->resultsPageMaterial, 10);
+			$materials->setDisplay('TASK');
+			$materials->setApproved('no');
+			$materials->setCalendar($this->year,$this->month);
+			$materials->setDetails();
 			$detail .= $materials->getListing($baseLink);
 		}
+		
 		if ($this->receiptCount > 0){
-			$receipts = new ReceiptList;
-			$receipts->setDetails($this->id, $this->resultsPageReceipt, 10);
+			$receipts = new ReceiptList($this->pageMode, 0, $this->id);
+			$receipts->setPaging($this->resultsPageReceipt, 10);
+			$receipts->setDisplay('TASK');
+			$receipts->setApproved('no');
+			$receipts->setCalendar($this->year,$this->month);
+			$receipts->setDetails();
 			$detail .= $receipts->getListing($baseLink);
 		}
 
@@ -554,6 +555,8 @@ class Task {
 
 		$this->id = $_POST['taskId'];
 		$this->project->id = $_POST['projectId'];
+		$this->idParent = $this->project->id;
+		
 		$this->locationId = $_POST['locationId'];
 		$this->typeId = $_POST['taskTypeId'];
 		$this->setParentProject();
@@ -602,12 +605,10 @@ class Task {
 	public function resetMaterialsAuthorization(){	
 		$this->materialsAuthProject = 'no';
 		$this->materialsAuthBy = 'Not Approved';
-		$sql = " UPDATE tasks as t ";
-		$sql .= " SET ";
-		$sql .= "t.updated = CURRENT_TIMESTAMP, ";		
-		$sql .= " t.materials_auth_project = '".$this->materialsAuthProject."', ";
-		$sql .= " t.materials_auth_by = '".$this->materialsAuthBy."' ";
-		$sql .= " WHERE t.id = ".$this->id." ";
+		$project = $this->materialsAuthProject;
+		$by = $this->materialsAuthBy;
+		
+		$sql = $this->sql->updateMaterialsAuth($this->id, $project, $by);
 		
 		$result = dbRunSQL($sql);
 		
@@ -630,72 +631,29 @@ class Task {
 	public function resetReceiptsAuthorization(){	
 		$this->receiptsAuthProject = 'no';
 		$this->receiptsAuthBy = 'Not Approved';
-		$sql = " UPDATE tasks as t ";
-		$sql .= " SET ";
-		$sql .= "t.updated = CURRENT_TIMESTAMP, ";		
-		$sql .= " t.receipts_auth_project = '".$this->receiptsAuthProject."', ";
-		$sql .= " t.receipts_auth_by = '".$this->receiptsAuthBy."' ";
-		$sql .= " WHERE t.id = ".$this->id." ";
 		
+		$project = $this->receiptsAuthProject;
+		$by = $this->receiptsAuthBy;
+		
+		$sql = $this->sql->updateReceiptsAuth($this->id, $project, $by);
 		$result = dbRunSQL($sql);
 	}
 
 	private function copyTask(){
+	
+		$idSource = $this->id;
+		
+		$sql = $this->sql->copy($idSource);
 
-		if ($this->pageMode == 'COPY'){
+		$result = dbRunSQL($sql);
+		$idCopy = dbInsertedId();
 		
+			$this->id = $idCopy;
+			$this->pageMode = 'EDIT';
 
-			$sql = " INSERT INTO tasks ";
-			$sql .= " (name, ";
-			$sql .= " project_id, ";
-			$sql .= " location_id, ";
-			$sql .= " type_id, ";			
-			$sql .= " task_order, ";
-			$sql .= " description, ";
-			$sql .= " summary, ";
-			$sql .= " started, ";
-			$sql .= " updated, ";
-			$sql .= " hours_estimated, ";
-			$sql .= " hours_actual, ";
-			$sql .= " hours_notes, ";
-			$sql .= " materials_auth_project, ";
-			$sql .= " materials_auth_by, ";
-			$sql .= " receipts_auth_project, ";
-			$sql .= " receipts_auth_by) ";
-			$sql .= " SELECT ";
-			$sql .= " name, ";
-			$sql .= " project_id, ";
-			$sql .= " location_id, ";
-			$sql .= " type_id, ";			
-			$sql .= " task_order, ";
-			$sql .= " description, ";
-			$sql .= " summary, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " hours_estimated, ";
-			$sql .= " 0, ";
-			$sql .= " hours_notes, ";
-			$sql .= " 'no', ";
-			$sql .= " 'n/a copied project', ";
-			$sql .= " 'no', ";
-			$sql .= " 'n/a copied project' ";
-			$sql .= " FROM tasks t WHERE t.id = ".$this->id." ";
-			
-			$result = dbRunSQL($sql);
-		
-			$this->id = dbInsertedId();
-		
-			//reset page mode from COPY to EDIT and set details using the copied id
-			$this->setDetails($this->id,$this->project->id,'EDIT');
-			$this->name = 'COPY OF '.$this->name;
-			
-		}
 	}
 
-	public function saveChanges(){
-	
-		if ($this->pageMode == 'EDIT'){
-
+	protected function saveUpdate(){
 			$sql = " UPDATE tasks AS t ";
 			$sql .= " SET ";
 			$sql .= " t.project_id = ".$this->project->id.", ";
@@ -717,12 +675,13 @@ class Task {
 
 			$sql .= " WHERE t.id = ".$this->id." ";	
 		
-		$result = dbRunSQL($sql);
+			$result = dbRunSQL($sql);
 			
 			$this->setMaterialsActualCost();			
 			$this->project->UpdateTaskSummary();
-		} else {
+	}
 	
+	protected function saveInsert(){
 			$sql = " INSERT INTO tasks ";
 			$sql .= " (name, ";
 			$sql .= " project_id, ";
@@ -763,9 +722,7 @@ class Task {
 			$this->id = dbInsertedId();
 
 			$this->project->UpdateTaskSummary();
-
-		}
-	
+			
 	}
 	
 } 

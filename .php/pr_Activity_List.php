@@ -22,9 +22,11 @@ if ($showCalendar == 'YES'){
 		$_SESSION['currentView'] = 'GROUP_ACTIVITY';
 	}
 }
-$al = new ActivityList;
-$al->setDetails($taskId, $resultPage, $detailsPerPage,$myActivity,$showCalendar,$projectId);
-$al->setCalendarRange($activityYear, $activityMonth);
+$al = new ActivityList('VIEW', 0, taskId);
+$al->setCalendar($activityYear, $activityMonth, $showCalendar);
+$al->setPaging($resultPage, $detailsPerPage);
+$al->setMyActivity($myActivity);
+$al->setDetails(, , ,$myActivity,,$projectId);
 
 $al->printPage();
 ?>

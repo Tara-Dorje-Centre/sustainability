@@ -24,8 +24,8 @@ function dbInsertedId ($callingFunction = 'dbInsertedId'){
 }
 
 function dbRunSQL($sql, $callingFunction = 'dbRunSQL'){
-	printLine($callingFunction);
-	printLine($sql);
+	//printLine($callingFunction);
+	//printLine($sql);
 	global $conn;
 	$success = $conn->query($sql);
 	

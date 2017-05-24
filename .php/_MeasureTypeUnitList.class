@@ -1,41 +1,41 @@
 ﻿<?php 
 
-class MeasureTypeUnitList{
-	public $measureTypeId = 0;
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class MeasureTypeUnitList extends __EntityList{
+	//public $measureTypeId = 0;
+	
 	public $measureType;
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent =0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new MeasureTypeUnitSQL;
-		$this->measureType = new MeasureType;
+		$this->measureType = new MeasureType($this->pageMode, $this->idParent);
 	}
 	
-	public function setDetails($measureTypeId, $resultPage = 1, $resultsPerPage = 10){
-		$this->measureTypeId = $measureTypeId;	
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
+	public function setDetails(){
+	//	$this->measureTypeId = $this->idParent;
 		
-		$this->measureType->setDetails($measureTypeId, 0, 'VIEW');
+	//	$this->resultPage = $resultPage;
+	//	$this->perPage = $resultsPerPage;
+		
+		$this->measureType->setDetails();
 		$this->setFoundCount();
 	}
 	
 	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	protected function setPageTitle(){
+
 		if ($this->measureType->id > 0){
-			$title .= $this->measureType->name.br();
+			$title = $this->measureType->name.br();
 		} else {
-			$title .= 'All Measure Types:'.br();
+			$title = 'All Measure Types:'.br();
 		}
 		$title .= 'Measure Type Units';
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}	
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -62,38 +62,18 @@ class MeasureTypeUnitList{
 		$menu .= $units->listingHref();		
 		
 		$menu .= $units->closeMenu();	
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}	
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
 	
-	private function setFoundCount(){
+	
+	
+	public function setFoundCount(){
 		$s = new MeasureTypeUnitSQL;
 		$sql = $s->countMeasureTypeUnits($this->measureType->id);
 		$this->found = dbGetCount($sql, 'total_units');
 	}		
 	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
-	}
 	
 	
 	public function getListing(){
@@ -104,8 +84,8 @@ class MeasureTypeUnitList{
 		$ml = new MeasureTypeUnitLinks;
 		$pagingLinks = $ml->listingPaged($this->measureType->id, $this->found,$this->resultPage,$this->perPage);
 		if ($this->measureType->id > 0){
-			$mtu = new MeasureTypeUnit;
-			$mtu->setDetails(0,$this->measureType->id,'ADD');
+			$mtu = new MeasureTypeUnit('ADD', 0, $this->measureType->id);
+			$mtu->setDetails();
 			$quickEdit = $mtu->editForm();
 		} else {
 			$quickEdit = NULL;
@@ -126,10 +106,10 @@ class MeasureTypeUnitList{
 			$m->id = $row["id"];
 			$m->measureTypeId = $row["measure_type_id"];
 			$m->unitOfMeasureId = $row["unit_measure_id"];
-			$m->measureTypeName = stripslashes($row["measure_type"]);
-			$m->unitType = stripslashes($row["unit_type"]);
-			$m->unitOfMeasure = stripslashes($row["unit_of_measure"]);
-			$m->unitSymbol = stripslashes($row["unit_symbol"]);
+			$m->measureTypeName = ($row["measure_type"]);
+			$m->unitType = ($row["unit_type"]);
+			$m->unitOfMeasure = ($row["unit_of_measure"]);
+			$m->unitSymbol = ($row["unit_symbol"]);
 			
 			$link = $ml->detailViewEditHref($m->id,$m->getMeasureTypeAndUnitSymbol());
 			$detail =  wrapTd($link);

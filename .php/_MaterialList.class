@@ -1,12 +1,10 @@
 ﻿<?php 
 
-class MaterialList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class MaterialList extends __Entity{
+
 	public $task;
-	public $month;
-	public $year;
+	
+	
 	private $prevCalendarLink = '';
 	private $nextCalendarLink = '';	
 	private $displayProject = 'TASK';
@@ -15,42 +13,27 @@ class MaterialList{
 	public $costEstimated = 0;
 	private $sql;
 
-	public function __construct(){
-		$this->task = new Task;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new MaterialSQL;
 	}
 	
-	public function setDetails($taskId, $resultPage = 1, $resultsPerPage = 10, $display = 'TASK', $approved = 'no',$projectId = 0, $year = 0, $month = 0){
-		$this->task->id = $taskId;	
-		$this->displayProject = $display;
-		$this->approved = $approved;
-		$this->task->project->id = $projectId;
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->task->setDetails($this->task->id, $this->task->project->id, 'VIEW');
-		$this->setCalendarRange($year,$month);
+	public function setDetails(){
+	
+		$this->task->setDetails();
 		$this->setFoundCount();
 		$this->setSummary();
 	}
 	
-	private function setCalendarRange($year, $month){
-
-		if ($year != 0 && $year != 0){
-			$this->year = $year;
-			$this->month = $month;
-		} else {
-			//dates not set, use current month and year
-			global $sessionTime;
-			$this->year = getTimestampYear($sessionTime);
-			$this->month = getTimestampMonth($sessionTime);
-		}
+	public function setApproved($approved = 'no'){
+		$this->approved = $approved;
 	}
-	
-		
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
-		
+	public function setDisplay($display = 'TASK'){
+		$this->displayProject = $display;
+	}
+
+	protected function setPageTitle(){
 		$title .= $this->task->project->name.br();
 
 		if ($this->displayProject == 'TASK'){
@@ -70,11 +53,11 @@ class MaterialList{
 			$title .= 'Materials Cost Approved = '.$this->costActual;
 		}
 		
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;
 	}	
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -105,16 +88,11 @@ class MaterialList{
 			$menu .= $materials->detailAddHref($this->task->id);
 		}
 		$menu .= $projects->closeMenu();	
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}	
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
 	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		if ($this->displayProject == 'PROJECT'){
 			$sql = $this->sql->countMaterialsByProject($this->task->project->id,$this->year,$this->month);
 		} elseif ($this->displayProject == 'PROJECT-SUMMARY'){
@@ -215,23 +193,7 @@ class MaterialList{
 	}
 
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
 	
-		$details = $this->getListing();
-		return $details;
-		
-	}
 	
 	private function getBaseUrl($baseUrl = 'USE_LISTING'){
 
@@ -568,8 +530,8 @@ class MaterialList{
 						
 		//on task materials list, show quick edit form (only if on materials listing page)
 		if ($pagingBaseLink == 'USE_LISTING'){
-		$m = new Material;
-		$m->setDetails(0,$this->task->id,'ADD');
+		$m = new Material('ADD', 0, $this->task->id);
+		$m->setDetails();
 		$quickEdit = $m->editForm();
 		} else {
 			$quickEdit = NULL;
@@ -660,7 +622,7 @@ class MaterialList{
 	
 		
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
-//printLine(this->year.$this->month);
+
 
 		if ($this->displayProject == 'PROJECT-SUMMARY'){
 			$list = $this->getSummaryProjectMonthly($pagingBaseLink);			

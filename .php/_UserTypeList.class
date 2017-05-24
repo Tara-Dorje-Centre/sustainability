@@ -1,20 +1,11 @@
 ﻿<?php 
 
-class UserTypeList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class UserTypeList extends __EntityList{
+
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->sql = new UserTypeSQL;
-	}
-	
-	public function setDetails($resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->setFoundCount();
 	}
 	
 	public function pageTitle(){
@@ -40,34 +31,12 @@ class UserTypeList{
 		return $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
 	
-	private function setFoundCount(){
+	
+	public function setFoundCount(){
 		$s = new UserTypeSQL;
 		$sql = $s->countUserTypes();
 		$this->found = dbGetCount($sql, 'total_types');
-	}
-	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
 	}
 	
 	public function getListing(){
@@ -75,11 +44,10 @@ class UserTypeList{
 		$s = new UserTypeSQL;
 		$sql = $s->listUserTypes($this->resultPage,$this->perPage);
 
-
 		$typeL = new UserTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
-		$ut = new UserType;
-		$ut->setDetails(0,'ADD');
+		$ut = new UserType('ADD');
+		//$ut->setDetails(0,'ADD');
 		$quickEdit = $ut->editForm();
 		$list = openDisplayList('user-types','User Profile Types',$pagingLinks,$quickEdit);
 		

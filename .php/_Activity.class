@@ -1,7 +1,6 @@
 ﻿<?php 
 
-class Activity {             
-    public $id = 0;
+class Activity extends __Entity{             
 	public $typeId = 0;
 	public $doneBy;
     public $started;
@@ -15,58 +14,48 @@ class Activity {
 	public $task;	
 	private $sql;
 	
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
-	
-	public function __construct(){
-		$this->task = new Task;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new ActivitySQL;
 	}
 	
-	public function setDetails($detailActivityId, $parentTaskId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailActivityId;
-		$this->task->id = $parentTaskId;
-		
-		$sql = $this->sql->infoActivity($this->id);
-
+	public function setDetails(){
+		$sql = $this->sql->info($this->id);
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 	  	{
 			$this->task->id = $row["task_id"];
 			$this->typeId = $row["type_id"];
-			$this->doneBy = stripslashes($row["done_by"]);
+			$this->doneBy = ($row["done_by"]);
 			$this->started = $row["started"];
 			$this->updated = $row["updated"];	
 			//$this->order = $row["activity_order"];	
 			//$this->hoursEstimated = $row["hours_estimated"];						
 			$this->hoursActual = $row["hours_actual"];						
-			$this->comments = stripslashes($row["comments"]);
-			$this->linkText = stripslashes($row["link_text"]);
-			$this->linkUrl = stripslashes($row["link_url"]);
+			$this->comments = ($row["comments"]);
+			$this->linkText = ($row["link_text"]);
+			$this->linkUrl = ($row["link_url"]);
 		}
 		$result->close();
 		}
 
-		$this->setParentTask();				
+		$this->setParentTask();			
+	
 	}	
 	
 	public function setParentTask(){
-		$this->task->setDetails($this->task->id, $this->task->project->id, $this->pageMode);
+		$this->task->setDetails();
 	}
 		
-	function pageTitle(){	
-		$title = openDiv('section-heading-title','none');
-		//show page mode for debugging
-		//$heading .= '['.$this->pageMode.']';
+	protected function setPageTitle(){	
 		$title .= $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;		
-		$title .= closeDiv();
-		return $title;
+		$this->_pageTitle = $title;
 	}	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -90,15 +79,12 @@ class Activity {
 		//$menu .= $activities->listingHref($this->task->id);
 
 		$menu .= $projects->closeMenu();
-		return $menu;
+		
+		$this->_pageMenu = $menu;
+
 	}
 		
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
-	
+		
 	public function formatForDisplay(){
 		$this->doneBy = displayLines($this->doneBy);
 		$this->comments = displayLines($this->comments);		
@@ -106,28 +92,6 @@ class Activity {
 		$this->updated = getTimestampDate($this->updated);		
 	}
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-		
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
 		
 		
 	public function display(){
@@ -251,6 +215,7 @@ class Activity {
 		$this->pageMode = $_POST['mode'];
 		
 		$this->task->id = $_POST['taskId'];
+		$this->idParent = $this->task->id;
 		$this->id = $_POST['activityId'];
 		$this->typeId = $_POST['typeId'];
 		//$this->order = $_POST['activityOrder']; 
@@ -266,11 +231,7 @@ class Activity {
 		$this->hoursEstimated = $this->task->hoursEstimated;
 	}
 	
-	
-	public function saveChanges(){
-	
-		if ($this->pageMode == 'EDIT'){
-
+	protected function saveUpdate(){
 			$sql = " UPDATE activities a ";
 			$sql .= " SET ";
 			$sql .= " a.done_by = '".$this->doneBy."', ";
@@ -288,9 +249,9 @@ class Activity {
 			$result = dbRunSql($sql);
 			
 			$this->task->updateActivitySummary();
-			
-		} else {
-		
+	}
+	
+	protected function saveInsert(){
 			$sql = " INSERT INTO activities ";
 			$sql .= " ( ";
 			//$sql .= " activity_order, ";
@@ -322,10 +283,9 @@ class Activity {
 			$this->id = dbInsertedId();
 
 			$this->task->updateActivitySummary();
-
-		}
-	
 	}
+	
+	
 	
 } 
 ?>

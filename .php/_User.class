@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class User {
-    public $id = 0; 
+class User extends __Entity{
+   // public $id = 0; 
     public $typeId = 0; 
 	public $typeName;
 	public $cssHighlight;
@@ -18,22 +18,23 @@ class User {
 	public $isAdmin = 'no';
 	public $isActive = 'no';
 	public $mustUpdatePwd = 'no';
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+	
+
 	public $validationMessages;
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new UserSQL;
 	}
 	
-	public function setDetails($userId, $userTypeId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $userId;
-		$this->typeId = $userTypeId;
+	public function setTypeId($id){
+		$this->typeId = $id;
+	}
+	
+	public function setDetails(){
 
 		$sql = $this->sql->infoUser($this->id);
-		
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -54,30 +55,28 @@ class User {
 			$this->typeName = $row["type_name"];
 			$this->cssHighlight = $row["highlight_style"];
 		}
-
 		$result->close();
 		}
-		
-				
+
 	}	
 		
-	private function pageTitle(){
-		$heading = openDiv('section-heading-title');
+	protected function setPageTitle(){
+
 		if ($this->pageMode != 'ADD'){
-			$heading .= $this->loginName;
+			$heading = $this->loginName;
 			if ($_SESSION['user-id'] == $this->id && $_SESSION['must-update-pwd'] == 'yes'){
 				$heading .= br().'Please update your profile password.';
 			}
 
 		} else {
-			$heading .= 'Add User Profile';
+			$heading = 'Add User Profile';
 		}
-		$heading .= closeDiv();		
-		return $heading;
+
+		$this->_pageTitle = $heading;
 	}
 	
 	
-	private function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$userL = new UserLinks($menuType,$menuStyle);		
@@ -97,13 +96,7 @@ class User {
 		$menu .= $userL->listingHref();
 		
 		$menu .= $userL->closeMenu();
-		return $menu;
-	}
-	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
+		$this->_pageMenu = $menu;
 	}
 	
 	public function formatForDisplay(){
@@ -111,17 +104,7 @@ class User {
 		$this->interests = displayLines($this->interests); 
 	}
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
 
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-	
 	public function getPageDetails(){			
 		if ($_SESSION['is-admin'] == 'yes'){
 			//is admin allow edit others and add users
@@ -147,7 +130,7 @@ class User {
 		
 	}
 	
-	public function display(){
+	protected function display(){
 		$this->formatForDisplay();
 		$detail = openDisplayDetails('user','User Profile Details');		
 
@@ -198,14 +181,11 @@ class User {
 			$this->email = $loginEmail;
 		
 			$newPass = $this->generatePassword();
-			$newPassCrypt = $this->obfuscate(mysql_real_escape_string($newPass),$loginName);
+			$newPassCrypt = $this->obfuscate(dbEscapeString($newPass),$loginName);
 		
 		
-			$sql = "UPDATE users u SET ";
-			$sql .= " u.login_pwd = '".$newPassCrypt."', ";
-			$sql .= " u.must_update_pwd = 'yes' ";
-			$sql .= " WHERE u.login_name = '".$loginName."' ";
-			
+			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
+		
 			$result = dbRunSQL($sql);
 			
 			$links = new UserLinks;	
@@ -282,6 +262,7 @@ class User {
 
 		if ($found == 1){
 			$validUser = true;
+			printLine('validateLogin.updatingLastLogin');
 			$this->updateLastLogin($loginName);
 			$this->setSecurity($loginName);
 			$_SESSION['login-messages'] = '';
@@ -312,12 +293,9 @@ class User {
 	
 	private function updateLastLogin($loginName){
 		
-		$sql = " UPDATE users u ";
-		$sql .= " SET u.last_login = CURRENT_TIMESTAMP ";
-		$sql .= " WHERE u.login_name = '".$loginName."' ";	
+		$sql = $this->sql->updateLastLogin($loginName);
 		
-		$result = 
-		dbRunSQL($sql);
+		$result = dbRunSQL($sql);
 		
 	}
 	
@@ -482,7 +460,7 @@ class User {
 	}
 	
 	
-	public function collectPostValues(){
+	protected function collectPostValues(){
 
 		$this->id = $_POST['userId'];
 		$this->typeId = $_POST['typeId'];
@@ -533,7 +511,7 @@ class User {
 		}
 	}
 	
-	private function cancelPost($message, $validation){
+	protected function cancelPost($message, $validation){
 		//echo 'in cancel post:'.$message;
 		//set validation message
 		$this->validationMessages[$validation] = span($message,'highlight-validation');
@@ -542,10 +520,7 @@ class User {
 		die;
 	}
 
-	
-	public function saveChanges(){
-	
-		if ($this->pageMode == 'EDIT'){
+	protected function saveUpdate(){
 			
 			$sql = " UPDATE users AS u ";
 			$sql .= " SET ";
@@ -569,9 +544,10 @@ class User {
 			if ($this->loginName == $_SESSION['login-name']){
 				$this->setSecurity($this->loginName);
 			}
-			
-		} else {
-
+	}
+	
+	protected function saveInsert(){
+	
 			$sql = " INSERT INTO users ";
 			$sql .= " (name_first, ";
 			$sql .= " name_last, ";
@@ -598,15 +574,12 @@ class User {
 			$sql .= " '".$this->mustUpdatePwd."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";			
 			$sql .= " ".$this->typeId.") ";
-
 			
 			$result = dbRunSQL($sql);
 
-			
 			$this->id = dbInsertedId();
-		}
-	
 	}
+	
 	
 } 
 ?>

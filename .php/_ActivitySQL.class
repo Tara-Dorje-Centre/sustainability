@@ -1,7 +1,7 @@
 ﻿<?php 
 
 class ActivitySQL{
-function columnsActivity(){
+protected function columns(){
 $c = " a.id,  ";
 $c .= " a.task_id,  ";
 $c .= " a.type_id, ";
@@ -21,9 +21,9 @@ $c .= " pt.highlight_style ";
 return $c;	
 }
 
-public function infoActivity($selectedActivityId){
+public function info($selectedActivityId){
 $q = " SELECT  ";
-$q .= $this->columnsActivity();
+$q .= $this->columns();
 $q .= " FROM activities a JOIN tasks t ON a.task_id = t.id ";
 $q .= " JOIN projects p ON t.project_id = p.id ";
 $q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
@@ -34,7 +34,7 @@ return $q;
 
 public function listActivityByTask($selectedTaskId, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
-$q .= $this->columnsActivity();
+$q .= $this->columns();
 $q .= " FROM activities a JOIN tasks t ON a.task_id = t.id ";
 $q .= " JOIN projects p ON t.project_id = p.id ";
 $q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
@@ -68,7 +68,7 @@ return $q;
 
 public function listActivityByDoneBy($doneBy, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
-$q .= $this->columnsActivity();
+$q .= $this->columns();
 $q .= " FROM activities a JOIN tasks t on a.task_id = t.id ";
 $q .= " JOIN projects p on t.project_id = p.id  ";
 $q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";

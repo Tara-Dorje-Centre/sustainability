@@ -1,7 +1,6 @@
 ﻿<?php 
 
-class Measure {
-    public $id = 0;
+class Measure extends __Entity{
     public $locationId = 0;	
 	public $name;
     public $description;
@@ -15,19 +14,17 @@ class Measure {
     public $notes;
 	public $task;	
 	private $sql;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
 	
-	public function __construct(){
-		$this->task = new Task;
+    
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new MeasureSQL;
 	}
 	
-
-	public function setDetails($detailMeasureId, $parentTaskId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailMeasureId;
-		$this->task->id = $parentTaskId;
+	public function setDetails(){
+		$this->task->id = $this->idParent;
 		
 		$sql = $this->sql->infoMeasure($this->id);
 		$result = dbGetResult($sql);
@@ -36,16 +33,16 @@ class Measure {
 		{	
 			$this->task->id = $row["task_id"];
 			$this->locationId = $row["location_id"];
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
 			$this->dateReported = $row["date_reported"];
 			$this->updated = $row["updated"];	
 			$this->value = $row["value"];	
 			$this->measureTypeUnitId = $row["measure_type_unit_id"];						
-			$this->measureType = stripslashes($row["measure_type"]);
-			$this->unitSymbol = stripslashes($row["unit_symbol"]);
-			$this->unitType = stripslashes($row["unit_type"]);
-			$this->notes = stripslashes($row["notes"]);
+			$this->measureType = ($row["measure_type"]);
+			$this->unitSymbol = ($row["unit_symbol"]);
+			$this->unitType = ($row["unit_type"]);
+			$this->notes = ($row["notes"]);
 		}
 		$result->close();
 		}
@@ -54,13 +51,13 @@ class Measure {
 	}	
 	
 	public function setParentTask(){
-		$this->task->setDetails($this->task->id, 0, $this->pageMode);
+		$this->task->setDetails($this->pageMode, $this->task->id);
 	}
 		
 	function pageTitle(){	
 		$title = openDiv('section-heading-title','none');
-		//show page mode for debugging
-		//$heading .= '['.$this->pageMode.']';
+		
+		
 		$title .= $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;		
 		$title .= closeDiv();
@@ -93,11 +90,6 @@ class Measure {
 		return $menu;
 	}
 		
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
 
 	public function getMeasureTypeAndUnitSymbol(){
 		$t = $this->measureType.'('.$this->unitSymbol.')';
@@ -110,28 +102,8 @@ class Measure {
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
 	}
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
 	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
+	
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -213,6 +185,7 @@ class Measure {
 		$this->pageMode = $_POST['mode'];
 		
 		$this->task->id = $_POST['taskId'];
+		$this->idParent = $this->task->id;
 		$this->id = $_POST['measureId'];
 		$this->locationId = $_POST['locationId'];
 		$this->description = dbEscapeString($_POST['description']);
@@ -225,9 +198,9 @@ class Measure {
 		$this->setParentTask();
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			
 			$sql = " UPDATE measures m ";
 			$sql .= " SET ";
@@ -243,7 +216,9 @@ class Measure {
 
 			$result = dbRunSQL($sql);
 			
-		} else {
+	}
+	
+	protected function saveInsert(){
 	
 			$sql = " INSERT INTO measures ";
 			$sql .= " (name, ";
@@ -267,7 +242,6 @@ class Measure {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
 	
 	}
 	

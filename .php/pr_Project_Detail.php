@@ -8,8 +8,8 @@ $_SESSION['currentProjectId'] = $projectId;
 
 //$parentId = sessionVariableGET('parentId',0);
 
-$p = new Project;
-$p->setDetails($projectId, $pageAction,$resultsPage);
-
+$p = new Project($pageAction, $projectId);
+$p->setPaging($resultsPage);
+$p->setDetails();
 $p->printPage();
 ?>

@@ -1,31 +1,26 @@
 ﻿<?php 
 
-class UserList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class UserList extends __EntityList{
+
 	public $userTypeId = 0;
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new UserSQL;
 	}
 	
-	public function setDetails($userTypeId = 0, $resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		$this->userTypeId = $userTypeId;
+	public function setDetails(){
+		
+		//$this->userTypeId = $userTypeId;
 		$this->setFoundCount();
 	}
 	
-	private function pageTitle(){
-		$title = openDiv('section-heading-title','none');
-		$title .= 'User Profiles';
-		$title .= closeDiv();
-		return $title;	
+	protected function setPageTitle(){
+		$this->_pageTitle .= 'User Profiles';
 	}
 
-	private function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -42,38 +37,13 @@ class UserList{
 		$menu .= $userL->listingHref();
 		
 		$menu .= $userL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		$sql = $this->sql->countUsers($this->userTypeId);
 		$this->found = dbGetCount($sql, 'total_users');
 	}	
-	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
-	}
-	
 	
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
 		
@@ -87,8 +57,7 @@ class UserList{
 			$base = $pagingBaseLink;
 		}
 		$pagingLinks = $cl->listingPaged($base, $this->found,$this->resultPage,$this->perPage);
-		$u = new User;
-		$u->setDetails(0,0,'ADD');
+		$u = new User('ADD');
 		$quickEdit = $u->editForm();
 		$list = openDisplayList('users','Users',$pagingLinks,$quickEdit);
 		

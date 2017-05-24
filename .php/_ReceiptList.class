@@ -1,9 +1,7 @@
 ﻿<?php 
 
-class ReceiptList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class ReceiptList extends __EntityList{
+
 	public $task;
 	private $displayProject = 'TASK';
 	private $approved = 'no';
@@ -11,28 +9,30 @@ class ReceiptList{
 	//public $costEstimated = 0;
 	private $sql;
 
-	public function __construct(){
-		$this->task = new Task;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new ReceiptSQL;
 	}
 	
-	public function setDetails($taskId, $resultPage = 1, $resultsPerPage = 10, $display = 'TASK', $approved = 'no',$projectId = 0){
-		$this->task->id = $taskId;	
+	public function setDisplay($display = 'TASK'){
 		$this->displayProject = $display;
+	}
+	
+	public function setApproved($approved = 'no'){
 		$this->approved = $approved;
-		$this->task->project->id = $projectId;
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->task->setDetails($this->task->id, $this->task->project->id, 'VIEW');
+	}
+	
+	public function setDetails(){
+		$this->task->setDetails();
 		$this->setFoundCount();
 		$this->setSummary();
 	}
 		
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	protected function setPageTitle(){
+
 		if ($this->displayProject == 'TASK'){
-			$title .= $this->task->project->name.br();
+			$title = $this->task->project->name.br();
 			$title .= 'Task: '.$this->task->name.br();
 			if ($this->task->receiptsAuthProject == 'yes'){
 				$title .= 'Receipts Approved = '.$this->costActual;
@@ -40,14 +40,14 @@ class ReceiptList{
 				$title .= 'Receipts Estimated';
 			}
 		} elseif ($this->displayProject == 'PROJECT'){
-			$title .= $this->task->project->name.br();	
+			$title = $this->task->project->name.br();	
 			$title .= 'Receipts Approved = '.$this->costActual;
 		}
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}	
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -71,16 +71,10 @@ class ReceiptList{
 			$menu .= $rL->detailAddHref($this->task->id);
 		}
 		$menu .= $projects->closeMenu();	
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}	
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		if ($this->displayProject == 'PROJECT'){
 			$sql = $this->sql->countReceiptsByProject($this->task->project->id, $this->approved);
 		} else {
@@ -105,25 +99,7 @@ class ReceiptList{
 		$result->close();		
 		}	
 	}
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
 	
-		$details = $this->getListing();
-		return $details;
-		
-	}
-
 		
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
 		if ($this->displayProject == 'PROJECT'){
@@ -143,8 +119,8 @@ class ReceiptList{
 		}
 		$pagingLinks = $receiptL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
 		
-		$r = new Receipt;
-		$r->setDetails(0,$this->task->id,'ADD');
+		$r = new Receipt('ADD', 0, $this->task->id);
+
 		$quickEdit = $r->editForm();
 		$list = openDisplayList('receipt','Receipts',$pagingLinks,$quickEdit);
 

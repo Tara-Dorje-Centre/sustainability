@@ -1,49 +1,32 @@
-﻿<?php 
+<?php 
 
-class ActivityList{          
+class ActivityList extends __EntityList{
 	public $myActivity = 'NO';
-	public $showCalendar = 'NO';
-	public $month;
-	public $year;
 	private $prevCalendarLink = '';
 	private $nextCalendarLink = '';
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+	
 	public $task;
 	private $sql;
 	
-	public function __construct(){
-		$this->task = new Task;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new ActivitySQL;	
 	}
-
-	public function setDetails($taskId, $page = 1, $perPage = 10,$myActivity = 'NO',$showCalendar='NO',$projectId = 0){
-		$this->task->id = $taskId;
-		$this->task->project->id = $projectId;	
-		$this->resultPage = $page;
-		$this->perPage = $perPage;
+	
+	public function setMyActivity($myActvity = 'NO'){
 		$this->myActivity = $myActivity;
-		$this->showCalendar = $showCalendar;
-		$this->task->setDetails($this->task->id, $this->task->project->id, 'VIEW');
+	}
+	
+	public function setDetails(){
+		$this->task->setDetails();
 		$this->setFoundCount();
 	}
 
-	public function setCalendarRange($year, $month){
 
-		if ($year != 0 && $year != 0){
-			$this->year = $year;
-			$this->month = $month;
-		} else {
-			//dates not set, use current month and year
-			global $sessionTime;
-			$this->year = getTimestampYear($sessionTime);
-			$this->month = getTimestampMonth($sessionTime);
-		}
-	}
-	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	protected function setPageTitle(){
+		
+		$title = '';
 		if ($this->myActivity == 'NO'){
 			$title .= $this->task->project->name.br();
 			$title .= 'Task: '.$this->task->name;
@@ -54,11 +37,11 @@ class ActivityList{
 		} elseif ($this->myActivity == 'PROJECT') {
 			$title .= 'All Project Activity:'.spacer(2).$this->task->project->name;
 		}
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}	
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -94,15 +77,9 @@ class ActivityList{
 		}
 		
 		$menu .= $activityL->closeMenu();	
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}	
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-
 	private function getActivityDoneBy(){
 			if ($this->myActivity == 'YES'){
 				$doneBy = $_SESSION['login-name'];
@@ -112,7 +89,7 @@ class ActivityList{
 			return $doneBy;		
 	}
 
-	private function setFoundCount(){
+	public function setFoundCount(){
 		if ($this->myActivity == 'NO'){
 			$sql = $this->sql->countActivityByTask($this->task->id);
 		} else {
@@ -317,17 +294,6 @@ class ActivityList{
 		
 	}
 	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-	
 	
 	public function getPageDetails(){
 		if ($this->showCalendar == 'YES'){
@@ -351,9 +317,9 @@ class ActivityList{
 		}
 		$pagingLinks = $activityL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);				
 		
-			$a = new Activity;
-			$a->setDetails(0,$this->task->id,'ADD');
-			$a->task->project->setDetails($this->task->project->id,'VIEW');
+			$a = new Activity('ADD', 0, $this->task->id);
+			$a->setDetails();
+			//$a->task->project->setDetails($this->task->project->id,'VIEW');
 			$quickEdit = $a->editForm('ActivityList.MyActivity='.$this->myActivity);
 		
 		$list = openDisplayList('activity','Activities', $pagingLinks, $quickEdit);

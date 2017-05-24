@@ -1,25 +1,17 @@
 ﻿<?php 
 
-class LocationType {
-    public $id = 0;
-    public $name;		
-    public $description;	
-    public $notes;
-	public $highlightStyle = 'none';
-	public $displayOrder = 0;
-    public $created;
-    public $updated;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+class LocationType extends __EntityType{
+   
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new LocationTypeSQL;
 	}
-    // set class properties with record values from database
-	public function setDetails($detailId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailId;
+    
+    
+	public function setDetails(){
+		
 
 		$sql = $this->sql->infoLocationType($this->id);
 		
@@ -72,11 +64,6 @@ class LocationType {
 		return $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
 	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
@@ -85,29 +72,9 @@ class LocationType {
 		$this->created = getTimestampDate($this->created);
 		$this->updated = getTimestampDate($this->updated);
 	}
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
 	
-	public function getPageDetails(){			
 
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
+
 	
 	
 	public function display(){
@@ -202,9 +169,9 @@ class LocationType {
 		$this->pageMode = $_POST['mode'];	
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			$sql = " UPDATE location_types AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -216,8 +183,9 @@ class LocationType {
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			
 			$result = dbRunSQL($sql);
+	}
 
-		} else {
+	protected function saveInsert(){
 			$sql = " INSERT INTO location_types ";
 			$sql .= " (name, ";
 			$sql .= " created, ";
@@ -238,7 +206,7 @@ class LocationType {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
+		
 	
 	}
 	

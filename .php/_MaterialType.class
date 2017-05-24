@@ -1,26 +1,18 @@
 ﻿<?php 
 
-class MaterialType {         
-    public $id = 0;
-    public $name;		
-    public $description;	
-    public $notes;
-	public $highlightStyle = 'none';
-	public $displayOrder = 0;
-    public $created;
-    public $updated;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+class MaterialType extends __EntityType {         
+  
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+
 		$this->sql = new MaterialTypeSQL;
 	}
 
-    // set class properties with record values from database
-	public function setDetails($detailId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailId;
+	public function setDetails($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::setDetails($mode, $id, $idParent);
+
 
 		$sql = $this->sql->infoMaterialType($this->id);
 		
@@ -28,13 +20,13 @@ class MaterialType {
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
-			$this->notes = stripslashes($row["notes"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->notes = ($row["notes"]);
 			$this->displayOrder = $row["display_order"];			
-			$this->highlightStyle = stripslashes($row["highlight_style"]);
-			$this->created = stripslashes($row["created"]);			
-			$this->updated = stripslashes($row["updated"]);			
+			$this->highlightStyle = ($row["highlight_style"]);
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
 		}
 		$result->close();
 		}
@@ -72,11 +64,7 @@ class MaterialType {
 		return $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
+	
 	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
@@ -86,27 +74,7 @@ class MaterialType {
 		$this->updated = getTimestampDate($this->updated);
 	}
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
 
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
 	
 	
 	public function display(){
@@ -196,7 +164,7 @@ class MaterialType {
 		$this->notes = dbEscapeString($_POST['notes']); 		
 		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
 		$this->displayOrder = ($_POST['displayOrder']); 		
-		printLine($this->displayOrder);
+		printLine('material type.display_order.post='.$this->displayOrder);
 		$this->pageMode = $_POST['mode'];	
 	}
 
@@ -213,7 +181,7 @@ class MaterialType {
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			
-			$result = mysql_query($sql) or die(mysql_error());
+			$result = dbRunSQL($sql);
 		} else {
 			$sql = " INSERT INTO material_types ";
 			$sql .= " (name, ";

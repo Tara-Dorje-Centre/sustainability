@@ -1,27 +1,20 @@
 ﻿<?php 
 
-class TaskType {
-    public $id = 0;
-    public $name;		
-    public $description;	
-    public $notes;
-	public $highlightStyle = 'none';
+
+class TaskType extends __EntityType{
+
+    
 	public $frequency = 'none';
-	public $displayOrder = 0;
-    public $created;
-    public $updated;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+
 		$this->sql = new TaskTypeSQL;
 	}
 	
-    // set class properties with record values from database
-	public function setDetails($detailId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailId;
+	public function setDetails(){
+		
 
 		$sql = $this->sql->infoTaskType($this->id);
 
@@ -29,21 +22,21 @@ class TaskType {
 		if($result){
 		while ($row = $result->fetch_assoc())
 			{	
-			$this->name = stripslashes($row["name"]);
-			$this->description = stripslashes($row["description"]);
-			$this->notes = stripslashes($row["notes"]);
-			$this->highlightStyle = stripslashes($row["highlight_style"]);
-			$this->frequency = stripslashes($row["frequency"]);
+			$this->name = ($row["name"]);
+			$this->description = ($row["description"]);
+			$this->notes = ($row["notes"]);
+			$this->highlightStyle = ($row["highlight_style"]);
+			$this->frequency = ($row["frequency"]);
 			$this->displayOrder = $row["display_order"];
-			$this->created = stripslashes($row["created"]);			
-			$this->updated = stripslashes($row["updated"]);			
+			$this->created = ($row["created"]);			
+			$this->updated = ($row["updated"]);			
 		}
 		$result->close();
 		}
 				
 	}	
 		
-	function pageTitle(){
+	protected function pageTitle(){
 		$heading = openDiv('section-heading-title');
 		if ($this->pageMode != 'ADD'){
 			$heading .= $this->name;
@@ -55,7 +48,7 @@ class TaskType {
 	}
 	
 	
-	function pageMenu(){
+	protected function pageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';		
 		$typesL = new TaskTypeLinks($menuType,$menuStyle);
@@ -74,44 +67,15 @@ class TaskType {
 		return $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
-	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
 		
 	}
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
 	
 	
-	public function display(){
+	protected function display(){
 		$this->formatForDisplay();
 		$detail = openDisplayDetails('project-type','Project Type Details');
 	 						
@@ -221,10 +185,9 @@ class TaskType {
 		$this->displayOrder = dbEscapeString($_POST['displayOrder']);
 		$this->pageMode = $_POST['mode'];	
 	}
-
-	public function saveChanges(){
 	
-		if ($this->pageMode == 'EDIT'){
+	protected function saveUpdate(){
+	
 			$sql = " UPDATE task_types AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -235,8 +198,11 @@ class TaskType {
 			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
-			$result = mysql_query($sql) or die(mysql_error());
-		} else {
+			$result = dbRunSQL($sql);
+	}
+	
+	protected function saveInsert(){
+	
 			$sql = " INSERT INTO task_types ";
 			$sql .= " (name, ";
 			$sql .= " frequency, ";
@@ -258,9 +224,9 @@ class TaskType {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
-	
 	}
+
+
 	
 } 
 ?>

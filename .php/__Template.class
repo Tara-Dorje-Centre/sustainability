@@ -1,53 +1,171 @@
 ﻿<?php 
-include_once("_includes.php");
 
-class _SiteTemplate{
-	private $htmlPageTitle = 'myPage';
-	private $siteTitle;
-	private $siteLinksItems;
+
+class __TemplateHTML{
+	protected $_title;
+	protected $_styles;
+	protected $_scripts;
+	protected $_onLoad = 'none';
+
+	protected $_links;
+	protected $_heading;	
+	protected $_details;
+	protected $_content;
+	protected $_footerLinks;
+	protected $_footerNotices;
+	protected $_footerLogo;
+
+
 	
-	private $footerLogoImage;
-	private $footerNoticesItems;
-	private $footerLinksItems;
+	public function printSite(){		
+		$content = $this->build();
+		echo $content;		
+		//close db connection
+		global $conn;
+		$conn->close;
+	}
 
-	private $pageHeading;
-//	public $pageLinksItems;
-	private $pageContents;
-	private $pageSectionHeading;
-	private $pageSectionDetails;
+	protected function build(){		
+		$content = $this->documentOpen();
+		$content .= $this->siteHeading();
+		$content .= $this->siteContent();	
+		$content .= $this->siteFooter();
+		$content .= $this->documentClose();
+		return $content;		
+	}
+
+	protected function documentOpen(){
+		$content = doctypeHtml();
+		$content .= openHTML();
+		$content .= openHead();
+		$content .= metaHttpEquivs();		
+		$content .= $this->_styles;
+		$content .= htmlTitle($this->_title);
+		$content .= $this->_scripts;
+		$content .= closeHead();
+		$content .= openBody($this->_onLoad);
+		$content .= openDiv('site-container');
+		return $content;	
+	}
+	
+	protected function documentClose(){
+		//close site page container
+		$content = closeDiv();
+		$content .= closeBody();
+		$content .= closeHTML();
+		return $content;
+	}
+	
+	protected function siteHeading(){
+		$content = openDiv('site-heading');
+		$content .= $this->siteTitle();
+		$content .= $this->siteLinks();
+		$content .= closeDiv();
+		return $content;	
+	}
+
+	protected function siteTitle(){
+		$content = openDiv('site-heading-title');
+		$content .= $this->_title;
+		$content .= closeDiv();
+		return $content;	
+	}
+
+	protected function siteLinks(){
+		$content = openDiv('site-heading-links');
+		$content .= $this->_links;
+		$content .= closeDiv(); //close site links
+		return $content;	
+	}
+
+	protected function siteContent(){
+		$content = openDiv('site-content');
+		$content .= $this->_content;
+		$content .= closeDiv(); // close site content
+		return $content;
+	}
+
+	protected function siteFooter(){
+		$content = openDiv('site-footer');
+		$content .= $this->siteFooterLogos();
+		$content .= $this->siteFooterNotices();
+		$content .= $this->siteFooterLinks();
+		$content .= closeDiv(); //close site footer
+		return $content;
+	}
+
+	protected function siteFooterLogos(){
+		$content = openDiv('site-footer-logos');
+		$content .= $this->_footerLogo;
+		$content .= closeDiv();
+		return $content;	
+	}
+
+	protected function siteFooterNotices(){
+		$content = openDiv('site-footer-notices');
+		$content .= $this->_footerNotices;
+		$content .= closeDiv();
+		return $content;	
+	}
+
+	protected function siteFooterLinks(){	
+		$content = openDiv('site-footer-links');
+		$content .= $this->_footerLinks;
+		$content .= closeDiv();
+		return $content;		
+	}
+
+
+
+}
+
+class _SiteTemplate extends __TemplateHTML{
+
+
 
 
 public function setSiteTemplateDetails($contentHeading = 'page heading', $contentDetails = 'page details'){
-	$this->pageSectionDetails = $contentDetails;
-	$this->pageSectionHeading = $contentHeading;
+	$this->_details = $contentDetails;
+	$this->_heading = $contentHeading;
 
-	$this->getSitewideSettings();
-	$this->setSiteTitle();
-	$this->setSiteLinksItems();
-	$this->setPageContents();	
-	$this->setFooterNoticesItems();
-	$this->setFooterLinksItems();	
+	$this->getSiteSettings();
+	$this->setOnLoad();
+	$this->setStyles();
+	$this->setScripts();
+	$this->setTitle();
+	$this->setLinks();
+	$this->setContents();	
+	$this->setFooterNotices();
+	$this->setFooterLinks();	
 }
 
-protected function getSitewideSettings(){
+protected function getSiteSettings(){
 	$settings = new SiteSettings;
 	$settings->setDetails('VIEW');
 }
 
+	protected function setOnLoad(){
+		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){	
+			$onLoad = 'none';
+		} else {
+			$onLoad='displayClientTime();';
+		}
+		$this->_onLoad = $onLoad;
+	}
 
-protected function setSiteTitle(){
+
+protected function setTitle(){
 	$title = $_SESSION['site-title'];
-	$this->htmlPageTitle = $title;		
-	$this->siteTitle = $title;	
+	$this->_title = $title;		
 }
 
 
-protected function setSiteLinksItems(){
+protected function setLinks(){
 
 	//login check goes here to show content or login screen
 	if (!isset($_SESSION['logged-in']) || $_SESSION['logged-in'] == false){
 		//user is not logged in, siteContent will display login form, display no links
-		$this->siteLinksItems = '';
+		$this->_links = '';
 	} else {
 		$menuType = 'LIST';
 		$menuStyle = 'button';
@@ -88,14 +206,14 @@ protected function setSiteLinksItems(){
 		$content .= $m->logoutHref();
 		$content .= $m->closeMenu();
 		
-		$this->siteLinksItems = $content;
+		$this->_links = $content;
 		
 	}
 	
 }
 
 
-protected function setPageContents(){ 
+protected function setContents(){ 
 
 	if (!isset($_SESSION['logged-in']) || $_SESSION['logged-in'] == false){
 		$user = new User;
@@ -105,26 +223,25 @@ protected function setPageContents(){
 		//  pageHeading contains section-title and section-links div containers
 		//  wrap title and links in section-heading div
 		//	$s .= openDiv('section-heading');
-		$content = $this->pageSectionHeading;
+		$content = $this->_heading;
 		//	$s .= closeDiv(); //close section heading
 
 		$content .= openDiv('section-details');
-		$content .= $this->pageSectionDetails;
+		$content .= $this->_details;
 		$content .= closeDiv(); //close section details
 	}
-	$this->pageContents = $content;
+	
+	$this->_content = $content;
 }
 
 
-	protected function setFooterNoticesItems(){
-
+	protected function setFooterNotices(){
 
 		$content = openDiv('login-notices');
 
 		global $sessionTime, $sessionTimeZone;
 		$timing = 'Request Time: '.$sessionTime.'(UTC'.$sessionTimeZone.')';
 		$content .= wrapDiv($timing, 'display-request-time');
-		
 		
 		if (isset($_SESSION['login-name'])){
 			$loginName = $_SESSION['login-name'];
@@ -141,7 +258,7 @@ protected function setPageContents(){
 	
 		$content .= closeDiv();
 		
-		
+
 		$content .= openDiv('site-organization');
 		$org = $_SESSION['site-org'];
 		$orgUrl = $_SESSION['site-org-url'];
@@ -152,52 +269,28 @@ protected function setPageContents(){
 		}
 		$content .= closeDiv();
 
-
-		$this->footerNoticesItems = $content;
+		$this->_footerNotices = $content;
 	
 	}
 
-	protected function setFooterLinksItems(){
-
+	protected function setFooterLinks(){
 		$content = getHref('https://sourceforge.net/projects/sustainability','Sustainability','menu-links-item','_blank');
-
-		$this->footerLinksItems = $content;	
+		$this->_footerLinks = $content;	
 	}
 
-	public function printSite(){		
-		$content = $this->getSiteTemplate();
-		echo $content;	
-		
-		
-
-//close db connection
-//global $conn;
-//conn->close;
-
-	}
-
-	protected function getSiteTemplate(){		
-		$content = $this->siteContainerOpen();
-		$content .= $this->siteHeading();
-		$content .= $this->siteContent();	
-		$content .= $this->siteFooter();
-		$content .= $this->siteContainerClose();
-		return $content;		
-	}
-
-	protected function siteStyles(){
+	protected function setStyles(){
 		//use internal stylesheet
 		//$content = $this->buildInternalStyles();
 
 		//use external stylesheet
 		$content = LinkStylesheet('css/styles.css');
 		//$content .= stylesheet('css/override.css');
-		
-		return $content;
+		$this->_styles = $content;
+		//return $content;
 		
 	}
 
-	protected function siteScripts(){
+	protected function setScripts(){
 		$scripts = openScript();	
 		//start oputput buffering
 		ob_start();
@@ -206,96 +299,8 @@ protected function setPageContents(){
 		//clear buffer to local variable
 		$scripts .= ob_get_clean();  
 		$scripts .= closeScript();
-		return $scripts;
-	}
-	
-
-
-	protected function siteContainerOpen(){
-		$content = doctypeHtml();
-		$content .= openHTML();
-		$content .= openHead();
-		$content .= metaHttpEquivs();		
-		$content .= $this->siteStyles();
-		$content .= htmlTitle($this->htmlPageTitle);
-		$content .= $this->siteScripts();
-		$content .= closeHead();
-
-		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){	
-			$onLoad = 'none';
-		} else {
-			$onLoad='displayClientTime();';
-		}
-		$content .= openBody($onLoad);
-		$content .= openDiv('site-container');
-		return $content;	
-	}
-
-	protected function siteHeading(){
-		$content = openDiv('site-heading');
-		$content .= $this->siteTitle();
-		$content .= $this->siteLinks();
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteTitle(){
-		$content = openDiv('site-heading-title');
-		$content .= $this->siteTitle;
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteLinks(){
-		$content = openDiv('site-heading-links');
-		$content .= $this->siteLinksItems;
-		$content .= closeDiv(); //close site links
-		return $content;	
-	}
-
-	protected function siteContent(){
-		$content = openDiv('site-content');
-		$content .= $this->pageContents;
-		$content .= closeDiv(); // close site content
-		return $content;
-	}
-
-	protected function siteFooter(){
-		$content = openDiv('site-footer');
-		$content .= $this->siteFooterLogos();
-		$content .= $this->siteFooterNotices();
-		$content .= $this->siteFooterLinks();
-		$content .= closeDiv(); //close site footer
-		return $content;
-	}
-
-	protected function siteFooterLogos(){
-		$content = openDiv('site-footer-logos');
-		$content .= $this->footerLogoImage;
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteFooterNotices(){
-		$content = openDiv('site-footer-notices');
-		$content .= $this->footerNoticesItems;
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteFooterLinks(){	
-		$content = openDiv('site-footer-links');
-		$content .= $this->footerLinksItems;
-		$content .= closeDiv();
-		return $content;		
-	}
-
-	protected function siteContainerClose(){
-		//close site page container
-		$content = closeDiv();
-		$content .= closeBody();
-		$content .= closeHTML();
-		return $content;
+		$this->_scripts = $scripts;
+		//return $scripts;
 	}
 	
 }

@@ -5,8 +5,8 @@ $measureTypeId = sessionVariableGET('measureTypeId',0);
 $measureTypeUnitId = sessionVariableGET('measureTypeUnitId',0);
 $pageAction = sessionVariableGET('pageAction','VIEW');
 
-$mtu = new MeasureTypeUnit;
-$mtu->setDetails($measureTypeUnitId, $measureTypeId,$pageAction);
+$mtu = new MeasureTypeUnit($pageAction, $measureTypeUnitId, $measureTypeId);
+$mtu->setDetails();
 
 $mtu->printPage();
 ?>

@@ -1,40 +1,40 @@
 ﻿<?php 
 
-class TaskList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class TaskList extends __EntityList{
+
 	public $periodicTasks = 'NO';
 	public $project;
 	private $sql;
 	
-	public function __construct(){
-		$this->project = new Project;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		
+		$this->project = new Project($this->pageMode, $this->idParent);
 		$this->sql = new TaskSQL;	
 	}
-	public function setDetails($projectId, $resultPage = 1, $resultsPerPage = 10, $periodicTasks = 'NO'){
-		$this->project->id = $projectId;	
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		$this->periodicTasks = $periodicTasks;
-		
-		$this->project->setDetails($this->project->id, 'VIEW');
+	
+	public function setDetails(){
+		$this->project->setDetails();
 		$this->setFoundCount();
 	}
+
+	public function setPeriodicTasks($periodic = 'NO'){
+		$this->periodicTasks = $periodic;
+	}
 	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	protected function setPageTitle(){
+
 		if ($this->periodicTasks == 'NO'){
-			$title .= $this->project->name.br();
+			$title = $this->project->name.br();
 			$title .= 'Project Tasks';
 		} else {
 			//$title .= $this->periodicTasks.spacer().' Periodic Tasks';
 		}
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_PageTitle = $title;	
 	}
 	
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -54,14 +54,9 @@ class TaskList{
 							
 		}
 		$menu .= $taskL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
 	private function getPeriodicTasksComplete(){
 		if ($this->periodicTasks == 'COMPLETE'){
 			$complete = 'YES';
@@ -70,31 +65,14 @@ class TaskList{
 		}
 		return $complete;		
 	}
-	private function setFoundCount(){
+	
+	public function setFoundCount(){
 		if ($this->periodicTasks == 'NO'){
 			$this->found = $this->project->tasksCount;
 		} else {
-			$sql = $this->sql->countPeriodicTasks($this->getPeriodicTasksComplete());
+			$sql = $this->sql->countPeriodic($this->getPeriodicTasksComplete());
 			$this->found = dbGetCount($sql, 'total_tasks');			
 		}
-	}
-	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
 	}
 	
 	
@@ -110,12 +88,12 @@ class TaskList{
 		$pagingLinks = $taskL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
 		
 
-			$a = new Activity;
-			$a->setDetails(0,0,'ADD');
-			$a->task->project->setDetails($this->project->id,'VIEW');
+			$a = new Activity('ADD');
+			$a->setDetails();
+			$a->task->project->setId($this->project->id);
+		    $a->task->project->setDetails();
 			$quickEdit = $a->editForm();
 
-				
 		$list = openDisplayList('task','Tasks',$pagingLinks,$quickEdit);
 
 		$heading =  wrapTh('Order');
@@ -137,9 +115,9 @@ class TaskList{
 		$receiptsL = new ReceiptLinks('DIV','button');
 
 		if ($this->periodicTasks == 'NO'){
-			$sql = $this->sql->listTasksByProject($this->project->id,$this->resultPage,$this->perPage);
+			$sql = $this->sql->listByProject($this->project->id,$this->resultPage,$this->perPage);
 		} else {
-			$sql = $this->sql->listPeriodicTasks($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
+			$sql = $this->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
 		}
 		
 		$result = dbGetResult($sql);

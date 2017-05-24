@@ -1,35 +1,28 @@
 ﻿<?php 
 
-class UnitOfMeasureList{       
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class UnitOfMeasureList extends __EntityList{
+
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new UnitOfMeasureSQL;
 	}
 	
-	public function setDetails($resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->setFoundCount();
-	}
 	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	public function setPageTitle(){
+
 		$title .= 'Units of Measure';
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}
 
-	public function pageMenu(){
+	public function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
 		$units = new UnitOfMeasureLinks($menuType,$menuStyle);
-		//$measureTypes = new MeasureTypeLinks($menuType,$menuStyle);
+
 		$menuL = new MenuLinks($menuType,$menuStyle);
 		
 		
@@ -42,46 +35,21 @@ class UnitOfMeasureList{
 		//$menu .= $measureTypes->listingHref();
 		
 		$menu .= $units->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
 	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		$sql = $this->sql->countUnitsOfMeasure();
 		$this->found = dbGetCount($sql, 'total_units');
 	}	
 	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
-	}
-	
 	public function getListing(){
 		$sql = $this->sql->listUnitsOfMeasure($this->resultPage,$this->perPage);
-
-
 		$uml = new UnitOfMeasureLinks;
 		$pagingLinks = $uml->listingPaged($this->found,$this->resultPage,$this->perPage);
-		$uom = new UnitOfMeasure;
-		$uom->setDetails(0,'ADD');
+		$uom = new UnitOfMeasure('ADD');
+		$uom->setDetails();
 		$quickEdit = $uom->editForm();
 		$list = openDisplayList('unit-of-measure','Units',$pagingLinks,$quickEdit);
 
@@ -97,10 +65,10 @@ class UnitOfMeasureList{
 		{	
 			$u = new UnitOfMeasure;
 			$u->id = $row["id"];
-			$u->name = stripslashes($row["name"]);
-			$u->type = stripslashes($row["type"]);
-			$u->symbol = stripslashes($row["symbol"]);
-			$u->notes = stripslashes($row["notes"]);
+			$u->name = ($row["name"]);
+			$u->type = ($row["type"]);
+			$u->symbol = ($row["symbol"]);
+			$u->notes = ($row["notes"]);
 			$u->formatForDisplay();
 
 			$detail =  wrapTd($u->type);

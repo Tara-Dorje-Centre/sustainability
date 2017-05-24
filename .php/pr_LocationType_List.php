@@ -4,8 +4,8 @@ $detailsPerPage = 10;
 
 $resultPage = sessionVariableGET('resultsPage', 1);
 
-$t = new LocationTypeList;
-$t->setDetails($resultPage, $detailsPerPage);
+$t = new LocationTypeList()
+$t->setPaging($resultPage, $detailsPerPage);
 
 $t->printPage();
 ?>

@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class Receipt {
-    public $id = 0;
+class Receipt extends __Entity{
+    
     public $activityId = 0;	
 	public $typeId = 0;
 	public $typeName = '';
@@ -19,20 +19,14 @@ class Receipt {
     public $notes;
 	public $task;
 	private $sql;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
 
-	public function __construct(){
-		$this->task = new Task;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new ReceiptSQL;
 	}
 
-
-	public function setDetails($detailReceiptId, $parentTaskId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailReceiptId;
-		$this->task->id = $parentTaskId;
-		
+	public function setDetails(){
 		$sql = $this->sql->infoReceipt($this->id);
 		
 		$result = dbGetResult($sql);
@@ -51,7 +45,7 @@ class Receipt {
 			$this->updated = $row["updated"];	
 			$this->quantity = $row["quantity"];	
 			$this->quantityUnitMeasureId = $row["qty_unit_measure_id"];
-			$this->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
+			$this->quantityUnitMeasureName = ($row["qty_unit_measure_name"]);
 			$this->costActual = $row["cost_actual"];
 			$this->costUnit = $row["cost_unit"];
 			$this->notes = ($row["notes"]);
@@ -64,22 +58,20 @@ class Receipt {
 	}	
 	
 	public function setParentTask(){
-		$this->task->setDetails($this->task->id, 0, $this->pageMode);
+		$this->task->setDetails();
 	}
 		
-	function pageTitle(){	
-		$title = openDiv('section-heading-title','none');
-		//show page mode for debugging
-		//$heading .= '['.$this->pageMode.']';
-		$title .= $this->task->project->name.br();
+	protected function setPageTitle(){	
+
+		$title = $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;		
-		$title .= closeDiv();
-		return $title;
+
+		$this->_pageTitle = $title;
 		
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -107,16 +99,10 @@ class Receipt {
 		}
 		
 		$menu .= $projects->closeMenu();
-		return $menu;
+		$this->_pageMenu = $menu;
 	}
 
 		
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
-	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
@@ -125,30 +111,6 @@ class Receipt {
 		$this->updated = getTimestampDate($this->updated);
 	}
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
-	
-	
 	public function display(){
 		$this->formatForDisplay();
 		
@@ -255,6 +217,7 @@ class Receipt {
 		$this->pageMode = $_POST['mode'];
 		
 		$this->task->id = $_POST['taskId'];
+		
 		$this->activityId = $_POST['activityId'];
 
 		$this->id = $_POST['receiptId'];
@@ -275,9 +238,9 @@ class Receipt {
 		$this->setParentTask();
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			
 			$sql = " UPDATE receipts m ";
 			$sql .= " SET ";
@@ -300,7 +263,9 @@ class Receipt {
 			
 			$this->task->resetReceiptsAuthorization();
 			
-		} else {
+	}
+			
+	protected function saveInsert(){
 	
 			$sql = " INSERT INTO receipts ";
 			$sql .= " (name, ";
@@ -338,9 +303,8 @@ class Receipt {
 			$this->id = dbInsertedId();
 
 			$this->task->resetReceiptsAuthorization();
-		}
-	
 	}
+	
 	
 } 
 ?>

@@ -69,5 +69,26 @@ public function validateLoginAndEmail($loginName, $loginEmail){
 	$q .= " AND u.is_active = 'yes' ";	
 	return $q;
 }
+
+
+
+		public function updatePass($loginName, $newPassCrypt){
+			$sql = "UPDATE users u SET ";
+			$sql .= " u.login_pwd = '".$newPassCrypt."', ";
+			$sql .= " u.must_update_pwd = 'yes' ";
+			$sql .= " WHERE u.login_name = '".$loginName."' ";
+			return $sql;
+		}
+		
+
+	public function updateLastLogin($loginName){
+		$sql = " UPDATE users u ";
+		$sql .= " SET u.last_login = CURRENT_TIMESTAMP ";
+		$sql .= " WHERE u.login_name = '".$loginName."' ";	
+		return $sql;
+		
+	}
+	
+		
 }
 ?>

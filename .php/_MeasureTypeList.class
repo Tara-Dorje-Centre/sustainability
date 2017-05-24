@@ -1,36 +1,25 @@
 ﻿<?php 
 
-class MeasureTypeList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class MeasureTypeList extends __EntityList{
+
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new MeasureTypeSQL;
 	}
 	
-	public function setDetails($resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->setFoundCount();
-	}
-	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
-		$title .= 'Measure Types';
-		$title .= closeDiv();
-		return $title;	
+	protected function setPageTitle(){
+		$title = 'Measure Types';
+		$this->_pageTitle = $title;	
 	}
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		//$units = new UnitOfMeasureLinks($menuType,$menuStyle);
 		$measureTypesL = new MeasureTypeLinks($menuType,$menuStyle);
 		$menuL = new MenuLinks($menuType,$menuStyle);
-		
 		
 		$menu = $measureTypesL->openMenu('section-heading-links');
 		$menu .= $menuL->linkReference();
@@ -41,45 +30,20 @@ class MeasureTypeList{
 		//$menu .= $units->listingHref();
 
 		$menu .= $measureTypesL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		$sql = $this->sql->countMeasureTypes();
 		$this->found = dbGetCount($sql, 'total_types');
 	}	
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
-	}
-
 	
 	public function getListing(){
 		$mtl = new MeasureTypeLinks;
 		$pagingLinks = $mtl->listingPaged($this->found,$this->resultPage,$this->perPage);
 		
-		$mt = new MeasureType;
-		$mt->setDetails(0,'ADD');
+		$mt = new MeasureType('ADD');
+		
 		$quickEdit = $mt->editForm();
 		$list = openDisplayList('measure-type','Measure Types',$pagingLinks,$quickEdit);
 		

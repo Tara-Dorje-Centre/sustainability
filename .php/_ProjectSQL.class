@@ -2,36 +2,36 @@
 
 class ProjectSQL{
 //projects table fields displayed in listing
-function columnsProjects(){
-$cols = " p.id, ";
-$cols .= " p.type_id, ";
-$cols .= " pt.name project_type, ";
-$cols .= " pt.highlight_style, ";
-$cols .= " p.parent_id, ";
-$cols .= " p.name, ";
-$cols .= " p.description, ";
-$cols .= " p.summary, ";
-$cols .= " p.priority, ";
-$cols .= " p.started, ";
-$cols .= " p.updated, ";
-$cols .= " p.pct_done, ";
-$cols .= " p.goals, ";
-$cols .= " p.lessons_learned, ";
-$cols .= " p.show_always, ";
-$cols .= " p.location_id, ";
-$cols .= " l.sort_key location_name, ";
-$cols .= " p.purpose, ";
-$cols .= " p.hours_estimated, ";
-$cols .= " p.hours_actual, ";
-$cols .= " p.budget_estimated, ";
-$cols .= " p.budget_notes, ";
-$cols .= " p.hours_notes ";
-return $cols;
-}
+	protected function columns(){
+		$cols = " p.id, ";
+		$cols .= " p.type_id, ";
+		$cols .= " pt.name project_type, ";
+		$cols .= " pt.highlight_style, ";
+		$cols .= " p.parent_id, ";
+		$cols .= " p.name, ";
+		$cols .= " p.description, ";
+		$cols .= " p.summary, ";
+		$cols .= " p.priority, ";
+		$cols .= " p.started, ";
+		$cols .= " p.updated, ";
+		$cols .= " p.pct_done, ";
+		$cols .= " p.goals, ";
+		$cols .= " p.lessons_learned, ";
+		$cols .= " p.show_always, ";
+		$cols .= " p.location_id, ";
+		$cols .= " l.sort_key location_name, ";
+		$cols .= " p.purpose, ";
+		$cols .= " p.hours_estimated, ";
+		$cols .= " p.hours_actual, ";
+		$cols .= " p.budget_estimated, ";
+		$cols .= " p.budget_notes, ";
+		$cols .= " p.hours_notes ";
+		return $cols;
+	}
 //projects table fields displayed in detail
 public function listProjectsByStatus($projectStatus, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
-$q .= $this->columnsProjects();
+$q .= $this->columns();
 $q .= " FROM projects p ";
 $q .= " LEFT OUTER JOIN locations l ";
 $q .= " ON p.location_id = l.id ";
@@ -46,9 +46,10 @@ $q .= " ORDER BY l.sort_key, p.priority, p.id ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
+
 public function listProjectsByDoneBy($activityDoneBy, $projectStatus, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
-$q .= $this->columnsProjects();
+$q .= $this->columns();
 $q .= " FROM projects p ";
 $q .= " LEFT OUTER JOIN locations l ";
 $q .= " ON p.location_id = l.id ";
@@ -69,6 +70,7 @@ $q .= " ORDER BY l.sort_key, p.priority, p.id ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
+
 public function countProjectsByDoneBy($activityDoneBy, $projectStatus){
 $q = " SELECT  count(*) total_projects ";
 $q .= " FROM projects p ";
@@ -96,9 +98,10 @@ if ($projectStatus=='CLOSED'){
 }
 return $q;
 }
-function listChildProjects($selectedProjectId){
+
+public function listChildProjects($selectedProjectId){
 $q = " SELECT  ";
-$q .= $this->columnsProjects();
+$q .= $this->columns();
 $q .= " FROM projects p ";
 $q .= " LEFT OUTER JOIN locations l ";
 $q .= " ON p.location_id = l.id ";
@@ -109,9 +112,10 @@ $q .= " WHERE p.parent_id = ".$selectedProjectId." ";
 $q .= " ORDER BY p.sort_key, p.priority, p.id ";
 return $q;
 }
-public function infoProject($selectedProjectId){
+
+public function info($selectedProjectId){
 $q = " SELECT  ";
-$q .= $this->columnsProjects();
+$q .= $this->columns();
 $q .= " FROM projects p ";
 $q .= " LEFT OUTER JOIN locations l ";
 $q .= " ON p.location_id = l.id ";
@@ -121,53 +125,6 @@ $q .= " ON p.type_id = pt.id ";
 $q .= " WHERE p.id = ".$selectedProjectId." "; 
 return $q;
 }
-public function createViewProjectStatus(){
-$q = "CREATE OR REPLACE VIEW project_status_v AS 
-SELECT 'OPEN' AS status,
-count(distinct p.id) AS projects,
-count(*) AS project_tasks,
-sum(t.hours_estimated) AS task_hours_estimated,
-sum(t.hours_actual) AS task_hours_actual
-FROM (projects p join tasks t 
-on((p.id = t.project_id))) 
-where (p.pct_done < 1) 
-union 
-select 'DONE' AS status,
-count(distinct p.id) AS projects,
-count(0) AS project_tasks,
-sum(t.hours_estimated) AS task_hours_estimated,
-sum(t.hours_actual) AS task_hours_actual 
-from (projects p join tasks t 
-on((p.id = t.project_id))) where (p.pct_done = 1) ";
-
-return $q;
-	
-}
-public function createViewProjectSummary(){
-$q = "CREATE OR REPLACE VIEW project_task_summary_v AS 
-select p.id AS project_id,
-min(p.pct_done) AS project_pct_done,
-count(*) AS total_tasks,
-sum(t.hours_estimated) AS sum_hours_estimated,
-sum(t.hours_actual) AS sum_hours_actual,
-(sum(t.pct_done) / count(0)) AS overall_pct_done 
-from (projects p join tasks t on((p.id = t.project_id))) 
-group by p.id ";
-return $q;	
-	
-}
-//project summary base query
-//SELECT 
-//p.id, p.name, count(t.id) tasks, 
-//sum(ifnull(t.hours_actual,0)) hours_actual,
-//sum(ifnull(t.hours_estimated,0)) hours_estimated,
-//count(a.id) activity_details,
-//sum(ifnull(a.hours_actual,0)) activity_hours_actual,
-//count(m.id) measure_details
-// FROM projects p left outer join tasks t on p.id = t.project_id
-//left outer join activities a on t.id = a.task_id`1
-//left outer join measures m on t.id = m.task_id
-//group by p.id, p.name
 
 public function selectOptions_Projects($selectedValue,$disabled){
 	$q = " SELECT ";
@@ -194,6 +151,81 @@ public function selectOptions_ProjectsByTypeId($typeId){
 	$q .= " ORDER BY name ";
 	return $q;	
 }
+
+
+	public function copy($idSource){
+
+			$sql = " INSERT INTO projects ";
+			$sql .= " (name, ";
+			$sql .= " parent_id, ";
+			$sql .= " location_id, ";
+			$sql .= " started, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " summary, ";
+			//$sql .= " lessons_learned, ";
+			$sql .= " show_always, ";
+			$sql .= " type_id, ";
+			$sql .= " purpose) ";
+			$sql .= " SELECT ";
+			$sql .= " name, ";
+			$sql .= " id, ";
+			$sql .= " location_id, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " description, ";
+			$sql .= " summary, ";
+			//$sql .= " lessons_learned, ";
+			$sql .= " show_always, ";
+			$sql .= " type_id, ";
+			$sql .= " purpose ";
+			$sql .= " FROM projects p WHERE p.id = ".$idSource." ";
+			
+			return $sql;
+			
+	}
+
+	public function copyTasks($idSource, $idCopy){
+			//insert all tasks from source project to copy project 
+			//substituting the copy project id		
+			$sql = " INSERT INTO tasks ";
+			$sql .= " (name, ";
+			$sql .= " project_id, ";
+			$sql .= " location_id, ";
+			$sql .= " type_id, ";			
+			$sql .= " task_order, ";
+			$sql .= " description, ";
+			$sql .= " summary, ";
+			$sql .= " started, ";
+			$sql .= " updated, ";
+			$sql .= " hours_estimated, ";
+			$sql .= " hours_actual, ";
+			$sql .= " hours_notes, ";
+			$sql .= " materials_auth_project, ";
+			$sql .= " materials_auth_by, ";
+			$sql .= " receipts_auth_project, ";
+			$sql .= " receipts_auth_by) ";
+			$sql .= " SELECT ";
+			$sql .= " name, ";
+			$sql .= " ".$idCopy.", ";
+			$sql .= " location_id, ";
+			$sql .= " type_id, ";			
+			$sql .= " task_order, ";
+			$sql .= " description, ";
+			$sql .= " summary, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " hours_estimated, ";
+			$sql .= " 0, ";
+			$sql .= " hours_notes, ";
+			$sql .= " 'no', ";
+			$sql .= " 'n/a copied project', ";
+			$sql .= " 'no', ";
+			$sql .= " 'n/a copied project' ";
+			$sql .= " FROM tasks t WHERE t.project_id = ".$idSource." ";
+
+		return $sql;
+	}
 
 }
 ?>

@@ -1,30 +1,20 @@
 ﻿<?php 
 
-class ReceiptTypeList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class ReceiptTypeList extends __EntityList{
+
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::construct($mode, $id, $idParent);
 		$this->sql = new ReceiptTypeSQL;
 	}
 	
-	public function setDetails($resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->setFoundCount();
-	}
-	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
-		$title .= 'Receipt Types';
-		$title .= closeDiv();
+	protected function setPageTitle(){
+		$this->_pageTitle = 'Receipt Types';
 		return $title;	
 	}
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$typeL = new ReceiptTypeLinks($menuType,$menuStyle);		
@@ -36,36 +26,12 @@ class ReceiptTypeList{
 		$menu .= $typeL->detailAddHref();
 		$menu .= $typeL->listingHref();		
 		$menu .= $typeL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		$sql = $this->sql->countReceiptTypes();
 		$this->found = dbGetCount($sql, 'total_types');
-	}
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
 	}
 
 		
@@ -75,8 +41,8 @@ class ReceiptTypeList{
 
 		$typeL = new ReceiptTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);
-		$rt = new ReceiptType;
-		$rt->setDetails(0,'ADD');
+		$rt = new ReceiptType('ADD');
+		$rt->setDetails();
 		$quickEdit = $rt->editForm();
 		$list = openDisplayList('receipt-types','Receipt Types',$pagingLinks,$quickEdit);
 
@@ -93,11 +59,11 @@ class ReceiptTypeList{
 		{	
 			$u = new ReceiptType;
 			$u->id = $row["id"];
-			$u->name = stripslashes($row["name"]);
-			$u->description = stripslashes($row["description"]);
-			$u->notes = stripslashes($row["notes"]);
+			$u->name = ($row["name"]);
+			$u->description = ($row["description"]);
+			$u->notes = ($row["notes"]);
 			$u->displayOrder = $row["display_order"];			
-			$u->highlightStyle = stripslashes($row["highlight_style"]);
+			$u->highlightStyle = ($row["highlight_style"]);
 			
 			$u->formatForDisplay();
 			

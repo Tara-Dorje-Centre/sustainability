@@ -23,7 +23,7 @@ class _TemplatePublic{
 	
 public function printSite(){
 		
-		$content = $this->buildSiteTemplate();
+		$content = $this->build();
 		echo $content;	
 		
 		//close database connection
@@ -32,7 +32,7 @@ public function printSite(){
 
 	}
 	
-	protected function buildSiteTemplate(){
+	protected function build(){
 	
 		$content = $this->siteContainerOpen();
 		$content .= $this->siteHeading();
@@ -252,7 +252,7 @@ public function printSite(){
 		$content = $this->buildInternalStyles();
 
 		//use external stylesheet
-		$content .= LinkStylesheet('css/public.css');
+		//$content = LinkStylesheet('css/public.css');
 		//$content .= stylesheet('css/publicOverrides.css');
 		return $content;
 		

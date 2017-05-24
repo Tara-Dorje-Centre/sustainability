@@ -1,36 +1,34 @@
 ﻿<?php 
 
-class LocationList{
-	public $parentId = -1;
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
+class LocationList extends __EntityList{
+	
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new LocationSQL;	
 	}
 	
-	public function setDetails($parentLocationId=-1, $resultPage = 1, $resultsPerPage = 10){
-		$this->parentId = $parentLocationId;	
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;		
-		$this->setFoundCount();
+	public function setDetails(){
+
+
+
+		//$this->setFoundCount();
 	}
 	
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
+	protected function setPageTitle(){
+
 		if ($this->parentId <= 0){	
-			$title .= 'All Locations';
+			$title = 'All Locations';
 		} else {
 			$l = new Location;
-			$title .= 'Sub Locations: '.$l->getSortKey($this->parentId);
+			$title = 'Sub Locations: '.$l->getSortKey($this->parentId);
 		}
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}
 	
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -60,16 +58,10 @@ class LocationList{
 		}
 		
 		$menu .= $locations->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		if ($this->parentId <= 0){
 			$sql = $this->sql->countLocationsByParent($this->parentId);
 		} else {
@@ -80,25 +72,33 @@ class LocationList{
 		$this->found = dbGetCount($sql, 'total_locations');
 	}
 	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
+	
+	
+	public function getListing(){		
 
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
+		if ($this->found > 0){
+			$ll = new LocationLinks;
+			$pagingLinks = $ll->listingPaged($this->parentId,$this->found,$this->resultPage,$this->perPage);
+			$list = openDisplayList('location','Locations',$pagingLinks);
+
+			$heading = wrapTh('Location');
+			$heading .= wrapTh('Description');
+			$list .= wrapTr($heading);
+
+			$list .= $this->getListingRows();
+
+			$list .= closeDisplayList();
+		} else {
+			$list = openDiv('location-list','none');
+			$list .= 'No Locations Found';
+			$list .= closeDiv();
+		}
+		
+		return $list;
 		
 	}
 	
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
-	}
-	
-	public function getListingRows(){
+	protected function getListingRows(){
 		$ll = new LocationLinks;
 		$list = '';
 		if ($this->parentId <= 0){
@@ -131,28 +131,6 @@ class LocationList{
 		return $list;
 	}
 
-	public function getListing(){		
 
-		if ($this->found > 0){
-			$ll = new LocationLinks;
-			$pagingLinks = $ll->listingPaged($this->parentId,$this->found,$this->resultPage,$this->perPage);
-			$list = openDisplayList('location','Locations',$pagingLinks);
-
-			$heading = wrapTh('Location');
-			$heading .= wrapTh('Description');
-			$list .= wrapTr($heading);
-
-			$list .= $this->getListingRows();
-
-			$list .= closeDisplayList();
-		} else {
-			$list = openDiv('location-list','none');
-			$list .= 'No Locations Found';
-			$list .= closeDiv();
-		}
-		
-		return $list;
-		
-	}
 }
 ?>

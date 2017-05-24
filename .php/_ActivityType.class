@@ -1,26 +1,16 @@
 ﻿<?php 
 
-class ActivityType {
-    public $id = 0;
-    public $name;		
-    public $description;	
-    public $notes;
-	public $displayOrder = 0;
-	public $highlightStyle = 'none';
-    public $created;
-    public $updated;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+class ActivityType extends __EntityType{
+
 	private $sql;
-	
-	public function __construct(){
+
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		
 		$this->sql = New ActivityTypeSQL;
 	}
-
-    // set class properties with record values from database
-	public function setDetails($detailId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailId;
+		
+	public function setDetails(){
 
 		$sql = $this->sql->infoActivityType($this->id);
 
@@ -40,20 +30,19 @@ class ActivityType {
 		}
 				
 	}	
+	
+	protected function setPageTitle(){
 		
-	function pageTitle(){
-		$heading = openDiv('section-heading-title');
 		if ($this->pageMode != 'ADD'){
 			$heading .= $this->name;
 		} else {
 			$heading .= 'Add New Activity Type';
 		}
-		$heading .= closeDiv();		
-		return $heading;
+		$this->_pageTitle = $heading;
+		
 	}
 	
-	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$typesL = new ActivityTypeLinks($menuType,$menuStyle);		
@@ -73,11 +62,6 @@ class ActivityType {
 		return $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
 	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
@@ -85,29 +69,6 @@ class ActivityType {
 		$this->notes = displayLines($this->notes);
 		$this->created = getTimestampDate($this->created);
 		$this->updated = getTimestampDate($this->updated);
-	}
-	
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
 	}
 	
 	
@@ -195,10 +156,8 @@ class ActivityType {
 		$this->displayOrder = $_POST['displayOrder'];
 		$this->pageMode = $_POST['mode'];	
 	}
-
-	public function saveChanges(){
 	
-		if ($this->pageMode == 'EDIT'){
+	protected function saveUpdate(){
 			$sql = " UPDATE activity_types AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -210,8 +169,9 @@ class ActivityType {
 			$sql .= " WHERE p.id = ".$this->id."  ";		
 				
 			$result = dbRunSQL($sql);
-			
-		} else {
+	}
+	
+	protected function saveInsert(){
 			$sql = " INSERT INTO activity_types ";
 			$sql .= " (name, ";
 			$sql .= " created, ";
@@ -232,9 +192,8 @@ class ActivityType {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
-	
 	}
+	
 	
 }
 ?>

@@ -1,8 +1,7 @@
 ﻿<?php 
 
-class MeasureTypeUnit {
-    public $id = 0;
-    public $measureTypeId = 0;
+class MeasureTypeUnit extends __Entity {
+
     public $unitOfMeasureId = 0;	
 	public $measureType;
 	public $measureTypeName;
@@ -12,19 +11,17 @@ class MeasureTypeUnit {
     public $created;	
     public $updated;
 
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+	
+
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new MeasureTypeUnitSQL;
-		$this->measureType = new MeasureType;
+		$this->measureType = new MeasureType($this->pageMode, $this->idParent);
 	}
 	
-	public function setDetails($detailMeasureTypeUnitId, $parentMeasureTypeId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailMeasureTypeUnitId;
-		$this->measureTypeId = $parentMeasureTypeId;
+	public function setDetails(){
 		
 		$sql = $this->sql->infoMeasureTypeUnit($this->id);
 
@@ -44,13 +41,13 @@ class MeasureTypeUnit {
 		$result->close();
 		}
 
-		$this->measureType->setDetails($this->measureTypeId, 'VIEW');
+		$this->measureType->setDetails('VIEW', $this->idParent);
 	}	
 			
 	function pageTitle(){	
 		$title = openDiv('section-heading-title','none');
-		//show page mode for debugging
-		//$heading .= '['.$this->pageMode.']';
+		
+		
 		$title .= 'Measure Type:&nbsp;'.$this->measureType->name.br();
 		$title .= 'Units:'.$this->unitOfMeasure;		
 		$title .= closeDiv();
@@ -79,12 +76,6 @@ class MeasureTypeUnit {
 		return $menu;
 	}
 		
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
-	
 	public function getMeasureTypeAndUnitSymbol(){
 		$text = $this->measureTypeName.'('.$this->unitSymbol.')';
 		return $text;
@@ -96,27 +87,7 @@ class MeasureTypeUnit {
 		//$this->notes = displayLines($this->notes);
 	}
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
 
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -194,26 +165,26 @@ class MeasureTypeUnit {
 		//called by save form prior to running adds/updates
 		$this->pageMode = $_POST['mode'];
 		
-		$this->measureTypeId = $_POST['measureTypeId'];
+		$this->idParent = $_POST['measureTypeId'];
+		$this->measureType->id = $this->idParent;
 		$this->id = $_POST['measureTypeUnitId'];
 		$this->unitOfMeasureId = $_POST['unitOfMeasureId']; 
 
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
-			
 			$sql = " UPDATE measure_type_units m ";
 			$sql .= " SET ";
-			$sql .= " m.measure_type_id = ".$this->measureTypeId.", ";
+			$sql .= " m.measure_type_id = ".$this->measureType->id.", ";
 			$sql .= " m.unit_measure_id = ".$this->unitOfMeasureId.", ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
 			$result = dbRunSQL($sql);
+	}
 			
-		} else {
+	protected function saveInsert(){
 	
 			$sql = " INSERT INTO measure_type_units ";
 			$sql .= " (measure_type_id, ";
@@ -221,7 +192,7 @@ class MeasureTypeUnit {
 			$sql .= " updated, ";
 			$sql .= " created) ";
 			$sql .= " VALUES (";
-			$sql .= " ".$this->measureTypeId.", ";
+			$sql .= " ".$this->measureType->id.", ";
 			$sql .= " ".$this->unitOfMeasureId.", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP) ";
@@ -229,9 +200,9 @@ class MeasureTypeUnit {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
-	
 	}
+	
+	
 	
 } 
 ?>

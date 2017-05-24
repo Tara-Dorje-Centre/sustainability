@@ -383,7 +383,7 @@ class _th extends _element{
 
 class _tr extends _element{
 	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('td', $idName, $css);
+		parent::__construct('tr', $idName, $css);
 	}
 	public function setWidth($width = 0){
 		if ($width!=0){
@@ -436,7 +436,7 @@ function wrapTr($content, $css = 'none', $colspan = 0){
 }
 
 function wrapTd($value, $width = 0, $css='none',$colSpan = 0){
-	$e = new td('none',$css);
+	$e = new _td('none',$css);
 	$e->setWidth($width);
 	$e->setColspan($colspan);
 	return $e->wrap($value);
@@ -446,7 +446,7 @@ function openTd($idName = 'none', $css = 'none', $width = 0, $colSpan = 0){
 	$td = new _td($idName, $css);
 	$e->setWidth($width);
 	$e->setColspan($colspan);
-	return $e->wrap($value);
+	return $e->open();
 }
 
 

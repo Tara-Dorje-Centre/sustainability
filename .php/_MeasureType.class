@@ -1,27 +1,17 @@
 ﻿<?php 
 
-class MeasureType {
-    public $id = 0;
-    public $name;	
-    public $description;
-    public $notes;
-    public $created;
-    public $updated;
-	public $highlightStyle = 'none';
-	public $displayOrder = 0;
-	
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
+class MeasureType extends __EntityType{
+  
 	private $sql;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+
 		$this->sql = new MeasureTypeSQL;
 	}
 	
-    // set class properties with record values from database
-	public function setDetails($detailMeasureTypeId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailMeasureTypeId;
+	public function setDetails(){
+
 
 		$sql = $this->sql->infoMeasureType($this->id);
 
@@ -40,7 +30,7 @@ class MeasureType {
 				
 	}	
 		
-	function pageTitle(){
+	protected function pageTitle(){
 		$heading = openDiv('section-heading-title');
 		if ($this->pageMode != 'ADD'){
 			$heading .= $this->name;
@@ -78,40 +68,12 @@ class MeasureType {
 		return $menu;
 	}
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
-	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
 	}
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
-	
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -186,9 +148,9 @@ class MeasureType {
 		$this->pageMode = $_POST['mode'];	
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			$sql = " UPDATE measure_types AS mt ";
 			$sql .= " SET ";
 			$sql .= " mt.name = '".$this->name."', ";
@@ -198,8 +160,11 @@ class MeasureType {
 			$sql .= " WHERE mt.id = ".$this->id."  ";		
 				
 			$result = dbRunSQL($sql);
-		} else {
-	
+		}
+		
+		
+		protected function saveInsert(){
+		
 			$sql = " INSERT INTO measure_types ";
 			$sql .= " (name, ";
 			$sql .= " created, ";
@@ -216,7 +181,6 @@ class MeasureType {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
 	
 	}
 	

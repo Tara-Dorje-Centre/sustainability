@@ -11,9 +11,9 @@ $pageReceipt = sessionVariableGET('resultsPageReceipt',1);
 $year = sessionVariableGET('year',-1);
 $month = sessionVariableGET('month',-1);
 
-$t = new Task;
-$t->setDetails($taskId, $projectId, $pageAction, $year, $month);
-$t->setPagingState($pageActivity, $pageMaterial, $pageMeasure, $pageReceipt);
-
+$t = new Task($pageAction, $taskId, $projectId);
+$t->setCalendar($year, $month);
+$t->setPagingDetails($pageActivity, $pageMaterial, $pageMeasure, $pageReceipt);
+$t->setDetails();
 $t->printPage();
 ?>

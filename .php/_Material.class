@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class Material {
-    public $id = 0;
+class Material extends __Entity{
+  
     public $locationId = 0;	
 	public $typeId = 0;
 	public $typeName = '';
@@ -22,19 +22,16 @@ class Material {
 	public $linkText;
 	public $task;
 	private $sql;
-	// property to support edit/view/add mode of calling page
-    public $pageMode;
-
-	public function __construct(){
-		$this->task = new Task;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new MaterialSQL;
 	}
 
-
-	public function setDetails($detailMaterialId, $parentTaskId, $inputMode){
-		$this->pageMode = $inputMode;
-		$this->id = $detailMaterialId;
-		$this->task->id = $parentTaskId;
+	public function setDetails($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::setDetails($mode, $id, $idParent);
+		$this->task->id = $this->idParent;
 		
 		$sql = $this->sql->infoMaterial($this->id);
 
@@ -70,18 +67,15 @@ class Material {
 	}	
 	
 	public function setParentTask(){
-		$this->task->setDetails($this->task->id, 0, $this->pageMode);
+		$this->task->setDetails($this->pageMode, $this->task->id);
 	}
 		
 	function pageTitle(){	
 		$title = openDiv('section-heading-title','none');
-		//show page mode for debugging
-		//$heading .= '['.$this->pageMode.']';
 		$title .= $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;		
 		$title .= closeDiv();
 		return $title;
-		
 	}
 	
 	
@@ -119,13 +113,6 @@ class Material {
 		return $menu;
 	}
 
-		
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
-	
 	public function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
@@ -134,29 +121,6 @@ class Material {
 		$this->updated = getTimestampDate($this->updated);
 	}
 
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
-	
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -306,6 +270,8 @@ class Material {
 		$this->pageMode = $_POST['mode'];
 		
 		$this->task->id = $_POST['taskId'];
+		$this->idParent = $this->task->id;
+		
 		$this->id = $_POST['materialId'];
 		$this->locationId = $_POST['locationId'];
 		$this->typeId = $_POST['typeId'];
@@ -331,9 +297,9 @@ class Material {
 		$this->setParentTask();
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			
 			$sql = " UPDATE materials m ";
 			$sql .= " SET ";
@@ -359,7 +325,9 @@ class Material {
 			
 			$this->task->resetMaterialsAuthorization();
 			
-		} else {
+		}
+			
+	protected function saveInsert(){
 	
 			$sql = " INSERT INTO materials ";
 			$sql .= " (name, ";
@@ -402,7 +370,7 @@ class Material {
 			
 			$this->id = dbInsertedId();
 			$this->task->resetMaterialsAuthorization();
-		}
+		
 	
 	}
 	

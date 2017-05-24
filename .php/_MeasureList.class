@@ -1,35 +1,29 @@
 ﻿<?php 
 
-class MeasureList{
-	public $found = 0;
-	public $resultPage = 1;
-	public $perPage = 10;
-	public $task;
+class MeasureList extends __EntityList{
+
 	private $sql;
 	
-	public function __construct(){
-		$this->task = new Task;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new MeasureSQL;
 	}
 	
-	public function setDetails($taskId, $resultPage = 1, $resultsPerPage = 10){
-		$this->task->id = $taskId;	
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-		
-		$this->task->setDetails($this->task->id, 0, 'VIEW');
+	public function setDetails(){
+		$this->task->setDetails();
 		$this->setFoundCount();
 	}
 		
-	public function pageTitle(){
-		$title = openDiv('section-heading-title','none');
-		$title .= $this->task->project->name.br();
+	protected function setPageTitle(){
+
+		$title = $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;
-		$title .= closeDiv();
-		return $title;	
+
+		$this->_pageTitle = $title;	
 	}	
 
-	public function pageMenu(){
+	protected function pageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -49,38 +43,12 @@ class MeasureList{
 		$menu .= $measures->listingHref($this->task->id);		
 		
 		$menu .= $projects->closeMenu();	
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}	
 	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}	
-	
-	private function setFoundCount(){
+	public function setFoundCount(){
 		$sql = $this->sql->countMeasuresByTask($this->task->id);
 		$this->found = dbGetCount($sql, 'total_measures');
-	}
-		
-		
-		
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	public function getPageDetails(){
-	
-		$details = $this->getListing();
-		return $details;
-		
 	}
 		
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
@@ -94,8 +62,8 @@ class MeasureList{
 			$base = $pagingBaseLink;
 		}
 		$pagingLinks = $ml->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
-		$m = new Measure;
-		$m->setDetails(0,$this->task->id,'ADD');
+		$m = new Measure('ADD', 0, $this->task->id);
+		$m->setDetails();
 		$quickEdit = $m->editForm();
 		$list = openDisplayList('measure','Measures',$pagingLinks,$quickEdit);
 
@@ -114,13 +82,13 @@ class MeasureList{
 		{	
 			$m = new Measure;
 			$m->id = $row["id"];
-			$m->name = stripslashes($row["name"]);
-			$m->measureType = stripslashes($row["measure_type"]);
-			$m->unitSymbol = stripslashes($row["unit_symbol"]);
-			$m->unitType = stripslashes($row["unit_type"]);
+			$m->name = ($row["name"]);
+			$m->measureType = ($row["measure_type"]);
+			$m->unitSymbol = ($row["unit_symbol"]);
+			$m->unitType = ($row["unit_type"]);
 			$m->value = $row["value"];
 			$m->dateReported = $row["date_reported"];
-			$m->description = stripslashes($row["description"]);
+			$m->description = ($row["description"]);
 			$m->formatForDisplay();
 			
 			$link = $ml->detailViewEditHref($m->id,$m->getMeasureTypeAndUnitSymbol());

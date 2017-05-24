@@ -30,8 +30,8 @@ public function close(){
 }
 
 public function query($sql){
-	//printLine('in db->query');
-//	printLine($sql);
+	printLine('in db->query');
+	printLine($sql);
 	return parent::query($sql);
 }
 
