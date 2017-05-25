@@ -1,6 +1,14 @@
 ﻿<?php 
 
 class ProjectType extends __EntityType{
+protected $__class = 'ProjectType';
+
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
    
 	private $sql;
 

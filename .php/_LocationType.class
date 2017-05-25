@@ -1,6 +1,14 @@
 ﻿<?php 
 
 class LocationType extends __EntityType{
+
+/*
+protected $__class = 'Project';
+protected $__function = '__construct';
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
    
 	private $sql;
 	
@@ -32,7 +40,7 @@ class LocationType extends __EntityType{
 				
 	}	
 		
-	function pageTitle(){
+	protected function setPageTitle(){
 		$heading = openDiv('section-heading-title');
 		if ($this->pageMode != 'ADD'){
 			$heading .= $this->name;
@@ -40,11 +48,11 @@ class LocationType extends __EntityType{
 			$heading .= 'Add New Location Type';
 		}
 		$heading .= closeDiv();		
-		return $heading;
+		$this->_pageTitle = $heading;
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$typesL = new LocationTypeLinks($menuType,$menuStyle);
@@ -61,7 +69,7 @@ class LocationType extends __EntityType{
 		}
 		$menu .= $typesL->listingHref();		
 		$menu .= $typesL->closeMenu();
-		return $menu;
+		$this->_pageMenu = $menu;
 	}
 	
 	
@@ -95,7 +103,7 @@ class LocationType extends __EntityType{
 	}
 	
 	public function getLocationTypeSelectList(
-		$selectedValue = '0', 
+		$selectedValue = 0, 
 		$idName = 'locationTypeId', 
 		$disabled = 'false',
 		$showLink = true,

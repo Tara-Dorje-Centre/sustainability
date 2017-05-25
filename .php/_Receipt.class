@@ -1,6 +1,13 @@
 ﻿<?php 
 
 class Receipt extends __Entity{
+protected $__class = 'Receipt';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
     
     public $activityId = 0;	
 	public $typeId = 0;

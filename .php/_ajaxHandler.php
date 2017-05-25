@@ -54,9 +54,9 @@ private function PROJECT_TASKS_SELECT(){
 	$projectId = $this->ajaxId;
 	//currently selected task not defined
 	$selectedTaskId = 0;	
-	include_once("pr_Task_Classes.php");
-	$t = new Task;
-	$t->setDetails($selectedTaskId,$projectId,'VIEW');
+	//include_once("pr_Task_Classes.php");
+	$t = new Task('VIEW',$selectedTaskId,$projectId);
+	$t->setDetails();
 	$t->project->id = $projectId;
 	
 	$changeJs = "ajaxRefresh('TASK_EST_EFFORT',this,'activityHoursActual');";
@@ -70,9 +70,9 @@ private function PROJECT_TASKS_RESET(){
 	$projectId = $this->ajaxId;
 	//currently selected task not defined
 	$selectedTaskId = 0;	
-	include_once("pr_Task_Classes.php");
-	$t = new Task;
-	$t->setDetails($selectedTaskId,$projectId,'VIEW');
+	//include_once("pr_Task_Classes.php");/
+	$t = new Task('VIEW',$selectedTaskId,$projectId);
+	$t->setDetails();
 	$t->project->id = $projectId;
 	
 	$changeJs = "ajaxRefresh('TASK_EST_EFFORT',this,'activityHoursActual');";
@@ -84,9 +84,9 @@ private function TASK_EST_EFFORT(){
 	$taskId = $this->ajaxId;
 
 	//include_once("pr_Activity_Classes.php");
-	$a = new Activity;
+	$a = new Activity('ADD',0,$taskId);
 	
-	$a->setDetails(0,$taskId,'ADD');
+	$a->setDetails();
 	$a->setAddRecordDefaults();
 	$effort = getTextInput('activityHoursActual', $a->hoursActual, 10, 4);
 	return $effort;
@@ -98,8 +98,8 @@ private function PROJECTS_SELECT(){
 	$selectedId = $this->ajaxId;
 
 	//include_once("pr_Project_Classes.php");
-	$p = new Project;
-	$p->setDetails($selectedId,'VIEW');
+	$p = new Project('VIEW',$selectedId);
+	$p->setDetails();
 	$changeJs = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'taskId');";	
 	$select = $p->getProjectSelectList($selectedId,'projectId','false',false,$changeJs);
 	return $select;
@@ -108,8 +108,8 @@ private function PROJECTS_SELECT(){
 private function PROJECTS_BY_TYPE_SELECT(){
 	$projectTypeId = $this->ajaxId;
 	$selectedId = 0;
-	$p = new Project;
-	$p->setDetails($selectedId,'VIEW');
+	$p = new Project('VIEW',$selectedId);
+	$p->setDetails();
 	$changeJs = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'taskId');";
 	$select = $p->getProjectSelectListByTypeId($projectTypeId,$selectedId,'projectId','false',false,$changeJs);
 	return $select;

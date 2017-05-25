@@ -1,6 +1,14 @@
 ﻿<?php 
 
 class Location extends __Entity{
+protected $__class = 'Location';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
+
 	public $typeId = 0;
     public $name;	
 	public $parentSortKey;
@@ -19,9 +27,6 @@ class Location extends __Entity{
 	}
 	
     public function setDetails($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::setDetails($mode, $id, $idParent);
-		//
-		//$this->parentId = $this->idParent;
 		
 		if ($this->pageMode == 'ADD'){
 			//if add came from all locations default, reset to 0 for no parent
@@ -52,27 +57,27 @@ class Location extends __Entity{
 	}	
 	
 	private function setChildLocationsCount(){
-		$list = new LocationList;
+		$list = new LocationList('VIEW', 0, $this->id);
 		$list->setDetails($this->id);
 		$this->childLocationsFound = $list->found;	
 	}
 	
-	function pageTitle(){
-		$heading = openDiv('section-heading-title');
+	protected function setPageTitle(){
+
 		if ($this->pageMode != 'ADD'){
-			$heading .= $this->sortKey;
+			$heading = $this->sortKey;
 		} else {
 			if ($this->idParent == 0){
-				$heading .= 'Add New Location';
+				$heading = 'Add New Location';
 			} else {
-				$heading .= $this->getSortKey($this->idParent).' Add Sub Location';	
+				$heading = $this->getSortKey($this->idParent).' Add Sub Location';	
 			}
 		}
-		$heading .= closeDiv();		
-		return $heading;
+
+		$this->_pageTitle = $heading;
 	}
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -106,7 +111,7 @@ class Location extends __Entity{
 		}
 	
 		$menu .= $locationL->closeMenu();
-		return $menu;
+		$this->_pageMenu = $menu;
 	}
 	
 	public function formatForDisplay(){
@@ -142,7 +147,7 @@ class Location extends __Entity{
 		
 		$sql = $this->sql->selectOptions_Locations($selectedValue,$disabled);
 		
-		$defaultValue = '0';
+		$defaultValue = 0;
 		$defaultCaption = '-select Location';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		
@@ -204,7 +209,7 @@ class Location extends __Entity{
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$sortKey = stripslashes($row["sort_key"]);
+			$sortKey = ($row["sort_key"]);
 		}
 		$result->close();
 		}
@@ -213,12 +218,14 @@ class Location extends __Entity{
 	}
 
 	private function updateSortKey(){
-		$sql = " UPDATE locations as l	";
+
 		if ($this->idParent == 0){
 			$sortKey = $this->name;
 		} else {
 			$sortKey = $this->getSortKey($this->idParent).'.'.$this->name;
 		}
+		
+		$sql = " UPDATE locations as l	";
 		$sql .= " SET l.sort_key = '".$sortKey."' ";	
 		$sql .= " WHERE l.id = ".$this->id." ";
 		
@@ -226,9 +233,9 @@ class Location extends __Entity{
 	
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			$sql = " UPDATE locations AS l ";
 			$sql .= " SET ";
 			$sql .= " l.name = '".$this->name."', ";
@@ -240,7 +247,9 @@ class Location extends __Entity{
 			$result = dbRunSQL($sql);
 			
 			$this->updateSortKey();
-		} else {
+	}
+	
+	protected function saveInsert(){
 	
 			$sql = " INSERT INTO locations ";
 			$sql .= " (name, ";
@@ -263,7 +272,7 @@ class Location extends __Entity{
 			$this->id = dbInsertedId();
 			
 			$this->updateSortKey();
-		}
+		
 	
 	}
 	

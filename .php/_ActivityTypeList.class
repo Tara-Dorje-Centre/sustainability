@@ -2,6 +2,14 @@
 
 class ActivityTypeList extends __EntityList{    
 
+/*
+protected $__class = 'Project';
+protected $__function = '__construct';
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
+
 	private $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){

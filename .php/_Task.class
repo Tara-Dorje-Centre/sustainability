@@ -1,6 +1,14 @@
 ﻿<?php 
 
 class Task extends __Entity{
+protected $__class = 'Task';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
+
     
 	//public $locationId = 0;
 	public $typeId = 0;
@@ -13,7 +21,7 @@ class Task extends __Entity{
     public $started;
 	public $updated;
     public $pctDone = 0;	
-    public $hoursEstimated = 0;
+    public $hoursEstimated = '0';
     public $hoursActual = 0;
     public $hoursNotes;	
 	public $materialsAuthProject = 'no';
@@ -36,10 +44,6 @@ class Task extends __Entity{
 	public $resultsPageMaterial = 1;
 	public $resultsPageReceipt = 1;
 	
-	/*public $year = -1;
-	public $month = -1;*/
-	
-	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->project = new Project($this->pageMode, $this>idParent);
@@ -47,6 +51,11 @@ class Task extends __Entity{
 	}
 	
 	public function setDetails(){
+   		$this->echoState('task.setDetails');
+		
+		$this->project->setDetails;
+		
+		if ($this->id > 0){
 		
 		if ($this->pageMode == 'COPY'){
 			$this->copyTask();
@@ -79,11 +88,13 @@ class Task extends __Entity{
 		$result->close();
 		}
 		
-		$this->setParentProject();
+
 		$this->setMeasureCount();
 		$this->summarizeActivity();
 		$this->summarizeMaterial();
 		$this->summarizeReceipt();
+		
+		}
 	}	
 	
 
@@ -99,28 +110,11 @@ class Task extends __Entity{
 		$this->resultsPageMaterial = $pageMaterial;
 		$this->resultsPageReceipt = $pageReceipt;
 	}
-	/*
 	
-	public function setPagingActivity($page = 1){
-		$this->resultsPageActivity = $page;
-	}
 
-	public function setPagingMaterial($page = 1){
-		$this->resultsPageMaterial = $page;
-	}
-	
-	public function setPagingReceipt($page = 1){
-		$this->resultsPageReceipt = $page;
-	}
-	
-	public function setPagingMeasure($page = 1){
-		$this->resultsPageMeasure = $page;
-	}
-	*/
-
-	protected function setParentProject(){
-		$this->project->setDetails();		
-	}
+	//protected function setParentProject(){
+		//$this->project->setDetails();		
+	//}
 	
 	protected function setMeasureCount(){
 		$s = new MeasureSQL;
@@ -360,8 +354,6 @@ class Task extends __Entity{
 
 		$l = new TaskLinks();
 		$baseLink = $l->detail('VIEW',$this->id);
-		
-		die('fix _task detail lists');
 
 		if ($this->activityCount > 0){
 			$activities = new ActivityList($this->pageMode, 0, $this->id);
@@ -432,7 +424,9 @@ class Task extends __Entity{
 		global $sessionTime;
 		$this->started = $sessionTime;	
 		$this->order = $this->project->tasksCount + 1;
-		$this->hoursActual = 0;
+		$this->hoursActual = '0';
+		$this->hoursEstimated = '0';
+		
 		$this->locationId = $this->project->locationId;		
 		$this->materialsAuthBy = 'Not Applicable';
 		$this->materialsAuthProject = 'no';

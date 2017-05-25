@@ -1,6 +1,13 @@
 ﻿<?php 
 
 class MaterialList extends __Entity{
+protected $__class = 'MaterialList';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
 
 	public $task;
 	

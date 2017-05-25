@@ -12,7 +12,7 @@ protected const _port = 3306;
 
 public function __construct(){
 
-	printLine('in db->__construct, creating connection');
+	//printLine('in db->__construct, creating connection');
 
 	parent::__construct($this::_server, $this::_user, $this::_pwd, $this::_database, $this::_port);
 
@@ -25,12 +25,12 @@ public function __construct(){
 
 //overload close method
 public function close(){
-	printLine('in db->close, releasing connection');
+	//printLine('in db->close, releasing connection');
 	parent::close();
 }
 
 public function query($sql){
-	printLine('in db->query');
+	//printLine('in db->query');
 	printLine($sql);
 	return parent::query($sql);
 }

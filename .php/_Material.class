@@ -1,6 +1,13 @@
 ﻿<?php 
 
 class Material extends __Entity{
+protected $__class = 'Material';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
   
     public $locationId = 0;	
 	public $typeId = 0;
@@ -29,8 +36,8 @@ class Material extends __Entity{
 		$this->sql = new MaterialSQL;
 	}
 
-	public function setDetails($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::setDetails($mode, $id, $idParent);
+	public function setDetails(){
+
 		$this->task->id = $this->idParent;
 		
 		$sql = $this->sql->infoMaterial($this->id);

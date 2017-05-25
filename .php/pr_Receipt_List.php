@@ -8,8 +8,11 @@ $displayProject = sessionVariableGET('displayProject', 'TASK');
 $approvedReceipts = sessionVariableGET('approvedReceipts', 'no');
 $resultPage = sessionVariableGET('resultsPageReceipt',1);
 
-$ml = new ReceiptList;
-$ml->setDetails($taskId, $resultPage, $detailsPerPage, $displayProject, $approvedReceipts, $projectId);
+$ml = new ReceiptList('VIEW', 0, $taskId);
+$ml->setPaging($resultPage, $detailsPerPage);
+$ml->setDisplay($displayProject);
+$ml->setApproved(approvedReceipts);
+$ml->setDetails();
 
 $ml->printPage();
 ?>

@@ -1,6 +1,15 @@
 ﻿<?php 
 
-class SiteSettings {
+class SiteSettings extends __Entity{
+protected $__class = 'SiteSettings';
+
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
+
 	public $siteTitle = 'MyProjects';
 	public $siteUrl = 'MyUrl';
 	public $loginNotice = '';
@@ -10,7 +19,7 @@ class SiteSettings {
 	public $contactName = 'MySiteContact';
 	public $contactEmail = 'MySiteContact@MyOrganization';
 	// property to support edit/view/add mode of calling page
-    public $pageMode;
+    //public $pageMode;
 	private $sql;
 	private $showPublicSite = 'no';
 	private $showCostReports = 'no';
@@ -28,13 +37,14 @@ class SiteSettings {
 	private $publicFontSizeMenu = 12;
 	private $publicFontSizeText = 12;
 	
-	public function __construct(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->sql = new SiteSettingsSQL;
 	}
 	
     // set class properties with record values from database
-	public function setDetails($inputMode){
-		$this->pageMode = $inputMode;
+	public function setDetails(){
+
 		$this->verifySettings();
 
 		$sql = $this->sql->details();
@@ -110,14 +120,11 @@ class SiteSettings {
 	}
 	
 		
-	function pageTitle(){
-		$heading = openDiv('section-heading-title');
-		$heading .= 'Site Settings';
-		$heading .= closeDiv();		
-		return $heading;
+	protected function setPageTitle(){
+		$this->_pageTitle = 'Site Settings';
 	}
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';		
 		$settingsL = new SiteSettingsLinks($menuType,$menuStyle);
@@ -133,42 +140,13 @@ class SiteSettings {
 			$menu .= $settingsL->detailViewHref();
 		}
 		$menu .= $settingsL->closeMenu();
-		return $menu;
-	}
-	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
+		$this->_pageMenu = $menu;
 	}
 	
 	public function formatForDisplay(){
 		$this->siteTitle = displayLines($this->siteTitle);
 		$this->organization = displayLines($this->organization);
 		$this->loginNotice = displayLines($this->loginNotice);
-	}
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-
-	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
 	}
 	
 	
@@ -454,9 +432,9 @@ class SiteSettings {
 	}
 
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 			
-		if ($this->pageMode == 'EDIT'){
+
 			$sql = " UPDATE sitewide_settings AS sw ";
 			$sql .= " SET ";
 			$sql .= " sw.site_title = '".$this->siteTitle."', ";
@@ -486,7 +464,7 @@ class SiteSettings {
 			$result = dbRunSQL($sql);
 		
 			$this->setSessionDetails();
-		}
+		
 	
 	}
 	

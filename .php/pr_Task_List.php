@@ -10,8 +10,9 @@ if ($periodicTasks == 'INCOMPLETE' || $periodicTasks == 'COMPLETE'){
 	$_SESSION['currentView'] = 'PERIODIC_TASKS';
 }
 
-$tl = new TaskList;
-$tl->setDetails($projectId, $resultPage, $detailsPerPage,$periodicTasks);
-
+$tl = new TaskList('VIEW', 0, $projectId);
+$tl->setPaging($resultPage, $detailsPerPage);
+$tl->setPeriodic($periodicTasks);
+$tl->setDetails();
 $tl->printPage();
 ?>

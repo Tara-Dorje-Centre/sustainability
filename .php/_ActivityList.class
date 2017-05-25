@@ -1,6 +1,13 @@
 <?php 
 
 class ActivityList extends __EntityList{
+protected $__class = 'ActivityList';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
 	public $myActivity = 'NO';
 	private $prevCalendarLink = '';
 	private $nextCalendarLink = '';
@@ -19,6 +26,8 @@ class ActivityList extends __EntityList{
 	}
 	
 	public function setDetails(){
+	
+   		$this->echoState('activityList.setDetails');
 		$this->task->setDetails();
 		$this->setFoundCount();
 	}

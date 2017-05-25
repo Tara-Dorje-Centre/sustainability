@@ -1,6 +1,13 @@
 ﻿<?php 
 
 class ReceiptList extends __EntityList{
+protected $__class = 'ReceiptList';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
 
 	public $task;
 	private $displayProject = 'TASK';

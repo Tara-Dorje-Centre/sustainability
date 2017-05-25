@@ -1,7 +1,14 @@
 ﻿<?php 
 
-class Activity extends __Entity{             
-	public $typeId = 0;
+class Activity extends __Entity{       
+protected $__class = 'Activity';
+
+	/*   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
+      
+	public $typeId = '0';
 	public $doneBy;
     public $started;
     public $updated;
@@ -20,7 +27,12 @@ class Activity extends __Entity{
 		$this->sql = new ActivitySQL;
 	}
 	
+
+	
 	public function setDetails(){
+	
+$this->echoState(true,'setDetails');
+	
 		$sql = $this->sql->info($this->id);
 		$result = dbGetResult($sql);
 		if($result){
@@ -126,7 +138,7 @@ class Activity extends __Entity{
 		//$this->hoursEstimated = $this->task->hoursEstimated;
 		$this->hoursActual = $this->task->hoursEstimated;
 		$this->doneBy = $_SESSION['login-name'];
-		$this->typeId = 0;
+		$this->typeId = '0';
 	}
 	
 	public function editForm($editContext = 'ActivityDetail'){

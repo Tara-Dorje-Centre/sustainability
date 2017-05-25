@@ -1,6 +1,11 @@
 ﻿<?php 
 
 class User extends __Entity{
+protected $__class = 'User';
+	   		/*
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');*/
+
    // public $id = 0; 
     public $typeId = 0; 
 	public $typeName;
@@ -33,6 +38,8 @@ class User extends __Entity{
 	}
 	
 	public function setDetails(){
+	
+		$this->echoState(true, 'setDetails');
 
 		$sql = $this->sql->infoUser($this->id);
 		$result = dbGetResult($sql);

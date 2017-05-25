@@ -26,7 +26,6 @@ $al = new ActivityList('VIEW', 0, taskId);
 $al->setCalendar($activityYear, $activityMonth, $showCalendar);
 $al->setPaging($resultPage, $detailsPerPage);
 $al->setMyActivity($myActivity);
-$al->setDetails(, , ,$myActivity,,$projectId);
-
+$al->setDetails();
 $al->printPage();
 ?>

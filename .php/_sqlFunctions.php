@@ -44,7 +44,7 @@ function dbGetResult($sql, $callingFunction = 'dbGetResult'){
 	return $result;
 }
 
-function dbGetScalar($sql, $field, $default = '', $callingFunction = 'dbGetScalar'){
+function dbGetScalar($sql, $field, $default = 0, $callingFunction = 'dbGetScalar'){
 	$result = dbGetResult($sql, $callingFunction);
 	if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -60,7 +60,7 @@ function dbGetScalar($sql, $field, $default = '', $callingFunction = 'dbGetScala
 }
 
 function dbGetCount($sql, $field, $callingFunction = 'dbGetCount'){
-	$i = dbGetScalar($sql, $field, '0', $callingFunction);
+	$i = dbGetScalar($sql, $field, 0, $callingFunction);
 	return $i;
 }
 

@@ -1,6 +1,14 @@
 ﻿<?php 
 
-class MaterialType extends __EntityType {         
+class MaterialType extends __EntityType {        
+
+ /*
+protected $__class = 'Project';
+protected $__function = '__construct';
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
   
 	private $sql;
 	

@@ -9,7 +9,5 @@ class __EntityType extends __Entity{
 	public $displayOrder = '0';
     public $created;
     public $updated;
-    
- 
 }
 ?>

@@ -1,18 +1,26 @@
 <?php 
 
 class __Entity{
+
+protected $__class = '__Entity.';
+protected $__function = '__construct';
+
+public const VIEW = 'VIEW';
+public const EDIT = 'EDIT';
+public const ADD = 'ADD';
+public const COPY = 'COPY';
+
     public $pageMode = 'VIEW';
 	public $id = 0;
 	public $idParent = 0;
 	
 	protected $_pageTitle = 'entity.pageTitle';
 	protected $_pageMenu = 'entity.pageMenu';
-	
-	
+	//paging
 	 public $resultPage = 1;
 	 public $perPage = 10;
 	 
-	
+	//calendar range
 	public $month = -1;
 	public $year = -1;
 	protected $showCalendar = 'NO';
@@ -20,16 +28,56 @@ class __Entity{
 	public $_getSummary = true;
 	public $_runUpdates = true;
 	
+	protected function echoValue($show = true, $n, $v, $f = '-use-current-', $c= '-use-current-'){
+		if ($c != '-use-current-'){
+		$this->__class = $c;
+		}
+		if ($f != '-use-current-'){
+		$this->__function = $f;
+		}
+		if ($show == true){
+				$cf = $this->__class.'->'.$this->__function;
+				//printLine($cf.'->'.$n.'['.$v.']');
+		}
+		
+	}
+	protected function echoState($show = true, $f = '-use-current-', $c= '-use-current-'){
+	
+		if ($c != '-use-current-'){
+		$this->__class = $c;
+		}
+		if ($f != '-use-current-'){
+		$this->__function = $f;
+		}
+		
+		
+		if ($show == true){
+		$s = true;
+		$this->echoValue($s, 'id', $this->id);
+		$this->echoValue($s, 'idParent', $this->idParent);
+		$this->echoValue($s, 'pageMode', $this->pageMode);
+		$s = false;
+		$this->echoValue($s, 'resultPage', $this->resultPage);
+		$this->echoValue($s, 'perPage', $this->perPage);
+		$s = false;
+		$this->echoValue($s, 'month', $this->month);
+		$this->echoValue($s, 'year', $this->year);
+		$this->echoValue($s, 'showCalendar', $this->showCalendar);
+		}
+	}
     
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->setMode($mode);
 		$this->setId($id);
 		$this->setIdParent($idParent);
+		
+		$this->echoState(true);
 	}
 
 	public function setDetails(){
 	
 	printLine('entity.setDetails not overridden');
+	
 	
 	}
 	
@@ -45,7 +93,7 @@ class __Entity{
 	public function setCalendar($year = -1, $month = -1, $show = 'NO'){
 		$this->showCalendar = $show;
 	
-		 if ($year != 0 && $year != 0){
+		 if ($year != 0 && $year != -1){
 		 	$this->year = $year;
 		 	$this->month = $month;
 		 } else {
@@ -100,6 +148,8 @@ class __Entity{
 	}
 	
 	public function printPage(){
+	
+	
 		$heading = $this->getPageHeading();
 		$details = $this->getPageDetails();
 		$site = new _SiteTemplate;

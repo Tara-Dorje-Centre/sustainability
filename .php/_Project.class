@@ -1,8 +1,18 @@
 ﻿<?php 
 
 class Project extends __Entity{
-    //public $id = 0;
-    //public $parentId = 0;
+
+protected $__class = 'Project';
+
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
+
+    
+    
 	public $locationId = 0;
     public $name;	
 	public $projectType;
@@ -32,7 +42,7 @@ class Project extends __Entity{
 	public $receiptsSummary = '';
 
 	private $sql;
-	public $resultPage = 1;
+	
 	
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -41,8 +51,12 @@ class Project extends __Entity{
 	}
 
     public function setDetails(){
+   
+   		$this->echoState(true, 'setDetails');
 
-		if ($this->id != 0){
+
+		
+		if ($this->id > 0){
 		
 		if ($this->pageMode == 'COPY'){
 			$this->copyProject();
@@ -75,13 +89,18 @@ class Project extends __Entity{
 		}
 		
 		$this->setTaskSummary();
-		$this->setMaterialSummary();
-		$this->setReceiptSummary();		
+		if ($this->tasksCount > 0){
+			$this->setMaterialSummary();
+			$this->setReceiptSummary();		
+		}
 		}
 	}	
 	
 	
 	private function setMaterialSummary(){
+	
+	$this->echoValue(true, 'tasksCount', $this->tasksCount,'setMaterialSummary');
+	
 		$s = new MaterialSQL;
 		$sql = $s->summarizeMaterialByProject($this->id, 'yes');
 
@@ -94,6 +113,7 @@ class Project extends __Entity{
 		}
 		$result->close();
 		}
+		$this->echoValue(true, 'materialsCount', $this->materialsCount);
 
 		$this->setMaterialSummaryByType();	
 	}
@@ -172,12 +192,14 @@ class Project extends __Entity{
 
 	
 	private function setTaskSummary(){
+		$this->echoValue(true, 'tasksCount', $this->tasksCount, 'setTaskSummary');
 		$s = new TaskSQL;
 		$sql = $s->summaryByProject($this->id);
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
+	//printLine('project.taskSummary in fetch row.total_tasks['.$row["total_tasks"].']');
 			$this->tasksHoursEstimated = $row["sum_hours_estimated"];
 			$this->tasksHoursActual = $row["sum_hours_actual"];	
 			$this->tasksPctDone = $row["overall_pct_done"];			
@@ -186,8 +208,10 @@ class Project extends __Entity{
 		$result->close();
 		}
 
+		$this->echoValue(true, 'tasksCount', $this->tasksCount, 'setTaskSummary');
+		
 		$effort = openTable('hours-info','displayListTable');
-		if ($this->tasksCount == '0'){
+		if ($this->tasksCount = 0){
 			$item = wrapTh('No Tasks Created');
 			$effort .= wrapTr($item);
 		} else {
@@ -282,6 +306,8 @@ class Project extends __Entity{
 	
 	
 	public function display(){
+	
+		$this->echoState(true, 'display');
 		$this->formatForDisplay();
 				
 		$detail = openDisplayDetails('project','Project Details');		
@@ -368,13 +394,16 @@ class Project extends __Entity{
 	private function setAddRecordDefaults(){	
 		global $sessionTime;
 		$this->started = $sessionTime;	
-		$this->locationId = 0;
-		$this->typeId = 0;
+		$this->locationId = '0';
+		$this->typeId = '0';
 		$this->priority = 1;
-		$this->pctDone = 0;
+		$this->pctDone = '0';
 	}
 	
 	public function editForm(){
+	
+	   		$this->echoState(true, 'editForm');
+	   		
 		if ($this->pageMode == 'ADD'){		
 			$this->setAddRecordDefaults();
 			$legend = 'Add Project';

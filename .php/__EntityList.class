@@ -3,15 +3,7 @@
 class __EntityList extends __Entity{
 
 	public $found = 0;
-	/*
-	public $resultPage = 1;
-	public $perPage = 10;
 	
-	public function setPaging($resultPage = 1, $resultsPerPage = 10){
-		$this->resultPage = $resultPage;
-		$this->perPage = $resultsPerPage;
-	}
-	*/
 	public function setFoundCount(){
 		$this->found = 0;
 		//override does sql lookup

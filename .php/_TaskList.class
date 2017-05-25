@@ -1,6 +1,13 @@
 ﻿<?php 
 
 class TaskList extends __EntityList{
+protected $__class = 'TaskList';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
 
 	public $periodicTasks = 'NO';
 	public $project;
@@ -14,11 +21,14 @@ class TaskList extends __EntityList{
 	}
 	
 	public function setDetails(){
+   		$this->echoState('taskList.setDetails');
+
+	
 		$this->project->setDetails();
 		$this->setFoundCount();
 	}
 
-	public function setPeriodicTasks($periodic = 'NO'){
+	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
 	}
 	
@@ -28,10 +38,10 @@ class TaskList extends __EntityList{
 			$title = $this->project->name.br();
 			$title .= 'Project Tasks';
 		} else {
-			//$title .= $this->periodicTasks.spacer().' Periodic Tasks';
+			$title .= 'Periodic Tasks';
 		}
 
-		$this->_PageTitle = $title;	
+		$this->_pageTitle = $title.'[task list]';
 	}
 	
 	protected function setPageMenu(){
@@ -124,15 +134,15 @@ class TaskList extends __EntityList{
 		if ($result){
 		while($row = $result->fetch_assoc())
 		{	
-			$t = new Task;		
+			$t = new Task('FETCH');
 			$t->id = $row["id"];
 			$t->order = $row["task_order"];
 			$t->pctDone = $row["pct_done"];
-			$t->name = stripslashes($row["name"]);
-			$taskType = stripslashes($row["task_type"]);
-			$t->description = stripslashes($row["description"]);
-//			$t->summary = stripslashes($row["summary"]);
-			$t->hoursNotes = stripslashes($row["hours_notes"]);
+			$t->name = ($row["name"]);
+			$taskType = ($row["task_type"]);
+			$t->description = ($row["description"]);
+//			$t->summary = ($row["summary"]);
+			$t->hoursNotes = ($row["hours_notes"]);
 			$t->hoursEstimated = $row["hours_estimated"];
 			$t->hoursActual = $row["hours_actual"];
 

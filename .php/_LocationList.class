@@ -1,6 +1,13 @@
 ﻿<?php 
 
 class LocationList extends __EntityList{
+protected $__class = 'LocationList';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
 	
 	private $sql;
 	
@@ -113,7 +120,7 @@ class LocationList extends __EntityList{
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$l = new Location;
+			$l = new Location('FETCH');
 			$l->id = $row["id"];
 			$l->name = ($row["name"]);
 			$l->sortKey = ($row["sort_key"]);

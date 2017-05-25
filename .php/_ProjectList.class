@@ -1,6 +1,14 @@
 ﻿<?php 
 
 class ProjectList extends __EntityList{
+protected $__class = 'ProjectList';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
+
 	public $showMyProjects = 'NO';
 	public $status = 'OPEN';
 	
@@ -11,6 +19,10 @@ class ProjectList extends __EntityList{
 		$this->sql = new ProjectSQL;	
 	}
 	public function setDetails(){
+	
+   		$this->echoState(true,'setDetails');
+
+	
 		$this->setFoundCount();
 	}
 	
@@ -72,6 +84,7 @@ class ProjectList extends __EntityList{
 	
 	
 	public function getListing(){		
+		$this->echoState(true,'getListing');
 	
 		$pl = new ProjectLinks;		
 		$pagingLinks = $pl->listingPaged($this->status,$this->showMyProjects,$this->found,$this->resultPage,$this->perPage);
@@ -101,7 +114,7 @@ class ProjectList extends __EntityList{
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$p = new Project('VIEW');
+			$p = new Project('FETCH');
 			$p->id = $row["id"];
 			$p->priority = $row["priority"];
 			$p->pctDone = $row["pct_done"];

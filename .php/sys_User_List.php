@@ -7,7 +7,7 @@ $resultPage = sessionVariableGET('resultPageUsers', 1);
 $userTypeId = sessionVariableGET('userTypeId',0);
 
 $u = new UserList;
-$u->setDetails($userTypeId, $resultPage, $detailsPerPage);
-
+$u->setPaging($resultPage, $detailsPerPage);
+$u->setDetails();
 $u->printPage();
 ?>

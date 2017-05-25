@@ -9,9 +9,7 @@ if (isset($_POST['submit-login'])){
 	if (!empty($_POST['login-name']) && !empty($_POST['login-pwd'])){
 		$login = $conn->escape_string($_POST['login-name']);
 		$pass = $conn->escape_string($_POST['login-pwd']);
-		
-		//$login = mysql_real_escape_string($_POST['login-name']);
-		//$pass = mysql_real_escape_string($_POST['login-pwd']);
+
 		$_POST['login-pwd'] = 'none';
 		
 		$u = new User;
@@ -32,9 +30,7 @@ if (isset($_POST['submit-login'])){
 }
 if (isset($_POST['submit-pwd-reset'])){
 	if (!empty($_POST['login-name'])  && !empty($_POST['login-email'])){
-		//$login = mysql_real_escape_string($_POST['login-name']);	
-		//$email = mysql_real_escape_string($_POST['login-email']);
-		
+
 		$login = $conn->escape_string($_POST['login-name']);	
 		$email = $conn->escape_string($_POST['login-email']);
 		

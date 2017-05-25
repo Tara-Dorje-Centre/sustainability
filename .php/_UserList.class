@@ -1,6 +1,13 @@
 ﻿<?php 
 
 class UserList extends __EntityList{
+protected $__class = 'UserList';
+
+/*
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
 
 	public $userTypeId = 0;
 	private $sql;

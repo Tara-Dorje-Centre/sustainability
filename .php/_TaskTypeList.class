@@ -1,6 +1,14 @@
 ﻿<?php 
 
 class TaskTypeList extends __EntityList{
+
+/*
+protected $__class = 'Project';
+protected $__function = '__construct';
+	   		$this->echoState(true, 'setDetails');
+	   $this->echoState(true, 'display');
+	   		$this->echoState(true, 'editForm');
+*/
 	
 	private $sql;
 	
