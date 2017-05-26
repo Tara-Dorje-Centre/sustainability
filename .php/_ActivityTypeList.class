@@ -1,14 +1,7 @@
 ﻿<?php 
 
 class ActivityTypeList extends __EntityList{    
-
-/*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+	protected $__MyClassName = 'Project';
 
 	private $sql;
 	
@@ -18,7 +11,6 @@ protected $__function = '__construct';
 	}
 	
 	protected function setPageTitle(){
-
 		$this->_pageTitle .= 'Activity Types';
 	}
 

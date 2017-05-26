@@ -1,26 +1,23 @@
 <?php 
 
-class __Entity{
+class __Entity extends __echo{
+	protected $__MyClassName = '__Entity.';
 
-protected $__class = '__Entity.';
-protected $__function = '__construct';
 
-public const VIEW = 'VIEW';
-public const EDIT = 'EDIT';
-public const ADD = 'ADD';
-public const COPY = 'COPY';
+	public const VIEW = 'VIEW';
+	public const EDIT = 'EDIT';
+	public const ADD = 'ADD';
+	public const COPY = 'COPY';
 
     public $pageMode = 'VIEW';
 	public $id = 0;
 	public $idParent = 0;
-	
-	protected $_pageTitle = 'entity.pageTitle';
-	protected $_pageMenu = 'entity.pageMenu';
-	//paging
-	 public $resultPage = 1;
-	 public $perPage = 10;
+
+	protected $isPagingSet = false;
+	public $resultPage = 1;
+	public $perPage = 10;
 	 
-	//calendar range
+	protected $isCalendarSet = false;
 	public $month = -1;
 	public $year = -1;
 	protected $showCalendar = 'NO';
@@ -28,41 +25,41 @@ public const COPY = 'COPY';
 	public $_getSummary = true;
 	public $_runUpdates = true;
 	
-	protected function echoValue($show = true, $n, $v, $f = '-use-current-', $c= '-use-current-'){
-		if ($c != '-use-current-'){
-		$this->__class = $c;
-		}
-		if ($f != '-use-current-'){
-		$this->__function = $f;
-		}
-		if ($show == true){
-				$cf = $this->__class.'->'.$this->__function;
-				//printLine($cf.'->'.$n.'['.$v.']');
-		}
-		
-	}
-	protected function echoState($show = true, $f = '-use-current-', $c= '-use-current-'){
+	protected $_pageTitle = 'entity.pageTitle';
+	protected $_pageMenu = 'entity.pageMenu';
 	
-		if ($c != '-use-current-'){
-		$this->__class = $c;
-		}
-		if ($f != '-use-current-'){
-		$this->__function = $f;
-		}
-		
-		
+	protected function echoState($show = true, $f = '-use-current-', $c= '-use-current-'){
 		if ($show == true){
-		$s = true;
+			$this->echoState_ids($show, $f, $c);
+			$this->echoState_paging($show, $f, $c);
+			$this->echoState_calendar($show, $f, $c);
+		}
+	}
+	
+	protected function echoState_ids($show = true, $f = '-use-current-', $c= '-use-current-'){
+		$this->echoLocale($f, $c);
+		$s = $show;
 		$this->echoValue($s, 'id', $this->id);
 		$this->echoValue($s, 'idParent', $this->idParent);
 		$this->echoValue($s, 'pageMode', $this->pageMode);
-		$s = false;
-		$this->echoValue($s, 'resultPage', $this->resultPage);
-		$this->echoValue($s, 'perPage', $this->perPage);
-		$s = false;
-		$this->echoValue($s, 'month', $this->month);
-		$this->echoValue($s, 'year', $this->year);
-		$this->echoValue($s, 'showCalendar', $this->showCalendar);
+	}
+	protected function echoState_calendar($show = true, $f = '-use-current-', $c= '-use-current-'){
+
+		if ($this->isCalendarSet == true){
+			$s = $show;
+			$this->echoLocale($f, $c);
+			$this->echoValue($s, 'month', $this->month);
+			$this->echoValue($s, 'year', $this->year);
+			$this->echoValue($s, 'showCalendar', $this->showCalendar);
+		}
+	}
+	protected function echoState_paging($show = true, $f = '-use-current-', $c= '-use-current-'){
+
+		if ($this->isPagingSet == true){
+			$s = $show;
+			$this->echoLocale($f, $c);
+			$this->echoValue($s, 'resultPage', $this->resultPage);
+			$this->echoValue($s, 'perPage', $this->perPage);
 		}
 	}
     
@@ -71,25 +68,22 @@ public const COPY = 'COPY';
 		$this->setId($id);
 		$this->setIdParent($idParent);
 		
-		$this->echoState(true);
+		$this->echoState_ids(true);
 	}
 
 	public function setDetails(){
 	
 	printLine('entity.setDetails not overridden');
-	
-	
 	}
-	
-	
 
-	 public function setPaging($resultPage = 1, $resultsPerPage = 10){
-	 $this->resultPage = $resultPage;
-	 $this->perPage = $resultsPerPage;
+	public function setPaging($resultPage = 1, $resultsPerPage = 10){
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;
+		
+		$this->isPagingSet = true;
+		$this->echoState_paging(true, 'setPaging');
 	 }
 	 
-	
-	
 	public function setCalendar($year = -1, $month = -1, $show = 'NO'){
 		$this->showCalendar = $show;
 	
@@ -103,6 +97,8 @@ public const COPY = 'COPY';
 		 	$this->month = getTimestampMonth($sessionTime);
 		 }
 		 
+		$this->isCalendarSet = true;
+		$this->echoState_calendar(true, 'setCalendar');
 	}
 	
 	public function setMode($mode = 'VIEW'){
@@ -133,8 +129,6 @@ public const COPY = 'COPY';
 		return $heading;
 	}
 
-
-
 	 protected function pageMenu(){
 	 	return $this->_pageMenu;
 	 }
@@ -148,8 +142,6 @@ public const COPY = 'COPY';
 	}
 	
 	public function printPage(){
-	
-	
 		$heading = $this->getPageHeading();
 		$details = $this->getPageDetails();
 		$site = new _SiteTemplate;

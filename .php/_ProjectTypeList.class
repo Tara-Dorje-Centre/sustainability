@@ -1,14 +1,7 @@
 ﻿<?php 
 
 class ProjectTypeList extends __EntityList{
-protected $__class = 'Project';
-
-
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+protected $__MyClassName = 'ProjectTypeList';
 
 	private $sql;
 	

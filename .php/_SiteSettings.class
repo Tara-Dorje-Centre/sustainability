@@ -1,14 +1,10 @@
 ﻿<?php 
 
 class SiteSettings extends __Entity{
-protected $__class = 'SiteSettings';
+protected $__MyClassName = 'SiteSettings';
 
 
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+
 
 	public $siteTitle = 'MyProjects';
 	public $siteUrl = 'MyUrl';

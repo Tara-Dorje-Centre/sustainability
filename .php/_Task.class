@@ -1,13 +1,9 @@
 ﻿<?php 
 
 class Task extends __Entity{
-protected $__class = 'Task';
+protected $__MyClassName = 'Task';
 
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+
 
     
 	//public $locationId = 0;

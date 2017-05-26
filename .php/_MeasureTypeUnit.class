@@ -1,15 +1,8 @@
 ﻿<?php 
 
-class MeasureTypeUnit extends __Entity {
-
-/*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
-
+class MeasureTypeUnit extends __Entity{
+	protected $__MyClassName = 'Project';
+	
     public $unitOfMeasureId = 0;	
 	public $measureType;
 	public $measureTypeName;

@@ -1,15 +1,8 @@
 ﻿<?php 
 
 class LocationType extends __EntityType{
+	protected $__MyClassName = 'LocationType';
 
-/*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
-   
 	private $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -80,10 +73,6 @@ protected $__function = '__construct';
 		$this->created = getTimestampDate($this->created);
 		$this->updated = getTimestampDate($this->updated);
 	}
-	
-
-
-	
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -215,7 +204,6 @@ protected $__function = '__construct';
 			
 			$this->id = dbInsertedId();
 		
-	
 	}
 	
 } 

@@ -1,4 +1,5 @@
 <?php
+include_once('__echo.class');
 //
 function showProgress($msg){
 	//printLine('manfest.inc->'.$msg);

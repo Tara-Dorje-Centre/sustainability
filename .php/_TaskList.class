@@ -1,13 +1,9 @@
 ﻿<?php 
 
 class TaskList extends __EntityList{
-protected $__class = 'TaskList';
+protected $__MyClassName = 'TaskList';
 
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+
 
 	public $periodicTasks = 'NO';
 	public $project;
@@ -21,7 +17,7 @@ protected $__class = 'TaskList';
 	}
 	
 	public function setDetails(){
-   		$this->echoState('taskList.setDetails');
+   		$this->echoState(true, 'setDetails');
 
 	
 		$this->project->setDetails();

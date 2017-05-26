@@ -1,20 +1,12 @@
 ﻿<?php 
 
 class ActivityType extends __EntityType{
-
-/*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+	protected $__MyClassName = 'ActivityType';
 
 	private $sql;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		
 		$this->sql = New ActivityTypeSQL;
 	}
 		

@@ -8,8 +8,8 @@ if (isset($_POST['submit'])){
 	$u->saveChanges();	
 } elseif (isset($_POST['submit-pwd-reset'])){
 	if (!empty($_POST['login-name'])  && !empty($_POST['login-email'])){
-		$login = mysql_real_escape_string($_POST['login-name']);	
-		$email = mysql_real_escape_string($_POST['login-email']);
+		$login = dbEscapeString($_POST['login-name']);	
+		$email = dbEscapeString($_POST['login-email']);
 		$u->resetPassword($login, $email);
 		$u->id = $_POST['userId'];
 	}

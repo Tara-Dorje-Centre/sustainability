@@ -1,13 +1,7 @@
 ﻿<?php 
 
 class ProjectList extends __EntityList{
-protected $__class = 'ProjectList';
-
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+protected $__MyClassName = 'ProjectList';
 
 	public $showMyProjects = 'NO';
 	public $status = 'OPEN';
@@ -19,10 +13,7 @@ protected $__class = 'ProjectList';
 		$this->sql = new ProjectSQL;	
 	}
 	public function setDetails(){
-	
    		$this->echoState(true,'setDetails');
-
-	
 		$this->setFoundCount();
 	}
 	

@@ -1,28 +1,22 @@
 ﻿<?php 
 
 class UserTypeList extends __EntityList{
+	protected $__MyClassName = 'UserTypeList';
 
-/*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
 	private $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->sql = new UserTypeSQL;
 	}
 	
-	public function pageTitle(){
+	protected function setPageTitle(){
 		$title = openDiv('section-heading-title','none');
 		$title .= 'User Types';
 		$title .= closeDiv();
-		return $title;	
+		$this->_pageTitle = $title;	
 	}
 
-	public function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -35,7 +29,7 @@ protected $__function = '__construct';
 		$menu .= $typeL->detailAddHref();
 		$menu .= $typeL->listingHref();		
 		$menu .= $typeL->closeMenu();
-		return $menu;			
+		$this->_pageMenu = $menu;			
 	}
 	
 	

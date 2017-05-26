@@ -1,15 +1,8 @@
 ﻿<?php 
 
 class MeasureTypeUnitList extends __EntityList{
+	protected $__MyClassName = 'MeasureTypeUnitList';
 
-/*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
-	//public $measureTypeId = 0;
 	
 	public $measureType;
 	private $sql;

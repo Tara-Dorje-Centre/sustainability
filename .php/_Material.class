@@ -1,14 +1,8 @@
 ﻿<?php 
 
 class Material extends __Entity{
-protected $__class = 'Material';
+protected $__MyClassName = 'Material';
 
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
-  
     public $locationId = 0;	
 	public $typeId = 0;
 	public $typeName = '';

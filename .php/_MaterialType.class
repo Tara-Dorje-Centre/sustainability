@@ -1,14 +1,8 @@
 ﻿<?php 
 
 class MaterialType extends __EntityType {        
+	protected $__MyClassName = 'MaterialType';
 
- /*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
   
 	private $sql;
 	
@@ -18,9 +12,7 @@ protected $__function = '__construct';
 		$this->sql = new MaterialTypeSQL;
 	}
 
-	public function setDetails($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::setDetails($mode, $id, $idParent);
-
+	public function setDetails(){
 
 		$sql = $this->sql->infoMaterialType($this->id);
 		

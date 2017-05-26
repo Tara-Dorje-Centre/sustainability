@@ -1,18 +1,8 @@
 ﻿<?php 
 
 class Project extends __Entity{
+	protected $__MyClassName = 'Project';
 
-protected $__class = 'Project';
-
-
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
-
-    
-    
 	public $locationId = 0;
     public $name;	
 	public $projectType;

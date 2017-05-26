@@ -1,14 +1,8 @@
 ﻿<?php 
 
 class LocationList extends __EntityList{
-protected $__class = 'LocationList';
+	protected $__MyClassName = 'LocationList';
 
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
-	
 	private $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -17,10 +11,9 @@ protected $__class = 'LocationList';
 	}
 	
 	public function setDetails(){
+		$this->echoState(true, 'setDetails');
 
-
-
-		//$this->setFoundCount();
+		$this->setFoundCount();
 	}
 	
 	protected function setPageTitle(){

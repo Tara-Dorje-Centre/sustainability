@@ -1,13 +1,8 @@
 ﻿<?php 
 
 class Activity extends __Entity{       
-protected $__class = 'Activity';
+protected $__MyClassName = 'Activity';
 
-	/*   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
-      
 	public $typeId = '0';
 	public $doneBy;
     public $started;
@@ -26,8 +21,6 @@ protected $__class = 'Activity';
 		$this->task = new Task($this->pageMode, $this->idParent);
 		$this->sql = new ActivitySQL;
 	}
-	
-
 	
 	public function setDetails(){
 	

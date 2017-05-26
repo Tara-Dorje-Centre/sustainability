@@ -2,15 +2,9 @@
 
 
 class TaskType extends __EntityType{
+	protected $__MyClassName = 'TaskType';
 
 
-/*
-protected $__class = 'Project';
-protected $__function = '__construct';
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
     
 	public $frequency = 'none';
 	private $sql;

@@ -1,13 +1,8 @@
 <?php 
 
 class ActivityList extends __EntityList{
-protected $__class = 'ActivityList';
+	protected $__MyClassName = 'ActivityList';
 
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
 	public $myActivity = 'NO';
 	private $prevCalendarLink = '';
 	private $nextCalendarLink = '';

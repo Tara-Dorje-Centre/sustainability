@@ -1,7 +1,8 @@
 <?php 
 
 class __EntityList extends __Entity{
-
+	protected $__MyClassName = '__EntityList';
+	
 	public $found = 0;
 	
 	public function setFoundCount(){

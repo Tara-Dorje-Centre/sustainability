@@ -1,7 +1,7 @@
 <?php 
 include_once("_includes.php");
 
-$um = new ReceiptType;
+$um = new ReceiptType('SAVE');
 $um->collectPostValues();
 $um->saveChanges();
 

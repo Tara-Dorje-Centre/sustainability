@@ -1,13 +1,7 @@
 ﻿<?php 
 
 class UnitOfMeasureList extends __EntityList{
-protected $__class = 'UnitOfMeasureList';
-protected $__function = '__construct';
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+	protected $__MyClassName = 'UnitOfMeasureList';
 
 	private $sql;
 	

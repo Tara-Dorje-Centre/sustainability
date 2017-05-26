@@ -1,13 +1,9 @@
 ﻿<?php 
 
 class UnitOfMeasure extends __Entity{
-protected $__class = 'UnitOfMeasure';
+	protected $__MyClassName = 'UnitOfMeasure';
 
-/*
-	   		$this->echoState(true, 'setDetails');
-	   $this->echoState(true, 'display');
-	   		$this->echoState(true, 'editForm');
-*/
+
     
     public $type;	
     public $name;	
