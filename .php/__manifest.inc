@@ -15,6 +15,8 @@ showProgress('general functions loaded');
 include_once("__Calendar.class");
 include_once("__Database.class");
 include_once("__Links.class");
+
+include_once("__EntityInterfaces.class");
 include_once("__Entity.class");
 include_once("__EntityType.class");
 include_once("__EntityList.class");
