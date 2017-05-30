@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class ReceiptSQL{
-function columnsReceipts(){
+class ReceiptSQL implements IentitySQL{
+protected function cols(){
 $c = " m.id, ";
 $c .= " m.task_id, ";
 $c .= " t.task_order, ";
@@ -24,55 +24,60 @@ $c .= " mt.highlight_style, ";
 $c .= " m.notes ";
 return $c;	
 }
-public function infoReceipt($receiptId){
-$q = " SELECT ";	
-$q .= $this->columnsReceipts();
-$q .= " FROM receipts AS m ";
+
+public function tables($joinTypes = true){
+
+$q = " FROM receipts AS m ";
 $q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " JOIN projects AS p ON t.project_id = p.id ";
+
+if ($joinTypes == true){
 $q .= " LEFT OUTER JOIN receipt_types AS mt ON m.type_id = mt.id ";
 $q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+}
+return $q;
+}
+public function info($receiptId){
+$q = " SELECT ";	
+$q .= $this->cols();
+$q .= $this->tables();
 $q .= " WHERE  ";
 $q .= " m.id = ".$receiptId." ";
 return $q;
 }
-public function listReceiptsByTask($selectedTaskId, $resultPage, $rowsPerPage){
+public function listTask($taskId, $resultPage, $rowsPerPage){
 $q = " SELECT ";	
-$q .= $this->columnsReceipts();
-$q .= " FROM receipts AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN receipt_types AS mt ON m.type_id = mt.id ";
-$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+$q .= $this->cols();
+$q .= $this->tables();
+
 $q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
+$q .= " m.task_id = ".$taskId." ";
 $q .= " ORDER BY ";
 $q .= " date(m.date_reported) desc, m.name ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
-public function countReceiptsByTask($selectedTaskId){
+public function countTask($taskId){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_receipts";
 $q .= " FROM receipts AS m ";
 $q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
+$q .= " m.task_id = ".$taskId." ";
 return $q;
 }
-public function summarizeReceiptsByTask($selectedTaskId){
+public function summaryTask($taskId){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_receipts, ";
 $q .= " SUM(m.cost_actual) sum_cost_actual ";
 $q .= " FROM receipts AS m ";
 $q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
+$q .= " m.task_id = ".$taskId." ";
 return $q;
 }
-public function listReceiptsByProject($projectId, $resultPage, $rowsPerPage, $approved = 'yes'){
+public function listProject($projectId, $resultPage, $rowsPerPage, $approved = 'yes'){
 $q = " SELECT ";	
-$q .= $this->columnsReceipts();
-$q .= " FROM receipts AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN receipt_types AS mt ON m.type_id = mt.id ";
-$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+$q .= $this->cols();
+$q .= $this->tables();
 $q .= " WHERE  ";
 $q .= " t.project_id = ".$projectId." ";
 $q .= " AND t.receipts_auth_project = '".$approved."' ";
@@ -81,35 +86,35 @@ $q .= " date(m.date_reported) desc, t.task_order, m.name ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
-public function countReceiptsByProject($projectId, $approved = 'yes'){
+public function countProject($projectId, $approved = 'yes'){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_receipts";
-$q .= " FROM receipts AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= $this->tables(false);
 $q .= " WHERE  ";
 $q .= " t.project_id = ".$projectId." ";
 $q .= " AND t.receipts_auth_project = '".$approved."' ";
 return $q;
 }
-public function summarizeReceiptsByProject($projectId, $approved = 'yes'){
+public function summaryProject($projectId, $approved = 'yes'){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_receipts, ";
 $q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM receipts AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= $this->tables(false);
+
+
 $q .= " WHERE  ";
 $q .= " t.project_id = ".$projectId." ";
 $q .= " AND t.receipts_auth_project = '".$approved."' ";
 return $q;
 }
-public function summarizeReceiptsByProjectAndType($projectId, $approved = 'yes'){
+public function summaryProjectByReceptType($projectId, $approved = 'yes'){
 $q = " SELECT  ";
 $q .= " IFNULL(mt.name, 'Unspecified') receipt_type, ";
 $q .= " COUNT(*) total_receipts, ";
 $q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM receipts AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN receipt_types mt on m.type_id = mt.id ";
+
+
+$q .= $this->tables(false);
 $q .= " WHERE  ";
 $q .= " t.project_id = ".$projectId." ";
 $q .= " AND t.receipts_auth_project = '".$approved."' ";

@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class MeasureTypeSQL{
-public function columnsMeasureTypes(){
+class MeasureTypeSQL implements IentitySQL{
+public function columns(){
 $query = " mt.id, ";
 $query .= " mt.name, ";
 $query .= " mt.notes, ";
@@ -10,23 +10,23 @@ $query .= " mt.updated, ";
 $query .= " mt.created ";
 return $query;	
 }
-public function infoMeasureType($measureTypeId){
+public function info($id){
 $query = " SELECT ";	
-$query .= $this->columnsMeasureTypes();
+$query .= $this->columns();
 $query .= " FROM measure_types mt ";
 $query .= " WHERE  ";
-$query .= " mt.id = ".$measureTypeId." ";
+$query .= " mt.id = ".$id." ";
 return $query;
 }
-public function listMeasureTypes($resultPage, $rowsPerPage){
+public function list($resultPage, $rowsPerPage){
 $query = " SELECT ";	
-$query .= $this->columnsMeasureTypes();
+$query .= $this->columns();
 $query .= " FROM measure_types mt ";
 $query .= " ORDER BY name ";
 $query .= sqlLimitClause($resultPage, $rowsPerPage);
 return $query;	
 }
-public function countMeasureTypes(){
+public function count(){
 $query = " SELECT ";	
 $query .= " COUNT(*) total_types ";
 $query .= " FROM measure_types mt ";

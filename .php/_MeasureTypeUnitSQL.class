@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class MeasureTypeUnitSQL{
+class MeasureTypeUnitSQL implements IentitySQL{
 	public function createView_MeasureTypeUnits(){
 		$s = "CREATE OR REPLACE VIEW measure_type_units_v AS
 		SELECT
@@ -24,7 +24,7 @@ class MeasureTypeUnitSQL{
 		unit_type, measure_type, unit_of_measure ";
 		return $s;
 	}
-public function columnsMeasureTypeUnit(){
+public function cols(){
 	$c = " mtu.id, ";
 	$c .= " mtu.measure_type_id, ";
 	$c .= " mtu.unit_measure_id, ";
@@ -36,16 +36,16 @@ public function columnsMeasureTypeUnit(){
 	$c .= " mtu.unit_symbol ";
 	return $c;	
 }
-public function infoMeasureTypeUnit($measureTypeUnitId){
+public function info($measureTypeUnitId){
 	$q = " SELECT ";	
-	$q .= $this->columnsMeasureTypeUnit();
+	$q .= $this->cols();
 	$q .= " FROM measure_type_units_v mtu ";
 	$q .= " WHERE mtu.id = '".$measureTypeUnitId."' ";
 	return $q;
 }
-public function listMeasureTypeUnits($measureTypeId,$resultPage, $rowsPerPage){
+public function list($measureTypeId,$resultPage, $rowsPerPage){
 	$q = " SELECT ";	
-	$q .= $this->columnsMeasureTypeUnit();
+	$q .= $this->cols();
 	$q .= " FROM measure_type_units_v mtu ";
 	if ($measureTypeId > 0){
 		$q .= " WHERE mtu.measure_type_id = ".$measureTypeId." ";
@@ -54,7 +54,9 @@ public function listMeasureTypeUnits($measureTypeId,$resultPage, $rowsPerPage){
 	$q .= sqlLimitClause($resultPage, $rowsPerPage);
 	return $q;	
 }
-public function countMeasureTypeUnits($measureTypeId){
+
+
+public function countByMeasureType($measureTypeId){
 	$q = " SELECT ";	
 	$q .= " COUNT(*) total_units ";
 	$q .= " FROM measure_type_units_v mtu ";
@@ -63,7 +65,7 @@ public function countMeasureTypeUnits($measureTypeId){
 	}
 	return $q;	
 }
-public function selectOptions_MeasureTypeUnits($selectedValue,$disabled){
+public function options($selectedValue,$disabled){
 	$q = " SELECT ";
 	$q .= " mtu.unit_type, ";
 	$q .= " mtu.id as value, ";

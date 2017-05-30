@@ -43,7 +43,7 @@ protected $__MyClassName = 'SiteSettings';
 
 		$this->verifySettings();
 
-		$sql = $this->sql->details();
+		$sql = $this->sql->info();
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -139,7 +139,7 @@ protected $__MyClassName = 'SiteSettings';
 		$this->_pageMenu = $menu;
 	}
 	
-	public function formatForDisplay(){
+	protected function formatForDisplay(){
 		$this->siteTitle = displayLines($this->siteTitle);
 		$this->organization = displayLines($this->organization);
 		$this->loginNotice = displayLines($this->loginNotice);
@@ -286,7 +286,7 @@ protected $__MyClassName = 'SiteSettings';
 	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
+			$this->setDefaults();
 			$legend = 'Add Site Settings';
 		} else {
 			$legend = 'Edit Site Settings';	

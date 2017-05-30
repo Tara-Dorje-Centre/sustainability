@@ -1,9 +1,9 @@
 ﻿<?php 
 
 class Activity extends __Entity{       
-protected $__MyClassName = 'Activity';
+	protected $__MyClassName = 'Activity';
 
-	public $typeId = '0';
+	public $typeId = 0;
 	public $doneBy;
     public $started;
     public $updated;
@@ -13,6 +13,7 @@ protected $__MyClassName = 'Activity';
     public $comments;
 	public $linkUrl;
 	public $linkText;
+	
 	public $task;	
 	private $sql;
 	
@@ -23,9 +24,10 @@ protected $__MyClassName = 'Activity';
 	}
 	
 	public function setDetails(){
+		$this->echoState(true,'setDetails');
 	
-$this->echoState(true,'setDetails');
-	
+		if ($this->id > 0){
+		
 		$sql = $this->sql->info($this->id);
 		$result = dbGetResult($sql);
 		if($result){
@@ -44,6 +46,8 @@ $this->echoState(true,'setDetails');
 			$this->linkUrl = ($row["link_url"]);
 		}
 		$result->close();
+		}
+
 		}
 
 		$this->setParentTask();			
@@ -90,7 +94,7 @@ $this->echoState(true,'setDetails');
 	}
 		
 		
-	public function formatForDisplay(){
+	protected function formatForDisplay(){
 		$this->doneBy = displayLines($this->doneBy);
 		$this->comments = displayLines($this->comments);		
 		$this->started = getTimestampDate($this->started);
@@ -124,7 +128,7 @@ $this->echoState(true,'setDetails');
 		return $detail;
 	}	
 	
-	public function setAddRecordDefaults(){
+	public function setDefaults(){
 		global $sessionTime;
 		$this->started = $sessionTime;	
 		$this->order = $this->task->activityCount + 1;
@@ -136,7 +140,7 @@ $this->echoState(true,'setDetails');
 	
 	public function editForm($editContext = 'ActivityDetail'){
 		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
+			$this->setDefaults();
 			$legend = 'Add Activity';	
 		} else if ($this->pageMode == 'EDIT'){
 			$legend =  'Edit Activity';
@@ -157,16 +161,16 @@ $this->echoState(true,'setDetails');
 		$pt = new ProjectType;
 		$pt->setDetails($_ptId,'VIEW');
 		$changeJs = "ajaxRefresh('PROJECTS_BY_TYPE_SELECT',this,'projectId');";
-		$input = $pt->getProjectTypeSelectList($_ptId,'projectTypeId','false',false,$changeJs);
+		$input = $pt->options($_ptId,'projectTypeId','false',false,$changeJs);
 		$fields = captionedInput('Project Type',$input);
 				
 		//project
 		$changeJs = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'taskId');";
-		$input = $this->task->project->getProjectSelectListByTypeId($_ptId,$_pId,'projectId','false',false,$changeJs);
+		$input = $this->task->project->options($_ptId,$_pId,'projectId','false',false,$changeJs);
 		$fields .= captionedInput('Project',$input);
 
 		$changeJs = "ajaxRefresh('TASK_EST_EFFORT',this,'activityHoursActual');";		
-		$input = $this->task->getTaskSelectList($_tId,'taskId','false',false,$changeJs);
+		$input = $this->task->options($_tId,'taskId','false',false,$changeJs);
 		$fields .= captionedInput('Task',$input);
 		
 		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
@@ -192,7 +196,7 @@ $this->echoState(true,'setDetails');
 
 	
 		$activityType = new ActivityType;
-		$input = $activityType->getActivityTypeSelectList($this->typeId,'typeId','false',false);
+		$input = $activityType->options($this->typeId,'typeId','false',false);
 		$fields = captionedInput('Activity Type',$input);
 
 		//$tooltip = 'Task Estimated Hours Per Activity';

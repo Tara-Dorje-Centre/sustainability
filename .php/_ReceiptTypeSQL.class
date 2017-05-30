@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class ReceiptTypeSQL{
-public function columnsReceiptType(){
+class ReceiptTypeSQL implements IentitySQL{
+protected function cols(){
 $c = "pt.id, ";
 $c .= " pt.description, ";
 $c .= " pt.name, ";
@@ -12,29 +12,29 @@ $c .= " pt.display_order, ";
 $c .= " pt.notes ";
 return $c;	
 }
-public function infoReceiptType($typeId){
+public function info($id){
 $q = " SELECT ";	
-$q .= $this->columnsReceiptType();
+$q .= $this->cols();
 $q .= " FROM receipt_types pt ";
 $q .= " WHERE  ";
-$q .= " pt.id = '".$typeId."' ";
+$q .= " pt.id = '".$id."' ";
 return $q;
 }
-public function listReceiptTypes($resultPage, $rowsPerPage){
+public function list($resultPage, $rowsPerPage){
 $q = " SELECT ";	
-$q .= $this->columnsReceiptType();
+$q .= $this->cols();
 $q .= " FROM receipt_types pt ";
 $q .= " ORDER BY display_order, name ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;	
 }
-public function countReceiptTypes(){
+public function count(){
 $q = " SELECT ";	
 $q .= " COUNT(*) total_types ";
 $q .= " FROM receipt_types pt ";
 return $q;	
 }
-public function selectOptions_ReceiptTypes($selectedValue, $disabled){
+public function options($selectedValue, $disabled){
 	$q = " SELECT ";
 	$q .= " pt.id as value, ";
 	$q .= " pt.name as caption ";

@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class ProjectSQL{
+class ProjectSQL implements IentitySQL{
 //projects table fields displayed in listing
-	protected function columns(){
+	protected function cols(){
 		$cols = " p.id, ";
 		$cols .= " p.type_id, ";
 		$cols .= " pt.name project_type, ";
@@ -28,40 +28,51 @@ class ProjectSQL{
 		$cols .= " p.hours_notes ";
 		return $cols;
 	}
+	
+	
+	protected function tables($joinTypes = true){
+
+		$t = " FROM projects p ";
+		$t .= " LEFT OUTER JOIN locations l ";
+		$t .= " ON p.location_id = l.id ";
+		if ($joinTypes == true){
+			$t .= " LEFT OUTER JOIN project_types pt ";
+			$t .= " ON p.type_id = pt.id ";
+		}
+		return $t;
+	
+	}
 //projects table fields displayed in detail
-public function listProjectsByStatus($projectStatus, $resultPage, $rowsPerPage){
+public function list($projectStatus, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
-$q .= $this->columns();
-$q .= " FROM projects p ";
-$q .= " LEFT OUTER JOIN locations l ";
-$q .= " ON p.location_id = l.id ";
-$q .= " LEFT OUTER JOIN project_types pt ";
-$q .= " ON p.type_id = pt.id ";
-if ($projectStatus=='CLOSED'){
+$q .= $this->cols();
+$q .= $this->tables();
+$q .= $this->whereStatus($status);
+/*
+if ($projectStatus =='CLOSED'){
 	$q .= " WHERE p.pct_done = '1.00' "; 
 } else {
 	$q .= " WHERE p.pct_done != '1.00' "; 
 }
+*/
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
 
-public function listProjectsByDoneBy($activityDoneBy, $projectStatus, $resultPage, $rowsPerPage){
+public function listActivityDoneBy($activityDoneBy, $status, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
-$q .= $this->columns();
-$q .= " FROM projects p ";
-$q .= " LEFT OUTER JOIN locations l ";
-$q .= " ON p.location_id = l.id ";
-$q .= " LEFT OUTER JOIN project_types pt ";
-$q .= " ON p.type_id = pt.id ";
-
+$q .= $this->cols();
+$q .= $this->tables();
+$q .= $this->whereStatus($status);
+/*
 if ($projectStatus=='CLOSED'){
 	$q .= " WHERE p.pct_done = '1.00' "; 
 } else {
 	
 	$q .= " WHERE p.pct_done != '1.00' "; 
 }
+*/
 $q .= " AND p.id IN ";
 $q .= " (select t.project_id from ";
 $q .= " activities a JOIN tasks t ON a.task_id = t.id ";
@@ -71,15 +82,11 @@ $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
 
-public function countProjectsByDoneBy($activityDoneBy, $projectStatus){
+public function countByActivityDoneBy($DoneBy, $status){
 $q = " SELECT  count(*) total_projects ";
 $q .= " FROM projects p ";
-if ($projectStatus=='CLOSED'){
-	$q .= " WHERE p.pct_done = '1.00' "; 
-} else {
-	
-	$q .= " WHERE p.pct_done != '1.00' "; 
-}
+$q .= $this->whereStatus($status);
+
 $q .= " AND p.id IN ";
 $q .= " (select t.project_id from ";
 $q .= " activities a JOIN tasks t ON a.task_id = t.id ";
@@ -87,46 +94,44 @@ $q .= " WHERE UPPER(a.done_by) = UPPER('".$activityDoneBy."') ) ";
 return $q;	
 }
 
-public function countProjectsByStatus($projectStatus){
+
+protected function whereStatus($status = 'OPEN'){
+if ($status =='CLOSED'){
+	$w = " WHERE p.pct_done = '1.00' "; 
+} else {
+	$w = " WHERE p.pct_done != '1.00' "; 
+}
+return $w;
+}
+
+public function countByStatus($status){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_projects ";
 $q .= " FROM projects AS p ";
-if ($projectStatus=='CLOSED'){
-	$q .= " WHERE p.pct_done = '1.00' "; 
-} else {
-	$q .= " WHERE p.pct_done != '1.00' "; 
-}
+$q .= $this->whereStatus($status);
 return $q;
 }
 
-public function listChildProjects($selectedProjectId){
+public function listChildProjects($projectId){
 $q = " SELECT  ";
-$q .= $this->columns();
-$q .= " FROM projects p ";
-$q .= " LEFT OUTER JOIN locations l ";
-$q .= " ON p.location_id = l.id ";
-$q .= " LEFT OUTER JOIN project_types pt ";
-$q .= " ON p.type_id = pt.id ";
+$q .= $this->cols();
+$q .= $this->tables();
 
-$q .= " WHERE p.parent_id = ".$selectedProjectId." "; 
+$q .= " WHERE p.parent_id = ".$projectId." "; 
 $q .= " ORDER BY p.sort_key, p.priority, p.id ";
 return $q;
 }
 
 public function info($selectedProjectId){
 $q = " SELECT  ";
-$q .= $this->columns();
-$q .= " FROM projects p ";
-$q .= " LEFT OUTER JOIN locations l ";
-$q .= " ON p.location_id = l.id ";
-$q .= " LEFT OUTER JOIN project_types pt ";
-$q .= " ON p.type_id = pt.id ";
+$q .= $this->cols();
+$q .= $this->tables();
 
 $q .= " WHERE p.id = ".$selectedProjectId." "; 
 return $q;
 }
 
-public function selectOptions_Projects($selectedValue,$disabled){
+public function options($selectedValue,$disabled){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
 	$q .= " p.name as caption ";
@@ -138,13 +143,15 @@ public function selectOptions_Projects($selectedValue,$disabled){
 	$q .= " ORDER BY name ";
 	return $q;	
 }
-public function selectOptions_ProjectsByTypeId($typeId){
+public function optionsByType($typeId = 0){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
 	$q .= " p.name as caption ";
 	$q .= " FROM projects p ";
 	$q .= " WHERE p.pct_done < 1 ";
+	if ($typdId > 0){
 	$q .= " AND (p.type_id > 0 AND p.type_id = ".$typeId.") ";
+	}
 //	if ($disabled == 'true'){
 //		$q .= " AND p.id = ".$selectedValue." ";	
 //	}

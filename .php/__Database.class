@@ -1,18 +1,18 @@
 <?php 
-
-class _Database extends mysqli
-{
-
+class _Database extends mysqli{
+	
 protected const _server = "127.0.0.1";
 protected const _database  = "projects_dev";
 protected const _user = "dev_usr";
 protected const _pwd = "dev_pwd";
 protected const _port = 3306;
 
+private $echo;
 
 public function __construct(){
 
-	//printLine('in db->__construct, creating connection');
+	$this->echo = new __echo();
+	$this->echo->echoPrint(false, 'creating connection', '__construct', '_Database', '');
 
 	parent::__construct($this::_server, $this::_user, $this::_pwd, $this::_database, $this::_port);
 
@@ -25,13 +25,15 @@ public function __construct(){
 
 //overload close method
 public function close(){
-	//printLine('in db->close, releasing connection');
+
+	$this->echo->echoPrint(true, ' --releasing connection', 'close');
 	parent::close();
 }
 
 public function query($sql){
-	//printLine('in db->query');
-	printLine($sql);
+
+	$this->echo->echoValue(true, 'sql', $sql, 'query');
+
 	return parent::query($sql);
 }
 

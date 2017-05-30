@@ -30,9 +30,9 @@ class LocationLinks extends _Links {
 		if ($locationId != 0){
 			$link .= '&locationId='.$locationId;
 		}
-		if ($parentLocationId != 0){
+	if ($parentLocationId != 0){
 			$link .= '&parentLocationId='.$parentLocationId;
-		}
+	}
 
 		return $link;
 	}	

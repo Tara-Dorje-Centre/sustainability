@@ -31,10 +31,10 @@ protected $__MyClassName = 'Material';
 	}
 
 	public function setDetails(){
-
-		$this->task->id = $this->idParent;
+	
+		if ($this->id > 0){
 		
-		$sql = $this->sql->infoMaterial($this->id);
+		$sql = $this->sql->info($this->id);
 
 		$result = dbGetResult($sql);
 		if($result){
@@ -64,14 +64,16 @@ protected $__MyClassName = 'Material';
 		$result->close();
 		}
 
-		$this->setParentTask();				
+		$this->setParentTask();			
+		
+		}	
 	}	
 	
 	public function setParentTask(){
-		$this->task->setDetails($this->pageMode, $this->task->id);
+		$this->task->setDetails();
 	}
 		
-	function pageTitle(){	
+	protected function pageTitle(){	
 		$title = openDiv('section-heading-title','none');
 		$title .= $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;		
@@ -80,7 +82,7 @@ protected $__MyClassName = 'Material';
 	}
 	
 	
-	function pageMenu(){
+	protected function pageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -114,7 +116,7 @@ protected $__MyClassName = 'Material';
 		return $menu;
 	}
 
-	public function formatForDisplay(){
+	protected function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
@@ -154,37 +156,41 @@ protected $__MyClassName = 'Material';
 		return $detail;
 	}	
 	
-	private function setAddRecordDefaults(){
-		$this->locationId = $this->task->locationId;
-		$this->quantity = 1;
-		$this->quantityUnitMeasureId = 0;
-		$this->costUnit = 0;
-		$this->costEstimated = 0;
-		$this->costActual = 0;		
+	protected function setDefaults(){
+	
+	
+		if ($this->pageMode == 'ADD'){		
+			
+			$this->locationId = $this->task->locationId;
+			$this->quantity = 1;
+			$this->quantityUnitMeasureId = 0;
+			$this->costUnit = 0;
+			$this->costEstimated = 0;
+			$this->costActual = 0;		
 
-		if (isset($_SESSION['last-material-date'])){
+			if (isset($_SESSION['last-material-date'])){
 			 $this->dateReported = $_SESSION['last-material-date'];
-		} else {
+			} else {
 			global $sessionTime;
 			$this->dateReported = $sessionTime;				
-		}
+			}
 
-		if (isset($_SESSION['last-material-paid-to'])){
+			if (isset($_SESSION['last-material-paid-to'])){
 			 $this->paidTo = $_SESSION['last-material-paid-to'];
-		}
+			}
 		
-		if (isset($_SESSION['last-material-done-by'])){
+			if (isset($_SESSION['last-material-done-by'])){
 			 $this->doneBy = $_SESSION['last-material-done-by'];
-		} else {
+			} else {
 			$this->doneBy = $_SESSION['login-name'];
+			}
 		}
-
 	}
 	
 	public function editForm(){
-		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
-		}
+		$this->setAddDefaults();
+		
+		$this->echoState(true, 'editForm');
 		
 		if ($this->pageMode == 'ADD'){
 			$legendText = 'Add Material';

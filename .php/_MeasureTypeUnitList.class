@@ -71,7 +71,7 @@ class MeasureTypeUnitList extends __EntityList{
 	
 	public function setFoundCount(){
 		$s = new MeasureTypeUnitSQL;
-		$sql = $s->countMeasureTypeUnits($this->measureType->id);
+		$sql = $s->count($this->measureType);
 		$this->found = dbGetCount($sql, 'total_units');
 	}		
 	
@@ -79,7 +79,7 @@ class MeasureTypeUnitList extends __EntityList{
 	
 	public function getListing(){
 		$s = new MeasureTypeUnitSQL;
-		$sql = $s->listMeasureTypeUnits($this->measureType->id,$this->resultPage,$this->perPage);
+		$sql = $s->list($this->measureType->id,$this->resultPage,$this->perPage);
 
 		
 		$ml = new MeasureTypeUnitLinks;

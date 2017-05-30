@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class MaterialSQL{
-function columnsMaterials(){
+class MaterialSQL implements IentitySQL{
+protected function cols(){
 $c = " m.id, ";
 $c .= " m.task_id, ";
 $c .= " t.task_order, ";
@@ -27,255 +27,210 @@ $c .= " m.link_url, ";
 $c .= " m.notes ";
 return $c;	
 }
-public function infoMaterial($materialId){
-$q = " SELECT ";	
-$q .= $this->columnsMaterials();
+public function tables($joinTypes = false){
 $q .= " FROM materials AS m ";
 $q .= " JOIN tasks AS t ON m.task_id = t.id ";
+$q .= " JOIN projects AS p ON t.project_id = p.id ";
+if ($joinTypes == true){
 $q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
 $q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+}
+return $q;
+
+}
+
+
+protected function andYearMonth($year = 0, $month = 0){
+	$w = '';
+	if ($year > 0){
+		$w .= " AND year(m.date_reported)  = ".$year." ";	
+	}
+	
+	if ($month > 0){
+		$w .= " AND MONTH(m.date_reported)  = ".$month." ";	
+	}
+	return $w;
+}
+
+protected function whereProject($id, $year, $month){
+	$w .= " WHERE  ";
+	$w .= " t.project_id = ".$projectId." ";
+	$w .= $this->andYearMonth($year, $month);
+	return $w;
+}
+
+protected function whereTask($id, $year, $month){
+	$w = " WHERE  ";
+	$w .= " m.task_id = ".$id." ";
+	$w .= $th->andYearMonth($year, $month);
+	return $w;
+}
+
+public function info($id){
+$q = " SELECT ";	
+$q .= $this->cols();
+$q .= $this->tables();
 $q .= " WHERE  ";
-$q .= " m.id = ".$materialId." ";
+$q .= " m.id = ".$id." ";
 return $q;
 }
-public function listMaterialsByTask($selectedTaskId,$resultPage, $rowsPerPage,$year = 0,$month = 0){
+
+public function listTask($id,$page = 1, $rows = 10,$year = 0,$month = 0){
 $q = " SELECT ";	
-$q .= $this->columnsMaterials();
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
-$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
+$q .= $this->cols();
+$q .= $this->tables();
+$q .= $this->whereTask($id, $year, $month);
 $q .= " ORDER BY ";
 $q .= " date(m.date_reported) desc, m.name ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
+$q .= sqlLimitClause($page, $rows);
 return $q;
 }
-public function countMaterialsByTask($selectedTaskId,$year = 0,$month = 0){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_materials";
-$q .= " FROM materials AS m ";
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
+public function colsCount(){
+$c = " COUNT(*) total_materials ";
+return $c;
 }
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
-
-return $q;
-}
-public function summarizeMaterialByTask($selectedTaskId,$year = 0,$month = 0){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_materials, ";
+public function colsSummary(){
+$q = " COUNT(*) total_materials, ";
 $q .= " SUM(m.cost_estimated) sum_cost_estimated, ";
 $q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM materials AS m ";
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
+return $c;
 }
 
+
+public function countTask($id, $year = 0,$month = 0){
+$q = " SELECT  ";
+$q .= $this->colsCount();
+$q .= $this->tables();
+$q .= $this->whereTask($id, $year, $month);
+return $q;
+}
+public function summaryTask($id, $year = 0,$month = 0){
+$q = " SELECT  ";
+$q .= $this->colsSummary();
+$q .= $this->tables();
+$q .= $this->whereTask($id, $year, $month);
 return $q;
 }
 
-public function listMaterialSummaryByProject($projectId, $year=0, $month=0){
+public function summaryTaskMaterialType($id, $year = 0, $month = 0){
 $q = " SELECT  ";
 $q .= " IFNULL(mt.name, 'Unspecified') material_type, ";
-$q .= " COUNT(*) total_materials, ";
-$q .= " SUM(m.cost_estimated) sum_cost_estimated, ";
-$q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
-$q .= " AND t.materials_auth_project = 'yes' ";
-
+$q .= $this->colsSummary();
+$q .= $this->tables();
+$q .= $this->whereTask($id, $year, $month);
 $q .= " GROUP BY material_type ";
-
 return $q;
 }
 
-public function listMaterialSummaryByTask($taskId,$projectId,$year=0, $month=0){
+public function summaryTaskDoneBy($id, $year = 0, $month = 0){
 $q = " SELECT  ";
-$q .= " IFNULL(mt.name, 'Unspecified') material_type, ";
-$q .= " COUNT(*) total_materials, ";
-$q .= " SUM(m.cost_estimated) sum_cost_estimated, ";
-$q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-$q .= " AND t.id = ".$taskId." ";
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
-
-$q .= " GROUP BY material_type ";
-
-return $q;
-}
-
-public function listMaterialSummaryByTaskDoneBy($taskId,$projectId,$year=0, $month=0){
-$q = " SELECT  ";
-$q .= " IF(m.done_by='', 'Unspecified', m.done_by) done_by, ";
-$q .= " COUNT(*) total_materials, ";
-$q .= " SUM(m.cost_estimated) sum_cost_estimated, ";
-$q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-$q .= " AND t.id = ".$taskId." ";
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
-
+$q .= $this->colsDoneBy();
+$q .= $this->colsSummary();
+$q .= $this->tables(falee);
+$q .= $this->whereTask($id, $year, $month);
 $q .= " GROUP BY done_by ";
-
 return $q;
 }
-public function listMaterialSummaryByProjectDoneBy($projectId,$year=0, $month=0){
+public function summaryProjectDoneBy($id, $year = 0, $month = 0){
 $q = " SELECT  ";
-$q .= " IF(m.done_by='', 'Unspecified', m.done_by) done_by, ";
-$q .= " COUNT(*) total_materials, ";
-$q .= " SUM(m.cost_estimated) sum_cost_estimated, ";
-$q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
+$q .= $this->colsDoneBy();
+$q .= $this->colsSummary();
+$q .= $this->tables(false);
+$q .= $this->whereProject($id, $year, $month);
 $q .= " AND t.materials_auth_project = 'yes' ";
 $q .= " GROUP BY done_by ";
-
 return $q;
 }
 
 
-public function listMaterialsByProject($projectId,$resultPage, $rowsPerPage,$year = 0,$month = 0){
+public function listProject($id,$page = 1, $rows = 10,$year = 0,$month = 0){
 $q = " SELECT ";	
-$q .= $this->columnsMaterials();
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
-$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
-
+$q .= $this->columns();
+$q .= $this->tables();
+$q .= $this->whereProject($id, $year, $month);
 $q .= " AND t.materials_auth_project = 'yes' ";
 $q .= " ORDER BY ";
 $q .= " date(m.date_reported) desc, t.task_order, m.name ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
-public function countMaterialsByProject($projectId, $year = 0,$month = 0){
+
+public function countProject($id, $year = 0, $month = 0){
 $q = " SELECT  ";
-$q .= " COUNT(*) total_materials";
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-
-$q .= " AND t.materials_auth_project = 'yes'";
-
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
-
-return $q;
-}
-public function summarizeMaterialByProject($projectId,$year = 0,$month = 0){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_materials, ";
-$q .= " SUM(m.cost_estimated) sum_cost_estimated, ";
-$q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM materials AS m ";
-$q .= " JOIN tasks AS t ON m.task_id = t.id ";
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-$q .= " AND t.materials_auth_project = 'yes'";
-
-if ($year > 0){
-	$q .= " AND year(m.date_reported)  = ".$year." ";	
-}
-if ($month > 0){
-	$q .= " AND MONTH(m.date_reported)  = ".$month." ";	
-}
-
-
+$q .= $this->colsCount();
+$q .= $this->tables();
+$q .= $this->whereProject($id, $year, $month);
 return $q;
 }
 
-public function calendarLinksProjectMaterials($projectId){
-  $q = "SELECT ";
-  $q .= " MONTH(a.date_reported) month, ";
+
+public function summaryProjectByType($id, $year= 0, $month = 0){
+$q = " SELECT  ";
+$q .= " IFNULL(mt.name, 'Unspecified') material_type, ";
+$q .= $this->colsSummary();
+$q .= $this->tables();
+$q .= $this->whereProject($id, $year, $month);
+	$q .= " AND t.materials_auth_project = 'yes' ";
+$q .= " GROUP BY material_type ";
+return $q;
+}
+
+
+public function summaryProject($id, $year = 0, $month = 0){
+$q = " SELECT  ";
+$q .= $this->colsSummary();
+$q .= $this->tables(false);
+$q .= $this->whereProject($id, $year, $month);
+$q .= " AND t.materials_auth_project = 'yes'";
+return $q;
+}
+
+protected function colsDoneBy(){
+$q .= " IF(m.done_by='', 'Unspecified', m.done_by) done_by, ";
+  return $q;
+  }
+protected function colsCalendarLinks(){
+  $q = " MONTH(a.date_reported) month, ";
   $q .= " YEAR(a.date_reported) year ";
-  $q .= " FROM projects p JOIN tasks t ON p.id = t.project_id  ";
-  $q .= " JOIN materials a ON t.id = a.task_id  ";
-  $q .= " WHERE p.id = ".$projectId." ";
+  return $q;
+  }
+
+public function calendarLinksProject($id){
+  $q = "SELECT ";
+$q .= $this->colsCalendarLinks();
+$q .= $this->tables(false);
+  $q .= $this->whereProject($id);
   $q .= " AND t.materials_auth_project = 'yes'";
   $q .= " GROUP BY  ";
   $q .= " YEAR(a.date_reported), ";
   $q .= " MONTH(a.date_reported) ";
   return $q;
 }
-public function calendarLinksTaskMaterials($projectId,$taskId){
-  $q = "SELECT ";
-  $q .= " MONTH(m.date_reported) month, ";
-  $q .= " YEAR(m.date_reported) year ";
-  $q .= " FROM projects p JOIN tasks t ON p.id = t.project_id  ";
-  $q .= " JOIN materials m ON t.id = m.task_id  ";
-  $q .= " WHERE p.id = ".$projectId." ";
-  $q .= " AND t.id = ".$taskId." ";
-  $q .= " GROUP BY  ";
-  $q .= " YEAR(m.date_reported), ";
-  $q .= " MONTH(m.date_reported) ";
-  return $q;
+public function calendarLinksTask($id){
+	$q = "SELECT ";
+	$q .= $this->colsCalendarLinks();
+$q .= $this->tables(false);
+	$q .= $this->whereTask($id);
+	$q .= " GROUP BY  ";
+	$q .= " YEAR(m.date_reported), ";
+	$q .= " MONTH(m.date_reported) ";
+	return $q;
 }
+
+public function list($page = 1, $rows = 1){  
+
+}
+
+public function count(){
+
+}
+
+public function options($selectedId = 0, $disabled = 'false'){
+
+
+}
+
+
 
 
 }

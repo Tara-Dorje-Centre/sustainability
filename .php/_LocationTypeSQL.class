@@ -1,7 +1,7 @@
 <?php
 
 class LocationTypeSQL{
-	public function columnsLocationType(){
+	protected function cols(){
 		$c = "lt.id, ";
 		$c .= " lt.description, ";
 		$c .= " lt.name, ";
@@ -13,40 +13,43 @@ class LocationTypeSQL{
 		return $c;	
 	}
 
-	public function infoLocationType($typeId){
+	public function info($typeId){
 		$q = " SELECT ";	
-		$q .= $this->columnsLocationType();
+		$q .= $this->cols();
 		$q .= " FROM location_types lt ";
 		$q .= " WHERE  ";
 		$q .= " lt.id = ".$typeId." ";
 		return $q;
 	}
 
-	public function listLocationTypes($resultPage, $rowsPerPage){
+	public function list($resultPage, $rowsPerPage){
 		$q = " SELECT ";	
-		$q .= $this->columnsLocationType();
+		$q .= $this->cols();
 		$q .= " FROM location_types lt ";
 		$q .= " ORDER BY display_order, name ";
 		$q .= sqlLimitClause($resultPage, $rowsPerPage);
 		return $q;	
 	}
 
-	public function countLocationTypes(){
+	public function count(){
 		$q = " SELECT ";	
 		$q .= " COUNT(*) total_types ";
 		$q .= " FROM location_types lt ";
 		return $q;	
 	}
 
-	public function selectOptions_LocationTypes($selectedValue, $disabled){
+	public function options($selectedId = 0, $disabled = 'false'){
 		$q = " SELECT ";
 		$q .= " lt.id as value, ";
 		$q .= " lt.name as caption, ";
 		$q .= " lt.display_order as sort_key ";
 		$q .= " FROM location_types lt ";
+		
 		if ($disabled == 'true'){
-			$q .= " WHERE lt.id = ".$selectedValue." ";
+		
+			$q .= " WHERE lt.id = ".$selectedId." ";
 		}
+		
 		$q .= " ORDER BY sort_key, name ";
 		return $q;	
 	}

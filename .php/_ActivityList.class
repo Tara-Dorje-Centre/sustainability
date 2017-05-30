@@ -4,8 +4,8 @@ class ActivityList extends __EntityList{
 	protected $__MyClassName = 'ActivityList';
 
 	public $myActivity = 'NO';
-	private $prevCalendarLink = '';
-	private $nextCalendarLink = '';
+	
+	
 	
 	public $task;
 	private $sql;
@@ -22,7 +22,7 @@ class ActivityList extends __EntityList{
 	
 	public function setDetails(){
 	
-   		$this->echoState('activityList.setDetails');
+   		$this->echoState(true, 'setDetails');
 		$this->task->setDetails();
 		$this->setFoundCount();
 	}
@@ -323,7 +323,7 @@ class ActivityList extends __EntityList{
 		
 			$a = new Activity('ADD', 0, $this->task->id);
 			$a->setDetails();
-			//$a->task->project->setDetails($this->task->project->id,'VIEW');
+			
 			$quickEdit = $a->editForm('ActivityList.MyActivity='.$this->myActivity);
 		
 		$list = openDisplayList('activity','Activities', $pagingLinks, $quickEdit);
@@ -344,11 +344,11 @@ class ActivityList extends __EntityList{
 		$list .=  wrapTr($heading);
 		
 		if ($this->myActivity == 'NO'){
-			$sql = $this->sql->listActivityByTask($this->task->id,$this->resultPage,$this->perPage);
+			$sql = $this->sql->listTask($this->task->id,$this->resultPage,$this->perPage);
 		} elseif ($this->myActivity == 'PROJECT'){
-			$sql = $this->sql->listProjectActivity($this->task->project->id,$this->resultPage,$this->perPage);	
+			$sql = $this->sql->listProject($this->task->project->id,$this->resultPage,$this->perPage);	
 		} else {
-			$sql = $this->sql->listActivityByDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			
+			$sql = $this->sql->listByDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			
 		}
 		
 		$result = dbGetResult($sql);

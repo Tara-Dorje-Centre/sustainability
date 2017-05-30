@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class TaskTypeSQL{
-public function columnsTaskType(){
+class TaskTypeSQL implements IentitySQL{
+protected function cols(){
 $c = " pt.id, ";
 $c .= " pt.description, ";
 $c .= " pt.name, ";
@@ -13,29 +13,29 @@ $c .= " pt.display_order, ";
 $c .= " pt.notes ";
 return $c;	
 }
-public function infoTaskType($typeId){
+public function info($typeId){
 $q = " SELECT ";	
-$q .= $this->columnsTaskType();
+$q .= $this->columns();
 $q .= " FROM task_types pt ";
 $q .= " WHERE  ";
 $q .= " pt.id = '".$typeId."' ";
 return $q;
 }
-public function listTaskTypes($resultPage, $rowsPerPage){
+public function list($resultPage, $rowsPerPage){
 $q = " SELECT ";	
-$q .= $this->columnsTaskType();
+$q .= $this->columns();
 $q .= " FROM task_types pt ";
 $q .= " ORDER BY display_order ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;	
 }
-public function countTaskTypes(){
+public function count(){
 $q = " SELECT ";	
 $q .= " COUNT(*) total_types ";
 $q .= " FROM task_types pt ";
 return $q;	
 }
-public function selectOptions_TaskTypes($selectedValue,$disabled){
+public function options($selectedValue,$disabled){
 	$q = " SELECT ";
 	$q .= " pt.id as value, ";
 	$q .= " pt.name as caption ";

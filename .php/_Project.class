@@ -92,7 +92,7 @@ class Project extends __Entity{
 	$this->echoValue(true, 'tasksCount', $this->tasksCount,'setMaterialSummary');
 	
 		$s = new MaterialSQL;
-		$sql = $s->summarizeMaterialByProject($this->id, 'yes');
+		$sql = $s->summaryProject($this->id, 'yes');
 
 		$result = dbGetResult($sql);
 		if($result){
@@ -127,7 +127,7 @@ class Project extends __Entity{
 
 	private function setReceiptSummary(){
 		$s = new ReceiptSQL;
-		$sql = $s->summarizeReceiptsByProject($this->id, 'yes');
+		$sql = $s->summaryProject($this->id, 'yes');
 
 		$result = dbGetResult($sql);
 
@@ -153,7 +153,7 @@ class Project extends __Entity{
 			$costs .= wrapTr($heading);
 		
 			$s = new ReceiptSQL;
-			$sql = $s->summarizeReceiptsByProjectAndType($this->id, 'yes');
+			$sql = $s->summaryProjectReceiptype($this->id, 'yes');
 			
 			$result = dbGetResult($sql);
 			if($result){
@@ -184,7 +184,7 @@ class Project extends __Entity{
 	private function setTaskSummary(){
 		$this->echoValue(true, 'tasksCount', $this->tasksCount, 'setTaskSummary');
 		$s = new TaskSQL;
-		$sql = $s->summaryByProject($this->id);
+		$sql = $s->summaryProject($this->id);
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -308,8 +308,8 @@ class Project extends __Entity{
 		$select = $l->getProjectTypeSelectList($this->typeId,'typeId','true');
 		$detail .= captionedParagraph('project-type','Project Type',$select);
 
-		$l = new Location;
-		$select = $l->getLocationSelectList($this->locationId,'locationId','true');
+		$l = new Location(OPTIONS);
+		$select = $l->options($this->locationId,'locationId','true');
 		$detail .= captionedParagraph('location','Location',$select);
 		$detail .= captionedParagraph('priority', 'Priority', $this->priority);
 		$detail .= captionedParagraph('started', 'Started', $this->started);
@@ -340,14 +340,14 @@ class Project extends __Entity{
 		return $detail;
 	}
 	
-	public function getProjectSelectList(
+	public function options(
 		$selectedValue = '0', 
 		$idName = 'projectId', 
 		$disabled = 'false',
 		$showLink = true,
 		$onChangeJS = NULL){
 	
-		$sql = $this->sql->selectOptions_Projects($selectedValue, $disabled);	
+		$sql = $this->sql->options($selectedValue, $disabled);	
 		$defaultValue = '0';
 		$defaultCaption = '-select Project';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
@@ -360,7 +360,7 @@ class Project extends __Entity{
 		return $select;
 	}	
 	
-	public function getProjectSelectListByTypeId(
+	public function optionsByType(
 		$projectTypeId = '0',
 		$selectedValue = '0', 
 		$idName = 'projectId', 
@@ -368,7 +368,7 @@ class Project extends __Entity{
 		$showLink = true,
 		$onChangeJS = NULL){
 	
-		$sql = $this->sql->selectOptions_ProjectsByTypeId($projectTypeId);
+		$sql = $this->sql->optionsByType($projectTypeId);
 		$defaultValue = '0';
 		$defaultCaption = '-select Project';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);			
@@ -381,7 +381,7 @@ class Project extends __Entity{
 		return $select;
 	}	
 	
-	private function setAddRecordDefaults(){	
+	private function setDefaults(){	
 		global $sessionTime;
 		$this->started = $sessionTime;	
 		$this->locationId = '0';
@@ -395,7 +395,7 @@ class Project extends __Entity{
 	   		$this->echoState(true, 'editForm');
 	   		
 		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
+			$this->setDefaults();
 			$legend = 'Add Project';
 		} else {
 			$legend = 'Edit Project';	
@@ -410,8 +410,8 @@ class Project extends __Entity{
 		$fields = inputFieldName($entity,$this->name,'name','Project');
 		
 		
-		$pt = new ProjectType;
-		$select = $pt->getProjectTypeSelectList($this->typeId,'projectTypeId','false',false);
+		$pt = new ProjectType('SELECT');
+		$select = $pt->options($this->typeId,'projectTypeId','false',false);
 		$fields .= captionedInput('Project Type', $select);
 		
 
@@ -422,8 +422,9 @@ class Project extends __Entity{
 		//start optional fields
 		$fields = inputFieldDescription($entity,$this->description,'description');
 
-		$l = new Location;
-		$select = $l->getLocationSelectList($this->locationId,'locationId','false',false);
+		$l = new Location('SELECT', $this->locationId,-1);
+		//$l->setDetails();
+		$select = $l->selectList($this->locationId,'locationId','false',false);
 		$fields .= captionedInput('Location', $select);
 
 
@@ -465,6 +466,7 @@ class Project extends __Entity{
 	}
 	
 	public function collectPostValues(){
+		$this->echoState(true, 'collectPostValues');
 		$this->id = $_POST['projectId'];
 		$this->parentId = $_POST['parentId'];
 		$this->typeId = $_POST['projectTypeId'];

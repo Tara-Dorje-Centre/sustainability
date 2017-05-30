@@ -5,7 +5,8 @@ class LocationList extends __EntityList{
 
 	private $sql;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+	//default listng all locations
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = -1){
 		parent::__construct($mode, $id, $idParent);
 		$this->sql = new LocationSQL;	
 	}
@@ -13,7 +14,7 @@ class LocationList extends __EntityList{
 	public function setDetails(){
 		$this->echoState(true, 'setDetails');
 
-		$this->setFoundCount();
+
 	}
 	
 	protected function setPageTitle(){
@@ -49,7 +50,7 @@ class LocationList extends __EntityList{
 			$menu .= $locations->resetMenu();
 			//showing sub locations for a parent
 			if ($this->found != 0){	
-				$menu .= $locations->listingHref($this->parentId,'SubLocations('.$this->found.')');
+				$menu .= $locations->listingHref($this->idParent,'SubLocations('.$this->found.')');
 			} else {
 				$menu .= 'No Sublocations';
 			}
@@ -61,24 +62,43 @@ class LocationList extends __EntityList{
 		$this->_pageMenu = $menu;			
 	}
 	
-	public function setFoundCount(){
-		if ($this->parentId <= 0){
-			$sql = $this->sql->countLocationsByParent($this->parentId);
+	public function setCount(){
+		if ($this->idParent == -1){
+			// idParent is -1, list all locatons
+			$sql = $this->sql->countAll();
+			$this->echoPrint(true, 'count all locations','setCount');
 		} else {
-			$l = new Location;
-			$sortKey = $l->getSortKey($this->parentId);
-			$sql = $this->sql->countLocationsByParentSortKey($sortKey,$this->parentId);
-		}
-		$this->found = dbGetCount($sql, 'total_locations');
+			// id parent is 0 -- list primary locatons
+			// f id s positive -- listdirect children
+			$sql = $this->sql->countChildren($this->idParent);
+
+			$this->echoPrint(true, ' count child locations');
+		} 
+			//locationid = 0, listing on add?
+			
+			
+		//	$l = new Location;
+		//	$sortKey = $l->getSortKey($this->idParent);
+		
+		
+		//if ($this->id != 0){
+			$this->found = dbGetCount($sql, 'total_locations');
+			
+		//} else {
+			//$this->found = 0;
+		//}
+
 	}
 	
 	
 	
 	public function getListing(){		
-
+	
+		$this->setCount();
+		
 		if ($this->found > 0){
 			$ll = new LocationLinks;
-			$pagingLinks = $ll->listingPaged($this->parentId,$this->found,$this->resultPage,$this->perPage);
+			$pagingLinks = $ll->listingPaged($this->idParent,$this->found,$this->resultPage,$this->perPage);
 			$list = openDisplayList('location','Locations',$pagingLinks);
 
 			$heading = wrapTh('Location');
@@ -99,14 +119,19 @@ class LocationList extends __EntityList{
 	}
 	
 	protected function getListingRows(){
+	$this->echoState(true,'getListingRows');
 		$ll = new LocationLinks;
 		$list = '';
-		if ($this->parentId <= 0){
-			$sql = $this->sql->listLocationsByParent($this->parentId,$this->resultPage,$this->perPage);
+		if ($this->idParent == -1){
+			$this->echoPrint(true, 'fetching all','getListingRows');
+		
+			$sql = $this->sql->listAll($this->resultPage,$this->perPage);
 		} else {
-			$l = new Location;
-			$sortKey = $l->getSortKey($this->parentId);
-			$sql = $this->sql->listLocationsByParentSortKey($sortKey,$this->parentId, $this->resultPage,$this->perPage);
+			$this->echoPrint(true, 'fetching children','getListingRows');
+		
+			$sql = $this->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
+			//$l = new Location;
+			//$sortKey = $l->getSortKey($this->idParent);
 		}
 		
 		$result = dbGetResult($sql);

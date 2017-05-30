@@ -2,9 +2,6 @@
 
 class Task extends __Entity{
 protected $__MyClassName = 'Task';
-
-
-
     
 	//public $locationId = 0;
 	public $typeId = 0;
@@ -17,7 +14,7 @@ protected $__MyClassName = 'Task';
     public $started;
 	public $updated;
     public $pctDone = 0;	
-    public $hoursEstimated = '0';
+    public $hoursEstimated = 0;
     public $hoursActual = 0;
     public $hoursNotes;	
 	public $materialsAuthProject = 'no';
@@ -108,19 +105,19 @@ protected $__MyClassName = 'Task';
 	}
 	
 
-	//protected function setParentProject(){
-		//$this->project->setDetails();		
-	//}
+	
+		
+	
 	
 	protected function setMeasureCount(){
 		$s = new MeasureSQL;
-		$sql = $s->countMeasuresByTask($this->id);
+		$sql = $s->countTask($this->id);
 		$this->measureCount = dbGetCount($sql, 'total_measures', 0);
 	}
 	
 	protected function summarizeActivity(){
 		$s = new ActivitySQL;
-		$sql = $s->summarizeActivityByTask($this->id);
+		$sql = $s->summaryTask($this->id);
 		
 		$result = dbGetResult($sql);
 		if ($result){
@@ -141,7 +138,7 @@ protected $__MyClassName = 'Task';
 
 	protected function summarizeMaterial(){		
 		$s = new MaterialSQL;
-		$sql = $s->summarizeMaterialByTask($this->id);
+		$sql = $s->summaryTask($this->id);
 		
 		$result = dbGetResult($sql);
 		if ($result){
@@ -157,7 +154,7 @@ protected $__MyClassName = 'Task';
 
 	protected function summarizeReceipt(){		
 		$s = new ReceiptSQL;
-		$sql = $s->summarizeReceiptsByTask($this->id);
+		$sql = $s->summaryTask($this->id);
 		
 		$result = dbGetResult($sql);
 		if ($result){
@@ -265,12 +262,12 @@ protected $__MyClassName = 'Task';
 		$detail .= captionedParagraph('order', 'Order', $this->order);
 		$detail .= captionedParagraph('name', 'Name', $this->name);
 		
-		$l = new Location;
-		$select = $l->getLocationSelectList($this->locationId,'locationId','true');
+		$l = new Location(OPTIONS);
+		$select = $l->options($this->locationId,'locationId','true');
 		$detail .= captionedParagraph('location','Location',$select);
 
-		$tt = new TaskType;
-		$select = $tt->getTaskTypeSelectList($this->typeId,'typeId','true');
+		$tt = new TaskType(OPTIONS);
+		$select = $tt->options($this->typeId,'typeId','true');
 		$detail .= captionedParagraph('type','Task Type',$select);
 
 		$detail .= captionedParagraph('description', 'Description', $this->description);
@@ -353,22 +350,23 @@ protected $__MyClassName = 'Task';
 
 		if ($this->activityCount > 0){
 			$activities = new ActivityList($this->pageMode, 0, $this->id);
-			$activities->setPaging($this->resultsPageActivity,10);
+			$activities->setPaging($this->resultsPageActivity);
 			$activities->setDetails();
 			$detail .= $activities->getListing($baseLink);
 		}
 
 		if ($this->measureCount > 0){
-			$activities = new MeasureList($this->pageMode, 0, $this->id);
-			$measures = new MeasureList;
-			$measures->setPaging($this->resultsPageMeasure, 10);
+			$measures = new MeasureList($this->pageMode, 0, $this->id);
+
+			$measures->setPaging($this->resultsPageMeasure);
 			$measures->setDetails();
 			$detail .= $measures->getListing($baseLink);
 		}
 		
 		if ($this->materialCount > 0){
 			$materials = new MaterialList($this->pageMode, 0, $this->id);
-			$materials->setPaging($this->resultsPageMaterial, 10);
+			$materials->setPaging($this->resultsPageMaterial);
+			
 			$materials->setDisplay('TASK');
 			$materials->setApproved('no');
 			$materials->setCalendar($this->year,$this->month);
@@ -378,7 +376,8 @@ protected $__MyClassName = 'Task';
 		
 		if ($this->receiptCount > 0){
 			$receipts = new ReceiptList($this->pageMode, 0, $this->id);
-			$receipts->setPaging($this->resultsPageReceipt, 10);
+			$receipts->setPaging($this->resultsPageReceipt);
+			
 			$receipts->setDisplay('TASK');
 			$receipts->setApproved('no');
 			$receipts->setCalendar($this->year,$this->month);
@@ -390,8 +389,8 @@ protected $__MyClassName = 'Task';
 		return $detail;
 	}
 	
-	public function getTaskSelectList(
-		$selectedValue = '0', 
+	public function options(
+		$selectedValue = 0,
 		$idName = 'taskId', 
 		$disabled = 'false',
 		$showLink = true,
@@ -400,10 +399,10 @@ protected $__MyClassName = 'Task';
 		$ajaxEventType = NULL){
 	
 		
-		$sql = $this->sql->selectOptions_Tasks($this->project->id, $selectedValue, $disabled);
+		$sql = $this->sql->optionsProject($this->project->id, $selectedValue, $disabled);
 		
-		$defaultValue = '0';
-		$defaultCaption = '-select Task';
+		$defaultValue = 0;
+		$defaultCaption = '-No Task';
 		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		
 		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS, $ajaxEvent, $ajaxEventType);
@@ -416,7 +415,7 @@ protected $__MyClassName = 'Task';
 	}	
 	
 	
-	private function setAddRecordDefaults(){
+	private function setDefaults(){
 		global $sessionTime;
 		$this->started = $sessionTime;	
 		$this->order = $this->project->tasksCount + 1;
@@ -433,7 +432,7 @@ protected $__MyClassName = 'Task';
 	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
+			$this->setDefaults();
 			$legend = 'Add Task';
 		} else {
 			$legend = 'Edit Task';
@@ -459,7 +458,7 @@ protected $__MyClassName = 'Task';
 		
 		
 		$l = new Location;
-		$select = $l->getLocationSelectList($this->locationId,'locationId','false',false);
+		$select = $l->options($this->locationId,'locationId','false',false);
 		$fields .= captionedInput('Location', $select);
 
 		$fields .= inputFieldDescription($entity,$this->description,'description');
@@ -549,7 +548,7 @@ protected $__MyClassName = 'Task';
 		
 		$this->locationId = $_POST['locationId'];
 		$this->typeId = $_POST['taskTypeId'];
-		$this->setParentProject();
+		//$this->setParentProject();
 		
 		$this->order = $_POST['order']; 
 		$this->started = getTimestampPostValues('started');

@@ -14,24 +14,23 @@ protected $__MyClassName = 'ProjectType';
 
 		if ($this->id != 0){
 		
-		$sql = $this->sql->infoProjectType($this->id);
+			$sql = $this->sql->info($this->id);
 		
-		$result = dbGetResult($sql);
-		if ($result){
-		while($row = $result->fetch_assoc())
-		{	
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
-			$this->notes = ($row["notes"]);
-			$this->highlightStyle = ($row["highlight_style"]);
-			$this->displayOrder = $row["display_order"];
-			$this->created = ($row["created"]);			
-			$this->updated = ($row["updated"]);			
-		}
-		$result->close();
-		}
-		
-		
+			$result = dbGetResult($sql);
+			if ($result){
+				while($row = $result->fetch_assoc())
+				{	
+					$this->name = ($row["name"]);
+					$this->description = ($row["description"]);
+					$this->notes = ($row["notes"]);
+					$this->highlightStyle = ($row["highlight_style"]);
+					$this->displayOrder = $row["display_order"];
+					$this->created = ($row["created"]);			
+					$this->updated = ($row["updated"]);			
+				}
+				$result->close();
+			}
+
 		}
 				
 	}	
@@ -66,7 +65,7 @@ protected $__MyClassName = 'ProjectType';
 	}
 	
 	
-	public function formatForDisplay(){
+	protected function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
@@ -89,14 +88,16 @@ protected $__MyClassName = 'ProjectType';
 		return $detail;
 	}
 
-	public function getProjectTypeSelectList(
-		$selectedValue = '0', 
+	public function options(
+		$selectedValue = 0,
 		$idName = 'projectTypeId', 
 		$disabled = 'false',
 		$showLink = true,
 		$onChangeJS = NULL){
 			
-		$sql = $this->sql->selectOptions_ProjectTypes($selectedValue, $disabled);
+		$this->echoState(true,'selectList');
+			
+		$sql = $this->sql->options($selectedValue, $disabled);
 		
 		$defaultValue = '0';
 		$defaultCaption = '-select Project Type';
@@ -111,9 +112,18 @@ protected $__MyClassName = 'ProjectType';
 		return $select;
 	}	
 	
+	protected function setAddDefaults(){
+	
+	}
 	
 	public function editForm(){
+	
+		$this->setAddDefaults();
+		
+		$this->echoState(true,'editForm');
+		
 		if ($this->pageMode == 'ADD'){
+
 			$legend = 'Add Project Type';
 		} else {
 			$legend = 'Edit Project Type';
@@ -167,9 +177,8 @@ protected $__MyClassName = 'ProjectType';
 		$this->pageMode = $_POST['mode'];	
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
 			$sql = " UPDATE project_types AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -182,7 +191,9 @@ protected $__MyClassName = 'ProjectType';
 				
 			$result = dbRunSQL($sql);
 			
-		} else {
+	}
+			
+	protected function saveInsert(){
 			$sql = " INSERT INTO project_types ";
 			$sql .= " (name, ";
 			$sql .= " created, ";
@@ -203,8 +214,6 @@ protected $__MyClassName = 'ProjectType';
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
-	
 	}
 	
 } 

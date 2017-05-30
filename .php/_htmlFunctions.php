@@ -1,5 +1,34 @@
 <?php
 
+function sessionVariableGET($urlVariable,$defaultValue){
+	if (isset($_GET[$urlVariable])){
+		$returnValue = $_GET[$urlVariable];
+	} else {
+		$returnValue = $defaultValue;
+	}
+	return $returnValue;
+}
+
+function sessionVariablePOST($urlVariable,$defaultValue){
+	if (isset($_POST[$urlVariable])){
+		$returnValue = $_POST[$urlVariable];
+	} else {
+		$returnValue = $defaultValue;
+	}
+	return $returnValue;
+}
+
+function sessionVariableSESSION($urlVariable,$defaultValue){
+	if (isset($_SESSION[$urlVariable])){
+		$returnValue = $_SESSION[$urlVariable];
+	} else {
+		$returnValue = $defaultValue;
+	}
+	return $returnValue;
+}
+
+
+
 class _element
 {
 protected const _NONE = 'none';
@@ -249,32 +278,11 @@ function closeScript($useComment = true){
 	return $e->close();
 }
 
-function sessionVariableGET($urlVariable,$defaultValue){
-	if (isset($_GET[$urlVariable])){
-		$returnValue = $_GET[$urlVariable];
-	} else {
-		$returnValue = $defaultValue;
-	}
-	return $returnValue;
-}
 
-function sessionVariablePOST($urlVariable,$defaultValue){
-	if (isset($_POST[$urlVariable])){
-		$returnValue = $_POST[$urlVariable];
-	} else {
-		$returnValue = $defaultValue;
-	}
-	return $returnValue;
-}
+/*
 
-function sessionVariableSESSION($urlVariable,$defaultValue){
-	if (isset($_SESSION[$urlVariable])){
-		$returnValue = $_SESSION[$urlVariable];
-	} else {
-		$returnValue = $defaultValue;
-	}
-	return $returnValue;
-}
+
+*/
 
 function displayLines($value){
 	$value = nl2br($value);

@@ -1,8 +1,9 @@
 <?php
 include_once('__echo.class');
 //
-function showProgress($msg){
-	//printLine('manfest.inc->'.$msg);
+function showProgress($msg, $show = false){
+	$e = new __echo();
+	$e->echoPrint($show,$msg,'includes','manifest.inc');
 }
 //
 include_once("_htmlFunctions.php");

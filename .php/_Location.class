@@ -1,7 +1,7 @@
 ﻿<?php 
 
 class Location extends __Entity{
-	protected $__MyClassName = 'Location';
+	protected $__MyClassName = '#Location';
 
 	public $typeId = 0;
     public $name;	
@@ -10,7 +10,7 @@ class Location extends __Entity{
     public $description;
     public $created;
     public $updated;
-	public $childLocationsFound = 0;
+	public $childLocations = 0;
 	
   
 	private $sql;
@@ -20,16 +20,12 @@ class Location extends __Entity{
 		$this->sql = new LocationSQL;
 	}
 	
-    public function setDetails($mode = 'VIEW', $id = 0, $idParent = 0){
-		
-		if ($this->pageMode == 'ADD'){
-			//if add came from all locations default, reset to 0 for no parent
-			if ($this->idParent == -1){
-				$this->idParent = 0;
-			}
-		} else {
+    public function setDetails(){
+		$this->echoState(true, 'setDetails');
+		if ($this->id != 0){
+		//if ($this->pageMode <> ADD){
 			//EDIT OR VIEW
-			$sql = $this->sql->infoLocation($this->id);
+			$sql = $this->sql->info($this->id);
 			
 			$result = dbGetResult($sql);
 			if($result){
@@ -46,14 +42,22 @@ class Location extends __Entity{
 			$result->close();
 			}
 			
-			$this->setChildLocationsCount();
 		}
+			
+		$this->setChildCount();
+		
 	}	
 	
-	private function setChildLocationsCount(){
-		$list = new LocationList('VIEW', 0, $this->id);
-		$list->setDetails($this->id);
-		$this->childLocationsFound = $list->found;	
+	private function setChildCount(){
+		$this->echoState(true,'setChildCount');
+		if ($this->id > 0){
+		$sql = $this->sql->countChildren($this->id);
+		$this->childLocations = dbGetCount($sql, 'total_locations');
+		} else {
+		$this->childLocations = 0;
+		}
+
+		
 	}
 	
 	protected function setPageTitle(){
@@ -94,7 +98,7 @@ class Location extends __Entity{
 		if ($this->pageMode != 'ADD'){
 			$menu .= $locationL->resetMenu();
 			
-			$i = $this->childLocationsFound;
+			$i = $this->childLocations;
 			if ($i != 0){
 				$menu .= $locationL->listingHref($this->id,'Sublocations('.$i.')');
 			} else {
@@ -118,12 +122,12 @@ class Location extends __Entity{
 		
 		$detail = openDisplayDetails('location','Location Details');		
 
-//	 	$detail .= 'parent='.$this->parentId;
+
 
 		$detail .= captionedParagraph('name', 'Name', $this->name);
 
-		$type = new LocationType;
-		$select = $type->getLocationTypeSelectList($this->typeId,'typeId','true');
+		$lt = new LocationType('SELECT');
+		$select = $lt->selectList($this->typeId,'typeId','true');
 		$detail .= captionedParagraph('type', 'Location Type', $select);
 		$detail .= captionedParagraph('desc', 'Description', $this->description);		
 		$detail .= captionedParagraph('created', 'Created', $this->created);
@@ -132,17 +136,30 @@ class Location extends __Entity{
 		$detail .= closeDisplayDetails();
 		return $detail;
 	}
-	
-	public function getLocationSelectList($selectedValue = 0, $idName = 'locationId', $disabled = 'false',
+	/*
+	CONST $html_false = 'false';
+	CONST $html_true = 'true';
+	*/
+	public function selectList(
+		$selected = 0, 
+		$idName = 'locationId', 
+		$disabled = 'false',
 		$showLink = true,
 		$onChangeJS = NULL){
 
+		$this->echoState(true, 'selectList');
 		
-		$sql = $this->sql->selectOptions_Locations($selectedValue,$disabled);
+		if (is_null($selected) || ($selected == '')){
+			$sv = 0;
+		} else {
+			$sv = $selected;
+		}
 		
-		$defaultValue = 0;
-		$defaultCaption = '-select Location';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+		$sql = $this->sql->options($sv,$disabled);
+		
+		$default = 0;
+		$defaultCaption = '-No Location';
+		$allOptions = getSelectOptionsSQL($sql,$sv,$disabled,$default,$defaultCaption);		
 		
 		$select = getSelectList($idName,$allOptions,'none',$disabled );	
 
@@ -154,14 +171,33 @@ class Location extends __Entity{
 		return $select;
 
 	}
+	
+	protected function setAddDefaults(){
+	
+		if ($this->pageMode == 'ADD'){
+			//if add came from all locations default, reset to 0 for no parent
+			if ($this->idParent == -1){
+				$this->idParent = 0;
+			}
+			
+		}
+		
+					$this->echoState(true,'setAddDefaults');
+		
+		
+	}  
 
 	public function editForm(){
+	
+	$this->echoState(true,'editForm');
+	
+		$this->setAddDefaults();
 		if ($this->pageMode == 'ADD'){
 			$legend = 'Add Location';
 		} else {
 			$legend = 'Edit Location';
 		}
-		$entity = 'location';
+		//$entity = 'location';
 		$c = new LocationLinks;
 		$contextMenu = $c->formatToggleLink('formOptional','+Location Options');		
 		$form = openEditForm($entity,$legend,'pr_Location_Save.php', $contentMenu);
@@ -169,15 +205,15 @@ class Location extends __Entity{
 		//formRequired fields	
 		$formRequired = inputFieldName($entity,$this->name,'locationName','Location');
 
-		$type = new LocationType;
-		$select = $type->getLocationTypeSelectList($this->typeId,'typeId','false',false);
+		$type = new LocationType('SELECT');
+		$select = $type->selectList($this->typeId,'typeId','false',false);
 		$formOptional = captionedInput('Location Type',$select);
 					
 		$formOptional .= inputFieldText($entity,$this->description,'locationDescription','Description');
 
 						
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('parentLocationId', $this->idParent);
+		$hidden .= getHiddenInput('parent-location-id', $this->idParent);
 		$hidden .= getHiddenInput('locationId', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $input.$hidden;
@@ -187,26 +223,20 @@ class Location extends __Entity{
 	}
 	
 	public function collectPostValues(){
+	
+			$this->echoState(true, 'collectPostValues');
 		$this->id = $_POST['locationId'];
 		$this->typeId = $_POST['typeId'];
-		$this->idParent = $_POST['parentLocationId'];
+		$this->idParent = sessionVariablePOST('parent-location-id', $this->idParent);
 		$this->name = dbEscapeString($_POST['locationName']); 
 		$this->description = dbEscapeString($_POST['locationDescription']); 		
 		$this->pageMode = $_POST['mode'];	
+		$this->echoState(true, 'collectPostValues.leaving');
 	}
  	
-	public function getSortKey($locationId){
-		$sql = " SELECT l.sort_key FROM locations l WHERE l.id = ".$locationId;
-
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{	
-			$sortKey = ($row["sort_key"]);
-		}
-		$result->close();
-		}
-		
+	public function getSortKey($id){
+		$sql = $this->sql->sortKey($id);
+		$sortKey = dbGetScalar($sql, 'sort_key');
 		return $sortKey;		
 	}
 
@@ -218,9 +248,7 @@ class Location extends __Entity{
 			$sortKey = $this->getSortKey($this->idParent).'.'.$this->name;
 		}
 		
-		$sql = " UPDATE locations as l	";
-		$sql .= " SET l.sort_key = '".$sortKey."' ";	
-		$sql .= " WHERE l.id = ".$this->id." ";
+		$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
 		
 		$result = dbRunSQL($sql);
 	

@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class TaskSQL{
+class TaskSQL implements IentitySQL{
 	
-	protected function columns(){
+	protected function cols(){
 $c = " t.id,  ";
 $c .= " t.project_id,  ";
 $c .= " p.name project_name, ";
@@ -30,54 +30,73 @@ $c .= " t.receipts_auth_by ";
 		return $c;
 	}
 	
-	public function listByProject($selectedProjectId, $resultPage, $rowsPerPage){
-$q = " SELECT  ";
-$q .= $this->columns();
-	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
+
+public function tables($joinTypes = true){
+	$q = " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
 	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
+	return $q;
+}
+
+public function colsSummary(){
+$q = " COUNT(*) as total_tasks, ";
+$q .= " sum(t.hours_estimated) as sum_hours_estimated, ";
+$q .= " sum(t.hours_actual) as sum_hours_actual, ";
+$q .= " sum(t.pct_done)/count(*) as overall_pct_done ";
+return $q;
+}
+
+
+public function info($id){
+$q = " SELECT  ";
+$q .= $this->cols();
+
+$q .= $this->tables);
+
 $q .= " WHERE  ";
-$q .= " p.id = ".$selectedProjectId." ";
+$q .= " t.id = ".$id." ";
+return $q;
+}
+
+
+
+public function countProject($id){
+$q = " SELECT  ";
+$q .= " COUNT(*) total_tasks ";
+$q .= " FROM tasks AS t ";
+$q .= " WHERE t.project_id = ".$id." ";
+return $q;	
+}
+
+
+	public function listProject($id, $page = 1, $rows = 10){
+$q = " SELECT  ";
+$q .= $this->cols();
+$q .= $this->tables();
+$q .= " WHERE  ";
+$q .= " p.id = ".$projectId." ";
 $q .= " ORDER BY ";
 $q .= " t.task_order, t.started, t.id ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
 
-public function info($selectedTaskId){
+
+
+public function summaryProject($id){
 $q = " SELECT  ";
-$q .= $this->columns();
-	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
-	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
-	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
-$q .= " WHERE  ";
-$q .= " t.id = ".$selectedTaskId." ";
+$this-+colsSummary();
+$this-tables(false);
+$q .= " WHERE t.project_id = ".$id." ";
 return $q;
 }
 
-public function summaryByProject($selectedProjectId){
-$q = " SELECT  ";
-$q .= " COUNT(*) as total_tasks, ";
-$q .= " sum(t.hours_estimated) as sum_hours_estimated, ";
-$q .= " sum(t.hours_actual) as sum_hours_actual, ";
-$q .= " sum(t.pct_done)/count(*) as overall_pct_done ";
-$q .= " FROM tasks AS t ";
-$q .= " WHERE t.project_id = ".$selectedProjectId." ";
-return $q;
-}
 
-public function countByProject($selectedProjectId){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_tasks ";
-$q .= " FROM tasks AS t ";
-$q .= " WHERE t.project_id = ".$selectedProjectId." ";
-return $q;	
-}
-function countByProjectByStatus($selectedProjectId, $taskStatus = 'OPEN'){
+function countProjectTaskStatus($id, $taskStatus = 'OPEN'){
 $q = " SELECT  ";
 $q .= " COUNT(*) AS total_tasks ";
 $q .= " FROM tasks AS t ";
-$q .= " WHERE t.project_id = ".$selectedProjectId." ";
+$q .= " WHERE t.project_id = ".$id." ";
 if ($taskStatus == 'OPEN'){
 	$q .= " AND t.pct_done < 1 "; 
 }
@@ -89,7 +108,7 @@ return $q;
 
 public function listPeriodic($complete = 'NO',$resultPage,$rowsPerPage){
 	$q = " SELECT ";
-	$q .= $this->columns();
+	$q .= $this->cols();
 	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " JOIN project_types pt on p.type_id = pt.id ";
 	$q .= " JOIN task_types tt on t.type_id = tt.id ";
@@ -153,7 +172,7 @@ private function periodicTasksSubquery($complete = 'NO'){
 	return $q;
 }
 
-public function selectOptions_Tasks($projectId,$selectedTaskId,$disabled){
+public function optionsProject($projectId,$selectedTaskId,$disabled){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
 	$q .= " concat_ws(' ',p.task_order,p.name) as caption ";

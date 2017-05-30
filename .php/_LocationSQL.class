@@ -1,7 +1,7 @@
 <?php
 
-class LocationSQL{
-function columnsLocations(){
+class LocationSQL implements IentitySQL{
+function columns(){
 	$c = " l.id, ";
 	$c .= " l.parent_id, ";
 	$c .= " l.type_id, ";
@@ -13,68 +13,128 @@ function columnsLocations(){
 	return $c;
 }
 
-public function listLocationsByParent($parentLocationId, $resultPage, $rowsPerPage){
+
+
+public function listAll($page, $perPage){
 	$q = " SELECT  ";
-	$q .= $this->columnsLocations();
+	$q .= $this->columns();
 	$q .= " FROM locations AS l ";
-	if ($parentLocationId != -1){
-		$q .= " WHERE l.parent_id = ".$parentLocationId." "; 
-	} 
+	/*if ($idParent != -1){
+		$q .= " WHERE l.parent_id = ".$idParent." "; 
+	} */
 	$q .= " ORDER BY l.sort_key ";
 
-	$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	$q .= sqlLimitClause($page, $perPage);
 	return $q;
 }
 
-public function countLocationsByParent($parentLocationId = 0){
+
+public function listChildren($idParent, $page, $perPage){
+	$q = " SELECT  ";
+	$q .= $this->columns();
+	$q .= " FROM locations AS l ";
+	//if ($idParent != -1){
+	$q .= " WHERE l.parent_id = ".$idParent." "; 
+	//} 
+	$q .= " ORDER BY l.sort_key ";
+
+	$q .= sqlLimitClause($page, $perPage);
+	return $q;
+}
+
+public function count(){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) total_locations ";
 	$q .= " FROM locations AS l ";
-	if ($parentLocationId != -1){
-		$q .= " WHERE l.parent_id = ".$parentLocationId." "; 
-	} 
+	//if ($id > 0){
+	//	$q .= " WHERE l.id = ".$id." "; 
+	//}
 	return $q;
 }
 
-public function listLocationsByParentSortKey($parentSortKey, $parentLocationId, $resultPage, $rowsPerPage){
-	$q = " SELECT  ";
-	$q .= $this->columnsLocations();
-	$q .= " FROM locations AS l ";
-	$q .= " WHERE l.sort_key LIKE '".$parentSortKey."%' "; 
-	$q .= " AND l.id != ".$parentLocationId." ";
-	$q .= " ORDER BY l.sort_key ";
-	$q .= sqlLimitClause($resultPage, $rowsPerPage);
-	return $q;
-}
-
-public function countLocationsByParentSortKey($parentSortKey, $parentLocationId){
+public function countChildren($id){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) total_locations ";
 	$q .= " FROM locations AS l ";
-	$q .= " WHERE l.sort_key LIKE '".$parentSortKey."%' ";  
-	$q .= " AND l.id != ".$parentLocationId." ";	
+	//if ($id >= 0){
+	$q .= " WHERE l.parent_id = ".$id." "; 
+	//} 
 	return $q;
 }
 
-public function infoLocation($selectedLocationId){
+
+
+public function sortKey($id){
+		$sql = " SELECT l.sort_key FROM locations l WHERE l.id = ".$id.' ';
+		return $sql;
+}
+
+public function sortKeyUpdate($id, $sortKey){
+		
+		$sql = " UPDATE locations as l	";
+		$sql .= " SET l.sort_key = '".dbEscapeString($sortKey)."' ";	
+		$sql .= " WHERE l.id = ".$id." ";
+	return $sql;
+}
+
+
+public function listByParentSortKey($sortKeyParent, $idParent, $page = 1, $perPage = 10){
 	$q = " SELECT  ";
-	$q .= $this->columnsLocations();
+	$q .= $this->columns();
 	$q .= " FROM locations AS l ";
-	$q .= " WHERE l.id = ".$selectedLocationId." "; 
+	$q .= " WHERE l.sort_key LIKE '".$sortKeyParent."%' "; 
+	$q .= " AND l.id != ".$idParent." ";
+	$q .= " ORDER BY l.sort_key ";
+	$q .= sqlLimitClause($page, $perPage);
 	return $q;
 }
 
-public function selectOptions_Locations($selectedValue,$disabled){
+public function countByParentSortKey($sortKeyParent, $idParent){
+	$q = " SELECT  ";
+	$q .= " COUNT(*) total_locations ";
+	$q .= " FROM locations AS l ";
+	$q .= " WHERE l.sort_key LIKE '".$sortKeyParent."%' ";  
+	$q .= " AND l.id != ".$idParent." ";	
+	return $q;
+}
+
+public function info($id){
+	$q = " SELECT  ";
+	$q .= $this->columns();
+	$q .= " FROM locations AS l ";
+	$q .= " WHERE l.id = ".$id." "; 
+	return $q;
+}
+
+public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " l.id as value, ";
 	$q .= " l.sort_key as caption ";
 	$q .= " FROM locations l ";
 	if ($disabled == 'true'){
-		$q .= " WHERE l.id = ".$selectedValue." ";
+		$q .= " WHERE l.id = ".$selectedId." ";
 	}
 	$q .= " ORDER BY caption ";
 	return $q;	
 }
+
+
+public function list($page = 1, $rows = 1){  
+
+}
+/*
+public function count(){
+
+}
+*/
+
+
+/*
+public function options($selectedId = 0, $disabled = 'false'){
+
+
+}
+*/
 
 }
 ?>

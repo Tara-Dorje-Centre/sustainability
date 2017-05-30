@@ -90,8 +90,8 @@ class ActivityType extends __EntityType{
 	}
 
 
-	public function getActivityTypeSelectList(
-		$selectedValue = '0', 
+	public function options(
+		$selectedValue = 0, 
 		$idName = 'activityTypeId', 
 		$disabled = 'false',
 		$showLink = true,

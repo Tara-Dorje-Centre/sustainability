@@ -14,7 +14,7 @@ class MeasureType extends __EntityType{
 	public function setDetails(){
 
 
-		$sql = $this->sql->infoMeasureType($this->id);
+		$sql = $this->sql->info($this->id);
 
 		$result = dbGetResult($sql);
 		if($result){
@@ -31,19 +31,19 @@ class MeasureType extends __EntityType{
 				
 	}	
 		
-	protected function pageTitle(){
-		$heading = openDiv('section-heading-title');
+	protected function setPageTitle(){
+
 		if ($this->pageMode != 'ADD'){
 			$heading .= $this->name;
 		} else {
 			$heading .= 'Add New Measure Type';
 		}
-		$heading .= closeDiv();		
-		return $heading;
+
+		$ths->_pageTitle = $heading;
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -66,7 +66,7 @@ class MeasureType extends __EntityType{
 		$menu .= $measureTypesL->listingHref();	
 	
 		$menu .= $measureTypesL->closeMenu();
-		return $menu;
+		$this->_pageMenu = $menu;
 	}
 	
 	public function formatForDisplay(){

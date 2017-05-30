@@ -36,7 +36,7 @@ class MeasureTypeList extends __EntityList{
 	}
 	
 	public function setFoundCount(){
-		$sql = $this->sql->countMeasureTypes();
+		$sql = $this->sql->count();
 		$this->found = dbGetCount($sql, 'total_types');
 	}	
 	
@@ -45,7 +45,6 @@ class MeasureTypeList extends __EntityList{
 		$pagingLinks = $mtl->listingPaged($this->found,$this->resultPage,$this->perPage);
 		
 		$mt = new MeasureType('ADD');
-		
 		$quickEdit = $mt->editForm();
 		$list = openDisplayList('measure-type','Measure Types',$pagingLinks,$quickEdit);
 		
@@ -54,7 +53,7 @@ class MeasureTypeList extends __EntityList{
 		$heading .= wrapTh('Notes');
 		$list .= wrapTr($heading);
 
-		$sql = $this->sql->listMeasureTypes($this->resultPage,$this->perPage);
+		$sql = $this->sql->lst($this->resultPage,$this->perPage);
 
 		$result = dbGetResult($sql);
 		if($result){

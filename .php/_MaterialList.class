@@ -1,13 +1,11 @@
 ﻿<?php 
 
-class MaterialList extends __Entity{
+class MaterialList extends __EntityList{
 	protected $__MyClassName = 'MaterialList';
 
 	public $task;
 	
-	
-	private $prevCalendarLink = '';
-	private $nextCalendarLink = '';	
+
 	private $displayProject = 'TASK';
 	private $approved = 'no';
 	public $costActual = 0;
@@ -108,19 +106,19 @@ class MaterialList extends __Entity{
 	
 	private function setSummary(){
 		if ($this->displayProject == 'PROJECT'){
-			$sql = $this->sql->summarizeMaterialByProject($this->task->project->id);
+			$sql = $this->sql->summaryByProject($this->task->project->id);
 
 		} elseif ($this->displayProject == 'PROJECT-SUMMARY'){
-			$sql = $this->sql->summarizeMaterialByProject($this->task->project->id, $this->year,$this->month);
+			$sql = $this->sql->summaryByProjectMaterialType($this->task->project->id, $this->year,$this->month);
 
 		} elseif ($this->displayProject == 'TASK-SUMMARY'){
-			$sql = $this->sql->summarizeMaterialByTask($this->task->id, $this->year,$this->month);
+			$sql = $this->sql->summaryByTask($this->task->id, $this->year,$this->month);
 		} else {
-			$sql = $this->sql->summarizeMaterialByTask($this->task->id,$this->year,$this->month);
+			$sql = $this->sql->summaryByTask($this->task->id,$this->year,$this->month);
 		}
 		
 		$result = dbGetResult($sql);
-		$result = $conn->query($sql) or exit($locale.$conn->error);
+
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 	  	{
@@ -144,9 +142,11 @@ class MaterialList extends __Entity{
 		$foundNext = false;
 				
 		if ($this->displayProject == 'PROJECT' or $this->displayProject == 'PROJECT-SUMMARY') {
-			$sql = $this->sql->calendarLinksProjectMaterials($this->task->project->id);
-		} else {  //if ($this->displayProject == 'TASK' or $this->displayProject == 'TASK-SUMMARY') {
-			$sql = $this->sql->calendarLinksTaskMaterials($this->task->project->id, $this->task->id);			
+			$sql = $this->sql->calendarLinksProject($this->task->project->id);
+		} else { 
+		 //if ($this->displayProject == 'TASK' 
+		//or $this->displayProject == 'TASK-SUMMARY') {
+			$sql = $this->sql->calendarLinksTask($this->task->id);			
 		}
 
 		$result = dbGetResult($sql);
@@ -211,7 +211,7 @@ class MaterialList extends __Entity{
 	private function getSummaryTaskMonthly($pagingBaseLink = 'USE_LISTING'){
 
 		
-		$sql = $this->sql->listMaterialSummaryByTask($this->task->id,$this->task->project->id,$this->year,$this->month);		
+		$sql = $this->sql->summaryByTask($this->task->id,$this->year,$this->month);		
 		
 		$result = mysql_query($sql) or die(mysql_error());		
 
@@ -273,7 +273,7 @@ class MaterialList extends __Entity{
 		$list .=  wrapTr($heading);
 
 
-		$sql = $this->sql->listMaterialSummaryByTaskDoneBy($this->task->id,$this->task->project->id,$this->year,$this->month);		
+		$sql = $this->sql->summaryByTaskDoneBy($this->task->id,$this->task->project->id,$this->year,$this->month);		
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -313,7 +313,7 @@ class MaterialList extends __Entity{
 
 	private function getSummaryProjectMonthly($pagingBaseLink = 'USE_LISTING'){
 
-		$id = $this->task->project->id;
+		$id = $this->task->idParent;
 						
 		$base = $this->getBaseUrl($pagingBaseLink);
 		$pagingLinks = $this->getCalendarLinks($base);					
@@ -326,7 +326,7 @@ class MaterialList extends __Entity{
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
 		
-		$sql = $this->sql->listMaterialSummaryByProject($id, $this->year,$this->month);		
+		$sql = $this->sql->summaryByProject($id, $this->year,$this->month);		
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -372,7 +372,7 @@ class MaterialList extends __Entity{
 		$heading .=  wrapTh('Cost Actual');
 		$list .=  wrapTr($heading);
 		
-		$sql = $this->sql->listMaterialSummaryByProjectDoneBy($this->task->project->id,$this->year,$this->month);		
+		$sql = $this->sql->summaryByProjectDoneBy($this->task->project->id,$this->year,$this->month);		
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -449,7 +449,7 @@ class MaterialList extends __Entity{
 		$list .=  wrapTr($heading);
 		
 		
-		$sql = $this->sql->listMaterialsByProject($this->task->project->id,$this->resultPage, $this->perPage,$this->year,$this->month);		
+		$sql = $this->sql->listByProject($this->task->idParent, $this->resultPage, $this->perPage,$this->year,$this->month);		
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -554,7 +554,7 @@ class MaterialList extends __Entity{
 		$list .=  wrapTr($heading);
 		
 		
-		$sql = $this->sql->listMaterialsByTask($this->task->id,$this->resultPage,$this->perPage,$this->year,$this->month);		
+		$sql = $this->sql->listByTask($this->task->id,$this->resultPage,$this->perPage,$this->year,$this->month);		
 		
 		$result = dbGetResult($sql);
 		if ($result){

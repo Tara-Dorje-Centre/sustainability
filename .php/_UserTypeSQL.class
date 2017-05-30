@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class UserTypeSQL{
-public function columnsUserType(){
+class UserTypeSQL implements IentitySQL{
+public function cols(){
 $c = "pt.id, ";
 $c .= " pt.description, ";
 $c .= " pt.name, ";
@@ -11,35 +11,35 @@ $c .= " pt.highlight_style, ";
 $c .= " pt.notes ";
 return $c;	
 }
-public function infoUserType($typeId){
+public function info($id){
 $q = " SELECT ";	
-$q .= $this->columnsUserType();
+$q .= $this->cols();
 $q .= " FROM user_types pt ";
 $q .= " WHERE  ";
-$q .= " pt.id = '".$typeId."' ";
+$q .= " pt.id = '".$id."' ";
 return $q;
 }
-public function listUserTypes($resultPage, $rowsPerPage){
+public function list($page = 1, $rows = 10){
 $q = " SELECT ";	
-$q .= $this->columnsUserType();
+$q .= $this->columns();
 $q .= " FROM user_types pt ";
 $q .= " ORDER BY name ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;	
 }
-public function countUserTypes(){
+public function count(){
 $q = " SELECT ";	
 $q .= " COUNT(*) total_types ";
 $q .= " FROM user_types pt ";
 return $q;	
 }
-public function selectOptions_UserTypes($selectedValue,$disabled){
+public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " pt.id as value, ";
 	$q .= " pt.name as caption ";
 	$q .= " FROM user_types pt ";
 	if ($disabled == 'true'){
-		$q .= " WHERE pt.id = ".$selectedValue." ";	
+		$q .= " WHERE pt.id = ".$selectedId." ";	
 	}
 	$q .= " ORDER BY name ";
 	return $q;	

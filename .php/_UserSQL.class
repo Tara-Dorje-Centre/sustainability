@@ -1,7 +1,7 @@
 <?php
 
-class UserSQL{
-private function columnsUser(){
+class UserSQL implements IentitySQL{
+private function cols(){
 	$c = " u.id, "; 
 	$c .= " u.name_first, "; 
 	$c .= " u.name_last, "; 
@@ -20,25 +20,41 @@ private function columnsUser(){
 	$c .= " ut.highlight_style ";
 	return $c;	
 }
-public function securityUser($loginName){
-	$q = " SELECT ";
-	$q .= " u.id, u.is_admin, u.is_active, u.must_update_pwd ";
-	$q .= " FROM users u ";
-	$q .= " WHERE u.login_name = '".$loginName."' ";	
-	return $q;
+
+protected function tables(){
+
+	$t = " FROM users u LEFT OUTER JOIN user_types ut ON u.type_id = ut.id ";
+	return $t;
 }
-public function infoUser($userId){
+
+public function info($id){
 	$q = " SELECT ";	
-	$q .= $this->columnsUser();
-	$q .= " FROM users u LEFT OUTER JOIN user_types ut ON u.type_id = ut.id ";
+	$q .= $this->cols();
+	$q .= $this->tables();
+	
+
 	$q .= " WHERE  ";
-	$q .= " u.id = ".$userId." ";
+	$q .= " u.id = ".$id." ";
 	return $q;
 }
-public function listUsers($userTypeId,$resultPage, $rowsPerPage){
+public function list($page = 1,$perPage = 10){
 	$q = " SELECT ";	
-	$q .= $this->columnsUser();
-	$q .= " FROM users u LEFT OUTER JOIN user_types ut ON u.type_id = ut.id ";
+	$q .= $this->cols();
+	
+		$q .= $this->tables();
+
+	/*if ($userTypeId > 0){
+		$q .= " WHERE u.type_id = ".$userTypeId." ";
+	}
+	*/
+	$q .= " ORDER BY login_name, name_first, name_last ";
+	$q .= sqlLimitClause($page, $perPage);
+	return $q;	
+}
+public function listByType($userTypeId,$resultPage, $rowsPerPage){
+	$q = " SELECT ";	
+	$q .= $this->cols();
+	$q .= $this->tables();
 	if ($userTypeId > 0){
 		$q .= " WHERE u.type_id = ".$userTypeId." ";
 	}
@@ -46,15 +62,26 @@ public function listUsers($userTypeId,$resultPage, $rowsPerPage){
 	$q .= sqlLimitClause($resultPage, $rowsPerPage);
 	return $q;	
 }
-public function countUsers($userTypeId = 0){
+public function count(){
 	$q = " SELECT ";	
 	$q .= " COUNT(*) total_users ";
-	$q .= " FROM users u ";
+	$q .= $this->tables();
+	//if ($userTypeId > 0){
+	//	$q .= " WHERE u.type_id = ".$userTypeId." ";
+	//}
+	return $q;	
+}
+
+public function countType($typeId = 0){
+	$q = " SELECT ";	
+	$q .= " COUNT(*) total_users ";
+	$q .= $this->tables();
 	if ($userTypeId > 0){
-		$q .= " WHERE u.type_id = ".$userTypeId." ";
+		$q .= " WHERE u.type_id = ".$typeId." ";
 	}
 	return $q;	
 }
+
 public function validateUser($loginName, $loginPwdCrypt){
 	$q = " SELECT count(*) AS user_count FROM users u ";
 	$q .= " WHERE u.login_name = '".$loginName."' ";
@@ -70,7 +97,13 @@ public function validateLoginAndEmail($loginName, $loginEmail){
 	return $q;
 }
 
-
+public function securityUser($loginName){
+	$q = " SELECT ";
+	$q .= " u.id, u.is_admin, u.is_active, u.must_update_pwd ";
+	$q .= " FROM users u ";
+	$q .= " WHERE u.login_name = '".$loginName."' ";	
+	return $q;
+}
 
 		public function updatePass($loginName, $newPassCrypt){
 			$sql = "UPDATE users u SET ";
@@ -89,6 +122,11 @@ public function validateLoginAndEmail($loginName, $loginEmail){
 		
 	}
 	
+	public function options($selectedId = 0, $disabled = 'false'){
+	
+	
+	
+	}
 		
 }
 ?>

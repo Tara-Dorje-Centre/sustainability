@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class UnitOfMeasureSQL{                  
-public function columnsUnitOfMeasure(){
+class UnitOfMeasureSQL implements IentitySQL{
+public function cols(){
 $query = "um.id, ";
 $query .= " um.type, ";
 $query .= " um.name, ";
@@ -11,7 +11,7 @@ $query .= " um.notes, ";
 $query .= " um.symbol ";
 return $query;	
 }
-public function infoUnitOfMeasure($unitId){
+public function info($unitId){
 $query = " SELECT ";	
 $query .= $this->columnsUnitOfMeasure();
 $query .= " FROM units_of_measure um ";
@@ -19,21 +19,21 @@ $query .= " WHERE  ";
 $query .= " um.id = '".$unitId."' ";
 return $query;
 }
-public function listUnitsOfMeasure($resultPage, $rowsPerPage){
+public function list($resultPage, $rowsPerPage){
 $query = " SELECT ";	
-$query .= $this->columnsUnitOfMeasure();
+$query .= $this->columns();
 $query .= " FROM units_of_measure um ";
 $query .= " ORDER BY type, name ";
 $query .= sqlLimitClause($resultPage, $rowsPerPage);
 return $query;	
 }
-public function countUnitsOfMeasure(){
+public function count(){
 $query = " SELECT ";	
 $query .= " COUNT(*) total_units ";
 $query .= " FROM units_of_measure um ";
 return $query;	
 }
-public function selectOptions_UnitsOfMeasure($selectedValue,$disabled){
+public function options($selectedValue,$disabled){
 	$q = " SELECT ";
 	$q .= " um.type, ";
 	$q .= " um.id as value, ";

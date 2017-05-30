@@ -18,7 +18,7 @@ class TaskType extends __EntityType{
 	public function setDetails(){
 		
 
-		$sql = $this->sql->infoTaskType($this->id);
+		$sql = $this->sql->info($this->id);
 
 		$result = dbGetResult($sql);
 		if($result){
@@ -116,7 +116,7 @@ class TaskType extends __EntityType{
 		$disabled = 'false',
 		$showLink = false,
 		$changeJS = NULL){
-		$sql = $this->sql->selectOptions_TaskTypes($selectedValue,$disabled);
+		$sql = $this->sql->options($selectedValue,$disabled);
 		
 		$defaultValue = '0';
 		$defaultCaption = '-select Task Type';

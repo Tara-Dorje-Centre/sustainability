@@ -43,7 +43,7 @@ class TaskTypeList extends __EntityList{
 
 	
 	public function getListing(){
-		$sql = $this->sql->listTaskTypes($this->resultPage,$this->perPage);
+		$sql = $this->sql->list($this->resultPage,$this->perPage);
 
 		$typeL = new TaskTypeLinks;
 		$pagingLinks = $typeL->listingPaged($this->found,$this->resultPage,$this->perPage);

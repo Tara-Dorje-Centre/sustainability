@@ -13,8 +13,8 @@ class LocationType extends __EntityType{
     
 	public function setDetails(){
 		
-
-		$sql = $this->sql->infoLocationType($this->id);
+if ($this->id >0){
+		$sql = $this->sql->info($this->id);
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -30,7 +30,8 @@ class LocationType extends __EntityType{
 		}
 		$result->close();
 		}
-				
+		
+		}
 	}	
 		
 	protected function setPageTitle(){
@@ -91,15 +92,16 @@ class LocationType extends __EntityType{
 		return $detail;
 	}
 	
-	public function getLocationTypeSelectList(
+	public function options(
 		$selectedValue = 0, 
 		$idName = 'locationTypeId', 
 		$disabled = 'false',
 		$showLink = true,
 		$onChangeJS = NULL){
 
+		$this->echoState('getLocationSelectList');
 		
-		$sql = $this->sql->selectOptions_LocationTypes($selectedValue, $disabled);
+		$sql = $this->sql->options($selectedValue, $disabled);
 		
 		$defaultValue = '0';
 		$defaultCaption = '-select Location Type';
@@ -115,6 +117,9 @@ class LocationType extends __EntityType{
 	}
 	
 	public function editForm(){
+	$this->echoState(true, 'editForm');
+	
+	
 		if ($this->pageMode == 'ADD'){
 			$legend = 'Add Location Type';
 		} else {
@@ -155,7 +160,7 @@ class LocationType extends __EntityType{
 	}
 	
 	public function collectPostValues(){
-
+		$this->echoState(true, 'collectPostValues');
 		$this->id = $_POST['locationTypeId'];
 		$this->name = dbEscapeString($_POST['name']); 
 		$this->description = dbEscapeString($_POST['description']); 

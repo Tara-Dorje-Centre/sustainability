@@ -13,8 +13,11 @@ class MaterialType extends __EntityType {
 	}
 
 	public function setDetails(){
-
-		$sql = $this->sql->infoMaterialType($this->id);
+		$this->echoState(true, 'setDetails');
+		
+		if ($this->id > 0){
+		
+		$sql = $this->sql->info($this->id);
 		
 		$result = dbGetResult($sql);
 		if($result){
@@ -31,21 +34,20 @@ class MaterialType extends __EntityType {
 		$result->close();
 		}
 				
+		}
 	}	
 		
-	function pageTitle(){
-		$heading = openDiv('section-heading-title');
+	protected function setPageTitle(){
 		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
+			$heading = $this->name;
 		} else {
-			$heading .= 'Add New Material Type';
+			$heading = 'Add New Material Type';
 		}
-		$heading .= closeDiv();		
-		return $heading;
+		$this->pageTitle = $heading;
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$typesL = new MaterialTypeLinks($menuType,$menuStyle);
@@ -61,12 +63,12 @@ class MaterialType extends __EntityType {
 		}
 		$menu .= $typesL->listingHref();		
 		$menu .= $typesL->closeMenu();
-		return $menu;
+		$ths->_pageMenu = $menu;
 	}
 	
 	
 	
-	public function formatForDisplay(){
+	protected function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
@@ -74,9 +76,6 @@ class MaterialType extends __EntityType {
 		$this->updated = getTimestampDate($this->updated);
 	}
 
-
-	
-	
 	public function display(){
 		$this->formatForDisplay();
 
@@ -94,30 +93,34 @@ class MaterialType extends __EntityType {
 		return $detail;
 	}
 	
-	public function getMaterialTypeSelectList(
-		$selectedValue = '0', 
+	public function options(
+		$selectedId = 0, 
 		$idName = 'materialTypeId', 
 		$disabled = 'false', 
 		$showLink = true){
 	
 		
-		$sql = $this->sql->selectOptions_MaterialTypes($selectedValue, $disabled);
+		$sql = $this->sql->options($selectedId, $disabled);
 		
-		$defaultValue = '0';
+		$defaultValue = 0;
 		$defaultCaption = '-select Material Type';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+		$allOptions = getSelectOptionsSQL($sql,$selected,$disabled,$defaultValue,$defaultCaption);		
 		
 		$select = getSelectList($idName,$allOptions,'none',$disabled );
 		if ($showLink == true){
 			$l = new MaterialTypeLinks;	
-			$links =$l->detailViewEditHref($selectedValue);
+			$links =$l->detailViewEditHref($selected);
 			$select .= $links;
 		}
 		return $select;
 	}	
+	public function setDefaults(){
 	
+	}
 	
 	public function editForm(){
+		$this->echoState(true, 'editForm');
+		$this->setDefaults();
 		if ($this->pageMode == 'ADD'){
 			$legend = 'Add Material Type';
 		} else {
@@ -168,9 +171,9 @@ class MaterialType extends __EntityType {
 		$this->pageMode = $_POST['mode'];	
 	}
 
-	public function saveChanges(){
+	protected function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			$sql = " UPDATE material_types AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -182,7 +185,11 @@ class MaterialType extends __EntityType {
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			
 			$result = dbRunSQL($sql);
-		} else {
+		
+	}
+	
+	protected function saveInsert(){
+	
 			$sql = " INSERT INTO material_types ";
 			$sql .= " (name, ";
 			$sql .= " created, ";
@@ -203,8 +210,6 @@ class MaterialType extends __EntityType {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
-	
 	}
 	
 } 

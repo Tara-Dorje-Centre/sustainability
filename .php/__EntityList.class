@@ -1,7 +1,9 @@
 <?php 
 
-class __EntityList extends __Entity{
-	protected $__MyClassName = '__EntityList';
+
+
+class __entityList extends __entity{
+	protected $__MyClassName = '__entityList';
 	
 	public $found = 0;
 	

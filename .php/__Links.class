@@ -1,4 +1,7 @@
 <?php 
+interface Ilinks{
+
+}
 
 class _Links{
 	private $cssStyleBase;

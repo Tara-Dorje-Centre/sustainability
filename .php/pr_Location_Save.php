@@ -1,7 +1,7 @@
 <?php 
 include_once("_includes.php");
 
-$p = new Location;
+$p = new Location('SAVE');
 $p->collectPostValues();
 $p->saveChanges();
 

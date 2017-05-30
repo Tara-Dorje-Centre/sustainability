@@ -51,6 +51,7 @@ function closeDisplayDetails(){
 function openEditForm($entityName, $legend, $formAction, $contextMenu = NULL){
 	$form = openDisplayDetails($entityName,$legend,NULL,'Edit',$contextMenu);
 	$form .= openForm($entityName.'-editForm',$formAction,'editForm');
+	//$form .= '<pre>';
 	$form .= openDiv($entityName.'-fields','editing-fields');
 	return $form;
 }
@@ -66,7 +67,10 @@ function closeEditForm($entity = '', $required = NULL, $optional = NULL, $submit
 
 	//close fields div
 	$form .= closeDiv();
+	
 	//close edit form
+	
+		//$form .= '</pre>';
 	$form .= closeForm();
 	
 	$form .= closeDisplayDetails();
@@ -190,21 +194,25 @@ function getPasswordInput($inputName, $size = 10, $maxLength = 50,$tooltip = 'En
 }
 
 function getHiddenInput($inputName, $inputValue){
-	$e = new _element('input',$inputName, $css);
-	$e->addAttribute('title',$tooltip);
-	$e->addAttribute('maxlength',$maxLength);
+
+
+return getTextInput($inputName, $inputValue, 20,20);
+	$e = new _element('input',$inputName, $inputName);
+	//$e->addAttribute('title',$tooltip);
+	//$e->addAttribute('maxlength',$maxLength);
 	//$e->addAttribute('size',$size);
 	//$e->addAttribute('cols',$cols);
 	
-	if ($disabled != 'false'){
-		$e->addAttribute('disabled',$disabled);
-	}
+	//if ($disabled != 'false'){
+		//$e->addAttribute('disabled',$disabled);
+	//}
 
-	$e->addAttribute('type','hidden');
+	//$e->addAttribute('type','hidden');
+	
 	$e->addAttribute('value',$inputValue);
 	
 	return $e->empty();
-
+//
 }
 
 
@@ -418,11 +426,19 @@ function captionedInput($caption, $input){
 }
 
 
-function getSelectOption($optionValue, $optionCaption, $selectedValue){
+function getSelectOption($optionValue = 0, $optionCaption = '', $selectedValue = 0){
 
+
+	if ( (!is_null($optionValue)) && (!($optionValue == '') )) {
+		$v = $optionValue;
+	} else {
+		$v = 0;
+	}
+		
 	$e = new _element('option');
 	$e->addAttribute('value',$optionValue);
-	if ($selectedValue == $optionValue){
+	
+	if ($selectedValue == $v){
 		$e->addAttribute('selected','selected');
 	}
 	

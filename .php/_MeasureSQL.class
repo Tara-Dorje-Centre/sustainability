@@ -1,7 +1,7 @@
 ﻿<?php 
 
-class MeasureSQL{
-function columnsMeasures(){
+class MeasureSQL implements IentitySQL{
+protected function columns(){
 $c = " m.id, ";
 $c .= " m.task_id, ";
 $c .= " m.location_id, ";
@@ -17,16 +17,16 @@ $c .= " mtu.unit_type, ";
 $c .= " mtu.unit_symbol ";
 return $c;	
 }
-public function infoMeasure($measureId){
+public function info($id){
 $q = " SELECT ";	
-$q .= $this->columnsMeasures();
+$q .= $this->columns();
 $q .= " FROM measures AS m JOIN measure_type_units_v as mtu ";
 $q .= " ON m.measure_type_unit_id = mtu.measure_type_unit_id ";
 $q .= " WHERE  ";
-$q .= " m.id = '".$measureId."' ";
+$q .= " m.id = '".$id."' ";
 return $q;
 }
-public function listMeasuresByTask($selectedTaskId, $resultPage, $rowsPerPage){
+public function listTask($selectedTaskId, $resultPage, $rowsPerPage){
 $q = " SELECT  ";
 $q .= $this->columnsMeasures();
 $q .= " FROM measures AS m JOIN measure_type_units_v as mtu ";
@@ -38,7 +38,7 @@ $q .= " m.date_reported, m.measure_type_unit_id, m.id ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
 }
-public function countMeasuresByTask($selectedTaskId){
+public function countTask($selectedTaskId){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_measures";
 $q .= " FROM measures AS m ";

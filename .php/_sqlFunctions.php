@@ -1,6 +1,8 @@
 <?php
-function printLine($msg){
-	echo $msg.'<br />';
+function printLine($msg, $show = true){
+	$e = new __echo();
+	$e->echoLocale(' ', '_sqlFunctions');
+	$e->echoPrint($show,$msg);
 }
 
 function dbEscapeString($value){
@@ -107,7 +109,7 @@ function addDays($timestamp, $days = 0){
 	return $newTime;
 }
 
-function getSelectOptionsSQL($sql,$selectedValue, $disabled, $defaultValue,$defaultCaption){
+function getSelectOptionsSQL($sql,$selectedValue = 0, $disabled = false, $defaultValue = 0, $defaultCaption = ''){
 	if ($defaultValue === 'NO_DEFAULT_VALUE'){
 		//omit default value
 		$allOptions = '';

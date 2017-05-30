@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class SiteSettingsSQL{
+class SiteSettingsSQL implements IentitySQL{
 
-private function columns(){
+private function cols(){
 	$c = " sw.site_title, ";
 	$c .= " sw.site_url, ";
 	$c .= " sw.organization, ";
@@ -29,9 +29,9 @@ private function columns(){
 	
 	return $c;	
 }
-public function details(){
+public function info($id = 0){
 $q = " SELECT ";	
-$q .= $this->columns();
+$q .= $this->cols();
 $q .= " FROM sitewide_settings sw ";
 return $q;
 }
@@ -40,6 +40,16 @@ public function count(){
 		$s = " SELECT COUNT(*) AS count_settings ";
 		$s .= " FROM sitewide_settings ";
 		return $s;
+}
+
+	public function options($selectedId = 0, $disabled = 'false'){
+	
+	
+	}
+
+public function list($page = 1, $rows = 10){
+
+
 }
 
 }

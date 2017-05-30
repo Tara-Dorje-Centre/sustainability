@@ -14,7 +14,7 @@ class ReceiptType extends __EntityType{
 	
 	public function setDetails(){
 
-		$sql = $this->sql->infoReceiptType($this->id);
+		$sql = $this->sql->info($this->id);
 
 		$result = dbGetResult($sql);
 		if($result){
@@ -33,19 +33,19 @@ class ReceiptType extends __EntityType{
 				
 	}	
 		
-	function pageTitle(){
-		$heading = openDiv('section-heading-title');
+	protected function setPageTitle(){
+
 		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
+			$heading = $this->name;
 		} else {
-			$heading .= 'Add New Receipt Type';
+			$heading = 'Add New Receipt Type';
 		}
-		$heading .= closeDiv();		
-		return $heading;
+
+		$this->_pageTitle = $heading;
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		$typesL = new ReceiptTypeLinks($menuType,$menuStyle);
@@ -61,49 +61,17 @@ class ReceiptType extends __EntityType{
 		}
 		$menu .= $typesL->listingHref();		
 		$menu .= $typesL->closeMenu();
-		return $menu;
+		$this->_pageMenu = $menu;
 	}
 	
-	/*
-	
-	public function getPageHeading(){
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
-		return $heading;
-	}
-	*/
-	
-	public function formatForDisplay(){
+	protected function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
 		$this->notes = displayLines($this->notes);
 		$this->created = getTimestampDate($this->created);
 		$this->updated = getTimestampDate($this->updated);
 	}
-	/*
-
-	public function printPage(){
-		
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-		
-	}
-	*/
 	
-	public function getPageDetails(){			
-
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-		
-	}
 	
 	
 	public function display(){
@@ -122,14 +90,14 @@ class ReceiptType extends __EntityType{
 		return $detail;
 	}
 	
-	public function getReceiptTypeSelectList(
+	public function options(
 		$selectedValue = '0', 
 		$idName = 'receiptTypeId', 
 		$disabled = 'false',
 		$showLink = false,
 		$changeJS = NULL){
 	
-		$sql = $this->sql->selectOptions_ReceiptTypes($selectedValue, $disabled);
+		$sql = $this->sql->options($selectedValue, $disabled);
 		
 		$defaultValue = '0';
 		$defaultCaption = '-select Receipt Type';
@@ -194,9 +162,9 @@ class ReceiptType extends __EntityType{
 		$this->pageMode = $_POST['mode'];	
 	}
 
-	public function saveChanges(){
+	public function saveUpdate(){
 	
-		if ($this->pageMode == 'EDIT'){
+
 			$sql = " UPDATE receipt_types AS p ";
 			$sql .= " SET ";
 			$sql .= " p.name = '".$this->name."', ";
@@ -207,8 +175,11 @@ class ReceiptType extends __EntityType{
 			$sql .= " p.notes = '".$this->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			$result = dbRunSQL($sql);
+			
+	}
+		
+	public function saveInsert(){
 
-		} else {
 			$sql = " INSERT INTO receipt_types ";
 			$sql .= " (name, ";
 			$sql .= " created, ";
@@ -228,7 +199,7 @@ class ReceiptType extends __EntityType{
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-		}
+		
 	
 	}
 	

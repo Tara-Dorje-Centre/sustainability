@@ -1,7 +1,7 @@
 ﻿<?php 
 
 class MeasureTypeUnit extends __Entity{
-	protected $__MyClassName = 'Project';
+	protected $__MyClassName = 'MeasureTypeUnit';
 	
     public $unitOfMeasureId = 0;	
 	public $measureType;
@@ -24,7 +24,9 @@ class MeasureTypeUnit extends __Entity{
 	
 	public function setDetails(){
 		
-		$sql = $this->sql->infoMeasureTypeUnit($this->id);
+				if ($this->id != 0){
+		
+		$sql = $this->sql->info($this->id);
 
 		$result = dbGetResult($sql);
 		if($result){
@@ -41,11 +43,13 @@ class MeasureTypeUnit extends __Entity{
 		}
 		$result->close();
 		}
+		
+		}
 
-		$this->measureType->setDetails('VIEW', $this->idParent);
+		$this->measureType->setDetails('VIEW');
 	}	
 			
-	function pageTitle(){	
+	protected function pageTitle(){	
 		$title = openDiv('section-heading-title','none');
 		
 		
@@ -56,7 +60,7 @@ class MeasureTypeUnit extends __Entity{
 	}
 	
 	
-	function pageMenu(){
+	protected function pageMenu(){
 		
 		$mtul = new MeasureTypeUnitLinks;
 		
@@ -97,7 +101,7 @@ class MeasureTypeUnit extends __Entity{
 
 		$detail .= captionedParagraph('measure-type','Measure Type',$this->getMeasureTypeAndUnitSymbol());
 		$u = new UnitOfMeasure;
-		$select = $u->getUnitOfMeasureSelectList($this->unitOfMeasureId,'unitOfMeasureId','true');
+		$select = $u->options($this->unitOfMeasureId,'unitOfMeasureId','true');
 		$detail .= captionedParagraph('units','Units',$select);		
 		$detail .= captionedParagraph('unit-type','Unit Type',$this->unitType);
 		$detail .= captionedParagraph('updated','Updated',$this->updated);		
@@ -108,14 +112,14 @@ class MeasureTypeUnit extends __Entity{
 		return $detail;
 	}
 
-	public function getMeasureTypeUnitSelectList(
+	public function options(
 		$selectedValue = 0, 
 		$idName = 'measureTypeUnitId', 
 		$disabled = 'false',
 		$showLink = false,
 		$changeJS = NULL){
 		
-		$sql = $this->sql->selectOptions_MeasureTypeUnits($selectedValue,$disabled);
+		$sql = $this->sql->options($selectedValue,$disabled);
 		
 		$defaultValue = '0';
 		$defaultCaption = '-select Measure Type Units';

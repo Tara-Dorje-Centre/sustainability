@@ -30,6 +30,9 @@ protected $__MyClassName = 'Receipt';
 	}
 
 	public function setDetails(){
+	
+		if ($this->id > 0){
+	
 		$sql = $this->sql->infoReceipt($this->id);
 		
 		$result = dbGetResult($sql);
@@ -55,6 +58,8 @@ protected $__MyClassName = 'Receipt';
 			
 		}
 		$result->close();
+		}
+		
 		}
 
 		$this->setParentTask();				
@@ -139,7 +144,7 @@ protected $__MyClassName = 'Receipt';
 		return $detail;
 	}	
 	
-	private function setAddRecordDefaults(){
+	private function setDefaults(){
 		global $sessionTime;
 		$this->dateReported = $sessionTime;	
 		//$this->activityId = $this->task->locationId;
@@ -152,7 +157,7 @@ protected $__MyClassName = 'Receipt';
 	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
+			$this->setDefaults();
 			$legend = 'Add Receipt';
 		} else {
 			$legend = 'Edit Receipt';
@@ -182,14 +187,14 @@ protected $__MyClassName = 'Receipt';
 		$fields = inputFieldNumber($entity,$this->quantity,'quantity','Quantity');
 		
 		$u = new UnitOfMeasure;
-		$select = $u->getUnitOfMeasureSelectList($this->quantityUnitMeasureId,'quantityUnitMeasureId','false');
+		$select = $u->options]($this->quantityUnitMeasureId,'quantityUnitMeasureId','false');
 		$fields .= captionedInput('Quantity Units', $select);
 
 		$tooltip = 'Set when task costs are approved';
 		$fields .= inputFieldNumber($entity,$this->costActual,'costActual','Amount Actual',$tooltip);
 
 		$m = new ReceiptType;
-		$select = $m->getReceiptTypeSelectList($this->typeId,'typeId','false');
+		$select = $m->options($this->typeId,'typeId','false');
 		$fields .= captionedInput('Receipt Type',$select);
 		
 

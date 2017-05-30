@@ -87,17 +87,17 @@ protected $__MyClassName = 'TaskList';
 		$taskL = new TaskLinks;	
 		$projectL = new ProjectLinks;					
 		if ($pagingBaseLink == 'USE_LISTING'){
-			$base = $taskL->listing($this->project->id,$this->periodicTasks);
+			$base = $taskL->listProject($this->project->id,$this->periodicTasks);
 		} else { 
 			$base = $pagingBaseLink;
 		 }
 		$pagingLinks = $taskL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
 		
 
-			$a = new Activity('ADD');
+			$a = new Activity('ADD',0,$this->project->id);
 			$a->setDetails();
-			$a->task->project->setId($this->project->id);
-		    $a->task->project->setDetails();
+		//	$a->task->project->setId($this->project->id);
+	//	    $a->task->project->setDetails();
 			$quickEdit = $a->editForm();
 
 		$list = openDisplayList('task','Tasks',$pagingLinks,$quickEdit);
@@ -121,7 +121,7 @@ protected $__MyClassName = 'TaskList';
 		$receiptsL = new ReceiptLinks('DIV','button');
 
 		if ($this->periodicTasks == 'NO'){
-			$sql = $this->sql->listByProject($this->project->id,$this->resultPage,$this->perPage);
+			$sql = $this->sql->listProject($this->project->id,$this->resultPage,$this->perPage);
 		} else {
 			$sql = $this->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
 		}

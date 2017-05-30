@@ -1,0 +1,69 @@
+<?php 
+
+
+/*
+interface IentitySQL{
+	public function info($id);
+	public function count();
+	public function list($page = 1, $rows = 10);
+	public function options($selectedId = 0, $disabled = 'false');
+	//	protected function cols();
+//	protected function tables($joinTypes = false);
+	//public function countChildren($id);
+	//public function countByType($typeId = 0);
+
+	//public function listChildren($id, $page = 1, $rows = 10);
+	//public function listByType($typeId);
+	//public function listByParent{$id, $page = 1, $rows = 10);
+
+	//public function optionsChildren();
+
+}
+
+
+interface Ientity{
+
+	public function setPaging($page = 1,$rows = 10);
+	public function setCalendar($year = -1, $month = -1, $show = 'NO');
+	public function setCounts($count = 0, $countChildren = 0);
+	public function setDetails();
+	public function getListing();
+	public function printPage();
+	public function editForm();
+	
+	public function saveChanges();
+	
+	public function options(
+		$selectedId = 0, 
+		$idName = 'not-set', 
+		$disabled = 'false',
+		$showLink = true,
+		$onChangeJS = NULL);
+	
+	protected function setPageTitle();
+	protected function setPageMenu();
+	protected function display();
+	protected function setDefaults();
+	
+	public function collectPostValues();
+
+}
+
+interface IEntityType extends IEntity{
+
+
+
+}
+
+interface IentityList extends IEntityType{
+	//public function setCalendar($page = 1, $perPage = 10);
+	//public function setPaging($page = 1, $perPage = 10);
+	//public function setFoundCount();	
+
+}
+
+*/
+
+
+
+?>

@@ -1,11 +1,11 @@
 <?php 
 
 class __echo{
-//public const USE_CURRENT = '-use-current-';
+
 protected $__MyClassName = '__echo';
 protected $__MyFunctionName = '__construct';
 
-protected function echoLocale($f = '-use-current-', $c= '-use-current-'){
+public function echoLocale($f = '-use-current-', $c= '-use-current-'){
 	if ($c != '-use-current-'){
 		$this->__MyClassName = $c;
 	}
@@ -13,24 +13,31 @@ protected function echoLocale($f = '-use-current-', $c= '-use-current-'){
 		$this->__MyFunctionName = $f;
 	}
 }
-
-protected function echoValue($show = true, $n, $v, $f = '-use-current-', $c= '-use-current-'){
-	$this->echoLocale($f, $c);
-	if ($show == true){
-		$cf = $this->__MyClassName.'->'.$this->__MyFunctionName;
-		printLine($cf.'->'.$n.'['.$v.']');
+protected function echoVN($v, $n = '-not-set-'){
+	if ($n != '-not-set-'){
+		return $n.'=['.$v.']';
+	} else {
+		return '['.$v.']';
 	}
 }
-
-protected function echoPrint($show = true, $msg, $f = '-use-current-', $c= '-use-current-'){
+protected function echoCF(){
+		return $this->__MyClassName.'.'.$this->__MyFunctionName.':';
+}
+public function echoValue($show = true, $n, $v, $f = '-use-current-', $c= '-use-current-'){
 	$this->echoLocale($f, $c);
 	if ($show == true){
-		$cf = $this->$__MyClassName.'->'.$this->__MyFunctionName;
-		printLine($cf.'['.$msg.']');
+		$this->echoPrintline($this->echoCF().$this->echoVN($v, $n));
 	}
 }
-
-
+public function echoPrint($show = true, $msg, $f = '-use-current-', $c= '-use-current-'){
+	$this->echoLocale($f, $c);
+	if ($show == true){
+		$this->echoPrintline($this->echoCF().$this->echoVN($msg));
+	}
+}
+public function echoPrintline($msg){
+	echo $msg.'<br />';
+}
 	
 }
 ?>

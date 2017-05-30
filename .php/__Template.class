@@ -284,7 +284,7 @@ protected function setContents(){
 
 		//use external stylesheet
 		$content = LinkStylesheet('css/styles.css');
-		//$content .= stylesheet('css/override.css');
+		$content .= Linkstylesheet('css/override.css');
 		$this->_styles = $content;
 		//return $content;
 		
@@ -295,7 +295,7 @@ protected function setContents(){
 		//start oputput buffering
 		ob_start();
 		//include scripts to buffer
-		include('_siteJavascriptFunctions.php');		
+		include('_siteJavascriptFunctions.inc');		
 		//clear buffer to local variable
 		$scripts .= ob_get_clean();  
 		$scripts .= closeScript();

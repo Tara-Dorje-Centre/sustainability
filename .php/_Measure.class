@@ -28,9 +28,9 @@ protected $__MyClassName = 'Measure';
 	}
 	
 	public function setDetails(){
-		$this->task->id = $this->idParent;
+		if ($ths->id > 0){
 		
-		$sql = $this->sql->infoMeasure($this->id);
+		$sql = $this->sql->info($this->id);
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -51,25 +51,25 @@ protected $__MyClassName = 'Measure';
 		$result->close();
 		}
 		
-		$this->setParentTask();				
+		}
+		$this->setParentTask();			
+		
 	}	
 	
 	public function setParentTask(){
 		$this->task->setDetails($this->pageMode, $this->task->id);
 	}
 		
-	function pageTitle(){	
-		$title = openDiv('section-heading-title','none');
-		
+	protected function setPageTitle(){	
 		
 		$title .= $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;		
-		$title .= closeDiv();
-		return $title;
+
+		$this->_pageTitle = $title;
 	}
 	
 	
-	function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -91,7 +91,7 @@ protected $__MyClassName = 'Measure';
 		}
 		
 		$menu .= $projects->closeMenu();
-		return $menu;
+		$this->_pageMenu = $menu;
 	}
 		
 
@@ -117,7 +117,7 @@ protected $__MyClassName = 'Measure';
 		$detail .= captionedParagraph('measure-updated','Updated',$this->updated);		
 		$detail .= captionedParagraph('measure-value','Value',$this->value);
 		$m = new MeasureTypeUnit;
-		$select = $m->getMeasureTypeUnitSelectList($this->measureTypeUnitId,'measureTypeUnitId','true');
+		$select = $m->options($this->measureTypeUnitId,'measureTypeUnitId','true');
 		$detail .= captionedParagraph('measure-type-units','Measure Type', $select);
 		$detail .= captionedParagraph('unit-of-measure','Unit Type',$this->unitType);
 		$detail .= captionedParagraph('measure-name','Measurement',$this->name);
@@ -130,7 +130,7 @@ protected $__MyClassName = 'Measure';
 	}
 	
 
-	private function setAddRecordDefaults(){	
+	private function setDefaults(){	
 		global $sessionTime;
 		$this->dateReported = $sessionTime;	
 		$this->measureTypeUnitId = 0;
@@ -139,7 +139,7 @@ protected $__MyClassName = 'Measure';
 	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
+			$this->setDefaults();
 			$legend = 'Add Measure';
 		} else {
 			$legend = 'Edit Measure';
@@ -154,7 +154,7 @@ protected $__MyClassName = 'Measure';
 		$fields = inputFieldNumber($entity,$this->value,'value','Value');
 
 		$m = new MeasureTypeUnit;
-		$select = $m->getMeasureTypeUnitSelectList($this->measureTypeUnitId,'measureTypeUnitId','false',false);
+		$select = $m->options($this->measureTypeUnitId,'measureTypeUnitId','false',false);
 		$fields .= captionedInput('Measure Type',$select);
 
 		$fields .= inputFieldTimestamp($entity, 'dateReported', $this->dateReported, 'Date Reported'); 		

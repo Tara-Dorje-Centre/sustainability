@@ -50,12 +50,12 @@ class MeasureList extends __EntityList{
 	}	
 	
 	public function setFoundCount(){
-		$sql = $this->sql->countMeasuresByTask($this->task->id);
+		$sql = $this->sql->countTask($this->task->id);
 		$this->found = dbGetCount($sql, 'total_measures');
 	}
 		
 	public function getListing($pagingBaseLink = 'USE_LISTING'){
-		$sql = $this->sql->listMeasuresByTask($this->task->id,$this->resultPage,$this->perPage);
+		$sql = $this->sql->listTask($this->task->id,$this->resultPage,$this->perPage);
 
 		
 		$ml = new MeasureLinks;		
@@ -83,7 +83,7 @@ class MeasureList extends __EntityList{
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$m = new Measure;
+			$m = new Measure(FETCH);
 			$m->id = $row["id"];
 			$m->name = ($row["name"]);
 			$m->measureType = ($row["measure_type"]);
