@@ -87,7 +87,7 @@ protected $__MyClassName = 'TaskList';
 		$taskL = new TaskLinks;	
 		$projectL = new ProjectLinks;					
 		if ($pagingBaseLink == 'USE_LISTING'){
-			$base = $taskL->listProject($this->project->id,$this->periodicTasks);
+			$base = $taskL->listing($this->project->id,$this->periodicTasks);
 		} else { 
 			$base = $pagingBaseLink;
 		 }

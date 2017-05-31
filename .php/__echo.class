@@ -36,7 +36,10 @@ public function echoPrint($show = true, $msg, $f = '-use-current-', $c= '-use-cu
 	}
 }
 public function echoPrintline($msg){
+	$enabled = false;
+	if ($enabled == true){
 	echo $msg.'<br />';
+	}
 }
 	
 }

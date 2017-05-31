@@ -21,6 +21,16 @@ $c .= " pt.highlight_style ";
 return $c;	
 }
 
+public function tables(){
+
+$q .= " FROM activities a JOIN tasks t ON a.task_id = t.id ";
+$q .= " JOIN projects p ON t.project_id = p.id ";
+$q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
+
+return $q;
+}
+
+
 public function info($id = 0){
 $q = " SELECT  ";
 $q .= $this->cols();

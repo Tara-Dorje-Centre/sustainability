@@ -99,7 +99,7 @@ class ActivityType extends __EntityType{
 
 	
 		
-		$sql = $this->sql->selectOptions_ActivityTypes($selectedValue, $disabled);
+		$sql = $this->sql->options($selectedValue, $disabled);
 		
 		$defaultValue = 0;
 		$defaultCaption = '-select Activity Type';

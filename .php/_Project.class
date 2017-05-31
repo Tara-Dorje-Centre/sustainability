@@ -305,7 +305,7 @@ class Project extends __Entity{
 		$detail .= captionedParagraph('name', 'Name', $this->name);
 
 		$l = new ProjectType;
-		$select = $l->getProjectTypeSelectList($this->typeId,'typeId','true');
+		$select = $l->options($this->typeId,'typeId','true');
 		$detail .= captionedParagraph('project-type','Project Type',$select);
 
 		$l = new Location(OPTIONS);
@@ -410,7 +410,7 @@ class Project extends __Entity{
 		$fields = inputFieldName($entity,$this->name,'name','Project');
 		
 		
-		$pt = new ProjectType('SELECT');
+		$pt = new ProjectType('OPTIONS');
 		$select = $pt->options($this->typeId,'projectTypeId','false',false);
 		$fields .= captionedInput('Project Type', $select);
 		
@@ -422,9 +422,8 @@ class Project extends __Entity{
 		//start optional fields
 		$fields = inputFieldDescription($entity,$this->description,'description');
 
-		$l = new Location('SELECT', $this->locationId,-1);
-		//$l->setDetails();
-		$select = $l->selectList($this->locationId,'locationId','false',false);
+		$l = new Location('OPTIONS', $this->locationId,-1);
+		$select = $l->options($this->locationId,'locationId','false',false);
 		$fields .= captionedInput('Location', $select);
 
 

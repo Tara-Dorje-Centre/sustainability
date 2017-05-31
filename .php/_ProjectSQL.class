@@ -3,30 +3,30 @@
 class ProjectSQL implements IentitySQL{
 //projects table fields displayed in listing
 	protected function cols(){
-		$cols = " p.id, ";
-		$cols .= " p.type_id, ";
-		$cols .= " pt.name project_type, ";
-		$cols .= " pt.highlight_style, ";
-		$cols .= " p.parent_id, ";
-		$cols .= " p.name, ";
-		$cols .= " p.description, ";
-		$cols .= " p.summary, ";
-		$cols .= " p.priority, ";
-		$cols .= " p.started, ";
-		$cols .= " p.updated, ";
-		$cols .= " p.pct_done, ";
-		$cols .= " p.goals, ";
-		$cols .= " p.lessons_learned, ";
-		$cols .= " p.show_always, ";
-		$cols .= " p.location_id, ";
-		$cols .= " l.sort_key location_name, ";
-		$cols .= " p.purpose, ";
-		$cols .= " p.hours_estimated, ";
-		$cols .= " p.hours_actual, ";
-		$cols .= " p.budget_estimated, ";
-		$cols .= " p.budget_notes, ";
-		$cols .= " p.hours_notes ";
-		return $cols;
+		$c = " p.id, ";
+		$c .= " p.type_id, ";
+		$c .= " pt.name project_type, ";
+		$c .= " pt.highlight_style, ";
+		$c .= " p.parent_id, ";
+		$c .= " p.name, ";
+		$c .= " p.description, ";
+		$c .= " p.summary, ";
+		$c .= " p.priority, ";
+		$c .= " p.started, ";
+		$c .= " p.updated, ";
+		$c .= " p.pct_done, ";
+		$c .= " p.goals, ";
+		$c .= " p.lessons_learned, ";
+		$c .= " p.show_always, ";
+		$c .= " p.location_id, ";
+		$c .= " l.sort_key location_name, ";
+		$c .= " p.purpose, ";
+		$c .= " p.hours_estimated, ";
+		$c .= " p.hours_actual, ";
+		$c .= " p.budget_estimated, ";
+		$c .= " p.budget_notes, ";
+		$c .= " p.hours_notes ";
+		return $c;
 	}
 	
 	
@@ -50,7 +50,7 @@ $q .= $this->tables();
 $q .= $this->whereStatus($status);
 
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
+$q .= sqlLimitClause($page, $rows);
 return $q;
 }
 
@@ -125,7 +125,7 @@ public function options($selectedId = 0, $disabled = 'false'){
 	$q .= " FROM projects p ";
 	$q .= " WHERE p.pct_done < 1 ";
 	if ($disabled == 'true'){
-		$q .= " AND p.id = ".$selectedValue." ";	
+		$q .= " AND p.id = ".$selectedId." ";	
 	}
 	$q .= " ORDER BY name ";
 	return $q;	

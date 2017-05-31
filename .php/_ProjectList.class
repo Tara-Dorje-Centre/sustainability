@@ -65,9 +65,9 @@ protected $__MyClassName = 'ProjectList';
 	
 	public function setFoundCount(){
 		if ($this->showMyProjects == 'YES'){
-			$sql = $this->sql->countProjectsByDoneBy($_SESSION['login-name'],$this->status);
+			$sql = $this->sql->countByDoneBy($_SESSION['login-name'],$this->status);
 		} else {
-			$sql = $this->sql->countProjectsByStatus($this->status);
+			$sql = $this->sql->countByStatus($this->status);
 		}
 		$this->found = dbGetCount($sql, 'total_projects');
 	}
@@ -96,9 +96,9 @@ protected $__MyClassName = 'ProjectList';
 		
 		if ($this->showMyProjects == 'YES'){
 			$user = $_SESSION['login-name'];
-			$sql = $this->sql->listProjectsByDoneBy($user,$this->status,$this->resultPage,$this->perPage);
+			$sql = $this->sql->listByDoneBy($user,$this->status,$this->resultPage,$this->perPage);
 		} else {
-			$sql = $this->sql->listProjectsByStatus($this->status,$this->resultPage,$this->perPage);
+			$sql = $this->sql->listByStatus($this->status,$this->resultPage,$this->perPage);
 		}
 		
 		$result = dbGetResult($sql);

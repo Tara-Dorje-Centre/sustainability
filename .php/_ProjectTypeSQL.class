@@ -43,7 +43,7 @@ public function options($selectedId = 0, $disabled = 'false'){
 	$q .= " pt.display_order as sort_key ";
 	$q .= " FROM project_types pt ";
 	if ($disabled == 'true'){
-		$q .= " WHERE pt.id = ".$selectedValue." ";	
+		$q .= " WHERE pt.id = ".$selectedId." ";	
 	}
 	$q .= " ORDER BY sort_key, name ";
 	return $q;	

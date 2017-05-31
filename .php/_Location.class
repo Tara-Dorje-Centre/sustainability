@@ -140,14 +140,14 @@ class Location extends __Entity{
 	CONST $html_false = 'false';
 	CONST $html_true = 'true';
 	*/
-	public function selectList(
+	public function options(
 		$selected = 0, 
 		$idName = 'locationId', 
 		$disabled = 'false',
 		$showLink = true,
 		$onChangeJS = NULL){
 
-		$this->echoState(true, 'selectList');
+		$this->echoState(true, 'options');
 		
 		if (is_null($selected) || ($selected == '')){
 			$sv = 0;
@@ -172,7 +172,7 @@ class Location extends __Entity{
 
 	}
 	
-	protected function setAddDefaults(){
+	protected function setDefaults(){
 	
 		if ($this->pageMode == 'ADD'){
 			//if add came from all locations default, reset to 0 for no parent
@@ -191,7 +191,7 @@ class Location extends __Entity{
 	
 	$this->echoState(true,'editForm');
 	
-		$this->setAddDefaults();
+		$this->setDefaults();
 		if ($this->pageMode == 'ADD'){
 			$legend = 'Add Location';
 		} else {
@@ -206,7 +206,7 @@ class Location extends __Entity{
 		$formRequired = inputFieldName($entity,$this->name,'locationName','Location');
 
 		$type = new LocationType('SELECT');
-		$select = $type->selectList($this->typeId,'typeId','false',false);
+		$select = $type->options($this->typeId,'typeId','false',false);
 		$formOptional = captionedInput('Location Type',$select);
 					
 		$formOptional .= inputFieldText($entity,$this->description,'locationDescription','Description');

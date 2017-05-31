@@ -77,7 +77,7 @@ $q .= " WHERE  ";
 $q .= " p.id = ".$projectId." ";
 $q .= " ORDER BY ";
 $q .= " t.task_order, t.started, t.id ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
+$q .= sqlLimitClause($page, $rows);
 return $q;
 }
 
@@ -85,14 +85,14 @@ return $q;
 
 public function summaryProject($id){
 $q = " SELECT  ";
-$this-+colsSummary();
-$this-tables(false);
+$q .= $this->colsSummary();
+$q .= $this->tables(false);
 $q .= " WHERE t.project_id = ".$id." ";
 return $q;
 }
 
 
-function countProjectTaskStatus($id, $taskStatus = 'OPEN'){
+public function countProjectTaskStatus($id, $taskStatus = 'OPEN'){
 $q = " SELECT  ";
 $q .= " COUNT(*) AS total_tasks ";
 $q .= " FROM tasks AS t ";
