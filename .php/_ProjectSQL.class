@@ -43,18 +43,12 @@ class ProjectSQL implements IentitySQL{
 	
 	}
 //projects table fields displayed in detail
-public function list($projectStatus, $resultPage, $rowsPerPage){
+public function listByStatus($status, $page = 1, $rows = 10){
 $q = " SELECT  ";
 $q .= $this->cols();
 $q .= $this->tables();
 $q .= $this->whereStatus($status);
-/*
-if ($projectStatus =='CLOSED'){
-	$q .= " WHERE p.pct_done = '1.00' "; 
-} else {
-	$q .= " WHERE p.pct_done != '1.00' "; 
-}
-*/
+
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
 $q .= sqlLimitClause($resultPage, $rowsPerPage);
 return $q;
@@ -65,14 +59,7 @@ $q = " SELECT  ";
 $q .= $this->cols();
 $q .= $this->tables();
 $q .= $this->whereStatus($status);
-/*
-if ($projectStatus=='CLOSED'){
-	$q .= " WHERE p.pct_done = '1.00' "; 
-} else {
-	
-	$q .= " WHERE p.pct_done != '1.00' "; 
-}
-*/
+
 $q .= " AND p.id IN ";
 $q .= " (select t.project_id from ";
 $q .= " activities a JOIN tasks t ON a.task_id = t.id ";
@@ -122,16 +109,16 @@ $q .= " ORDER BY p.sort_key, p.priority, p.id ";
 return $q;
 }
 
-public function info($selectedProjectId){
+public function info($id){
 $q = " SELECT  ";
 $q .= $this->cols();
 $q .= $this->tables();
 
-$q .= " WHERE p.id = ".$selectedProjectId." "; 
+$q .= " WHERE p.id = ".$id." "; 
 return $q;
 }
 
-public function options($selectedValue,$disabled){
+public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
 	$q .= " p.name as caption ";
@@ -233,6 +220,19 @@ public function optionsByType($typeId = 0){
 
 		return $sql;
 	}
+
+
+public function list($page = 1, $rows = 10){
+
+
+
+}
+public function count(){
+
+
+}
+
+
 
 }
 ?>

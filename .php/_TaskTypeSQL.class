@@ -13,20 +13,20 @@ $c .= " pt.display_order, ";
 $c .= " pt.notes ";
 return $c;	
 }
-public function info($typeId){
+public function info($id){
 $q = " SELECT ";	
-$q .= $this->columns();
+$q .= $this->cols();
 $q .= " FROM task_types pt ";
 $q .= " WHERE  ";
-$q .= " pt.id = '".$typeId."' ";
+$q .= " pt.id = '".$is."' ";
 return $q;
 }
-public function list($resultPage, $rowsPerPage){
+public function list($page = 1, $rows = 10){
 $q = " SELECT ";	
-$q .= $this->columns();
+$q .= $this->cols();
 $q .= " FROM task_types pt ";
 $q .= " ORDER BY display_order ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
+$q .= sqlLimitClause($page, $rows);
 return $q;	
 }
 public function count(){
@@ -35,13 +35,13 @@ $q .= " COUNT(*) total_types ";
 $q .= " FROM task_types pt ";
 return $q;	
 }
-public function options($selectedValue,$disabled){
+public function options($selectedId = 0,$disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " pt.id as value, ";
 	$q .= " pt.name as caption ";
 	$q .= " FROM task_types pt ";
 	if ($disabled == 'true'){
-		$q .= " WHERE pt.id = ".$selectedValue." ";	
+		$q .= " WHERE pt.id = ".$selectedId." ";	
 	}
 	$q .= " ORDER BY display_order ";
 	return $q;	

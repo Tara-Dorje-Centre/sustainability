@@ -25,7 +25,7 @@ $c .= " m.notes ";
 return $c;	
 }
 
-public function tables($joinTypes = true){
+protected function tables($joinTypes = true){
 
 $q = " FROM receipts AS m ";
 $q .= " JOIN tasks AS t ON m.task_id = t.id ";
@@ -37,15 +37,15 @@ $q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id "
 }
 return $q;
 }
-public function info($receiptId){
+public function info($id){
 $q = " SELECT ";	
 $q .= $this->cols();
 $q .= $this->tables();
 $q .= " WHERE  ";
-$q .= " m.id = ".$receiptId." ";
+$q .= " m.id = ".$id." ";
 return $q;
 }
-public function listTask($taskId, $resultPage, $rowsPerPage){
+public function listTask($taskId, $page = 1, $rows = 10){
 $q = " SELECT ";	
 $q .= $this->cols();
 $q .= $this->tables();
@@ -54,7 +54,7 @@ $q .= " WHERE  ";
 $q .= " m.task_id = ".$taskId." ";
 $q .= " ORDER BY ";
 $q .= " date(m.date_reported) desc, m.name ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
+$q .= sqlLimitClause($page, $rows);
 return $q;
 }
 public function countTask($taskId){
@@ -121,6 +121,24 @@ $q .= " AND t.receipts_auth_project = '".$approved."' ";
 $q .= " GROUP BY receipt_type ";
 return $q;
 }
+
+
+
+public function count(){
+
+}
+
+public function list($page = 1, $rows = 10){
+
+
+}
+
+
+public function options($selectedId = 0, $disabled = 'false'){
+
+}
+
+
 
 }
 ?>

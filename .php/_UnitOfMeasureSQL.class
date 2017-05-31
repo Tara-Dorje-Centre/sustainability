@@ -11,17 +11,17 @@ $query .= " um.notes, ";
 $query .= " um.symbol ";
 return $query;	
 }
-public function info($unitId){
+public function info($id){
 $query = " SELECT ";	
-$query .= $this->columnsUnitOfMeasure();
+$query .= $this->cols();
 $query .= " FROM units_of_measure um ";
 $query .= " WHERE  ";
-$query .= " um.id = '".$unitId."' ";
+$query .= " um.id = '".$id."' ";
 return $query;
 }
-public function list($resultPage, $rowsPerPage){
+public function list($page = 1, $rows = 10){
 $query = " SELECT ";	
-$query .= $this->columns();
+$query .= $this->cols();
 $query .= " FROM units_of_measure um ";
 $query .= " ORDER BY type, name ";
 $query .= sqlLimitClause($resultPage, $rowsPerPage);
@@ -33,14 +33,14 @@ $query .= " COUNT(*) total_units ";
 $query .= " FROM units_of_measure um ";
 return $query;	
 }
-public function options($selectedValue,$disabled){
+public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " um.type, ";
 	$q .= " um.id as value, ";
 	$q .= " concat(um.name,'(',um.symbol,')') as caption ";
 	$q .= " FROM units_of_measure um ";
 	if ($disabled == 'true'){
-		$q .= " WHERE um.id = ".$selectedValue." ";	
+		$q .= " WHERE um.id = ".$selectedId." ";	
 	}
 	$q .= " ORDER BY type, caption ";
 	return $q;	

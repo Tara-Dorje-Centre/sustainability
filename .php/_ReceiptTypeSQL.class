@@ -20,7 +20,9 @@ $q .= " WHERE  ";
 $q .= " pt.id = '".$id."' ";
 return $q;
 }
-public function list($resultPage, $rowsPerPage){
+public function list($page = 1, $rows = 10){
+
+
 $q = " SELECT ";	
 $q .= $this->cols();
 $q .= " FROM receipt_types pt ";
@@ -34,13 +36,13 @@ $q .= " COUNT(*) total_types ";
 $q .= " FROM receipt_types pt ";
 return $q;	
 }
-public function options($selectedValue, $disabled){
+public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " pt.id as value, ";
 	$q .= " pt.name as caption ";
 	$q .= " FROM receipt_types pt ";
 	if ($disabled == 'true'){
-		$q .= " WHERE pt.id = ".$selectedValue." ";
+		$q .= " WHERE pt.id = ".$selectedId." ";
 	}
 	$q .= " ORDER BY name ";
 	return $q;	

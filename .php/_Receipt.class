@@ -3,8 +3,6 @@
 class Receipt extends __Entity{
 protected $__MyClassName = 'Receipt';
 
-
-    
     public $activityId = 0;	
 	public $typeId = 0;
 	public $typeName = '';
@@ -186,14 +184,14 @@ protected $__MyClassName = 'Receipt';
 		//start optional fields
 		$fields = inputFieldNumber($entity,$this->quantity,'quantity','Quantity');
 		
-		$u = new UnitOfMeasure;
-		$select = $u->options]($this->quantityUnitMeasureId,'quantityUnitMeasureId','false');
+		$u = new UnitOfMeasure(OPTIONS);
+		$select = $u->options($this->quantityUnitMeasureId,'quantityUnitMeasureId','false');
 		$fields .= captionedInput('Quantity Units', $select);
 
 		$tooltip = 'Set when task costs are approved';
 		$fields .= inputFieldNumber($entity,$this->costActual,'costActual','Amount Actual',$tooltip);
 
-		$m = new ReceiptType;
+		$m = new ReceiptType(OPTIONS);
 		$select = $m->options($this->typeId,'typeId','false');
 		$fields .= captionedInput('Receipt Type',$select);
 		

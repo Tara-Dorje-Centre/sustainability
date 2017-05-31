@@ -12,20 +12,20 @@ $c .= " pt.display_order, ";
 $c .= " pt.notes ";
 return $c;	
 }
-public function info($typeId){
+public function info($id){
 $q = " SELECT ";	
 $q .= $this->cols();
 $q .= " FROM project_types pt ";
 $q .= " WHERE  ";
-$q .= " pt.id = '".$typeId."' ";
+$q .= " pt.id = '".$id."' ";
 return $q;
 }
-public function list($resultPage, $rowsPerPage){
+public function list($page = 1, $rows = 10){
 $q = " SELECT ";	
 $q .= $this->cols();
 $q .= " FROM project_types pt ";
 $q .= " ORDER BY display_order, name ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
+$q .= sqlLimitClause($page, $rows);
 return $q;	
 }
 
@@ -36,7 +36,7 @@ $q .= " FROM project_types pt ";
 return $q;	
 }
 
-public function options($selectedValue,$disabled){
+public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " pt.id as value, ";
 	$q .= " pt.name as caption, ";

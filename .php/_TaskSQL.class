@@ -51,7 +51,7 @@ public function info($id){
 $q = " SELECT  ";
 $q .= $this->cols();
 
-$q .= $this->tables);
+$q .= $this->tables();
 
 $q .= " WHERE  ";
 $q .= " t.id = ".$id." ";
@@ -252,7 +252,19 @@ public function optionsProject($projectId,$selectedTaskId,$disabled){
 	}
 	
 	
+	public function count(){
 	
+	
+	}
+	
+	public function list($page = 1, $rows = 10){
+	
+	}
+	
+	public function options($selectedId = 0, $disabled = 'false'){
+	
+	
+	}
 	
 
 }
