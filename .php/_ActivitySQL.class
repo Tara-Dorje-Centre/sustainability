@@ -1,6 +1,8 @@
 ﻿<?php 
 
-class ActivitySQL implements IentitySQL{
+class ActivitySQL 
+implements IentitySQL, ItaskDescendentSQL, IprojectDescendentSQL
+{
 protected function cols(){
 $c = " a.id,  ";
 $c .= " a.task_id,  ";
@@ -21,43 +23,57 @@ $c .= " pt.highlight_style ";
 return $c;	
 }
 
-public function tables(){
-
-$q .= " FROM activities a JOIN tasks t ON a.task_id = t.id ";
+public function tables($joinTypes = true){
+$q = " FROM activities a JOIN tasks t ON a.task_id = t.id ";
 $q .= " JOIN projects p ON t.project_id = p.id ";
-$q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
 
+
+$q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
 return $q;
 }
 
-
-public function info($id = 0){
-$q = " SELECT  ";
-$q .= $this->cols();
-$q .= $this->tables();
+protected function where($id){
 $q .= " WHERE  ";
 $q .= " a.id = '".$id."' ";
 return $q;
 }
 
-public function listTask($taskId = 0, $page = 10, $rows = 10){
+
+protected function whereTask($id = 0){
+$q .= " WHERE  ";
+$q .= " a.task_id = '".$id."' ";
+return $q;
+}
+protected function whereProject($id = 0){
+$q .= " WHERE  ";
+$q .= " t.project_id = '".$id."' ";
+return $q;
+}
+
+public function info($id = 0){
 $q = " SELECT  ";
 $q .= $this->cols();
 $q .= $this->tables();
-$q .= " WHERE  ";
-$q .= " a.task_id = '".$taskId."' ";
+$q .= $this->where($id);
+return $q;
+}
+
+public function listTask($id = 0, $page = 10, $rows = 10){
+$q = " SELECT  ";
+$q .= $this->cols();
+$q .= $this->tables();
+$q .= $this->whereTask($id);
 $q .= " ORDER BY ";
 $q .= " a.started desc, a.activity_order, a.id ";
 $q .= sqlLimitClause($page, $rows);
 return $q;
 }
 
-public function countTask($taskId){
+public function countTask($id = 0){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_activities";
 $q .= $this->tables(false);
-$q .= " WHERE  ";
-$q .= " a.task_id = '".$taskId."' ";
+$q .= $this->whereTask($id);
 return $q;
 }
 
@@ -68,16 +84,15 @@ $q .= " SUM(a.hours_estimated) total_hours_estimated, ";
 $q .= " SUM(a.hours_actual) total_hours_actual ";
 return $q;
 }
-public function summaryTask($taskId){
+public function summaryTask($id = 0){
 $q = " SELECT  ";
 $q .= $this->colsSummary();
 $q .= $this->tables(false);
-$q .= " WHERE  ";
-$q .= " a.task_id = '".$taskId."' ";
+$q .= $this->whereTask($id);
 return $q;
 }
 
-public function listDoneBy($doneBy, $resultPage, $rowsPerPage){
+public function listDoneBy($doneBy, $page = 1, $rows = 10){
 $q = " SELECT  ";
 $q .= $this->cols();
 $q .= $this->tables();
@@ -167,26 +182,27 @@ $q .= " MONTH(a.started) ";
 return $q;
 }
 
-public function listProject($projectId, $page = 1, $rows = 10){
+public function listProject($id = 0, $page = 1, $rows = 10){
 $q = " SELECT  ";
 $q .= $this->cols();
 $q .= $this->tables();
-$q .= " WHERE p.id = ".$projectId." ";
+$q .= $this->whereProject($id);
+
 $q .= " ORDER BY ";
 $q .= " a.started desc, a.id ";
 $q .= sqlLimitClause($page, $rows);
 return $q;
 }
 
-public function countProject($projectId){
+public function countProject($id = 0){
 $q = " SELECT  ";
 $q .= " COUNT(*) total_activities  ";
 $q .= $this->tables(false);
-$q .= " WHERE p.id = ".$projectId." ";
+$q .= $this->whereProject($id);
 return $q;
 }
 
-public function calendarSummaryProject($projectId, $year, $month){
+public function calendarSummaryProject($id = 0, $year, $month){
 //show daily tally by task and person
 $q = "SELECT  ";
 $q .= " SUM(a.hours_actual) sum_hours, ";
@@ -199,7 +215,7 @@ $q .= " min(t.name) name, ";
 $q .= " min(t.task_order) ordering, ";
 $q .= " min(tt.highlight_style) highlight_style ";
 $q .= $this->tables();
-$q .= " WHERE p.id = ".$projectId." ";
+$q .= $this->whereProject($id);
 $q .= " AND MONTH(a.started) = '".$month."'  ";
 $q .= " AND YEAR(a.started) = '".$year."'  ";
 $q .= " GROUP BY  ";
@@ -219,7 +235,7 @@ $q .= " t.name, ";
 $q .= " 1000 + min(t.task_order) ordering, ";
 $q .= " 'highlight-yellow' highlight_style ";
 $q .= $this->tables();
-$q .= " WHERE p.id = ".$projectId." ";
+$q .= $this->whereProject($id);
 $q .= " AND MONTH(a.started) = '".$month."'  ";
 $q .= " AND YEAR(a.started) = '".$year."'  ";
 $q .= " GROUP BY ";
@@ -229,12 +245,12 @@ $q .= " ORDER BY started, ordering, done_by ";
 return $q;	
 }
 
-public function calendarLinksProject($projectId){
+public function calendarLinksProject($id = 0){
   $q = "SELECT ";
   $q .= " MONTH(a.started) month, ";
   $q .= " YEAR(a.started) year ";
 $q .= $this->tables(false);
-  $q .= " WHERE p.id = ".$projectId." ";
+$q .= $this->whereProject($id);
   $q .= " GROUP BY  ";
   $q .= " YEAR(a.started), ";
   $q .= " MONTH(a.started) ";

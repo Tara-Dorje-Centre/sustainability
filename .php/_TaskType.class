@@ -110,7 +110,7 @@ class TaskType extends __EntityType{
 		return $select;
 	}	
 	
-	public function getTaskTypeSelectList(
+	public function options(
 		$selectedValue = '0', 
 		$idName = 'taskTypeId', 
 		$disabled = 'false',

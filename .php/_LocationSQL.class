@@ -21,12 +21,12 @@ public function list($page = 1, $rows = 10){
 	$q .= " FROM locations AS l ";
 	$q .= " ORDER BY l.sort_key ";
 
-	$q .= sqlLimitClause($page, $perPage);
+	$q .= sqlLimitClause($page, $rows);
 	return $q;
 }
 
 
-public function listChildren($idParent, $page, $perPage){
+public function listChildren($idParent, $page = 1, $rows = 10){
 	$q = " SELECT  ";
 	$q .= $this->columns();
 	$q .= " FROM locations AS l ";
@@ -35,7 +35,7 @@ public function listChildren($idParent, $page, $perPage){
 	//} 
 	$q .= " ORDER BY l.sort_key ";
 
-	$q .= sqlLimitClause($page, $perPage);
+	$q .= sqlLimitClause($page, $rows);
 	return $q;
 }
 

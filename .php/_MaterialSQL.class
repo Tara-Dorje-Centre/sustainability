@@ -62,7 +62,7 @@ protected function whereProject($id, $year, $month){
 protected function whereTask($id, $year, $month){
 	$w = " WHERE  ";
 	$w .= " m.task_id = ".$id." ";
-	$w .= $th->andYearMonth($year, $month);
+	$w .= $this->andYearMonth($year, $month);
 	return $w;
 }
 
@@ -90,9 +90,9 @@ $c = " COUNT(*) total_materials ";
 return $c;
 }
 public function colsSummary(){
-$q = " COUNT(*) total_materials, ";
-$q .= " SUM(m.cost_estimated) sum_cost_estimated, ";
-$q .= " SUM(m.cost_actual) sum_cost_actual ";
+	$c = " COUNT(*) total_materials, ";
+	$c .= " SUM(m.cost_estimated) sum_cost_estimated, ";
+	$c .= " SUM(m.cost_actual) sum_cost_actual ";
 return $c;
 }
 
@@ -126,7 +126,7 @@ public function summaryTaskDoneBy($id, $year = 0, $month = 0){
 $q = " SELECT  ";
 $q .= $this->colsDoneBy();
 $q .= $this->colsSummary();
-$q .= $this->tables(falee);
+$q .= $this->tables(false);
 $q .= $this->whereTask($id, $year, $month);
 $q .= " GROUP BY done_by ";
 return $q;
@@ -145,7 +145,7 @@ return $q;
 
 public function listProject($id,$page = 1, $rows = 10,$year = 0,$month = 0){
 $q = " SELECT ";	
-$q .= $this->columns();
+$q .= $this->cols();
 $q .= $this->tables();
 $q .= $this->whereProject($id, $year, $month);
 $q .= " AND t.materials_auth_project = 'yes' ";

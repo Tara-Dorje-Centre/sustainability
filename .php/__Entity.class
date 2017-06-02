@@ -10,7 +10,8 @@ class __entity extends __echo {
 	public const ADD = 'ADD';
 	public const COPY = 'COPY';
 	public const FETCH = 'FETCH';
-	public const SELECT = 'SELECT';
+	public const OPTIONS = 'OPTIONS';
+		public const LIST = 'LIST';
 
     public $pageMode = 'VIEW';
 	public $id = 0;

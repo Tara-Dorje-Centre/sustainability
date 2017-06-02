@@ -22,7 +22,7 @@ class ActivityList extends __EntityList{
 	
 	public function setDetails(){
 	
-   		$this->echoState(true, 'setDetails');
+   		$this->echoState(true, '#setDetails');
 		$this->task->setDetails();
 		$this->setFoundCount();
 	}
@@ -94,11 +94,13 @@ class ActivityList extends __EntityList{
 	}
 
 	public function setFoundCount(){
+		$this->echoState(true, 'setFoundCount');
+		$this->echoValue(true, 'myActivity',$this->myActivity, 'setFoundCount');
 		if ($this->myActivity == 'NO'){
-			$sql = $this->sql->countActivityByTask($this->task->id);
+			$sql = $this->sql->countByTask($this->task->id);
 		} else {
 			if ($this->myActivity == 'YES' || $this->myActivity == 'GROUP'){
-				$sql = $this->sql->countActivityByDoneBy($this->getActivityDoneBy());
+				$sql = $this->sql->countByDoneBy($this->getActivityDoneBy());
 			} elseif ($this->myActivity == 'PROJECT') {
 				$sql = $this->sql->countProjectActivity($this->task->project->id);
 			}
@@ -107,6 +109,7 @@ class ActivityList extends __EntityList{
 	}
 
 	private function getCalendarLinks(){
+		$this->echoState(true, 'getCalendarLnks');
 		$l = new ActivityLinks('DIV','paged');
 		$baseUrl = $l->listing(-1,$this->myActivity,$this->showCalendar,$this->task->project->id);
 		$links = $l->openMenu('calendar-links');
@@ -117,7 +120,7 @@ class ActivityList extends __EntityList{
 		$foundNext = false;
 				
 		if ($this->myActivity == 'PROJECT') {
-			$sql = $this->sql->calendarLinksProjectActivity($this->task->project->id);
+			$sql = $this->sql->calendarLinksProject($this->task->project->id);
 		} else {
 			$sql = $this->sql->calendarLinksMyActivity($this->getActivityDoneBy());			
 		}
@@ -159,7 +162,7 @@ class ActivityList extends __EntityList{
 		$title = 'Project Activities';
 
 		$cal = new _Calendar($this->year,$this->month,$title);
-		$sql = $this->sql->calendarSummaryProjectActivity($this->task->project->id,$this->year,$this->month);
+		$sql = $this->sql->calendarSummaryProject($this->task->project->id,$this->year,$this->month);
 		
 		$result = dbGetResult($sql);
 		if($result){

@@ -74,7 +74,7 @@ $q = " SELECT  ";
 $q .= $this->cols();
 $q .= $this->tables();
 $q .= " WHERE  ";
-$q .= " p.id = ".$projectId." ";
+$q .= " p.id = ".$id." ";
 $q .= " ORDER BY ";
 $q .= " t.task_order, t.started, t.id ";
 $q .= sqlLimitClause($page, $rows);

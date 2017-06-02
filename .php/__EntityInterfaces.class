@@ -7,19 +7,55 @@ interface IentitySQL{
 	public function count();
 	public function list($page = 1, $rows = 10);
 	public function options($selectedId = 0, $disabled = 'false');
-	//	protected function cols();
+//	protected function cols();
 //	protected function tables($joinTypes = false);
-	//public function countChildren($id);
-	//public function countByType($typeId = 0);
+//  protected function where($id);
+}
 
-	//public function listChildren($id, $page = 1, $rows = 10);
-	//public function listByType($typeId);
-	//public function listByParent{$id, $page = 1, $rows = 10);
+Interface IsummarySQL{
+//protected function colsSummary();
+	public function summary($id = 0);
+}
 
-	//public function optionsChildren();
+Interface IhasDoneBySQL{
+//protected function colsDoneBy();
+public function whereDoneBy($doneBy = 'EVERYONE');
+public function listByDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10);
 
 }
 
+interface IhasTypeSQL{
+//protected function colsByType();
+//protected function whereByType();
+public function countByType($typeId = 0);
+public function listByType($typeId = 0, $page = 1, $rows = 10);
+public function summaryByType($id = 0);
+}
+
+interface ItaskDescendentSQL{
+
+//  protected function whereByTask($id);
+	public function getTaskId($id = 0);
+	public function countTask($id = 0);
+	public function listTask($id = 0, $page = 1, $rows = 10);
+	public function summaryTask($id = 0);
+	public function optionsTask($id = 0, $selectedId = 0, $disabled = 'false');
+}
+
+interface IprojectDescendentSQL{
+//  protected function whereByProject($id);
+	public function getProjectId($id = 0);
+	public function countProject($id = 0);
+	public function listProject($id = 0, $page = 1, $rows = 10);
+	public function summaryProject($id = 0);
+	public function optionsProject($id = 0, $selectedId = 0, $disabled = 'false');
+}
+
+interface IsParentSQL{
+	public function countChild($id, $child = array());
+	public function listChild($id, $child = array(), $page = 1, $rows = 10);
+	public function optionsChild($id, $child = array(), $selectedId = 0, $disabled = 'false');
+}
 
 interface Ientity{
 

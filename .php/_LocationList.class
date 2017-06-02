@@ -65,7 +65,7 @@ class LocationList extends __EntityList{
 	public function setCount(){
 		if ($this->idParent == -1){
 			// idParent is -1, list all locatons
-			$sql = $this->sql->countAll();
+			$sql = $this->sql->count();
 			$this->echoPrint(true, 'count all locations','setCount');
 		} else {
 			// id parent is 0 -- list primary locatons
@@ -125,7 +125,7 @@ class LocationList extends __EntityList{
 		if ($this->idParent == -1){
 			$this->echoPrint(true, 'fetching all','getListingRows');
 		
-			$sql = $this->sql->listAll($this->resultPage,$this->perPage);
+			$sql = $this->sql->list($this->resultPage,$this->perPage);
 		} else {
 			$this->echoPrint(true, 'fetching children','getListingRows');
 		

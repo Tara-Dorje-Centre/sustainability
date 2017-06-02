@@ -46,7 +46,7 @@ protected $__MyClassName = 'Task';
 	public function setDetails(){
    		$this->echoState('task.setDetails');
 		
-		$this->project->setDetails;
+
 		
 		if ($this->id > 0){
 		
@@ -88,6 +88,8 @@ protected $__MyClassName = 'Task';
 		$this->summarizeReceipt();
 		
 		}
+		
+		$this->project->setDetails;
 	}	
 	
 
@@ -110,12 +112,14 @@ protected $__MyClassName = 'Task';
 	
 	
 	protected function setMeasureCount(){
+		$this->echoState(true, 'setMeasureCount');
 		$s = new MeasureSQL;
 		$sql = $s->countTask($this->id);
 		$this->measureCount = dbGetCount($sql, 'total_measures', 0);
 	}
 	
 	protected function summarizeActivity(){
+		$this->echoState(true, 'setMeasureCount');
 		$s = new ActivitySQL;
 		$sql = $s->summaryTask($this->id);
 		
@@ -446,18 +450,18 @@ protected $__MyClassName = 'Task';
 
 		$fields .= inputFieldName($entity,$this->name,'name','Task Name');
 		
-		$l = new TaskType;
-		$select = $l->getTaskTypeSelectList($this->typeId,'taskTypeId');
+		$l = new TaskType(OPTIONS);
+		$select = $l->options($this->typeId,'taskTypeId');
 		$fields .= captionedInput('Task Type', $select);
 
 
 		$formRequired = $fields;
 
-		$input = $this->project->getProjectSelectList($this->project->id,'projectId','false',false);
+		$input = $this->project->options($this->project->id,'projectId','false',false);
 		$fields = captionedInput('Task Project', $input);
 		
 		
-		$l = new Location;
+		$l = new Location(OPTIONS);
 		$select = $l->options($this->locationId,'locationId','false',false);
 		$fields .= captionedInput('Location', $select);
 

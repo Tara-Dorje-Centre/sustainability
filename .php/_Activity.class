@@ -139,6 +139,7 @@ class Activity extends __Entity{
 	}
 	
 	public function editForm($editContext = 'ActivityDetail'){
+		$this->echoState(true, 'editForm');
 		if ($this->pageMode == 'ADD'){		
 			$this->setDefaults();
 			$legend = 'Add Activity';	
@@ -158,15 +159,15 @@ class Activity extends __Entity{
 		//$form .= $_ptId.'.'.$_pId.'.'.$_tId;
 
 		//project type
-		$pt = new ProjectType;
-		$pt->setDetails($_ptId,'VIEW');
+		$pt = new ProjectType(OPTIONS);
+		//$pt->setDetails($_ptId,'VIEW');
 		$changeJs = "ajaxRefresh('PROJECTS_BY_TYPE_SELECT',this,'projectId');";
 		$input = $pt->options($_ptId,'projectTypeId','false',false,$changeJs);
 		$fields = captionedInput('Project Type',$input);
 				
 		//project
 		$changeJs = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'taskId');";
-		$input = $this->task->project->options($_ptId,$_pId,'projectId','false',false,$changeJs);
+		$input = $this->task->project->options($_pId,'projectId','false',false,$changeJs);
 		$fields .= captionedInput('Project',$input);
 
 		$changeJs = "ajaxRefresh('TASK_EST_EFFORT',this,'activityHoursActual');";		
@@ -195,7 +196,7 @@ class Activity extends __Entity{
 
 
 	
-		$activityType = new ActivityType;
+		$activityType = new ActivityType(OPTIONS);
 		$input = $activityType->options($this->typeId,'typeId','false',false);
 		$fields = captionedInput('Activity Type',$input);
 
@@ -220,6 +221,7 @@ class Activity extends __Entity{
 	}
 	
 	public function collectPostValues(){
+		$this->echoState(true, 'collectPostValues');
 		//called by save form prior to running adds/updates
 		$this->pageMode = $_POST['mode'];
 		

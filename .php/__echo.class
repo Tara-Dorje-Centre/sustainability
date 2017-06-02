@@ -2,6 +2,8 @@
 
 class __echo{
 
+protected $echoEnabled = true;
+
 protected $__MyClassName = '__echo';
 protected $__MyFunctionName = '__construct';
 
@@ -36,8 +38,8 @@ public function echoPrint($show = true, $msg, $f = '-use-current-', $c= '-use-cu
 	}
 }
 public function echoPrintline($msg){
-	$enabled = false;
-	if ($enabled == true){
+	
+	if ($this->echoEnabled == true){
 	echo $msg.'<br />';
 	}
 }
