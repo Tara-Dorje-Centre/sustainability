@@ -1,3 +1,5 @@
 <?php
-include("public.php");
+header("Location: public.php");
+//
+//include("public.php");
 ?>

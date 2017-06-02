@@ -1,4 +1,4 @@
-﻿<?php 
+<?php
 include_once("_includes.php");
 
 $viewMode = sessionVariableGET('viewMode', 'MAIN');
