@@ -1,8 +1,14 @@
 ﻿<?php 
+class MaterialSQL extends _taskChildSQL{
 
-class MaterialSQL implements IentitySQL{
+protected $baseTable = 'materials';
+
+$fieldApproved = 'materials_auth_project';
+$fieldDate = 'date_reported';
+
 protected function cols(){
-$c = " m.id, ";
+$c = $this->select();
+$c .= " m.id, ";
 $c .= " m.task_id, ";
 $c .= " t.task_order, ";
 $c .= " t.name task_name, ";
@@ -27,6 +33,15 @@ $c .= " m.link_url, ";
 $c .= " m.notes ";
 return $c;	
 }
+
+public function colsSummary($first = true){
+$c = $this->select($first);
+	$c .= " COUNT(*) total_materials, ";
+	$c .= " SUM(m.cost_estimated) sum_cost_estimated, ";
+	$c .= " SUM(m.cost_actual) sum_cost_actual ";
+return $c;
+}
+
 public function tables($joinTypes = false){
 $q .= " FROM materials AS m ";
 $q .= " JOIN tasks AS t ON m.task_id = t.id ";
@@ -36,201 +51,26 @@ $q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
 $q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
 }
 return $q;
-
 }
 
-
-protected function andYearMonth($year = 0, $month = 0){
-	$w = '';
-	if ($year > 0){
-		$w .= " AND year(m.date_reported)  = ".$year." ";	
-	}
+public function summaryTaskGroupType($id, $year = 0, $month = 0){
+$q .= $this->colsSummary();
+$q .= " IFNULL(mt.name, 'Unspecified') material_type, ";
+$q .= $this->tables();
+$q .= $this->whereTask($id, $year, $month);
+$q .= " GROUP BY material_type ";
+return $q;
+}
 	
-	if ($month > 0){
-		$w .= " AND MONTH(m.date_reported)  = ".$month." ";	
-	}
-	return $w;
-}
-
-protected function whereProject($id, $year, $month){
-	$w .= " WHERE  ";
-	$w .= " t.project_id = ".$projectId." ";
-	$w .= $this->andYearMonth($year, $month);
-	return $w;
-}
-
-protected function whereTask($id, $year, $month){
-	$w = " WHERE  ";
-	$w .= " m.task_id = ".$id." ";
-	$w .= $this->andYearMonth($year, $month);
-	return $w;
-}
-
-public function info($id){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= $this->tables();
-$q .= " WHERE  ";
-$q .= " m.id = ".$id." ";
-return $q;
-}
-
-public function listTask($id,$page = 1, $rows = 10,$year = 0,$month = 0){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= $this->tables();
-$q .= $this->whereTask($id, $year, $month);
-$q .= " ORDER BY ";
-$q .= " date(m.date_reported) desc, m.name ";
-$q .= sqlLimitClause($page, $rows);
-return $q;
-}
-public function colsCount(){
-$c = " COUNT(*) total_materials ";
-return $c;
-}
-public function colsSummary(){
-	$c = " COUNT(*) total_materials, ";
-	$c .= " SUM(m.cost_estimated) sum_cost_estimated, ";
-	$c .= " SUM(m.cost_actual) sum_cost_actual ";
-return $c;
-}
-
-
-public function countTask($id, $year = 0,$month = 0){
-$q = " SELECT  ";
-$q .= $this->colsCount();
-$q .= $this->tables();
-$q .= $this->whereTask($id, $year, $month);
-return $q;
-}
-public function summaryTask($id, $year = 0,$month = 0){
-$q = " SELECT  ";
-$q .= $this->colsSummary();
-$q .= $this->tables();
-$q .= $this->whereTask($id, $year, $month);
-return $q;
-}
-
-public function summaryTaskMaterialType($id, $year = 0, $month = 0){
-$q = " SELECT  ";
+public function summaryProjectGroupType($id, $year= 0, $month = 0){
+$q = $this->colsSummary();
 $q .= " IFNULL(mt.name, 'Unspecified') material_type, ";
-$q .= $this->colsSummary();
 $q .= $this->tables();
-$q .= $this->whereTask($id, $year, $month);
+$q .= $this->whereProject($id, $year, $month);
+
 $q .= " GROUP BY material_type ";
 return $q;
 }
-
-public function summaryTaskDoneBy($id, $year = 0, $month = 0){
-$q = " SELECT  ";
-$q .= $this->colsDoneBy();
-$q .= $this->colsSummary();
-$q .= $this->tables(false);
-$q .= $this->whereTask($id, $year, $month);
-$q .= " GROUP BY done_by ";
-return $q;
-}
-public function summaryProjectDoneBy($id, $year = 0, $month = 0){
-$q = " SELECT  ";
-$q .= $this->colsDoneBy();
-$q .= $this->colsSummary();
-$q .= $this->tables(false);
-$q .= $this->whereProject($id, $year, $month);
-$q .= " AND t.materials_auth_project = 'yes' ";
-$q .= " GROUP BY done_by ";
-return $q;
-}
-
-
-public function listProject($id,$page = 1, $rows = 10,$year = 0,$month = 0){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= $this->tables();
-$q .= $this->whereProject($id, $year, $month);
-$q .= " AND t.materials_auth_project = 'yes' ";
-$q .= " ORDER BY ";
-$q .= " date(m.date_reported) desc, t.task_order, m.name ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
-return $q;
-}
-
-public function countProject($id, $year = 0, $month = 0){
-$q = " SELECT  ";
-$q .= $this->colsCount();
-$q .= $this->tables();
-$q .= $this->whereProject($id, $year, $month);
-return $q;
-}
-
-
-public function summaryProjectByType($id, $year= 0, $month = 0){
-$q = " SELECT  ";
-$q .= " IFNULL(mt.name, 'Unspecified') material_type, ";
-$q .= $this->colsSummary();
-$q .= $this->tables();
-$q .= $this->whereProject($id, $year, $month);
-	$q .= " AND t.materials_auth_project = 'yes' ";
-$q .= " GROUP BY material_type ";
-return $q;
-}
-
-
-public function summaryProject($id, $year = 0, $month = 0){
-$q = " SELECT  ";
-$q .= $this->colsSummary();
-$q .= $this->tables(false);
-$q .= $this->whereProject($id, $year, $month);
-$q .= " AND t.materials_auth_project = 'yes'";
-return $q;
-}
-
-protected function colsDoneBy(){
-$q .= " IF(m.done_by='', 'Unspecified', m.done_by) done_by, ";
-  return $q;
-  }
-protected function colsCalendarLinks(){
-  $q = " MONTH(a.date_reported) month, ";
-  $q .= " YEAR(a.date_reported) year ";
-  return $q;
-  }
-
-public function calendarLinksProject($id){
-  $q = "SELECT ";
-$q .= $this->colsCalendarLinks();
-$q .= $this->tables(false);
-  $q .= $this->whereProject($id);
-  $q .= " AND t.materials_auth_project = 'yes'";
-  $q .= " GROUP BY  ";
-  $q .= " YEAR(a.date_reported), ";
-  $q .= " MONTH(a.date_reported) ";
-  return $q;
-}
-public function calendarLinksTask($id){
-	$q = "SELECT ";
-	$q .= $this->colsCalendarLinks();
-$q .= $this->tables(false);
-	$q .= $this->whereTask($id);
-	$q .= " GROUP BY  ";
-	$q .= " YEAR(m.date_reported), ";
-	$q .= " MONTH(m.date_reported) ";
-	return $q;
-}
-
-public function list($page = 1, $rows = 1){  
-
-}
-
-public function count(){
-
-}
-
-public function options($selectedId = 0, $disabled = 'false'){
-
-
-}
-
-
 
 
 }

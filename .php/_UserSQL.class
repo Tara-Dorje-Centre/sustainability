@@ -1,7 +1,9 @@
 <?php
 
-class UserSQL implements IentitySQL{
-private function cols(){
+class UserSQL extends __entitySQL{
+
+protected $baseTable = 'users';
+protected function cols(){
 	$c = " u.id, "; 
 	$c .= " u.name_first, "; 
 	$c .= " u.name_last, "; 
@@ -21,65 +23,10 @@ private function cols(){
 	return $c;	
 }
 
-protected function tables(){
+protected function tables($includeTypes = true){
 
 	$t = " FROM users u LEFT OUTER JOIN user_types ut ON u.type_id = ut.id ";
 	return $t;
-}
-
-public function info($id){
-	$q = " SELECT ";	
-	$q .= $this->cols();
-	$q .= $this->tables();
-	
-
-	$q .= " WHERE  ";
-	$q .= " u.id = ".$id." ";
-	return $q;
-}
-public function list($page = 1,$perPage = 10){
-	$q = " SELECT ";	
-	$q .= $this->cols();
-	
-		$q .= $this->tables();
-
-	/*if ($userTypeId > 0){
-		$q .= " WHERE u.type_id = ".$userTypeId." ";
-	}
-	*/
-	$q .= " ORDER BY login_name, name_first, name_last ";
-	$q .= sqlLimitClause($page, $perPage);
-	return $q;	
-}
-public function listByType($userTypeId,$resultPage, $rowsPerPage){
-	$q = " SELECT ";	
-	$q .= $this->cols();
-	$q .= $this->tables();
-	if ($userTypeId > 0){
-		$q .= " WHERE u.type_id = ".$userTypeId." ";
-	}
-	$q .= " ORDER BY login_name, name_first, name_last ";
-	$q .= sqlLimitClause($resultPage, $rowsPerPage);
-	return $q;	
-}
-public function count(){
-	$q = " SELECT ";	
-	$q .= " COUNT(*) total_users ";
-	$q .= $this->tables();
-	//if ($userTypeId > 0){
-	//	$q .= " WHERE u.type_id = ".$userTypeId." ";
-	//}
-	return $q;	
-}
-
-public function countType($typeId = 0){
-	$q = " SELECT ";	
-	$q .= " COUNT(*) total_users ";
-	$q .= $this->tables();
-	if ($userTypeId > 0){
-		$q .= " WHERE u.type_id = ".$typeId." ";
-	}
-	return $q;	
 }
 
 public function validateUser($loginName, $loginPwdCrypt){
@@ -121,12 +68,13 @@ public function securityUser($loginName){
 		return $sql;
 		
 	}
-	
+	/*
 	public function options($selectedId = 0, $disabled = 'false'){
 	
 	
 	
 	}
+	*/
 		
 }
 ?>

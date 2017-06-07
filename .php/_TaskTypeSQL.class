@@ -1,6 +1,9 @@
 ﻿<?php 
 
-class TaskTypeSQL implements IentitySQL{
+class TaskTypeSQL extends __entitySQL{
+
+protected $baseTable = 'task_types';
+
 protected function cols(){
 $c = " pt.id, ";
 $c .= " pt.description, ";
@@ -13,38 +16,7 @@ $c .= " pt.display_order, ";
 $c .= " pt.notes ";
 return $c;	
 }
-public function info($id){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= " FROM task_types pt ";
-$q .= " WHERE  ";
-$q .= " pt.id = '".$is."' ";
-return $q;
-}
-public function list($page = 1, $rows = 10){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= " FROM task_types pt ";
-$q .= " ORDER BY display_order ";
-$q .= sqlLimitClause($page, $rows);
-return $q;	
-}
-public function count(){
-$q = " SELECT ";	
-$q .= " COUNT(*) total_types ";
-$q .= " FROM task_types pt ";
-return $q;	
-}
-public function options($selectedId = 0,$disabled = 'false'){
-	$q = " SELECT ";
-	$q .= " pt.id as value, ";
-	$q .= " pt.name as caption ";
-	$q .= " FROM task_types pt ";
-	if ($disabled == 'true'){
-		$q .= " WHERE pt.id = ".$selectedId." ";	
-	}
-	$q .= " ORDER BY display_order ";
-	return $q;	
-}
+
+
 }
 ?>

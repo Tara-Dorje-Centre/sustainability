@@ -2,53 +2,28 @@
 
 
 
-interface IentitySQL{
-	public function info($id);
-	public function count();
-	public function list($page = 1, $rows = 10);
-	public function options($selectedId = 0, $disabled = 'false');
-//	protected function cols();
-//	protected function tables($joinTypes = false);
-//  protected function where($id);
-}
 
 Interface IsummarySQL{
-//protected function colsSummary();
-	public function summary($id = 0);
+
+
 }
 
-Interface IhasDoneBySQL{
-//protected function colsDoneBy();
-public function whereDoneBy($doneBy = 'EVERYONE');
-public function listByDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10);
+Interface IdoneBySQL{
+// function colsDoneBy();
+// function whereDoneBy($doneBy = 'EVERYONE');
+public function countDoneBy( $doneBy = 'EVERYONE', $year= 0, $month = 0);
+public function listDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
+public function summaryDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
 
+public function summaryDoneByGroupType($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year = 0, $month = 0);
 }
 
 interface IhasTypeSQL{
-//protected function colsByType();
-//protected function whereByType();
-public function countByType($typeId = 0);
-public function listByType($typeId = 0, $page = 1, $rows = 10);
-public function summaryByType($id = 0);
-}
-
-interface ItaskDescendentSQL{
-
-//  protected function whereByTask($id);
-	public function getTaskId($id = 0);
-	public function countTask($id = 0);
-	public function listTask($id = 0, $page = 1, $rows = 10);
-	public function summaryTask($id = 0);
-	public function optionsTask($id = 0, $selectedId = 0, $disabled = 'false');
-}
-
-interface IprojectDescendentSQL{
-//  protected function whereByProject($id);
-	public function getProjectId($id = 0);
-	public function countProject($id = 0);
-	public function listProject($id = 0, $page = 1, $rows = 10);
-	public function summaryProject($id = 0);
-	public function optionsProject($id = 0, $selectedId = 0, $disabled = 'false');
+// function colsByType();
+// function whereByType();
+public function countByType($id = 0);
+public function listByType($id = 0, $page = 1, $rows = 10);
+public function summaryGroupType($id = 0);
 }
 
 interface IsParentSQL{
@@ -92,9 +67,9 @@ interface IEntityType extends IEntity{
 }
 
 interface IentityList extends IEntityType{
-	//public function setCalendar($page = 1, $perPage = 10);
-	//public function setPaging($page = 1, $perPage = 10);
-	//public function setFoundCount();	
+	
+	
+	
 
 }
 

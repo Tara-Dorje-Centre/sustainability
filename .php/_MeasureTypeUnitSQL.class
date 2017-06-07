@@ -1,6 +1,9 @@
 ﻿<?php 
 
 class MeasureTypeUnitSQL implements IentitySQL{
+
+protected $baseTable = 'units_of_measure';
+
 	public function createView_MeasureTypeUnits(){
 		$s = "CREATE OR REPLACE VIEW measure_type_units_v AS
 		SELECT

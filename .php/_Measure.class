@@ -1,6 +1,7 @@
 ﻿<?php 
 
-class Measure extends __Entity{
+class Measure extends __Entity {
+
 protected $__MyClassName = 'Measure';
 
 

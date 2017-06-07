@@ -1,6 +1,8 @@
 <?php
 
-class LocationSQL implements IentitySQL{
+class LocationSQL extends __entitySQL{
+
+
 function columns(){
 	$c = " l.id, ";
 	$c .= " l.parent_id, ";
@@ -38,14 +40,14 @@ public function listChildren($idParent, $page = 1, $rows = 10){
 	$q .= sqlLimitClause($page, $rows);
 	return $q;
 }
-
+/*
 public function count(){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) total_locations ";
 	$q .= " FROM locations AS l ";
 	return $q;
 }
-
+*/
 public function countChildren($id){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) total_locations ";
@@ -91,6 +93,7 @@ public function countByParentSortKey($sortKeyParent, $idParent){
 	$q .= " AND l.id != ".$idParent." ";	
 	return $q;
 }
+/*
 
 public function info($id){
 	$q = " SELECT  ";
@@ -98,7 +101,7 @@ public function info($id){
 	$q .= " FROM locations AS l ";
 	$q .= " WHERE l.id = ".$id." "; 
 	return $q;
-}
+}*/
 
 public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";

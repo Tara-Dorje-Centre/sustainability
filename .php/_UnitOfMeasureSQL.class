@@ -1,6 +1,8 @@
 ﻿<?php 
 
-class UnitOfMeasureSQL implements IentitySQL{
+class UnitOfMeasureSQL extends __entitySQL{
+
+protected $baseTable = 'units_of_measure';
 public function cols(){
 $query = "um.id, ";
 $query .= " um.type, ";
@@ -11,6 +13,8 @@ $query .= " um.notes, ";
 $query .= " um.symbol ";
 return $query;	
 }
+
+/*
 public function info($id){
 $query = " SELECT ";	
 $query .= $this->cols();
@@ -32,7 +36,7 @@ $query = " SELECT ";
 $query .= " COUNT(*) total_units ";
 $query .= " FROM units_of_measure um ";
 return $query;	
-}
+}*/
 public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " um.type, ";
@@ -45,5 +49,7 @@ public function options($selectedId = 0, $disabled = 'false'){
 	$q .= " ORDER BY type, caption ";
 	return $q;	
 }
+
+
 }
 ?>

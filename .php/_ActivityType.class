@@ -1,6 +1,7 @@
 ﻿<?php 
 
 class ActivityType extends __EntityType{
+
 	protected $__MyClassName = 'ActivityType';
 
 	private $sql;

@@ -17,6 +17,10 @@ include_once("__Database.class");
 include_once("__Links.class");
 
 include_once("__EntityInterfaces.class");
+include_once("__EntitySQL.class");
+include_once("_projectChildSQL.class");
+include_once("_taskChildSQL.class");
+
 include_once("__Entity.class");
 include_once("__EntityType.class");
 include_once("__EntityList.class");

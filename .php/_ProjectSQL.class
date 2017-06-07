@@ -1,6 +1,8 @@
 ﻿<?php 
 
-class ProjectSQL implements IentitySQL{
+class ProjectSQL extends __entitySQL{
+
+protected $baseTable = 'projects';
 //projects table fields displayed in listing
 	protected function cols(){
 		$c = " p.id, ";
@@ -108,7 +110,7 @@ $q .= " WHERE p.parent_id = ".$projectId." ";
 $q .= " ORDER BY p.sort_key, p.priority, p.id ";
 return $q;
 }
-
+/*
 public function info($id){
 $q = " SELECT  ";
 $q .= $this->cols();
@@ -117,7 +119,7 @@ $q .= $this->tables();
 $q .= " WHERE p.id = ".$id." "; 
 return $q;
 }
-
+*/
 public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
@@ -221,7 +223,7 @@ public function optionsByType($typeId = 0){
 		return $sql;
 	}
 
-
+/*
 public function list($page = 1, $rows = 10){
 
 
@@ -232,7 +234,7 @@ public function count(){
 
 }
 
-
+*/
 
 }
 ?>

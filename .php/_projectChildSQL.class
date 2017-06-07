@@ -1,0 +1,97 @@
+<?php
+
+interface IprojectChildSQL{ 
+	public function getProjectId($id = 0);
+	public function countProject($id = 0);
+	public function listProject($id = 0, $page = 1, $rows = 10);
+	public function summaryProject($id = 0,$year= 0, $month = 0);
+	public function summaryProjectGroupType($id = 0, $year= 0, $month = 0);
+	public function summaryProjectDoneBy($id = 0, $doneBy = 'EVERYONE', $year= 0, $month = 0);
+	public function optionsProject($id = 0, $selectedId = 0, $disabled = 'false');
+}
+
+class _projectChildSQL extends __entitySQL implements IprojectChildSQL{
+
+protected $fieldProjectId = 'project_id';
+
+protected function whereProject($id = 0,	$year= 0, $month = 0, $approved = 'no', $first = true){
+	$w = $this->_equalNumber($id, $this->fieldProjectId, $first);
+	$w .= $this->_equalYearMonth($year, $month);
+	$w .= $this->_equalApproved($approved);
+	return $w;
+}
+
+
+public function getProjectId($id = 0){
+$q = " SELECT  ";
+$q .= $this->fieldProjectId;
+$q .= $this->tables(false);
+$q .= $this->where($id);
+return $q;
+}
+
+
+public function countProject($id = 0, $year= 0, $month = 0, $approved = 'no'){
+	$q = $this->colsCount();
+	$q .= $this->tables(false);
+	$q .= $this->whereProject($id, $year, $month, $approved);
+	return $q;	
+}
+	
+
+public function listProject($id = 0, $page = 1, $rows = 10, $year= 0, $month = 0, $approved = 'no'){
+$q = $this->cols();
+$q .= $this->tables(false);
+$q .= $this->whereProject($id, $year, $month, $approved);
+	$q .= sqlLimitClause($page, $rows);
+return $q;
+}
+
+public function summaryProject($id = 0,$year= 0, $month = 0, $approved = 'no'){
+$q = $this->colsSummary();
+$q .= $this->tables(false);
+$q .= $this->whereProject($id, year, $month, $approved);
+return $q;
+}
+
+
+public function summaryProjectDoneBy($id = 0, $doneBy = 'EVERYONE', $year = 0, $month = 0, $approved = 'no'){
+$q = $this->colsSummary();
+$q .= $this->colsDoneBy(false);
+$q .= $this->tables(false);
+$q .= $this->whereProject($id, $year, $month, $approved);
+$q .= $this->_equalDoneBy($doneBy);
+if ($doneBy == 'EVERYONE'){
+$q .= " GROUP BY ".$this->fieldDoneBy." ";
+}
+return $q;
+}
+
+
+
+public function calendarLinksProject($id){
+$q = $this->colsCalendarLinks();
+$q .= $this->tables(false);
+  $q .= $this->whereProject($id);
+  $q .= $this->groupByCalendarLinks();
+  return $q;
+}
+
+public function optionsProject($id = 0, $selectedId = 0,$disabled = 'false'){
+	$q = " SELECT ";
+	$q .= " p.id as value, ";
+	$q .= " concat_ws(' ',p.task_order,p.name) as caption ";
+$q .= $this->tables();
+$q .= $this->whereProject($id);
+	$q .= " AND p.pct_done < 1 ";
+	if ($disabled == 'true'){
+		$q .= " AND p.id = ".$selectedId." ";	
+	}
+	$q .= " ORDER BY caption ";
+	return $q;	
+}
+
+
+}
+
+?>

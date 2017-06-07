@@ -1,7 +1,14 @@
 ﻿<?php 
 
-class ReceiptSQL implements IentitySQL{
+class ReceiptSQL extends _taskChildSQL{
+
+protected $baseTable = 'receipts';
+
+$fieldApproved = 'receipts_auth_project';
+$fieldDate = 'date_reported';
+
 protected function cols(){
+$c = $this->select();
 $c = " m.id, ";
 $c .= " m.task_id, ";
 $c .= " t.task_order, ";
@@ -26,117 +33,35 @@ return $c;
 }
 
 protected function tables($joinTypes = true){
-
 $q = " FROM receipts AS m ";
 $q .= " JOIN tasks AS t ON m.task_id = t.id ";
 $q .= " JOIN projects AS p ON t.project_id = p.id ";
-
 if ($joinTypes == true){
 $q .= " LEFT OUTER JOIN receipt_types AS mt ON m.type_id = mt.id ";
 $q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
 }
 return $q;
 }
-public function info($id){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= $this->tables();
-$q .= " WHERE  ";
-$q .= " m.id = ".$id." ";
-return $q;
-}
-public function listTask($taskId, $page = 1, $rows = 10){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= $this->tables();
 
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$taskId." ";
-$q .= " ORDER BY ";
-$q .= " date(m.date_reported) desc, m.name ";
-$q .= sqlLimitClause($page, $rows);
-return $q;
-}
-public function countTask($taskId){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_receipts";
-$q .= " FROM receipts AS m ";
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$taskId." ";
-return $q;
-}
-public function summaryTask($taskId){
-$q = " SELECT  ";
+protected function colsSummary($first = true){
+
 $q .= " COUNT(*) total_receipts, ";
 $q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= " FROM receipts AS m ";
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$taskId." ";
-return $q;
 }
-public function listProject($projectId, $resultPage, $rowsPerPage, $approved = 'yes'){
-$q = " SELECT ";	
-$q .= $this->cols();
-$q .= $this->tables();
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-$q .= " AND t.receipts_auth_project = '".$approved."' ";
-$q .= " ORDER BY ";
-$q .= " date(m.date_reported) desc, t.task_order, m.name ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
-return $q;
-}
-public function countProject($projectId, $approved = 'yes'){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_receipts";
-$q .= $this->tables(false);
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-$q .= " AND t.receipts_auth_project = '".$approved."' ";
-return $q;
-}
-public function summaryProject($projectId, $approved = 'yes'){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_receipts, ";
-$q .= " SUM(m.cost_actual) sum_cost_actual ";
-$q .= $this->tables(false);
-
-
-$q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
-$q .= " AND t.receipts_auth_project = '".$approved."' ";
-return $q;
-}
-public function summaryProjectByReceptType($projectId, $approved = 'yes'){
-$q = " SELECT  ";
+ 
+public function summaryProjectGroupType($id = 0, $approved = 'yes'){
+	$q = $this->colsSummary();
 $q .= " IFNULL(mt.name, 'Unspecified') receipt_type, ";
 $q .= " COUNT(*) total_receipts, ";
 $q .= " SUM(m.cost_actual) sum_cost_actual ";
-
-
 $q .= $this->tables(false);
 $q .= " WHERE  ";
-$q .= " t.project_id = ".$projectId." ";
+$q .= $this->whereProject($id);
 $q .= " AND t.receipts_auth_project = '".$approved."' ";
 $q .= " GROUP BY receipt_type ";
 return $q;
 }
 
-
-
-public function count(){
-
-}
-
-public function list($page = 1, $rows = 10){
-
-
-}
-
-
-public function options($selectedId = 0, $disabled = 'false'){
-
-}
 
 
 

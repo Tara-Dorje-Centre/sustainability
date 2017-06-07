@@ -1,8 +1,10 @@
 ﻿<?php 
 
-class SiteSettingsSQL implements IentitySQL{
+class SiteSettingsSQL extends __entitySQL{
 
-private function cols(){
+protected $baseTable = 'units_of_measure';
+
+protected function cols(){
 	$c = " sw.site_title, ";
 	$c .= " sw.site_url, ";
 	$c .= " sw.organization, ";
@@ -41,16 +43,5 @@ public function count(){
 		$s .= " FROM sitewide_settings ";
 		return $s;
 }
-
-	public function options($selectedId = 0, $disabled = 'false'){
-	
-	
-	}
-
-public function list($page = 1, $rows = 10){
-
-
-}
-
 }
 ?>

@@ -1,7 +1,10 @@
 ﻿<?php 
 
-class MeasureSQL implements IentitySQL{
+class MeasureSQL extends _taskChildSQL{
+
+protected $baseTable = 'measures';
 protected function cols(){
+$c = $this->select();
 $c = " m.id, ";
 $c .= " m.task_id, ";
 $c .= " m.location_id, ";
@@ -18,49 +21,10 @@ $c .= " mtu.unit_symbol ";
 return $c;	
 }
 
-protected function tables(){
-
+protected function tables($joinTypes = true){
 	$t = " FROM measures AS m JOIN measure_type_units_v as mtu ";
 	$t .= " ON m.measure_type_unit_id = mtu.measure_type_unit_id ";
 	return $t;
-}
-
-public function info($id){
-$q = " SELECT ";	
-
-$q .= $this->cols();
-$q .= $this->tables();
-$q .= " WHERE  ";
-$q .= " m.id = '".$id."' ";
-return $q;
-}
-public function listTask($taskId, $page = 1, $rows = 10){
-$q = " SELECT  ";
-$q .= $this->cols();
-$q .= $this->tables();
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
-$q .= " ORDER BY ";
-$q .= " m.date_reported, m.measure_type_unit_id, m.id ";
-$q .= sqlLimitClause($resultPage, $rowsPerPage);
-return $q;
-}
-public function countTask($selectedTaskId){
-$q = " SELECT  ";
-$q .= " COUNT(*) total_measures";
-$q .= " FROM measures AS m ";
-$q .= " WHERE  ";
-$q .= " m.task_id = ".$selectedTaskId." ";
-return $q;
-}
-
-
-public function count(){
-
-}
-public function list($page = 1, $rows = 10){
-}
-public function options($selectedId = 0, $disabled = 'false'){
 }
 
 
