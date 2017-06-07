@@ -5,14 +5,15 @@ class ActivityTypeSQL extends __entitySQL{
 protected $baseTable = 'activity_types';
 
 public function cols(){
-	$c = "pt.id, ";
-	$c .= " pt.description, ";
-	$c .= " pt.name, ";
-	$c .= " pt.updated, ";
-	$c .= " pt.created, ";
-	$c .= " pt.display_order, ";
-	$c .= " pt.highlight_style, ";
-	$c .= " pt.notes ";
+$c = $this->select();
+	$c .= "e.id, ";
+	$c .= " e.description, ";
+	$c .= " e.name, ";
+	$c .= " e.updated, ";
+	$c .= " e.created, ";
+	$c .= " e.display_order, ";
+	$c .= " e.highlight_style, ";
+	$c .= " e.notes ";
 	return $c;	
 }
 

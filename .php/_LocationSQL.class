@@ -3,8 +3,9 @@
 class LocationSQL extends __entitySQL{
 
 
-function columns(){
-	$c = " l.id, ";
+protected function columns(){
+$c = $this->select();
+	$c .=  " l.id, ";
 	$c .= " l.parent_id, ";
 	$c .= " l.type_id, ";
 	$c .= " l.name, ";

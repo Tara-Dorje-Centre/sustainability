@@ -4,14 +4,15 @@ class MeasureTypeSQL extends __entitySQL{
 
 protected $baseTable = 'measure_types';
 
-public function columns(){
-$query = " mt.id, ";
-$query .= " mt.name, ";
-$query .= " mt.notes, ";
-$query .= " mt.description, ";
-$query .= " mt.updated, ";
-$query .= " mt.created ";
-return $query;	
+public function cols(){
+$c = $this->select();
+$c .= " e.id, ";
+$c .= " e.name, ";
+$c .= " e.notes, ";
+$c .= " e.description, ";
+$c .= " e.updated, ";
+$c .= " e.created ";
+return $c;	
 }
 
 

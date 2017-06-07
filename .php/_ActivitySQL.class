@@ -7,7 +7,7 @@ protected $fieldDate = 'started';
 
 protected function cols($first = true){
 $c = $this->select($first);
-$c = " a.id,  ";
+$c .= " a.id,  ";
 $c .= " a.task_id,  ";
 $c .= " a.type_id, ";
 $c .= " t.name task_name, ";

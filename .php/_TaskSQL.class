@@ -9,7 +9,7 @@ protected $baseTable = 'tasks';
 
 protected function cols(){
 $c = $this->select();
-$c = " t.id,  ";
+$c .= " t.id,  ";
 $c .= " t.project_id,  ";
 $c .= " p.name project_name, ";
 $c .= " pt.name project_type, ";

@@ -5,14 +5,15 @@ class LocationTypeSQL extends __entitySQL{
 protected $baseTable = 'location_types';
 
 	protected function cols(){
-		$c = "lt.id, ";
-		$c .= " lt.description, ";
-		$c .= " lt.name, ";
-		$c .= " lt.updated, ";
-		$c .= " lt.created, ";
-		$c .= " lt.highlight_style, ";
-		$c .= " lt.display_order, ";
-		$c .= " lt.notes ";
+		$c = $this->select();
+		$c .= "e.id, ";
+		$c .= " e.description, ";
+		$c .= " e.name, ";
+		$c .= " e.updated, ";
+		$c .= " e.created, ";
+		$c .= " e.highlight_style, ";
+		$c .= " e.display_order, ";
+		$c .= " e.notes ";
 		return $c;	
 	}
 	

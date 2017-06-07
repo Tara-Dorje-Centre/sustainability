@@ -4,7 +4,8 @@ class UserSQL extends __entitySQL{
 
 protected $baseTable = 'users';
 protected function cols(){
-	$c = " u.id, "; 
+$c = $this->select();
+	$c .= " u.id, "; 
 	$c .= " u.name_first, "; 
 	$c .= " u.name_last, "; 
 	$c .= " u.email, "; 
