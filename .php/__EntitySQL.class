@@ -188,6 +188,16 @@ public function summary(){
 }
 
 
+public function calendarLinksDoneBy($doneBy = 'EVERYONE'){
+$q = $this->colsCalendarLinks();
+$q .= $this->tables(false);
+$q .= $this->_equalDoneBy($doneBy);
+$q .= $this->groupByCalendarLinks();
+return $q;
+}
+
+
+
 public function options($selectedId = 0, $disabled = 'false'){
 	$q = $this->colsOption(true);
 	$q .= $this->tables(true);

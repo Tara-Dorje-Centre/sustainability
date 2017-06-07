@@ -3,6 +3,8 @@
 class ActivityType extends __EntityType{
 
 	protected $__MyClassName = 'ActivityType';
+	
+  	protected $_titleEntity = 'Activity Type';
 
 	private $sql;
 
@@ -11,37 +13,6 @@ class ActivityType extends __EntityType{
 		$this->sql = New ActivityTypeSQL;
 	}
 		
-	public function setDetails(){
-
-		$sql = $this->sql->infoActivityType($this->id);
-
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-	  	{
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
-			$this->notes = ($row["notes"]);
-			$this->displayOrder = $row["display_order"];			
-			$this->highlightStyle = ($row["highlight_style"]);
-			$this->created = ($row["created"]);			
-			$this->updated = ($row["updated"]);			
-		}
-		$result->close();
-		}
-				
-	}	
-	
-	protected function setPageTitle(){
-		
-		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
-		} else {
-			$heading .= 'Add New Activity Type';
-		}
-		$this->_pageTitle = $heading;
-		
-	}
 	
 	protected function setPageMenu(){
 		$menuType = 'LIST';
@@ -57,39 +28,13 @@ class ActivityType extends __EntityType{
 		} elseif ($this->pageMode == 'EDIT'){
 			$menu .= $typesL->detailViewHref($this->id);
 		}
-		$menu .= $typesL->listingHref();	
+		$menu .= $typesL->listingHref();	/
 			
 		$menu .= $typesL->closeMenu();
-		return $menu;
-	}
-	
-	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
-		$this->created = getTimestampDate($this->created);
-		$this->updated = getTimestampDate($this->updated);
-	}
-	
-	
-	public function display(){
-		$this->formatForDisplay();
 		
-		$detail = openDisplayDetails('activity-type', 'Activity Type Details');
-	 						
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
-		$detail .= captionedParagraph('display-order', 'Display Order', $this->displayOrder);
-
-		$detail .= closeDisplayDetails();
-		return $detail;
+		this->_pageMenu = $menu;
 	}
-
+	
 
 	public function options(
 		$selectedValue = 0, 
@@ -139,23 +84,12 @@ class ActivityType extends __EntityType{
 
 		//formSubmit fields
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('activityTypeId', $this->id);
+		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 	
 		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);	
 		return $form;
-	}
-	
-	public function collectPostValues(){
-
-		$this->id = $_POST['activityTypeId'];
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->notes = dbEscapeString($_POST['notes']); 		
-		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		$this->displayOrder = $_POST['displayOrder'];
-		$this->pageMode = $_POST['mode'];	
 	}
 	
 	protected function saveUpdate(){

@@ -32,7 +32,7 @@ class LocationTypeList extends __EntityList{
 	}
 	
 	public function setFoundCount(){
-		$sql = $this->sql->countLocationTypes();
+		$sql = $this->sql->count();
 		$this->found = dbGetCount($sql, 'total_types');
 	}
 	
@@ -58,7 +58,7 @@ class LocationTypeList extends __EntityList{
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			$u = new LocationType;
+			$u = new LocationType(FETCH);
 			$u->id = $row["id"];
 			$u->name = $row["name"];
 			$u->description = $row["description"];

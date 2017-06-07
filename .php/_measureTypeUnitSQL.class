@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class MeasureTypeUnitSQL implements IentitySQL{
+class MeasureTypeUnitSQL extends __entitySQL{
 
-protected $baseTable = 'units_of_measure';
+protected $baseTable = 'measure_type_units_v';
 
 	public function createView_MeasureTypeUnits(){
 		$s = "CREATE OR REPLACE VIEW measure_type_units_v AS
@@ -27,6 +27,7 @@ protected $baseTable = 'units_of_measure';
 		unit_type, measure_type, unit_of_measure ";
 		return $s;
 	}
+	
 protected function cols(){
 	$c = " mtu.id, ";
 	$c .= " mtu.measure_type_id, ";
@@ -39,13 +40,14 @@ protected function cols(){
 	$c .= " mtu.unit_symbol ";
 	return $c;	
 }
+/*
 public function info($id){
 	$q = " SELECT ";	
 	$q .= $this->cols();
 	$q .= " FROM measure_type_units_v mtu ";
 	$q .= " WHERE mtu.id = '".$measureTypeUnitId."' ";
 	return $q;
-}
+}*/
 public function listMeasureType($id,$page = 1, $rows = 10){
 	$q = " SELECT ";	
 	$q .= $this->cols();
@@ -57,7 +59,7 @@ public function listMeasureType($id,$page = 1, $rows = 10){
 	$q .= sqlLimitClause($page, $rows);
 	return $q;	
 }
-
+/*
 public function count(){
 	$q = " SELECT ";	
 	$q .= " COUNT(*) total_units ";
@@ -67,7 +69,7 @@ public function count(){
 	//}
 	return $q;	
 }
-
+*/
 public function countMeasureType($id){
 	$q = " SELECT ";	
 	$q .= " COUNT(*) total_units ";
@@ -89,14 +91,14 @@ public function options($selectedId = 0, $disabled = 'false'){
 	$q .= " ORDER BY unit_type, caption ";
 	return $q;	
 }
-
+/*
 
 public function list($page = 1, $rows = 10){
 
 
 
 }
-
+*/
 
 
 }

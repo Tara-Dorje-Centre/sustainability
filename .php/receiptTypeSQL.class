@@ -1,0 +1,8 @@
+﻿<?php 
+
+class ReceiptTypeSQL extends __entityTypeSQL{
+
+protected $baseTable = 'receipt_types';
+
+}
+?>

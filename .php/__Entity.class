@@ -11,8 +11,10 @@ class __entity extends __echo {
 	public const COPY = 'COPY';
 	public const FETCH = 'FETCH';
 	public const OPTIONS = 'OPTIONS';
-		public const LIST = 'LIST';
-
+	public const COUNT = 'COUNT';
+	public const LIST = 'LIST';
+	public const SUMMARY= 'SUMMARY';
+		
     public $pageMode = 'VIEW';
 	public $id = 0;
 	public $idParent = 0;
@@ -144,17 +146,6 @@ class __entity extends __echo {
 	protected function setPageMenu(){
 		$this->_pageMenu = 'entity._pageMenu not set.';
 	}
-	
-	protected function pageTitle(){
-		$heading = openDiv('section-heading-title');
-		$heading .= $this->_pageTitle;
-		$heading .= closeDiv();		
-		return $heading;
-	}
-
-	 protected function pageMenu(){
-	 	return $this->_pageMenu;
-	 }
 	 
 	public function editForm(){
 		$this->echoState(true, 'editForm');
@@ -178,8 +169,12 @@ class __entity extends __echo {
 	protected function getPageHeading(){
 		$this->setPageTitle();
 		$this->setPageMenu();
-		$heading = $this->pageTitle();
-		$heading .= $this->pageMenu();
+		
+		$heading = openDiv('section-heading-title');
+		$heading .= $this->_pageTitle;
+		$heading .= closeDiv();		
+		
+		$heading .= $this->_pageMenu();
 		return $heading;
 	}
 	

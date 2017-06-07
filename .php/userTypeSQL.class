@@ -1,0 +1,12 @@
+﻿<?php 
+
+class UserTypeSQL extends __entityTypeSQL{
+
+
+protected $baseTable = 'user_types';
+
+//missing display order from table
+
+
+}
+?>

@@ -2,7 +2,8 @@
 
 class ActivitySQL extends _taskChildSQL{
 
-protected $baseTable = 'activity';
+protected $baseTable = 'activities';
+protected $typeTable = 'activity_types';
 protected $fieldDate = 'started';
 
 protected function cols($first = true){
@@ -63,13 +64,13 @@ $q .= $this->tables();
 $q .= $this->_equalDoneBy($doneBy, true);
 $q .= $this->_equalYearMonth($year, $month, false);
 
-
-
 $q .= " GROUP BY  ";
 $q .= " DATE(a.started), ";
 $q .= " a.done_by, ";
 $q .= " p.id ";
+//
 $q .= " UNION ALL ";
+
 $q .= " SELECT  ";
 $q .= " SUM(a.hours_actual) sum_hours, ";
 $q .= " LAST_DAY(a.started) started, ";
@@ -90,15 +91,6 @@ $q .= " ORDER BY started, ordering, id, done_by ";
 return $q;	
 }
 
-public function calendarLinksMyActivity($doneBy){
-$q = $this->colsCalendarLinks();
-$q .= $this->tables(false);
-
-$q .= $this->_equalDoneBy($doneBy);
-
-$q .= $this->groupByCalendarLinks();
-return $q;
-}
 
 
 public function calendarSummaryProject($id = 0, $year, $month){

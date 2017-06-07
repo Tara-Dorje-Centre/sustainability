@@ -57,7 +57,8 @@ $q .= " SUM(m.cost_actual) sum_cost_actual ";
 $q .= $this->tables(false);
 $q .= " WHERE  ";
 $q .= $this->whereProject($id);
-$q .= " AND t.receipts_auth_project = '".$approved."' ";
+$q .= $this->_equalApproved($approved);
+// .= " AND t.receipts_auth_project = '".$approved."' ";
 $q .= " GROUP BY receipt_type ";
 return $q;
 }

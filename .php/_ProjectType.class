@@ -3,47 +3,14 @@
 class ProjectType extends __EntityType{
 protected $__MyClassName = 'ProjectType';
    
+    protected $_titleEntity = 'Project Type';
+   
 	private $sql;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->sql = new ProjectTypeSQL;
 	}
-	
-	public function setDetails(){
-
-		if ($this->id != 0){
-		
-			$sql = $this->sql->info($this->id);
-		
-			$result = dbGetResult($sql);
-			if ($result){
-				while($row = $result->fetch_assoc())
-				{	
-					$this->name = ($row["name"]);
-					$this->description = ($row["description"]);
-					$this->notes = ($row["notes"]);
-					$this->highlightStyle = ($row["highlight_style"]);
-					$this->displayOrder = $row["display_order"];
-					$this->created = ($row["created"]);			
-					$this->updated = ($row["updated"]);			
-				}
-				$result->close();
-			}
-
-		}
-				
-	}	
-		
-	protected function setPageTitle(){
-		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
-		} else {
-			$heading = 'Add New Project Type';
-		}
-		$this->_pageTitle = $heading;
-	}
-	
 	
 	protected function setPageMenu(){
 		$menuType = 'LIST';
@@ -64,30 +31,6 @@ protected $__MyClassName = 'ProjectType';
 		$ths->_pageMenu = $menu;
 	}
 	
-	
-	protected function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
-	}
-	
-	public function display(){
-		$this->formatForDisplay();
-				
-		$detail = openDisplayDetails('project-type','Project Type Details');
-		
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
-		$detail .= captionedParagraph('display-order', 'Display Order', $this->displayOrder);
-
-		$detail .= closeDisplayDetails();
-		return $detail;
-	}
-
 	public function options(
 		$selectedValue = 0,
 		$idName = 'projectTypeId', 
@@ -165,18 +108,6 @@ protected $__MyClassName = 'ProjectType';
 		return $form;
 	}
 	
-	public function collectPostValues(){
-
-		$this->id = $_POST['projectTypeId'];
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->notes = dbEscapeString($_POST['notes']); 		
-		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		$this->displayOrder = $_POST['displayOrder'];
-		
-		$this->pageMode = $_POST['mode'];	
-	}
-
 	protected function saveUpdate(){
 	
 			$sql = " UPDATE project_types AS p ";

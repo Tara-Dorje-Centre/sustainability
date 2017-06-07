@@ -1,0 +1,12 @@
+﻿<?php 
+
+class MeasureTypeSQL extends __entityTypeSQL{
+
+protected $baseTable = 'measure_types';
+
+//table mssing display order
+
+
+
+}
+?>

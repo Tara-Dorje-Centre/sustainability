@@ -3,45 +3,13 @@
 class UserType extends __EntityType {
 	protected $__MyClassName = 'UserType';
 
-
+  	protected $_titleEntity = 'User Profile Type';
 	private $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->sql = new UserTypeSQL;
 	}
-	
-	public function setDetails(){
-
-
-		$sql = $this->sql->infoUserType($this->id);
-		$result = dbGetResult($sql);
-		if ($result){
-		while($row = $result->fetch_assoc())
-			{	
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
-			$this->notes = ($row["notes"]);
-			$this->highlightStyle = ($row["highlight_style"]);
-			$this->created = ($row["created"]);			
-			$this->updated = ($row["updated"]);			
-		}
-		$result->close();
-		}
-				
-	}	
-		
-	protected function pageTitle(){
-		$heading = openDiv('section-heading-title');
-		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
-		} else {
-			$heading .= 'Add New User Type';
-		}
-		$heading .= closeDiv();		
-		return $heading;
-	}
-	
 	
 	protected function pageMenu(){
 		$menuType = 'LIST';
@@ -64,38 +32,15 @@ class UserType extends __EntityType {
 		return $menu;
 	}
 	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
-		$this->created = getTimestampDate($this->created);
-		$this->updated = getTimestampDate($this->updated);
-	}
-	
-	public function display(){
-		$this->formatForDisplay();
-				
-		$detail = openDisplayDetails('user-type','User Profile Type Details');
-	 						
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
 
-		$detail .= closeDisplayDetails();
-		return $detail;
-	}
-
-	public function getUserTypeSelectList(
+	public function options(
 		$selectedValue = '0', 
 		$idName = 'userTypeId', 
 		$disabled = 'false',
 		$showLink = false,
 		$changeJS = NULL){
 	
-		$sql = $this->sql->selectOptions_UserTypes($selectedValue,$disabled);
+		$sql = $this->sql->options($selectedValue,$disabled);
 		
 		$defaultValue = 0;
 		$defaultCaption = '-select User Type';
@@ -142,23 +87,12 @@ class UserType extends __EntityType {
 		
 		//formsubmit
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('userTypeId', $this->id);
+		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 		
 		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
 		return $form;
-	}
-	
-	public function collectPostValues(){
-
-		$this->id = $_POST['userTypeId'];
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->notes = dbEscapeString($_POST['notes']); 		
-		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		
-		$this->pageMode = $_POST['mode'];	
 	}
 	
 	protected function saveUpdate(){

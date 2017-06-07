@@ -2,6 +2,8 @@
 
 class MeasureType extends __EntityType{
 	protected $__MyClassName = 'MeasureType';
+	
+	protected $_titleEntity = 'Receipt Type';
   
 	private $sql;
 	
@@ -10,38 +12,6 @@ class MeasureType extends __EntityType{
 
 		$this->sql = new MeasureTypeSQL;
 	}
-	
-	public function setDetails(){
-
-
-		$sql = $this->sql->info($this->id);
-
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-			{	
-			$this->name = ($row["name"]);
-			$this->type = ($row["description"]);
-			$this->notes = ($row["notes"]);
-			$this->created = ($row["created"]);			
-			$this->updated = ($row["updated"]);			
-		}
-		$result->close();
-		}
-				
-	}	
-		
-	protected function setPageTitle(){
-
-		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
-		} else {
-			$heading .= 'Add New Measure Type';
-		}
-
-		$ths->_pageTitle = $heading;
-	}
-	
 	
 	protected function setPageMenu(){
 		$menuType = 'LIST';
@@ -69,12 +39,6 @@ class MeasureType extends __EntityType{
 		$this->_pageMenu = $menu;
 	}
 	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
-	}
-
 	
 	public function display(){
 		$this->formatForDisplay();
@@ -129,7 +93,7 @@ class MeasureType extends __EntityType{
 		$formOptional = $fields;
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('measureTypeId', $this->id);
+		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 			
@@ -137,18 +101,6 @@ class MeasureType extends __EntityType{
 		return $form;
 	}
 	
-	public function collectPostValues(){
-
-		$this->id = $_POST['measureTypeId'];
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		$this->displayOrder = dbEscapeString($_POST['displayOrder']);
-		
-		$this->notes = dbEscapeString($_POST['notes']); 		
-		$this->pageMode = $_POST['mode'];	
-	}
-
 	protected function saveUpdate(){
 	
 

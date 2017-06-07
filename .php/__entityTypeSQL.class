@@ -1,22 +1,28 @@
 ﻿<?php 
 
-class TaskTypeSQL extends __entitySQL{
+class __entityTypeSQL extends __entitySQL{
 
-protected $baseTable = 'task_types';
 
-protected function cols(){
+protected $baseTable = 'any_entity_types';
+
+protected $fieldCount = 'count_types';
+
+public function cols(){
 $c = $this->select();
-$c .= " e.id, ";
+$c .= "e.id, ";
 $c .= " e.description, ";
 $c .= " e.name, ";
 $c .= " e.updated, ";
 $c .= " e.created, ";
 $c .= " e.highlight_style, ";
-$c .= " e.frequency, ";
+//missing display order from some tables
 $c .= " e.display_order, ";
 $c .= " e.notes ";
 return $c;	
 }
+
+
+
 
 
 }

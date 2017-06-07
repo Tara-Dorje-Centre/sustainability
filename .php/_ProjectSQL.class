@@ -57,6 +57,14 @@ $q .= sqlLimitClause($page, $rows);
 return $q;
 }
 
+
+private function subqueryActivityDoneBy($doneBy){
+$q = " (select t.project_id from ";
+$q .= " activities a JOIN tasks t ON a.task_id = t.id ";
+$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";
+
+return $q;
+}
 public function listActivityDoneBy($doneBy, $status, $page, $rows){
 $q = " SELECT  ";
 $q .= $this->cols();
@@ -64,9 +72,10 @@ $q .= $this->tables();
 $q .= $this->whereStatus($status);
 
 $q .= " AND p.id IN ";
+$q .= $this->subqueryActivityDoneBy($doneBy);/*
 $q .= " (select t.project_id from ";
 $q .= " activities a JOIN tasks t ON a.task_id = t.id ";
-$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";
+$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";*/
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
 $q .= sqlLimitClause($page, $rows);
 return $q;
@@ -78,9 +87,10 @@ $q .= " FROM projects p ";
 $q .= $this->whereStatus($status);
 
 $q .= " AND p.id IN ";
+$q .= $this->subqueryActivityDoneBy($doneBy);/*
 $q .= " (select t.project_id from ";
 $q .= " activities a JOIN tasks t ON a.task_id = t.id ";
-$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";
+$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";*/
 return $q;	
 }
 
@@ -117,7 +127,9 @@ public function options($selectedId = 0, $disabled = 'false'){
 	$q .= " p.id as value, ";
 	$q .= " p.name as caption ";
 	$q .= " FROM projects p ";
+	//
 	$q .= " WHERE p.pct_done < 1 ";
+	//
 	if ($disabled == 'true'){
 		$q .= " AND p.id = ".$selectedId." ";	
 	}

@@ -2,7 +2,7 @@
 
 class MaterialType extends __EntityType {        
 	protected $__MyClassName = 'MaterialType';
-
+  	protected $_titleEntity = 'Material Type';
   
 	private $sql;
 	
@@ -12,41 +12,6 @@ class MaterialType extends __EntityType {
 		$this->sql = new MaterialTypeSQL;
 	}
 
-	public function setDetails(){
-		$this->echoState(true, 'setDetails');
-		
-		if ($this->id > 0){
-		
-		$sql = $this->sql->info($this->id);
-		
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{	
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
-			$this->notes = ($row["notes"]);
-			$this->displayOrder = $row["display_order"];			
-			$this->highlightStyle = ($row["highlight_style"]);
-			$this->created = ($row["created"]);			
-			$this->updated = ($row["updated"]);			
-		}
-		$result->close();
-		}
-				
-		}
-	}	
-		
-	protected function setPageTitle(){
-		if ($this->pageMode != 'ADD'){
-			$heading = $this->name;
-		} else {
-			$heading = 'Add New Material Type';
-		}
-		$this->pageTitle = $heading;
-	}
-	
-	
 	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
@@ -64,33 +29,6 @@ class MaterialType extends __EntityType {
 		$menu .= $typesL->listingHref();		
 		$menu .= $typesL->closeMenu();
 		$ths->_pageMenu = $menu;
-	}
-	
-	
-	
-	protected function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
-		$this->created = getTimestampDate($this->created);
-		$this->updated = getTimestampDate($this->updated);
-	}
-
-	public function display(){
-		$this->formatForDisplay();
-
-		$detail = openDisplayDetails('material-type','Material Type Details');				
-	 						
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-		$detail .= captionedParagraph('display-order', 'displayOrder', $this->displayOrder);	
-		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
-
-		$detail .= closeDisplayDetails();
-		return $detail;
 	}
 	
 	public function options(
@@ -151,7 +89,7 @@ class MaterialType extends __EntityType {
 		
 		//formSubmit fields		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('materialTypeId', $this->id);
+		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 		
@@ -159,18 +97,6 @@ class MaterialType extends __EntityType {
 		return $form;
 	}
 	
-	public function collectPostValues(){
-
-		$this->id = $_POST['materialTypeId'];
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->notes = dbEscapeString($_POST['notes']); 		
-		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		$this->displayOrder = ($_POST['displayOrder']); 		
-		printLine('material type.display_order.post='.$this->displayOrder);
-		$this->pageMode = $_POST['mode'];	
-	}
-
 	protected function saveUpdate(){
 	
 

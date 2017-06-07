@@ -4,7 +4,7 @@
 class TaskType extends __EntityType{
 	protected $__MyClassName = 'TaskType';
 
-
+  	protected $_titleEntity = 'Task Type';
     
 	public $frequency = 'none';
 	private $sql;
@@ -13,40 +13,6 @@ class TaskType extends __EntityType{
 		parent::__construct($mode, $id, $idParent);
 
 		$this->sql = new TaskTypeSQL;
-	}
-	
-	public function setDetails(){
-		
-
-		$sql = $this->sql->info($this->id);
-
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-			{	
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
-			$this->notes = ($row["notes"]);
-			$this->highlightStyle = ($row["highlight_style"]);
-			$this->frequency = ($row["frequency"]);
-			$this->displayOrder = $row["display_order"];
-			$this->created = ($row["created"]);			
-			$this->updated = ($row["updated"]);			
-		}
-		$result->close();
-		}
-				
-	}	
-		
-	protected function pageTitle(){
-		$heading = openDiv('section-heading-title');
-		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
-		} else {
-			$heading .= 'Add New Task Type';
-		}
-		$heading .= closeDiv();		
-		return $heading;
 	}
 	
 	
@@ -68,14 +34,6 @@ class TaskType extends __EntityType{
 		$menu .= $typesL->closeMenu();
 		return $menu;
 	}
-	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
-		
-	}
-	
 	
 	protected function display(){
 		$this->formatForDisplay();
@@ -168,7 +126,7 @@ class TaskType extends __EntityType{
 
 				
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('taskTypeId', $this->id);
+		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 		
@@ -178,14 +136,10 @@ class TaskType extends __EntityType{
 	
 	public function collectPostValues(){
 
-		$this->id = $_POST['taskTypeId'];
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->notes = dbEscapeString($_POST['notes']); 		
-		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		parent::collectPostValues();
+		
 		$this->frequency = dbEscapeString($_POST['frequency']);
-		$this->displayOrder = dbEscapeString($_POST['displayOrder']);
-		$this->pageMode = $_POST['mode'];	
+		
 	}
 	
 	protected function saveUpdate(){

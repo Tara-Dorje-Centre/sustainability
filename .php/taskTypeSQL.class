@@ -1,0 +1,15 @@
+﻿<?php 
+
+class TaskTypeSQL extends __entityTypeSQL{
+
+protected $baseTable = 'task_types';
+
+protected function cols(){
+$c = parent::cols();
+$c .= ", e.frequency ";
+return $c;	
+}
+
+
+}
+?>
