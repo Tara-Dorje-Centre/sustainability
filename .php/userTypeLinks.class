@@ -1,0 +1,10 @@
+﻿<?php 
+
+class userTypeLinks extends _entityTypeLinks{
+
+	protected $_pageList = 'sys_UserType_List.php';
+	protected $_pageDetail = 'sys_UserType_Detail.php';
+
+}
+
+?>

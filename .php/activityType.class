@@ -1,0 +1,55 @@
+﻿<?php 
+
+class activityType extends _entityType{
+	protected $__MyClassName = 'ActivityType';
+  	protected $_titleEntity = 'Activity Type';
+	protected $pageSave = 'pr_ActivityType_Save.php';
+	public $sql;
+	public $links;
+
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = New activityTypeSQL;
+		$this->links = new activityTypeLinks;	
+	}
+	
+	protected function saveUpdate(){
+			$sql = " UPDATE activity_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.display_order = ".$this->displayOrder.", ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";		
+				
+			$result = dbRunSQL($sql);
+	}
+	
+	protected function saveInsert(){
+			$sql = " INSERT INTO activity_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " display_order, ";
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= $this->displayOrder.", ";
+			$sql .= "'".$this->highlightStyle."', ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	}
+	
+	
+}
+?>

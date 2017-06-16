@@ -1,0 +1,86 @@
+﻿<?php 
+
+class ActivityLinks extends _Links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($idParent,$caption = 'Activities',$myActivity='NO',$showCalendar = 'NO',$projectId = 0){
+		$link = $this->listing($idParent,$myActivity,$showCalendar,$projectId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $id = 0, $idParent = 0, $caption = 'Activity'){
+		$link = $this->detail($pageAction,$id,$idParent);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	public function listing($idParent, $myActivity = 'NO',$showCalendar = 'NO',$projectId = 0){
+		$link = 'pr_Activity_List.php?taskId='.$idParent;
+		if ($myActivity != 'NO'){
+			$link .= '&myActivity='.$myActivity;
+		}
+		if ($showCalendar != 'NO'){
+			$link .= '&showCalendar='.$showCalendar;
+		}
+		if ($projectId != 0){
+			$link .= '&projectId='.$projectId;
+		}
+		return $link;
+	} 
+	public function listingPaged($baseLink,$found, $resultPage, $perPage){
+		$l = $baseLink.'&resultsPageActivity=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+
+	public function detail($pageAction, $id, $idParent = 0){
+		$link = 'pr_Activity_Detail.php?pageAction='.$pageAction;
+		if($idParent != 0){
+			$link .= '&taskId='.$idParent;			
+		}
+		if ($id != 0){
+			$link .= '&activityId='.$id;
+		}
+		return $link;
+	}	
+	public function detailAddHref($idParent,$caption = '+Activity'){
+		$l = $this->detailHref('ADD',0,$idParent,$caption);
+		return $l;	
+	}
+	public function detailViewHref($id,$caption = 'ViewActivity'){
+		$l = $this->detailHref('VIEW',$id,0,$caption);
+		return $l;	
+	}
+	public function detailEditHref($id,$caption = 'EditActivity'){
+		$l = $this->detailHref('EDIT',$id,0,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($id = 0, $viewCaption = 'Activity'){
+		
+		if ($id != 0){
+			$links = $this->detailViewHref($id,$viewCaption);
+			$links .= $this->detailEditHref($id,'#');
+		}
+		return $links;
+	}	
+	public function linkMyActivities(){
+		return $this->listingHref(-1,'My History','YES');		
+	}
+	public function linkGroupActivities(){
+		return $this->listingHref(-1,'Group History','GROUP');
+	}
+	public function linkMyCalendar(){
+		return $this->listingHref(-1,'My Calendar','YES','YES');
+	}
+	public function linkGroupCalendar(){
+		return $this->listingHref(-1,'Group Calendar','GROUP','YES');
+	}
+	public function linkProjectCalendar($projectId){
+		return $this->listingHref(-1,'Calendar','PROJECT','YES',$projectId);		
+	}
+	public function linkProjectActivities($projectId){
+		return $this->listingHref(-1,'Project History','PROJECT','NO',$projectId);		
+	}
+
+}
+?>

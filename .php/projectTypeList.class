@@ -1,0 +1,45 @@
+﻿<?php 
+
+class ProjectTypeList extends __EntityTypeList{
+	protected $__MyClassName = 'ProjectTypeList';
+	protected $_titleEntity = 'Project Types';
+
+	private $sql;
+	private $typeLinks;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new ProjectTypeSQL;
+		$this->typeLinks = new ProjectTypeLinks;	
+	}
+	
+	protected function listingQuickEdit(){
+		$at = new ProjectType('ADD');
+		$quickEdit =$at->editForm();			
+		return $quickEdit;
+	}
+	
+	protected function listingRows(){
+		$sql = $this->sql->list($this->resultPage,$this->perPage);
+		$result = dbGetResult($sql);
+		if($result){
+		
+			$u = new ProjectType(FETCH);
+			$list = $u->listingHeading();
+			
+		  	while ($row = $result->fetch_assoc())
+			{	
+				$u->setRowValues($row);
+				$list .= $u->listingRowFormat($u);
+			}
+			$result->close();
+		} else {
+			$list =  wrapTr('no results found';
+		}
+		return $list;
+	}
+	
+	*/
+	
+} 
+?>

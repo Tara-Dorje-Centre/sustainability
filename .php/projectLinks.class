@@ -1,0 +1,83 @@
+﻿<?php 
+
+class ProjectLinks extends _Links {
+
+
+
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	
+	public function listingAllProjects($showClosed = false){
+//		$menu = $this->formatTextItem('AllProjects:');		
+		$menu = $this->listingHref('OPEN','Projects');
+		if ($showClosed == true){
+			$menu .= $this->listingHref('CLOSED','ClosedProjects');	
+		}
+		return $menu;
+	}
+	
+	public function listingMyProjects($showClosed = false){
+		//$menu = $this->formatTextItem('MyProjects:');		
+		$menu = $this->listingHref('OPEN','MyProjects','YES');
+		if ($showClosed == true){
+			$menu .= $this->listingHref('CLOSED','MyClosedProjects','YES');
+		}
+		return $menu;
+	}
+	public function listingHref($projectStatus = 'OPEN',$caption = 'Projects',$showMyProjects = 'NO'){
+		$link = $this->listing($projectStatus,$showMyProjects);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $id = 0, $caption = 'Project'){
+		$link = $this->detail($pageAction,$id);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	public function listing($projectStatus = 'OPEN',$showMyProjects = 'NO'){
+		$link = 'pr_Project_List.php'.'?projectStatus='.$projectStatus;
+		if ($showMyProjects == 'YES'){
+			$link .= '&showMyProjects=YES';
+		}
+		return $link;
+	}
+	public function listingPaged($status, $showMyProjects,$found, $resultPage, $perPage){
+		$l = $this->listing($status,$showMyProjects).'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+	public function detail($pageAction, $id = 0){
+		$link = 'pr_Project_Detail.php?pageAction='.$pageAction;
+		if ($id != 0){
+			$link .= '&projectId='.$id;
+		}
+		return $link;
+	}	
+	public function detailAddHref($caption = '+Project'){
+		$l = $this->detailHref('ADD',0,$caption);
+		return $l;	
+	}
+	public function detailViewHref($id,$caption = 'ViewProject'){
+		$l = $this->detailHref('VIEW',$id,$caption);
+		return $l;	
+	}
+	public function detailEditHref($id,$caption = 'EditProject'){
+		$l = $this->detailHref('EDIT',$id,$caption);
+		return $l;	
+	}
+	public function detailCopyHref($id,$caption = 'CopyProject'){
+		$l = $this->detailHref('COPY',$id,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($id = 0, $viewCaption = 'Project'){
+		$links = '';
+		if ($id != 0){
+			$links .= $this->detailViewHref($id,$viewCaption);
+			$links .= $this->detailEditHref($id,'#');
+		}
+		return $links;
+	}	
+	
+}
+?>

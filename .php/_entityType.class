@@ -1,0 +1,247 @@
+<?php 
+
+class _entityTypeFields extends _entityFields{
+	//id,name,idParent,highlightStyle, created, updated from entityFields
+    public $description;	
+    public $notes;
+	
+	public $displayOrder = '0';
+
+    
+	
+	public function setRowValues($row){
+			$this->f->id = $row["id"];
+			$this->f->name = ($row["name"]);
+			$this->f->description = ($row["description"]);
+			$this->f->notes = ($row["notes"]);
+			$this->f->highlightStyle = ($row["highlight_style"]);
+			$this->f->displayOrder = $row["display_order"];
+			$this->f->created = ($row["created"]);			
+			$this->f->updated = ($row["updated"]);			
+			$this->formatForDisplay();
+	}
+	
+	
+	protected function formatForDisplay(){
+		$this->name = displayLines($this->name);
+		$this->description = displayLines($this->description);
+		$this->notes = displayLines($this->notes);
+		$this->created = getTimestampDate($this->created);
+		$this->updated = getTimestampDate($this->updated);
+	}
+
+
+    
+    
+}
+
+class _entityType extends _entity{
+	protected $__MyClassName = '__EntityType';
+	protected $_titleEntity = 'Entity Type';
+	protected $pageSave = 'entityTypeSave.php';
+	//standard entity type properties
+    public $f;
+    protected $sql;
+	public $links;
+ 
+ 
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->f = new _entityTypeFields;
+		$this->sql = new _entityTypeSQL;
+		$this->links = new _entityTypeLinks();
+	}
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		$this->links->saveSettings();
+		$this->links->setType($menuType);
+		$this->links->setStyle($menuStyle);
+		
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $this->links->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $this->links->resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $this->links->detailEditHref($this->id);
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $this->links->detailViewHref($this->id);
+		}
+		$menu .= $this->links->listingHref();
+		$menu .= $this->links->closeMenu();
+		
+		$this->links->restoreSettings();
+		
+		this->_pageMenu = $menu;
+	}
+	
+
+	public function options(
+		$selectedId = 0, 
+		$idName = 'entityTypeId', 
+		$disabled = 'false', 
+		$showLink = true){
+	
+		
+		$sql = $this->sql->options($selectedId, $disabled);
+		
+		$defaultValue = 0;
+		$defaultCaption = '-select '.$this->$_titleEntity;
+		$allOptions = getSelectOptionsSQL($sql,$selectedId,$disabled,$defaultValue,$defaultCaption);		
+		
+		$select = getSelectList($idName,$allOptions,'none',$disabled );
+		
+		$select.= $this->optionsLink($showLink, $selectedId);
+		
+		return $select;
+	}	
+	
+	protected function optionsLink($showLink = true, $selectedId = 0){
+	
+		if ($showLink == true){
+			$links =$this->links->detailViewEditHref($selectedId);
+		} else {
+			$links = '';
+		}
+		return $links;
+	}
+	
+	
+	/*
+	
+	public function setRowValues($row){
+			$this->f->id = $row["id"];
+			$this->f->name = ($row["name"]);
+			$this->f->description = ($row["description"]);
+			$this->f->notes = ($row["notes"]);
+			$this->f->highlightStyle = ($row["highlight_style"]);
+			$this->f->displayOrder = $row["display_order"];
+			$this->f->created = ($row["created"]);			
+			$this->f->updated = ($row["updated"]);			
+			$this->formatForDisplay();
+	}
+    */
+    
+	public function setDetails(){
+		$sql = $this->sql->info($this->id);
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+		{	
+			$this->f->setRowValues($row);
+		}
+		$result->close();
+		}
+	}	
+	
+	protected listingRowLink(){
+		$link = $this->links->detailViewEditHref($this->id,$this->name);
+		return $link;
+	}
+	
+	public function listingHeading(){
+	
+		$heading = wrapTh('Display Order');		
+		$heading .= wrapTh($this->titleEntity);
+		$heading .= wrapTh('Description');
+		$heading .= wrapTh('Notes');
+		$heading .= wrapTh('Highlight Style');
+		
+		$list .= wrapTr($heading);
+		return $list;
+
+	}
+	
+	public listingRowFormat(){
+	
+		$this->formatForDisplay();
+		$detail = wrapTd($this->displayOrder);
+		$detail .= wrapTd($this->listingRowLink());
+		$detail .=  wrapTd($this->description);			
+		$detail .= wrapTd($this->notes);
+		$detail .= wrapTd($this->highlightStyle);			
+		$listRow = wrapTr($detail,$this->highlightStyle);
+		return $listRow;
+	}
+	
+	
+	
+	
+	
+	public function display(){
+		$this->formatForDisplay();
+		
+		$detail = openDisplayDetails('entity-type', $this-> $_titleEntity.':  Details');
+		$detail .= captionedParagraph('display-order', 'Display Order', $this->displayOrder);
+		$detail .= captionedParagraph('name', 'Name', $this->name);
+		$detail .= captionedParagraph('description', 'Description', $this->description);
+		$detail .= captionedParagraph('created', 'Created', $this->created);
+		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
+		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
+		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
+
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+
+	public function collectPostValues(){
+
+		$this->id = $_POST['id'];
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 
+		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		$this->displayOrder = $_POST['displayOrder'];
+		$this->pageMode = $_POST['mode'];	
+	}
+	
+	protected function setDefaults(){
+	
+	
+	
+	}
+	
+
+
+	
+	public function editForm(){
+		
+		$legend = $this->pageMode;
+		$legend .= $this->$_titleEntity;
+		$entity = 'entity-type';
+	
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
+		$form = openEditForm($entity,$legend,$this->pageSave,$contextMenu);
+
+		//formRequired fields		
+		$fields = inputFieldName($entity,$this->name,'name',$this->_titleEntity);
+		$fields .= inputFieldNumber($entity,$this->displayOrder,'displayOrder','Display Order');
+		$fields .= inputFieldHighlightStyle($entity,$this->highlightStyle,'highlightStyle');
+		$formRequired = $fields;
+		
+		//formOptional fields
+		$fields = inputFieldDescription($entity,$this->description,'description');
+		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+		$formOptional = $fields;
+
+		//formSubmit fields
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('id', $this->id);
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+	
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);	
+		return $form;
+	}
+	
+	
+		
+}
+
+
+
+
+
+?>

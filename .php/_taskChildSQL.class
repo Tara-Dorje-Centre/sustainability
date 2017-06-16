@@ -77,15 +77,15 @@ $q .= $this->tables(false);
 	return $q;
 }
 
-public function optionsProject($id = 0, $selectedId = 0,$disabled = 'false'){
+public function optionsTask($id = 0, $selectedId = 0,$disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
 	$q .= " concat_ws(' ',p.task_order,p.name) as caption ";
 $q .= $this->tables();
-$q .= $this->whereProject($id);
-	$q .= " AND p.pct_done < 1 ";
+$q .= $this->whereTask($id);
+	//$q .= " AND p.pct_done < 1 ";
 	if ($disabled == 'true'){
-		$q .= " AND p.id = ".$selectedId." ";	
+		$q .= " AND t.id = ".$selectedId." ";	
 	}
 	$q .= " ORDER BY caption ";
 	return $q;	

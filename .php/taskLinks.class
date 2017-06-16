@@ -1,0 +1,82 @@
+﻿<?php 
+
+class taskLinks extends _links {
+
+
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($idParent,$caption = 'ProjectTasks',$periodicTasks = 'NO'){
+		$link = $this->listing($idParent,$periodicTasks);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	private function detailHref($pageAction = 'VIEW', $id = 0, $idParent = 0, $caption = 'Task'){
+		$link = $this->detail($pageAction,$id,$idParent);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	public function listing($idParent,$periodicTasks = 'NO'){
+		$link = 'pr_Task_List.php'.'?idParent='.$idParent;
+		if ($periodicTasks != 'NO'){
+			$link .= '&periodicTasks='.$periodicTasks;
+		}
+		return $link;
+	}
+	public function listingPaged($baseLink,$found, $resultPage, $perPage){
+		$l = $baseLink.'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+	public function detail($pageAction, $id = 0, $idParent = 0){
+		$link = 'pr_Task_Detail.php?pageAction='.$pageAction;
+		if ($idParent != 0){
+			$link .= '&idParent='.$idParent;
+		} 
+		if ($id != 0){
+			$link .= '&id='.$id;
+		}
+		return $link;
+	}
+	public function detailAddHref($idParent,$caption = '+Task'){
+		$l = $this->detailHref('ADD',0,$idParent,$caption);
+		return $l;	
+	}
+	public function detailViewHref($id,$caption = 'ViewTask'){
+		$l = $this->detailHref('VIEW',$id,0,$caption);
+		return $l;	
+	}
+	public function detailEditHref($id,$caption = 'EditTask'){
+		$l = $this->detailHref('EDIT',$id,0,$caption);
+		return $l;	
+	}
+	public function detailCopyHref($id,$caption = 'CopyTask'){
+		$l = $this->detailHref('COPY',$id,0,$caption);
+		return $l;	
+	}
+
+	public function detailViewEditHref($id = 0, $viewCaption = 'Task'){
+		$links = '';
+		if ($id != 0){
+			$links .= $this->detailViewHref($id,$viewCaption);
+			$links .= $this->detailEditHref($id,'#'); 
+			//$links .= $this->detailCopyHref($id);
+		}
+		return $links;
+	}	
+	public function linkPeriodicTasksOpen(){
+		return $this->listingHref(-1,'To Do','INCOMPLETE');
+	}
+	public function linkPeriodicTasksClosed(){
+		return $this->listingHref(-1,'Done','COMPLETE');		
+	}
+	public function linksPeriodicTasks($showClosed = false){
+//		$menu = $this->formatTextItem('PeriodicTasks:');
+		$menu = $this->linkPeriodicTasksOpen();
+		if ($showClosed == true){
+			$menu .= $this->linkPeriodicTasksClosed();
+		}
+		return $menu;	
+	}
+}
+?>

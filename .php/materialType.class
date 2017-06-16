@@ -1,0 +1,58 @@
+﻿<?php 
+
+class MaterialType extends __EntityType {        
+	protected $__MyClassName = 'MaterialType';
+  	protected $_titleEntity = 'Material Type';
+  	protected $pageSave = 'pr_MaterialType_Save.php';
+	private $sql;
+	private $typeLinks;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new MaterialTypeSQL;
+		$typeLinks = new MaterialTypeLinks();
+	}
+	
+	protected function saveUpdate(){
+	
+
+			$sql = " UPDATE material_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.display_order = ".$this->displayOrder.", ";			
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";			
+			
+			$result = dbRunSQL($sql);
+		
+	}
+	
+	protected function saveInsert(){
+	
+			$sql = " INSERT INTO material_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " display_order, ";			
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= " ".$this->displayOrder.", ";			
+			$sql .= "'".$this->highlightStyle."', ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	}
+	
+} 
+?>

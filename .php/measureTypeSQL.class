@@ -9,4 +9,6 @@ protected $baseTable = 'measure_types';
 
 
 }
+
+
 ?>

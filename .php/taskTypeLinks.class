@@ -1,0 +1,10 @@
+﻿<?php 
+
+class taskTypeLinks extends _entityTypeLinks{
+
+	protected $_pageList = 'pr_TaskType_List.php';
+	protected $_pageDetail = 'pr_TaskType_Detail.php';
+
+}
+
+?>

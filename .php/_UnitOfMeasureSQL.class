@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class UnitOfMeasureSQL extends __entitySQL{
+class unitOfMeasureSQL extends _entityTypeSQL{
 
 protected $baseTable = 'units_of_measure';
 public function cols(){

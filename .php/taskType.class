@@ -1,0 +1,181 @@
+﻿<?php 
+
+
+class taskType extends _entityType{
+	protected $__MyClassName = 'TaskType';
+  	protected $_titleEntity = 'Task Type';
+    protected $pageSave = 'pr_TaskType_Save.php';
+	public $frequency = 'none';
+	private $sql;
+	private $typeLinks;
+	
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new TaskTypeSQL;
+		$this->typeLinks new TaskTypeLinks;	
+	}
+	
+	public function setRowValues($row){
+		parent::setRowValues($row);
+		$u->frequency = ($row["frequency"]);
+		
+	}
+	
+	public function listingHeading(){
+	
+		$heading = wrapTh('Display Order');		
+		$heading .= wrapTh('Task Type');
+		$heading .= wrapTh('Frequency');
+		$heading .= wrapTh('Description');
+		$heading .= wrapTh('Notes');
+		$heading .= wrapTh('Highlight Style');
+		
+		$list .= wrapTr($heading);
+		return $list;
+
+	}
+	
+	public listingRowFormat(){
+	
+		$this->formatForDisplay();
+		$detail = wrapTd($this->displayOrder);
+		$detail .= wrapTd($this->listingRowLink());
+		$detail .=  wrapTd($this->frequency);			
+		$detail .=  wrapTd($this->description);			
+		$detail .= wrapTd($this->notes);
+		$detail .= wrapTd($this->highlightStyle);			
+		$listRow = wrapTr($detail,$this->highlightStyle);
+		return $listRow;
+	}
+	
+	
+	protected function display(){
+		$this->formatForDisplay();
+		$detail = openDisplayDetails('project-type','Project Type Details');
+	 						
+		$detail .= captionedParagraph('name', 'Task Type', $this->name);
+		$detail .= captionedParagraph('frequency', 'Frequency', $this->frequency);
+		$detail .= captionedParagraph('description', 'Description', $this->description);
+		$detail .= captionedParagraph('created', 'Created', $this->created);
+		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
+		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
+		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
+		$detail .= captionedParagraph('highlight-style', 'Display Order', $this->displayOrder);
+
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+	
+	public function optionsFrequency($selectedValue = 'none', $idName = 'frequency', $disabled = 'false'){
+		$sql = "SELECT f.frequency value, f.description caption ";
+		$sql .= "FROM task_type_frequencies f ";
+		if ($disabled == 'true'){
+			$sql = " WHERE f.frequency = '".$selectedValue."' ";	
+		}
+		$sql .= " ORDER BY f.display_order ";
+		
+		$defaultValue = 'none';
+		$defaultCaption = '-not set';
+		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+		
+		$select = getSelectList($idName,$allOptions,'none',$disabled );
+		return $select;
+	}	
+	
+	
+	public function editForm(){
+		$legend = $this->pageMode;
+		$legend .= $this->$_titleEntity;
+		$entity = 'entity-type';
+
+		$entity = 'task-type';
+		
+		$contextMenu = $this->typeLinks->formatToggleLink('formOptional','+Options');
+		$form = openEditForm($entity,$legend,'pr_TaskType_Save.php',$contextMenu);
+		
+		//formRequired fields	
+		$fields = inputFieldName($entity,$this->name,'name','Task Type');
+
+		$fields .= inputFieldNumber($entity,$this->displayOrder,'displayOrder','Display Order');
+
+		$fields .= inputFieldHighlightStyle($entity,$this->highlightStyle,'highlightStyle');
+
+		
+
+		$formRequired = $fields;
+			
+		//formOptional fields
+		$fields = inputFieldDescription($entity,$this->description,'description');
+		
+		
+		$select = $this->optionsFrequency($this->frequency,'frequency');
+		$fields .=inputFieldSelect($entity, $select,'Frequency');
+
+		
+		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+		//end formOptional
+		$formOptional = $fields;
+
+				
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('id', $this->id);
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+		
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+		return $form;
+	}
+	
+	public function collectPostValues(){
+
+		parent::collectPostValues();
+		
+		$this->frequency = dbEscapeString($_POST['frequency']);
+		
+	}
+	
+	protected function saveUpdate(){
+	
+			$sql = " UPDATE task_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.frequency = '".$this->frequency."', ";
+			$sql .= " p.display_order = ".$this->displayOrder.", ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$result = dbRunSQL($sql);
+	}
+	
+	protected function saveInsert(){
+	
+			$sql = " INSERT INTO task_types ";
+			$sql .= " (name, ";
+			$sql .= " frequency, ";
+			$sql .= " display_order, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= " '".$this->name."', ";
+			$sql .= " '".$this->frequency."', ";
+			$sql .= " ".$this->displayOrder.", ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " '".$this->description."', ";
+			$sql .= " '".$this->highlightStyle."', ";
+			$sql .= " '".$this->notes."') ";
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	}
+
+
+	
+} 
+?>

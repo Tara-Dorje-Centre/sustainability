@@ -1,0 +1,140 @@
+﻿<?php 
+﻿
+
+class _entityLinks extends _links {
+	//override to set entry points
+	protected $_pageList = 'entityList.php';
+	protected $_pageDetail = 'entityDetail.php';
+	
+	
+	
+	public function listingHref($idParent = -1, $caption = 'List'){
+		$link = $this->listing($idParent);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $id = 0, $idParent = 0, $caption = 'View'){
+		$link = $this->detail($pageAction,$id,$idParent);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	public function listing($idParent = -1){
+		$link = $this->_pageList'.'?idParent='.$idParent;
+		return $link;
+	}
+	
+	public function listingPaged($idParent, $found, $resultPage=1, $perPage=10){
+		$l = $this->listing($idParent).'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+
+	public function detail($pageAction, $id = 0, $idParent = 0){
+		$link = $this->pageDetail.'?pageAction='.$pageAction;
+		if ($id != 0){
+			$link .= '&id='.$id;
+		}
+		if ($idParent != 0){
+			$link .= '&idParent='.$idParent;
+		}
+
+		return $link;
+	}	
+	public function detailAddHref($idParent = 0,$caption = '+'){
+		$l = $this->detailHref('ADD',0,$idParent,$caption);
+		return $l;	
+	}
+	public function detailViewHref($id = 0, $caption = 'View'){
+		$l = $this->detailHref('VIEW',$id,0,$caption);
+		return $l;	
+	}
+	public function detailEditHref($id = 0, $caption = 'Edit'){
+		$l = $this->detailHref('EDIT',$id,0,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($id = 0, $viewCaption = 'View'){
+		
+		if ($id != 0){
+			$links = $this->detailViewHref($id,$viewCaption);
+			$links .= $this->detailEditHref($id,'#');
+		} else {
+			$links = $this->listingHref();
+		}
+		return $links;
+	}	
+	
+
+	
+	
+}
+
+
+class _entityTypeLinks extends _links {
+	//override to set entry points
+	protected $_pageList = 'entityTypeList.php';
+	protected $_pageDetail = 'entityTypeDetail.php';
+	
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+
+	public function listing(){
+		$link = $this->_pageList;
+		return $link;
+	}
+
+	public function detail($pageAction, $id = 0){
+		$link = $this->_pageDetail;
+		$link .= '?pageAction='.$pageAction;
+		if ($id != 0){
+			$link .= '&id='.$id;
+		}
+		return $link;
+	}	
+
+	public function listingHref($caption = 'List'){
+		$link = $this->listing();
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	
+	private function detailHref($pageAction = 'VIEW', $id = 0, $caption = 'View'){
+		$link = $this->detail($pageAction,$id);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	
+	public function listingPaged($found, $resultPage, $perPage){
+		$l = $this->listing().'?resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+	
+	public function detailAddHref($caption = '+'){
+		$l = $this->detailHref('ADD',0,$caption);
+		return $l;	
+	}
+	
+	public function detailViewHref($id = 0,$caption = 'View'){
+		$l = $this->detailHref('VIEW',$id,$caption);
+		return $l;	
+	}
+	
+	public function detailEditHref($id = 0,$caption = 'Edit'){
+		$l = $this->detailHref('EDIT',$id,$caption);
+		return $l;	
+	}
+	
+	public function detailViewEditHref($id = 0, $viewCaption = 'View'){
+		
+		if ($id != 0){
+			$links = $this->detailViewHref($id,$viewCaption);
+			$links .= $this->detailEditHref($id,'#');
+		} else {
+			$links = $this->listingHref();
+		}
+		return $links;
+	}	
+	
+}
+?>

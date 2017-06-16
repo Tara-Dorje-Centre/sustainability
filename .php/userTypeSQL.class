@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class UserTypeSQL extends __entityTypeSQL{
+class userTypeSQL extends _entityTypeSQL{
 
 
 protected $baseTable = 'user_types';

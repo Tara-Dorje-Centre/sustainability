@@ -1,0 +1,51 @@
+﻿<?php 
+
+class userType extends _entityType {
+	protected $__MyClassName = 'UserType';
+  	protected $_titleEntity = 'User Profile Type';
+	protected $pageSave = 'sys_UserType_Save.php';
+	private $sql;
+	private $typeLinks;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new UserTypeSQL;
+		$typeLinks = new UserTypeLinks();
+	}
+	
+	
+	protected function saveUpdate(){
+			$sql = " UPDATE user_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$result = dbRunSQL($sql);
+	}
+	
+	protected function saveInsert(){
+			$sql = " INSERT INTO user_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= "'".$this->highlightStyle."', ";
+			$sql .= "'".$this->notes."') ";
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	}
+	
+	
+} 
+?>

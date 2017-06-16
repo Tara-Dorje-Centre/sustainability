@@ -1,0 +1,11 @@
+﻿<?php 
+
+class ReceiptTypeLinks extends _entityTypeLinks{
+
+	protected $_pageList = 'pr_ReceiptType_List.php';
+	protected $_pageDetail = 'pr_ReceiptType_Detail.php';
+
+}
+
+
+?>

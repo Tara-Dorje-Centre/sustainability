@@ -1,0 +1,590 @@
+﻿<?php 
+
+class user extends _entity{
+protected $__MyClassName = 'User';
+	   		
+
+   // public $id = 0; 
+    public $typeId = 0; 
+	public $typeName;
+	public $cssHighlight;
+    public $loginName;
+	private $loginPwd;
+    public $nameFirst;
+    public $nameLast;
+	public $email;
+	public $interests;
+	public $focus;
+	public $lastLogin;
+	public $created;	 
+	public $updated;
+	public $isAdmin = 'no';
+	public $isActive = 'no';
+	public $mustUpdatePwd = 'no';
+	
+
+	public $validationMessages;
+	private $sql;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new UserSQL;
+	}
+	
+	public function setTypeId($id){
+		$this->typeId = $id;
+	}
+	
+	public function setDetails(){
+	
+		$this->echoState(true, 'setDetails');
+
+		$sql = $this->sql->infoUser($this->id);
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{
+			$this->nameFirst = ($row["name_first"]); 
+			$this->nameLast = ($row["name_last"]); 
+			$this->email = ($row["email"]); 
+			$this->focus = ($row["focus"]);
+			$this->interests = ($row["interests"]);
+			$this->loginName = ($row["login_name"]);
+			$this->lastLogin = $row["last_login"]; 
+			$this->created = $row["created"]; 
+			$this->updated = $row["updated"];
+			$this->isAdmin = $row["is_admin"];
+			$this->isActive = $row["is_active"];
+			$this->mustUpdatePwd = $row["must_update_pwd"];
+			$this->typeId = $row["type_id"];
+			$this->typeName = $row["type_name"];
+			$this->cssHighlight = $row["highlight_style"];
+		}
+		$result->close();
+		}
+
+	}	
+		
+	protected function setPageTitle(){
+
+		if ($this->pageMode != 'ADD'){
+			$heading = $this->loginName;
+			if ($_SESSION['user-id'] == $this->id && $_SESSION['must-update-pwd'] == 'yes'){
+				$heading .= br().'Please update your profile password.';
+			}
+
+		} else {
+			$heading = 'Add User Profile';
+		}
+
+		$this->_pageTitle = $heading;
+	}
+	
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		$userL = new UserLinks($menuType,$menuStyle);		
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $userL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $userL->resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			if ($_SESSION['is-admin'] == 'yes' || $_SESSION['user-id'] == $this->id){
+				//user is admin or self, show edit link
+				$menu .= $userL->detailEditHref($this->id);
+			}
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $userL->detailViewHref($this->id);
+		}
+		$menu .= $userL->listingHref();
+		
+		$menu .= $userL->closeMenu();
+		$this->_pageMenu = $menu;
+	}
+	
+	public function formatForDisplay(){
+		$this->focus = displayLines($this->focus); 		
+		$this->interests = displayLines($this->interests); 
+	}
+
+
+	public function getPageDetails(){			
+		if ($_SESSION['is-admin'] == 'yes'){
+			//is admin allow edit others and add users
+		} else {
+			//not admin allow edit self only
+			if ($this->pageMode == 'ADD'){
+				//non admin trying to add a user
+				//revert to viewing self
+				$this->setDetails($_SESSION['user-id'],0,'VIEW');
+			} elseif ($this->pageMode == 'EDIT' && $_SESSION['user-id'] == $this->id){
+				//editing self, ok
+			} else {
+				$this->pageMode = 'VIEW';
+			}	 
+		}
+
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+	
+	protected function display(){
+		$this->formatForDisplay();
+		$detail = openDisplayDetails('user','User Profile Details');		
+
+		$detail .= captionedParagraph('login-name', 'Login Name', $this->loginName);
+		$detail .= captionedParagraph('name-first', 'First Name', $this->nameFirst);
+		$detail .= captionedParagraph('name-last', 'Last Name', $this->nameLast);
+		$detail .= captionedParagraph('email', 'Email Address', $this->email);
+		$detail .= captionedParagraph('type-name', 'Profile Type', $this->typeName);
+		$detail .= captionedParagraph('focus', 'Focus', $this->focus);
+		$detail .= captionedParagraph('interests', 'Interests', $this->interests);
+		$detail .= captionedParagraph('last-login', 'Last Login', $this->lastLogin);
+		
+		$detail .= captionedParagraph('is-active', 'Active Profile', $this->isActive);
+		$detail .= captionedParagraph('is-admin','Administrator', $this->isAdmin);
+		$detail .= captionedParagraph('must-update-pwd','Must Update Password', $this->mustUpdatePwd);
+
+		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){		
+			$detail .= $this->requestPasswordResetForm();
+		}
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+
+	private function generatePassword($length = 11) {
+		$chars = '.!%^&*#@';
+		$clen = mb_strlen($chars);
+		$base = md5(microtime());
+		$password = substr(base_convert(substr($base,1),16,36),0,$length);
+		$len = mb_strlen($password);
+		for($i = 0;$i < $len;$i++)
+		{
+			if(rand(0,1) && 1){
+				$password[$i] = strtoupper($password[$i]);
+			} elseif(rand(0,2) && 1 && $clen){
+				$password[$i] = $chars[rand(0,$clen - 1)];
+			}
+		}
+		return $password;
+	}
+	
+	
+	
+	public function resetPassword($loginName, $loginEmail){
+		
+		//verify that login and email exist for an active account
+		if ($this->validateLoginAndEmail($loginName,$loginEmail) == true){
+			//login and email are valid and account is active 
+			$this->email = $loginEmail;
+		
+			$newPass = $this->generatePassword();
+			$newPassCrypt = $this->obfuscate(dbEscapeString($newPass),$loginName);
+		
+		
+			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
+		
+			$result = dbRunSQL($sql);
+			
+			$links = new UserLinks;	
+			$message = $_SESSION['site-title'].br();
+			$message .= $links->formatHref($_SESSION['site-org'],$_SESSION['site-org-url']).br();
+			$message .= "Profile password has been reset".br();
+			$message .= "Login Name = ".$loginName.br();
+			$message .= "New Password = ".$newPass.br();
+			$message .= $links->formatHref($_SESSION['site-url'],$_SESSION['site-url']).br();
+			$this->mailUser($message,'Password Reset');
+			$_SESSION['login-messages'] = 'Profile password reset';
+		} else {
+			$_SESSION['login-messages'] = 'Active profile not found, contact an administrator';	
+		}
+	}
+
+	private function mailUser($message = '', $subject = 'User Notification'){
+
+		$fromAddress = ini_get('sendmail_from');
+		$headers = "From: ".$fromAddress."\n";
+		$headers .= "X-Mailer: PHP/".phpversion()."\n"; 
+		$headers .= "MIME-Version: 1.0\n"; 
+		$headers .= "Content-Type: text/html; charset=utf-8\n"; 
+		$headers .= "Content-Transfer-Encoding: 8bit\n"; 
+		$newSubject = $_SESSION['site-title'].':'.$subject;
+		mail($this->email,$newSubject,$message,$headers, '-f '.$fromAddress);
+	}
+	
+	private function obfuscate($pass,$login){
+		//$salt = crypt($login);
+		$hash = md5($pass.$login);
+		return $hash;	
+	}
+
+	public function validateLoginAndEmail($loginName, $loginEmail){
+		$validLoginEmail = false;
+		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
+	
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{
+			$found = $row["user_count"];  
+		}
+		$result->close;
+		}
+
+		if ($found == 1){
+			$validLoginEmail = true;
+		} 
+		return $validLoginEmail;
+	}
+	
+	public function validateLogin($loginName, $loginPwd){
+		$loginPwdCrypt = $this->obfuscate($loginPwd,$loginName);
+		$validUser = false;
+		$sql = $this->sql->validateUser($loginName, $loginPwdCrypt);
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  		while ($row = $result->fetch_assoc())
+			{
+				$found = $row["user_count"];  
+			}
+		
+		$result->close();
+		}
+		
+		
+		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
+		//then comment this line
+		//printLine('forcing login');
+		//$found = 1;
+
+		if ($found == 1){
+			$validUser = true;
+			printLine('validateLogin.updatingLastLogin');
+			$this->updateLastLogin($loginName);
+			$this->setSecurity($loginName);
+			$_SESSION['login-messages'] = '';
+		} else {
+			$_SESSION['login-messages'] = 'Could not validate login';
+		}
+		
+		return $validUser;
+		
+	}
+	
+	
+	private function setSecurity($loginName){
+		$sql = $this->sql->securityUser($loginName);
+
+		$result = dbGetResult($sql);
+		if($result){
+	  		while ($row = $result->fetch_assoc())
+			{
+				$_SESSION['user-id'] = $row["id"];
+				$_SESSION['is-admin'] = $row["is_admin"];  
+				$_SESSION['must-update-pwd'] = $row["must_update_pwd"];
+			}
+		$result->close();
+		}
+			
+	}
+	
+	private function updateLastLogin($loginName){
+		
+		$sql = $this->sql->updateLastLogin($loginName);
+		
+		$result = dbRunSQL($sql);
+		
+	}
+	
+	private function setAddRecordDefaults(){
+		$this->isAdmin = 'no';
+		$this->mustUpdatePwd = 'yes';
+		$this->isActive = 'yes';
+	}
+	
+	public function loginForm(){
+		
+		$message = 'Please Login...';
+		$message .= $this->getLoginMessages();
+		$entity = 'user-type';
+		$c = new ProjectTypeLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','Lost Password');
+		$form = openEditForm('site-login', $message, 'sys_Login.php',$contextMenu);
+
+		$fields = inputFieldUser($entity,$this->loginName,'login-name','Login Name');
+
+		$input = getPasswordInput('login-pwd', 10, 50);
+		$fields .= captionedInput('Password',$input);
+
+		//end required fields
+		$formRequired = $fields;
+		//formOptional
+
+		$fields = inputFieldText($entity,$this->email,'login-email','Login Email',50,255);
+		$fields .= getLoginLogoutButton('Reset Password','submit-pwd-reset');		
+		$input = 'To reset password, enter your login name and profile email.'.br();
+		$input .= 'If your email is not registered, please contact an administrator to setup a profile.';
+		$fields .= captionedInput('Lost Password Instructions',$input);
+
+	
+		//end optional fields
+		$formOptional = $fields;
+		
+		$hidden = getHiddenInput('client-time-zone','');
+		$input = getLoginLogoutButton('Login','submit-login');
+		$formSubmit = $hidden.$input;
+			
+
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+
+		$form .= openDiv('site-login-notices');
+		$form .= $_SESSION['site-login-notice'];
+		$form .= closeDiv();
+
+		return $form;			
+	}
+	
+	private function getLoginMessages(){
+		if (isset($_SESSION['login-messages']) && $_SESSION['login-messages'] != ''){
+			$messages = $_SESSION['login-messages'].br();
+			unset($_SESSION['login-messages']);
+		} else {
+			$messages = '';
+		}
+		return $messages;
+	}
+	
+	public function requestPasswordResetForm(){
+		
+		$form = openForm('user-password-reset','sys_User_Save.php','none');
+		$hidden = getHiddenInput('userId',$this->id);
+		$hidden .= getHiddenInput('login-email',$this->email);	
+		$hidden .= getHiddenInput('login-name', $this->loginName);
+		$button = getSubmitButton('Request Reset','submit-pwd-reset');
+		$messages = $this->getLoginMessages();
+		$form .= $messages.$button.$hidden;
+		$form .= closeForm();		
+		return $form;
+		
+	}
+
+	public function editForm(){
+		if ($this->pageMode == 'ADD'){
+			$this->setAddRecordDefaults();
+			$legend = 'Add Profile';
+		} else {
+			$legend = 'Edit Profile';
+		}
+
+		$entity = 'user';
+		$c = new ProjectLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		
+		$form = openEditForm($entity,$legend,'sys_User_Save.php',$contextMenu);
+
+		if ($this->pageMode == 'ADD'){
+			$input = getTextInput('loginName', $this->loginName, 20,50,'Login Name','false');
+			$messages = @$this->validationMessages['login'];			
+		} else {
+			$input = $this->loginName.getHiddenInput('loginName',$this->loginName);
+			$messages = '(cannot be changed)';
+		}
+		$fields = captionedInput('Login Name '.$messages,$input);
+
+
+
+		$input = getPasswordInput('loginPwd', 10,20);
+		$passwordGroup = captionedInput('Password',$input);
+		
+		$input = getPasswordInput('loginPwdConfirm', 10,20,'Confirm Password');
+		$messages = @$this->validationMessages['password'];
+		$passwordGroup .= captionedInput('Password Confirm '.$messages,$input);
+		$fields .= wrapDivFieldGrouping($entity,$passwordGroup);
+
+		$input = getTextInput('email', $this->email, 50,255);
+		$messages = @$this->validationMessages['email'];
+		$fields .= captionedInput('Email Address '.$messages,$input);
+
+
+				
+		//end required fields
+		$formRequired = $fields;		
+		
+		//formOptional
+		$fields = inputFieldName($entity,$this->nameFirst,'nameFirst','First Name');
+		
+		$fields .= inputFieldName($entity,$this->nameLast,'nameLast','Last Name');
+
+
+		$m = new UserType;
+		$select = $m->getUserTypeSelectList($this->typeId,'typeId','false');
+		$fields .= captionedInput('User Type',$select);
+		
+
+		$fields .= inputFieldComments($entity,$this->focus,'focus','Focus Areas',1000);
+		
+		$fields .= inputFieldComments($entity,$this->interests,'interests','Interests',1000);
+		
+		
+		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){
+			//if admin and not editing self allow setting admin
+			//prevents admins from disabling their own accounts
+			$input1 = getSelectYesNo('isAdmin',$this->isAdmin,'Is Administrator','false');
+			$input2 = getSelectYesNo('isActive',$this->isActive,'Is Active','false');
+			$input3 = getSelectYesNo('mustUpdatePwd',$this->mustUpdatePwd,'Must Update Password','false');
+		} else {
+			$input1 = $this->isAdmin.getHiddenInput('isAdmin',$this->isAdmin);
+			$input2 = $this->isActive.getHiddenInput('isActive',$this->isActive);
+			$input3 = $this->mustUpdatePwd.getHiddenInput('mustUpdatePwd','no');
+		}				
+		$input = captionedInput('Administrator',$input1);
+		$input .= captionedInput('Active Profile',$input2);
+		$input .= captionedInput('Must Update Password', $input3);
+		$fields .= captionedInput('Profile Settings',$input);
+		
+		//end optional fields
+		$formOptional = $fields;
+		
+		
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('userId', $this->id);
+
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);		
+		return $form;
+	}
+	
+	
+	protected function collectPostValues(){
+
+		$this->id = $_POST['userId'];
+		$this->typeId = $_POST['typeId'];
+		
+		$this->nameFirst = dbEscapeString($_POST['nameFirst']); 
+		$this->nameLast = dbEscapeString($_POST['nameLast']); 
+		$this->email = dbEscapeString($_POST['email']); 
+		$this->focus = dbEscapeString($_POST['focus']); 
+		$this->interests = dbEscapeString($_POST['interests']); 
+		$this->isAdmin = dbEscapeString($_POST['isAdmin']);
+		$this->isActive = dbEscapeString($_POST['isActive']);
+		$this->mustUpdatePwd = dbEscapeString($_POST['mustUpdatePwd']);
+		$this->pageMode = $_POST['mode'];	
+		
+		$this->loginName = dbEscapeString($_POST['loginName']); 
+		//get password for local validation
+		$pwd = dbEscapeString($_POST['loginPwd']);
+		$pwdConfirm = dbEscapeString($_POST['loginPwdConfirm']);
+		//clear the password from post variables if canceling form post
+		$_POST['loginPwd'] = 'password';
+		$_POST['loginPwdConfirm'] = 'password';
+
+		//validate login name
+		if ($this->loginName == '' || is_null($this->loginName)){
+			$this->cancelPost('Login name cannot be blank','login');
+		}
+		//validate email address
+		if ($this->email != '' && filter_var($this->email, FILTER_VALIDATE_EMAIL) !== false) {
+    		// $email contains a valid email
+		} else {
+			if ($this->email == ''){
+				$validation = 'Email address cannot be blank';
+			} else {
+				$validation = 'Email address is not valid';
+			}
+			$this->cancelPost($validation,'email');
+		}
+		//validate password
+		if ($pwd != '' && $pwd == $pwdConfirm && $pwd != 'password'){
+			$this->loginPwd = $this->obfuscate($pwd, $this->loginName);
+		} else {
+			if ($pwd == '' || is_null($pwd) || is_null($pwdConfirm) || $pwdConfirm == ''){
+				$validation = 'Password cannot be blank';
+			} elseif ($pwd != $pwdConfirm){
+				$validation = 'Passwords do not match';
+			}
+			$this->cancelPost($validation,'password'); 
+		}
+	}
+	
+	protected function cancelPost($message, $validation){
+		//echo 'in cancel post:'.$message;
+		//set validation message
+		$this->validationMessages[$validation] = span($message,'highlight-validation');
+		//display editing form with current validation state
+		$this->printPage();
+		die;
+	}
+
+	protected function saveUpdate(){
+			
+			$sql = " UPDATE users AS u ";
+			$sql .= " SET ";
+			$sql .= " u.name_first = '".$this->nameFirst."', ";
+			$sql .= " u.name_last = '".$this->nameLast."', ";
+			$sql .= " u.email = '".$this->email."', ";
+			$sql .= " u.focus = '".$this->focus."', ";
+			$sql .= " u.interests = '".$this->interests."', ";
+			$sql .= " u.login_name = '".$this->loginName."', ";
+			$sql .= " u.login_pwd = '".$this->loginPwd."', ";
+			$sql .= " u.is_admin = '".$this->isAdmin."', ";
+			$sql .= " u.is_active = '".$this->isActive."', ";
+			$sql .= " u.must_update_pwd = '".$this->mustUpdatePwd."', ";
+			$sql .= " u.type_id = ".$this->typeId." ";
+			$sql .= " WHERE u.id = ".$this->id."  ";			
+
+			$result = dbRunSQL($sql);
+
+			$this->mailUser('Your User Profile Has Been Updated');
+			
+			if ($this->loginName == $_SESSION['login-name']){
+				$this->setSecurity($this->loginName);
+			}
+	}
+	
+	protected function saveInsert(){
+	
+			$sql = " INSERT INTO users ";
+			$sql .= " (name_first, ";
+			$sql .= " name_last, ";
+			$sql .= " email, ";
+			$sql .= " focus, ";
+			$sql .= " interests, ";
+			$sql .= " login_name, ";
+			$sql .= " login_pwd, ";
+			$sql .= " is_admin, ";
+			$sql .= " is_active, ";
+			$sql .= " must_update_pwd, ";
+			$sql .= " created, ";
+			$sql .= " type_id) ";
+			$sql .= " VALUES (";
+			$sql .= " '".$this->nameFirst."', ";
+			$sql .= " '".$this->nameLast."', ";
+			$sql .= " '".$this->email."', ";
+			$sql .= " '".$this->focus."', ";
+			$sql .= " '".$this->interests."', ";
+			$sql .= " '".$this->loginName."', ";
+			$sql .= " '".$this->loginPwd."', ";
+			$sql .= " '".$this->isAdmin."', ";
+			$sql .= " '".$this->isActive."', ";
+			$sql .= " '".$this->mustUpdatePwd."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";			
+			$sql .= " ".$this->typeId.") ";
+			
+			$result = dbRunSQL($sql);
+
+			$this->id = dbInsertedId();
+	}
+	
+	
+} 
+?>

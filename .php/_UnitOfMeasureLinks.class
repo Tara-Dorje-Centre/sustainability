@@ -1,6 +1,11 @@
 ﻿<?php 
 
-class UnitOfMeasureLinks extends _Links {
+class unitOfMeasureLinks extends _entityTypeLinks {
+
+	protected $_pageList = 'pr_UnitOfMeasure_List.php';
+	protected $_pageDetail = 'pr_UnitOfMeasure_Detail.php';
+	
+/*
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
 	}
@@ -54,7 +59,7 @@ class UnitOfMeasureLinks extends _Links {
 			$links = $this->listingHref();
 		}
 		return $links;
-	}	
+	}	*/
 	
 }
 ?>

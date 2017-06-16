@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class MeasureTypeUnitSQL extends __entitySQL{
+class measureTypeUnitSQL extends _entitySQL{
 
 protected $baseTable = 'measure_type_units_v';
 

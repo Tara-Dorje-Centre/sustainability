@@ -1,0 +1,57 @@
+﻿<?php 
+
+class locationType extends _entityType{
+	protected $__MyClassName = 'LocationType';
+  	protected $_titleEntity = 'Location Type';
+	protected $pageSave = 'pr_LocationType_Save.php';
+	public $sql;
+	public $links;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new locationTypeSQL;
+		$this->links = new locationTypeLinks;	
+	}
+	
+	protected function saveUpdate(){
+	
+
+			$sql = " UPDATE location_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.display_order = ".$this->displayOrder.", ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";			
+			
+			$result = dbRunSQL($sql);
+	}
+
+	protected function saveInsert(){
+			$sql = " INSERT INTO location_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " highlight_style, ";
+			$sql .= " display_order, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= "'".$this->highlightStyle."', ";
+			$sql .= " ".$this->displayOrder.", ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+		
+	}
+	
+} 
+?>

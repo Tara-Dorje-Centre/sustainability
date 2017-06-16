@@ -1,6 +1,6 @@
 <?php
 
-class LocationTypeSQL extends __entityTypeSQL{
+class locationTypeSQL extends _entityTypeSQL{
 
 protected $baseTable = 'location_types';
 

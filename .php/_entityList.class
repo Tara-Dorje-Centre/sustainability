@@ -1,0 +1,83 @@
+<?php 
+
+	
+class _entityList extends _entity{
+	protected $__MyClassName = '_entityList';
+	protected $_titleEntity = 'Entity List';
+	
+	public $found = 0;
+	//public $f;
+	public $sql;
+	public $links;
+	
+	
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		//$ths->f = new __entityFields;
+		$this->sql = new __entitySQL;	
+		$this->links = new __entityLinks();	
+	}
+	
+	public function setFoundCount(){
+		$this->found = 0;
+		//override does sql lookup
+	}
+	
+	
+	public function setFoundCount(){
+		$sql = $this->sql->count();
+		$this->found = dbGetCount($sql, 'total_types');
+	}
+	
+	
+	protected function setPageTitle(){
+		$this->_pageTitle = $this->_titleEntity;
+	}
+	
+	//overrides __Entity.getPageDetails for listing query
+	protected function getPageDetails(){
+		$details = $this->getListing();
+		return $details;
+	}
+	
+	protected function listingPagingLinks(){
+	//ovrrride to set link type
+		$pagingLinks = $this->links->listingPaged($this->found,$this->resultPage,$this->perPage);	
+		return $pagingLinks;
+	}
+	
+	protected function listingQuickEdit(){
+	//override to set add form
+		//$at = new ActivityType('ADD');
+		//$quickEdit =$at->editForm();		
+		$quickEdit = 'entityList.listingQuickEdit';
+		return $quickEdit;
+	}
+	
+	protected function listingStart(){
+		paging = $this->listingPagingLinks();
+		$add = $this->listingQuickEdit();
+		$list = openDisplayList('entity-list',$this->_titleEntity, $paging,$add);
+		return $list;
+	}
+	
+	protected function listingRows(){
+	//override to set sql and create proper fetch type
+		$list = '__EntityList.listingRows not overridden ';
+		return $list;
+	}
+	
+	public function getListing(){
+		$list = $this->listingStart();
+		$list = $this->listingRows();
+		$list .= closeDisplayList();
+		return $list;
+	}
+	
+
+}
+
+
+
+?>

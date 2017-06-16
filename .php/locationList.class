@@ -1,0 +1,171 @@
+﻿<?php 
+
+class LocationList extends __EntityList{
+	protected $__MyClassName = 'LocationList';
+
+	private $sql;
+	private $links;
+	
+	//default listng all locations
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = -1){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new LocationSQL;	
+		$this->links = new LocationLinks();
+	}
+	
+	public function setDetails(){
+		$this->echoState(true, 'setDetails');
+
+
+	}
+	
+	protected function setPageTitle(){
+
+		if ($this->parentId <= 0){	
+			$title = 'All Locations';
+		} else {
+			$l = new Location;
+			$title = 'Sub Locations: '.$l->getSortKey($this->parentId);
+		}
+
+		$this->_pageTitle = $title;	
+	}
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$this->links->saveSettings;
+		$this->links->setType($menuType);
+		$this->links->setStyle($menuStyle);
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $this->links->openMenu('section-heading-links');
+ 		$menu .= $menuL->linkReference();
+		$menu .= $this->links->resetMenu();
+		if ($this->parentId > 0){
+			$menu .= $this->links->detailViewHref($this->parentId,'Up');	
+		} else {
+			$menu .= $this->links->detailAddHref(0);
+		}
+		$menu .= $this->links->listingHref(-1);
+				
+		if ($this->parentId > 0){
+			$menu .= $this->links->resetMenu();
+			//showing sub locations for a parent
+			if ($this->found != 0){	
+				$menu .= $this->links->listingHref($this->idParent,'SubLocations('.$this->found.')');
+			} else {
+				$menu .= 'No Sublocations';
+			}
+			//add new sublocation to current parent
+			$menu .= $this->links->detailAddHref($this->parentId);
+		}
+		
+		$menu .= $this->links->closeMenu();
+		
+				$this->links->restoreSettings();
+				
+		$this->_pageMenu = $menu;			
+	}
+	
+	public function setCount(){
+		if ($this->idParent == -1){
+			// idParent is -1, list all locatons
+			$sql = $this->sql->count();
+			$this->echoPrint(true, 'count all locations','setCount');
+		} else {
+			// id parent is 0 -- list primary locatons
+			// f id s positive -- listdirect children
+			$sql = $this->sql->countChildren($this->idParent);
+
+			$this->echoPrint(true, ' count child locations');
+		} 
+			//locationid = 0, listing on add?
+			
+			
+		//	$l = new Location;
+		//	$sortKey = $l->getSortKey($this->idParent);
+		
+		
+		//if ($this->id != 0){
+			$this->found = dbGetCount($sql, 'total_locations');
+			
+		//} else {
+			//$this->found = 0;
+		//}
+
+	}
+	
+	protected function listingQuickEdit(){
+		$at = new Location('ADD', 0, $this->id);
+		$quickEdit =$at->editForm();			
+		return $quickEdit;
+	}
+	/*
+	public function getListing(){		
+	
+		$this->setCount();
+		
+		if ($this->found > 0){
+			$ll = new LocationLinks;
+			$pagingLinks = $ll->listingPaged($this->idParent,$this->found,$this->resultPage,$this->perPage);
+			$list = openDisplayList('location','Locations',$pagingLinks);
+
+			$heading = wrapTh('Location');
+			$heading .= wrapTh('Description');
+			$list .= wrapTr($heading);
+
+			$list .= $this->getListingRows();
+
+			$list .= closeDisplayList();
+		} else {
+			$list = openDiv('location-list','none');
+			$list .= 'No Locations Found';
+			$list .= closeDiv();
+		}
+		
+		return $list;
+		
+	}
+	*/
+	protected function listingRows(){
+	$this->echoState(true,'listingRows');
+		$ll = new LocationLinks;
+		$list = '';
+		if ($this->idParent == -1){
+			$this->echoPrint(true, 'fetching all','getListingRows');
+		
+			$sql = $this->sql->list($this->resultPage,$this->perPage);
+		} else {
+			$this->echoPrint(true, 'fetching children','getListingRows');
+		
+			$sql = $this->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
+			//$l = new Location;
+			//$sortKey = $l->getSortKey($this->idParent);
+		}
+		
+		$result = dbGetResult($sql);
+		if($result){
+		
+			$l = new Location('FETCH');
+			$list = $this->listingHeading();
+	 	 	while ($row = $result->fetch_assoc())
+			{	
+
+				$l->setRowValues($row);
+				$list .= $l->listingRowFormat();
+			
+			}
+			$result->close();
+		} else {
+		
+		//no data found
+		}
+		
+		return $list;
+	}
+
+
+}
+?>

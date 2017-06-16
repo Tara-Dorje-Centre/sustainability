@@ -1,0 +1,60 @@
+﻿<?php 
+
+class ReceiptType extends __EntityType{
+	protected $__MyClassName = 'ReceiptType';
+  	protected $_titleEntity = 'Receipt Type';
+  	protected $pageSave = 'pr_ReceiptType_Save.php';
+	
+	private $sql;
+	private $typeLinks;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+
+		$this->sql = new ReceiptTypeSQL;
+		$this->typeLinks = new ReceiptTypeLinks();
+	}
+	
+	public function saveUpdate(){
+	
+
+			$sql = " UPDATE receipt_types AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->name."', ";
+			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.display_order = ".$this->displayOrder.", ";			
+			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$result = dbRunSQL($sql);
+			
+	}
+		
+	public function saveInsert(){
+
+			$sql = " INSERT INTO receipt_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " display_order, ";			
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= " ".$this->displayOrder.", ";			
+			$sql .= "'".$this->highlightStyle."', ";
+			$sql .= "'".$this->notes."') ";
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+		
+	
+	}
+	
+} 
+?>

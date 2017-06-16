@@ -1,0 +1,52 @@
+<?php 
+
+class _entityTypeList extends _entityList{
+	protected $__MyClassName = '__entityTypeList';
+	protected $_titleEntity = 'Entity Types';
+	
+	public $links;
+	private $sql;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new _entityTypeSQL;	
+		$this->links = new _entityTypeLinks();	
+	}
+	
+	public function setFoundCount(){
+		$sql = $this->sql->count();
+		$this->found = dbGetCount($sql, 'total_types');
+	}
+
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu'
+		$this->links->saveMenuSettings();
+		$this->links->setType($menuType);
+		$this->links->setStyle($menuStyle);
+		
+		
+		$menuL = new MenuLinks($menuType,$menuStyle);
+			
+		$menu = $this->links->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $this->links->resetMenu();
+		$menu .= $this->links->detailAddHref();
+		$menu .= $this->links->listingHref();		
+		$menu .= $this->links->closeMenu();
+		$this->_pageMenu = $menu;
+		
+		$this->links->restoreMenuSettings();
+	}
+	
+	protected function listingPagingLinks(){
+		$pagingLinks = $this->links->listingPaged($this->found,$this->resultPage,$this->perPage);	
+		return $pagingLinks;
+	}
+	
+	
+}
+
+
+
+?>

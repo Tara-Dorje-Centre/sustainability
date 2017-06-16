@@ -1,0 +1,11 @@
+﻿<?php 
+
+class locationTypeLinks extends _entityTypeLinks{
+
+	protected $_pageList = 'pr_LocationType_List.php';
+	protected $_pageDetail = 'pr_LocationType_Detail.php';
+
+}
+
+
+?>

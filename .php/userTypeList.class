@@ -1,0 +1,45 @@
+﻿<?php 
+
+class userTypeList extends _entityTypeList{
+	protected $__MyClassName = 'UserTypeList';
+	protected $_titleEntity = 'User Types';
+
+	private $sql;
+	private $typeLinks;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new UserTypeSQL;
+		$this->typeLinks = new UserTypeLinks;	
+	}
+	
+	
+	protected function listingQuickEdit(){
+		$at = new UserType('ADD');
+		$quickEdit =$at->editForm();			
+		return $quickEdit;
+	}
+	
+	protected function listingRows(){
+		$sql = $this->sql->list($this->resultPage,$this->perPage);
+		$result = dbGetResult($sql);
+		if($result){
+		
+			$u = new UserType(FETCH);
+			$list = $u->listingHeading();
+			
+		  	while ($row = $result->fetch_assoc())
+			{	
+				$u->setRowValues($row);
+				$list .= $u->listingRowFormat($u);
+			}
+			$result->close();
+		} else {
+			$list =  wrapTr('no results found';
+		}
+		return $list;
+	}
+	
+	
+}
+?>

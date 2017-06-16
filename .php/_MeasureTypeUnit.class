@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class MeasureTypeUnit extends __Entity{
+class measureTypeUnit extends _entity{
 	protected $__MyClassName = 'MeasureTypeUnit';
 	
     public $unitOfMeasureId = 0;	
@@ -18,8 +18,8 @@ class MeasureTypeUnit extends __Entity{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new MeasureTypeUnitSQL;
-		$this->measureType = new MeasureType($this->pageMode, $this->idParent);
+		$this->sql = new measureTypeUnitSQL;
+		$this->measureType = new measureType($this->pageMode, $this->idParent);
 	}
 	
 	public function setDetails(){

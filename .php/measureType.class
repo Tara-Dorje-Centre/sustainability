@@ -1,0 +1,102 @@
+﻿<?php 
+
+class MeasureType extends __EntityType{
+	protected $__MyClassName = 'MeasureType';
+	protected $_titleEntity = 'Measure Type';
+  	protected $pageSave = 'pr_MeasureType_Save.php';
+	private $sql;
+	private $typeLinks;
+		
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new MeasureTypeSQL;
+		$typeLinks= new MeasureTypeLinks();
+		
+	}
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		//$units = new UnitOfMeasureLinks($menuType,$menuStyle);
+		$measureTypesL = new MeasureTypeLinks($menuType,$menuStyle);
+		$measureTypeUnitsL = new MeasureTypeUnitLinks($menuType,$menuStyle);
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $measureTypesL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $measureTypesL->detailEditHref($this->id);
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $measureTypesL->detailViewHref($this->id);
+		}
+		if ($this->pageMode != 'ADD'){
+			$menu .= $measureTypeUnitsL->listingHref($this->id);
+		}
+		$menu .= $measureTypesL->resetMenu();
+		$menu .= $measureTypesL->listingHref();	
+	
+		$menu .= $measureTypesL->closeMenu();
+		$this->_pageMenu = $menu;
+	}
+	
+	
+	public function display(){
+		$this->formatForDisplay();
+		$detail = openDisplayDetails('measure-type','Measure Type Details');		
+	 						
+		$detail .= captionedParagraph('name', 'Name', $this->name);
+		$detail .= captionedParagraph('description', 'Description', $this->description);
+		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
+		$detail .= captionedParagraph('created', 'Created', $this->created);
+		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
+		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
+		$detail .= captionedParagraph('display-order-style', 'Display Order', $this->displayOrder);
+
+
+		$measureunits = new MeasureTypeUnitList;
+		$measureunits->setDetails($this->id);
+		$detail .= $measureunits->getListing();
+		
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+	
+	protected function saveUpdate(){
+	
+
+			$sql = " UPDATE measure_types AS mt ";
+			$sql .= " SET ";
+			$sql .= " mt.name = '".$this->name."', ";
+			$sql .= " mt.description = '".$this->description."', ";
+			$sql .= " mt.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " mt.notes = '".$this->notes."' ";
+			$sql .= " WHERE mt.id = ".$this->id."  ";		
+				
+			$result = dbRunSQL($sql);
+		}
+		
+		
+		protected function saveInsert(){
+		
+			$sql = " INSERT INTO measure_types ";
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->description."', ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	
+	}
+	
+} 
+?>

@@ -1,0 +1,137 @@
+﻿<?php 
+
+class taskList extends _entityList{
+	protected $__MyClassName = 'TaskList';
+	protected $__titleEntity = 'Tasks';
+
+	public $periodicTasks = 'NO';
+	public $project;
+	public $sql;
+	public $links;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		
+		$this->project = new Project($this->pageMode, $this->idParent);
+		$this->sql = new TaskSQL;	
+		$this->links = new TaskLinks;
+	}
+	
+	public function setDetails(){
+   		$this->echoState(true, 'setDetails');
+		$this->project->setDetails();
+		$this->setFoundCount();
+	}
+
+	public function setPeriodic($periodic = 'NO'){
+		$this->periodicTasks = $periodic;
+	}
+	
+	protected function setPageTitle(){
+
+		if ($this->periodicTasks == 'NO'){
+			$title = $this->project->name.br();
+			$title .= 'Project Tasks';
+		} else {
+			$title .= 'Periodic Tasks';
+		}
+
+		$this->_pageTitle = $title.'[task list]';
+	}
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+	//	$projectL = new ProjectLinks($menuType,$menuStyle);
+
+		
+		$menu = $this->links->openMenu('section-heading-links');
+		if ($this->periodicTasks == 'NO'){
+			$menu .= $this->links->detailAddHref($this->project->id);
+			$menu .= $this->links->listingHref($this->project->id);
+			$menu .= $this->project->links->detailViewHref($this->project->id);	
+		} else {
+			
+			//$menu .= $taskL->linksPeriodicTasks();
+			//$menu .= $taskL->formatOptionsLink();
+			//$menu .= $projectL->listingAllProjects();
+							
+		}
+		$menu .= $this->links->closeMenu();
+		$this->_pageMenu = $menu;			
+	}
+	
+	private function getPeriodicTasksComplete(){
+		if ($this->periodicTasks == 'COMPLETE'){
+			$complete = 'YES';
+		} elseif ($this->periodicTasks == 'INCOMPLETE'){
+			$complete = 'NO';
+		}
+		return $complete;		
+	}
+	
+	public function setFoundCount(){
+		if ($this->periodicTasks == 'NO'){
+			$this->found = $this->project->tasksCount;
+		} else {
+			$sql = $this->sql->countPeriodic($this->getPeriodicTasksComplete());
+			$this->found = dbGetCount($sql, 'total_tasks');			
+		}
+	}
+	
+	protected function listingPagingLinks($pagingBaseLink = 'USE_LISTING'){
+	
+		if ($pagingBaseLink == 'USE_LISTING'){
+			$base = $this->links->listing($this->project->id,$this->periodicTasks);
+		} else { 
+			$base = $pagingBaseLink;
+		 }
+		$pagingLinks = $this->links->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
+		return $pagingLinks;
+	
+	}
+	
+	protected function listingQuickEdit(){
+	//override to set add form
+		$at = new Task('ADD', 0, $this->project->id);
+		$quickEdit =$at->editForm();		
+		return $quickEdit;
+	}
+	
+	
+	public function getListing($pagingBaseLink = 'USE_LISTING'){
+
+		$pagingLinks = $this->listingPagingLinks($pagingBaseLink);
+	
+		$quickEdit = $this->listingQuickEdit;
+
+		$list = openDisplayList('task','Tasks',$pagingLinks,$quickEdit);
+
+	
+
+
+		if ($this->periodicTasks == 'NO'){
+			$sql = $this->sql->listProject($this->project->id,$this->resultPage,$this->perPage);
+		} else {
+			$sql = $this->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
+		}
+		
+		$result = dbGetResult($sql);
+		if ($result){
+			$t = new Task('FETCH');
+			$list = $t->listingHeading($this->periodicTasks);
+			while($row = $result->fetch_assoc())
+			{	
+				$t->setRowValues($row);
+				$list .= $t->listingRowFormat($periodicTasks);
+			}
+		
+			$result->close();
+		}
+
+		$list .= closeDisplayList();
+		return $list;
+	}
+}
+?>

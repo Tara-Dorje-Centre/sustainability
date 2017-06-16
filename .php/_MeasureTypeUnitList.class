@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class MeasureTypeUnitList extends __EntityList{
+class measureTypeUnitList extends _entityList{
 	protected $__MyClassName = 'MeasureTypeUnitList';
 
 	
@@ -9,8 +9,8 @@ class MeasureTypeUnitList extends __EntityList{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent =0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new MeasureTypeUnitSQL;
-		$this->measureType = new MeasureType($this->pageMode, $this->idParent);
+		$this->sql = new measureTypeUnitSQL;
+		$this->measureType = new measureType($this->pageMode, $this->idParent);
 	}
 	
 	public function setDetails(){

@@ -1,0 +1,117 @@
+﻿<?php 
+
+class projectList extends __entityList{
+protected $__MyClassName = 'ProjectList';
+protected $__titleEntity = 'Projects';
+
+	public $showMyProjects = 'NO';
+	public $status = 'OPEN';
+	
+	public $sql;
+	public $links;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->sql = new ProjectSQL;	
+		$this->links = new ProjectLinks();
+	}
+	public function setDetails(){
+   		$this->echoState(true,'setDetails');
+		$this->setFoundCount();
+	}
+	
+	public function setMyProjects($showMyProjects = 'NO'){
+		$this->showMyProjects = $showMyProjects;
+	}
+	
+	public function setStatus($projectStatus = 'OPEN'){
+		$this->status = $projectStatus;	
+	}
+	
+	
+	protected function setPageTitle(){
+
+		if ($this->showMyProjects == 'YES'){
+			$title .= 'My ';
+		}
+		$title .= $this->status.' Projects';
+
+		$this->_pageTitle = $title;	
+	}
+
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+	
+		//$activityL = new ActivityLinks($menuType,$menuStyle);
+
+		$menu = $this->links->openMenu('section-heading-links');
+		
+		if ($this->status == 'CLOSED'){
+			$menu .= $this->links->listingAllProjects(true);	
+		} else {
+			$menu .= $this->links->listingAllProjects();
+		}
+		$menu .= $this->links->resetMenu();		
+		if ($this->status == 'CLOSED'){
+			$menu .= $this->links->listingMyProjects(true);
+		} else {
+			$menu .= $this->links->listingMyProjects();	
+		}
+		$menu .= $this->links->resetMenu();
+		$menu .= $this->links->detailAddHref();					
+		$menu .= $this->links->closeMenu();
+		$this->_pageMenu = $menu;			
+	}
+	
+	
+	public function setFoundCount(){
+		if ($this->showMyProjects == 'YES'){
+			$sql = $this->sql->countByDoneBy($_SESSION['login-name'],$this->status);
+		} else {
+			$sql = $this->sql->countByStatus($this->status);
+		}
+		$this->found = dbGetCount($sql, 'total_projects');
+	}
+	
+	
+	protected function listingQuickEdit(){
+	//override to set add form
+		$at = new Project('ADD',0, $this->idParent);
+		$quickEdit =$at->editForm();		
+		return $quickEdit;
+	}
+	
+	public function listingRows(){		
+		$this->echoState(true,'getListing');
+	
+	
+		
+		if ($this->showMyProjects == 'YES'){
+			$user = $_SESSION['login-name'];
+			$sql = $this->sql->listByDoneBy($user,$this->status,$this->resultPage,$this->perPage);
+		} else {
+			$sql = $this->sql->listByStatus($this->status,$this->resultPage,$this->perPage);
+		}
+		
+		$result = dbGetResult($sql);
+		if($result){
+					$p = new Project('FETCH');
+					$list = $p->listingHeading();
+	  	while ($row = $result->fetch_assoc())
+		{	
+
+			$p->setRowValues($row);
+			$p->formatForDisplay();
+			$list .= $p->listingRowFormat();
+
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();		
+		return $list;
+	}
+}
+?>

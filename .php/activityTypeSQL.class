@@ -1,6 +1,6 @@
 ﻿<?php 
  
-class ActivityTypeSQL extends __entityTypeSQL{
+class activityTypeSQL extends _entityTypeSQL{
 
 protected $baseTable = 'activity_types';
 

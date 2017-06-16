@@ -1,0 +1,10 @@
+﻿<?php 
+
+class ProjectTypeLinks extends _entityTypeLinks{
+	protected $_pageList = 'pr_ProjectType_List.php';
+	protected $_pageDetail = 'pr_ProjectType_Detail.php';
+
+}
+
+
+?>

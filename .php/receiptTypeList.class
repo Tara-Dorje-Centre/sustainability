@@ -1,0 +1,43 @@
+﻿<?php 
+
+class ReceiptTypeList extends __EntityTypeList{
+protected $__MyClassName = 'ReceiptTypeList';
+	protected $_titleEntity = 'Receipt Types';
+	private $sql;
+	private $typeLinks;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::construct($mode, $id, $idParent);
+		$this->sql = new ReceiptTypeSQL;
+		$this->typeLinks = new ReceiptTypeLinks;	
+	}
+	
+	protected function listingQuickEdit(){
+		$at = new ReceiptType('ADD');
+		$quickEdit =$at->editForm();			
+		return $quickEdit;
+	}
+	
+	protected function listingRows(){
+		$sql = $this->sql->list($this->resultPage,$this->perPage);
+		$result = dbGetResult($sql);
+		if($result){
+		
+			$u = new ReceiptType(FETCH);
+			$list = $u->listingHeading();
+			
+		  	while ($row = $result->fetch_assoc())
+			{	
+				$u->setRowValues($row);
+				$list .= $u->listingRowFormat($u);
+			}
+			$result->close();
+		} else {
+			$list =  wrapTr('no results found';
+		}
+		return $list;
+	}
+	
+
+}
+?>

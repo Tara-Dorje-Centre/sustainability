@@ -1,13 +1,15 @@
 ﻿<?php 
 
-class UnitOfMeasureList extends __EntityList{
+class unitOfMeasureList extends _entityTypeList{
 	protected $__MyClassName = 'UnitOfMeasureList';
 
-	private $sql;
+	public $sql;
+	public links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new UnitOfMeasureSQL;
+		$this->sql = new unitOfMeasureSQL;
+		$this->links = new unitOfMeasureLinks;
 	}
 	
 	

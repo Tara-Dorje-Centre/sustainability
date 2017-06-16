@@ -1,8 +1,7 @@
 ﻿<?php 
 
-class UnitOfMeasure extends __Entity{
+class unitOfMeasure extends _entityType{
 	protected $__MyClassName = 'UnitOfMeasure';
-
 
     
     public $type;	
@@ -12,17 +11,19 @@ class UnitOfMeasure extends __Entity{
     public $created;
     public $updated;
 	
-    
-	private $sql;
+    public $f;
+	public $sql;
+	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new UnitOfMeasureSQL;
+		
+		$this->sql = new unitOfMeasureSQL;
 	}
 	
     public function setDetails(){
 
-		$sql = $this->sql->infoUnitOfMeasure($this->id);
+		$sql = $this->sql->info($this->id);
 
 		$result = dbGetResult($sql);
 		if($result){
@@ -105,7 +106,7 @@ class UnitOfMeasure extends __Entity{
 		$showLink = true,
 		$changeJS = NULL){
 	
-		$sql = $this->sql->selectOptions_UnitsOfMeasure($selectedValue,$disabled);
+		$sql = $this->sql->options($selectedValue,$disabled);
 		
 		$defaultValue = '0';
 		$defaultCaption = '-select Unit Type';
