@@ -1,16 +1,16 @@
 ﻿<?php 
 
-class ProjectType extends __EntityType{
+class projectType extends _entityType{
 	protected $__MyClassName = 'ProjectType';
     protected $_titleEntity = 'Project Type';
    	protected $pageSave = 'pr_ProjectType_Save.php';
-	private $sql;
-	private $typeLinks;
+	public $sql;
+	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new ProjectTypeSQL;
-		$typeLinks= new ProjectTypeLinks();
+		$this->sql = new projectTypeSQL;
+		$this->links = new projectTypeLinks();
 	}
 	
 	
@@ -18,12 +18,12 @@ class ProjectType extends __EntityType{
 	
 			$sql = " UPDATE project_types AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->name."', ";
-			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.name = '".$this->f->name."', ";
+			$sql .= " p.description = '".$this->f->description."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
-			$sql .= " p.display_order = ".$this->displayOrder.", ";
-			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " p.highlight_style = '".$this->f->highlightStyle."', ";
+			$sql .= " p.display_order = ".$this->f->displayOrder.", ";
+			$sql .= " p.notes = '".$this->f->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";		
 				
 			$result = dbRunSQL($sql);
@@ -40,13 +40,13 @@ class ProjectType extends __EntityType{
 			$sql .= " display_order, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
+			$sql .= "'".$this->f->name."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->description."', ";
-			$sql .= "'".$this->highlightStyle."', ";
-			$sql .= " ".$this->displayOrder.", ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= "'".$this->f->highlightStyle."', ";
+			$sql .= " ".$this->f->displayOrder.", ";
+			$sql .= "'".$this->f->notes."') ";
 			
 			$result = dbRunSQL($sql);
 			

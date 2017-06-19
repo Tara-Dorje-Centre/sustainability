@@ -1,41 +1,13 @@
 ﻿<?php 
 
-class MaterialTypeList extends __EntityTypeList{
+class materialTypeList extends _entityTypeList{
 	protected $__MyClassName = 'MaterialTypeList';
 	protected $_titleEntity = 'Material Types';
-	private $sql;
-	private $typeLinks;
+	public $base;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new MaterialTypeSQL;
-		$this->typeLinks = new MaterialTypeLinks;	
-	}
-	
-	protected function listingQuickEdit(){
-		$at = new MaterialType('ADD');
-		$quickEdit =$at->editForm();			
-		return $quickEdit;
-	}
-	
-	protected function listingRows(){
-		$sql = $this->sql->list($this->resultPage,$this->perPage);
-		$result = dbGetResult($sql);
-		if($result){
-		
-			$u = new MaterialType(FETCH);
-			$list = $u->listingHeading();
-			
-		  	while ($row = $result->fetch_assoc())
-			{	
-				$u->setRowValues($row);
-				$list .= $u->listingRowFormat($u);
-			}
-			$result->close();
-		} else {
-			$list =  wrapTr('no results found';
-		}
-		return $list;
+		$this->base = new materialType(LIST);
 	}
 	
 }

@@ -520,21 +520,39 @@ function paragraph($content, $id, $css = 'none'){
 	return $e->wrap($content);
 }
 
+
 function captionedParagraph($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption'){
+return para($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption'){
+}
+
+function para($id, $caption, $content, $cssPara = 'none',$cssCaption = 'display-caption'){
 	$value = span($caption.':',$cssCaption).$content;
-	$data = paragraph($value, $id, $cssParagraph);
+	$data = paragraph($value, $id, $cssPara);
 	return $data;
 }
 
-function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
-	$e = new _element('img','none',$css);
 
-	$e->addAttribute('src',$src);
-	$e->addAttribute('alt',$alt);
-	$e->addAttribute('width',$width);
-	$e->addAttribute('height',$height);
-	$e->addAttribute('border',$border);
-	return $e->emptyTag();
+class img extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('img', $idName, $css);
+	}
+	
+	public function setSource($src, $alt){
+		$e->addAttribute('src',$src);
+		$e->addAttribute('alt',$alt);
+	}
+	public function setDim($width = 0, $height = 0, $border = 0){
+		$e->addAttribute('width',$width);
+		$e->addAttribute('height',$height);
+		$e->addAttribute('border',$border);
+	}
+}
+
+function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
+	$i = new img('none',$css);
+	$i->setSource($src, $alt);
+	$i->setDim($width, $height, $border);
+	return $i->emptyTag();
 }
 
 

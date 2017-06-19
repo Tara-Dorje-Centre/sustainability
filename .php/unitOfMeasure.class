@@ -1,55 +1,64 @@
 ﻿<?php 
+class unitOfMeasureFields extends _entityTypeFields{
+	/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+    public $symbol;	
+    public $type;
+	
+	public function setRowValues($row){
+		parent::setRowValues($row);
+		$this->type = ($row["type"]);
+		$this->symbol = ($row["symbol"]);	
+	}
+	
+	protected function formatForDisplay(){
+		parent::formatForDisplay();
+		$this->type = displayLines($this->type);
+		$this->symbol = displayLines($this->symbol);
+	}
+	
+	public listHeading(){
+		$heading = parent::listHeading();
+		$heading .= wrapTh('Type');
+		$heading .= wrapTh('Symbol');
+		return $heading;
+	}
+	
+	public listDetail(){
+		$detail = parent::listDetail();
+		$detail .= wrapTd($this->type);
+		$detail .= wrapTd($this->symbol);
+		return $detail;
+	}
+
+	public function displayDetail(){
+		$detail = parent::displayDetail();
+		$detail .= captionedParagraph('type', 'Type', $this->f->type);
+		$detail .= captionedParagraph('symbol', 'Symbol', $this->f->symbol);
+		return $detail;
+	}
+    
+}
 
 class unitOfMeasure extends _entityType{
 	protected $__MyClassName = 'UnitOfMeasure';
-
+	protected $_titleEntity = 'Unit of Measure';
     
-    public $type;	
-    public $name;	
-    public $symbol;
-    public $notes;
-    public $created;
-    public $updated;
-	
+  
     public $f;
 	public $sql;
 	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		
+		$this->f = new unitOfMeasureFields();
 		$this->sql = new unitOfMeasureSQL;
-	}
-	
-    public function setDetails(){
-
-		$sql = $this->sql->info($this->id);
-
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-			{	
-			$this->name = ($row["name"]);
-			$this->type = ($row["type"]);
-			$this->notes = ($row["notes"]);
-			$this->symbol = ($row["symbol"]);	
-			$this->created = ($row["created"]);			
-			$this->updated = ($row["updated"]);			
-		}
-		$result->close();
-		}
-				
-	}	
-		
-	protected function pageTitle(){
-		$heading = openDiv('section-heading-title');
-		if ($this->pageMode != 'ADD'){
-			$heading .= $this->name;
-		} else {
-			$heading .= 'Add New Unit Of Measure';
-		}
-		$heading .= closeDiv();		
-		return $heading;
+		$this->links = new unitOfMeasureLinks;
 	}
 	
 	
@@ -78,28 +87,7 @@ class unitOfMeasure extends _entityType{
 	
 	
 	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->type = displayLines($this->type);
-		$this->notes = displayLines($this->notes);
-	}
-	
-	public function display(){
-		$this->formatForDisplay();
-		$detail = openDisplayDetails('unit-of-measure','Unit of Measure Details');
-					 						
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		$detail .= captionedParagraph('type', 'Type', $this->type);
-		$detail .= captionedParagraph('symbol', 'Symbol', $this->symbol);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-
-		$detail .= closeDisplayDetails();
-		return $detail;
-	}
-		
-	public function getUnitOfMeasureSelectList(
+	public function options(
 		$selectedValue = 0, 
 		$idName = 'unitOfMeasureId', 
 		$disabled = 'false', 
@@ -115,17 +103,16 @@ class unitOfMeasure extends _entityType{
 		$select = getSelectList($idName,$allOptions,'none',$disabled,$changeJS);
 		
 		if ($showLink == true){
-			$l = new UnitOfMeasureLinks;			
-			$links =$l->detailViewEditHref($selectedValue);
+			$links =$this->links->detailViewEditHref($selectedValue);
 			$select .= $links;
 		}
 		return $select;
 	}	
 	
+	
 	private function setAddRecordDefaults(){
 		
 	}
-	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
 			$this->setAddRecordDefaults();

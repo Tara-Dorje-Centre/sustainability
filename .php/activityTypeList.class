@@ -4,39 +4,12 @@ class activityTypeList extends _entityTypeList{
 	protected $__MyClassName = 'ActivityTypeList';
 	protected $_titleEntity = 'Activity Types';
 	
-	public $sql;
-	public	$links;
+	public $base;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new activityTypeSQL;	
-		$this->typeLinks = new activityTypeLinks;	
+		$this->base = new activityType(LIST);
 	}
 	
-	protected function listingQuickEdit(){
-		$at = new activityType('ADD');
-		$quickEdit =$at->editForm();			
-		return $quickEdit;
-	}
-	
-	protected function listingRows(){
-		$sql = $this->sql->list($this->resultPage,$this->perPage);
-		$result = dbGetResult($sql);
-		if($result){
-		
-			$u = new activityType(FETCH);
-			$list = $u->listingHeading();
-			
-		  	while ($row = $result->fetch_assoc())
-			{	
-				$u->setRowValues($row);
-				$list .= $u->listingRowFormat($u);
-			}
-			$result->close();
-		} else {
-			$list =  wrapTr('no results found';
-		}
-		return $list;
-	}
 }
 ?>

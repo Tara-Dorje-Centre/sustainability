@@ -5,16 +5,17 @@ class taskList extends _entityList{
 	protected $__titleEntity = 'Tasks';
 
 	public $periodicTasks = 'NO';
-	public $project;
-	public $sql;
-	public $links;
+	public $base;
+	//public $project;
+	//public $sql;
+	//public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		
-		$this->project = new Project($this->pageMode, $this->idParent);
-		$this->sql = new TaskSQL;	
-		$this->links = new TaskLinks;
+		$this->base = new task(LIST);
+		//$this->project = new Project($this->pageMode, $this->idParent);
+		//$this->sql = new TaskSQL;	
+	//	$this->links = new TaskLinks;
 	}
 	
 	public function setDetails(){
@@ -30,7 +31,7 @@ class taskList extends _entityList{
 	protected function setPageTitle(){
 
 		if ($this->periodicTasks == 'NO'){
-			$title = $this->project->name.br();
+			$title = $this->base->project->name.br();
 			$title .= 'Project Tasks';
 		} else {
 			$title .= 'Periodic Tasks';
@@ -73,9 +74,9 @@ class taskList extends _entityList{
 	
 	public function setFoundCount(){
 		if ($this->periodicTasks == 'NO'){
-			$this->found = $this->project->tasksCount;
+			$this->found = $this->base->project->tasksCount;
 		} else {
-			$sql = $this->sql->countPeriodic($this->getPeriodicTasksComplete());
+			$sql = $this->base->sql->countPeriodic($this->getPeriodicTasksComplete());
 			$this->found = dbGetCount($sql, 'total_tasks');			
 		}
 	}
@@ -83,11 +84,11 @@ class taskList extends _entityList{
 	protected function listingPagingLinks($pagingBaseLink = 'USE_LISTING'){
 	
 		if ($pagingBaseLink == 'USE_LISTING'){
-			$base = $this->links->listing($this->project->id,$this->periodicTasks);
+			$base = $this->base->links->listing($this->project->id,$this->periodicTasks);
 		} else { 
 			$base = $pagingBaseLink;
 		 }
-		$pagingLinks = $this->links->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
+		$pagingLinks = $this->base->links->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
 		return $pagingLinks;
 	
 	}

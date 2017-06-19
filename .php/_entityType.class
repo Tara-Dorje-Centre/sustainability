@@ -1,47 +1,59 @@
 <?php 
 
 class _entityTypeFields extends _entityFields{
-	//id,name,idParent,highlightStyle, created, updated from entityFields
-    public $description;	
-    public $notes;
-	
-	public $displayOrder = '0';
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
 
-    
-	
+_entityTypeFields  notes, displayOrder
+****/
+
+    public $notes;
+	public $displayOrder = 0;
+
 	public function setRowValues($row){
-			$this->f->id = $row["id"];
-			$this->f->name = ($row["name"]);
-			$this->f->description = ($row["description"]);
-			$this->f->notes = ($row["notes"]);
-			$this->f->highlightStyle = ($row["highlight_style"]);
-			$this->f->displayOrder = $row["display_order"];
-			$this->f->created = ($row["created"]);			
-			$this->f->updated = ($row["updated"]);			
-			$this->formatForDisplay();
+		parent::setRowValues($row);
+		$this->notes = ($row["notes"]);
+		$this->displayOrder = $row["display_order"];
 	}
-	
 	
 	protected function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
+		parent::formatForDisplay();
 		$this->notes = displayLines($this->notes);
-		$this->created = getTimestampDate($this->created);
-		$this->updated = getTimestampDate($this->updated);
+		
+	}
+	
+	public listHeading(){
+		$heading = parent::listHeading();
+		$heading .= wrapTh('Display Order');		
+		$heading .= wrapTh('Notes');
+		return $heading;
+	}
+	
+	public listDetail(){
+		$detail = parent::listDetail();
+		$detail .= wrapTd($this->displayOrder);
+		$detail .= wrapTd($this->notes);
+		return $detail;
+	}
+	
+	public function displayDetail(){
+		$detail = parent::displayDetail();
+		$detail .= para('display-order', 'Display Order', $this->displayOrder);
+		$detail .= para('notes', 'Notes', $this->notes);
+		return $detail;
 	}
 
-
-    
-    
 }
 
 class _entityType extends _entity{
-	protected $__MyClassName = '__EntityType';
-	protected $_titleEntity = 'Entity Type';
-	protected $pageSave = 'entityTypeSave.php';
+	protected $__MyClassName = '_entityType';
+	protected $_titleEntity = '[entity] Type';
+	protected $pageSave = '[entity]TypeSave.php';
 	//standard entity type properties
     public $f;
-    protected $sql;
+    public $sql;
 	public $links;
  
  
@@ -83,23 +95,19 @@ class _entityType extends _entity{
 		$idName = 'entityTypeId', 
 		$disabled = 'false', 
 		$showLink = true){
-	
-		
+
 		$sql = $this->sql->options($selectedId, $disabled);
-		
 		$defaultValue = 0;
 		$defaultCaption = '-select '.$this->$_titleEntity;
 		$allOptions = getSelectOptionsSQL($sql,$selectedId,$disabled,$defaultValue,$defaultCaption);		
-		
+
 		$select = getSelectList($idName,$allOptions,'none',$disabled );
-		
 		$select.= $this->optionsLink($showLink, $selectedId);
 		
 		return $select;
 	}	
 	
 	protected function optionsLink($showLink = true, $selectedId = 0){
-	
 		if ($showLink == true){
 			$links =$this->links->detailViewEditHref($selectedId);
 		} else {
@@ -107,89 +115,12 @@ class _entityType extends _entity{
 		}
 		return $links;
 	}
-	
-	
-	/*
-	
-	public function setRowValues($row){
-			$this->f->id = $row["id"];
-			$this->f->name = ($row["name"]);
-			$this->f->description = ($row["description"]);
-			$this->f->notes = ($row["notes"]);
-			$this->f->highlightStyle = ($row["highlight_style"]);
-			$this->f->displayOrder = $row["display_order"];
-			$this->f->created = ($row["created"]);			
-			$this->f->updated = ($row["updated"]);			
-			$this->formatForDisplay();
-	}
-    */
     
-	public function setDetails(){
-		$sql = $this->sql->info($this->id);
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-		{	
-			$this->f->setRowValues($row);
-		}
-		$result->close();
-		}
-	}	
-	
-	protected listingRowLink(){
-		$link = $this->links->detailViewEditHref($this->id,$this->name);
-		return $link;
-	}
-	
-	public function listingHeading(){
-	
-		$heading = wrapTh('Display Order');		
-		$heading .= wrapTh($this->titleEntity);
-		$heading .= wrapTh('Description');
-		$heading .= wrapTh('Notes');
-		$heading .= wrapTh('Highlight Style');
-		
-		$list .= wrapTr($heading);
-		return $list;
-
-	}
-	
-	public listingRowFormat(){
-	
-		$this->formatForDisplay();
-		$detail = wrapTd($this->displayOrder);
-		$detail .= wrapTd($this->listingRowLink());
-		$detail .=  wrapTd($this->description);			
-		$detail .= wrapTd($this->notes);
-		$detail .= wrapTd($this->highlightStyle);			
-		$listRow = wrapTr($detail,$this->highlightStyle);
-		return $listRow;
-	}
-	
-	
-	
-	
-	
-	public function display(){
-		$this->formatForDisplay();
-		
-		$detail = openDisplayDetails('entity-type', $this-> $_titleEntity.':  Details');
-		$detail .= captionedParagraph('display-order', 'Display Order', $this->displayOrder);
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
-
-		$detail .= closeDisplayDetails();
-		return $detail;
-	}
 
 	public function collectPostValues(){
 
 		$this->id = $_POST['id'];
-		$this->name = dbEscapeString($_POST['name']); 
+		$this->f->name = dbEscapeString($_POST['name']); 
 		$this->description = dbEscapeString($_POST['description']); 
 		$this->notes = dbEscapeString($_POST['notes']); 		
 		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		

@@ -1,16 +1,16 @@
 ﻿<?php 
 
-class MeasureType extends __EntityType{
+class measureType extends _entityType{
 	protected $__MyClassName = 'MeasureType';
 	protected $_titleEntity = 'Measure Type';
   	protected $pageSave = 'pr_MeasureType_Save.php';
-	private $sql;
-	private $typeLinks;
+	public $sql;
+	public $links;
 		
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new MeasureTypeSQL;
-		$typeLinks= new MeasureTypeLinks();
+		$this->sql = new measureTypeSQL;
+		$ths->links = new measureTypeLinks();
 		
 	}
 	
@@ -42,6 +42,8 @@ class MeasureType extends __EntityType{
 	
 	
 	public function display(){
+	parent::display();
+	/*
 		$this->formatForDisplay();
 		$detail = openDisplayDetails('measure-type','Measure Type Details');		
 	 						
@@ -53,7 +55,7 @@ class MeasureType extends __EntityType{
 		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
 		$detail .= captionedParagraph('display-order-style', 'Display Order', $this->displayOrder);
 
-
+*/
 		$measureunits = new MeasureTypeUnitList;
 		$measureunits->setDetails($this->id);
 		$detail .= $measureunits->getListing();
@@ -67,10 +69,10 @@ class MeasureType extends __EntityType{
 
 			$sql = " UPDATE measure_types AS mt ";
 			$sql .= " SET ";
-			$sql .= " mt.name = '".$this->name."', ";
-			$sql .= " mt.description = '".$this->description."', ";
+			$sql .= " mt.name = '".$this->f->name."', ";
+			$sql .= " mt.description = '".$this->f->description."', ";
 			$sql .= " mt.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " mt.notes = '".$this->notes."' ";
+			$sql .= " mt.notes = '".$this->f->notes."' ";
 			$sql .= " WHERE mt.id = ".$this->id."  ";		
 				
 			$result = dbRunSQL($sql);
@@ -86,11 +88,11 @@ class MeasureType extends __EntityType{
 			$sql .= " description, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
+			$sql .= "'".$this->f->name."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->description."', ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= "'".$this->f->notes."') ";
 			
 			$result = dbRunSQL($sql);
 			

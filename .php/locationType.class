@@ -18,12 +18,12 @@ class locationType extends _entityType{
 
 			$sql = " UPDATE location_types AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->name."', ";
-			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.name = '".$this->f->name."', ";
+			$sql .= " p.description = '".$this->f->description."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
-			$sql .= " p.display_order = ".$this->displayOrder.", ";
-			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " p.highlight_style = '".$this->f->highlightStyle."', ";
+			$sql .= " p.display_order = ".$this->f->displayOrder.", ";
+			$sql .= " p.notes = '".$this->f->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			
 			$result = dbRunSQL($sql);
@@ -39,13 +39,13 @@ class locationType extends _entityType{
 			$sql .= " display_order, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
+			$sql .= "'".$this->f->name."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->description."', ";
-			$sql .= "'".$this->highlightStyle."', ";
-			$sql .= " ".$this->displayOrder.", ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= "'".$this->f->highlightStyle."', ";
+			$sql .= " ".$this->f->displayOrder.", ";
+			$sql .= "'".$this->f->notes."') ";
 			
 			$result = dbRunSQL($sql);
 			

@@ -1,16 +1,16 @@
 ﻿<?php 
 
-class MaterialType extends __EntityType {        
+class materialType extends _entityType {        
 	protected $__MyClassName = 'MaterialType';
   	protected $_titleEntity = 'Material Type';
   	protected $pageSave = 'pr_MaterialType_Save.php';
-	private $sql;
-	private $typeLinks;
+	public $sql;
+	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new MaterialTypeSQL;
-		$typeLinks = new MaterialTypeLinks();
+		$this->sql = new materialTypeSQL;
+		$this->links = new materialTypeLinks();
 	}
 	
 	protected function saveUpdate(){
@@ -18,13 +18,13 @@ class MaterialType extends __EntityType {
 
 			$sql = " UPDATE material_types AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->name."', ";
-			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.name = '".$this->f->name."', ";
+			$sql .= " p.description = '".$this->f->description."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.display_order = ".$this->displayOrder.", ";			
-			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
-			$sql .= " p.notes = '".$this->notes."' ";
-			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$sql .= " p.display_order = ".$this->f->displayOrder.", ";			
+			$sql .= " p.highlight_style = '".$this->f->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->f->notes."' ";
+			$sql .= " WHERE p.id = ".$this->f->id."  ";			
 			
 			$result = dbRunSQL($sql);
 		
@@ -41,13 +41,13 @@ class MaterialType extends __EntityType {
 			$sql .= " highlight_style, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
+			$sql .= "'".$this->f->name."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->description."', ";
-			$sql .= " ".$this->displayOrder.", ";			
-			$sql .= "'".$this->highlightStyle."', ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= " ".$this->f->displayOrder.", ";			
+			$sql .= "'".$this->f->highlightStyle."', ";
+			$sql .= "'".$this->f->notes."') ";
 			
 			$result = dbRunSQL($sql);
 			

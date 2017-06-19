@@ -1,21 +1,103 @@
 <?php 
 
-
-
 class _entityFields{
+
+	/******
+	 _entityFields    id, name, description, 
+	 highlightStyle, created, updated
+	 idType, idParent,
+	 ****/
 
 	public $id;	
 	public $name;		
+	public $description;
 	public $idParent;
+	public $idType;
 	public $highlightStyle = 'none';
 	public $created;
     public $updated;
     
+    protected $hasType = false;
+    protected $hasParent = false;
+    
+    public function __construct($hasType = false, $hasParent = false){
+    	$this->hasType = $hasType;
+    	$this->hasParent = $hasParent;
+    }
+    
+    protected function reset(){
+    
+    	$this->id = 0;
+		$this->name = '';
+		$this->description ='';
+		$this->highlightStyle = '';
+		$this->created = '';	
+		$this->updated = '';
+		if ($this->hasType == true){
+			$this->idType = 0;
+		}
+		if ($this->hasParent == true){
+			$this->idParent = 0;
+		}
+    
+    }
+    
 	public function setRowValues($row){
+		$this->reset;
+		$this->id = $row["id"];
+		$this->name = ($row["name"]);
+		$this->description = ($row["description"]);
+		$this->highlightStyle = ($row["highlight_style"]);
+		$this->created = ($row["created"]);			
+		$this->updated = ($row["updated"]);		
+		if ($this->hasType == true){
+			$this->idType = ($row["type_id"]);
+		}
+		if ($this->hasParent == true){
+			$this->idParent = $row["parent_id"];
+		}
+		
 		
 	}
-	protected function formatForDisplay(){
 	
+	public setDefaultValues(){
+		$this->reset;
+		$this->id = 0;
+	
+	}
+	
+	protected function formatForDisplay(){
+		$this->name = displayLines($this->name);
+		$this->description = displayLines($this->description);
+		$this->created = getTimestampDate($this->created);
+		$this->updated = getTimestampDate($this->updated);
+	}
+	
+	
+	public function listHeading(){
+		$heading = wrapTh('Name');
+		$heading .= wrapTh('Description');
+		$heading .= wrapTh('Highlight Style');
+		return $heading;
+	}
+	
+	public function listDetail(){
+		$this->formatForDisplay();
+		$detail = wrapTd($this->name);
+		$detail .=  wrapTd($this->description);			
+		$detail .= wrapTd($this->highlightStyle);			
+		return $detail;
+	}
+	
+	public function displayDetail(){
+		$this->formatForDisplay();
+		$detail = para('id', 'Id', $this->id);
+		$detail .= para('name', 'Name', $this->name);
+		$detail .= para('description', 'Description', $this->description);
+		$detail .= para('created', 'Created', $this->created);
+		$detail .= para('updated', 'Updated', $this->updated);
+		$detail .= para('highlight-style', 'Highlight', $this->highlightStyle);
+		return $detail;
 	}
 }
 
@@ -23,14 +105,7 @@ class _entity extends _baseEntity{
 	protected $__MyClassName = '__Entity';
 	protected $_titleEntity = 'Entity';
 	protected $pageSave = '[entity]Save.php';
-	//standard entity properties
-   // public $name;		
-    //public $description;	
-    //public $notes;
-	//public $highlightStyle = 'none';
-	//public $displayOrder = '0';
-  //  public $created;
-  //  public $updated;
+	
   	public $f;
     public $sql;
 	public $links;
@@ -38,13 +113,50 @@ class _entity extends _baseEntity{
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->f = new _entityFields;
-		$this->sql = new _entitySQL;
+		$this->f = new _entityFields();
+		$this->sql = new _entitySQL();
 		$this->links = new _entityLinks();
 	}
-
-
-
+	
+	public function setDetails(){
+		if ($this->id > 0){
+			$sql = $this->sql->info($this->id);
+			$result = dbGetResult($sql);
+			if($result){
+				while ($row = $result->fetch_assoc())
+				{	
+					$this->f->setRowValues($row);
+				}
+				$result->close();
+			}
+		}
+	}	
+	
+	public function listHeading(){
+		$heading = wrapTh($this->titleEntity);
+		$heading = $this->f->listHeading();
+		$list .= wrapTr($heading);
+		return $list;
+	}
+	
+	protected function listRowLink(){
+		$link = $this->links->detailViewEditHref($this->f->id,$this->f->name);
+		return $link;
+	}
+	
+	public function listRowFormat(){
+		$detail = wrapTd($this->listRowLink());
+		$detail .= $this->f->listRowDetail();		
+		$listRow = wrapTr($detail,$this->f-highlightStyle);
+		return $listRow;
+	}
+	
+	public function display(){
+		$detail = openDisplayDetails('entity', $this-> $_titleEntity.':  Details');
+		$detail .= $this->f->displayDetail();
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
 }
 
 class _baseEntity extends _echo {
@@ -140,10 +252,6 @@ class _baseEntity extends _echo {
 		//$this->echoState(true);
 	}
 
-	public function setDetails(){
-		$this->echoState(true, 'setDetails');
-		$this->echoPrint(true,'not overridden','setDetails');
-	}
 
 	public function setPaging($page = 1, $perPage = 10){
 		$this->resultPage = $page;
@@ -188,11 +296,11 @@ class _baseEntity extends _echo {
 
 	protected function setPageTitle(){
 
-		if ($this->pageMode != 'ADD'){
+	//	if ($this->pageMode != 'ADD'){
 			$heading = $this->_titleEntity;
-		} else {
-			$heading = 'Add New '.$this->_titleEntity;
-		}
+		//} else {
+			$heading = $this->pageMode.':  '.$this->_titleEntity;
+		//}
 
 		$this->_pageTitle = $heading;
 	}
@@ -204,7 +312,12 @@ class _baseEntity extends _echo {
 	protected function setDefaults(){
 	 	
 	}
-	 	
+	
+	public function addForm(){
+		$this->pageMode = ADD;
+		return $this->editForm();
+	
+	}
 	public function editForm(){
 		$this->echoState(true, 'editForm');
 		$this->setDefaults();

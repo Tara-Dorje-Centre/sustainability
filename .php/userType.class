@@ -4,24 +4,24 @@ class userType extends _entityType {
 	protected $__MyClassName = 'UserType';
   	protected $_titleEntity = 'User Profile Type';
 	protected $pageSave = 'sys_UserType_Save.php';
-	private $sql;
-	private $typeLinks;
+	public $sql;
+	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new UserTypeSQL;
-		$typeLinks = new UserTypeLinks();
+		$this->sql = new userTypeSQL;
+		$this->links = new userTypeLinks();
 	}
 	
 	
 	protected function saveUpdate(){
 			$sql = " UPDATE user_types AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->name."', ";
-			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.name = '".$this->f->name."', ";
+			$sql .= " p.description = '".$this->f->description."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
-			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " p.highlight_style = '".$this->f->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->f->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			$result = dbRunSQL($sql);
 	}
@@ -35,12 +35,12 @@ class userType extends _entityType {
 			$sql .= " highlight_style, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
+			$sql .= "'".$this->f->name."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->description."', ";
-			$sql .= "'".$this->highlightStyle."', ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= "'".$this->f->highlightStyle."', ";
+			$sql .= "'".$this->f->notes."') ";
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();

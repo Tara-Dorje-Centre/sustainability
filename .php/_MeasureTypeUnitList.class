@@ -70,16 +70,16 @@ class measureTypeUnitList extends _entityList{
 	
 	
 	public function setFoundCount(){
-		$s = new MeasureTypeUnitSQL;
-		$sql = $s->count($this->measureType);
+		//$s = new MeasureTypeUnitSQL;
+		$sql = $this->sql->count($this->measureType);
 		$this->found = dbGetCount($sql, 'total_units');
 	}		
 	
 	
 	
 	public function getListing(){
-		$s = new MeasureTypeUnitSQL;
-		$sql = $s->list($this->measureType->id,$this->resultPage,$this->perPage);
+		//$s = new MeasureTypeUnitSQL;
+		$sql = $this->sql->list($this->measureType->id,$this->resultPage,$this->perPage);
 
 		
 		$ml = new MeasureTypeUnitLinks;

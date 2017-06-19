@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class ProjectTypeSQL extends __entityTypeSQL{
+class ProjectTypeSQL extends _entityTypeSQL{
 
 $baseTable = 'project_types';
 

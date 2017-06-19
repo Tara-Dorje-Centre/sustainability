@@ -1,5 +1,5 @@
 <?php
-include_once('__echo.class');
+include_once('_echo.class');
 //
 function showProgress($msg, $show = false){
 	$e = new __echo();
@@ -12,19 +12,22 @@ include_once("_formFunctions.php");
 include_once("_sqlFunctions.php");
 showProgress('general functions loaded');
 //
-include_once("__Calendar.class");
-include_once("__Database.class");
-include_once("__Links.class");
+include_once("_calendar.class");
+include_once("_database.class");
+include_once("_links.class");
 
 include_once("__EntityInterfaces.class");
-include_once("__EntitySQL.class");
-include_once("__EntityTypeSQL.class");
+include_once("_entitySQL.class");
+include_once("_entityTypeSQL.class");
 include_once("_projectChildSQL.class");
 include_once("_taskChildSQL.class");
 
-include_once("__Entity.class");
-include_once("__EntityType.class");
-include_once("__EntityList.class");
+include_once("_entity.class");
+include_once("_entityList.class");
+//include_once("_entityLinks.class");
+include_once("_entityType.class");
+include_once("_entityTypeList.class");
+include_once("_entityTypeLinks.class");
 include_once("__Template.class");
 include_once("__TemplatePublic.class");
 showProgress('general classes loaded');
@@ -95,9 +98,9 @@ include_once("_Measure.class");
 include_once("_MeasureList.class");
 include_once("_MeasureLinks.class");
 include_once("_MeasureSQL.class");
-include_once("_MeasureType.class");
-include_once("_MeasureTypeList.class");
-include_once("_MeasureTypeLinks.class");
+include_once("measureType.class");
+include_once("measureTypeList.class");
+include_once("measureTypeLinks.class");
 include_once("measureTypeSQL.class");
 include_once("_MeasureTypeUnit.class");
 include_once("_MeasureTypeUnitList.class");
@@ -135,10 +138,10 @@ include_once("taskTypeLinks.class");
 include_once("taskTypeSQL.class");
 showProgress('task classes loaded');
 //
-include_once("_UnitOfMeasure.class");
-include_once("_UnitOfMeasureList.class");
-include_once("_UnitOfMeasureLinks.class");
-include_once("_UnitOfMeasureSQL.class");
+include_once("unitOfMeasure.class");
+include_once("unitOfMeasureList.class");
+include_once("unitOfMeasureLinks.class");
+include_once("unitOfMeasureSQL.class");
 showProgress('unit of measure classes loaded');
 //
 //data classes - crop management

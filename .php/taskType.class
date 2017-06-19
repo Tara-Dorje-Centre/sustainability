@@ -1,72 +1,66 @@
 ﻿<?php 
 
+class taskTypeFields extends _entityTypeFields{
+
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+	public $frequency = 'none';
+	
+	public function setRowValues($row){
+		parent::setRowValues($row);
+		$this->frequency = ($row["frequency"]);
+		
+	}
+	
+	protected function formatForDisplay(){
+		parent::formatForDisplay();
+		$this->frequency = displayLines($this->frequency);
+		
+	}
+	
+	public listHeading(){
+		$heading = parent::listHeading();
+		$heading .= wrapTh('Frequency');
+		return $heading;
+	}
+	
+	public listDetail(){
+		$detail = parent::listDetail();
+		$detail .= wrapTd($this->frequency);
+		return $detail;
+	}
+	
+	public function displayDetail(){
+		$detail = parent::displayDetail();
+		$detail .= captionedParagraph('frequency', 'Frequency', $this->frequency);
+		return $detail;
+	}
+	
+}
 
 class taskType extends _entityType{
 	protected $__MyClassName = 'TaskType';
   	protected $_titleEntity = 'Task Type';
     protected $pageSave = 'pr_TaskType_Save.php';
-	public $frequency = 'none';
-	private $sql;
-	private $typeLinks;
+	public $f;
+	public $sql;
+	public $links;
 	
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new TaskTypeSQL;
-		$this->typeLinks new TaskTypeLinks;	
-	}
-	
-	public function setRowValues($row){
-		parent::setRowValues($row);
-		$u->frequency = ($row["frequency"]);
 		
+		$this->f = new taskTypeFields();
+		$this->sql = new taskTypeSQL;
+		$this->links new taskTypeLinks;	
 	}
 	
-	public function listingHeading(){
-	
-		$heading = wrapTh('Display Order');		
-		$heading .= wrapTh('Task Type');
-		$heading .= wrapTh('Frequency');
-		$heading .= wrapTh('Description');
-		$heading .= wrapTh('Notes');
-		$heading .= wrapTh('Highlight Style');
-		
-		$list .= wrapTr($heading);
-		return $list;
 
-	}
-	
-	public listingRowFormat(){
-	
-		$this->formatForDisplay();
-		$detail = wrapTd($this->displayOrder);
-		$detail .= wrapTd($this->listingRowLink());
-		$detail .=  wrapTd($this->frequency);			
-		$detail .=  wrapTd($this->description);			
-		$detail .= wrapTd($this->notes);
-		$detail .= wrapTd($this->highlightStyle);			
-		$listRow = wrapTr($detail,$this->highlightStyle);
-		return $listRow;
-	}
-	
-	
-	protected function display(){
-		$this->formatForDisplay();
-		$detail = openDisplayDetails('project-type','Project Type Details');
-	 						
-		$detail .= captionedParagraph('name', 'Task Type', $this->name);
-		$detail .= captionedParagraph('frequency', 'Frequency', $this->frequency);
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
-		$detail .= captionedParagraph('highlight-style', 'Display Order', $this->displayOrder);
-
-		$detail .= closeDisplayDetails();
-		return $detail;
-	}
-	
 	public function optionsFrequency($selectedValue = 'none', $idName = 'frequency', $disabled = 'false'){
 		$sql = "SELECT f.frequency value, f.description caption ";
 		$sql .= "FROM task_type_frequencies f ";
@@ -131,7 +125,7 @@ class taskType extends _entityType{
 
 		parent::collectPostValues();
 		
-		$this->frequency = dbEscapeString($_POST['frequency']);
+		$this->f->frequency = dbEscapeString($_POST['frequency']);
 		
 	}
 	
@@ -139,13 +133,13 @@ class taskType extends _entityType{
 	
 			$sql = " UPDATE task_types AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->name."', ";
-			$sql .= " p.frequency = '".$this->frequency."', ";
-			$sql .= " p.display_order = ".$this->displayOrder.", ";
-			$sql .= " p.description = '".$this->description."', ";
+			$sql .= " p.name = '".$this->f->name."', ";
+			$sql .= " p.frequency = '".$this->f->frequency."', ";
+			$sql .= " p.display_order = ".$this->f->displayOrder.", ";
+			$sql .= " p.description = '".$this->f->description."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.highlight_style = '".$this->highlightStyle."', ";
-			$sql .= " p.notes = '".$this->notes."' ";
+			$sql .= " p.highlight_style = '".$this->f->highlightStyle."', ";
+			$sql .= " p.notes = '".$this->f->notes."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			$result = dbRunSQL($sql);
 	}
@@ -162,14 +156,14 @@ class taskType extends _entityType{
 			$sql .= " highlight_style, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= " '".$this->name."', ";
-			$sql .= " '".$this->frequency."', ";
-			$sql .= " ".$this->displayOrder.", ";
+			$sql .= " '".$this->f->name."', ";
+			$sql .= " '".$this->f->frequency."', ";
+			$sql .= " ".$this->f->displayOrder.", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " '".$this->description."', ";
-			$sql .= " '".$this->highlightStyle."', ";
-			$sql .= " '".$this->notes."') ";
+			$sql .= " '".$this->f->description."', ";
+			$sql .= " '".$this->f->highlightStyle."', ";
+			$sql .= " '".$this->f->notes."') ";
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();

@@ -3,41 +3,13 @@
 class locationTypeList extends _entityTypeList{
 	protected $__MyClassName = 'Location';
 	protected $_titleEntity = 'Location Types';
-
-	private $sql;
-	private $links;
+	public $base;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new locationTypeSQL;	
-		$this->links = new locationTypeLinks();	
+		$this->base = new locationType(LIST);
 	}
 	
-	protected function listingQuickEdit(){
-		$at = new locationType('ADD');
-		$quickEdit =$at->editForm();			
-		return $quickEdit;
-	}
-	
-	protected function listingRows(){
-		$sql = $this->sql->list($this->resultPage,$this->perPage);
-		$result = dbGetResult($sql);
-		if($result){
-		
-			$u = new locationType(FETCH);
-			$list = $u->listingHeading();
-			
-		  	while ($row = $result->fetch_assoc())
-			{	
-				$u->setRowValues($row);
-				$list .= $u->listingRowFormat($u);
-			}
-			$result->close();
-		} else {
-			$list =  wrapTr('no results found';
-		}
-		return $list;
-	}
 	
 	
 }

@@ -1,0 +1,11 @@
+﻿<?php 
+
+class unitOfMeasureLinks extends _entityTypeLinks {
+
+	protected $_pageList = 'pr_UnitOfMeasure_List.php';
+	protected $_pageDetail = 'pr_UnitOfMeasure_Detail.php';
+	
+
+	
+}
+?>

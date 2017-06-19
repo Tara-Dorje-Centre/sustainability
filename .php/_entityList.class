@@ -3,33 +3,20 @@
 	
 class _entityList extends _entity{
 	protected $__MyClassName = '_entityList';
-	protected $_titleEntity = 'Entity List';
+	protected $_titleEntity = '[entity] List';
 	
 	public $found = 0;
-	//public $f;
-	public $sql;
-	public $links;
-	
-	
+	public $base;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		//$ths->f = new __entityFields;
-		$this->sql = new __entitySQL;	
-		$this->links = new __entityLinks();	
+		$this->base = new _entity(LIST);
 	}
 	
 	public function setFoundCount(){
-		$this->found = 0;
-		//override does sql lookup
-	}
-	
-	
-	public function setFoundCount(){
-		$sql = $this->sql->count();
+		$sql = $this->base->sql->count();
 		$this->found = dbGetCount($sql, 'total_types');
 	}
-	
 	
 	protected function setPageTitle(){
 		$this->_pageTitle = $this->_titleEntity;
@@ -42,16 +29,12 @@ class _entityList extends _entity{
 	}
 	
 	protected function listingPagingLinks(){
-	//ovrrride to set link type
-		$pagingLinks = $this->links->listingPaged($this->found,$this->resultPage,$this->perPage);	
+		$pagingLinks = $this->base->links->listingPaged($this->found,$this->resultPage,$this->perPage);	
 		return $pagingLinks;
 	}
 	
-	protected function listingQuickEdit(){
-	//override to set add form
-		//$at = new ActivityType('ADD');
-		//$quickEdit =$at->editForm();		
-		$quickEdit = 'entityList.listingQuickEdit';
+	protected function listingQuickEdit(){ 
+		$quickEdit = $this->base->addForm();		
 		return $quickEdit;
 	}
 	
@@ -68,13 +51,34 @@ class _entityList extends _entity{
 		return $list;
 	}
 	
+	protected function listingSQL(){
+		$sql = $this->base->sql->list($this->resultPage,$this->perPage);
+		return $sql;
+	}
+	
+	protected function listingRows(){
+		$sql = $this->listingSQL();
+		$result = dbGetResult($sql);
+		if($result){
+			$list = $this->base->listingHeading();
+		  	while ($row = $result->fetch_assoc())
+			{	
+				$this->base->f->setRowValues($row);
+				$list .= $this->base->listingRowFormat();
+			}
+			$result->close();
+		} else {
+			$list =  wrapTr('no results found';
+		}
+		return $list;
+	}
+	
 	public function getListing(){
 		$list = $this->listingStart();
 		$list = $this->listingRows();
 		$list .= closeDisplayList();
 		return $list;
 	}
-	
 
 }
 
