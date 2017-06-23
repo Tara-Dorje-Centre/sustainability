@@ -1,10 +1,9 @@
 ﻿<?php 
-class MaterialSQL extends _taskChildSQL{
+class materialSQL extends _taskChildSQL{
 
-protected $baseTable = 'materials';
-
-$fieldApproved = 'materials_auth_project';
-$fieldDate = 'date_reported';
+	public $baseTable = 'materials';
+	protected $fieldApproved = 'materials_auth_project';
+	protected $fieldDate = 'date_reported';
 
 protected function cols(){
 $c = $this->select();

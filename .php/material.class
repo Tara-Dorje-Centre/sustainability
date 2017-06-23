@@ -1,6 +1,15 @@
 ﻿<?php 
 
-class Material extends __Entity{
+
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+
+class material extends _entity{
 protected $__MyClassName = 'Material';
 
     public $locationId = 0;	
@@ -22,7 +31,7 @@ protected $__MyClassName = 'Material';
 	public $linkUrl;
 	public $linkText;
 	public $task;
-	private $sql;
+	public $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

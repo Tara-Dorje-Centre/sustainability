@@ -6,11 +6,11 @@ protected $__MyClassName = 'UserList';
 
 
 	public $userTypeId = 0;
-	private $sql;
+	public $base;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new UserSQL;
+		$this->base = new user();
 	}
 	
 	public function setDetails(){
@@ -44,7 +44,7 @@ protected $__MyClassName = 'UserList';
 	}
 	
 	public function setFoundCount(){
-		$sql = $this->sql->countUsers($this->userTypeId);
+		$sql = $this->sql->count();//$this->userTypeId);
 		$this->found = dbGetCount($sql, 'total_users');
 	}	
 	

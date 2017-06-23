@@ -1,5 +1,13 @@
 ﻿<?php 
 
+/******
+ _entityFields    id, name, description, 
+ highlightStyle, created, updated
+ idType, idParent,
+
+ _entityTypeFields  notes, displayOrder
+ ****/
+
 class measureType extends _entityType{
 	protected $__MyClassName = 'MeasureType';
 	protected $_titleEntity = 'Measure Type';

@@ -1,6 +1,15 @@
 ﻿<?php 
 
 class materialType extends _entityType {        
+	/******
+	 _entityFields    id, name, description, 
+	 highlightStyle, created, updated
+	 idType, idParent,
+
+	 _entityTypeFields  notes, displayOrder
+	 ****/
+
+
 	protected $__MyClassName = 'MaterialType';
   	protected $_titleEntity = 'Material Type';
   	protected $pageSave = 'pr_MaterialType_Save.php';

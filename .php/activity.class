@@ -1,7 +1,16 @@
 ﻿<?php 
 
-class activityFields extends __entityFields{
-//id,name,idParent,highlightStyle from entityFields
+class activityFields extends _entityFields{
+
+
+
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
 	public $taskId = 0;
 	public $typeId = 0;
 	public $doneBy;
@@ -15,11 +24,14 @@ class activityFields extends __entityFields{
 	public $linkText;
 	//public $highlightStyle
 	
-
+public function __construct(){
+		parent::construct(true);
+	}
+	
 	public function setRowValues($row){
-			$this->id = $row["id"];
+			//$this->id = $row["id"];
 			$this->task->id = $row["task_id"];
-			$this->type->id = $row["type_id"];
+			//$this->type->id = $row["type_id"];
 			$this->doneBy = ($row["done_by"]);
 			$this->started = $row["started"];
 			$this->updated = $row["updated"];	
@@ -29,7 +41,7 @@ class activityFields extends __entityFields{
 			$this->comments = ($row["comments"]);
 			$this->linkText = ($row["link_text"]);
 			$this->linkUrl = ($row["link_url"]);
-			$this->highlightStyle = $row['highlight_style'];
+			//$this->highlightStyle = $row['highlight_style'];
 			
 	}
 	
@@ -47,7 +59,7 @@ class activityFields extends __entityFields{
 
 }
 
-class Activity extends __Entity{       
+class activity extends _entity{       
 	protected $__MyClassName = 'Activity';
 	protected $_titleEntity = 'Activity';
 /*
@@ -64,7 +76,7 @@ class Activity extends __Entity{
 	public $highlightStyle
 	*/
 	public $task;	
-	public $type;
+	//public $type;
 	public $f;
 	public $sql;
 	public $links;
@@ -73,7 +85,7 @@ class Activity extends __Entity{
 		parent::__construct($mode, $id, $idParent);
 		$this->task = new Task($this->pageMode, $this->idParent);
 
-		$this->type = new activtyType;
+		//$this->type = new activtyType;
 		$this->f = new activityFields;
 		$this->sql = new ActivitySQL;
 		$this->links = new ActivityLinks();
@@ -97,12 +109,12 @@ class Activity extends __Entity{
 	}*/
 	
 	
-	protected listingRowLink(){
+	protected function listingRowLink(){
 		$link = $this->links->detailViewEditHref($this->id,$this->name);
 		return $link;
 	}
 	
-	public function listingHeading($myActivity  'NO'){
+	public function listingHeading($myActivity = 'NO'){
 		$heading = '';
 		if ($this->myActivity != 'NO'){
 			if ($this->myActivity != 'PROJECT'){
@@ -246,8 +258,8 @@ class Activity extends __Entity{
 			$link = $l->formatHref($this->linkText,$this->linkUrl,'_blank');
 			$detail .= captionedParagraph('a-weblink','Web Link',$link);
 		}
-		$activityType = new ActivityType;
-		$input = $activityType->getActivityTypeSelectList($this->typeId,'typeId','true');
+		//$activityType = new ActivityType;
+		//$input = $activityType->getActivityTypeSelectList($this->typeId,'typeId','true');
 	
 		$detail .= closeDisplayDetails();	
 		

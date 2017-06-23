@@ -1,11 +1,11 @@
 ﻿<?php 
 
-class MeasureList extends __EntityList{
+class measureList extends _entityList{
 	protected $__MyClassName = 'MeasureList';
 
 
 
-	private $sql;
+	public $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

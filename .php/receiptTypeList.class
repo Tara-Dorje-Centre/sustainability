@@ -7,8 +7,8 @@ class receiptTypeList extends _entityTypeList{
 	public $base;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::construct($mode, $id, $idParent);
-		$this->base = new receiptType(LIST)
+		parent::__construct($mode, $id, $idParent);
+		$this->base = new receiptType();
 		
 	}
 	

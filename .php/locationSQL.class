@@ -1,13 +1,20 @@
 <?php
 
-class LocationSQL extends __entitySQL{
+class locationSQL extends _entitySQL{
+
+
+	public $baseTable = 'locations';
+	public $typeTable = 'location_types';
 
 
 protected function columns(){
 $c = $this->select();
 	$c .=  " l.id, ";
 	$c .= " l.parent_id, ";
+	$c .= " p.name parent_name, ";
+	$c .= " p.sort_key parent_sort_key, ";
 	$c .= " l.type_id, ";
+	$c .= " t.name type_name, ";
 	$c .= " l.name, ";
 	$c .= " l.sort_key, ";
 	$c .= " l.description, ";
@@ -18,10 +25,21 @@ $c = $this->select();
 
 
 
+public function tables($joinTypes = true){
+$q = " FROM locations as l ";
+if ($joinTypes == true){
+$q .= " LEFT OUTER JOIN location_types as t ON l.type_id = t.id ";
+$q .= " LEFT OUTER JOIN locations as p ON l.parent_id = p.id ";
+}
+return $q;
+}
+
+
 public function list($page = 1, $rows = 10){
-	$q = " SELECT  ";
+
 	$q .= $this->columns();
-	$q .= " FROM locations AS l ";
+	$q .= $this->tables();
+	
 	$q .= " ORDER BY l.sort_key ";
 
 	$q .= sqlLimitClause($page, $rows);
@@ -30,9 +48,9 @@ public function list($page = 1, $rows = 10){
 
 
 public function listChildren($idParent, $page = 1, $rows = 10){
-	$q = " SELECT  ";
+
 	$q .= $this->columns();
-	$q .= " FROM locations AS l ";
+	$q .= $this->tables();
 	//if ($idParent != -1){
 	$q .= " WHERE l.parent_id = ".$idParent." "; 
 	//} 
@@ -41,18 +59,18 @@ public function listChildren($idParent, $page = 1, $rows = 10){
 	$q .= sqlLimitClause($page, $rows);
 	return $q;
 }
-/*
+
 public function count(){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) total_locations ";
-	$q .= " FROM locations AS l ";
+	$q .= $this->tables();
 	return $q;
 }
-*/
+
 public function countChildren($id){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) total_locations ";
-	$q .= " FROM locations AS l ";
+	$q .= $this->tables();
 	//if ($id >= 0){
 	$q .= " WHERE l.parent_id = ".$id." "; 
 	//} 
@@ -76,9 +94,9 @@ public function sortKeyUpdate($id, $sortKey){
 
 
 public function listByParentSortKey($sortKeyParent, $idParent, $page = 1, $perPage = 10){
-	$q = " SELECT  ";
+
 	$q .= $this->columns();
-	$q .= " FROM locations AS l ";
+	$q .= $this->tables();
 	$q .= " WHERE l.sort_key LIKE '".$sortKeyParent."%' "; 
 	$q .= " AND l.id != ".$idParent." ";
 	$q .= " ORDER BY l.sort_key ";
@@ -89,26 +107,26 @@ public function listByParentSortKey($sortKeyParent, $idParent, $page = 1, $perPa
 public function countByParentSortKey($sortKeyParent, $idParent){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) total_locations ";
-	$q .= " FROM locations AS l ";
+	$q .= $this->tables();
 	$q .= " WHERE l.sort_key LIKE '".$sortKeyParent."%' ";  
 	$q .= " AND l.id != ".$idParent." ";	
 	return $q;
 }
-/*
+
 
 public function info($id){
-	$q = " SELECT  ";
+
 	$q .= $this->columns();
-	$q .= " FROM locations AS l ";
+	$q .= $this->tables();
 	$q .= " WHERE l.id = ".$id." "; 
 	return $q;
-}*/
+}
 
 public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " l.id as value, ";
 	$q .= " l.sort_key as caption ";
-	$q .= " FROM locations l ";
+	$q .= $this->tables();
 	if ($disabled == 'true'){
 		$q .= " WHERE l.id = ".$selectedId." ";
 	}

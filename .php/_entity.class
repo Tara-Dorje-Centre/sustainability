@@ -12,7 +12,9 @@ class _entityFields{
 	public $name;		
 	public $description;
 	public $idParent;
+	public $nameParent;
 	public $idType;
+	public $nameType;
 	public $highlightStyle = 'none';
 	public $created;
     public $updated;
@@ -30,14 +32,16 @@ class _entityFields{
     	$this->id = 0;
 		$this->name = '';
 		$this->description ='';
-		$this->highlightStyle = '';
+		$this->highlightStyle = 'none';
 		$this->created = '';	
 		$this->updated = '';
 		if ($this->hasType == true){
 			$this->idType = 0;
+			$this->nameType = '';
 		}
 		if ($this->hasParent == true){
 			$this->idParent = 0;
+			$this->nameParent = '';
 		}
     
     }
@@ -52,15 +56,17 @@ class _entityFields{
 		$this->updated = ($row["updated"]);		
 		if ($this->hasType == true){
 			$this->idType = ($row["type_id"]);
+			$this->nameType = $row["type_name"];
 		}
 		if ($this->hasParent == true){
 			$this->idParent = $row["parent_id"];
+			$this->nameParent = $row["parent_name"];
 		}
 		
 		
 	}
 	
-	public setDefaultValues(){
+	public function setDefaultValues(){
 		$this->reset;
 		$this->id = 0;
 	
@@ -75,9 +81,15 @@ class _entityFields{
 	
 	
 	public function listHeading(){
-		$heading = wrapTh('Name');
+		$heading = wrapTh('#Name');
 		$heading .= wrapTh('Description');
 		$heading .= wrapTh('Highlight Style');
+		if ($this->hasType == true){
+			$heading .= wrapTh('Type');
+		}
+		if ($this->hasParent == true){
+			$heading .= wrapTh('Parent');
+		}
 		return $heading;
 	}
 	
@@ -85,7 +97,13 @@ class _entityFields{
 		$this->formatForDisplay();
 		$detail = wrapTd($this->name);
 		$detail .=  wrapTd($this->description);			
-		$detail .= wrapTd($this->highlightStyle);			
+		$detail .= wrapTd($this->highlightStyle);		
+		if ($this->hasType == true){
+			$detail .=  wrapTd($this->nameType);			
+		}
+		if ($this->hasParent == true){
+			$detail .=  wrapTd($this->nameParent);			
+		}
 		return $detail;
 	}
 	
@@ -97,6 +115,12 @@ class _entityFields{
 		$detail .= para('created', 'Created', $this->created);
 		$detail .= para('updated', 'Updated', $this->updated);
 		$detail .= para('highlight-style', 'Highlight', $this->highlightStyle);
+		if ($this->hasType == true){
+			$detail .= para('type', 'Type', $this->nameType);
+		}
+		if ($this->hasParent == true){
+			$detail .= para('parent', 'Parent', $this->nameParent);
+		}
 		return $detail;
 	}
 }
@@ -132,10 +156,38 @@ class _entity extends _baseEntity{
 		}
 	}	
 	
+	
+	public function options(
+		$selectedId = 0, 
+		$idName = 'entityTypeId', 
+		$disabled = 'false', 
+		$showLink = true){
+
+		$sql = $this->sql->options($selectedId, $disabled);
+		$defaultValue = 0;
+		$defaultCaption = '-select '.$this->$_titleEntity;
+		$allOptions = getSelectOptionsSQL($sql,$selectedId,$disabled,$defaultValue,$defaultCaption);		
+
+		$select = getSelectList($idName,$allOptions,'none',$disabled );
+		$select.= $this->optionsLink($showLink, $selectedId);
+		
+		return $select;
+	}	
+	
+	protected function optionsLink($showLink = true, $selectedId = 0){
+		if ($showLink == true){
+			$links =$this->links->detailViewEditHref($selectedId);
+		} else {
+			$links = '';
+		}
+		return $links;
+	}
+    
+	
 	public function listHeading(){
-		$heading = wrapTh($this->titleEntity);
-		$heading = $this->f->listHeading();
-		$list .= wrapTr($heading);
+		$heading = wrapTh($this->_titleEntity);
+		$heading .= $this->f->listHeading();
+		$list = wrapTr($heading);
 		return $list;
 	}
 	
@@ -146,17 +198,100 @@ class _entity extends _baseEntity{
 	
 	public function listRowFormat(){
 		$detail = wrapTd($this->listRowLink());
-		$detail .= $this->f->listRowDetail();		
-		$listRow = wrapTr($detail,$this->f-highlightStyle);
+		$detail .= $this->f->listDetail();		
+		$listRow = wrapTr($detail,$this->f->highlightStyle);
 		return $listRow;
 	}
 	
 	public function display(){
-		$detail = openDisplayDetails('entity', $this-> $_titleEntity.':  Details');
+		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
 		$detail .= $this->f->displayDetail();
 		$detail .= closeDisplayDetails();
 		return $detail;
 	}
+	
+	
+	protected function setPageTitle(){
+		$heading = $this->pageMode.':  '.$this->_titleEntity;
+		$this->_pageTitle = $heading;
+	}
+	
+	protected function setPageMenu(){
+		$this->_pageMenu = 'entity._pageMenu not set.';
+	}
+	
+	protected function setDefaults(){
+	 	$this->f->setDefaults();
+	}
+	
+	public function addForm(){
+		$this->pageMode = ADD;
+		return $this->editForm();
+	}
+	
+	public function editForm(){
+		$this->echoState(true, 'editForm');
+		$this->setDefaults();
+
+		return ('__Entity.editForm not overridden in child');
+	}
+	
+	public function printPage(){
+		$this->echoState(true, 'printPage');
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+	}
+	
+	protected function getPageHeading(){
+		$this->setPageTitle();
+		$this->setPageMenu();
+		
+		$heading = openDiv('section-heading-title');
+		$heading .= $this->_pageTitle;
+		$heading .= closeDiv();		
+		
+		$heading .= $this->_pageMenu;
+		return $heading;
+	}
+	
+	protected function getPageDetails(){			
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+	}
+	
+	protected function copy(){
+		$this->echoState(true, 'copy');
+		printLine('__Entity.copy not overridden');
+	}
+	
+	protected function saveUpdate(){
+		$this->echoState(true, 'saveUpdate');
+		printLine('__Entity.saveUpdate not overridden in child');
+	}
+	
+	protected function saveInsert(){
+		$this->echoState(true, 'saveInsert');
+		printLine ('__Entity.saveInsert not overridden in child');
+	}
+	
+	public function saveChanges(){
+		$this->echoState(true, 'saveChanges');
+		
+		if ($this->pageMode == 'EDIT'){
+			$this->saveUpdate();
+		} else {
+			$this->saveInsert();
+		}
+	}
+	
+	
 }
 
 class _baseEntity extends _echo {
@@ -294,96 +429,7 @@ class _baseEntity extends _echo {
 	}
 
 
-	protected function setPageTitle(){
-
-	//	if ($this->pageMode != 'ADD'){
-			$heading = $this->_titleEntity;
-		//} else {
-			$heading = $this->pageMode.':  '.$this->_titleEntity;
-		//}
-
-		$this->_pageTitle = $heading;
-	}
-	
-	protected function setPageMenu(){
-		$this->_pageMenu = 'entity._pageMenu not set.';
-	}
-	
-	protected function setDefaults(){
-	 	
-	}
-	
-	public function addForm(){
-		$this->pageMode = ADD;
-		return $this->editForm();
-	
-	}
-	public function editForm(){
-		$this->echoState(true, 'editForm');
-		$this->setDefaults();
-
-		return ('__Entity.editForm not overridden in child');
-	}
-	
-	protected function display(){
-		$this->echoState(true, 'display');
-		return ('__Entity.display not overridden in child');
-	}
-	
-	public function printPage(){
-		$this->echoState(true, 'printPage');
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-		$site = new _SiteTemplate;
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-	}
-	
-	protected function getPageHeading(){
-		$this->setPageTitle();
-		$this->setPageMenu();
-		
-		$heading = openDiv('section-heading-title');
-		$heading .= $this->_pageTitle;
-		$heading .= closeDiv();		
-		
-		$heading .= $this->_pageMenu();
-		return $heading;
-	}
-	
-	protected function getPageDetails(){			
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
-			$details = $this->editForm();
-		} else {
-			$details = $this->display();
-		}
-		return $details;
-	}
-	
-	protected function copy(){
-		$this->echoState(true, 'copy');
-		printLine('__Entity.copy not overridden');
-	}
-	
-	protected function saveUpdate(){
-		$this->echoState(true, 'saveUpdate');
-		printLine('__Entity.saveUpdate not overridden in child');
-	}
-	
-	protected function saveInsert(){
-		$this->echoState(true, 'saveInsert');
-		printLine ('__Entity.saveInsert not overridden in child');
-	}
-	
-	public function saveChanges(){
-		$this->echoState(true, 'saveChanges');
-		
-		if ($this->pageMode == 'EDIT'){
-			$this->saveUpdate();
-		} else {
-			$this->saveInsert();
-		}
-	}
 	
 }
+
 ?>

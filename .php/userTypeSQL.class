@@ -3,7 +3,7 @@
 class userTypeSQL extends _entityTypeSQL{
 
 
-protected $baseTable = 'user_types';
+public $baseTable = 'user_types';
 
 //missing display order from table
 

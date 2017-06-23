@@ -1,7 +1,13 @@
 ﻿<?php 
 
-class taskFields extends __entityFields{
-//id,name,idParent,highlightStyle from entityFields
+class taskFields extends _entityFields{
+	/******
+	 _entityFields    id, name, description, 
+	 highlightStyle, created, updated
+	 idType, idParent,
+
+	 _entityTypeFields  notes, displayOrder
+	 ****/
 
 
 
@@ -94,7 +100,7 @@ class task extends _entity{
 	*/
 	public $project;
 	public $type;
-	publc $f;
+	public $f;
 	public $sql;
 	public $links;
 	
@@ -154,18 +160,18 @@ class task extends _entity{
 		return $menu;
 	}
 	
-	protected listingRowLink(){
+	protected function listingRowLink(){
 		$link = $this->links->detailViewEditHref($this->id,$this->name);
 		return $link;
 	}
 	
-	protected listingRowProjectLink(){
+	protected function listingRowProjectLink(){
 		//$projectL = new ProjectLinks();
 		$link = $this->project->links->detailViewHref($this->project->id,$this->project->name);
 		return $link;
 	}
 	
-	public listingRowFormat($periodicTasks = 'NO'){
+	public function listingRowFormat($periodicTasks = 'NO'){
 	
 		$this->formatForDisplay();
 
@@ -585,7 +591,7 @@ class task extends _entity{
 	}	
 	
 	
-	private function setDefaults(){
+	protected function setDefaults(){
 		global $sessionTime;
 		$this->started = $sessionTime;	
 		$this->order = $this->project->tasksCount + 1;

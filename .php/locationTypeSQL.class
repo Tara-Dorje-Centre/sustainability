@@ -2,7 +2,7 @@
 
 class locationTypeSQL extends _entityTypeSQL{
 
-protected $baseTable = 'location_types';
+public $baseTable = 'location_types';
 
 	
 }

@@ -12,7 +12,7 @@ class taskList extends _entityList{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->base = new task(LIST);
+		$this->base = new task();
 		//$this->project = new Project($this->pageMode, $this->idParent);
 		//$this->sql = new TaskSQL;	
 	//	$this->links = new TaskLinks;
@@ -20,7 +20,7 @@ class taskList extends _entityList{
 	
 	public function setDetails(){
    		$this->echoState(true, 'setDetails');
-		$this->project->setDetails();
+		//$this->project->setDetails();
 		$this->setFoundCount();
 	}
 
@@ -113,9 +113,9 @@ class taskList extends _entityList{
 
 
 		if ($this->periodicTasks == 'NO'){
-			$sql = $this->sql->listProject($this->project->id,$this->resultPage,$this->perPage);
+			$sql = $this->base->sql->listProject($this->project->id,$this->resultPage,$this->perPage);
 		} else {
-			$sql = $this->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
+			$sql = $this->base->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
 		}
 		
 		$result = dbGetResult($sql);

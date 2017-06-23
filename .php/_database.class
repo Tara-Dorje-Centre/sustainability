@@ -1,5 +1,5 @@
 <?php 
-class __database extends mysqli{
+class _database extends mysqli{
 	
 protected const _server = "127.0.0.1";
 protected const _database  = "projects_dev";
@@ -11,7 +11,7 @@ private $echo;
 
 public function __construct(){
 
-	$this->echo = new __echo();
+	$this->echo = new _echo();
 	$this->echo->echoPrint(false, 'creating connection', '__construct', '_Database', '');
 
 	parent::__construct($this::_server, $this::_user, $this::_pwd, $this::_database, $this::_port);

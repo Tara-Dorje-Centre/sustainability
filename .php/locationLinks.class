@@ -4,9 +4,6 @@ class LocationLinks extends _entityLinks {
 	protected $_pageList = 'pr_Location_List.php';
 	protected $_pageDetail = 'pr_Location_Detail.php';
 	
-	
-	/*
-
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
 	}
@@ -22,7 +19,7 @@ class LocationLinks extends _entityLinks {
 		return $href;	
 	}	
 	public function listing($idParent = -1){
-		$link = $this->_pageList'.'?idParent='.$idParent;
+		$link = $this->_pageList.'?idParent='.$idParent;
 		return $link;
 	}
 	
@@ -55,7 +52,7 @@ class LocationLinks extends _entityLinks {
 		$l = $this->detailHref('EDIT',$id,0,$caption);
 		return $l;	
 	}
-	public function detailViewEditHref($id = 0, $viewCaption = 'View'){
+	public function detailViewEditHref($id, $viewCaption = 'View'){
 		
 		if ($id != 0){
 			$links = $this->detailViewHref($id,$viewCaption);
@@ -66,5 +63,5 @@ class LocationLinks extends _entityLinks {
 		return $links;
 	}	
 	
-}*/
+}
 ?>

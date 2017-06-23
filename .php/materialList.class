@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class MaterialList extends __EntityList{
+class materialList extends _entityList{
 	protected $__MyClassName = 'MaterialList';
 
 	public $task;
@@ -10,7 +10,8 @@ class MaterialList extends __EntityList{
 	private $approved = 'no';
 	public $costActual = 0;
 	public $costEstimated = 0;
-	private $sql;
+	
+	public $sql;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

@@ -1,6 +1,14 @@
 ﻿<?php 
 
-class Receipt extends __Entity{
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+
+class receipt extends _entity{
 protected $__MyClassName = 'Receipt';
 
     public $activityId = 0;	
@@ -19,7 +27,7 @@ protected $__MyClassName = 'Receipt';
 	public $costActual = 0;
     public $notes;
 	public $task;
-	private $sql;
+	public $sql;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
@@ -142,7 +150,7 @@ protected $__MyClassName = 'Receipt';
 		return $detail;
 	}	
 	
-	private function setDefaults(){
+	protected function setDefaults(){
 		global $sessionTime;
 		$this->dateReported = $sessionTime;	
 		//$this->activityId = $this->task->locationId;

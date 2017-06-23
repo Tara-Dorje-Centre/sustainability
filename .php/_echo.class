@@ -1,6 +1,6 @@
 <?php 
 
-class __echo{
+class _echo{
 
 protected $echoEnabled = true;
 

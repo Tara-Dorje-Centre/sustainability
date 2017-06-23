@@ -1,5 +1,47 @@
 ﻿<?php 
 
+class userFields extends _entityFields{
+
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+	public function __construct(){
+		parent::__construct(true);
+	}
+
+
+	public function setRowValues($row){
+		parent::setRowValues($row);
+		
+		$this->sortKey = $row["sort_key"];
+		$this->sortKeyParent= $row["parent_sort_key"];
+		
+	}
+	
+	public function listHeading(){
+		$heading = parent::listHeading;
+		$heading .= wrapTh('SortKey');
+		return $heading;
+	}
+	
+	public function listDetail(){
+		$detail = parent::listDetail();
+		$detail .= wrapTd($this->sortKey);
+		return $detail;
+	}
+	
+	public function displayDetail(){
+		$detail = parent::displayDetail();
+		$detail .= para('sortKey', 'SortKey', $this->sortKey);
+		return $detail;
+	}
+
+}
+
 class user extends _entity{
 protected $__MyClassName = 'User';
 	   		
@@ -24,7 +66,7 @@ protected $__MyClassName = 'User';
 	
 
 	public $validationMessages;
-	private $sql;
+	public $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
@@ -39,7 +81,7 @@ protected $__MyClassName = 'User';
 	
 		$this->echoState(true, 'setDetails');
 
-		$sql = $this->sql->infoUser($this->id);
+		$sql = $this->sql->info($this->id);
 		$result = dbGetResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
@@ -135,7 +177,7 @@ protected $__MyClassName = 'User';
 		
 	}
 	
-	protected function display(){
+	public function display(){
 		$this->formatForDisplay();
 		$detail = openDisplayDetails('user','User Profile Details');		
 

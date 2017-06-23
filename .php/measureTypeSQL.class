@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class MeasureTypeSQL extends __entityTypeSQL{
+class measureTypeSQL extends _entityTypeSQL{
 
-protected $baseTable = 'measure_types';
+public $baseTable = 'measure_types';
 
 //table mssing display order
 

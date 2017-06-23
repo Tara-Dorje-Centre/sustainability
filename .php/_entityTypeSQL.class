@@ -2,12 +2,9 @@
 
 class _entityTypeSQL extends _entitySQL{
 
+public $baseTable = '[entity]_type';
 
-protected $baseTable = 'any_entity_types';
-
-protected $fieldCount = 'count_types';
-
-public function cols(){
+protected function cols(){
 $c = $this->select();
 $c .= "e.id, ";
 $c .= " e.description, ";

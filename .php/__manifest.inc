@@ -2,7 +2,7 @@
 include_once('_echo.class');
 //
 function showProgress($msg, $show = false){
-	$e = new __echo();
+	$e = new _echo();
 	$e->echoPrint($show,$msg,'includes','manifest.inc');
 }
 //
@@ -38,19 +38,19 @@ include_once("_Menu.class");
 include_once("_MenuLinks.class");
 showProgress('menu classes loaded');
 //
-include_once("_User.class");
-include_once("_UserList.class");
-include_once("_UserLinks.class");
-include_once("_UserSQL.class");
+include_once("user.class");
+include_once("userList.class");
+include_once("userLinks.class");
+include_once("userSQL.class");
 include_once("userType.class");
 include_once("userTypeList.class");
 include_once("userTypeLinks.class");
 include_once("userTypeSQL.class");
 showProgress('user classes loaded');
 //
-include_once("_SiteSettings.class");
-include_once("_SiteSettingsLinks.class");
-include_once("_SiteSettingsSQL.class");
+include_once("siteSettings.class");
+include_once("siteSettingsLinks.class");
+include_once("siteSettingsSQL.class");
 showProgress('site settings classes loaded');
 //
 showProgress('system classes loaded');
@@ -62,76 +62,76 @@ include_once("_PublicSiteLinks.class");
 include_once("_PublicSiteSQL.class");
 showProgress('publicsite classes loaded');
 
-include_once("_Activity.class");
-include_once("_ActivityList.class");
-include_once("_ActivityLinks.class");
-include_once("_ActivitySQL.class");
+include_once("activity.class");
+include_once("activityList.class");
+include_once("activityLinks.class");
+include_once("activitySQL.class");
 showProgress('activity classes loaded');
 //
-include_once("actvityType.class");
+include_once("activityType.class");
 include_once("activityTypeList.class");
 include_once("activityTypeLinks.class");
 include_once("activityTypeSQL.class");
 showProgress('activity type classes loaded');
 //
-include_once("_Location.class");
-include_once("_LocationList.class");
-include_once("_LocationLinks.class");
-include_once("_LocationSQL.class");
+include_once("location.class");
+include_once("locationList.class");
+include_once("locationLinks.class");
+include_once("locationSQL.class");
 include_once("locationType.class");
 include_once("locationTypeList.class");
 include_once("locationTypeLinks.class");
 include_once("locationTypeSQL.class");
 showProgress('location classes loaded');
 //
-include_once("_Material.class");
-include_once("_MaterialList.class");
-include_once("_MaterialLinks.class");
-include_once("_MaterialSQL.class");
+include_once("material.class");
+include_once("materialList.class");
+include_once("materialLinks.class");
+include_once("materialSQL.class");
 include_once("materialType.class");
 include_once("materialTypeList.class");
 include_once("materialTypeLinks.class");
 include_once("materialTypeSQL.class");
 showProgress('material classes loaded');
 //
-include_once("_Measure.class");
-include_once("_MeasureList.class");
-include_once("_MeasureLinks.class");
-include_once("_MeasureSQL.class");
+include_once("measure.class");
+include_once("measureList.class");
+include_once("measureLinks.class");
+include_once("measureSQL.class");
 include_once("measureType.class");
 include_once("measureTypeList.class");
 include_once("measureTypeLinks.class");
 include_once("measureTypeSQL.class");
-include_once("_MeasureTypeUnit.class");
-include_once("_MeasureTypeUnitList.class");
-include_once("_MeasureTypeUnitLinks.class");
-include_once("_MeasureTypeUnitSQL.class");
+include_once("measureTypeUnit.class");
+include_once("measureTypeUnitList.class");
+include_once("measureTypeUnitLinks.class");
+include_once("measureTypeUnitSQL.class");
 showProgress('measure classes loaded');
 //
-include_once("_Project.class");
-include_once("_ProjectList.class");
-include_once("_ProjectLinks.class");
-include_once("_ProjectSQL.class");
+include_once("project.class");
+include_once("projectList.class");
+include_once("projectLinks.class");
+include_once("projectSQL.class");
 include_once("projectType.class");
 include_once("projectTypeList.class");
 include_once("projectTypeLinks.class");
 include_once("projectTypeSQL.class");
 showProgress('project classes loaded');
 //
-include_once("_Receipt.class");
-include_once("_ReceiptList.class");
-include_once("_ReceiptLinks.class");
-include_once("_ReceiptSQL.class");
-include_once("reciptType.class");
+include_once("receipt.class");
+include_once("receiptList.class");
+include_once("receiptLinks.class");
+include_once("receiptSQL.class");
+include_once("receiptType.class");
 include_once("receiptTypeList.class");
 include_once("receiptTypeLinks.class");
 include_once("receiptTypeSQL.class");
 showProgress('receipt classes loaded');
 //
-include_once("_Task.class");
-include_once("_TaskList.class");
-include_once("_TaskLinks.class");
-include_once("_TaskSQL.class");
+include_once("task.class");
+include_once("taskList.class");
+include_once("taskLinks.class");
+include_once("taskSQL.class");
 include_once("taskType.class");
 include_once("taskTypeList.class");
 include_once("taskTypeLinks.class");

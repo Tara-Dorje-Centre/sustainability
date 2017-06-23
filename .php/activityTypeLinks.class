@@ -1,7 +1,7 @@
 ﻿<?php 
 
 class activityTypeLinks extends _entityTypeLinks{
-
+	protected $_captionBase = 'activityType';
 	protected $_pageList = 'pr_ActivityType_List.php';
 	protected $_pageDetail = 'pr_ActivityType_Detail.php';
 

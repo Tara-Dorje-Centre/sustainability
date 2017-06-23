@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class SiteSettingsSQL extends __entitySQL{
+class siteSettingsSQL extends _entitySQL{
 
-protected $baseTable = 'units_of_measure';
+	public $baseTable = 'units_of_measure';
 
 protected function cols(){
 	$c = " sw.site_title, ";

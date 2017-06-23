@@ -5,7 +5,7 @@ class measureTypeUnitList extends _entityList{
 
 	
 	public $measureType;
-	private $sql;
+	public $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent =0){
 		parent::__construct($mode, $id, $idParent);

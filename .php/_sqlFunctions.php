@@ -1,6 +1,6 @@
 <?php
 function printLine($msg, $show = true){
-	$e = new __echo();
+	$e = new _echo();
 	$e->echoLocale(' ', '_sqlFunctions');
 	$e->echoPrint($show,$msg);
 }
@@ -99,7 +99,7 @@ function setSessionTimeZone(){
 	$result = dbRunSQL($sql, $locale);
 	
 	//return new client time zone to confirm function
-	return getSessionTimeZone();
+	//return getSessionTimeZone();
 }
 
 function addDays($timestamp, $days = 0){

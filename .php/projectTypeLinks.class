@@ -1,6 +1,7 @@
 ﻿<?php 
 
-class ProjectTypeLinks extends _entityTypeLinks{
+class projectTypeLinks extends _entityTypeLinks{
+	protected $_captionBase = 'projectType';
 	protected $_pageList = 'pr_ProjectType_List.php';
 	protected $_pageDetail = 'pr_ProjectType_Detail.php';
 

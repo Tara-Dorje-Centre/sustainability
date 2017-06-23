@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class ReceiptTypeSQL extends __entityTypeSQL{
+class receiptTypeSQL extends _entityTypeSQL{
 
-protected $baseTable = 'receipt_types';
+public $baseTable = 'receipt_types';
 
 }
 ?>

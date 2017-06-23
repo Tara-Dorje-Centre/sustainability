@@ -23,13 +23,13 @@ _entityTypeFields  notes, displayOrder
 		
 	}
 	
-	public listHeading(){
+	public function listHeading(){
 		$heading = parent::listHeading();
 		$heading .= wrapTh('Frequency');
 		return $heading;
 	}
 	
-	public listDetail(){
+	public function listDetail(){
 		$detail = parent::listDetail();
 		$detail .= wrapTd($this->frequency);
 		return $detail;
@@ -57,7 +57,7 @@ class taskType extends _entityType{
 		
 		$this->f = new taskTypeFields();
 		$this->sql = new taskTypeSQL;
-		$this->links new taskTypeLinks;	
+		$this->links = new taskTypeLinks;	
 	}
 	
 
@@ -85,7 +85,7 @@ class taskType extends _entityType{
 
 		$entity = 'task-type';
 		
-		$contextMenu = $this->typeLinks->formatToggleLink('formOptional','+Options');
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		$form = openEditForm($entity,$legend,'pr_TaskType_Save.php',$contextMenu);
 		
 		//formRequired fields	

@@ -1,5 +1,13 @@
 ﻿<?php 
 
+/******
+ _entityFields    id, name, description, 
+ highlightStyle, created, updated
+ idType, idParent,
+
+ _entityTypeFields  notes, displayOrder
+ ****/
+
 class userType extends _entityType {
 	protected $__MyClassName = 'UserType';
   	protected $_titleEntity = 'User Profile Type';

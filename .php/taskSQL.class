@@ -5,7 +5,7 @@
 
 class taskSQL extends _projectChildSQL{
 
-protected $baseTable = 'tasks';
+	public $baseTable = 'tasks';
 
 protected function cols(){
 $c = $this->select();
@@ -70,11 +70,9 @@ return $q;
 }
 
 public function listPeriodic($complete = 'NO',$resultPage,$rowsPerPage){
-	$q = " SELECT ";
-	$q .= $this->cols();
-	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
-	$q .= " JOIN project_types pt on p.type_id = pt.id ";
-	$q .= " JOIN task_types tt on t.type_id = tt.id ";
+	
+	$q = $this->cols();
+	$q .= $this->tables(true);
 	$q .= " WHERE t.id IN ";
 	$q .= $this->periodicTasksSubquery($complete);
 	$q .= " ORDER BY ";
@@ -83,10 +81,11 @@ public function listPeriodic($complete = 'NO',$resultPage,$rowsPerPage){
 	return $q;
 }
 public function countPeriodic($complete = 'NO'){
-$q .= $this->colsCount();
-	$q .= " FROM projects p join tasks t ON p.id = t.project_id ";
+$q = $this->colsCount();
+	$q .= $this->tables(true);
+	/* " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " JOIN project_types pt on p.type_id = pt.id ";
-	$q .= " JOIN task_types tt on t.type_id = tt.id ";
+	$q .= " JOIN task_types tt on t.type_id = tt.id ";*/
 	$q .= " WHERE t.id IN ";
 	$q .= $this->periodicTasksSubquery($complete);
 	return $q;

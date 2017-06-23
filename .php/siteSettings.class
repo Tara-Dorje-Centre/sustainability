@@ -1,6 +1,20 @@
 ﻿<?php 
 
-class SiteSettings extends __Entity{
+class siteSettingsFields extends _entityFields{
+
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+
+
+
+}
+
+class siteSettings extends _entity{
 protected $__MyClassName = 'SiteSettings';
 
 
@@ -16,7 +30,7 @@ protected $__MyClassName = 'SiteSettings';
 	public $contactEmail = 'MySiteContact@MyOrganization';
 	// property to support edit/view/add mode of calling page
     //public $pageMode;
-	private $sql;
+	public $sql;
 	private $showPublicSite = 'no';
 	private $showCostReports = 'no';
 	private $showRevenueReports = 'no';
@@ -35,7 +49,7 @@ protected $__MyClassName = 'SiteSettings';
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new SiteSettingsSQL;
+		$this->sql = new siteSettingsSQL;
 	}
 	
     // set class properties with record values from database

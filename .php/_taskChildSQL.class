@@ -5,7 +5,7 @@ interface ItaskChildSQL extends IprojectChildSQL{
 	public function countTask($id = 0);
 	public function listTask($id = 0, $page = 1, $rows = 10);
 	public function summaryTask($id = 0, $year= 0, $month = 0);
-	public function summaryTaskGroupType($id = 0, $year= 0, $month = 0);
+	//public function summaryTaskGroupType($id = 0, $year= 0, $month = 0);
 	public function summaryTaskDoneBy($id = 0, $doneBy = 'EVERYONE', $year= 0, $month = 0);
 	public function optionsTask($d = 0, $selectedId = 0, $disabled = 'false');
 }

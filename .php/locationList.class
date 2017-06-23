@@ -1,22 +1,16 @@
 ﻿<?php 
 
-class LocationList extends __EntityList{
+class locationList extends _entityList{
 	protected $__MyClassName = 'LocationList';
 
-	private $sql;
-	private $links;
+	public $base;
+
 	
 	//default listng all locations
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = -1){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new LocationSQL;	
-		$this->links = new LocationLinks();
-	}
-	
-	public function setDetails(){
-		$this->echoState(true, 'setDetails');
-
-
+		$this->base = new Location();	
+		
 	}
 	
 	protected function setPageTitle(){
@@ -25,7 +19,7 @@ class LocationList extends __EntityList{
 			$title = 'All Locations';
 		} else {
 			$l = new Location;
-			$title = 'Sub Locations: '.$l->getSortKey($this->parentId);
+			$title = 'Sub Locations: '.$this->base->getSortKey($this->parentId);
 		}
 
 		$this->_pageTitle = $title;	
@@ -98,73 +92,31 @@ class LocationList extends __EntityList{
 	}
 	
 	protected function listingQuickEdit(){
-		$at = new Location('ADD', 0, $this->id);
-		$quickEdit =$at->editForm();			
+		$this->base->idParent =$this->id;
+		// new Location('ADD', 0, $this->id);
+		$quickEdit =$this->base->addForm();			
 		return $quickEdit;
 	}
-	/*
-	public function getListing(){		
 	
-		$this->setCount();
+	protected function listingSQL(){
+	
 		
-		if ($this->found > 0){
-			$ll = new LocationLinks;
-			$pagingLinks = $ll->listingPaged($this->idParent,$this->found,$this->resultPage,$this->perPage);
-			$list = openDisplayList('location','Locations',$pagingLinks);
+		 if ($this->idParent == -1){
+		 $this->echoPrint(true, 'fetching all','getListingRows');
 
-			$heading = wrapTh('Location');
-			$heading .= wrapTh('Description');
-			$list .= wrapTr($heading);
+		 $sql = $this->sql->list($this->resultPage,$this->perPage);
+		 } else {
+		 $this->echoPrint(true, 'fetching children','getListingRows');
 
-			$list .= $this->getListingRows();
-
-			$list .= closeDisplayList();
-		} else {
-			$list = openDiv('location-list','none');
-			$list .= 'No Locations Found';
-			$list .= closeDiv();
-		}
-		
-		return $list;
-		
+		 $sql = $this->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
+		 //$l = new Location;
+		 //$sortKey = $l->getSortKey($this->idParent);
+		 }
+		 
+		 return $sql;
+		 
 	}
-	*/
-	protected function listingRows(){
-	$this->echoState(true,'listingRows');
-		$ll = new LocationLinks;
-		$list = '';
-		if ($this->idParent == -1){
-			$this->echoPrint(true, 'fetching all','getListingRows');
-		
-			$sql = $this->sql->list($this->resultPage,$this->perPage);
-		} else {
-			$this->echoPrint(true, 'fetching children','getListingRows');
-		
-			$sql = $this->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
-			//$l = new Location;
-			//$sortKey = $l->getSortKey($this->idParent);
-		}
-		
-		$result = dbGetResult($sql);
-		if($result){
-		
-			$l = new Location('FETCH');
-			$list = $this->listingHeading();
-	 	 	while ($row = $result->fetch_assoc())
-			{	
-
-				$l->setRowValues($row);
-				$list .= $l->listingRowFormat();
-			
-			}
-			$result->close();
-		} else {
-		
-		//no data found
-		}
-		
-		return $list;
-	}
+	
 
 
 }

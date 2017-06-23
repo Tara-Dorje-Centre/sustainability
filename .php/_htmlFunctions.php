@@ -522,7 +522,7 @@ function paragraph($content, $id, $css = 'none'){
 
 
 function captionedParagraph($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption'){
-return para($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption'){
+return para($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption');
 }
 
 function para($id, $caption, $content, $cssPara = 'none',$cssCaption = 'display-caption'){

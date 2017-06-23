@@ -22,14 +22,14 @@ _entityTypeFields  notes, displayOrder
 		$this->symbol = displayLines($this->symbol);
 	}
 	
-	public listHeading(){
+	public function listHeading(){
 		$heading = parent::listHeading();
 		$heading .= wrapTh('Type');
 		$heading .= wrapTh('Symbol');
 		return $heading;
 	}
 	
-	public listDetail(){
+	public function listDetail(){
 		$detail = parent::listDetail();
 		$detail .= wrapTd($this->type);
 		$detail .= wrapTd($this->symbol);

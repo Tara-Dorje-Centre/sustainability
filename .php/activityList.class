@@ -1,6 +1,6 @@
 <?php 
 
-class ActivityList extends __EntityList{
+class activityList extends _entityList{
 	protected $__MyClassName = 'ActivityList';
 	protected $_titleEntity = 'Activities';
 	public $myActivity = 'NO';
@@ -315,7 +315,7 @@ class ActivityList extends __EntityList{
 	
 	
 	
-		protected function listingPagingLinks($pagingBaseLink){
+		protected function listingPagingLinks($pagingBaseLink = 'USE_LISTING'){
 		if ($pagingBaseLink == 'USE_LISTING'){
 			$base = $this->links->listing($this->task->id,$this->myActivity,$this->showCalendar,$this->task->project->id);
 		} else { 

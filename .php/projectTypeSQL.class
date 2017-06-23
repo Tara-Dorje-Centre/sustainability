@@ -2,7 +2,8 @@
 
 class ProjectTypeSQL extends _entityTypeSQL{
 
-$baseTable = 'project_types';
+
+public $baseTable = 'project_types';
 
 }
 ?>

@@ -2,7 +2,7 @@
 
 class taskTypeSQL extends _entityTypeSQL{
 
-protected $baseTable = 'task_types';
+	public $baseTable = 'task_types';
 
 protected function cols(){
 $c = parent::cols();

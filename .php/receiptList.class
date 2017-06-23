@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class ReceiptList extends __EntityList{
+class receiptList extends _entityList{
 protected $__MyClassName = 'ReceiptList';
 
 
@@ -10,7 +10,7 @@ protected $__MyClassName = 'ReceiptList';
 	private $approved = 'no';
 	public $costActual = 0;
 	//public $costEstimated = 0;
-	private $sql;
+	public $sql;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

@@ -1,6 +1,15 @@
 ﻿<?php 
 
-class Measure extends __Entity {
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+
+
+class measure extends _entity {
 
 protected $__MyClassName = 'Measure';
 
@@ -18,7 +27,7 @@ protected $__MyClassName = 'Measure';
 	public $unitSymbol;
     public $notes;
 	public $task;	
-	private $sql;
+	public $sql;
 	
     
 	
@@ -131,7 +140,7 @@ protected $__MyClassName = 'Measure';
 	}
 	
 
-	private function setDefaults(){	
+	protected function setDefaults(){	
 		global $sessionTime;
 		$this->dateReported = $sessionTime;	
 		$this->measureTypeUnitId = 0;

@@ -1,5 +1,14 @@
 ﻿<?php 
 
+
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
+
+_entityTypeFields  notes, displayOrder
+****/
+
 class measureTypeUnit extends _entity{
 	protected $__MyClassName = 'MeasureTypeUnit';
 	
@@ -14,7 +23,7 @@ class measureTypeUnit extends _entity{
 
 	
 
-	private $sql;
+	public $sql;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

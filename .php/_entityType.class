@@ -24,14 +24,14 @@ _entityTypeFields  notes, displayOrder
 		
 	}
 	
-	public listHeading(){
+	public function listHeading(){
 		$heading = parent::listHeading();
 		$heading .= wrapTh('Display Order');		
 		$heading .= wrapTh('Notes');
 		return $heading;
 	}
 	
-	public listDetail(){
+	public function listDetail(){
 		$detail = parent::listDetail();
 		$detail .= wrapTd($this->displayOrder);
 		$detail .= wrapTd($this->notes);
@@ -67,7 +67,7 @@ class _entityType extends _entity{
 	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
-		$this->links->saveSettings();
+		$this->links->saveMenuSettings();
 		$this->links->setType($menuType);
 		$this->links->setStyle($menuStyle);
 		
@@ -84,47 +84,22 @@ class _entityType extends _entity{
 		$menu .= $this->links->listingHref();
 		$menu .= $this->links->closeMenu();
 		
-		$this->links->restoreSettings();
+		$this->links->restoreMenuSettings();
 		
-		this->_pageMenu = $menu;
+		$this->_pageMenu = $menu;
 	}
 	
 
-	public function options(
-		$selectedId = 0, 
-		$idName = 'entityTypeId', 
-		$disabled = 'false', 
-		$showLink = true){
-
-		$sql = $this->sql->options($selectedId, $disabled);
-		$defaultValue = 0;
-		$defaultCaption = '-select '.$this->$_titleEntity;
-		$allOptions = getSelectOptionsSQL($sql,$selectedId,$disabled,$defaultValue,$defaultCaption);		
-
-		$select = getSelectList($idName,$allOptions,'none',$disabled );
-		$select.= $this->optionsLink($showLink, $selectedId);
-		
-		return $select;
-	}	
-	
-	protected function optionsLink($showLink = true, $selectedId = 0){
-		if ($showLink == true){
-			$links =$this->links->detailViewEditHref($selectedId);
-		} else {
-			$links = '';
-		}
-		return $links;
-	}
-    
 
 	public function collectPostValues(){
 
-		$this->id = $_POST['id'];
+		$this->f->id = $_POST['id'];
+		$this->id = $this->f->id;
 		$this->f->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->notes = dbEscapeString($_POST['notes']); 		
-		$this->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		$this->displayOrder = $_POST['displayOrder'];
+		$this->f->description = dbEscapeString($_POST['description']); 
+		$this->f->notes = dbEscapeString($_POST['notes']); 		
+		$this->f->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
+		$this->f->displayOrder = $_POST['displayOrder'];
 		$this->pageMode = $_POST['mode'];	
 	}
 	
@@ -147,14 +122,14 @@ class _entityType extends _entity{
 		$form = openEditForm($entity,$legend,$this->pageSave,$contextMenu);
 
 		//formRequired fields		
-		$fields = inputFieldName($entity,$this->name,'name',$this->_titleEntity);
-		$fields .= inputFieldNumber($entity,$this->displayOrder,'displayOrder','Display Order');
-		$fields .= inputFieldHighlightStyle($entity,$this->highlightStyle,'highlightStyle');
+		$fields = inputFieldName($entity,$this->f->name,'name',$this->_titleEntity);
+		$fields .= inputFieldNumber($entity,$this->f->displayOrder,'displayOrder','Display Order');
+		$fields .= inputFieldHighlightStyle($entity,$this->f->highlightStyle,'highlightStyle');
 		$formRequired = $fields;
 		
 		//formOptional fields
-		$fields = inputFieldDescription($entity,$this->description,'description');
-		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+		$fields = inputFieldDescription($entity,$this->f->description,'description');
+		$fields .= inputFieldNotes($entity,$this->f->notes,'notes');
 		$formOptional = $fields;
 
 		//formSubmit fields
@@ -167,6 +142,44 @@ class _entityType extends _entity{
 		return $form;
 	}
 	
+	
+	protected function saveUpdate(){
+
+			$sql = " UPDATE ".$this->sql->baseTable." AS base ";
+			$sql .= " SET ";
+			$sql .= " base.name = '".$this->f->name."', ";
+			$sql .= " base.description = '".$this->f->description."', ";
+			$sql .= " base.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " base.highlight_style = '".$this->f->highlightStyle."', ";
+			$sql .= " base.display_order = ".$this->f->displayOrder.", ";
+			$sql .= " base.notes = '".$this->f->notes."' ";
+			$sql .= " WHERE base.id = ".$this->f->id."  ";		
+				
+			$result = dbRunSQL($sql);
+	}
+	
+	protected function saveInsert(){
+			$sql = " INSERT INTO ".$this->sql->baseTable;
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " display_order, ";
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->f->name."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= $this->f->displayOrder.", ";
+			$sql .= "'".$this->f->highlightStyle."', ";
+			$sql .= "'".$this->f->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	}
 	
 		
 }

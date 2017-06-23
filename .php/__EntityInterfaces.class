@@ -50,12 +50,12 @@ interface Ientity{
 		$disabled = 'false',
 		$showLink = true,
 		$onChangeJS = NULL);
-	
+	/*
 	protected function setPageTitle();
 	protected function setPageMenu();
 	protected function display();
 	protected function setDefaults();
-	
+	*/
 	public function collectPostValues();
 
 }

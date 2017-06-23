@@ -10,12 +10,13 @@ class _entityList extends _entity{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->base = new _entity(LIST);
+		$this->base = new _entity($mode,$id,$idParent);
+
 	}
-	
-	public function setFoundCount(){
+	//overrde for listing
+	public function setDetails(){
 		$sql = $this->base->sql->count();
-		$this->found = dbGetCount($sql, 'total_types');
+		$this->found = dbGetCount($sql, 'count_details');
 	}
 	
 	protected function setPageTitle(){
@@ -24,11 +25,12 @@ class _entityList extends _entity{
 	
 	//overrides __Entity.getPageDetails for listing query
 	protected function getPageDetails(){
+
 		$details = $this->getListing();
 		return $details;
 	}
 	
-	protected function listingPagingLinks(){
+	protected function listingPagingLinks($baseLink = 'USE_LISTING'){
 		$pagingLinks = $this->base->links->listingPaged($this->found,$this->resultPage,$this->perPage);	
 		return $pagingLinks;
 	}
@@ -39,15 +41,12 @@ class _entityList extends _entity{
 	}
 	
 	protected function listingStart(){
-		paging = $this->listingPagingLinks();
+		$paging = $this->listingPagingLinks();
 		$add = $this->listingQuickEdit();
-		$list = openDisplayList('entity-list',$this->_titleEntity, $paging,$add);
-		return $list;
-	}
-	
-	protected function listingRows(){
-	//override to set sql and create proper fetch type
-		$list = '__EntityList.listingRows not overridden ';
+		
+	$entity = $this->_titleEntity;
+	$legend = $this->_titleEntity;
+		$list = openDisplayList($entity,$legend,$paging,$add);
 		return $list;
 	}
 	
@@ -60,22 +59,23 @@ class _entityList extends _entity{
 		$sql = $this->listingSQL();
 		$result = dbGetResult($sql);
 		if($result){
-			$list = $this->base->listingHeading();
+			$list = $this->base->listHeading();
 		  	while ($row = $result->fetch_assoc())
 			{	
 				$this->base->f->setRowValues($row);
-				$list .= $this->base->listingRowFormat();
+				$list .= $this->base->listRowFormat();
 			}
 			$result->close();
 		} else {
-			$list =  wrapTr('no results found';
+			$list =  wrapTr('no results found');
 		}
 		return $list;
 	}
 	
 	public function getListing(){
+
 		$list = $this->listingStart();
-		$list = $this->listingRows();
+		$list .= $this->listingRows();
 		$list .= closeDisplayList();
 		return $list;
 	}

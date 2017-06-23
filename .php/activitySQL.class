@@ -1,9 +1,10 @@
 ﻿<?php
 
-class ActivitySQL extends _taskChildSQL{
+class activitySQL extends _taskChildSQL{
 
-protected $baseTable = 'activities';
-protected $typeTable = 'activity_types';
+
+public $baseTable = 'activities';
+public $typeTable = 'activity_types';
 protected $fieldDate = 'started';
 
 protected function cols($first = true){
@@ -11,7 +12,8 @@ $c = $this->select($first);
 $c .= " a.id,  ";
 $c .= " a.task_id,  ";
 $c .= " a.type_id, ";
-$c .= " t.name task_name, ";
+$c .= " t.name parent_name, ";
+$c .= " at.name type_name, ";
 $c .= " t.project_id, ";
 $c .= " p.name project_name, ";
 $c .= " a.done_by,  ";

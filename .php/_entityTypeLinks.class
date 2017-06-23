@@ -1,16 +1,18 @@
-﻿<?php 
-﻿
+﻿<?php
+
 
 class _entityLinks extends _links {
 	//override to set entry points
+	protected $_captionBase = 'entity';
 	protected $_pageList = 'entityList.php';
 	protected $_pageDetail = 'entityDetail.php';
 	
 	
 	
-	public function listingHref($idParent = -1, $caption = 'List'){
+	public function listingHref($idParent = -1, $caption = 's'){
+		$c = $this->_captionBase.$caption;
 		$link = $this->listing($idParent);
-		$href = $this->formatHref($caption,$link);
+		$href = $this->formatHref($c,$link);
 		return $href;	
 	}	
 	private function detailHref($pageAction = 'VIEW', $id = 0, $idParent = 0, $caption = 'View'){
@@ -19,7 +21,7 @@ class _entityLinks extends _links {
 		return $href;	
 	}	
 	public function listing($idParent = -1){
-		$link = $this->_pageList'.'?idParent='.$idParent;
+		$link = $this->_pageList.'?idParent='.$idParent;
 		return $link;
 	}
 	
@@ -44,15 +46,15 @@ class _entityLinks extends _links {
 		$l = $this->detailHref('ADD',0,$idParent,$caption);
 		return $l;	
 	}
-	public function detailViewHref($id = 0, $caption = 'View'){
+	public function detailViewHref($id, $caption = 'View'){
 		$l = $this->detailHref('VIEW',$id,0,$caption);
 		return $l;	
 	}
-	public function detailEditHref($id = 0, $caption = 'Edit'){
+	public function detailEditHref($id, $caption = 'Edit'){
 		$l = $this->detailHref('EDIT',$id,0,$caption);
 		return $l;	
 	}
-	public function detailViewEditHref($id = 0, $viewCaption = 'View'){
+	public function detailViewEditHref($id, $viewCaption = 'View'){
 		
 		if ($id != 0){
 			$links = $this->detailViewHref($id,$viewCaption);
@@ -63,13 +65,11 @@ class _entityLinks extends _links {
 		return $links;
 	}	
 	
-
-	
-	
 }
 
 
 class _entityTypeLinks extends _links {
+	protected $_captionBase = 'entityType';
 	//override to set entry points
 	protected $_pageList = 'entityTypeList.php';
 	protected $_pageDetail = 'entityTypeDetail.php';
@@ -92,9 +92,10 @@ class _entityTypeLinks extends _links {
 		return $link;
 	}	
 
-	public function listingHref($caption = 'List'){
+	public function listingHref($caption = 's'){
+		$c = $this->_captionBase.$caption;
 		$link = $this->listing();
-		$href = $this->formatHref($caption,$link);
+		$href = $this->formatHref($c,$link);
 		return $href;	
 	}	
 	

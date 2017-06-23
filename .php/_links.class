@@ -90,13 +90,13 @@ class _links{
 		return $menu;	
 	}
 
-	private function saveMenuSettings(){
+	public function saveMenuSettings(){
 		$this->saveMenuType =$this->menuType;
 		$this->saveBaseStyle = $this->cssStyleBase;
 		$this->saveMenuName = $this->menuName;		
 	}
 
-	private function restoreMenuSettings(){
+	public function restoreMenuSettings(){
 		$this->setType($this->saveMenuType);
 		$this->setStyle($this->saveBaseStyle);	
 		$this->menuName = $this->saveMenuName;

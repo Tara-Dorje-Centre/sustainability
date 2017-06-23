@@ -2,7 +2,7 @@
 
 class measureTypeUnitSQL extends _entitySQL{
 
-protected $baseTable = 'measure_type_units_v';
+	public $baseTable = 'measure_type_units_v';
 
 	public function createView_MeasureTypeUnits(){
 		$s = "CREATE OR REPLACE VIEW measure_type_units_v AS

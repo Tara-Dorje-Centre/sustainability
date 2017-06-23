@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class ProjectSQL extends __entitySQL{
+class ProjectSQL extends _entitySQL{
 
-protected $baseTable = 'projects';
+public $baseTable = 'projects';
 //projects table fields displayed in listing
 	protected function cols(){
 	$c = $this->select();
@@ -47,8 +47,8 @@ protected $baseTable = 'projects';
 	}
 //projects table fields displayed in detail
 public function listByStatus($status, $page = 1, $rows = 10){
-$q = " SELECT  ";
-$q .= $this->cols();
+
+$q = $this->cols();
 $q .= $this->tables();
 $q .= $this->whereStatus($status);
 
@@ -66,16 +66,13 @@ $q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";
 return $q;
 }
 public function listActivityDoneBy($doneBy, $status, $page, $rows){
-$q = " SELECT  ";
-$q .= $this->cols();
+
+$q = $this->cols();
 $q .= $this->tables();
 $q .= $this->whereStatus($status);
 
 $q .= " AND p.id IN ";
-$q .= $this->subqueryActivityDoneBy($doneBy);/*
-$q .= " (select t.project_id from ";
-$q .= " activities a JOIN tasks t ON a.task_id = t.id ";
-$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";*/
+$q .= $this->subqueryActivityDoneBy($doneBy);
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
 $q .= sqlLimitClause($page, $rows);
 return $q;
@@ -87,10 +84,7 @@ $q .= " FROM projects p ";
 $q .= $this->whereStatus($status);
 
 $q .= " AND p.id IN ";
-$q .= $this->subqueryActivityDoneBy($doneBy);/*
-$q .= " (select t.project_id from ";
-$q .= " activities a JOIN tasks t ON a.task_id = t.id ";
-$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";*/
+$q .= $this->subqueryActivityDoneBy($doneBy);
 return $q;	
 }
 

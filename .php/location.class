@@ -1,77 +1,76 @@
 ﻿<?php 
+class locationFields extends _entityFields{
 
-class Location extends __Entity{
-	protected $__MyClassName = '#Location';
+/******
+_entityFields    id, name, description, 
+highlightStyle, created, updated
+idType, idParent,
 
-	public $typeId = 0;
-    public $name;	
-	public $parentSortKey;
+_entityTypeFields  notes, displayOrder
+****/
+
+	public $sortKeyParent;
 	public $sortKey;
-    public $description;
-    public $created;
-    public $updated;
+	
+	public function __construct(){
+		parent::construct(true, true);
+	}
+	
+	public function setRowValues($row){
+		parent::setRowValues($row);
+		
+		$this->sortKey = $row["sort_key"];
+		$this->sortKeyParent= $row["parent_sort_key"];
+		
+	}
+	
+	public function listHeading(){
+		$heading = parent::listHeading;
+		$heading .= wrapTh('SortKey');
+		return $heading;
+	}
+	
+	public function listDetail(){
+		$detail = parent::listDetail();
+		$detail .= wrapTd($this->sortKey);
+		return $detail;
+	}
+	
+	public function displayDetail(){
+		$detail = parent::displayDetail();
+		$detail .= para('sortKey', 'SortKey', $this->sortKey);
+		return $detail;
+	}
+	
+	
+}
+
+class location extends _entity{
+	protected $__MyClassName = 'location';
+
+  	protected $_titleEntity = 'Location';
+	protected $pageSave = 'pr_Location_Save.php';
 	public $childLocations = 0;
 	
-  
-	private $sql;
-	private $links;
+
+	public $sql;
+	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new LocationSQL;
-		$this->links = new LocationLinks();
+	
+		$this->sql = new locationSQL;
+		$this->links = new locationLinks();
+		
 	}
 	
-	
-	public function setRowValues($row){
-		$this->id = $row["id"];
-		$this->idParent = $row["parent_id"];
-		$this->typeId = $row["type_id"];
-		$this->name = ($row["name"]);
-		$this->sortKey = ($row["sort_key"]);
-		$this->description = ($row["description"]);
-		$this->created = ($row["created"]);	
-		$this->updated = ($row["updated"]);		
-	}
-	
-	public function listingHeading(){
-		$heading = wrapTh('Location');
-		$heading .= wrapTh('Description');
-		$list .= wrapTr($heading);
-		return $list;
-	}
-	
-	protected listingRowLink(){
-		$link = $this->links->detailViewEditHref($this->id,$this->sortKey);
+	protected function listRowLink(){
+		$link = $this->links->detailViewEditHref($this->f->id,$this->f->sortKey);
 		return $link;
 	}
-	
-	public listingRowFormat(){
-	
-		$this->formatForDisplay();
-		$detail .= wrapTd($this->listingRowLink());
-		$detail .=  wrapTd($this->description);			
-		$listRow =  wrapTr($detail);
-		return $listRow;
-	}
-	
     public function setDetails(){
-		$this->echoState(true, 'setDetails');
-		if ($this->id != 0){
-			
-			$sql = $this->sql->info($this->id);
-			
-			$result = dbGetResult($sql);
-			if($result){
-	  			while ($row = $result->fetch_assoc())
-	  			{
-	  			$this->setRowValues($row);
-			
-				}
-			$result->close();
-			}
-			
-		}
+    	parent::setDetails();
+    	
 			
 		$this->setChildCount();
 		
@@ -85,18 +84,17 @@ class Location extends __Entity{
 		} else {
 		$this->childLocations = 0;
 		}
-
 		
 	}
 	
 	protected function setPageTitle(){
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->sortKey;
+			$heading = $this->f->sortKey;
 		} else {
 			if ($this->idParent == 0){
 				$heading = 'Add New Location';
 			} else {
-				$heading = $this->getSortKey($this->idParent).' Add Sub Location';	
+				$heading = $this->f->sortKeyParent.' Add Sub Location';	
 			}
 		}
 
@@ -140,35 +138,8 @@ class Location extends __Entity{
 		$this->_pageMenu = $menu;
 	}
 	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-	}
 
 	
-	public function display(){
-		$this->formatForDisplay();
-		
-		$detail = openDisplayDetails('location','Location Details');		
-
-
-
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-
-		$lt = new LocationType('SELECT');
-		$select = $lt->selectList($this->typeId,'typeId','true');
-		$detail .= captionedParagraph('type', 'Location Type', $select);
-		$detail .= captionedParagraph('desc', 'Description', $this->description);		
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-
-		$detail .= closeDisplayDetails();
-		return $detail;
-	}
-	/*
-	CONST $html_false = 'false';
-	CONST $html_true = 'true';
-	*/
 	public function options(
 		$selected = 0, 
 		$idName = 'locationId', 
@@ -206,7 +177,7 @@ class Location extends __Entity{
 			
 		}
 		
-					$this->echoState(true,'setAddDefaults');
+		$this->echoState(true,'setAddDefaults');
 		
 		
 	}  
@@ -223,22 +194,22 @@ class Location extends __Entity{
 		}
 		//$entity = 'location';
 		$c = new LocationLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Location Options');		
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$form = openEditForm($entity,$legend,'pr_Location_Save.php', $contentMenu);
 		
 		//formRequired fields	
-		$formRequired = inputFieldName($entity,$this->name,'locationName','Location');
+		$formRequired = inputFieldName($entity,$this->f->name,'name','Name');
 
 		$type = new LocationType('SELECT');
-		$select = $type->options($this->typeId,'typeId','false',false);
-		$formOptional = captionedInput('Location Type',$select);
+		$select = $type->options($this->f->idType,'type-id','false',false);
+		$formOptional = captionedInput('Type',$select);
 					
-		$formOptional .= inputFieldText($entity,$this->description,'locationDescription','Description');
+		$formOptional .= inputFieldText($entity,$this->f->description,'description','Description');
 
 						
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('parent-location-id', $this->idParent);
-		$hidden .= getHiddenInput('locationId', $this->id);
+		$hidden .= getHiddenInput('parent-id', $this->f->idParent);
+		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $input.$hidden;
 		
@@ -249,11 +220,11 @@ class Location extends __Entity{
 	public function collectPostValues(){
 	
 			$this->echoState(true, 'collectPostValues');
-		$this->id = $_POST['locationId'];
-		$this->typeId = $_POST['typeId'];
-		$this->idParent = sessionVariablePOST('parent-location-id', $this->idParent);
-		$this->name = dbEscapeString($_POST['locationName']); 
-		$this->description = dbEscapeString($_POST['locationDescription']); 		
+		$this->id = $_POST['id'];
+		$this->typeId = $_POST['type-id'];
+		$this->idParent = sessionVariablePOST('parent-id', $this->idParent);
+		$this->name = dbEscapeString($_POST['name']); 
+		$this->description = dbEscapeString($_POST['description']); 		
 		$this->pageMode = $_POST['mode'];	
 		$this->echoState(true, 'collectPostValues.leaving');
 	}
@@ -269,7 +240,7 @@ class Location extends __Entity{
 		if ($this->idParent == 0){
 			$sortKey = $this->name;
 		} else {
-			$sortKey = $this->getSortKey($this->idParent).'.'.$this->name;
+			$sortKey = $this->f->sortKeyParent.'.'.$this->name;
 		}
 		
 		$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
@@ -283,10 +254,10 @@ class Location extends __Entity{
 
 			$sql = " UPDATE locations AS l ";
 			$sql .= " SET ";
-			$sql .= " l.name = '".$this->name."', ";
-			$sql .= " l.type_id = ".$this->typeId.", ";
+			$sql .= " l.name = '".$this->f->name."', ";
+			$sql .= " l.type_id = ".$this->f->idType.", ";
 			$sql .= " l.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " l.description = '".$this->description."' ";
+			$sql .= " l.description = '".$this->f->description."' ";
 			$sql .= " WHERE l.id = ".$this->id."  ";			
 			
 			$result = dbRunSQL($sql);
@@ -305,12 +276,12 @@ class Location extends __Entity{
 			$sql .= " updated, ";
 			$sql .= " description) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
-			$sql .= " ".$this->idParent.", ";
-			$sql .= " ".$this->typeId.", ";
+			$sql .= "'".$this->f->name."', ";
+			$sql .= " ".$this->f->idParent.", ";
+			$sql .= " ".$this->f->idType.", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->description."') ";
+			$sql .= "'".$this->f->description."') ";
 			
 			$result = dbRunSQL($sql);
 			

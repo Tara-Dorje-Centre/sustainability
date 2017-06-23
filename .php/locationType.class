@@ -1,5 +1,14 @@
 ﻿<?php 
 
+/******
+ _entityFields    id, name, description, 
+ highlightStyle, created, updated
+ idType, idParent,
+
+ _entityTypeFields  notes, displayOrder
+ ****/
+
+
 class locationType extends _entityType{
 	protected $__MyClassName = 'LocationType';
   	protected $_titleEntity = 'Location Type';

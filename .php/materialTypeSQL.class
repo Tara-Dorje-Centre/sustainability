@@ -1,8 +1,8 @@
 ﻿<?php 
 
-class MaterialTypeSQL extends __entityTypeSQL{
+class materialTypeSQL extends _entityTypeSQL{
 
-protected $baseTable = 'material_types';
+public $baseTable = 'material_types';
 
 	
 }

@@ -1,6 +1,16 @@
 ﻿<?php 
 
+/******
+ _entityFields    id, name, description, 
+ highlightStyle, created, updated
+ idType, idParent,
+
+ _entityTypeFields  notes, displayOrder
+ ****/
+
 class projectType extends _entityType{
+
+
 	protected $__MyClassName = 'ProjectType';
     protected $_titleEntity = 'Project Type';
    	protected $pageSave = 'pr_ProjectType_Save.php';

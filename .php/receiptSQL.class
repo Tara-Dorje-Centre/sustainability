@@ -1,11 +1,11 @@
 ﻿<?php 
 
-class ReceiptSQL extends _taskChildSQL{
+class receiptSQL extends _taskChildSQL{
 
-protected $baseTable = 'receipts';
+	public $baseTable = 'receipts';
 
-$fieldApproved = 'receipts_auth_project';
-$fieldDate = 'date_reported';
+protected $fieldApproved = 'receipts_auth_project';
+protected $fieldDate = 'date_reported';
 
 protected function cols(){
 $c = $this->select();

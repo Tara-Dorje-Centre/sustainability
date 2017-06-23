@@ -2,7 +2,7 @@
  
 class activityTypeSQL extends _entityTypeSQL{
 
-protected $baseTable = 'activity_types';
+public $baseTable = 'activity_types';
 
 
 }
