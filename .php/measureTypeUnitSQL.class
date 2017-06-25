@@ -1,8 +1,12 @@
 ﻿<?php 
 
 class measureTypeUnitSQL extends _entitySQL{
+	public function __construct(){
+		$this->baseTable = 'measure_type_units_v';
 
-	public $baseTable = 'measure_type_units_v';
+	}
+	
+
 
 	public function createView_MeasureTypeUnits(){
 		$s = "CREATE OR REPLACE VIEW measure_type_units_v AS

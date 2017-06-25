@@ -1,14 +1,19 @@
 ﻿<?php 
 
-class ProjectSQL extends _entitySQL{
+class projectSQL extends _entitySQL{
 
-public $baseTable = 'projects';
+public function __construct(){
+	$this->baseTable = 'projects';
+	$this->fieldId = 'p.id';
+
+}
+
 //projects table fields displayed in listing
 	protected function cols(){
 	$c = $this->select();
 		$c .= " p.id, ";
 		$c .= " p.type_id, ";
-		$c .= " pt.name project_type, ";
+		$c .= " pt.name type_name, ";
 		$c .= " pt.highlight_style, ";
 		$c .= " p.parent_id, ";
 		$c .= " p.name, ";
@@ -116,17 +121,14 @@ $q .= " ORDER BY p.sort_key, p.priority, p.id ";
 return $q;
 }
 
-public function options($selectedId = 0, $disabled = 'false'){
+public function options(){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
 	$q .= " p.name as caption ";
 	$q .= " FROM projects p ";
-	//
+	
 	$q .= " WHERE p.pct_done < 1 ";
-	//
-	if ($disabled == 'true'){
-		$q .= " AND p.id = ".$selectedId." ";	
-	}
+
 	$q .= " ORDER BY name ";
 	return $q;	
 }
@@ -139,9 +141,7 @@ public function optionsByType($typeId = 0){
 	if ($typdId > 0){
 	$q .= " AND (p.type_id > 0 AND p.type_id = ".$typeId.") ";
 	}
-//	if ($disabled == 'true'){
-//		$q .= " AND p.id = ".$selectedValue." ";	
-//	}
+
 	$q .= " ORDER BY name ";
 	return $q;	
 }

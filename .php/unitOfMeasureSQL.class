@@ -1,8 +1,10 @@
 ﻿<?php 
 
 class unitOfMeasureSQL extends _entityTypeSQL{
-
-	public $baseTable = 'units_of_measure';
+	public function __construct(){
+		$this->baseTable = 'units_of_measure';
+	}
+	
 public function cols(){
 $c = $this->select();
 $query .= "um.id, ";

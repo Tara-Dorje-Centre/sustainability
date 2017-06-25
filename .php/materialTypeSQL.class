@@ -2,8 +2,11 @@
 
 class materialTypeSQL extends _entityTypeSQL{
 
-public $baseTable = 'material_types';
+	public function __construct(){
+	$this->baseTable = 'material_types';
 
-	
+
+}
+
 }
 ?>

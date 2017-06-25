@@ -23,7 +23,7 @@ class projectType extends _entityType{
 		$this->links = new projectTypeLinks();
 	}
 	
-	
+	/*
 	protected function saveUpdate(){
 	
 			$sql = " UPDATE project_types AS p ";
@@ -62,6 +62,6 @@ class projectType extends _entityType{
 			
 			$this->id = dbInsertedId();
 	}
-	
+	*/
 } 
 ?>

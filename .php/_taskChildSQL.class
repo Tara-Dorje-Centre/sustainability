@@ -7,7 +7,7 @@ interface ItaskChildSQL extends IprojectChildSQL{
 	public function summaryTask($id = 0, $year= 0, $month = 0);
 	//public function summaryTaskGroupType($id = 0, $year= 0, $month = 0);
 	public function summaryTaskDoneBy($id = 0, $doneBy = 'EVERYONE', $year= 0, $month = 0);
-	public function optionsTask($d = 0, $selectedId = 0, $disabled = 'false');
+	public function optionsTask($d = 0);
 }
 
 class _taskChildSQL extends _projectChildSQL implements ItaskChildSQL{
@@ -77,16 +77,17 @@ $q .= $this->tables(false);
 	return $q;
 }
 
-public function optionsTask($id = 0, $selectedId = 0,$disabled = 'false'){
+public function optionsTask($id = 0){
+//$selectedId = 0,$disabled = 'false'){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
-	$q .= " concat_ws(' ',p.task_order,p.name) as caption ";
+	$q .= " concat_ws(' ',t.task_order,p.name) as caption ";
 $q .= $this->tables();
 $q .= $this->whereTask($id);
 	//$q .= " AND p.pct_done < 1 ";
-	if ($disabled == 'true'){
-		$q .= " AND t.id = ".$selectedId." ";	
-	}
+	//if ($disabled == 'true'){
+	//	$q .= " AND t.id = ".$selectedId." ";	
+	//}
 	$q .= " ORDER BY caption ";
 	return $q;	
 }

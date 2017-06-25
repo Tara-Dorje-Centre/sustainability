@@ -21,7 +21,7 @@ class materialType extends _entityType {
 		$this->sql = new materialTypeSQL;
 		$this->links = new materialTypeLinks();
 	}
-	
+	/*
 	protected function saveUpdate(){
 	
 
@@ -61,7 +61,7 @@ class materialType extends _entityType {
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
-	}
+	}*/
 	
 } 
 ?>

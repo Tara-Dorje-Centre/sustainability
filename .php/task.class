@@ -8,20 +8,15 @@ class taskFields extends _entityFields{
 
 	 _entityTypeFields  notes, displayOrder
 	 ****/
-
-
-
-	//public $locationId = 0;
-	public $typeId = 0;
-	public $taskType;
-	//public $highlightStyle = 'none';
-
-	public $order = '0';
-   // public $name;	
-    public $description;
+	//public $idLocation = 0;
+	//public $nameLocation = '';
+	
+	//public $idProject = 0;
+	//public $nameProject = '';
+	
+	public $taskOrder = 0;
     public $summary;
     public $started;
-	public $updated;
     public $pctDone = 0;	
     public $hoursEstimated = 0;
     public $hoursActual = 0;
@@ -31,22 +26,22 @@ class taskFields extends _entityFields{
 	public $receiptsAuthProject = 'no';
 	public $receiptsAuthBy = '';
 	
+public function __construct(){
+    	$this->hasType = true;
+    	$this->hasCreated = true;
+    	$this->hasHighlight = true;
+    	$this->hasLocation = true;
+    	$this->hasParent = false;
+    	$this->hasProject = true;
+    }
 
 	public function setRowValues($row){
-
-			$this->id = $row["id"];
-			$this->project->id = $row["project_id"];
-			$this->project->name = $row["project_name"];
-			$this->locationId = $row["location_id"];
-			$this->typeId = $row["type_id"];
-			$this->taskType = ($row["task_type"]);
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
+		parent::setRowValues($row);
+			
 			$this->summary = ($row["summary"]);
 			$this->started = $row["started"];	
-			$this->updated = $row["updated"];
 			$this->pctDone = $row["pct_done"];	
-			$this->order = $row["task_order"];						
+			$this->taskOrder = $row["task_order"];						
 			$this->hoursEstimated = $row["hours_estimated"];
 			$this->hoursActual = $row["hours_actual"];
 			$this->hoursNotes = ($row["hours_notes"]);			
@@ -54,63 +49,71 @@ class taskFields extends _entityFields{
 			$this->materialsAuthBy = ($row["materials_auth_by"]);
 			$this->receiptsAuthProject = $row["receipts_auth_project"];
 			$this->receiptsAuthBy = ($row["receipts_auth_by"]);
-			$this->highlightStyle = $row["project_highlight_style"];
+			
 	}
-		
-		
 		
 	
 	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
+		parent::formatForDisplay();
 		$this->summary = displayLines($this->summary);
 		$this->hoursNotes = displayLines($this->hoursNotes);
-		
 		$this->started = getTimestampDate($this->started);
-		$this->updated = getTimestampDate($this->updated);
-		
+
 	}
+
+	 public function listHeading($periodicTasks = 'NO'){
+	 	$heading = parent::listHeading();
+	 	
+	 	$heading .=  wrapTh('Task Order');
+		$heading .=  wrapTh('% Done');
+		$heading .=  wrapTh('Hours<br/>Estimated');
+		$heading .=  wrapTh('Hours<br/>Actual');
 		
+	 	return $heading;
+	 }
+
+	 public function listDetail(){
+	 	  $detail = parent::listDetail();
+		  $detail .=  wrapTd($this->taskOrder,0);
+		  $detail .=  wrapTd($this->pctDone,0);
+		  $detail .=  wrapTd($this->hoursEstimated,0);
+		  $detail .=  wrapTd($this->hoursActual,0);
+	      return $detail;
+	 }
+
+	 public function displayDetail(){
+	 	$detail = parent::displayDetail();
+	 
+		$detail .= para('task-order', 'Task Order', $this->taskOrder);
+	 	$detail .= para('location','Location', $this->nameLocation);
+		$detail .= para('started', 'Started', $this->started);
+		$detail .= para('priority', 'Estimated Effort', $this->hoursEstimated);
+		$detail .= para('priority', 'Actual Effort', $this->hoursActual);
+		$detail .= para('pct-done', '% Done', $this->pctDone);
+		$detail .= para('summary', 'Summary', $this->summary);
+		$detail .= para('hours-notes', 'Effort Notes', $this->hoursNotes);
+		 $detail .= para('materials-auth', 'Materials Approved', $this->materialsAuthProject);
+		 $detail .= para('materials-auth-by', 'Materials Approved By', $this->materialsAuthBy);
+		 $detail .= para('receipts-auth', 'Receipts Approved', $this->receiptsAuthProject);
+		 $detail .= para('receipts-auth-by', 'Receipts Approved By', $this->receiptsAuthBy);
+
+	 	return $detail;
+	 }
 
 }
 
 class task extends _entity{
 	protected $__MyClassName = 'Task';
     protected $_titleEntity = 'Task';
-    /*
-	//public $locationId = 0;
-	public $typeId = 0;
-	public $taskType;
-	public $highlightStyle = 'none';
-
-	public $order = '0';
-    public $name;	
-    public $description;
-    public $summary;
-    public $started;
-	public $updated;
-    public $pctDone = 0;	
-    public $hoursEstimated = 0;
-    public $hoursActual = 0;
-    public $hoursNotes;	
-	public $materialsAuthProject = 'no';
-	public $materialsAuthBy = '';
-	public $receiptsAuthProject = 'no';
-	public $receiptsAuthBy = '';
-	*/
-	public $project;
-	public $type;
+    
 	public $f;
 	public $sql;
 	public $links;
 	
+	public $totals;
+	
 	public $measureCount = 0;
-	public $activityCount = 0;
-	public $materialCount = 0;
-	public $receiptCount = 0;
-	public $costEstimated = 0;
-	public $costActual = 0;	
-	public $receiptCostActual = 0;
+	
 	public $resultsPageActivity = 1;
 	public $resultsPageMeasure = 1;
 	public $resultsPageMaterial = 1;
@@ -118,33 +121,29 @@ class task extends _entity{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->project = new Project($this->pageMode, $this>idParent);
-		$this->type = new taskType;
+		
+		
 		$this->f = new taskFields;
 		$this->sql = new TaskSQL;
 		$this->links = new TaskLinks;
+		$this->totals = new summaryTotals;
+		
 	}
 	
-	
-	public function listingHeading($periodicTasks = 'NO'){
-	
-		$heading =  wrapTh('Order');
-		$heading .=  wrapTh('Task Name');
-		$heading .=  wrapTh('Task Type');		
-		$heading .=  wrapTh('Description');
-		$heading .=  wrapTh('% Done');
-		$heading .=  wrapTh('Hours<br/>Estimated');
-		$heading .=  wrapTh('Hours<br/>Actual');
+	public function listHeading($periodicTasks = 'NO'){
+		$heading = wrapTh($this->_titleEntity);
+		$heading .= $this->f->listHeading();
+		
 		$heading .= wrapTh('Hotlinks');
 		if ($periodicTasks != 'NO'){
 			$heading .= wrapTh('Project');			
 		}
-		$list =  wrapTr($heading);
+		$list = wrapTr($heading);
 		return $list;
 	}
 	
 	
-	public function listingHotLinks(){
+	public function listRowHotLinks(){
 	
 		$activitiesL = new ActivityLinks('DIV','button');
 		$materialsL = new MaterialLinks('DIV','button');
@@ -152,89 +151,50 @@ class task extends _entity{
 		$receiptsL = new ReceiptLinks('DIV','button');
 		
 		$menu = $activitiesL->openMenu('hotlinks-list');
-		$menu .= $activitiesL->detailAddHref($this->id);
-		$menu .= $measuresL->detailAddHref($this->id);
-		$menu .= $materialsL->detailAddHref($this->id);
-		$menu .= $receiptsL->detailAddHref($this->id);
+		$menu .= $activitiesL->detailAddHref($this->f->id);
+		$menu .= $measuresL->detailAddHref($this->f->id);
+		$menu .= $materialsL->detailAddHref($this->f->id);
+		$menu .= $receiptsL->detailAddHref($this->f->id);
 		$menu .= $activitiesL->closemenu();
 		return $menu;
 	}
 	
-	protected function listingRowLink(){
-		$link = $this->links->detailViewEditHref($this->id,$this->name);
+	protected function listRowProjectLink(){
+		$l = new ProjectLinks();
+		$link = $l->detailViewHref($this->f->idProject,$this->f->nameProject);
 		return $link;
 	}
 	
-	protected function listingRowProjectLink(){
-		//$projectL = new ProjectLinks();
-		$link = $this->project->links->detailViewHref($this->project->id,$this->project->name);
-		return $link;
-	}
 	
-	public function listingRowFormat($periodicTasks = 'NO'){
-	
-		$this->formatForDisplay();
+	public function listRowFormat(){
+		$detail = wrapTd($this->listRowLink());
+		$detail .= $this->f->listDetail();		
+		$detail .=  wrapTd($this->listRowHotLinks);
 
 		if ($periodicTasks != 'NO'){
-			$cssItem = $this->highlightStyle;
+			$detail .= wrapTd($this->listRowProjectLink);
+		}
+		
+		if ($periodicTasks != 'NO'){
+			$cssItem = $this->f->highlightStyle;
 		} else {
 			//highlight based on reported activity
-			if ($this->hoursActual == 0){
+			if ($this->f->hoursActual == 0){
 				$cssItem = 'highlight-yellow';
 			} else {
 				$cssItem = 'none';
 			}
 		}
-
-		$detail =  wrapTd($t->order,0);
-		$detail .= wrapTd($this->listingRowLink());
-		$detail .= wrapTd($this->taskType);
-		$detail .=  wrapTd($this->description,0);
-		$detail .=  wrapTd($this->pctDone,0);
-		$detail .=  wrapTd($this->hoursEstimated,0);
-		$detail .=  wrapTd($this->hoursActual,0);
-		$detail .=  wrapTd($this->listingHotLinks);
-
-		if ($periodicTasks != 'NO'){
-			$detail .= wrapTd($this->listingRowProjectLink);
-		}
-		$listRow =  wrapTr($detail,$cssItem);
-
+		
+		$listRow = wrapTr($detail,$cssItem);
+		//$listRow = wrapTr($detail,$this->f->highlightStyle);
 		return $listRow;
 	}
 	
-	/*
-	public function setRowValues($row){
-
-			$this->id = $row["id"];
-			$this->project->id = $row["project_id"];
-			$this->project->name = $row["project_name"];
-			$this->locationId = $row["location_id"];
-			$this->typeId = $row["type_id"];
-			$this->taskType = ($row["task_type"]);
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
-			$this->summary = ($row["summary"]);
-			$this->started = $row["started"];	
-			$this->updated = $row["updated"];
-			$this->pctDone = $row["pct_done"];	
-			$this->order = $row["task_order"];						
-			$this->hoursEstimated = $row["hours_estimated"];
-			$this->hoursActual = $row["hours_actual"];
-			$this->hoursNotes = ($row["hours_notes"]);			
-			$this->materialsAuthProject = $row["materials_auth_project"];
-			$this->materialsAuthBy = ($row["materials_auth_by"]);
-			$this->receiptsAuthProject = $row["receipts_auth_project"];
-			$this->receiptsAuthBy = ($row["receipts_auth_by"]);
-			$this->highlightStyle = $row["project_highlight_style"];
-	}
-		*/
 	
 	
 	public function setDetails(){
    		$this->echoState('task.setDetails');
-		
-
 		
 		if ($this->id > 0){
 		
@@ -247,21 +207,27 @@ class task extends _entity{
 		if ($result){
 		while($row = $result->fetch_assoc())
 		{	
-			$this->setRowValues($row);
+			$this->f->setRowValues($row);
 			
 		}
 		$result->close();
 		}
 		
+		$this->totals->setTaskTotals($this->f->id);
+		 //if activity records with hours exist
+		 //update estimated effort to reflect current average of actual hours
+		 if ($this->totals->tasks->count > 0 && $this->totals->tasks->actual > 0){
+		 $this->f->hoursEstimated = round($this->totals->tasks->actual / $this->totals->tasks->count,2);
+		 $this->f->hoursActual = $this->totals->tasks->actual;
+		 }
 
 		$this->setMeasureCount();
-		$this->summarizeActivity();
-		$this->summarizeMaterial();
-		$this->summarizeReceipt();
+		
+		
 		
 		}
 		
-		$this->project->setDetails;
+		
 	}	
 	
 
@@ -278,11 +244,6 @@ class task extends _entity{
 		$this->resultsPageReceipt = $pageReceipt;
 	}
 	
-
-	
-		
-	
-	
 	protected function setMeasureCount(){
 		$this->echoState(true, 'setMeasureCount');
 		$s = new MeasureSQL;
@@ -290,65 +251,11 @@ class task extends _entity{
 		$this->measureCount = dbGetCount($sql, 'total_measures', 0);
 	}
 	
-	protected function summarizeActivity(){
-		$this->echoState(true, 'setMeasureCount');
-		$s = new ActivitySQL;
-		$sql = $s->summaryTask($this->id);
-		
-		$result = dbGetResult($sql);
-		if ($result){
-		while ($row = $result->fetch_assoc())
-		{
-			$this->activityCount = $row["total_activities"];	
-			$this->hoursActual = $row["total_hours_actual"];
-		}
-		$result->close();
-		}
-		
-		//if activity records with hours exist
-		//update estimated effort to reflect current average of actual hours
-		if ($this->activityCount > 0 && $this->hoursActual > 0){
-			$this->hoursEstimated = round($this->hoursActual / $this->activityCount,2);
-		}
-	}
-
-	protected function summarizeMaterial(){		
-		$s = new MaterialSQL;
-		$sql = $s->summaryTask($this->id);
-		
-		$result = dbGetResult($sql);
-		if ($result){
-		while ($row = $result->fetch_assoc())
-		{
-			$this->materialCount = $row["total_materials"];	
-			$this->costActual = $row["sum_cost_actual"];
-			$this->costEstimated = $row["sum_cost_estimated"];
-		}
-		$result->close();
-		}
-	}
-
-	protected function summarizeReceipt(){		
-		$s = new ReceiptSQL;
-		$sql = $s->summaryTask($this->id);
-		
-		$result = dbGetResult($sql);
-		if ($result){
-		while ($row = $result->fetch_assoc())
-		{
-			$this->receiptCount = $row["total_receipts"];	
-			$this->receiptCostActual = $row["sum_cost_actual"];
-		}
-		$result->close();
-		}
-	}
-
-	
 	protected function setPageTitle(){
 
-		$title = $this->project->name.br();
+		$title = $this->f->projectName.br();
 		if ($this->pageMode != 'ADD'){
-			$title .= 'Task: '.$this->name;
+			$title .= 'Task: '.$this->f->name;
 		} else {
 			$title .= 'Add New Task.';
 		}
@@ -362,205 +269,111 @@ class task extends _entity{
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
-		$projects = new ProjectLinks($menuType,$menuStyle);
-		$tasks = new TaskLinks($menuType,$menuStyle);
-		$measures = new MeasureLinks($menuType,$menuStyle);
-		$materials = new MaterialLinks($menuType,$menuStyle);
-		$activities = new ActivityLinks($menuType,$menuStyle);	
-		$receipts = new ReceiptLinks($menuType,$menuStyle);
+		$p = new ProjectLinks($menuType,$menuStyle);
+		$t = new TaskLinks($menuType,$menuStyle);
+		$measure = new MeasureLinks($menuType,$menuStyle);
+		$material = new MaterialLinks($menuType,$menuStyle);
+		$a = new ActivityLinks($menuType,$menuStyle);	
+		$r = new ReceiptLinks($menuType,$menuStyle);
 		
-		$menu = $projects->openMenu('section-heading-links');
-		$menu .= $projects->detailViewHref($this->project->id);
-		$menu .= $projects->resetMenu();
+		$menu = $p->openMenu('section-heading-links');
+		$menu .= $p->detailViewHref($this->f->idProject);
+		$menu .= $p->resetMenu();
 
 		if ($this->project->materialsCount > 0){
-			$menu .= $materials->listingHref($this->id,'ProjectMaterials',$this->project->id,'PROJECT','yes');
-			$menu .= $projects->resetMenu();
+			$menu .= $material->listingHref($this->f->id,'ProjectMaterials',$this->projectId,'PROJECT','yes');
+			$menu .= $p->resetMenu();
 		}
 		if ($this->project->receiptsCount > 0){
-			$menu .= $receipts->listingHref($this->id,'ProjectReceipts',$this->project->id,'PROJECT','yes');
-			$menu .= $projects->resetMenu();
+			$menu .= $r->listingHref($this->f->id,'ProjectReceipts',$this->f->projectId,'PROJECT','yes');
+			$menu .= $r->resetMenu();
 		}
 		
 		if ($this->pageMode == 'VIEW'){
-			$menu .= $tasks->detailEditHref($this->id);
-			$menu .= $tasks->detailCopyHref($this->id);
+			$menu .= $t->detailEditHref($this->f->id);
+			$menu .= $t->detailCopyHref($this->f->id);
 		} elseif ($this->pageMode == 'EDIT') {
 			//$menu .= $tasks->formatOptionsLink();
-			$menu .= $tasks->detailViewHref($this->id);
+			$menu .= $t->detailViewHref($this->f->id);
 		}		
-		$menu .= $projects->resetMenu();
+		$menu .= $p->resetMenu();
 
 		if ($this->materialCount > 0){
 			$menu .= $materials->listingHref($this->id,'TaskMaterials',0,'TASK');
-			$menu .= $projects->resetMenu();
+			$menu .= $p->resetMenu();
 		}
 		if ($this->receiptCount > 0){
-			$menu .= $receipts->listingHref($this->id,'TaskReceipts',0,'TASK');
-			$menu .= $projects->resetMenu();
+			$menu .= $r->listingHref($this->id,'TaskReceipts',0,'TASK');
+			$menu .= $p->resetMenu();
 		}
 
 		if ($this->pageMode != 'ADD'){
 			$menuStyle = 'button';
-			$projects->setStyle($menuStyle);
-			$activities->setStyle($menuStyle);
-			$measures->setStyle($menuStyle);
-			$materials->setStyle($menuStyle); 
-			$receipts->setStyle($menuStyle);
-			$menu .= $projects->resetMenu();
-			$menu .= $activities->detailAddHref($this->id);
-			$menu .= $measures->detailAddHref($this->id);
-			$menu .= $materials->detailAddHref($this->id);
-			$menu .= $receipts->detailAddHref($this->id);
+			$p->setStyle($menuStyle);
+			$a ->setStyle($menuStyle);
+			$measure->setStyle($menuStyle);
+			$material->setStyle($menuStyle); 
+			$r->setStyle($menuStyle);
+			$menu .= $p->resetMenu();
+			$menu .= $a->detailAddHref($this->id);
+			$menu .= $measure->detailAddHref($this->id);
+			$menu .= $material->detailAddHref($this->id);
+			$menu .= $r->detailAddHref($this->id);
 		}
 				
-		$menu .= $projects->closeMenu();
+		$menu .= $p->closeMenu();
 		$this->_pageMenu = $menu;		
 	}
-	/*
 	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->summary = displayLines($this->summary);
-		$this->hoursNotes = displayLines($this->hoursNotes);
-		
-		$this->started = getTimestampDate($this->started);
-		$this->updated = getTimestampDate($this->updated);
-		
-	}*/
-		
-	public function display(){
-		$this->formatForDisplay();
+	protected function displayChildDetails(){
+	 //	$l = new TaskLinks();
+	 $baseLink = $this->links->detail('VIEW',$this->id);
 
-		$detail = openDisplayDetails('task','Task Details');
+	 if ($this->totals->tasks->count > 0){
+	 $activities = new ActivityList($this->pageMode, 0, $this->id);
+	 $activities->setPaging($this->resultsPageActivity);
+	 $activities->setDetails();
+	 $detail .= $activities->getListing($baseLink);
+	 }
 
-		$detail .= captionedParagraph('order', 'Order', $this->order);
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		
-		$l = new Location(OPTIONS);
-		$select = $l->options($this->locationId,'locationId','true');
-		$detail .= captionedParagraph('location','Location',$select);
+	 if ($this->measureCount > 0){
+	 $measures = new MeasureList($this->pageMode, 0, $this->id);
 
-		$tt = new TaskType(OPTIONS);
-		$select = $tt->options($this->typeId,'typeId','true');
-		$detail .= captionedParagraph('type','Task Type',$select);
+	 $measures->setPaging($this->resultsPageMeasure);
+	 $measures->setDetails();
+	 $detail .= $measures->getListing($baseLink);
+	 }
 
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('summary', 'Summary', $this->summary);	
-		$detail .= captionedParagraph('effort-notes','Effort Notes', $this->hoursNotes);
-		//$detail .= hr();
-		$detail .= captionedParagraph('started', 'Started', $this->started);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		//$detail .= openDiv('summary-info');
-		if ($this->activityCount > 0){
-			$effort = openTable('hours-info','displayListTable');
-			$heading = wrapTh('Estimated Hours');
-			$heading .= wrapTh('Actual Hours');
-			$heading .= wrapTh('% Done');
-			$effort .= wrapTr($heading);
-			$row = wrapTd($this->hoursEstimated);
-			$row .= wrapTd($this->hoursActual);
-			$row .= wrapTd($this->pctDone);
-			$effort .= wrapTr($row);
-			$effort .= closeTable();
-		} else {
-			$effort = openTable('hours-info','displayListTable');
-			$effort .= wrapTr(wrapTh('No Activity History.'));	
-			$effort .= closeTable();
-		}
-		if ($this->materialCount > 0){
-			$costs = openTable('cost-info','displayListTable');
-			$heading = wrapTh('Estimated Cost');
-			$heading .= wrapTh('Actual Cost');
-			$heading .= wrapTh('Approved');
-			$costs .= wrapTr($heading);
-			$row = wrapTd($this->costEstimated);
-			$row .= wrapTd($this->costActual);			
-			if ($this->materialsAuthProject == 'yes'){
-				$value = $this->materialsAuthBy;
-			} else {
-				$value = $this->materialsAuthProject;
-			}
-			$row .= wrapTd($value);
-			$costs .= wrapTr($row);
-			$costs .= closeTable();
-		} else {
-			$costs = openTable('cost-info','displayListTable');
-			$costs .= wrapTr(wrapTh('No Materials Costs.'));
-			$costs .= closeTable();
-		}
-		if ($this->receiptCount > 0){
-			$income = openTable('receipts-info','displayListTable');
-			$heading = wrapTh('Received');
-			$heading .= wrapTh('Approved');
-			$income .= wrapTr($heading);
-			
-			$row = wrapTd($this->receiptCostActual);
-			if ($this->receiptsAuthProject == 'yes'){
-				$value = $this->receiptsAuthBy;
-			} else {
-				$value = $this->receiptsAuthProject;
-			}
-			$row .= wrapTd($value);
-			$income .= wrapTr($row);
-			$income .= closeTable();
-		} else {
-			$income = openTable('receipts-info','displayListTable');
-			$income .= wrapTr(wrapTh('No Income Received.'));
-			$income .= closeTable();
-		}
-		
-		$timeAndEffort = openTable('effort-and-cost','displayListTable');
-		$row = wrapTd($effort,30);
-		$row .= wrapTd($costs,40);
-		$row .= wrapTd($income,25);
-		
-		$timeAndEffort .= wrapTr($row);
-		$timeAndEffort .= closeTable();
-		
-		$detail .= captionedParagraph('time-and-effort','Time, Materials and Receipts',$timeAndEffort);
+	 if ($this->totals->materials->count > 0){
+	 $materials = new MaterialList($this->pageMode, 0, $this->id);
+	 $materials->setPaging($this->resultsPageMaterial);
 
-		$l = new TaskLinks();
-		$baseLink = $l->detail('VIEW',$this->id);
+	 $materials->setDisplay('TASK');
+	 $materials->setApproved('no');
+	 $materials->setCalendar($this->year,$this->month);
+	 $materials->setDetails();
+	 $detail .= $materials->getListing($baseLink);
+	 }
 
-		if ($this->activityCount > 0){
-			$activities = new ActivityList($this->pageMode, 0, $this->id);
-			$activities->setPaging($this->resultsPageActivity);
-			$activities->setDetails();
-			$detail .= $activities->getListing($baseLink);
-		}
+	 if ($this->totals->receipts->count > 0){
+	 $receipts = new ReceiptList($this->pageMode, 0, $this->id);
+	 $receipts->setPaging($this->resultsPageReceipt);
 
-		if ($this->measureCount > 0){
-			$measures = new MeasureList($this->pageMode, 0, $this->id);
+	 $receipts->setDisplay('TASK');
+	 $receipts->setApproved('no');
+	 $receipts->setCalendar($this->year,$this->month);
+	 $receipts->setDetails();
+	 $detail .= $receipts->getListing($baseLink);
+	 }
 
-			$measures->setPaging($this->resultsPageMeasure);
-			$measures->setDetails();
-			$detail .= $measures->getListing($baseLink);
-		}
-		
-		if ($this->materialCount > 0){
-			$materials = new MaterialList($this->pageMode, 0, $this->id);
-			$materials->setPaging($this->resultsPageMaterial);
-			
-			$materials->setDisplay('TASK');
-			$materials->setApproved('no');
-			$materials->setCalendar($this->year,$this->month);
-			$materials->setDetails();
-			$detail .= $materials->getListing($baseLink);
-		}
-		
-		if ($this->receiptCount > 0){
-			$receipts = new ReceiptList($this->pageMode, 0, $this->id);
-			$receipts->setPaging($this->resultsPageReceipt);
-			
-			$receipts->setDisplay('TASK');
-			$receipts->setApproved('no');
-			$receipts->setCalendar($this->year,$this->month);
-			$receipts->setDetails();
-			$detail .= $receipts->getListing($baseLink);
-		}
-
+	 }
+	 
+	 //override display to add summaries and child details
+	 public function display(){
+	 	$detail = openDisplayDetails('entity', $this-> $_titleEntity.':  Details');
+		$detail .= $this->f->displayDetail();
+		$detail .= $this->totals->display();
+		$detail .= $this->displayChildDetails();
 		$detail .= closeDisplayDetails();
 		return $detail;
 	}
@@ -575,7 +388,7 @@ class task extends _entity{
 		$ajaxEventType = NULL){
 	
 		
-		$sql = $this->sql->optionsProject($this->project->id, $selectedValue, $disabled);
+		$sql = $this->sql->optionsProject($this->f->projectId, $selectedValue, $disabled);
 		
 		$defaultValue = 0;
 		$defaultCaption = '-No Task';
@@ -592,18 +405,19 @@ class task extends _entity{
 	
 	
 	protected function setDefaults(){
+	/*
 		global $sessionTime;
 		$this->started = $sessionTime;	
 		$this->order = $this->project->tasksCount + 1;
 		$this->hoursActual = '0';
 		$this->hoursEstimated = '0';
 		
-		$this->locationId = $this->project->locationId;		
+		$this->locationId = $this->f->idLocation;		
 		$this->materialsAuthBy = 'Not Applicable';
 		$this->materialsAuthProject = 'no';
 		$this->receiptsAuthBy = 'Not Applicable';
 		$this->receiptsAuthProject = 'no';
-
+*/
 	}	
 	
 	public function editForm(){
@@ -614,65 +428,66 @@ class task extends _entity{
 			$legend = 'Edit Task';
 		}
 		$entity = 'task';
-		$c = new TaskLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		//$c = new TaskLinks;
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		$form = openEditForm($entity,$legend,'pr_Task_Save.php',$contextMenu);
 
-		$fields = inputFieldNumber($entity,$this->order,'order','Order');
+		$fields = inputFieldNumber($entity,$this->f->taskOrder,'taskOrder','Order');
 
-		$fields .= inputFieldName($entity,$this->name,'name','Task Name');
+		$fields .= inputFieldName($entity,$this->f->name,'name','Task Name');
 		
-		$l = new TaskType(OPTIONS);
-		$select = $l->options($this->typeId,'taskTypeId');
+		$l = new taskType();
+		$select = $l->options($this->f->idType,'typeId');
 		$fields .= captionedInput('Task Type', $select);
 
 
 		$formRequired = $fields;
-
-		$input = $this->project->options($this->project->id,'projectId','false',false);
+		
+		$l = new project();
+		$input = $l->options($this->f->idproject,'projectId','false',false);
 		$fields = captionedInput('Task Project', $input);
 		
 		
-		$l = new Location(OPTIONS);
-		$select = $l->options($this->locationId,'locationId','false',false);
+		$l = new location('OPTIONS');
+		$select = $l->options($this->f->idLocation,'locationId','false',false);
 		$fields .= captionedInput('Location', $select);
 
-		$fields .= inputFieldDescription($entity,$this->description,'description');
+		$fields .= inputFieldDescription($entity,$this->f->description,'description');
 
 
-		$fields .= inputFieldComments($entity,$this->summary,'summary','Summary');
+		$fields .= inputFieldComments($entity,$this->f->summary,'summary','Summary');
 		
-		$fields .= inputFieldTimestamp($entity, 'started', $this->started, 'Start Date'); 		
+		$fields .= inputFieldTimestamp($entity, 'started', $this->f->started, 'Start Date'); 		
 				
-		$fields .= inputFieldNumber($entity,$this->hoursEstimated,'hoursEstimated','Estimated');
+		$fields .= inputFieldNumber($entity,$this->f->hoursEstimated,'hoursEstimated','Estimated');
 		
 		$tooltip = 'Add activity details to record hours';
-		$fields .= inputFieldNumber($entity,$this->hoursActual,'hoursActual','Actual');
+		$fields .= inputFieldNumber($entity,$this->f->hoursActual,'hoursActual','Actual');
 		
-		$fields .= inputFieldNumber($entity,$this->pctDone,'pctDone','% Done');
+		$fields .= inputFieldNumber($entity,$this->f->pctDone,'pctDone','% Done');
 		
-		$fields .= inputFieldComments($entity,$this->hoursNotes,'hoursNotes','Effort Notes',4000);
+		$fields .= inputFieldComments($entity,$this->f->hoursNotes,'hoursNotes','Effort Notes',4000);
 
 
-		if ($this->materialCount > 0) {
+		if ($this->totals->materials->count > 0) {
 			if ($_SESSION['is-admin'] == 'yes'){
 				//current user is admin, allow editing approvals
-				$input = 'Costs Approved:'.getSelectYesNo('materialsAuthProject', $this->materialsAuthProject);
-				if ($this->materialsAuthProject == 'no'){
-					$this->materialsAuthBy = $_SESSION['login-name'];
+				$input = 'Costs Approved:'.getSelectYesNo('materialsAuthProject', $this->f->materialsAuthProject);
+				if ($this->f->materialsAuthProject == 'no'){
+					$this->f->materialsAuthBy = $_SESSION['login-name'];
 				}
-				$input .= spacer().'By:'.getTextInput('materialsAuthBy', $this->materialsAuthBy, 30, 50);
+				$input .= spacer().'By:'.getTextInput('materialsAuthBy', $this->f->materialsAuthBy, 30, 50);
 			} else {
 				//materials present but user cannot edit approvals
-				$input = 'Costs Approved:'.$this->materialsAuthProject;
-				$input .= getHiddenInput('materialsAuthProject', $this->materialsAuthProject);
-				$input .= spacer().'By:'.$this->materialsAuthBy;
-				$input .= getHiddenInput('materialsAuthBy', $this->materialsAuthBy);	
+				$input = 'Costs Approved:'.$this->f->materialsAuthProject;
+				$input .= getHiddenInput('materialsAuthProject', $this->f->materialsAuthProject);
+				$input .= spacer().'By:'.$this->f->materialsAuthBy;
+				$input .= getHiddenInput('materialsAuthBy', $this->f->materialsAuthBy);	
 			}
 		} else {
 			//no materials under task, dont show authorization fields
-			$input = getHiddenInput('materialsAuthProject', $this->materialsAuthProject);
-			$input .= getHiddenInput('materialsAuthBy', $this->materialsAuthBy);	
+			$input = getHiddenInput('materialsAuthProject', $this->f->materialsAuthProject);
+			$input .= getHiddenInput('materialsAuthBy', $this->f->materialsAuthBy);	
 			$input .= 'No Task Costs';
 		}
 		$fields .= captionedInput('Costs', $input);
@@ -681,22 +496,22 @@ class task extends _entity{
 		if ($this->receiptCount > 0) {
 			if ($_SESSION['is-admin'] == 'yes'){
 				//current user is admin, allow editing approvals
-				$input = 'Receipts Approved:'.getSelectYesNo('receiptsAuthProject', $this->receiptsAuthProject);
-				if ($this->receiptsAuthProject == 'no'){
-					$this->receiptsAuthBy = $_SESSION['login-name'];
+				$input = 'Receipts Approved:'.getSelectYesNo('receiptsAuthProject', $this->f->receiptsAuthProject);
+				if ($this->f->receiptsAuthProject == 'no'){
+					$this->f->receiptsAuthBy = $_SESSION['login-name'];
 				}
-				$input .= spacer().'By:'.getTextInput('receiptsAuthBy', $this->receiptsAuthBy, 30, 50);
+				$input .= spacer().'By:'.getTextInput('receiptsAuthBy', $this->f->receiptsAuthBy, 30, 50);
 			} else {
 				//materials present but user cannot edit approvals
-				$input = 'Receipts Approved:'.$this->receiptsAuthProject;
-				$input .= getHiddenInput('receiptsAuthProject', $this->receiptsAuthProject);
-				$input .= spacer().'By:'.$this->receiptsAuthBy;
-				$input .= getHiddenInput('receiptsAuthBy', $this->receiptsAuthBy);	
+				$input = 'Receipts Approved:'.$this->f->receiptsAuthProject;
+				$input .= getHiddenInput('receiptsAuthProject', $this->f->receiptsAuthProject);
+				$input .= spacer().'By:'.$this->f->receiptsAuthBy;
+				$input .= getHiddenInput('receiptsAuthBy', $this->f->receiptsAuthBy);	
 			}
 		} else {
 			//no materials under task, dont show authorization fields
-			$input = getHiddenInput('receiptsAuthProject', $this->receiptsAuthProject);
-			$input .= getHiddenInput('receiptsAuthBy', $this->receiptsAuthBy);	
+			$input = getHiddenInput('receiptsAuthProject', $this->f->receiptsAuthProject);
+			$input .= getHiddenInput('receiptsAuthBy', $this->f->receiptsAuthBy);	
 			$input .= 'No Task Income';
 		}
 		$fields .= captionedInput('Income',$input);		
@@ -704,7 +519,7 @@ class task extends _entity{
 		$formOptional = $fields;
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('id', $this->id);
+		$hidden .= getHiddenInput('id', $this->f->id);
 
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
@@ -718,34 +533,35 @@ class task extends _entity{
 		//called by save form prior to running adds/updates
 		$this->pageMode = $_POST['mode'];
 
-		$this->id = $_POST['id'];
-		$this->project->id = $_POST['idParent'];
-		$this->idParent = $this->project->id;
+		$this->f->id = $_POST['id'];
+		$this->id = $this->f->id;
+		$this->f->idProject = $_POST['idProject'];
+		$this->idParent = $this->f->idProject;
 		
-		$this->locationId = $_POST['locationId'];
-		$this->typeId = $_POST['taskTypeId'];
+		$this->f->idLocation = $_POST['idLocation'];
+		$this->f->idType = $_POST['idType'];
 		//$this->setParentProject();
 		
-		$this->order = $_POST['order']; 
-		$this->started = getTimestampPostValues('started');
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->summary = dbEscapeString($_POST['summary']); 
-		$this->pctDone = $_POST['pctDone']; 
-		$this->hoursEstimated = $_POST['hoursEstimated']; 
+		$this->f->taskOrder = $_POST['taskOrder']; 
+		$this->f->started = getTimestampPostValues('started');
+		$this->f->name = dbEscapeString($_POST['name']); 
+		$this->f->description = dbEscapeString($_POST['description']); 
+		$this->f->summary = dbEscapeString($_POST['summary']); 
+		$this->f->pctDone = $_POST['pctDone']; 
+		$this->f->hoursEstimated = $_POST['hoursEstimated']; 
 		//$this->hoursActual = $_POST['hoursActual']; 
-		$this->hoursNotes = dbEscapeString($_POST['hoursNotes']); 
-		$this->materialsAuthProject = dbEscapeString($_POST['materialsAuthProject']);
-		if ($this->materialsAuthProject == 'yes'){
-			$this->materialsAuthBy = dbEscapeString($_POST['materialsAuthBy']);
+		$this->f->hoursNotes = dbEscapeString($_POST['hoursNotes']); 
+		$this->f->materialsAuthProject = dbEscapeString($_POST['materialsAuthProject']);
+		if ($this->f->materialsAuthProject == 'yes'){
+			$this->f->materialsAuthBy = dbEscapeString($_POST['materialsAuthBy']);
 		} else {
-			$this->materialsAuthBy = 'Not Approved';			
+			$this->f->materialsAuthBy = 'Not Approved';			
 		}
-		$this->receiptsAuthProject = dbEscapeString($_POST['receiptsAuthProject']);
-		if ($this->receiptsAuthProject == 'yes'){
-			$this->receiptsAuthBy = dbEscapeString($_POST['receiptsAuthBy']);
+		$this->f->receiptsAuthProject = dbEscapeString($_POST['receiptsAuthProject']);
+		if ($this->f->receiptsAuthProject == 'yes'){
+			$this->f->receiptsAuthBy = dbEscapeString($_POST['receiptsAuthBy']);
 		} else {
-			$this->receiptsAuthBy = 'Not Approved';			
+			$this->f->receiptsAuthBy = 'Not Approved';			
 		}
 
 	}
@@ -757,9 +573,9 @@ class task extends _entity{
 		$sql = " UPDATE tasks as t ";
 		$sql .= " SET ";
 		$sql .= " t.updated = CURRENT_TIMESTAMP, ";		
-		$sql .= " t.hours_actual = 	".$this->hoursActual.", ";
-		$sql .= " t.hours_estimated = ".$this->hoursEstimated." ";
-		$sql .= " WHERE t.id = ".$this->id." ";
+		$sql .= " t.hours_actual = 	".$this->f->hoursActual.", ";
+		$sql .= " t.hours_estimated = ".$this->f->hoursEstimated." ";
+		$sql .= " WHERE t.id = ".$this->f->id." ";
 		
 		$result = dbRunSQL($sql);
 
@@ -768,12 +584,12 @@ class task extends _entity{
 	}
 
 	public function resetMaterialsAuthorization(){	
-		$this->materialsAuthProject = 'no';
-		$this->materialsAuthBy = 'Not Approved';
-		$project = $this->materialsAuthProject;
-		$by = $this->materialsAuthBy;
+		$this->f->materialsAuthProject = 'no';
+		$this->f->materialsAuthBy = 'Not Approved';
+		$project = $this->f->materialsAuthProject;
+		$by = $this->f->materialsAuthBy;
 		
-		$sql = $this->sql->updateMaterialsAuth($this->id, $project, $by);
+		$sql = $this->sql->updateMaterialsAuth($this->f->id, $project, $by);
 		
 		$result = dbRunSQL($sql);
 		
@@ -781,14 +597,14 @@ class task extends _entity{
 	}
 	
 	private function setMaterialsActualCost(){
-		if ($this->materialsAuthProject == 'yes'){
+		if ($this->f->materialsAuthProject == 'yes'){
 			$sql = " UPDATE materials as m ";
 			$sql .= " SET m.cost_actual = m.cost_estimated ";
-			$sql .= " WHERE m.task_id = ".$this->id." ";
+			$sql .= " WHERE m.task_id = ".$this->f->id." ";
 		} else {
 			$sql = " UPDATE materials as m ";
 			$sql .= " SET m.cost_actual = 0 ";
-			$sql .= " WHERE m.task_id = ".$this->id." ";			
+			$sql .= " WHERE m.task_id = ".$this->f->id." ";			
 		}
 		$result = dbRunSQL($sql);
 	}
@@ -797,10 +613,10 @@ class task extends _entity{
 		$this->receiptsAuthProject = 'no';
 		$this->receiptsAuthBy = 'Not Approved';
 		
-		$project = $this->receiptsAuthProject;
-		$by = $this->receiptsAuthBy;
+		$project = $this->f->receiptsAuthProject;
+		$by = $this->f->receiptsAuthBy;
 		
-		$sql = $this->sql->updateReceiptsAuth($this->id, $project, $by);
+		$sql = $this->sql->updateReceiptsAuth($this->f->id, $project, $by);
 		$result = dbRunSQL($sql);
 	}
 
@@ -821,24 +637,24 @@ class task extends _entity{
 	protected function saveUpdate(){
 			$sql = " UPDATE tasks AS t ";
 			$sql .= " SET ";
-			$sql .= " t.project_id = ".$this->project->id.", ";
-			$sql .= " t.task_order = ".$this->order.", ";
-			$sql .= " t.location_id = ".$this->locationId.", ";
-			$sql .= " t.started = '".$this->started."', ";
-			$sql .= " t.name = '".$this->name."', ";
-			$sql .= " t.description = '".$this->description."', ";
-			$sql .= " t.summary = '".$this->summary."', ";
+			$sql .= " t.project_id = ".$this->f->idProject.", ";
+			$sql .= " t.task_order = ".$this->f->taskOrder.", ";
+			$sql .= " t.location_id = ".$this->f->idLocation.", ";
+			$sql .= " t.started = '".$this->f->started."', ";
+			$sql .= " t.name = '".$this->f->name."', ";
+			$sql .= " t.description = '".$this->f->description."', ";
+			$sql .= " t.summary = '".$this->f->summary."', ";
 			$sql .= " t.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " t.type_id = ".$this->typeId.", ";
-			$sql .= " t.hours_estimated = ".$this->hoursEstimated.", ";
-			$sql .= " t.pct_done = ".$this->pctDone.", ";
-			$sql .= " t.hours_notes = '".$this->hoursNotes."', ";
-			$sql .= " t.materials_auth_project = '".$this->materialsAuthProject."', ";
-			$sql .= " t.materials_auth_by = '".$this->materialsAuthBy."', ";
-			$sql .= " t.receipts_auth_project = '".$this->receiptsAuthProject."', ";
-			$sql .= " t.receipts_auth_by = '".$this->receiptsAuthBy."' ";
+			$sql .= " t.type_id = ".$this->f->idType.", ";
+			$sql .= " t.hours_estimated = ".$this->f->hoursEstimated.", ";
+			$sql .= " t.pct_done = ".$this->f->pctDone.", ";
+			$sql .= " t.hours_notes = '".$this->f->hoursNotes."', ";
+			$sql .= " t.materials_auth_project = '".$this->f->materialsAuthProject."', ";
+			$sql .= " t.materials_auth_by = '".$this->f->materialsAuthBy."', ";
+			$sql .= " t.receipts_auth_project = '".$this->f->receiptsAuthProject."', ";
+			$sql .= " t.receipts_auth_by = '".$this->f->receiptsAuthBy."' ";
 
-			$sql .= " WHERE t.id = ".$this->id." ";	
+			$sql .= " WHERE t.id = ".$this->f->id." ";	
 		
 			$result = dbRunSQL($sql);
 			
@@ -866,22 +682,22 @@ class task extends _entity{
 			$sql .= " receipts_auth_by) ";
 
 			$sql .= " VALUES (";
-			$sql .= " '".$this->name."', ";
-			$sql .= " ".$this->project->id.", ";
-			$sql .= " ".$this->locationId.", ";		
-			$sql .= " ".$this->typeId.", ";			
-			$sql .= " ".$this->order.", ";
-			$sql .= " '".$this->description."', ";
-			$sql .= " '".$this->summary."', ";
-			$sql .= " '".$this->started."', ";
+			$sql .= " '".$this->f->name."', ";
+			$sql .= " ".$this->f->idProject.", ";
+			$sql .= " ".$this->f->idLocation.", ";		
+			$sql .= " ".$this->f->idType.", ";			
+			$sql .= " ".$this->f->taskOrder.", ";
+			$sql .= " '".$this->f->description."', ";
+			$sql .= " '".$this->f->summary."', ";
+			$sql .= " '".$this->f->started."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " ".$this->hoursEstimated.", ";
+			$sql .= " ".$this->f->hoursEstimated.", ";
 			$sql .= " 0, ";
-			$sql .= " '".$this->hoursNotes."', ";
-			$sql .= " '".$this->materialsAuthProject."', ";
-			$sql .= " '".$this->materialsAuthBy."', ";
-			$sql .= " '".$this->receiptsAuthProject."', ";
-			$sql .= " '".$this->receiptsAuthBy."') ";
+			$sql .= " '".$this->f->hoursNotes."', ";
+			$sql .= " '".$this->f->materialsAuthProject."', ";
+			$sql .= " '".$this->f->materialsAuthBy."', ";
+			$sql .= " '".$this->f->receiptsAuthProject."', ";
+			$sql .= " '".$this->f->receiptsAuthBy."') ";
 			
 		$result = dbRunSQL($sql);
 			$this->id = dbInsertedId();

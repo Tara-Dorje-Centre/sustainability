@@ -10,8 +10,13 @@ idType, idParent,
 _entityTypeFields  notes, displayOrder
 ****/
 	public function __construct(){
-		parent::__construct(true);
-	}
+    	$this->hasType = true;
+    	$this->hasCreated = true;
+    	$this->hasHighlight = true;
+    	$this->hasLocation = false;
+    	$this->hasParent = false;
+    	$this->hasProject = false;
+    }
 
 
 	public function setRowValues($row){

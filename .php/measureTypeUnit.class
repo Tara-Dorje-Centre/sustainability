@@ -12,6 +12,7 @@ _entityTypeFields  notes, displayOrder
 class measureTypeUnit extends _entity{
 	protected $__MyClassName = 'MeasureTypeUnit';
 	
+	
     public $unitOfMeasureId = 0;	
 	public $measureType;
 	public $measureTypeName;

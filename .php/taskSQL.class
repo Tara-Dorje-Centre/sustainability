@@ -4,8 +4,15 @@
 ﻿<?php 
 
 class taskSQL extends _projectChildSQL{
+	public function __construct(){
+		$this->baseTable = 'tasks';
+		$this->fieldId = 't.id';
 
-	public $baseTable = 'tasks';
+	}
+	
+
+	
+
 
 protected function cols(){
 $c = $this->select();
@@ -13,11 +20,12 @@ $c .= " t.id,  ";
 $c .= " t.project_id,  ";
 $c .= " p.name project_name, ";
 $c .= " pt.name project_type, ";
-$c .= " pt.highlight_style project_highlight_style, ";
+//$c .= " pt.highlight_style project_highlight_style, ";
 $c .= " t.location_id,  ";
+$c .= " l.name location_name, ";
 $c .= " t.type_id,  ";
 $c .= " tt.highlight_style, ";
-$c .= " tt.name task_type, ";
+$c .= " tt.name type_name, ";
 $c .= " tt.frequency, ";
 $c .= " t.task_order,  ";
 $c .= " t.name,  ";
@@ -38,6 +46,7 @@ $c .= " t.receipts_auth_by ";
 	
 public function tables($joinTypes = true){
 	$q = " FROM projects p join tasks t ON p.id = t.project_id ";
+	$q .= " LEFT OUTER JOIN locations l on t.location_id = l.id ";
 	if ($joinTypes == true){
 	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
 	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
@@ -47,7 +56,7 @@ public function tables($joinTypes = true){
 
 
 public function colsSummary($first = true){
-$c = $this->select($first);
+$q = $this->select($first);
 $q .= " COUNT(*) as total_tasks, ";
 $q .= " sum(t.hours_estimated) as sum_hours_estimated, ";
 $q .= " sum(t.hours_actual) as sum_hours_actual, ";
@@ -57,7 +66,7 @@ return $q;
  
 
 public function countProjectTaskStatus($id, $taskStatus = 'OPEN'){
-$q .= $this->colsCount();
+$q = $this->colsCount();
 $q .= " FROM tasks AS t ";
 $q .= $this->where($id, 't.project_id');
 if ($taskStatus == 'OPEN'){

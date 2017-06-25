@@ -30,7 +30,7 @@ class LocationLinks extends _entityLinks {
 	}
 
 	public function detail($pageAction, $id = 0, $idParent = 0){
-		$link = $this->pageDetail.'?pageAction='.$pageAction;
+		$link = $this->_pageDetail.'?pageAction='.$pageAction;
 		if ($id != 0){
 			$link .= '&id='.$id;
 		}

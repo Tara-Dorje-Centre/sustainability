@@ -11,20 +11,40 @@ class _entityFields{
 	public $id;	
 	public $name;		
 	public $description;
-	public $idParent;
-	public $nameParent;
-	public $idType;
-	public $nameType;
-	public $highlightStyle = 'none';
+	
+    public $hasCreated = true;
 	public $created;
+    public $hasUpdated = true;
     public $updated;
     
-    protected $hasType = false;
-    protected $hasParent = false;
+    public $hasHighlight = true;
+	public $highlightStyle = 'none';
     
-    public function __construct($hasType = false, $hasParent = false){
-    	$this->hasType = $hasType;
-    	$this->hasParent = $hasParent;
+    public $hasType = true;
+	public $idType;
+	public $nameType;
+	
+	public $hasLocation = false;
+	public $idLocation;
+	public $nameLocation;
+	 
+    public $hasParent = false;
+   	public $idParent;
+   	public $nameParent;
+   	
+   	public $hasProject = false;
+   	public $listProject = false;
+   	public $idProject;
+   	public $nameProject;
+	
+	 
+    public function __construct(){
+    	$this->hasType = true;
+    	$this->hasCreated = true;
+    	$this->hasHighlight = true;
+    	$this->hasLocation = false;
+    	$this->hasParent = false;
+    	$this->hasProject = false;
     }
     
     protected function reset(){
@@ -32,7 +52,10 @@ class _entityFields{
     	$this->id = 0;
 		$this->name = '';
 		$this->description ='';
-		$this->highlightStyle = 'none';
+		
+		if ($this->hasHighlight == true){
+			$this->highlightStyle = 'none';
+		}
 		$this->created = '';	
 		$this->updated = '';
 		if ($this->hasType == true){
@@ -51,8 +74,13 @@ class _entityFields{
 		$this->id = $row["id"];
 		$this->name = ($row["name"]);
 		$this->description = ($row["description"]);
-		$this->highlightStyle = ($row["highlight_style"]);
-		$this->created = ($row["created"]);			
+		if ($this->hasHighlight == true){
+			$this->highlightStyle = ($row["highlight_style"]);
+		}
+		
+		if ($this->hasCreated == true){
+			$this->created = ($row["created"]);		
+		}	
 		$this->updated = ($row["updated"]);		
 		if ($this->hasType == true){
 			$this->idType = ($row["type_id"]);
@@ -63,12 +91,22 @@ class _entityFields{
 			$this->nameParent = $row["parent_name"];
 		}
 		
+		if ($this->hasProject == true){
+			$this->idProject = $row["project_id"];
+			$this->nameProject = $row["project_name"];
+		}
+					
+		if ($this->hasLocation == true){
+			$this->idLocation = $row["location_id"];
+			$this->nameLocation = ($row["location_name"]);
+		}
+			
+		
 		
 	}
 	
 	public function setDefaultValues(){
 		$this->reset;
-		$this->id = 0;
 	
 	}
 	
@@ -81,29 +119,55 @@ class _entityFields{
 	
 	
 	public function listHeading(){
-		$heading = wrapTh('#Name');
-		$heading .= wrapTh('Description');
-		$heading .= wrapTh('Highlight Style');
+		//$heading = wrapTh('Name');
+		$heading = wrapTh('Description');
+		
 		if ($this->hasType == true){
 			$heading .= wrapTh('Type');
+		}
+		if ($this->hasLocation == true){
+			$heading .= wrapTh('Location');
+		}
+		if ($this->hasProject == true){
+			$heading .= wrapTh('Project');
 		}
 		if ($this->hasParent == true){
 			$heading .= wrapTh('Parent');
 		}
+		if ($this->hasHighlight == true){
+			$heading .= wrapTh('Highlight Style');
+		}
+		
 		return $heading;
 	}
 	
 	public function listDetail(){
 		$this->formatForDisplay();
-		$detail = wrapTd($this->name);
-		$detail .=  wrapTd($this->description);			
-		$detail .= wrapTd($this->highlightStyle);		
+		//use name in list item link
+		//$detail = wrapTd($this->name);
+		$detail =  wrapTd($this->description);		
+		
+		
 		if ($this->hasType == true){
 			$detail .=  wrapTd($this->nameType);			
 		}
+		
+		if ($this->hasLocation == true){
+			$detail .=  wrapTd($this->nameLocation);			
+		}
+		
+	 	if ($this->hasProject == true){
+		 $detail .= wrapTd($this->nameProject);		
+		}
+		 
 		if ($this->hasParent == true){
 			$detail .=  wrapTd($this->nameParent);			
 		}
+		
+	 	if ($this->hasHighlight == true){
+		 $detail .= wrapTd($this->highlightStyle);		
+		}
+		
 		return $detail;
 	}
 	
@@ -112,15 +176,27 @@ class _entityFields{
 		$detail = para('id', 'Id', $this->id);
 		$detail .= para('name', 'Name', $this->name);
 		$detail .= para('description', 'Description', $this->description);
-		$detail .= para('created', 'Created', $this->created);
+		if ($this->hasCreated == true){
+			$detail .= para('created', 'Created', $this->created);
+		}
 		$detail .= para('updated', 'Updated', $this->updated);
-		$detail .= para('highlight-style', 'Highlight', $this->highlightStyle);
+		if ($this->hasHighlight == true){
+			$detail .= para('highlight-style', 'Highlight', $this->highlightStyle);
+		}
 		if ($this->hasType == true){
 			$detail .= para('type', 'Type', $this->nameType);
+		}
+		if ($this->hasLocation== true){
+			$detail .= para('location', 'Location', $this->nameLocation);
+		}
+		if ($this->hasProject == true){
+			$detail .= para('project', 'Project', $this->nameProject);
 		}
 		if ($this->hasParent == true){
 			$detail .= para('parent', 'Parent', $this->nameParent);
 		}
+		
+		
 		return $detail;
 	}
 }
@@ -165,7 +241,7 @@ class _entity extends _baseEntity{
 
 		$sql = $this->sql->options($selectedId, $disabled);
 		$defaultValue = 0;
-		$defaultCaption = '-select '.$this->$_titleEntity;
+		$defaultCaption = '-select '.$this->_titleEntity;
 		$allOptions = getSelectOptionsSQL($sql,$selectedId,$disabled,$defaultValue,$defaultCaption);		
 
 		$select = getSelectList($idName,$allOptions,'none',$disabled );

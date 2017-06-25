@@ -2,7 +2,12 @@
 
 class locationTypeSQL extends _entityTypeSQL{
 
-public $baseTable = 'location_types';
+
+	public function __construct(){
+		$this->baseTable = 'location_types';
+
+
+	}
 
 	
 }

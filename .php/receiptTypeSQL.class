@@ -1,8 +1,12 @@
 ﻿<?php 
 
 class receiptTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'receipt_types';
 
-public $baseTable = 'receipt_types';
+	}
+
+
 
 }
 ?>

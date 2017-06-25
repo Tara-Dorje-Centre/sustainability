@@ -13,8 +13,13 @@ _entityTypeFields  notes, displayOrder
 	public $sortKey;
 	
 	public function __construct(){
-		parent::construct(true, true);
-	}
+    	$this->hasType = true;
+    	$this->hasCreated = true;
+    	$this->hasHighlight = true;
+    	$this->hasLocation = false;
+    	$this->hasParent = true;
+    	$this->hasProject = false;
+    }
 	
 	public function setRowValues($row){
 		parent::setRowValues($row);
@@ -25,7 +30,7 @@ _entityTypeFields  notes, displayOrder
 	}
 	
 	public function listHeading(){
-		$heading = parent::listHeading;
+		$heading = parent::listHeading();
 		$heading .= wrapTh('SortKey');
 		return $heading;
 	}
@@ -52,15 +57,16 @@ class location extends _entity{
 	protected $pageSave = 'pr_Location_Save.php';
 	public $childLocations = 0;
 	
-
+public $f;
 	public $sql;
 	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 	
-		$this->sql = new locationSQL;
+		$this->sql = new locationSQL();
 		$this->links = new locationLinks();
+		$this->f = new locationFields();
 		
 	}
 	
@@ -150,7 +156,8 @@ class location extends _entity{
 		$this->echoState(true, 'options');
 		
 		
-		$sql = $this->sql->options($selected, $disabled);
+		$sql = $this->base->sql->options();
+		//selected, $disabled);
 		
 		$default = 0;
 		$defaultCaption = '-No Location';
@@ -195,20 +202,20 @@ class location extends _entity{
 		//$entity = 'location';
 		$c = new LocationLinks;
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$form = openEditForm($entity,$legend,'pr_Location_Save.php', $contentMenu);
+		$form = openEditForm($entity,$legend,'pr_Location_Save.php', $contextMenu);
 		
 		//formRequired fields	
 		$formRequired = inputFieldName($entity,$this->f->name,'name','Name');
 
 		$type = new LocationType('SELECT');
-		$select = $type->options($this->f->idType,'type-id','false',false);
+		$select = $type->options($this->f->idType,'idType','false',true);
 		$formOptional = captionedInput('Type',$select);
 					
 		$formOptional .= inputFieldText($entity,$this->f->description,'description','Description');
 
 						
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('parent-id', $this->f->idParent);
+		$hidden .= getHiddenInput('idParent', $this->idParent);
 		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $input.$hidden;
@@ -220,11 +227,14 @@ class location extends _entity{
 	public function collectPostValues(){
 	
 			$this->echoState(true, 'collectPostValues');
-		$this->id = $_POST['id'];
-		$this->typeId = $_POST['type-id'];
-		$this->idParent = sessionVariablePOST('parent-id', $this->idParent);
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 		
+		$this->f->id = $_POST['id'];
+		$this->id = $this->f->id;
+		
+		$this->f->idType = $_POST['idType'];
+		$this->f->idParent = sessionVariablePOST('idParent', $this->idParent);
+		$this->idParent = $this->f->idParent;
+		$this->f->name = dbEscapeString($_POST['name']); 
+		$this->f->description = dbEscapeString($_POST['description']); 		
 		$this->pageMode = $_POST['mode'];	
 		$this->echoState(true, 'collectPostValues.leaving');
 	}

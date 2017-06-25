@@ -7,7 +7,7 @@ interface IprojectChildSQL{
 	public function summaryProject($id = 0,$year= 0, $month = 0);
 	//public function summaryProjectGroupType($id = 0, $year= 0, $month = 0);
 	public function summaryProjectDoneBy($id = 0, $doneBy = 'EVERYONE', $year= 0, $month = 0);
-	public function optionsProject($id = 0, $selectedId = 0, $disabled = 'false');
+	public function optionsProject($id = 0);
 }
 
 class _projectChildSQL extends _entitySQL implements IprojectChildSQL{
@@ -26,7 +26,7 @@ public function getProjectId($id = 0){
 $q = " SELECT  ";
 $q .= $this->fieldProjectId;
 $q .= $this->tables(false);
-$q .= $this->where($id);
+$q .= $this->whereId($id);
 return $q;
 }
 
@@ -41,7 +41,7 @@ public function countProject($id = 0, $year= 0, $month = 0, $approved = 'no'){
 
 public function listProject($id = 0, $page = 1, $rows = 10, $year= 0, $month = 0, $approved = 'no'){
 $q = $this->cols();
-$q .= $this->tables(false);
+$q .= $this->tables(true);
 $q .= $this->whereProject($id, $year, $month, $approved);
 	$q .= sqlLimitClause($page, $rows);
 return $q;
@@ -77,16 +77,16 @@ $q .= $this->tables(false);
   return $q;
 }
 
-public function optionsProject($id = 0, $selectedId = 0,$disabled = 'false'){
+public function optionsProject($id = 0){
 	$q = " SELECT ";
-	$q .= " p.id as value, ";
-	$q .= " concat_ws(' ',p.task_order,p.name) as caption ";
+	$q .= " t.id as value, ";
+	$q .= " concat_ws(' ',t.task_order,t.name) as caption ";
 $q .= $this->tables();
 $q .= $this->whereProject($id);
 	$q .= " AND p.pct_done < 1 ";
-	if ($disabled == 'true'){
+	/*if ($disabled == 'true'){
 		$q .= " AND p.id = ".$selectedId." ";	
-	}
+	}*/
 	$q .= " ORDER BY caption ";
 	return $q;	
 }

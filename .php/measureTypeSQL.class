@@ -2,9 +2,11 @@
 
 class measureTypeSQL extends _entityTypeSQL{
 
-public $baseTable = 'measure_types';
-
 //table mssing display order
+	public function __construct(){
+		$this->baseTable = 'measure_types';
+
+	}
 
 
 

@@ -81,7 +81,7 @@ class measureType extends _entityType{
 			$sql .= " mt.description = '".$this->f->description."', ";
 			$sql .= " mt.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " mt.notes = '".$this->f->notes."' ";
-			$sql .= " WHERE mt.id = ".$this->id."  ";		
+			$sql .= " WHERE mt.id = ".$this->f->id."  ";		
 				
 			$result = dbRunSQL($sql);
 		}

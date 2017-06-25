@@ -1,8 +1,11 @@
 <?php
 
 class userSQL extends _entitySQL{
+	public function __construct(){
+		$this->baseTable = 'users';
+	}
+	
 
-public $baseTable = 'users';
 protected function cols(){
 $c = $this->select();
 	$c .= " u.id, "; 

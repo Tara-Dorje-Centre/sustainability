@@ -2,24 +2,24 @@
 
 class locationList extends _entityList{
 	protected $__MyClassName = 'LocationList';
-
+protected $titleEntity = 'Location';
 	public $base;
 
 	
 	//default listng all locations
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = -1){
 		parent::__construct($mode, $id, $idParent);
-		$this->base = new Location();	
+		$this->base = new location(0, $idParent);	
 		
 	}
 	
 	protected function setPageTitle(){
 
-		if ($this->parentId <= 0){	
+		if ($this->idParent <= 0){	
 			$title = 'All Locations';
 		} else {
-			$l = new Location;
-			$title = 'Sub Locations: '.$this->base->getSortKey($this->parentId);
+		//	$l = new Location;
+			$title = 'Sub Locations: '.$this->base->getSortKey($this->idParent);
 		}
 
 		$this->_pageTitle = $title;	
@@ -29,36 +29,36 @@ class locationList extends _entityList{
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
-		$this->links->saveSettings;
-		$this->links->setType($menuType);
-		$this->links->setStyle($menuStyle);
+		$this->base->links->saveMenuSettings();
+		$this->base->links->setType($menuType);
+		$this->base->links->setStyle($menuStyle);
 		$menuL = new MenuLinks($menuType,$menuStyle);
 		
-		$menu = $this->links->openMenu('section-heading-links');
+		$menu = $this->base->links->openMenu('section-heading-links');
  		$menu .= $menuL->linkReference();
-		$menu .= $this->links->resetMenu();
-		if ($this->parentId > 0){
-			$menu .= $this->links->detailViewHref($this->parentId,'Up');	
+		$menu .= $this->base->links->resetMenu();
+		if ($this->idParent > 0){
+			$menu .= $this->base->links->detailViewHref($this->idParent,'Up');	
 		} else {
-			$menu .= $this->links->detailAddHref(0);
+			$menu .= $this->base->links->detailAddHref(0);
 		}
-		$menu .= $this->links->listingHref(-1);
+		$menu .= $this->base->links->listingHref(-1);
 				
-		if ($this->parentId > 0){
-			$menu .= $this->links->resetMenu();
+		if ($this->idParent > 0){
+			$menu .= $this->base->links->resetMenu();
 			//showing sub locations for a parent
 			if ($this->found != 0){	
-				$menu .= $this->links->listingHref($this->idParent,'SubLocations('.$this->found.')');
+				$menu .= $this->base->links->listingHref($this->idParent,'SubLocations('.$this->found.')');
 			} else {
 				$menu .= 'No Sublocations';
 			}
 			//add new sublocation to current parent
-			$menu .= $this->links->detailAddHref($this->parentId);
+			$menu .= $this->base->links->detailAddHref($this->idParent);
 		}
 		
-		$menu .= $this->links->closeMenu();
+		$menu .= $this->base->links->closeMenu();
 		
-				$this->links->restoreSettings();
+				$this->base->links->restoreMenuSettings();
 				
 		$this->_pageMenu = $menu;			
 	}
@@ -66,12 +66,12 @@ class locationList extends _entityList{
 	public function setCount(){
 		if ($this->idParent == -1){
 			// idParent is -1, list all locatons
-			$sql = $this->sql->count();
+			$sql = $this->base->sql->count();
 			$this->echoPrint(true, 'count all locations','setCount');
 		} else {
 			// id parent is 0 -- list primary locatons
 			// f id s positive -- listdirect children
-			$sql = $this->sql->countChildren($this->idParent);
+			$sql = $this->base->sql->countChildren($this->idParent);
 
 			$this->echoPrint(true, ' count child locations');
 		} 
@@ -92,7 +92,7 @@ class locationList extends _entityList{
 	}
 	
 	protected function listingQuickEdit(){
-		$this->base->idParent =$this->id;
+		$this->base->idParent =$this->idParent;
 		// new Location('ADD', 0, $this->id);
 		$quickEdit =$this->base->addForm();			
 		return $quickEdit;
@@ -104,11 +104,11 @@ class locationList extends _entityList{
 		 if ($this->idParent == -1){
 		 $this->echoPrint(true, 'fetching all','getListingRows');
 
-		 $sql = $this->sql->list($this->resultPage,$this->perPage);
+		 $sql = $this->base->sql->list($this->resultPage,$this->perPage);
 		 } else {
 		 $this->echoPrint(true, 'fetching children','getListingRows');
 
-		 $sql = $this->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
+		 $sql = $this->base->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
 		 //$l = new Location;
 		 //$sortKey = $l->getSortKey($this->idParent);
 		 }

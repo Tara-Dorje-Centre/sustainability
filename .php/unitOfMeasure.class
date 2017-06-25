@@ -155,11 +155,11 @@ class unitOfMeasure extends _entityType{
 	}
 	
 	public function collectPostValues(){
-		$this->id = $_POST['unitOfMeasureId'];
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->type = dbEscapeString($_POST['type']); 
-		$this->symbol = dbEscapeString($_POST['symbol']); 
-		$this->notes = dbEscapeString($_POST['notes']); 		
+		$this->f->id = $_POST['unitOfMeasureId'];
+		$this->f->name = dbEscapeString($_POST['name']); 
+		$this->f->type = dbEscapeString($_POST['type']); 
+		$this->f->symbol = dbEscapeString($_POST['symbol']); 
+		$this->f->notes = dbEscapeString($_POST['notes']); 		
 		$this->pageMode = $_POST['mode'];	
 	}
 
@@ -167,12 +167,12 @@ class unitOfMeasure extends _entityType{
 	
 			$sql = " UPDATE units_of_measure AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->name."', ";
-			$sql .= " p.type = '".$this->type."', ";
-			$sql .= " p.symbol = '".$this->symbol."', ";
+			$sql .= " p.name = '".$this->f->name."', ";
+			$sql .= " p.type = '".$this->f->type."', ";
+			$sql .= " p.symbol = '".$this->f->symbol."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.notes = '".$this->notes."' ";
-			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$sql .= " p.notes = '".$this->f->notes."' ";
+			$sql .= " WHERE p.id = ".$this->f->id."  ";			
 			$result = dbRunSQL($sql);
 
 	}
@@ -187,12 +187,12 @@ class unitOfMeasure extends _entityType{
 			$sql .= " symbol, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
+			$sql .= "'".$this->f->name."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->type."', ";
-			$sql .= "'".$this->symbol."', ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "'".$this->f->type."', ";
+			$sql .= "'".$this->f->symbol."', ";
+			$sql .= "'".$this->f->notes."') ";
 			
 			$result = dbRunSQL($sql);
 			

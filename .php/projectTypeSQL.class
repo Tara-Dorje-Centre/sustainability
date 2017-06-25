@@ -1,9 +1,11 @@
 ﻿<?php 
 
-class ProjectTypeSQL extends _entityTypeSQL{
+class projectTypeSQL extends _entityTypeSQL{
 
+public function __construct(){
+	$this->baseTable = 'project_types';
 
-public $baseTable = 'project_types';
+}
 
 }
 ?>

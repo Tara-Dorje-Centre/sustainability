@@ -22,7 +22,7 @@ class receiptType extends _entityType{
 		$this->sql = new receiptTypeSQL;
 		$this->links = new receiptTypeLinks();
 	}
-	
+	/*
 	public function saveUpdate(){
 	
 
@@ -62,7 +62,7 @@ class receiptType extends _entityType{
 			$this->id = dbInsertedId();
 		
 	
-	}
+	}*/
 	
 } 
 ?>

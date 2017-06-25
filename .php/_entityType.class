@@ -12,6 +12,16 @@ _entityTypeFields  notes, displayOrder
     public $notes;
 	public $displayOrder = 0;
 
+public function __construct(){
+    	$this->hasType = false;
+    	$this->hasCreated = true;
+    	$this->hasHighlight = true;
+    	$this->hasLocation = false;
+    	$this->hasParent = false;
+    	$this->hasProject = false;
+    }
+
+
 	public function setRowValues($row){
 		parent::setRowValues($row);
 		$this->notes = ($row["notes"]);
@@ -25,22 +35,29 @@ _entityTypeFields  notes, displayOrder
 	}
 	
 	public function listHeading(){
-		$heading = parent::listHeading();
+			$heading = parent::listHeading();
 		$heading .= wrapTh('Display Order');		
+
 		$heading .= wrapTh('Notes');
 		return $heading;
 	}
 	
 	public function listDetail(){
-		$detail = parent::listDetail();
+			$detail = parent::listDetail();
+	
 		$detail .= wrapTd($this->displayOrder);
+
 		$detail .= wrapTd($this->notes);
 		return $detail;
 	}
 	
 	public function displayDetail(){
-		$detail = parent::displayDetail();
+			$detail = parent::displayDetail();
+	
+	
 		$detail .= para('display-order', 'Display Order', $this->displayOrder);
+
+		
 		$detail .= para('notes', 'Notes', $this->notes);
 		return $detail;
 	}
@@ -145,7 +162,7 @@ class _entityType extends _entity{
 	
 	protected function saveUpdate(){
 
-			$sql = " UPDATE ".$this->sql->baseTable." AS base ";
+			$sql = " UPDATE ".$this->sql->getBaseTable()." AS base ";
 			$sql .= " SET ";
 			$sql .= " base.name = '".$this->f->name."', ";
 			$sql .= " base.description = '".$this->f->description."', ";
@@ -159,7 +176,7 @@ class _entityType extends _entity{
 	}
 	
 	protected function saveInsert(){
-			$sql = " INSERT INTO ".$this->sql->baseTable;
+			$sql = " INSERT INTO ".$this->sql->getBaseTable();
 			$sql .= " (name, ";
 			$sql .= " created, ";
 			$sql .= " updated, ";
@@ -179,6 +196,7 @@ class _entityType extends _entity{
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
+			$this->f->id = $this->id;
 	}
 	
 		

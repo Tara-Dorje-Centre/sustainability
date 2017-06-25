@@ -7,9 +7,9 @@ idType, idParent,
 
 _entityTypeFields  notes, displayOrder
 ****/
-	public $locationId = 0;
-	    public $locationName;
-   
+	//public $idLocation = 0;
+	//public $nameLocation;
+  
     public $summary;
     public $started;
     public $pctDone = 0;	
@@ -19,16 +19,20 @@ _entityTypeFields  notes, displayOrder
 	public $purpose;	
 	public $showAlways = 'yes';
 	
-	public function __construct(){
-		parent::__construct(true, true);
-	}
+public function __construct(){
+    	$this->hasType = true;
+    	$this->hasCreated = false;
+    	$this->hasHighlight = true;
+    	$this->hasLocation = true;
+    	$this->hasParent = true;
+    	$this->hasProject = false;
+    }
 	
 	public function setRowValues($row){
 		parent::setRowValues($row);
 			
-			
-			$this->locationId = $row["location_id"];
-			$this->locationName = ($row['location_name']);
+			//$this->idLocation = $row["location_id"];
+			//$this->nameLocation = ($row['location_name']);
 			
 			$this->summary = ($row["summary"]);
 			$this->started = ($row["started"]);	
@@ -57,19 +61,19 @@ _entityTypeFields  notes, displayOrder
 	public function listHeading(){
 		$heading = parent::listHeading();
 		
-		$heading = wrapTh('Location');
+		//$heading .= wrapTh('Location');
 		$heading .= wrapTh('Priority');
 		$heading .= wrapTh('%Done');
-		$heading .= wrapTh('Notes');
+
 		return $heading;
 	}
 	
 	public function listDetail(){
 		$detail = parent::listDetail();
-		$detail .=  wrapTd($this->locationName);
+		//$detail .=  wrapTd($this->nameLocation);
 		$detail .=  wrapTd($this->priority);
 		$detail .=  wrapTd($this->pctDone);
-		$detail .= wrapTd($this->description);
+
 
 		return $detail;
 	}
@@ -77,7 +81,7 @@ _entityTypeFields  notes, displayOrder
 	public function displayDetail(){
 		$detail = parent::displayDetail();
 
-		$detail .= para('location','Location', $this->locationName);
+		//$detail .= para('location','Location', $this->nameLocation);
 		$detail .= para('priority', 'Priority', $this->priority);
 		$detail .= para('started', 'Started', $this->started);
 		$detail .= para('pct-done', '% Done', $this->pctDone);
@@ -97,41 +101,94 @@ class summary{
 	public $actual = 0;
 	public $pctDone = 0;
 	protected $info = '';
+	public $isProject = false;
+	public $isTask = false;
 	
-	public function setDisplay(){
-	
-	
+	public function setProjectTotals($id){
+		$this->isProject = true;
 	}
 	
+	public function setTaskTotals($id){
+		$this->isTask = true;
+		
+	}
+		
 	public function display(){
-		return $this->info;
+		return 'Summary.Display';
 	}
 }
 
 class summaryEffort extends summary{
 
+
+	public function setProjectTotals($id){
+		$this->isProject = true;
+		$s = new TaskSQL;
+		$sql = $s->summaryProject($id);
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+	
+			$this->estimated = $row["sum_hours_estimated"];
+			$this->actual = $row["sum_hours_actual"];	
+			$this->pctDone = $row["overall_pct_done"];			
+			$this->count = $row["total_tasks"];	
+		}
+		$result->close();
+		}
+		
+	}
+	
+	public function setTaskTotals($id){
+			$this->isTask = true;
+		$s = new ActivitySQL;
+		$sql = $s->summaryTask($id);
+		
+		$result = dbGetResult($sql);
+		if ($result){
+		while ($row = $result->fetch_assoc())
+		{
+			$this->count = $row["total_activities"];	
+			$this->actual = $row["total_hours_actual"];
+			$this->estimated = $row["total_hours_estimated"];
+		}
+		$result->close();
+		}
+		
+	}
+	
 	public function display(){
 
 		$effort = openTable('hours-info','displayListTable');
-		if ($this->count = 0){
-			$item = wrapTh('No Tasks Created');
+		
+		
+		if ($this->isProject == true){
+			$noCount = 'No Tasks Created';
+			$h = 'Tasks';
+		} else {
+			$noCount = 'No Activity History';
+			$h = 'Activities';
+		}
+		if ($this->count == 0){
+			$item = wrapTh($noCount);
 			$effort .= wrapTr($item);
 		} else {
-			if ($this->actual == 0){
-				$item = wrapTh('No Activity History');
-				$effort .= wrapTr($item);				
-			} else {
-				$heading = wrapTh('Tasks');
+			
+				$heading = wrapTh($h);
 				$heading .= wrapTh('Estimated Hours');
 				$heading .= wrapTh('Actual Hours');
-				$heading .= wrapTh('% Done');
+				if ($this->isProject == true){
+					$heading .= wrapTh('% Done');
+				}
 				$effort .= wrapTr($heading);
 				$row = wrapTd($this->count);
 				$row .= wrapTd($this->estimated);
 				$row .= wrapTd($this->actual);
-				$row .= wrapTd($this->pctDone);
+				if ($this->isProject == true){
+					$row .= wrapTd($this->pctDone);
+				}
 				$effort .= wrapTr($row);
-			}
 		}
 		$effort .= closeTable();
 		return $effort;		
@@ -140,6 +197,7 @@ class summaryEffort extends summary{
 } 
 
 class summaryCost extends summary{
+
 	public function display(){
 
 		$costs = openTable('cost-info','displayListTable');
@@ -147,8 +205,8 @@ class summaryCost extends summary{
 		if ($this->count > 0){
 
 			$item = wrapTh('Items');
-			$item = wrapTh('Actual');
-			$item = wrapTh('Estimated');
+			$item .= wrapTh('Actual');
+			$item .= wrapTh('Estimated');
 		 	$costs .= wrapTr($item);
 			$item = wrapTd($this->count);
 			$item .= wrapTd($this->actual);
@@ -163,26 +221,126 @@ class summaryCost extends summary{
 	}
 }
 
-class summaryProject{
+class summaryMaterials extends summaryCost{
+
+	public function setProjectTotals($id){
+	
+		$this->isProject = true;
+		$s = new MaterialSQL;
+		$sql = $s->summaryProject($id, 'yes');
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$this->count = $row["total_materials"];
+			$this->actual = $row["sum_cost_actual"];
+			$this->estimated = $row["sum_cost_estimated"];
+		}
+		$result->close();
+		}
+
+	}
+	
+	public function setTaskTotals($id){
+		$this->isTask = true;
+		$s = new MaterialSQL;
+		$sql = $s->summaryTask($id);
+		
+		$result = dbGetResult($sql);
+		if ($result){
+		while ($row = $result->fetch_assoc())
+		{
+			$this->count = $row["total_materials"];	
+			$this->actual = $row["sum_cost_actual"];
+			$this->estimated = $row["sum_cost_estimated"];
+		}
+		$result->close();
+		}
+	
+	
+		
+	}
+}
+
+class summaryReceipts extends summaryCost{
+
+	public function setProjectTotals($id){
+		$this->isProject = true;
+		
+		$s = new ReceiptSQL;
+		$sql = $s->summaryProject($id, 'yes');
+
+		$result = dbGetResult($sql);
+
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$this->count = $row["total_receipts"];
+			$this->actual = $row["sum_cost_actual"];
+			$this->estimated = $row["sum_cost_estimated"];
+		}
+		$result->close();
+		}
+
+	}
+	
+	public function setTaskTotals($id){
+		$this->isTask = true;
+	
+		$s = new ReceiptSQL;
+		$sql = $s->summaryTask($this->id);
+		
+		$result = dbGetResult($sql);
+		if ($result){
+		while ($row = $result->fetch_assoc())
+		{
+			$this->count = $row["total_receipts"];	
+			$this->actual = $row["sum_cost_actual"];
+			$this->estimated = $row["sum_cost_estimated"];
+		}
+		$result->close();
+		}
+		
+	 
+	 
+	 
+	}
+}
+
+class summaryTotals{
 	public $tasks;
 	public $materials;
 	public $receipts;
 	public function __construct(){
 		$this->tasks = new summaryEffort();
-		$this->materials = new summaryCost();
-		$this->receipts = new summaryCost();
+		$this->materials = new summaryMaterials();
+		$this->receipts = new summaryReceipts();
 	}
-		
+	
+	
+	public function setProjectTotals($id){
+		$this->tasks->setProjectTotals($id);
+		if ($this->tasks->count > 0){
+		$this->materials->setProjectTotals($id);
+		$this->receipts->setProjectTotals($id);	
+		}
+	}
+	
+	public function setTaskTotals($id){
+		$this->tasks->setTaskTotals($id);
+		$this->materials->setTaskTotals($id);
+		$this->receipts->setTaskTotals($id);	
+	}
+	
 	public function display(){
 	
 		$effortAndCost = openTable('effort-and-cost','displayListTable');
-		$row = wrapTd($this->tasks->display,30);
-		$row .= wrapTd($this->materials->display,30);
-		$row .= wrapTd($this->receipts->display,30);
-
-		$effortAndCost .= wrapTr($row);
+		$effortAndCost .= wrapTr(wrapTd($this->tasks->display()));
+		$effortAndCost .= wrapTr(wrapTd($this->materials->display()));
+		$effortAndCost .= wrapTr(wrapTd($this->receipts->display()));
 		$effortAndCost .= closeTable();
-		$detail .= captionedParagraph('effort-and-cost','Time, Materials and Receipts',$effortAndCost);		
+		$detail = para('effort-and-cost','Time, Materials and Receipts',$effortAndCost);		
 		return $detail;	
 	}
 }
@@ -203,7 +361,7 @@ class project extends _entity{
 		$this->f = new projectFields;
 		$this->sql = new projectSQL;
 		$this->links = new projectLinks;
-		$this->totals = new summaryProject;
+		$this->totals = new summaryTotals;
 	}
 	
     public function setDetails(){
@@ -228,51 +386,11 @@ class project extends _entity{
 				$result->close();
 			}
 		
-			$this->setTaskSummary();
+			$this->totals->setProjectTotals($this->f->id);
 			
 		}
 	}	
 	
-	
-	private function setMaterialSummary(){
-	
-	$this->echoValue(true, 'tasksCount', $this->tasksCount,'setMaterialSummary');
-	
-		$s = new MaterialSQL;
-		$sql = $s->summaryProject($this->id, 'yes');
-
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{	
-			$this->totals->materials->count = $row["total_materials"];
-			$this->totals->materials->actual = $row["sum_cost_actual"];
-		}
-		$result->close();
-		}
-		$this->echoValue(true, 'materialsCount', $this->totals->materials->count);
-
-		//$this->setMaterialSummaryByType();	
-	}
-	
-
-	private function setReceiptSummary(){
-		$s = new ReceiptSQL;
-		$sql = $s->summaryProject($this->id, 'yes');
-
-		$result = dbGetResult($sql);
-
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{	
-			$this->totals->receipts->count = $row["total_receipts"];
-			$this->totals->receipts->actual = $row["sum_cost_actual"];
-		}
-		$result->close();
-		}
-
-		//$this->setReceiptSummaryByType();	
-	}
 	
 	private function setReceiptSummaryByType(){
 
@@ -312,37 +430,10 @@ class project extends _entity{
 
 
 	
-	private function setTaskSummary(){
-		$this->echoValue(true, 'tasksCount', $this->tasksCount, 'setTaskSummary');
-		$s = new TaskSQL;
-		$sql = $s->summaryProject($this->id);
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{	
-	//printLine('project.taskSummary in fetch row.total_tasks['.$row["total_tasks"].']');
-			$this->totals->tasks->estimated = $row["sum_hours_estimated"];
-			$this->totals->tasks->actual = $row["sum_hours_actual"];	
-			$this->totals->tasks->pctDone = $row["overall_pct_done"];			
-			$this->totals->tasks->count = $row["total_tasks"];	
-		}
-		$result->close();
-		}
-
-		//$this->echoValue(true, 'tasksCount', $this->tasksCount, 'setTaskSummary');
-		
-		
-		if ($this->totals->tasks->count > 0){
-			$this->setMaterialSummary();
-			$this->setReceiptSummary();		
-		}
-		
-	}
-	
 	protected function setPageTitle(){
 
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->name;
+			$heading = $this->f->name;
 		} else {
 			$heading = 'Add New Project';
 		}
@@ -396,7 +487,7 @@ class project extends _entity{
 	
 	
 	public function display(){
-		$detail = openDisplayDetails('entity', $this-> $_titleEntity.':  Details');
+		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
 		$detail .= $this->f->displayDetail();
 		$detail .= $this->totals->display();
 
@@ -477,11 +568,11 @@ class project extends _entity{
 		
 		
 		//start required fields
-		$fields = inputFieldName($entity,$this->name,'name','Project');
+		$fields = inputFieldName($entity,$this->f->name,'name','Project');
 		
 		
 		$pt = new ProjectType('OPTIONS');
-		$select = $pt->options($this->typeId,'projectTypeId','false',false);
+		$select = $pt->options($this->f->idType,'idType','false',true);
 		$fields .= captionedInput('Project Type', $select);
 		
 
@@ -490,43 +581,45 @@ class project extends _entity{
 		$formRequired = $fields;
 
 		//start optional fields
-		$fields = inputFieldDescription($entity,$this->description,'description');
+		$fields = inputFieldDescription($entity,$this->f->description,'description');
 
-		$l = new Location('OPTIONS', $this->locationId,-1);
-		$select = $l->options($this->locationId,'locationId','false',false);
+		$l = new Location('OPTIONS');
+		$select = $l->options($this->f->idLocation,'idLocation','false',true);
 		$fields .= captionedInput('Location', $select);
 
 
-		$fields .= inputFieldTimestamp($entity, 'started', $this->started, 'Start Date'); 		
+		$fields .= inputFieldTimestamp($entity, 'started', $this->f->started, 'Start Date'); 		
 
-		$fields .= inputFieldNumber($entity,$this->priority,'priority','Priority');
+		$fields .= inputFieldNumber($entity,$this->f->priority,'priority','Priority');
 
-		$fields .= inputFieldNumber($entity,$this->pctDone,'pctDone','% Done');
+		$fields .= inputFieldNumber($entity,$this->f->pctDone,'pctDone','% Done');
 
 						
-		$input = getSelectYesNo('showAlways', $this->showAlways);
+		$input = getSelectYesNo('showAlways', $this->f->showAlways);
 		$fields .= captionedInput('Show in calendar', $input);
 
 
-		$fields .= inputFieldDescription($entity,$this->purpose,'purpose','Purpose');
+		$fields .= inputFieldDescription($entity,$this->f->purpose,'purpose','Purpose');
 					
-		$fields .= inputFieldComments($entity,$this->summary,'summary','Summary');
-				
+		$fields .= inputFieldComments($entity,$this->f->summary,'summary','Summary');
 		
+				$fields .= inputFieldComments($entity,$this->f->goals,'goals','Goals');		
+			
+				$fields .= inputFieldComments($entity,$this->f->lessons,'lessons','Lessons');
 		
-		//$input = getTextArea('projectGoals', $this->goals, 1000);
-		//$form .= formInputRow($input, 'Goals');
+	/*	$input = getTextArea('goals', $this->f->goals, 1000);
+		$form .= formInputRow($input, 'Goals');
 		
-		//$input = getTextArea('projectLessonsLearned', $this->lessons, 1000);
-		//$form .= formInputRow($input, 'Lessons Learned');
-		
+		$input = getTextArea('lessons', $this->f->lessons, 1000);
+		$form .= formInputRow($input, 'Lessons Learned');
+		*/
 		//end optional fields (hidden by default)
 		$formOptional = $fields;
 		
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('parentId', $this->idParent);
-		$hidden .= getHiddenInput('projectId', $this->id);
+		$hidden .= getHiddenInput('idParent', $this->f->idParent);
+		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 
@@ -536,19 +629,19 @@ class project extends _entity{
 	
 	public function collectPostValues(){
 		$this->echoState(true, 'collectPostValues');
-		$this->id = $_POST['projectId'];
-		$this->parentId = $_POST['parentId'];
-		$this->typeId = $_POST['projectTypeId'];
-		$this->locationId = $_POST['locationId'];		
-		$this->name = dbEscapeString($_POST['name']); 
-		$this->description = dbEscapeString($_POST['description']); 
-		//$this->goals = dbEscapeString($_POST['projectGoals']); 
-		$this->summary = dbEscapeString($_POST['summary']); 
-		//$this->lessons = dbEscapeString($_POST['projectLessonsLearned']); 
-		$this->started = getTimestampPostValues('started');
-		$this->priority = $_POST['priority']; 
-		$this->pctDone = $_POST['pctDone']; 
-		$this->purpose = dbEscapeString($_POST['purpose']); 
+		$this->id = $_POST['id'];
+		$this->f->idParent = $_POST['idParent'];
+		$this->f->idType = $_POST['idType'];
+		$this->f->idLocation = $_POST['idLocation'];		
+		$this->f->name = dbEscapeString($_POST['name']); 
+		$this->f->description = dbEscapeString($_POST['description']); 
+		$this->f->goals = dbEscapeString($_POST['goals']); 
+		$this->f->summary = dbEscapeString($_POST['summary']); 
+		$this->f->lessons = dbEscapeString($_POST['lessons']); 
+		$this->f->started = getTimestampPostValues('started');
+		$this->f->priority = $_POST['priority']; 
+		$this->f->pctDone = $_POST['pctDone']; 
+		$this->f->purpose = dbEscapeString($_POST['purpose']); 
 		$this->showAlways = $_POST['showAlways']; 
 		
 		$this->pageMode = $_POST['mode'];	
@@ -558,13 +651,13 @@ class project extends _entity{
 		
 		//refresh current project task summary values
 		$this->setTaskSummary();
-		if ($this->tasksCount > 0){
+		if ($this->totals->tasks->count > 0){
 		
 			$sql = " update projects p ";
-			$sql .= " set p.pct_done = ".$this->tasksPctDone.", ";
+			$sql .= " set p.pct_done = ".$this->totals->tasks->pctDone.", ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.hours_estimated = ".$this->tasksHoursEstimated.",  ";
-			$sql .= " p.hours_actual = ".$this->tasksHoursActual." ";
+			$sql .= " p.hours_estimated = ".$this->totals->tasks->estimated.",  ";
+			$sql .= " p.hours_actual = ".$this->totals->tasks->actual." ";
 			$sql .= " where p.id = ".$this->id." ";
 			
 			$result = dbRunSQL($sql);
@@ -596,18 +689,19 @@ class project extends _entity{
 	
 			$sql = " UPDATE projects AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->name."', ";
-			$sql .= " p.location_id = ".$this->locationId.", ";
-			$sql .= " p.priority = ".$this->priority.", ";
-			$sql .= " p.pct_done = ".$this->pctDone.", ";
-			$sql .= " p.started = '".$this->started."', ";			
+			$sql .= " p.name = '".$this->f->name."', ";
+			$sql .= " p.location_id = ".$this->f->idLocation.", ";
+			$sql .= " p.priority = ".$this->f->priority.", ";
+			$sql .= " p.pct_done = ".$this->f->pctDone.", ";
+			$sql .= " p.started = '".$this->f->started."', ";			
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.description = '".$this->description."', ";
-			$sql .= " p.show_always = '".$this->showAlways."', ";
-			$sql .= " p.type_id = ".$this->typeId.", ";
-			$sql .= " p.purpose = '".$this->purpose."', ";
-			//$sql .= "`p`.`lessons_learned = '".$this->lessons."', ";
-			$sql .= " p.summary = '".$this->summary."' ";
+			$sql .= " p.description = '".$this->f->description."', ";
+			$sql .= " p.show_always = '".$this->f->showAlways."', ";
+			$sql .= " p.type_id = ".$this->f->idType.", ";
+			$sql .= " p.purpose = '".$this->f->purpose."', ";
+			$sql .= " p.goals = '".$this->f->goals."', ";
+			$sql .= " p.lessons_learned = '".$this->f->lessons."', ";
+			$sql .= " p.summary = '".$this->f->summary."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			
 			$result = dbRunSQL($sql);
@@ -618,28 +712,28 @@ class project extends _entity{
 	
 			$sql = " INSERT INTO projects ";
 			$sql .= " (name, ";
-			//$sql .= " parent_id, ";
+			$sql .= " parent_id, ";
 			$sql .= " location_id, ";
 			$sql .= " started, ";
 			$sql .= " updated, ";
 			$sql .= " description, ";
 			$sql .= " summary, ";
-			//$sql .= " lessons_learned, ";
+			$sql .= " lessons_learned, ";
 			$sql .= " show_always, ";
 			$sql .= " type_id, ";
 			$sql .= " purpose) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
-			//$sql .= " ".$this->parentId.", ";
-			$sql .= " ".$this->locationId.", ";
-			$sql .= " '".$this->started."', ";
+			$sql .= "'".$this->f->name."', ";
+			$sql .= " ".$this->idParent.", ";
+			$sql .= " ".$this->f->idLocation.", ";
+			$sql .= " '".$this->f->started."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->description."', ";
-			$sql .= "'".$this->summary."', ";
-			//$sql .= "'".$this->lessons."', ";
-			$sql .= "'".$this->showAlways."', ";
-			$sql .= " ".$this->typeId.", ";
-			$sql .= "'".$this->purpose."') ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= "'".$this->f->summary."', ";
+			$sql .= "'".$this->f->lessons."', ";
+			$sql .= "'".$this->f->showAlways."', ";
+			$sql .= " ".$this->f->idType.", ";
+			$sql .= "'".$this->f->purpose."') ";
 			
 			$result = dbRunSQL($sql);
 			

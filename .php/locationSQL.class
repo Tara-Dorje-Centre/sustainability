@@ -1,13 +1,17 @@
 <?php
 
 class locationSQL extends _entitySQL{
+public function __construct(){
+		$this->baseTable = 'locations';
+		$this->typeTable = 'location_types';
+
+}
 
 
-	public $baseTable = 'locations';
-	public $typeTable = 'location_types';
 
 
-protected function columns(){
+
+protected function cols(){
 $c = $this->select();
 	$c .=  " l.id, ";
 	$c .= " l.parent_id, ";
@@ -25,7 +29,7 @@ $c = $this->select();
 
 
 
-public function tables($joinTypes = true){
+protected function tables($joinTypes = true){
 $q = " FROM locations as l ";
 if ($joinTypes == true){
 $q .= " LEFT OUTER JOIN location_types as t ON l.type_id = t.id ";
@@ -37,8 +41,8 @@ return $q;
 
 public function list($page = 1, $rows = 10){
 
-	$q .= $this->columns();
-	$q .= $this->tables();
+	$q = $this->cols();
+	$q .= $this->tables(true);
 	
 	$q .= " ORDER BY l.sort_key ";
 
@@ -49,8 +53,8 @@ public function list($page = 1, $rows = 10){
 
 public function listChildren($idParent, $page = 1, $rows = 10){
 
-	$q .= $this->columns();
-	$q .= $this->tables();
+	$q .= $this->cols();
+	$q .= $this->tables(true);
 	//if ($idParent != -1){
 	$q .= " WHERE l.parent_id = ".$idParent." "; 
 	//} 
@@ -116,20 +120,19 @@ public function countByParentSortKey($sortKeyParent, $idParent){
 
 public function info($id){
 
-	$q .= $this->columns();
+	$q .= $this->cols();
 	$q .= $this->tables();
 	$q .= " WHERE l.id = ".$id." "; 
 	return $q;
 }
 
-public function options($selectedId = 0, $disabled = 'false'){
+public function options(){
+
 	$q = " SELECT ";
 	$q .= " l.id as value, ";
 	$q .= " l.sort_key as caption ";
 	$q .= $this->tables();
-	if ($disabled == 'true'){
-		$q .= " WHERE l.id = ".$selectedId." ";
-	}
+	
 	$q .= " ORDER BY caption ";
 	return $q;	
 }

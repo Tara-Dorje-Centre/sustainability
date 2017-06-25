@@ -2,17 +2,20 @@
 
 class activitySQL extends _taskChildSQL{
 
+	public function __construct(){
+		$this->baseTable = 'activities';
+		$this->typeTable = 'activity_types';
+		$this->fieldDate = 'started';
+	}
 
-public $baseTable = 'activities';
-public $typeTable = 'activity_types';
-protected $fieldDate = 'started';
+
 
 protected function cols($first = true){
 $c = $this->select($first);
 $c .= " a.id,  ";
 $c .= " a.task_id,  ";
 $c .= " a.type_id, ";
-$c .= " t.name parent_name, ";
+$c .= " t.name task_name, ";
 $c .= " at.name type_name, ";
 $c .= " t.project_id, ";
 $c .= " p.name project_name, ";
@@ -20,7 +23,7 @@ $c .= " a.done_by,  ";
 $c .= " a.started,  ";
 $c .= " a.updated,  ";
 //$c .= " a.activity_order,  ";
-//$c .= " a.hours_estimated,  ";
+$c .= " a.hours_estimated,  ";
 $c .= " a.hours_actual,  ";
 $c .= " a.comments, ";
 $c .= " a.link_url, ";

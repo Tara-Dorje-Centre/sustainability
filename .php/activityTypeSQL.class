@@ -1,8 +1,12 @@
 ﻿<?php 
  
 class activityTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'activity_types';
 
-public $baseTable = 'activity_types';
+	}
+
+
 
 
 }

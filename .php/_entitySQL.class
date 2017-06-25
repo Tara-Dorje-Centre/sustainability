@@ -6,20 +6,27 @@ interface IentitySQL{
 	public function count();
 	public function list($page = 1, $rows = 10);
 	public function summary();
-	public function options($selectedId = 0, $disabled = 'false');
+	public function options();
+	
 }
 
 class _entitySQL extends  _baseEntitySQL implements IentitySQL{
-	public $baseTable = 'baseTable';
+	protected $baseTable = 'baseTable';
 	protected $fieldDate = 'date_reported';
 	protected $fieldApproved = 'approved';
 	protected $fieldDoneBy = 'done_by';
-	protected $fieldId = 'e.id';
-	protected $fieldTypeId = 'e.type_id';
-	protected $fieldParentId = 'e.parent_id';
+	protected $fieldId = 'id';
+	protected $fieldTypeId = 'type_id';
+	protected $fieldParentId = 'parent_id';
 	protected $fieldCount = 'count_details';
 	protected $fieldOptionCaption = 'caption';
 	protected $fieldOptionValue = 'value';
+
+public function getBaseTable(){
+return $this->baseTable;
+}
+
+
 
 	protected function cols(){
 		$c = $this->select();
@@ -77,7 +84,7 @@ class _entitySQL extends  _baseEntitySQL implements IentitySQL{
 	}
 
 	protected function tables($joinTypes = false){
-		$f = " FROM ".$this->baseTable." as e ";
+		$f = " FROM ".$this->baseTable." ";
 		return $f;
 	}
 
@@ -135,7 +142,7 @@ class _entitySQL extends  _baseEntitySQL implements IentitySQL{
 
 	public function info($id = 0){
 		$q = $this->cols();
-		$q .= $this->tables();
+		$q .= $this->tables(true);
 		$q .= $this->whereId($id);
 		return $q;
 	}
@@ -157,7 +164,7 @@ class _entitySQL extends  _baseEntitySQL implements IentitySQL{
 
 	public function summary(){
 		$q = $this->colsSummary();
-		$q .= $this->tables(false);
+		$q .= $this->tables(true);
 		return $q;
 	} 
 	
@@ -179,12 +186,13 @@ class _entitySQL extends  _baseEntitySQL implements IentitySQL{
 	return $q;
 	}
 
-	public function options($selectedId = 0, $disabled = 'false'){
+	public function options(){
+	//$selectedId = 0, $disabled = 'false'){
 	$q = $this->colsOption(true);
 	$q .= $this->tables(true);
-	if ($selectedId > 0){
+	/*if (($selectedId > 0) && ($disabled != 'false')){
 		$q .= $this->whereId($selectedId);
-	}
+	}*/
 	$q .= $this->orderBy()." caption ";
 	return $q;	
 	}

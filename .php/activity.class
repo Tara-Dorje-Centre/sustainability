@@ -24,9 +24,14 @@ _entityTypeFields  notes, displayOrder
 	public $linkText;
 	//public $highlightStyle
 	
-public function __construct(){
-		parent::construct(true);
-	}
+    public function __construct(){
+    	$this->hasType = true;
+    	$this->hasCreated = false;
+    	$this->hasHighlight = true;
+    	$this->hasLocation = false;
+    	$this->hasParent = false;
+    	$this->hasProject = false;
+    }
 	
 	public function setRowValues($row){
 			//$this->id = $row["id"];

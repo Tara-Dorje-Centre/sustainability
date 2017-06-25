@@ -1,8 +1,10 @@
 ﻿<?php 
 
 class taskTypeSQL extends _entityTypeSQL{
+public function __construct(){
+	$this->baseTable = 'task_types';
 
-	public $baseTable = 'task_types';
+}
 
 protected function cols(){
 $c = parent::cols();

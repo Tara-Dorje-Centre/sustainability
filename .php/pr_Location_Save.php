@@ -6,7 +6,7 @@ $p->collectPostValues();
 $p->saveChanges();
 
 $_GET['pageAction'] = 'VIEW';
-$_GET['locationId'] = $p->id;
+$_GET['id'] = $p->id;
 
 include_once("pr_Location_Detail.php");
 ?>
