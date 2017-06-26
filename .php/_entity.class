@@ -8,43 +8,48 @@ class _entityFields{
 	 idType, idParent,
 	 ****/
 
-	public $id;	
+	public $id = 0;
 	public $name;		
 	public $description;
 	
     public $hasCreated = true;
+        public $listCreated = true;
 	public $created;
     public $hasUpdated = true;
+            public $listUpdated = true;
     public $updated;
     
     public $hasHighlight = true;
+    public $listHighlight = true;
 	public $highlightStyle = 'none';
     
     public $hasType = true;
-	public $idType;
+    public $listType = true;
+	public $idType = 0;
 	public $nameType;
 	
 	public $hasLocation = false;
+	public $listLocation = false;
 	public $idLocation;
 	public $nameLocation;
 	 
     public $hasParent = false;
-   	public $idParent;
+    public $listParent = false;
+   	public $idParent = 0;
    	public $nameParent;
    	
    	public $hasProject = false;
    	public $listProject = false;
-   	public $idProject;
+   	public $idProject = 0;
    	public $nameProject;
 	
-	 
+	public $hasTask = false;
+   	public $listTask = false;
+   	public $idTask = 0;
+   	public $nameTask;
+	
     public function __construct(){
-    	$this->hasType = true;
-    	$this->hasCreated = true;
-    	$this->hasHighlight = true;
-    	$this->hasLocation = false;
-    	$this->hasParent = false;
-    	$this->hasProject = false;
+
     }
     
     protected function reset(){
@@ -56,6 +61,7 @@ class _entityFields{
 		if ($this->hasHighlight == true){
 			$this->highlightStyle = 'none';
 		}
+		
 		$this->created = '';	
 		$this->updated = '';
 		if ($this->hasType == true){
@@ -66,7 +72,21 @@ class _entityFields{
 			$this->idParent = 0;
 			$this->nameParent = '';
 		}
+		
+		if ($this->hasLocation == true){
+			$this->idLocation = 0;
+			$this->nameLocation = '';
+		}
     
+    	if ($this->hasProject == true){
+			$this->idProject = 0;
+			$this->nameProject = '';
+		}
+		
+    	if ($this->hasTask == true){
+			$this->idTask = 0;
+			$this->nameTask = '';
+		}
     }
     
 	public function setRowValues($row){
@@ -101,6 +121,10 @@ class _entityFields{
 			$this->nameLocation = ($row["location_name"]);
 		}
 			
+		if ($this->hasTask == true){
+			$this->idTask = $row["task_id"];
+			$this->nameTask = $row["task_name"];
+		}
 		
 		
 	}
@@ -119,23 +143,27 @@ class _entityFields{
 	
 	
 	public function listHeading(){
-		//$heading = wrapTh('Name');
-		$heading = wrapTh('Description');
+		$heading = wrapTh('Id');
+		$heading .= wrapTh('Name');
+		$heading .= wrapTh('Description');
 		
-		if ($this->hasType == true){
+		if ($this->listType == true){
 			$heading .= wrapTh('Type');
 		}
-		if ($this->hasLocation == true){
+		if ($this->listLocation == true){
 			$heading .= wrapTh('Location');
 		}
-		if ($this->hasProject == true){
+		if ($this->listProject == true){
 			$heading .= wrapTh('Project');
 		}
-		if ($this->hasParent == true){
+		if ($this->listTask == true){
+			$heading .= wrapTh('Task');
+		}
+		if ($this->listParent == true){
 			$heading .= wrapTh('Parent');
 		}
-		if ($this->hasHighlight == true){
-			$heading .= wrapTh('Highlight Style');
+		if ($this->listHighlight == true){
+			$heading .= wrapTh('Highlight');
 		}
 		
 		return $heading;
@@ -144,27 +172,27 @@ class _entityFields{
 	public function listDetail(){
 		$this->formatForDisplay();
 		//use name in list item link
-		//$detail = wrapTd($this->name);
-		$detail =  wrapTd($this->description);		
+		$detail = wrapTd($this->id);
+		$detail .= wrapTd($this->name);
+		$detail .=  wrapTd($this->description);		
 		
-		
-		if ($this->hasType == true){
+		if ($this->listType == true){
 			$detail .=  wrapTd($this->nameType);			
 		}
-		
-		if ($this->hasLocation == true){
+		if ($this->listLocation == true){
 			$detail .=  wrapTd($this->nameLocation);			
 		}
 		
-	 	if ($this->hasProject == true){
+	 	if ($this->listProject == true){
 		 $detail .= wrapTd($this->nameProject);		
 		}
-		 
-		if ($this->hasParent == true){
+		if ($this->listTask == true){
+		 $detail .= wrapTd($this->nameTask);		
+		}
+		if ($this->listParent == true){
 			$detail .=  wrapTd($this->nameParent);			
 		}
-		
-	 	if ($this->hasHighlight == true){
+	 	if ($this->listHighlight == true){
 		 $detail .= wrapTd($this->highlightStyle);		
 		}
 		
@@ -192,10 +220,12 @@ class _entityFields{
 		if ($this->hasProject == true){
 			$detail .= para('project', 'Project', $this->nameProject);
 		}
+		if ($this->hasTask == true){
+			$detail .= para('task', 'Task', $this->nameProject);
+		}
 		if ($this->hasParent == true){
 			$detail .= para('parent', 'Parent', $this->nameParent);
 		}
-		
 		
 		return $detail;
 	}
@@ -370,142 +400,5 @@ class _entity extends _baseEntity{
 	
 }
 
-class _baseEntity extends _echo {
-	protected $__MyClassName = '__baseEntity.';
-	protected $_titleEntity = '__baseEntity';
-
-	public const VIEW = 'VIEW';
-	public const EDIT = 'EDIT';
-	public const ADD = 'ADD';
-	public const COPY = 'COPY';
-	public const FETCH = 'FETCH';
-	public const OPTIONS = 'OPTIONS';
-	public const COUNT = 'COUNT';
-	public const LIST = 'LIST';
-	public const SUMMARY= 'SUMMARY';
-		
-    public $pageMode = 'VIEW';
-	public $id = 0;
-	public $idParent = 0;
-
-	protected $isPagingSet = false;
-	public $resultPage = 1;
-	public $perPage = 10;
-	 
-	protected $isCalendarSet = false;
-	public $month = -1;
-	public $year = -1;
-	public $showCalendar = 'NO';
-	
-	public $prevCalendarLink = '';
-	public $nextCalendarLink = '';
-	
-	public $countAll = 0;
-	public $countChildren = 0;
-	public $isCountSet = false;
-	
-	protected $_pageTitle = 'entity.pageTitle';
-	protected $_pageMenu = 'entity.pageMenu';
-	
-	protected function echoState($show = true, $f = '-use-current-', $c= '-use-current-'){
-		if ($show == true){
-			$this->echoState_ids($show, $f, $c);
-			$this->echoState_paging($show, $f, $c);
-			$this->echoState_calendar($show, $f, $c);
-			$this->echoState_count($show, $f, $c);
-		}
-	}
-	
-	protected function echoState_ids($show = true, $f = '-use-current-', $c= '-use-current-'){
-		$this->echoLocale($f, $c);
-		$s = $show;
-		$this->echoValue($s, 'id', $this->id);
-		$this->echoValue($s, 'idParent', $this->idParent);
-		$this->echoValue($s, 'pageMode', $this->pageMode);
-	}
-	
-	protected function echoState_calendar($show = true, $f = '-use-current-', $c= '-use-current-'){
-
-		if ($this->isCalendarSet == true){
-			$s = $show;
-			$this->echoLocale($f, $c);
-			$this->echoValue($s, 'month', $this->month);
-			$this->echoValue($s, 'year', $this->year);
-			$this->echoValue($s, 'showCalendar', $this->showCalendar);
-		}
-	}
-	
-	protected function echoState_count($show = true, $f = '-use-current-', $c= '-use-current-'){
-
-		if ($this->isCountSet == true){
-			$s = $show;
-			$this->echoLocale($f, $c);
-			$this->echoValue($s, 'count', $this->count);
-			$this->echoValue($s, 'countChilden', $this->countChildren);
-		}
-	}
-	
-	
-	protected function echoState_paging($show = true, $f = '-use-current-', $c= '-use-current-'){
-
-		if ($this->isPagingSet == true){
-			$s = $show;
-			$this->echoLocale($f, $c);
-			$this->echoValue($s, 'resultPage', $this->resultPage);
-			$this->echoValue($s, 'perPage', $this->perPage);
-		}
-	}
-    
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0, $page = 1, $rows = 10, $year = -1, $month = -1, $calendar = 'NO'){
-		$this->setIdentifiers($mode, $id, $idParent);
-		$this->setPaging($page, $rows, $calendar);
-		$this->setCalendar($year, $month, $calendar);
-		//$this->echoState(true);
-	}
-
-
-	public function setPaging($page = 1, $perPage = 10){
-		$this->resultPage = $page;
-		$this->perPage = $perPage;
-		
-		$this->isPagingSet = true;
-		$this->echoState_paging(true, 'setPaging');
-	 }
-	 
-	public function setCalendar($year = -1, $month = -1, $show = 'NO'){
-		$this->showCalendar = $show;
-	
-		 if ($year != 0 && $year != -1){
-		 	$this->year = $year;
-		 	$this->month = $month;
-		 } else {
-		 //dates not set, use current month and year
-		 	global $sessionTime;
-		 	$this->year = getTimestampYear($sessionTime);
-		 	$this->month = getTimestampMonth($sessionTime);
-		 }
-		 
-		$this->isCalendarSet = true;
-		$this->echoState_calendar(true, 'setCalendar');
-	}
-	
-	protected function setCounts($count = 0, $countChildren = 0){
-		$this->countAll = $count;
-		$this->countChildren = $countChildren;
-		
-		$this->isCountSet = true;
-		$this->echoState_count(true, 'setCount');
-	}
-	
-	public function setIdentifiers($mode, $id = 0, $idParent = 0){
-		$this->pageMode = $mode;
-		$this->id = $id;
-		$this->idParent = $idParent;
-		$this->echoState_ids(true, 'setIdentifiers');
-	}
-
-
-	
-}
 
 ?>

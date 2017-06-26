@@ -15,7 +15,7 @@ _entityTypeFields  notes, displayOrder
 	public function __construct(){
     	$this->hasType = true;
     	$this->hasCreated = true;
-    	$this->hasHighlight = true;
+    	$this->hasHighlight = false;
     	$this->hasLocation = false;
     	$this->hasParent = true;
     	$this->hasProject = false;
@@ -156,7 +156,7 @@ public $f;
 		$this->echoState(true, 'options');
 		
 		
-		$sql = $this->base->sql->options();
+		$sql = $this->sql->options();
 		//selected, $disabled);
 		
 		$default = 0;
@@ -181,7 +181,7 @@ public $f;
 			if ($this->idParent == -1){
 				$this->idParent = 0;
 			}
-			
+			$this->f->idParent = $this->id;
 		}
 		
 		$this->echoState(true,'setAddDefaults');
@@ -215,7 +215,7 @@ public $f;
 
 						
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('idParent', $this->idParent);
+		$hidden .= getHiddenInput('idParent', $this->f->idParent);
 		$hidden .= getHiddenInput('id', $this->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $input.$hidden;
@@ -228,11 +228,10 @@ public $f;
 	
 			$this->echoState(true, 'collectPostValues');
 		$this->f->id = $_POST['id'];
+		$this->f->idParent = sessionVariablePOST('idParent', 0);
 		$this->id = $this->f->id;
-		
-		$this->f->idType = $_POST['idType'];
-		$this->f->idParent = sessionVariablePOST('idParent', $this->idParent);
 		$this->idParent = $this->f->idParent;
+		$this->f->idType = $_POST['idType'];
 		$this->f->name = dbEscapeString($_POST['name']); 
 		$this->f->description = dbEscapeString($_POST['description']); 		
 		$this->pageMode = $_POST['mode'];	
@@ -247,10 +246,11 @@ public $f;
 
 	private function updateSortKey(){
 
-		if ($this->idParent == 0){
-			$sortKey = $this->name;
+		if ($this->f->idParent == 0){
+			$sortKey = $this->f->name;
 		} else {
-			$sortKey = $this->f->sortKeyParent.'.'.$this->name;
+		$this->f->sortKeyParent = $this->getSortKey($this->f->idParent);
+			$sortKey = $this->f->sortKeyParent.'.'.$this->f->name;
 		}
 		
 		$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
@@ -281,7 +281,7 @@ public $f;
 			$sql .= " (name, ";
 			$sql .= " parent_id, ";
 			$sql .= " type_id, ";
-//			$sql .= " sort_key, ";
+//			//$sql .= " sort_key, ";
 			$sql .= " created, ";
 			$sql .= " updated, ";
 			$sql .= " description) ";

@@ -1,6 +1,6 @@
 ﻿<?php
 
-/*
+
 class _entityLinks extends _links {
 	//override to set entry points
 	protected $_captionBase = 'entity';
@@ -66,8 +66,8 @@ class _entityLinks extends _links {
 	}	
 	
 }
-*/
 
+/*
 class _entityTypeLinks extends _links {
 	protected $_captionBase = 'entityType';
 	//override to set entry points
@@ -137,5 +137,5 @@ class _entityTypeLinks extends _links {
 		return $links;
 	}	
 	
-}
+}*/
 ?>

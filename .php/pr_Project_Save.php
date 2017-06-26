@@ -6,7 +6,7 @@ $p->collectPostValues();
 $p->saveChanges();
 
 $_GET['pageAction'] = 'VIEW';
-$_GET['projectId'] = $p->id;
+$_GET['id'] = $p->id;
 
 include_once("pr_Project_Detail.php");
 ?>

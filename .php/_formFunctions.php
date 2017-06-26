@@ -195,24 +195,15 @@ function getPasswordInput($inputName, $size = 10, $maxLength = 50,$tooltip = 'En
 
 function getHiddenInput($inputName, $inputValue){
 
-
-return getTextInput($inputName, $inputValue, 20,20);
-	$e = new _element('input',$inputName, $inputName);
-	//$e->addAttribute('title',$tooltip);
-	//$e->addAttribute('maxlength',$maxLength);
-	//$e->addAttribute('size',$size);
-	//$e->addAttribute('cols',$cols);
-	
-	//if ($disabled != 'false'){
-		//$e->addAttribute('disabled',$disabled);
-	//}
-
-	//$e->addAttribute('type','hidden');
-	
+	$e = new _element('input',$inputName, 'editing-input-hidden');
+	$e->addAttribute('type','hidden');
 	$e->addAttribute('value',$inputValue);
+
+	$input = $e->empty();
+	$input .= $inputName.'['.$inputValue.']';
 	
-	return $e->empty();
-//
+	return $input;
+
 }
 
 
@@ -220,14 +211,7 @@ return getTextInput($inputName, $inputValue, 20,20);
 function getButton($inputType,$inputValue,$inputName){
 
 	$e = new _element('input',$inputName, 'editing-button');
-	$e->addAttribute('title',$tooltip);
-	$e->addAttribute('maxlength',$maxLength);
-	$e->addAttribute('size',$size);
-	$e->addAttribute('cols',$cols);
-	
-	if ($disabled != 'false'){
-		$e->addAttribute('disabled',$disabled);
-	}
+
 
 	$e->addAttribute('type',$inputType);
 	$e->addAttribute('value',$inputValue);

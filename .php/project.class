@@ -607,12 +607,7 @@ class project extends _entity{
 			
 				$fields .= inputFieldComments($entity,$this->f->lessons,'lessons','Lessons');
 		
-	/*	$input = getTextArea('goals', $this->f->goals, 1000);
-		$form .= formInputRow($input, 'Goals');
-		
-		$input = getTextArea('lessons', $this->f->lessons, 1000);
-		$form .= formInputRow($input, 'Lessons Learned');
-		*/
+	
 		//end optional fields (hidden by default)
 		$formOptional = $fields;
 		
@@ -629,8 +624,12 @@ class project extends _entity{
 	
 	public function collectPostValues(){
 		$this->echoState(true, 'collectPostValues');
-		$this->id = $_POST['id'];
+		$this->f->id = $_POST['id'];
 		$this->f->idParent = $_POST['idParent'];
+		$this->id = $this->f->id;
+		$this->idParent = $this->f->idParent;
+
+		
 		$this->f->idType = $_POST['idType'];
 		$this->f->idLocation = $_POST['idLocation'];		
 		$this->f->name = dbEscapeString($_POST['name']); 
@@ -645,6 +644,7 @@ class project extends _entity{
 		$this->showAlways = $_POST['showAlways']; 
 		
 		$this->pageMode = $_POST['mode'];	
+		
 	}
 
     public function UpdateTaskSummary(){

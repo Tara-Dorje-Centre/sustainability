@@ -21,10 +21,10 @@ include_once("_entitySQL.class");
 include_once("_entityTypeSQL.class");
 include_once("_projectChildSQL.class");
 include_once("_taskChildSQL.class");
-
+include_once("_baseEntity.class");
 include_once("_entity.class");
 include_once("_entityList.class");
-//include_once("_entityLinks.class");
+include_once("_entityLinks.class");
 include_once("_entityType.class");
 include_once("_entityTypeList.class");
 include_once("_entityTypeLinks.class");
