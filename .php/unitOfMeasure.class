@@ -48,17 +48,13 @@ _entityTypeFields  notes, displayOrder
 class unitOfMeasure extends _entityType{
 	protected $__MyClassName = 'UnitOfMeasure';
 	protected $_titleEntity = 'Unit of Measure';
-    
-  
-    public $f;
-	public $sql;
-	public $links;
+   
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->f = new unitOfMeasureFields();
-		$this->sql = new unitOfMeasureSQL;
-		$this->links = new unitOfMeasureLinks;
+		$this->sql = new unitOfMeasureSQL();
+		$this->links = new unitOfMeasureLinks();
 	}
 	
 	

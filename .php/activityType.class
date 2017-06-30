@@ -1,65 +1,20 @@
 ﻿<?php 
+class activityTypeFields extends _entityTypeFields{
 
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
-
-_entityTypeFields  notes, displayOrder
-****/
-
+}
 
 class activityType extends _entityType{
 	protected $__MyClassName = 'ActivityType';
   	protected $_titleEntity = 'Activity Type';
 	protected $pageSave = 'pr_ActivityType_Save.php';
-	
-	public $sql;
-	public $links;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = New activityTypeSQL;
-		$this->links = new activityTypeLinks;	
-	}
-	/*
-	protected function saveUpdate(){
-			$sql = " UPDATE activity_types AS base ";
-			$sql .= " SET ";
-			$sql .= " base.name = '".$this->f->name."', ";
-			$sql .= " base.description = '".$this->f->description."', ";
-			$sql .= " base.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " base.highlight_style = '".$this->f->highlightStyle."', ";
-			$sql .= " base.display_order = ".$this->f->displayOrder.", ";
-			$sql .= " base.notes = '".$this->f->notes."' ";
-			$sql .= " WHERE base.id = ".$this->id."  ";		
-				
-			$result = dbRunSQL($sql);
+		$this->f = new activityTypeFields();
+		$this->sql = New activityTypeSQL();
+		$this->links = new activityTypeLinks();
 	}
 	
-	protected function saveInsert(){
-			$sql = " INSERT INTO activity_types ";
-			$sql .= " (name, ";
-			$sql .= " created, ";
-			$sql .= " updated, ";
-			$sql .= " description, ";
-			$sql .= " display_order, ";
-			$sql .= " highlight_style, ";
-			$sql .= " notes) ";
-			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name."', ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->f->description."', ";
-			$sql .= $this->f->displayOrder.", ";
-			$sql .= "'".$this->f->highlightStyle."', ";
-			$sql .= "'".$this->f->notes."') ";
-			
-			$result = dbRunSQL($sql);
-			
-			$this->id = dbInsertedId();
-	}
-	*/
 	
 }
 ?>

@@ -1,23 +1,21 @@
 ﻿<?php 
 
-/******
- _entityFields    id, name, description, 
- highlightStyle, created, updated
- idType, idParent,
+class measureTypeFields extends _entityTypeFields{
 
- _entityTypeFields  notes, displayOrder
- ****/
+
+}
 
 class measureType extends _entityType{
+
 	protected $__MyClassName = 'MeasureType';
 	protected $_titleEntity = 'Measure Type';
   	protected $pageSave = 'pr_MeasureType_Save.php';
-	public $sql;
-	public $links;
+	
 		
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->sql = new measureTypeSQL;
+		$this->f = new measureTypeFields();
+		$this->sql = new measureTypeSQL();
 		$ths->links = new measureTypeLinks();
 		
 	}

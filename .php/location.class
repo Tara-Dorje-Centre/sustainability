@@ -1,14 +1,6 @@
 ﻿<?php 
 class locationFields extends _entityFields{
 
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
-
-_entityTypeFields  notes, displayOrder
-****/
-
 	public $sortKeyParent;
 	public $sortKey;
 	
@@ -52,14 +44,10 @@ _entityTypeFields  notes, displayOrder
 
 class location extends _entity{
 	protected $__MyClassName = 'location';
-
   	protected $_titleEntity = 'Location';
 	protected $pageSave = 'pr_Location_Save.php';
 	public $childLocations = 0;
 	
-public $f;
-	public $sql;
-	public $links;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

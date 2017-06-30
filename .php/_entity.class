@@ -1,6 +1,12 @@
 <?php 
-//abstract
- class _entityFields{
+abstract class _baseEntityFields{
+
+
+
+}
+
+
+class _entityFields extends _baseEntityFields{
 
 	/******
 	 _entityFields    id, name, description, 

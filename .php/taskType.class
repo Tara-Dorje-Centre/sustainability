@@ -2,13 +2,7 @@
 
 class taskTypeFields extends _entityTypeFields{
 
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
 
-_entityTypeFields  notes, displayOrder
-****/
 	public $frequency = 'none';
 	
 	public function setRowValues($row){

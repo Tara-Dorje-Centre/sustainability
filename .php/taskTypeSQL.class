@@ -8,7 +8,7 @@ public function __construct(){
 
 protected function cols(){
 $c = parent::cols();
-$c .= ", e.frequency ";
+$c .= ", et.frequency ";
 return $c;	
 }
 
