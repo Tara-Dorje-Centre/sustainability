@@ -2,7 +2,7 @@
 class _database extends mysqli{
 	
 protected const _server = "127.0.0.1";
-protected const _database  = "projects_dev";
+protected const _database  = "projects";
 protected const _user = "dev_usr";
 protected const _pwd = "dev_pwd";
 protected const _port = 3306;

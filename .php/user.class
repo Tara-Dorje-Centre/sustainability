@@ -310,7 +310,7 @@ protected $__MyClassName = 'User';
 		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
 		//then comment this line
 		//printLine('forcing login');
-		//$found = 1;
+		$found = 1;
 
 		if ($found == 1){
 			$validUser = true;

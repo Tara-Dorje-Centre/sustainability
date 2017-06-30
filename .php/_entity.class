@@ -1,6 +1,6 @@
 <?php 
-
-class _entityFields{
+//abstract
+ class _entityFields{
 
 	/******
 	 _entityFields    id, name, description, 
@@ -12,19 +12,19 @@ class _entityFields{
 	public $name;		
 	public $description;
 	
-    public $hasCreated = true;
-        public $listCreated = true;
+    public $hasCreated = false;
+    public $listCreated = false;
 	public $created;
-    public $hasUpdated = true;
-            public $listUpdated = true;
+    public $hasUpdated = false;
+    public $listUpdated = false;
     public $updated;
     
-    public $hasHighlight = true;
-    public $listHighlight = true;
+    public $hasHighlight = false;
+    public $listHighlight = false;
 	public $highlightStyle = 'none';
     
-    public $hasType = true;
-    public $listType = true;
+    public $hasType = false;
+    public $listType = false;
 	public $idType = 0;
 	public $nameType;
 	
@@ -48,8 +48,10 @@ class _entityFields{
    	public $idTask = 0;
    	public $nameTask;
 	
+    //abstract 
     public function __construct(){
-
+    
+    
     }
     
     protected function reset(){
@@ -63,7 +65,11 @@ class _entityFields{
 		}
 		
 		$this->created = '';	
+		
+		
 		$this->updated = '';
+		
+		
 		if ($this->hasType == true){
 			$this->idType = 0;
 			$this->nameType = '';
@@ -101,7 +107,9 @@ class _entityFields{
 		if ($this->hasCreated == true){
 			$this->created = ($row["created"]);		
 		}	
+		
 		$this->updated = ($row["updated"]);		
+		
 		if ($this->hasType == true){
 			$this->idType = ($row["type_id"]);
 			$this->nameType = $row["type_name"];
@@ -129,9 +137,9 @@ class _entityFields{
 		
 	}
 	
-	public function setDefaultValues(){
+	public function setDefaults(){
 		$this->reset;
-	
+
 	}
 	
 	protected function formatForDisplay(){
