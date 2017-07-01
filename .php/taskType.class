@@ -41,17 +41,13 @@ class taskType extends _entityType{
 	protected $__MyClassName = 'TaskType';
   	protected $_titleEntity = 'Task Type';
     protected $pageSave = 'pr_TaskType_Save.php';
-	public $f;
-	public $sql;
-	public $links;
-	
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		
 		$this->f = new taskTypeFields();
-		$this->sql = new taskTypeSQL;
-		$this->links = new taskTypeLinks;	
+		$this->sql = new taskTypeSQL();
+		$this->links = new taskTypeLinks();
 	}
 	
 
@@ -72,7 +68,10 @@ class taskType extends _entityType{
 	}	
 	
 	
-	public function editForm(){
+	protected function editForm(){
+		$this->setDefaults();
+	
+	
 		$legend = $this->pageMode;
 		$legend .= $this->$_titleEntity;
 		$entity = 'entity-type';
@@ -83,25 +82,25 @@ class taskType extends _entityType{
 		$form = openEditForm($entity,$legend,'pr_TaskType_Save.php',$contextMenu);
 		
 		//formRequired fields	
-		$fields = inputFieldName($entity,$this->name,'name','Task Type');
+		$fields = inputFieldName($entity,$this->f->name,'name','Task Type');
 
-		$fields .= inputFieldNumber($entity,$this->displayOrder,'displayOrder','Display Order');
+		$fields .= inputFieldNumber($entity,$this->f->displayOrder,'displayOrder','Display Order');
 
-		$fields .= inputFieldHighlightStyle($entity,$this->highlightStyle,'highlightStyle');
+		$fields .= inputFieldHighlightStyle($entity,$this->f->highlightStyle,'highlightStyle');
 
 		
 
 		$formRequired = $fields;
 			
 		//formOptional fields
-		$fields = inputFieldDescription($entity,$this->description,'description');
+		$fields = inputFieldDescription($entity,$this->f->description,'description');
 		
 		
-		$select = $this->optionsFrequency($this->frequency,'frequency');
+		$select = $this->optionsFrequency($this->f->frequency,'frequency');
 		$fields .=inputFieldSelect($entity, $select,'Frequency');
 
 		
-		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+		$fields .= inputFieldNotes($entity,$this->f->notes,'notes');
 		//end formOptional
 		$formOptional = $fields;
 
@@ -134,7 +133,7 @@ class taskType extends _entityType{
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " p.highlight_style = '".$this->f->highlightStyle."', ";
 			$sql .= " p.notes = '".$this->f->notes."' ";
-			$sql .= " WHERE p.id = ".$this->id."  ";			
+			$sql .= " WHERE p.id = ".$this->f->id."  ";			
 			$result = dbRunSQL($sql);
 	}
 	

@@ -106,12 +106,13 @@ class unitOfMeasure extends _entityType{
 	}	
 	
 	
-	private function setAddRecordDefaults(){
+	private function setDefaults(){
 		
 	}
 	public function editForm(){
+		$this->setDefaults();
 		if ($this->pageMode == 'ADD'){		
-			$this->setAddRecordDefaults();
+
 			$legend = 'Add Unit of Measure';
 		} else {
 			$legend = 'Edit Unit of Measure';	
@@ -151,7 +152,8 @@ class unitOfMeasure extends _entityType{
 	}
 	
 	public function collectPostValues(){
-		$this->f->id = $_POST['unitOfMeasureId'];
+		$this->f->id = $_POST['id'];
+		$this->id = $this->f->id;
 		$this->f->name = dbEscapeString($_POST['name']); 
 		$this->f->type = dbEscapeString($_POST['type']); 
 		$this->f->symbol = dbEscapeString($_POST['symbol']); 

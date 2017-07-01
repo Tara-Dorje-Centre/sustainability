@@ -121,12 +121,13 @@ class _entityType extends _entity{
 	}
 	
 	protected function setDefaults(){
-	
+			if ($this->pageMode == 'ADD'){
 		$this->f->setDefaults();
 		
 		$s = $this->sql->count();
 		$next = dbGetCount($s, 'count_details');
 		$this->f->displayOrder = $next + 1;
+		}
 	
 	}
 	
@@ -134,7 +135,7 @@ class _entityType extends _entity{
 
 	
 	public function editForm(){
-		if ($this->pageMode == 'ADD'){
+
 		$this->setDefaults();
 		}
 		$legend = $this->pageMode;

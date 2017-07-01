@@ -49,19 +49,9 @@ class measureType extends _entityType{
 	
 	public function display(){
 	parent::display();
-	/*
-		$this->formatForDisplay();
-		$detail = openDisplayDetails('measure-type','Measure Type Details');		
-	 						
-		$detail .= captionedParagraph('name', 'Name', $this->name);
-		$detail .= captionedParagraph('description', 'Description', $this->description);
-		$detail .= captionedParagraph('notes', 'Notes', $this->notes);
-		$detail .= captionedParagraph('created', 'Created', $this->created);
-		$detail .= captionedParagraph('updated', 'Updated', $this->updated);
-		$detail .= captionedParagraph('highlight-style', 'Highlight', $this->highlightStyle);
-		$detail .= captionedParagraph('display-order-style', 'Display Order', $this->displayOrder);
-
-*/
+	
+	
+	
 		$measureunits = new MeasureTypeUnitList;
 		$measureunits->setDetails($this->id);
 		$detail .= $measureunits->getListing();

@@ -323,10 +323,12 @@ class _entity extends _baseEntity{
 		return $listRow;
 	}
 	
-	public function display(){
+	protected function display($close = true)){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
 		$detail .= $this->f->displayDetail();
-		$detail .= closeDisplayDetails();
+		if ($close == true){
+			$detail .= closeDisplayDetails();
+		}
 		return $detail;
 	}
 	
@@ -341,17 +343,23 @@ class _entity extends _baseEntity{
 	}
 	
 	protected function setDefaults(){
-	 	$this->f->setDefaults();
+		if ($this->pageMode == 'ADD'){
+	 		$this->f->setDefaults();
+	 	}
 	}
 	
 	public function addForm(){
-		$this->pageMode = ADD;
+		$this->pageMode = 'ADD';
+		$this->setDefaults();
 		return $this->editForm();
 	}
 	
-	public function editForm(){
+	protected function editForm(){
 		$this->echoState(true, 'editForm');
-		$this->setDefaults();
+
+	/*	if ($this->pageMode == 'ADD'){
+
+		}*/
 
 		return ('__Entity.editForm not overridden in child');
 	}
