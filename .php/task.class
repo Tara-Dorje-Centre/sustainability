@@ -106,9 +106,9 @@ class task extends _entity{
 	protected $__MyClassName = 'Task';
     protected $_titleEntity = 'Task';
     
-	public $f;
+	/*public $f;
 	public $sql;
-	public $links;
+	public $links;*/
 	
 	public $totals;
 	
@@ -119,10 +119,10 @@ class task extends _entity{
 	public $resultsPageMaterial = 1;
 	public $resultsPageReceipt = 1;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+	/*public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		
-		
+		*/
+	protected function setHelperClasses(){
 		$this->f = new taskFields;
 		$this->sql = new TaskSQL;
 		$this->links = new TaskLinks;

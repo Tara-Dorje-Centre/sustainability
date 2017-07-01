@@ -1,18 +1,15 @@
 ﻿<?php 
 
+
 class userList extends _entityList{
 protected $__MyClassName = 'UserList';
 
-
-
 	public $userTypeId = 0;
-	public $base;
-	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new user();
+
+	protected function setHelperClasses();
+	 	$this->base = new user($this-pageMode,$this->id,$this->idParent);
 	}
-	
+	 
 	public function setDetails(){
 		
 		//$this->userTypeId = $userTypeId;

@@ -3,15 +3,6 @@
 abstract class _entityTypeList extends _entityList{
 	protected $__MyClassName = '__entityTypeList';
 	protected $_titleEntity = 'Entity Types';
-	public $base;
-	/*
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		//$this->base = new _entityType('LIST');
-	}*/
-	
-	abstract protected function setHelperClasses();
-	
 	
 	protected function setPageMenu(){
 		$menuType = 'LIST';

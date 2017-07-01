@@ -1,6 +1,48 @@
 <?php 
 
 
+abstract class _baseEntityFields{
+
+ protected $_content = '';
+
+ protected function resetContent(){
+ 	$_content = '';
+ }
+ protected function addContent($value = '', $reset = false){
+ 	if ($reset == true){
+ 		$this->resetContent();
+ 	}
+ 	$_content .= $value;
+ }
+ protected function getContent($reset = true){
+ 	$value = $this->_content;
+ 	if ($reset == true){
+ 		$this->resetContent();
+ 	}
+ 	return $value;
+ }
+ protected function listTh($heading, $show = false, $reset = false){
+ 	if ($show == true){
+ 		$this->addContent(wrapTh($heading,$reset));
+ 	}
+ }
+ protected function listTd($value, $show = false,$reset = false){
+ 	if ($show == true){
+ 		$this->addContent(wrapTd($value,$reset));
+ 	}
+ }
+ protected function detailPara($caption,$value,$show = false,$reset = false){
+ 	if ($show == true){
+ 		$this->addContent(para($caption,$value,$reset));
+ 	}
+ }
+ protected function postVar($varName, $default){
+
+ }
+
+
+ }
+ 
 abstract class _baseEntity extends _echo {
 	protected $__MyClassName = '__baseEntity.';
 	protected $_titleEntity = '__baseEntity';

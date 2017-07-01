@@ -2,33 +2,24 @@
 
 class userFields extends _entityFields{
 
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
-
-_entityTypeFields  notes, displayOrder
-****/
 	public function __construct(){
     	$this->hasType = true;
     	$this->hasCreated = true;
     	$this->hasHighlight = true;
     	$this->hasLocation = false;
     	$this->hasParent = false;
-    	$this->hasProject = false;
     }
-
 
 	public function setRowValues($row){
 		parent::setRowValues($row);
-		
 		$this->sortKey = $row["sort_key"];
 		$this->sortKeyParent= $row["parent_sort_key"];
-		
 	}
 	
 	public function listHeading(){
-		$heading = parent::listHeading;
+		$this->resetContent();
+		$this->addContent(parent::listHeading);
+		
 		$heading .= wrapTh('SortKey');
 		return $heading;
 	}
@@ -72,12 +63,18 @@ protected $__MyClassName = 'User';
 
 	public $validationMessages;
 	public $sql;
-	
+	/*
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->sql = new UserSQL;
 	}
-	
+	*/
+	protected function setHelperClasses();
+		$this->f = new UserFields();
+		$this->sql = new UserSQL();
+		$this->links = new UserLinks();
+	}
+
 	public function setTypeId($id){
 		$this->typeId = $id;
 	}

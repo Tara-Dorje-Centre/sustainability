@@ -8,12 +8,11 @@ abstract class _entityList extends _entity{
 	public $found = 0;
 	public $base;
 	
-	abstract protected function setHelperClasses();
 	/*
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		//$this->base = new _entity($mode,$id,$idParent);
-
+	protected function setHelperClasses();
+	
+		$this->base = new _entity?($this-pageMode,$this->id,$this->idParent);
+	}
 	*/
 	//overrde for listing
 	public function setDetails(){

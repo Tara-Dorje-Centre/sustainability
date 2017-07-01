@@ -1,40 +1,4 @@
 <?php 
-abstract class _baseEntityFields{
-
-	protected $_content = '';
-	
-	protected function resetContent(){
-		$_content = '';
-	}
-	
-	protected function addContent($value = ''){
-		$_content = $value;
-	}
-	
-	protected function getContent(){
-		$value = $this->_content;
-		$this->resetContent();
-		return $value;
-	}
-	
-	protected function listTh($heading, $show = false){
-		if ($show == true){
-			$this->addContent(wrapTh($heading));
-		}
-	}
-	protected function listTd($value, $show = false){
-		if ($show == true){
-			$this->addContent(wrapTd($value));
-		}
-	}
-	protected function detailPara($caption,$value,$show = false){
-		if ($show == true){
-			$this->addContent(para($caption,$value));
-		}
-	}
-
-}
-
 
 abstract class _entityFields extends _baseEntityFields{
 
@@ -240,6 +204,10 @@ abstract class _entityFields extends _baseEntityFields{
 		
 	
 	}
+	
+	protected function getPostVariables(){
+	$this->id = $this->postVariable('id',0);
+	}
 }
 
 abstract class _entity extends _baseEntity{
@@ -266,9 +234,7 @@ abstract class _entity extends _baseEntity{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->setHelperClasses();
-	//	$this->f = new _entityFields();
-	//	$this->sql = new _entitySQL();
-		//$this->links = new _entityLinks();
+	
 	}
 	
 	abstract protected function setHelperClasses();
@@ -395,13 +361,19 @@ abstract class _entity extends _baseEntity{
 		return $heading;
 	}
 	
-	protected function getPageDetails(){			
-		if (($this->pageMode == 'EDIT') or ($this->pageMode == 'ADD')){
-			$details 
-			$details = $this->editForm();
-		} else {
+	protected function getPageDetails(){	
+		if ($this->pageMode == 'VIEW'){
 			$details = $this->display();
+		} else {
+		
+			if ($this->pageMode == 'EDIT'){
+				$details = $this->editForm();
+			} else {
+				$details = $this->addForm();
+			}
+			
 		}
+			
 		return $details;
 	}
 	

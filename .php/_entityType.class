@@ -68,23 +68,16 @@ abstract class _entityType extends _entity{
 	protected $__MyClassName = '_entityType';
 	protected $_titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';
-	//standard entity type properties
-    public $f;
-    public $sql;
-	public $links;
+	
  
- /*
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-	*/
-	abstract protected function setHelperClasses();
-	
-	
-	//	$this->f = new _entityTypeFields;
-	//	$this->sql = new _entityTypeSQL;
-	//	$this->links = new _entityTypeLinks();
-	//}
-	
+ 
+/*
+	protected function setHelperClasses();
+		$this->f = new _entityTypeFields();
+		$this->sql = new _entityTypeSQL();
+		$this->links = new _entityTypeLinks();
+	}
+*/
 	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';

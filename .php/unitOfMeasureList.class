@@ -4,6 +4,8 @@ class unitOfMeasureList extends _entityTypeList{
 	protected $__MyClassName = 'unitOfMeasureList';
 	protected $_titleEntity = 'Units of Measure';
 	
+	
+	
 	public $base;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){

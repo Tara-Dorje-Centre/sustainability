@@ -1,56 +1,35 @@
 ﻿<?php 
 
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
 
-_entityTypeFields  notes, displayOrder
-****/
-
-class receipt extends _entity{
-protected $__MyClassName = 'Receipt';
+class receiptFields extends _entityFields(){
 
     public $activityId = 0;	
-	public $typeId = 0;
-	public $typeName = '';
-	public $name;
-    public $description;
+	
     public $dateReported;
 	public $receivedBy;
 	public $receivedFrom;
-    public $updated;
+ 
     public $quantity = 1;	
 	public $quantityUnitMeasureId = 0;
 	public $quantityUnitMeasureName = '';
     public $costUnit = 0;	
 	public $costActual = 0;
     public $notes;
-	public $task;
-	public $sql;
-
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-		$this->sql = new ReceiptSQL;
+	public function __construct(){
+	
+		$this->hasType = true;
+		$this->listType = true;
+		$this>hasUpdated = true;
+		$this->hasProject = true;
+		$this->hasTask = true;
 	}
-
-	public function setDetails(){
 	
-		if ($this->id > 0){
+	public function setRowValues($row){
+		parent::setRowValues($row);
 	
-		$sql = $this->sql->infoReceipt($this->id);
+	
+			$this->idActivity = $row["activity_id"];
 		
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-		{	
-			$this->task->id = $row["task_id"];
-			$this->activityId = $row["activity_id"];
-			$this->typeId = $row["type_id"];
-			$this->typeName = ($row["type_name"]);
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
 			$this->dateReported = $row["date_reported"];
 			$this->receivedBy = ($row["received_by"]);
 			$this->receivedFrom = ($row["received_from"]);
@@ -62,6 +41,37 @@ protected $__MyClassName = 'Receipt';
 			$this->costUnit = $row["cost_unit"];
 			$this->notes = ($row["notes"]);
 			
+	}
+}
+
+class receipt extends _entity{
+protected $__MyClassName = 'Receipt';
+
+	//public $task;
+	//public $sql;
+/*
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->task = new Task($this->pageMode, $this->idParent);
+		$this->sql = new ReceiptSQL;
+	}*/
+	protected function setHelperClasses(){
+		$this->f = new receiptFields();
+		$this->sql = new receiptSQL;
+		$this->links = new receiptLinks();
+	}
+	public function setDetails(){
+	
+		if ($this->id > 0){
+	
+		$sql = $this->sql->infoReceipt($this->id);
+		
+		$result = dbGetResult($sql);
+		if($result){
+		while ($row = $result->fetch_assoc())
+		{	
+			$this->base->setRowValues($row);
+	
 		}
 		$result->close();
 		}
@@ -258,20 +268,20 @@ protected $__MyClassName = 'Receipt';
 			
 			$sql = " UPDATE receipts m ";
 			$sql .= " SET ";
-			$sql .= " m.name = '".$this->name."', ";
-			$sql .= " m.description = '".$this->description."', ";
-			$sql .= " m.notes = '".$this->notes."', ";
+			$sql .= " m.name = '".$this->f->name."', ";
+			$sql .= " m.description = '".$this->f->description."', ";
+			$sql .= " m.notes = '".$this->f->notes."', ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " m.date_reported = '".$this->dateReported."', ";
-			$sql .= " m.received_by = '".$this->receivedBy."', ";
-			$sql .= " m.received_from = '".$this->receivedFrom."', ";			
-			$sql .= " m.type_id = ".$this->typeId.", ";
-			$sql .= " m.activity_id = ".$this->activityId.", ";
-			$sql .= " m.quantity = ".$this->quantity.", ";
-			$sql .= " m.qty_unit_measure_id = ".$this->quantityUnitMeasureId.", ";
-			$sql .= " m.cost_unit = ".$this->costUnit.", ";
-			$sql .= " m.cost_actual = ".$this->costActual." ";
-			$sql .= " WHERE m.id = ".$this->id." ";
+			$sql .= " m.date_reported = '".$this->f->dateReported."', ";
+			$sql .= " m.received_by = '".$this->f->receivedBy."', ";
+			$sql .= " m.received_from = '".$this->f->receivedFrom."', ";			
+			$sql .= " m.type_id = ".$this->f->idType.", ";
+			$sql .= " m.activity_id = ".$this->f->idActivity.", ";
+			$sql .= " m.quantity = ".$this->f->quantity.", ";
+			$sql .= " m.qty_unit_measure_id = ".$this->f->quantityUnitMeasureId.", ";
+			$sql .= " m.cost_unit = ".$this->f->costUnit.", ";
+			$sql .= " m.cost_actual = ".$this->f->costActual." ";
+			$sql .= " WHERE m.id = ".$this->f->id." ";
 
 			$result = dbRunSQL($sql);
 			
@@ -297,24 +307,25 @@ protected $__MyClassName = 'Receipt';
 			$sql .= " qty_unit_measure_id, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
-			$sql .= "'".$this->description."', ";
-			$sql .= "".$this->task->id.", ";
-			$sql .= "".$this->activityId.", ";
-			$sql .= " '".$this->dateReported."', ";
-			$sql .= " '".$this->receivedBy."', ";
-			$sql .= " '".$this->receivedFrom."', ";
+			$sql .= "'".$this->f->name."', ";
+			$sql .= "'".$this->f->description."', ";
+			$sql .= "".$this->f->idTask.", ";
+			$sql .= "".$this->f->idActivity.", ";
+			$sql .= " '".$this->f->dateReported."', ";
+			$sql .= " '".$this->f->receivedBy."', ";
+			$sql .= " '".$this->f->receivedFrom."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "".$this->quantity.", ";
-			$sql .= "".$this->costUnit.", ";
-			$sql .= "".$this->costActual.", ";
-			$sql .= " ".$this->typeId.", ";
-			$sql .= " ".$this->quantityUnitMeasureId.", ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "".$this->f->quantity.", ";
+			$sql .= "".$this->f->costUnit.", ";
+			$sql .= "".$this->f->costActual.", ";
+			$sql .= " ".$this->f->idType.", ";
+			$sql .= " ".$this->f->quantityUnitMeasureId.", ";
+			$sql .= "'".$this->f->notes."') ";
 			
 			$result = dbRunSQL($sql);
 
-			$this->id = dbInsertedId();
+			$this->f->id = dbInsertedId();
+			$this->id = $this->f->id;
 
 			$this->task->resetReceiptsAuthorization();
 	}
