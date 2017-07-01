@@ -1,17 +1,47 @@
 <?php 
 abstract class _baseEntityFields{
 
-
+	protected $_content = '';
+	
+	protected function resetContent(){
+		$_content = '';
+	}
+	
+	protected function addContent($value = ''){
+		$_content = $value;
+	}
+	
+	protected function getContent(){
+		$value = $this->_content;
+		$this->resetContent();
+		return $value;
+	}
+	
+	protected function listTh($heading, $show = false){
+		if ($show == true){
+			$this->addContent(wrapTh($heading));
+		}
+	}
+	protected function listTd($value, $show = false){
+		if ($show == true){
+			$this->addContent(wrapTd($value));
+		}
+	}
+	protected function detailPara($caption,$value,$show = false){
+		if ($show == true){
+			$this->addContent(para($caption,$value));
+		}
+	}
 
 }
 
 
-class _entityFields extends _baseEntityFields{
+abstract class _entityFields extends _baseEntityFields{
 
 	/******
 	 _entityFields    id, name, description, 
 	 highlightStyle, created, updated
-	 idType, idParent,
+	 idType, idParent, idProject,idTask
 	 ****/
 
 	public $id = 0;
@@ -53,12 +83,8 @@ class _entityFields extends _baseEntityFields{
    	public $listTask = false;
    	public $idTask = 0;
    	public $nameTask;
-	
-    //abstract 
-    public function __construct(){
-    
-    
-    }
+	 
+    abstract public function __construct();
     
     protected function reset(){
     
@@ -71,10 +97,7 @@ class _entityFields extends _baseEntityFields{
 		}
 		
 		$this->created = '';	
-		
-		
 		$this->updated = '';
-		
 		
 		if ($this->hasType == true){
 			$this->idType = 0;
@@ -112,9 +135,10 @@ class _entityFields extends _baseEntityFields{
 		
 		if ($this->hasCreated == true){
 			$this->created = ($row["created"]);		
-		}	
-		
-		$this->updated = ($row["updated"]);		
+		}			
+		if ($this->hasUpdated == true){
+			$this->updated = ($row["updated"]);		
+		}
 		
 		if ($this->hasType == true){
 			$this->idType = ($row["type_id"]);
@@ -145,107 +169,91 @@ class _entityFields extends _baseEntityFields{
 	
 	public function setDefaults(){
 		$this->reset;
-
+		
 	}
 	
 	protected function formatForDisplay(){
 		$this->name = displayLines($this->name);
 		$this->description = displayLines($this->description);
-		$this->created = getTimestampDate($this->created);
-		$this->updated = getTimestampDate($this->updated);
+		if ($this->hasCreated == true){
+			$this->created = getTimestampDate($this->created);
+		}
+		if ($this->hasUpdated == true){
+			$this->updated = getTimestampDate($this->updated);
+		}
 	}
 	
-	
 	public function listHeading(){
-		$heading = wrapTh('Id');
-		$heading .= wrapTh('Name');
-		$heading .= wrapTh('Description');
+		$this->resetContent;
+		$this->listTh('Id',true);
+		$this->listTh('Name',true);
+		$this->listTh('Description',true);
 		
-		if ($this->listType == true){
-			$heading .= wrapTh('Type');
-		}
-		if ($this->listLocation == true){
-			$heading .= wrapTh('Location');
-		}
-		if ($this->listProject == true){
-			$heading .= wrapTh('Project');
-		}
-		if ($this->listTask == true){
-			$heading .= wrapTh('Task');
-		}
-		if ($this->listParent == true){
-			$heading .= wrapTh('Parent');
-		}
-		if ($this->listHighlight == true){
-			$heading .= wrapTh('Highlight');
-		}
-		
-		return $heading;
+		$this->listTh('Type',$this->listType);
+		$this->listTh('Location',$this->listLocation);
+		$this->listTh('Project',$this->listProject);
+		$this->listTh('Task',$this->listTask);
+		$this->listTh('Parent',$this->listParent);
+		$this->listTh('Created',$this->listCreated);
+		$this->listTh('Updated',$this->listUpdated);
+		$this->listTh('Highlight',$this->listHighlight);
+		return $this->getContent();
 	}
 	
 	public function listDetail(){
 		$this->formatForDisplay();
-		//use name in list item link
-		$detail = wrapTd($this->id);
-		$detail .= wrapTd($this->name);
-		$detail .=  wrapTd($this->description);		
 		
-		if ($this->listType == true){
-			$detail .=  wrapTd($this->nameType);			
-		}
-		if ($this->listLocation == true){
-			$detail .=  wrapTd($this->nameLocation);			
-		}
+		$this->resetContent;
+		$this->listTd($this->id,true);
+		$this->listTd($this->name,true);
+		$this->listTd($this->description,true);
 		
-	 	if ($this->listProject == true){
-		 $detail .= wrapTd($this->nameProject);		
-		}
-		if ($this->listTask == true){
-		 $detail .= wrapTd($this->nameTask);		
-		}
-		if ($this->listParent == true){
-			$detail .=  wrapTd($this->nameParent);			
-		}
-	 	if ($this->listHighlight == true){
-		 $detail .= wrapTd($this->highlightStyle);		
-		}
-		
-		return $detail;
+		$this->listTd($this->nameType,$this->listType);
+		$this->listTd($this->nameLocation,$this->listLocation);
+		$this->listTd($this->nameProject,$this->listProject);
+		$this->listTd($this->nameTask,$this->listTask);
+		$this->listTd($this->nameParent,$this->listParent);
+		$this->listTd($this->created,$this->listCreated);
+		$this->listTd($this->updated,$this->listUpdated);
+		$this->listTd($this->highlightStyle,$this->listHighlight);
+		return $this->getContent();
+
 	}
-	
+
 	public function displayDetail(){
 		$this->formatForDisplay();
-		$detail = para('id', 'Id', $this->id);
-		$detail .= para('name', 'Name', $this->name);
-		$detail .= para('description', 'Description', $this->description);
-		if ($this->hasCreated == true){
-			$detail .= para('created', 'Created', $this->created);
-		}
-		$detail .= para('updated', 'Updated', $this->updated);
-		if ($this->hasHighlight == true){
-			$detail .= para('highlight-style', 'Highlight', $this->highlightStyle);
-		}
-		if ($this->hasType == true){
-			$detail .= para('type', 'Type', $this->nameType);
-		}
-		if ($this->hasLocation== true){
-			$detail .= para('location', 'Location', $this->nameLocation);
-		}
-		if ($this->hasProject == true){
-			$detail .= para('project', 'Project', $this->nameProject);
-		}
-		if ($this->hasTask == true){
-			$detail .= para('task', 'Task', $this->nameProject);
-		}
-		if ($this->hasParent == true){
-			$detail .= para('parent', 'Parent', $this->nameParent);
-		}
 		
-		return $detail;
+		$this->resetContent;
+		$this->detailPara('Id',$this->id,true);
+		$this->detailPara('Name',$this->name,true);
+		$this->detailPara('Description',$this->description,true);
+		
+		$this->detailPara('Type',$this->nameType,$this->listType);
+		$this->detailPara('Location',$this->nameLocation,$this->listLocation);
+		$this->detailPara('Project',$this->nameProject,$this->listProject);
+		$this->detailPara('Task',$this->nameTask,$this->listTask);
+		$this->detailPara('Parent',$this->nameParent,$this->listParent);
+		$this->detailPara('Created',$this->created,$this->listCreated);
+		$this->detailPara('Updated',$this->updated,$this->listUpdated);
+		$this->detailPara('Highlight',$this->highlightStyle,$this->listHighlight);
+		return $this->getContent();
+		
+	
 	}
 }
 
-class _entity extends _baseEntity{
+abstract class _entity extends _baseEntity{
+/*
+	public const VIEW = 'VIEW';
+	public const EDIT = 'EDIT';
+	public const ADD = 'ADD';
+	public const COPY = 'COPY';
+	public const FETCH = 'FETCH';
+	public const OPTIONS = 'OPTIONS';
+	public const COUNT = 'COUNT';
+	public const LIST = 'LIST';
+	public const SUMMARY= 'SUMMARY';
+		*/
 	protected $__MyClassName = '__Entity';
 	protected $_titleEntity = 'Entity';
 	protected $pageSave = '[entity]Save.php';
@@ -257,10 +265,14 @@ class _entity extends _baseEntity{
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
+		$this->setHelperClasses();
 	//	$this->f = new _entityFields();
 	//	$this->sql = new _entitySQL();
 		//$this->links = new _entityLinks();
 	}
+	
+	abstract protected function setHelperClasses);
+	
 	
 	public function setDetails(){
 		if ($this->id > 0){
@@ -360,15 +372,13 @@ class _entity extends _baseEntity{
 		return $this->editForm();
 	}
 	
-	protected function editForm(){
-		$this->echoState(true, 'editForm');
+	abstract protected function editForm();
+	/*	$this->echoState(true, 'editForm');
 
-	/*	if ($this->pageMode == 'ADD'){
-
-		}*/
+	
 
 		return ('__Entity.editForm not overridden in child');
-	}
+	}*/
 	
 	public function printPage(){
 		$this->echoState(true, 'printPage');
@@ -392,7 +402,8 @@ class _entity extends _baseEntity{
 	}
 	
 	protected function getPageDetails(){			
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+		if (($this->pageMode == 'EDIT') or ($this->pageMode == 'ADD')){
+			$details 
 			$details = $this->editForm();
 		} else {
 			$details = $this->display();

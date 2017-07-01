@@ -521,13 +521,13 @@ function paragraph($content, $id, $css = 'none'){
 }
 
 
-function captionedParagraph($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption'){
-return para($id, $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption');
+function captionedParagraph($caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption'){
+return para('', $caption, $content, $cssParagraph = 'none',$cssCaption = 'display-caption');
 }
 
-function para($id, $caption, $content, $cssPara = 'none',$cssCaption = 'display-caption'){
+function para( $caption, $content, $cssPara = 'none',$cssCaption = 'display-caption'){
 	$value = span($caption.':',$cssCaption).$content;
-	$data = paragraph($value, $id, $cssPara);
+	$data = paragraph($value, '', $cssPara);
 	return $data;
 }
 

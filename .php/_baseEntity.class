@@ -1,20 +1,10 @@
 <?php 
 
 
-class _baseEntity extends _echo {
+abstract class _baseEntity extends _echo {
 	protected $__MyClassName = '__baseEntity.';
 	protected $_titleEntity = '__baseEntity';
 
-	public const VIEW = 'VIEW';
-	public const EDIT = 'EDIT';
-	public const ADD = 'ADD';
-	public const COPY = 'COPY';
-	public const FETCH = 'FETCH';
-	public const OPTIONS = 'OPTIONS';
-	public const COUNT = 'COUNT';
-	public const LIST = 'LIST';
-	public const SUMMARY= 'SUMMARY';
-		
     public $pageMode = 'VIEW';
 	public $id = 0;
 	public $idParent = 0;

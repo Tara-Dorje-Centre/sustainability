@@ -4,8 +4,6 @@ class userTypeList extends _entityTypeList{
 	protected $__MyClassName = 'UserTypeList';
 	protected $_titleEntity = 'User Types';
 
-	public $base;
-
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->base = new userType($mode,$id,$idParent);

@@ -1,10 +1,6 @@
 ﻿<?php
-
-
-
-class _entityTypeLinks extends _baseEntityLinks {
-	
-
+abstract class _entityTypeLinks extends _baseEntityLinks {
+/*
 	public function listingHref($caption = 'List'){
 	return $this->list($this->context.$caption);
 	}	
@@ -24,6 +20,6 @@ class _entityTypeLinks extends _baseEntityLinks {
 	public function detailViewEditHref($id = 0, $caption = 'View'){
 			return $this->itemViewEdit($caption,$id);
 	}	
-	
+	*/
 }
 ?>
