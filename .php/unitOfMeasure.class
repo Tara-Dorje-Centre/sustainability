@@ -106,10 +106,8 @@ class unitOfMeasure extends _entityType{
 	}	
 	
 	
-	private function setDefaults(){
-		
-	}
-	public function editForm(){
+	
+	protected function editForm(){
 		$this->setDefaults();
 		if ($this->pageMode == 'ADD'){		
 

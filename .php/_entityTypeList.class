@@ -7,7 +7,7 @@ class _entityTypeList extends _entityList{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->base = new _entityType('LIST');
+		//$this->base = new _entityType('LIST');
 	}
 	
 	protected function setPageMenu(){
@@ -23,8 +23,8 @@ class _entityTypeList extends _entityList{
 		$menu = $this->base->links->openMenu('section-heading-links');
 		$menu .= $menuL->linkReference();
 		$menu .= $this->base->links->resetMenu();
-		$menu .= $this->base->links->detailAddHref();
-		$menu .= $this->base->links->listingHref();		
+		$menu .= $this->base->links->add();
+		$menu .= $this->base->links->list();		
 		$menu .= $this->base->links->closeMenu();
 		$this->_pageMenu = $menu;
 		

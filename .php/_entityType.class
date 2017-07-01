@@ -76,9 +76,9 @@ class _entityType extends _entity{
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->f = new _entityTypeFields;
-		$this->sql = new _entityTypeSQL;
-		$this->links = new _entityTypeLinks();
+	//	$this->f = new _entityTypeFields;
+	//	$this->sql = new _entityTypeSQL;
+	//	$this->links = new _entityTypeLinks();
 	}
 	
 	protected function setPageMenu(){
@@ -93,12 +93,11 @@ class _entityType extends _entity{
 		$menu = $this->links->openMenu('section-heading-links');
 		$menu .= $menuL->linkReference();
 		$menu .= $this->links->resetMenu();
-		if ($this->pageMode == 'VIEW'){
-			$menu .= $this->links->detailEditHref($this->id);
-		} elseif ($this->pageMode == 'EDIT'){
-			$menu .= $this->links->detailViewHref($this->id);
-		}
-		$menu .= $this->links->listingHref();
+		
+		
+		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id);
+		
+		$menu .= $this->links->list();
 		$menu .= $this->links->closeMenu();
 		
 		$this->links->restoreMenuSettings();
@@ -111,13 +110,15 @@ class _entityType extends _entity{
 	public function collectPostValues(){
 
 		$this->f->id = $_POST['id'];
-		$this->id = $this->f->id;
+
 		$this->f->name = dbEscapeString($_POST['name']); 
 		$this->f->description = dbEscapeString($_POST['description']); 
 		$this->f->notes = dbEscapeString($_POST['notes']); 		
 		$this->f->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
 		$this->f->displayOrder = $_POST['displayOrder'];
 		$this->pageMode = $_POST['mode'];	
+				$this->id = $this->f->id;
+						$this->idParent = $this->f->idParent;
 	}
 	
 	protected function setDefaults(){
@@ -134,10 +135,10 @@ class _entityType extends _entity{
 
 
 	
-	public function editForm(){
+	protected function editForm(){
 
 		$this->setDefaults();
-		}
+		
 		$legend = $this->pageMode;
 		$legend .= $this->$_titleEntity;
 		$entity = 'entity-type';

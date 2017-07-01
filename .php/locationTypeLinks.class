@@ -1,9 +1,9 @@
 ﻿<?php 
 
 class locationTypeLinks extends _entityTypeLinks{
-	protected $_captionBase = 'locationType';
-	protected $_pageList = 'pr_LocationType_List.php';
-	protected $_pageDetail = 'pr_LocationType_Detail.php';
+	protected $context = 'locationType';
+	protected $pageList = 'pr_LocationType_List.php';
+	protected $pageDetail = 'pr_LocationType_Detail.php';
 
 }
 

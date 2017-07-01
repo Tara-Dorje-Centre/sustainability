@@ -9,9 +9,9 @@ class _entityTypeLinks extends _baseEntityLinks {
 	return $this->list($this->context.$caption);
 	}	
 	public function listingPaged($found, $resultPage, $perPage){
-			return $this->pagingLinks($found,$perPage,$resultPage);
+			return $this->pagingLinks($found,$resultPage,$perPage);
 	}
-	public function detailAddHref($caption = '+'){
+	public function detailAddHref($caption = '[+]'){
 	return $this->add($caption);
 		return $l;	
 	}

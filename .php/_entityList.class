@@ -10,7 +10,7 @@ class _entityList extends _entity{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->base = new _entity($mode,$id,$idParent);
+		//$this->base = new _entity($mode,$id,$idParent);
 
 	}
 	//overrde for listing
@@ -31,7 +31,7 @@ class _entityList extends _entity{
 	}
 	
 	protected function listingPagingLinks($baseLink = 'USE_LISTING'){
-		$pagingLinks = $this->base->links->listingPaged($this->found,$this->resultPage,$this->perPage);	
+		$pagingLinks = $this->base->links->pagingLinks($this->found,$this->resultPage,$this->perPage);	
 		return $pagingLinks;
 	}
 	
@@ -62,7 +62,7 @@ class _entityList extends _entity{
 			$list = $this->base->listHeading();
 		  	while ($row = $result->fetch_assoc())
 			{	
-				$this->base->f->setRowValues($row);
+				$this->base->setRowValues($row);
 				$list .= $this->base->listRowFormat();
 			}
 			$result->close();

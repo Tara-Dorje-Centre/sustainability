@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class ActivityLinks extends _Links {
+class activityLinks extends _Links {
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
 	}

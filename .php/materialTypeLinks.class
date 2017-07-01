@@ -1,9 +1,9 @@
 ﻿<?php 
 
 class materialTypeLinks extends _entityTypeLinks{
-	protected $_captionBase = 'materialType';
-	protected $_pageList = 'pr_MaterialType_List.php';
-	protected $_pageDetail = 'pr_MaterialType_Detail.php';
+	protected $context = 'materialType';
+	protected $pageList = 'pr_MaterialType_List.php';
+	protected $pageDetail = 'pr_MaterialType_Detail.php';
 
 }
 

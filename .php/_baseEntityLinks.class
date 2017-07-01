@@ -18,14 +18,13 @@ abstract class _baseEntityLinks extends _links{
 		return $p;
 	}
 	
-	protected function nonZeroParameter($name, $value, $first = false){
-
+	protected function nonZeroParameter($name, $value = 0, $first = false){
 		if ($value != 0){
 			$p  = $this->parameter($name, $value, $first);
 		} else {
 			$p = '';
 		}
-	
+		return $p;
 	}
 	
 	protected function urlBase($page = 'index.php', $scope = 'detail'){
@@ -56,7 +55,7 @@ abstract class _baseEntityLinks extends _links{
 		return $link;
 	}	
 	
-	public function list($caption = 'List', idParent = 0){
+	public function list($caption = 'List', $idParent = 0){
 		$link = $this->urlList($idParent);
 		$href = $this->formatHref($caption,$link);
 		return $href;	
@@ -69,15 +68,19 @@ abstract class _baseEntityLinks extends _links{
 	}	
 
 	public function add($caption = 'New', $idParent = 0){
-		$l = $this->hrefDetail($caption,'ADD',0,$idParent);
+		$l = $this->detail($caption,'ADD',0,$idParent);
 		return $l;	
 	}
 	public function view($caption = 'View', $id = 0){
-		$l = $this->hrefDetail($caption,'VIEW',$id);
+		$l = $this->detail($caption,'VIEW',$id);
+		return $l;	
+	}
+	public function edit($caption = 'Edit', $id = 0){
+		$l = $this->detail($caption,'EDIT',$id);
 		return $l;	
 	}
 	public function copy($caption = 'Copy', $id = 0){
-		$l = $this->hrefDetail($caption,'COPY',$id);
+		$l = $this->detail($caption,'COPY',$id);
 		return $l;	
 	}
 	public function itemViewEdit($caption = 'View', $id = 0){
@@ -111,7 +114,7 @@ abstract class _baseEntityLinks extends _links{
 	
 	
 	public function pagingLinks($found, $resultPage, $perPage){
-		$l = $this->urlList(0).'?resultsPage=';
+		$l = $this->urlList(0).'&resultsPage=';
 		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
 		return $ls;
 	}

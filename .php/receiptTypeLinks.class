@@ -1,9 +1,9 @@
 ﻿<?php 
 
 class receiptTypeLinks extends _entityTypeLinks{
-	protected $_captionBase = 'receiptType';
-	protected $_pageList = 'pr_ReceiptType_List.php';
-	protected $_pageDetail = 'pr_ReceiptType_Detail.php';
+	protected $context = 'receiptType';
+	protected $pageList = 'pr_ReceiptType_List.php';
+	protected $pageDetail = 'pr_ReceiptType_Detail.php';
 
 }
 

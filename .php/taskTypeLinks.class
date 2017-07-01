@@ -1,9 +1,9 @@
 ﻿<?php 
 
 class taskTypeLinks extends _entityTypeLinks{
-	protected $_captionBase = 'taskType';
-	protected $_pageList = 'pr_TaskType_List.php';
-	protected $_pageDetail = 'pr_TaskType_Detail.php';
+	protected $context = 'taskType';
+	protected $pageList = 'pr_TaskType_List.php';
+	protected $pageDetail = 'pr_TaskType_Detail.php';
 
 }
 

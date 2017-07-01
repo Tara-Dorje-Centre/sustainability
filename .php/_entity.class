@@ -257,9 +257,9 @@ class _entity extends _baseEntity{
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->f = new _entityFields();
-		$this->sql = new _entitySQL();
-		$this->links = new _entityLinks();
+	//	$this->f = new _entityFields();
+	//	$this->sql = new _entitySQL();
+		//$this->links = new _entityLinks();
 	}
 	
 	public function setDetails(){
@@ -269,13 +269,18 @@ class _entity extends _baseEntity{
 			if($result){
 				while ($row = $result->fetch_assoc())
 				{	
-					$this->f->setRowValues($row);
+					$this->setRowValues($row);
 				}
 				$result->close();
 			}
 		}
 	}	
 	
+	
+	protected function setRowValues($row){
+		$this->f->setRowValues($row);
+	
+	}
 	
 	public function options(
 		$selectedId = 0, 
@@ -296,7 +301,7 @@ class _entity extends _baseEntity{
 	
 	protected function optionsLink($showLink = true, $selectedId = 0){
 		if ($showLink == true){
-			$links =$this->links->detailViewEditHref($selectedId);
+			$links =$this->links->view('View',$selectedId);
 		} else {
 			$links = '';
 		}
@@ -312,7 +317,7 @@ class _entity extends _baseEntity{
 	}
 	
 	protected function listRowLink(){
-		$link = $this->links->detailViewEditHref($this->f->id,$this->f->name);
+		$link = $this->links->itemViewEdit($this->f->name,$this->f->id);
 		return $link;
 	}
 	
@@ -323,7 +328,8 @@ class _entity extends _baseEntity{
 		return $listRow;
 	}
 	
-	protected function display($close = true)){
+	protected function display(){
+	$close = true;//){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
 		$detail .= $this->f->displayDetail();
 		if ($close == true){

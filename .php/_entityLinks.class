@@ -3,7 +3,7 @@
 class _entityLinks extends _baseEntityLinks {
 
 	public function listingPaged($idParent, $found, $resultPage=1, $perPage=10){
-		return $this->pagingLinksChildren($idParent, $found,$perPage,$resultPage);
+		return $this->pagingLinksChildren($idParent, $found,$resultPage,$perPage);
 	}
 	
 	public function listingHref($idParent = -1, $caption = 'List'){
@@ -20,7 +20,7 @@ class _entityLinks extends _baseEntityLinks {
 		return $this->edit($caption,$id);
 	}
 	public function detailViewEditHref($id, $caption = 'View'){
-		return detailViewEdit($caption,$id);
+		return itemViewEdit($caption,$id);
 	}	
 	
 }

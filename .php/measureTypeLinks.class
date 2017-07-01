@@ -1,9 +1,9 @@
 ﻿<?php 
 
 class MeasureTypeLinks extends _entityTypeLinks{
-	protected $_captionBase = 'measureType';
-	protected $_pageList = 'pr_MeasureType_List.php';
-	protected $_pageDetail = 'pr_MeasureType_Detail.php';
+	protected $context = 'measureType';
+	protected $pageList = 'pr_MeasureType_List.php';
+	protected $pageDetail = 'pr_MeasureType_Detail.php';
 
 }
 

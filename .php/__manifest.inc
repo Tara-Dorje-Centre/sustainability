@@ -22,6 +22,7 @@ include_once("_entityTypeSQL.class");
 include_once("_projectChildSQL.class");
 include_once("_taskChildSQL.class");
 include_once("_baseEntity.class");
+include_once("_baseEntityLinks.class");
 include_once("_entity.class");
 include_once("_entityList.class");
 include_once("_entityLinks.class");
@@ -146,22 +147,22 @@ showProgress('unit of measure classes loaded');
 //
 //data classes - crop management
 //
-include_once("_Crop.class");
-include_once("_CropList.class");
-include_once("_CropLinks.class");
-include_once("_CropSQL.class");
+include_once("crop.class");
+include_once("cropList.class");
+include_once("cropLinks.class");
+include_once("cropSQL.class");
 showProgress('crop classes loaded');
 //
-include_once("_CropPlan.class");
-include_once("_CropPlanList.class");
-include_once("_CropPlanLinks.class");
-include_once("_CropPlanSQL.class");
+include_once("cropPlan.class");
+include_once("cropPlanList.class");
+include_once("cropPlanLinks.class");
+include_once("cropPlanSQL.class");
 showProgress('crop plan classes loaded');
 //
-include_once("_CropPlanting.class");
-include_once("_CropPlantingList.class");
-include_once("_CropPlantingLinks.class");
-include_once("_CropPlantingSQL.class");
+include_once("cropPlanting.class");
+include_once("cropPlantingList.class");
+include_once("cropPlantingLinks.class");
+include_once("cropPlantingSQL.class");
 showProgress('crop planting classes loaded');
 //
 showProgress('exit manifest.inc');
