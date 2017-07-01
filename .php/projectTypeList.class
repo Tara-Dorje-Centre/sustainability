@@ -9,7 +9,7 @@ class projectTypeList extends _entityTypeList{
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->base = new projectType();
+		$this->base = new projectType($mode,$id,$idParent);
 	}
 	
 	

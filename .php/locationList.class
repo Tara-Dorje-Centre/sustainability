@@ -38,22 +38,23 @@ protected $titleEntity = 'Location';
  		$menu .= $menuL->linkReference();
 		$menu .= $this->base->links->resetMenu();
 		if ($this->idParent > 0){
-			$menu .= $this->base->links->detailViewHref($this->idParent,'Up');	
+			$menu .= $this->base->links->view('Up',$this->idParent);	
 		} else {
-			$menu .= $this->base->links->detailAddHref(0);
+			$menu .= $this->base->links->add();
 		}
-		$menu .= $this->base->links->listingHref(-1);
+		$menu .= $this->base->links->list('AllLocations',-1);
 				
 		if ($this->idParent > 0){
 			$menu .= $this->base->links->resetMenu();
 			//showing sub locations for a parent
 			if ($this->found != 0){	
-				$menu .= $this->base->links->listingHref($this->idParent,'SubLocations('.$this->found.')');
+				$caption = 'SubLocations ['.$this->found.']';
+				$menu .= $this->base->links->list($caption,$this->id);
 			} else {
 				$menu .= 'No Sublocations';
 			}
 			//add new sublocation to current parent
-			$menu .= $this->base->links->detailAddHref($this->idParent);
+			$menu .= $this->base->links->add('addSubLocation',$this->idParent);
 		}
 		
 		$menu .= $this->base->links->closeMenu();

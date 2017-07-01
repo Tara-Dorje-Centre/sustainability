@@ -6,9 +6,9 @@ class activityTypeList extends _entityTypeList{
 	
 	public $base;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+	public function __construct($mode = 'LIST', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->base = new activityType();
+		$this->base = new activityType($mode,$id,$idParent);
 	}
 	
 }
