@@ -3,12 +3,12 @@ class receiptTypeFields extends _entityTypeFields{
 
 }
 class receiptType extends _entityType{
-	protected $__MyClassName = 'ReceiptType';
+	protected $__MyClassName = 'receiptType';
   	protected $_titleEntity = 'Receipt Type';
   	protected $pageSave = 'pr_ReceiptType_Save.php';
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
+	protected function setHelperClasses(){
+		$this->f = new receiptTypeFields();
 		$this->sql = new receiptTypeSQL;
 		$this->links = new receiptTypeLinks();
 	}

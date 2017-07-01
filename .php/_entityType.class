@@ -1,6 +1,6 @@
 <?php 
 
-class _entityTypeFields extends _entityFields{
+abstract class _entityTypeFields extends _entityFields{
 /******
 _entityFields    id, name, description, 
 highlightStyle, created, updated
@@ -64,7 +64,7 @@ public function __construct(){
 
 }
 
-class _entityType extends _entity{
+abstract class _entityType extends _entity{
 	protected $__MyClassName = '_entityType';
 	protected $_titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';
@@ -73,13 +73,17 @@ class _entityType extends _entity{
     public $sql;
 	public $links;
  
- 
+ /*
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
+	*/
+	abstract protected function setHelperClasses();
+	
+	
 	//	$this->f = new _entityTypeFields;
 	//	$this->sql = new _entityTypeSQL;
 	//	$this->links = new _entityTypeLinks();
-	}
+	//}
 	
 	protected function setPageMenu(){
 		$menuType = 'LIST';

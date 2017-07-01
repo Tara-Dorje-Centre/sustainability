@@ -9,8 +9,7 @@ class userType extends _entityType {
   	protected $_titleEntity = 'User Profile Type';
 	protected $pageSave = 'sys_UserType_Save.php';
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
+	protected function setHelperClasses(){
 		$this->f = new userTypeFields();
 		$this->sql = new userTypeSQL();
 		$this->links = new userTypeLinks();

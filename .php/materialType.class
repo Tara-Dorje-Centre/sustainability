@@ -8,8 +8,7 @@ class materialType extends _entityType {
   	protected $_titleEntity = 'Material Type';
   	protected $pageSave = 'pr_MaterialType_Save.php';
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
+	protected function setHelperClasses();
 		$this->f = new materialTypeFields();
 		$this->sql = new materialTypeSQL();
 		$this->links = new materialTypeLinks();

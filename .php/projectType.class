@@ -7,8 +7,7 @@ class projectType extends _entityType{
     protected $_titleEntity = 'Project Type';
    	protected $pageSave = 'pr_ProjectType_Save.php';
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
+	protected function setHelperClasses(){
 		$this->f = new projectTypeFields();
 		$this->sql = new projectTypeSQL();
 		$this->links = new projectTypeLinks();

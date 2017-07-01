@@ -42,9 +42,8 @@ class taskType extends _entityType{
   	protected $_titleEntity = 'Task Type';
     protected $pageSave = 'pr_TaskType_Save.php';
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		
+	
+	protected function setHelperClasses(){
 		$this->f = new taskTypeFields();
 		$this->sql = new taskTypeSQL();
 		$this->links = new taskTypeLinks();

@@ -12,11 +12,10 @@ class measureType extends _entityType{
   	protected $pageSave = 'pr_MeasureType_Save.php';
 	
 		
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
+	protected function setHelperClasses();
 		$this->f = new measureTypeFields();
 		$this->sql = new measureTypeSQL();
-		$ths->links = new measureTypeLinks();
+		$this->links = new measureTypeLinks();
 		
 	}
 	

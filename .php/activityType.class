@@ -4,12 +4,12 @@ class activityTypeFields extends _entityTypeFields{
 }
 
 class activityType extends _entityType{
-	protected $__MyClassName = 'ActivityType';
+	protected $__MyClassName = 'activityType';
   	protected $_titleEntity = 'Activity Type';
 	protected $pageSave = 'pr_ActivityType_Save.php';
 
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
+	
+	protected function setHelperClasses(){
 		$this->f = new activityTypeFields();
 		$this->sql = New activityTypeSQL();
 		$this->links = new activityTypeLinks();

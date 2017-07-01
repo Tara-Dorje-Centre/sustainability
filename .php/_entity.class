@@ -271,7 +271,7 @@ abstract class _entity extends _baseEntity{
 		//$this->links = new _entityLinks();
 	}
 	
-	abstract protected function setHelperClasses);
+	abstract protected function setHelperClasses();
 	
 	
 	public function setDetails(){
@@ -356,9 +356,8 @@ abstract class _entity extends _baseEntity{
 		$this->_pageTitle = $heading;
 	}
 	
-	protected function setPageMenu(){
-		$this->_pageMenu = 'entity._pageMenu not set.';
-	}
+	abstract protected function setPageMenu();
+
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
@@ -373,12 +372,7 @@ abstract class _entity extends _baseEntity{
 	}
 	
 	abstract protected function editForm();
-	/*	$this->echoState(true, 'editForm');
-
 	
-
-		return ('__Entity.editForm not overridden in child');
-	}*/
 	
 	public function printPage(){
 		$this->echoState(true, 'printPage');
