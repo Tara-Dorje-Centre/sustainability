@@ -1,18 +1,6 @@
 ﻿<?php 
 
 class taskFields extends _entityFields{
-	/******
-	 _entityFields    id, name, description, 
-	 highlightStyle, created, updated
-	 idType, idParent,
-
-	 _entityTypeFields  notes, displayOrder
-	 ****/
-	//public $idLocation = 0;
-	//public $nameLocation = '';
-	
-	//public $idProject = 0;
-	//public $nameProject = '';
 	
 	public $taskOrder = 0;
     public $summary;
@@ -31,7 +19,7 @@ public function __construct(){
     	$this->hasCreated = true;
     	$this->hasHighlight = true;
     	$this->hasLocation = true;
-    	$this->hasParent = false;
+    	$this->hasUpdated= true;
     	$this->hasProject = true;
     }
 
@@ -98,6 +86,32 @@ public function __construct(){
 
 	 	return $this->getContent();
 	 }
+	 
+	 public function getPostVars(){
+		parent::getPostVars();
+	
+		$this->taskOrder = $this->$this->postVar('taskOrder'); 
+		$this->started = $this->postDate('started');
+		$this->summary = $this->postString('summary');
+		$this->pctDone = $this->postVar('pctDone');
+		$this->hoursEstimated = $this->postVar('hoursEstimated', 0); 
+		$this->hoursNotes = $this->postString('hoursNotes', 0); 
+		//$this->hoursActual = $this->postVar('hoursActual');
+		$this->materialsAuthProject = $this->postString('materialsAuthProject');
+		if ($this->materialsAuthProject == 'yes'){
+			$this->materialsAuthBy = $this->postString('materialsAuthBy'); 
+		} else {
+			$this->materialsAuthBy = 'Not Approved';			
+		}
+		$this->receiptsAuthProject = $this->postString('receiptsAuthProject'); 
+		if ($this->receiptsAuthProject == true){
+		$this->receiptsAuthBy = $this->postString('receiptsAuthBy');
+		} else {
+			$this->receiptsAuthBy = 'Not Approved';			
+		}
+
+	}
+	 
 
 }
 
@@ -202,7 +216,7 @@ class task extends _entity{
 		if ($result){
 		while($row = $result->fetch_assoc())
 		{	
-			$this->f->setRowValues($row);
+			$this->f->setRow($row);
 			
 		}
 		$result->close();
@@ -366,7 +380,7 @@ class task extends _entity{
 	 //override display to add summaries and child details
 	 public function display(){
 	 	$detail = openDisplayDetails('entity', $this-> $_titleEntity.':  Details');
-		$detail .= $this->f->displayDetail();
+		$detail .= $this->f->display();
 		$detail .= $this->totals->display();
 		$detail .= $this->displayChildDetails();
 		$detail .= closeDisplayDetails();
@@ -524,40 +538,6 @@ class task extends _entity{
 	}
 	
 		
-	public function collectPostValues(){
-		//called by save form prior to running adds/updates
-		$this->pageMode = $_POST['mode'];
-
-		$this->f->id = $_POST['id'];
-		$this->id = $this->f->id;
-		$this->f->idProject = $_POST['idProject'];
-		$this->idParent = $this->f->idProject;
-		
-		$this->f->idLocation = $_POST['idLocation'];
-		$this->f->idType = $_POST['idType'];
-		//$this->setParentProject();
-		
-		$this->f->taskOrder = $_POST['taskOrder']; 
-		$this->f->started = getTimestampPostValues('started');
-		$this->f->name = dbEscapeString($_POST['name']); 
-		$this->f->description = dbEscapeString($_POST['description']); 
-		$this->f->summary = dbEscapeString($_POST['summary']); 
-		$this->f->pctDone = $_POST['pctDone']; 
-		$this->f->hoursEstimated = $_POST['hoursEstimated']; 
-		//$this->hoursActual = $_POST['hoursActual']; 
-		$this->f->hoursNotes = dbEscapeString($_POST['hoursNotes']); 
-		$this->f->materialsAuthProject = dbEscapeString($_POST['materialsAuthProject']);
-		if ($this->f->materialsAuthProject == 'yes'){
-			$this->f->materialsAuthBy = dbEscapeString($_POST['materialsAuthBy']);
-		} else {
-			$this->f->materialsAuthBy = 'Not Approved';			
-		}
-		$this->f->receiptsAuthProject = dbEscapeString($_POST['receiptsAuthProject']);
-		if ($this->f->receiptsAuthProject == 'yes'){
-			$this->f->receiptsAuthBy = dbEscapeString($_POST['receiptsAuthBy']);
-		} else {
-			$this->f->receiptsAuthBy = 'Not Approved';			
-		}
 
 	}
 	

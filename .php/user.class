@@ -1,19 +1,39 @@
 ﻿<?php 
 
 class userFields extends _entityFields{
+	
+    public $loginName;
+    public $nameFirst;
+    public $nameLast;
+	public $email;
+	public $interests;
+	public $focus;
+	public $lastLogin;
+	public $isAdmin = 'no';
+	public $isActive = 'no';
+	public $mustUpdatePwd = 'no';
+	
 
 	public function __construct(){
     	$this->hasType = true;
     	$this->hasCreated = true;
     	$this->hasHighlight = true;
-    	$this->hasLocation = false;
-    	$this->hasParent = false;
+    	$this->hasUpdated = true;
     }
 
 	public function setRow($row){
 		parent::setRow($row);
-		$this->sortKey = $row["sort_key"];
-		$this->sortKeyParent= $row["parent_sort_key"];
+		$this->nameFirst = ($row["name_first"]); 
+		$this->nameLast = ($row["name_last"]); 
+		$this->name = $this->nameLast.', '.$this->nameFirst;
+		$this->email = ($row["email"]); 
+		$this->focus = ($row["focus"]);
+		$this->interests = ($row["interests"]);
+		$this->loginName = ($row["login_name"]);
+		$this->lastLogin = $row["last_login"]; 
+		$this->isAdmin = $row["is_admin"];
+		$this->isActive = $row["is_active"];
+		$this->mustUpdatePwd = $row["must_update_pwd"];
 	}
 	
 	
@@ -22,23 +42,27 @@ class userFields extends _entityFields{
 
 		$this->addContent(parent::listHeading(),true);
 		
-		$heading .= wrapTh('SortKey');
+		$this->listTh('SortKey');
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
 		$this->addContent(parent::listDetail(),true)
-		$detail .= wrapTd($this->sortKey);
+		$this->listTd($this->sortKey);
 		return $this->getContent();
 	}
 	
 	public function display(){
 		$this->addContent(parent::display(),true)
-		$detail .= para('sortKey', 'SortKey', $this->sortKey);
+		$this->detailPara('SortKey', $this->sortKey);
 		return $this->getContent();
 	}
 	
-	public getPost
+	public getPostVars(){
+		parent::getPostVars();
+	
+	
+	}
 
 }
 
@@ -46,33 +70,10 @@ class user extends _entity{
 protected $__MyClassName = 'User';
 	   		
 
-   // public $id = 0; 
-    public $typeId = 0; 
-	public $typeName;
-	public $cssHighlight;
-    public $loginName;
 	private $loginPwd;
-    public $nameFirst;
-    public $nameLast;
-	public $email;
-	public $interests;
-	public $focus;
-	public $lastLogin;
-	public $created;	 
-	public $updated;
-	public $isAdmin = 'no';
-	public $isActive = 'no';
-	public $mustUpdatePwd = 'no';
-	
-
 	public $validationMessages;
-	public $sql;
-	/*
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->sql = new UserSQL;
-	}
-	*/
+
+	
 	protected function setHelperClasses();
 		$this->f = new UserFields();
 		$this->sql = new UserSQL();
@@ -82,36 +83,22 @@ protected $__MyClassName = 'User';
 	public function setTypeId($id){
 		$this->typeId = $id;
 	}
-	
+	/*
 	public function setDetails(){
 	
 		$this->echoState(true, 'setDetails');
 
 		$sql = $this->sql->info($this->id);
-		$result = dbGetResult($sql);
+		$result = dbGetResult($sql);*
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{
-			$this->nameFirst = ($row["name_first"]); 
-			$this->nameLast = ($row["name_last"]); 
-			$this->email = ($row["email"]); 
-			$this->focus = ($row["focus"]);
-			$this->interests = ($row["interests"]);
-			$this->loginName = ($row["login_name"]);
-			$this->lastLogin = $row["last_login"]; 
-			$this->created = $row["created"]; 
-			$this->updated = $row["updated"];
-			$this->isAdmin = $row["is_admin"];
-			$this->isActive = $row["is_active"];
-			$this->mustUpdatePwd = $row["must_update_pwd"];
-			$this->typeId = $row["type_id"];
-			$this->typeName = $row["type_name"];
-			$this->cssHighlight = $row["highlight_style"];
+			$this->f->setRow($row);
 		}
 		$result->close();
 		}
 
-	}	
+	}	*/
 		
 	protected function setPageTitle(){
 

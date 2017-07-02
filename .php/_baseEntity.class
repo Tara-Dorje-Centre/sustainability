@@ -3,55 +3,55 @@
 
 abstract class _baseEntityFields{
 
- protected $_content = '';
+	protected $_content = '';
 
- protected function resetContent(){
- 	$_content = '';
- }
- protected function addContent($value = '', $reset = false){
- 	if ($reset == true){
- 		$this->resetContent();
+ 	protected function resetContent(){
+ 		$_content = '';
  	}
- 	$_content .= $value;
- }
- protected function getContent($reset = true){
- 	$value = $this->_content;
- 	if ($reset == true){
- 		$this->resetContent();
+	protected function addContent($value = '', $reset = false){
+ 		if ($reset == true){
+ 			$this->resetContent();
+ 		}
+ 		$_content .= $value;
  	}
- 	return $value;
- }
- protected function listTh($heading, $show = false, $reset = false){
- 	if ($show == true){
- 		$this->addContent(wrapTh($heading),$reset);
+	protected function getContent($reset = true){
+ 		$value = $this->_content;
+ 		if ($reset == true){
+ 			$this->resetContent();
+ 		}
+ 		return $value;
+	}
+	protected function listTh($heading, $show = false, $reset = false){
+ 		if ($show == true){
+ 			$this->addContent(wrapTh($heading),$reset);
+ 		}
  	}
- }
- protected function listTd($value, $show = false,$reset = false){
- 	if ($show == true){
- 		$this->addContent(wrapTd($value),$reset);
+ 	protected function listTd($value, $show = false,$reset = false){
+ 		if ($show == true){
+ 			$this->addContent(wrapTd($value),$reset);
+ 		}
  	}
- }
- protected function detailPara($caption,$value,$show = false,$reset = false){
- 	if ($show == true){
- 		$this->addContent(para($caption,$value),$reset);
+ 	protected function detailPara($caption,$value,$show = false,$reset = false){
+ 		if ($show == true){
+ 			$this->addContent(para($caption,$value),$reset);
+ 		}
  	}
- }
- protected function postVar($varName, $default){
+ 	protected function postVar($varName, $default){
 		return $_POST[$varName];
- }
+ 	}
 	protected function postDate(){
 		return getTimestampPostValues($date);
 	}
-		protected postString($name, $default){
+	protected function postString($name, $default){
 		return dbEscapeString($_POST[$name]);
-	}
+	{
 	
-	 protected function formatText($text){
-	 	return displayLines($text);
-	 }
-	 protected function formatDate($date){
-	 	return getTimestampDate($date);
-	 }
+	protected function formatText($text){
+		return displayLines($text);
+	}
+	protected function formatDate($date){
+		return getTimestampDate($date);
+	}
 }
  
 abstract class _baseEntity extends _echo {
