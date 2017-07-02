@@ -53,11 +53,11 @@ public function __construct(){
 	}
 		
 	
-	public function formatForDisplay(){
-		parent::formatForDisplay();
-		$this->summary = displayLines($this->summary);
-		$this->hoursNotes = displayLines($this->hoursNotes);
-		$this->started = getTimestampDate($this->started);
+	public function format(){
+		parent::format();
+		$this->summary = formatText($this->summary);
+		$this->hoursNotes = formatText($this->hoursNotes);
+		$this->started = formatDate($this->started);
 
 	}
 
@@ -81,21 +81,21 @@ public function __construct(){
 	      return $detail;
 	 }
 
-	 public function displayDetail(){
-	 	$detail = parent::displayDetail();
+	 public function display(){
+	 	//$detail = parent::display();
 	 
-		$detail .= para('task-order', 'Task Order', $this->taskOrder);
-	 	$detail .= para('location','Location', $this->nameLocation);
-		$detail .= para('started', 'Started', $this->started);
-		$detail .= para('priority', 'Estimated Effort', $this->hoursEstimated);
-		$detail .= para('priority', 'Actual Effort', $this->hoursActual);
-		$detail .= para('pct-done', '% Done', $this->pctDone);
-		$detail .= para('summary', 'Summary', $this->summary);
-		$detail .= para('hours-notes', 'Effort Notes', $this->hoursNotes);
-		 $detail .= para('materials-auth', 'Materials Approved', $this->materialsAuthProject);
-		 $detail .= para('materials-auth-by', 'Materials Approved By', $this->materialsAuthBy);
-		 $detail .= para('receipts-auth', 'Receipts Approved', $this->receiptsAuthProject);
-		 $detail .= para('receipts-auth-by', 'Receipts Approved By', $this->receiptsAuthBy);
+		$this->detailPara('Task Order', $this->taskOrder);
+	 	$this->detailPara('Location', $this->nameLocation);
+		$this->detailPara('Started', $this->started);
+		$this->detailPara('Estimated Effort', $this->hoursEstimated);
+		$this->detailPara('Actual Effort', $this->hoursActual);
+		$this->detailPara('% Done', $this->pctDone);
+		$this->detailPara('Summary', $this->summary);
+		$this->detailPara('Effort Notes', $this->hoursNotes);
+		$this->detailPara('Materials Approved', $this->materialsAuthProject);
+		$this->detailPara('Materials Approved By', $this->materialsAuthBy);
+		$this->detailPara('Receipts Approved', $this->receiptsAuthProject);
+		$this->detailPara('Receipts Approved By', $this->receiptsAuthBy);
 
 	 	return $detail;
 	 }
@@ -106,9 +106,7 @@ class task extends _entity{
 	protected $__MyClassName = 'Task';
     protected $_titleEntity = 'Task';
     
-	/*public $f;
-	public $sql;
-	public $links;*/
+	
 	
 	public $totals;
 	
@@ -119,14 +117,12 @@ class task extends _entity{
 	public $resultsPageMaterial = 1;
 	public $resultsPageReceipt = 1;
 	
-	/*public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		*/
+	
 	protected function setHelperClasses(){
-		$this->f = new taskFields;
-		$this->sql = new TaskSQL;
-		$this->links = new TaskLinks;
-		$this->totals = new summaryTotals;
+		$this->f = new taskFields();
+		$this->sql = new TaskSQL();
+		$this->links = new TaskLinks();
+		$this->totals = new summaryTotals();
 		
 	}
 	
@@ -151,17 +147,17 @@ class task extends _entity{
 		$receiptsL = new ReceiptLinks('DIV','button');
 		
 		$menu = $activitiesL->openMenu('hotlinks-list');
-		$menu .= $activitiesL->detailAddHref($this->f->id);
-		$menu .= $measuresL->detailAddHref($this->f->id);
-		$menu .= $materialsL->detailAddHref($this->f->id);
-		$menu .= $receiptsL->detailAddHref($this->f->id);
+		$menu .= $activitiesL->add('Activity',$this->f->id);
+		$menu .= $measuresL->add('Measures',$this->f->id);
+		$menu .= $materialsL->add('Materials',$this->f->id);
+		$menu .= $receiptsL->add('Receipts',$this->f->id);
 		$menu .= $activitiesL->closemenu();
 		return $menu;
 	}
 	
 	protected function listRowProjectLink(){
 		$l = new ProjectLinks();
-		$link = $l->detailViewHref($this->f->idProject,$this->f->nameProject);
+		$link = $l->view($this->f->nameProject,$this->f->idProject);
 		return $link;
 	}
 	

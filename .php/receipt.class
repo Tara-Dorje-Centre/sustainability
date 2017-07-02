@@ -3,7 +3,7 @@
 
 class receiptFields extends _entityFields(){
 
-    public $activityId = 0;	
+   // public $activityId = 0;	
 	
     public $dateReported;
 	public $receivedBy;
@@ -22,18 +22,16 @@ class receiptFields extends _entityFields(){
 		$this>hasUpdated = true;
 		$this->hasProject = true;
 		$this->hasTask = true;
+		$this->hasActivity = true;
 	}
 	
-	public function setRowValues($row){
+	public function setRow($row){
 		parent::setRowValues($row);
-	
-	
-			$this->idActivity = $row["activity_id"];
-		
+
 			$this->dateReported = $row["date_reported"];
 			$this->receivedBy = ($row["received_by"]);
 			$this->receivedFrom = ($row["received_from"]);
-			$this->updated = $row["updated"];	
+			
 			$this->quantity = $row["quantity"];	
 			$this->quantityUnitMeasureId = $row["qty_unit_measure_id"];
 			$this->quantityUnitMeasureName = ($row["qty_unit_measure_name"]);
@@ -42,53 +40,78 @@ class receiptFields extends _entityFields(){
 			$this->notes = ($row["notes"]);
 			
 	}
+	
+	protected fumction format(){
+		parent::format();
+		$this->notes = $this->formatText($this->notes);
+		$this->dateReported = $this->formatDate($this->dateReported);
+		
+	}
+	
+	public function defaults(){
+		parent::defaults();
+		global $sessionTime;
+		$this->dateReported = $sessionTime;	
+		
+		$this->quantity = 1;
+		$this->quantityUnitMeasureId = 0;
+		$this->costUnit = 0;
+		$this->costActual = 0;		
+		$this->receivedBy = $_SESSION['login-name'];
+	}
+	
+	
+	//listheading
+	//listdetail
+	
+	public function display(){
+		$this->addContent(parent::display(),true);
+		
+		$this->detailPara('reported','Reported',$this->dateReported);
+		$this->detailPara('receivedBy','Received By', $this->receivedBy);
+		$this->detailPara('receivedFrom','Received From', $this->receivedFrom);
+		$this->detailPara('updated','Updated',$this->updated);	
+		$this->detailPara('quantity-units','Quantity Units',$this->quantityUnitMeasureName);	
+		$this->detailPara('quantity','Quantity',$this->quantity);
+		$this->detailPara('cost-unit','Unit Amount',$this->costUnit);
+		$this->detailPara('cost-actual','Amount Actual',$this->costActual);
+ 		$this->detailPara('notes','Notes',$this->notes);
+ 		
+ 		return getContent();
+
+	}
+	
+
+	
+	public function getPostVars(){
+		parent::getPostVars();
+	
+		$this->notes = $this->$this->postString('notes'); 
+		$this->dateReported = $this->postDate('dateReported');
+		$this->receivedBy = $this->postString('receivedBy');
+		$this->receivedFrom = $this->postString('receivedFrom');
+		$this->quantity = $this->postVar('quantity', 0); 
+		$this->quantityUnitMeasureId = $this->postVar('quantityUnitMeasureId',0);
+		$this->costUnit = $this->postVar('costUnit',0); 
+		
+	}
 }
 
 class receipt extends _entity{
 protected $__MyClassName = 'Receipt';
 
-	//public $task;
-	//public $sql;
-/*
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-		$this->sql = new ReceiptSQL;
-	}*/
+	protected $_titleEntity = 'Receipt';
+	
+
 	protected function setHelperClasses(){
 		$this->f = new receiptFields();
 		$this->sql = new receiptSQL;
 		$this->links = new receiptLinks();
 	}
-	public function setDetails(){
-	
-		if ($this->id > 0){
-	
-		$sql = $this->sql->infoReceipt($this->id);
-		
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-		{	
-			$this->base->setRowValues($row);
-	
-		}
-		$result->close();
-		}
-		
-		}
-
-		$this->setParentTask();				
-	}	
-	
-	public function setParentTask(){
-		$this->task->setDetails();
-	}
-		
 	protected function setPageTitle(){	
 
-		$title = $this->task->project->name.br();
-		$title .= 'Task: '.$this->task->name;		
+		$title = $this->f->nameProject->name.br();
+		$title .= 'Task: '.$this->f->nameTask;		
 
 		$this->_pageTitle = $title;
 		
@@ -125,105 +148,56 @@ protected $__MyClassName = 'Receipt';
 		$menu .= $projects->closeMenu();
 		$this->_pageMenu = $menu;
 	}
-
-		
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
-		$this->dateReported = getTimestampDate($this->dateReported);
-		$this->updated = getTimestampDate($this->updated);
-	}
-
-	public function display(){
-		$this->formatForDisplay();
-		
-		$detail = openDisplayDetails('receipt','Receipt Details');
-
-		$detail .= captionedParagraph('name','Receipt',$this->name);
-		$detail .= captionedParagraph('type-name','Type',$this->typeName);
-		$detail .= captionedParagraph('description','Description',$this->description);
-		
-		$detail .= captionedParagraph('reported','Reported',$this->dateReported);
-		$detail .= captionedParagraph('receivedBy','Received By', $this->receivedBy);
-		$detail .= captionedParagraph('receivedFrom','Received From', $this->receivedFrom);
-		$detail .= captionedParagraph('updated','Updated',$this->updated);	
-		$detail .= captionedParagraph('quantity-units','Quantity Units',$this->quantityUnitMeasureName);	
-		$detail .= captionedParagraph('quantity','Quantity',$this->quantity);
-		$detail .= captionedParagraph('cost-unit','Unit Amount',$this->costUnit);
-		$detail .= captionedParagraph('cost-actual','Amount Actual',$this->costActual);
- 		$detail .= captionedParagraph('notes','Notes',$this->notes);
-
-		$detail .= closeDisplayDetails();
-
-		
-		return $detail;
-	}	
 	
-	protected function setDefaults(){
-		global $sessionTime;
-		$this->dateReported = $sessionTime;	
-		//$this->activityId = $this->task->locationId;
-		$this->quantity = 1;
-		$this->quantityUnitMeasureId = 0;
-		$this->costUnit = 0;
-		$this->costActual = 0;		
-		$this->receivedBy = $_SESSION['login-name'];
-	}
-	
-	public function editForm(){
-		if ($this->pageMode == 'ADD'){		
-			$this->setDefaults();
-			$legend = 'Add Receipt';
-		} else {
-			$legend = 'Edit Receipt';
-		}
+	protected function editForm(){
+			$legend = $this->pageMode.'Receipt';
+		
 		$entity = 'receipt';
 		$c = new ProjectTypeLinks;
 		$contextMenu = $c->formatToggleLink('formOptional','+Options');
 		$form = openEditForm($entity,$legend,'pr_Receipt_Save.php',$contextMenu);
 
 		//start required fields
-		$fields = inputFieldName($entity,$this->name,'name','Receipt');
+		$fields = inputFieldName($entity,$this->f->name,'name','Receipt');
 
-		$fields .= inputFieldUser($entity,$this->receivedBy,'receivedBy','Received By');
+		$fields .= inputFieldUser($entity,$this->f->receivedBy,'receivedBy','Received By');
 
-		$fields .= inputFieldUser($entity,$this->receivedFrom,'receivedFrom','Received From');
+		$fields .= inputFieldUser($entity,$this->f->receivedFrom,'receivedFrom','Received From');
 				
-		$fields .= inputFieldNumber($entity,$this->costUnit,'costUnit','Unit Amount');
+		$fields .= inputFieldNumber($entity,$this->f->costUnit,'costUnit','Unit Amount');
 
-		$fields .= inputFieldTimestamp($entity, 'dateReported', $this->dateReported, 'Date Reported'); 		
+		$fields .= inputFieldTimestamp($entity, 'dateReported', $this->f->dateReported, 'Date Reported'); 		
 
-		$fields .= inputFieldDescription($entity,$this->description,'description');
+		$fields .= inputFieldDescription($entity,$this->f-description,'description');
 
 		//end required fields
 		$formRequired = $fields;
 		
 		//start optional fields
-		$fields = inputFieldNumber($entity,$this->quantity,'quantity','Quantity');
+		$fields = inputFieldNumber($entity,$this->f->quantity,'quantity','Quantity');
 		
 		$u = new UnitOfMeasure(OPTIONS);
-		$select = $u->options($this->quantityUnitMeasureId,'quantityUnitMeasureId','false');
+		$select = $u->options($this->f->quantityUnitMeasureId,'quantityUnitMeasureId','false');
 		$fields .= captionedInput('Quantity Units', $select);
 
 		$tooltip = 'Set when task costs are approved';
-		$fields .= inputFieldNumber($entity,$this->costActual,'costActual','Amount Actual',$tooltip);
+		$fields .= inputFieldNumber($entity,$this->f->costActual,'costActual','Amount Actual',$tooltip);
 
 		$m = new ReceiptType(OPTIONS);
-		$select = $m->options($this->typeId,'typeId','false');
+		$select = $m->options($this->f->idType,'idType','false');
 		$fields .= captionedInput('Receipt Type',$select);
 		
 
-		$fields .= inputFieldNotes($entity,$this->notes,'notes');
+		$fields .= inputFieldNotes($entity,$this->f-notes,'notes');
 
 		//end optional fields (hidden by default)
 		$formOptional = $fields;
 
 		//hidden fields and submit,reset buttons
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('taskId', $this->task->id);
-		$hidden .= getHiddenInput('receiptId', $this->id);
-		$hidden .= getHiddenInput('activityId', $this->activityId);
+		$hidden .= getHiddenInput('idTask', $this->f->idTask);
+		$hidden .= getHiddenInput('id', $this->f->id);
+		$hidden .= getHiddenInput('idActivity', $this->f->idActivity);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 			
@@ -233,30 +207,12 @@ protected $__MyClassName = 'Receipt';
 	}
 	
 	private function setActualCost(){
-			$this->costActual = $this->costUnit * $this->quantity;
+			$this->costActual = $this->f->costUnit * $this->f->quantity;
 	}
 	
 	public function collectPostValues(){
 		//called by save form prior to running adds/updates
-		$this->pageMode = $_POST['mode'];
-		
-		$this->task->id = $_POST['taskId'];
-		
-		$this->activityId = $_POST['activityId'];
-
-		$this->id = $_POST['receiptId'];
-		$this->receiptId = $_POST['receiptId'];
-		$this->typeId = $_POST['typeId'];
-		$this->name = dbEscapeString($_POST['name']);
-		$this->description = dbEscapeString($_POST['description']); 
-		$this->notes = dbEscapeString($_POST['notes']); 
-		$this->dateReported = getTimestampPostValues('dateReported');
-		$this->receivedBy = dbEscapeString($_POST['receivedBy']);
-		$this->receivedFrom = dbEscapeString($_POST['receivedFrom']);
-		$this->quantity = $_POST['quantity']; 
-		$this->quantityUnitMeasureId = $_POST['quantityUnitMeasureId'];
-		$this->costUnit = $_POST['costUnit']; 
-		
+		parent::collectPostValues();
 		$this->setActualCost();
 
 		$this->setParentTask();

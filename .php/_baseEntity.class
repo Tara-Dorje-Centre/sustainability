@@ -23,25 +23,36 @@ abstract class _baseEntityFields{
  }
  protected function listTh($heading, $show = false, $reset = false){
  	if ($show == true){
- 		$this->addContent(wrapTh($heading,$reset));
+ 		$this->addContent(wrapTh($heading),$reset);
  	}
  }
  protected function listTd($value, $show = false,$reset = false){
  	if ($show == true){
- 		$this->addContent(wrapTd($value,$reset));
+ 		$this->addContent(wrapTd($value),$reset);
  	}
  }
  protected function detailPara($caption,$value,$show = false,$reset = false){
  	if ($show == true){
- 		$this->addContent(para($caption,$value,$reset));
+ 		$this->addContent(para($caption,$value),$reset);
  	}
  }
  protected function postVar($varName, $default){
 
  }
-
-
- }
+	protected function postDate(){
+		return getTimestampPostValues($date);
+	}
+		protected postString($name, $default){
+		return dbEscapeString($_POST[$name]);
+	}
+	
+	 protected function formatText($text){
+	 	return displayLines($text);
+	 }
+	 protected function formatDate($date){
+	 	return getTimestampDate($date);
+	 }
+}
  
 abstract class _baseEntity extends _echo {
 	protected $__MyClassName = '__baseEntity.';

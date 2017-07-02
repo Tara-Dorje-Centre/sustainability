@@ -59,9 +59,12 @@ abstract class _entityFields extends _baseEntityFields{
 		if ($this->hasHighlight == true){
 			$this->highlightStyle = 'none';
 		}
-		
-		$this->created = '';	
-		$this->updated = '';
+		if ($this->hasCreated == true){
+			$this->created = '';	
+		}
+		if ($this->hasUpdated == true){
+			$this->updated = '';
+		}
 		
 		if ($this->hasType == true){
 			$this->idType = 0;
@@ -88,7 +91,7 @@ abstract class _entityFields extends _baseEntityFields{
 		}
     }
     
-	public function setRowValues($row){
+	public function setRow($row){
 		$this->reset;
 		$this->id = $row["id"];
 		$this->name = ($row["name"]);
@@ -96,14 +99,12 @@ abstract class _entityFields extends _baseEntityFields{
 		if ($this->hasHighlight == true){
 			$this->highlightStyle = ($row["highlight_style"]);
 		}
-		
 		if ($this->hasCreated == true){
 			$this->created = ($row["created"]);		
 		}			
 		if ($this->hasUpdated == true){
 			$this->updated = ($row["updated"]);		
 		}
-		
 		if ($this->hasType == true){
 			$this->idType = ($row["type_id"]);
 			$this->nameType = $row["type_name"];
@@ -112,43 +113,50 @@ abstract class _entityFields extends _baseEntityFields{
 			$this->idParent = $row["parent_id"];
 			$this->nameParent = $row["parent_name"];
 		}
-		
-		if ($this->hasProject == true){
-			$this->idProject = $row["project_id"];
-			$this->nameProject = $row["project_name"];
-		}
-					
 		if ($this->hasLocation == true){
 			$this->idLocation = $row["location_id"];
 			$this->nameLocation = ($row["location_name"]);
 		}
-			
+		if ($this->hasProject == true){
+			$this->idProject = $row["project_id"];
+			$this->nameProject = $row["project_name"];
+		}
 		if ($this->hasTask == true){
 			$this->idTask = $row["task_id"];
 			$this->nameTask = $row["task_name"];
 		}
 		
-		
+		if ($this->hasActivity == true){
+			$this->idActivity = $row["activity_id"];
+			$this->nameActivity = $row["activity_name"];
+		}
 	}
 	
-	public function setDefaults(){
+	public function defaults(){
 		$this->reset;
 		
 	}
+	/*
+	protected function formatText($text,$hasField=false){
+		return displayLines($text);
+	}
+	protected function formatDate($date,$hasField=false){
+		return getTimestampDate($date);
+	}*/
 	
-	protected function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		if ($this->hasCreated == true){
-			$this->created = getTimestampDate($this->created);
+	protected function format(){
+		$this->name = formatText($this->name,true);
+		$this->description = formatText($this->description,true);
+		if ( == true){
+			$this->created = formatDate($this->created,$this->hasCreated);
 		}
-		if ($this->hasUpdated == true){
-			$this->updated = getTimestampDate($this->updated);
+		if ( == true){
+			$this->updated = formatDate($this->updated,$this->hasUpdated);
 		}
 	}
 	
 	public function listHeading(){
-		$this->resetContent;
+		$this->resetContent()
 		$this->listTh('Id',true);
 		$this->listTh('Name',true);
 		$this->listTh('Description',true);
@@ -165,7 +173,7 @@ abstract class _entityFields extends _baseEntityFields{
 	}
 	
 	public function listDetail(){
-		$this->formatForDisplay();
+		$this->format();
 		
 		$this->resetContent;
 		$this->listTd($this->id,true);
@@ -184,8 +192,8 @@ abstract class _entityFields extends _baseEntityFields{
 
 	}
 
-	public function displayDetail(){
-		$this->formatForDisplay();
+	public function display(){
+		$this->format();
 		
 		$this->resetContent;
 		$this->detailPara('Id',$this->id,true);
@@ -202,29 +210,42 @@ abstract class _entityFields extends _baseEntityFields{
 		$this->detailPara('Highlight',$this->highlightStyle,$this->listHighlight);
 		return $this->getContent();
 		
-	
 	}
 	
-	protected function getPostVariables(){
-	$this->id = $this->postVariable('id',0);
+
+	
+	public function getPostVars(){
+	
+		$this->id = $this->postVar('id',0);
+		$this->name = $this->postString('name');
+		$this->description = $this->postString('description');
+		if ($this->hasType == true){
+		$this->idType = $this->postVar('idType',0);
+		}
+		if ($this->hasLocation == true){
+		$this->idLocation = $this->postVar('idLocation',0);
+		}
+		if ($this->hasParent == true){
+		$this->idParent = $this->postVar('idParent',0);
+		}
+		if ($this->hasProject == true){
+		$this->idProject = $this->postVar('idProject',0);
+		}
+		if ($this->hasTask == true){
+		$this->idTask = $this->postVar('idTask',0);
+		}
+		if ($this->hasActivity == true){
+		$this->idActivity = $this->postVar('idActivity',0);
+		}
+				
 	}
 }
 
 abstract class _entity extends _baseEntity{
-/*
-	public const VIEW = 'VIEW';
-	public const EDIT = 'EDIT';
-	public const ADD = 'ADD';
-	public const COPY = 'COPY';
-	public const FETCH = 'FETCH';
-	public const OPTIONS = 'OPTIONS';
-	public const COUNT = 'COUNT';
-	public const LIST = 'LIST';
-	public const SUMMARY= 'SUMMARY';
-		*/
+
 	protected $__MyClassName = '__Entity';
 	protected $_titleEntity = 'Entity';
-	protected $pageSave = '[entity]Save.php';
+	protected $pageSave = 'save.php';
 	
   	public $f;
     public $sql;
@@ -234,7 +255,6 @@ abstract class _entity extends _baseEntity{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->setHelperClasses();
-	
 	}
 	
 	abstract protected function setHelperClasses();
@@ -247,18 +267,14 @@ abstract class _entity extends _baseEntity{
 			if($result){
 				while ($row = $result->fetch_assoc())
 				{	
-					$this->setRowValues($row);
+					$this->f->setRow($row);
 				}
 				$result->close();
 			}
+			$this->synchIds();
 		}
 	}	
 	
-	
-	protected function setRowValues($row){
-		$this->f->setRowValues($row);
-	
-	}
 	
 	public function options(
 		$selectedId = 0, 
@@ -306,10 +322,9 @@ abstract class _entity extends _baseEntity{
 		return $listRow;
 	}
 	
-	protected function display(){
-	$close = true;//){
+	protected function display($close = true){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
-		$detail .= $this->f->displayDetail();
+		$detail .= $this->f->display();
 		if ($close == true){
 			$detail .= closeDisplayDetails();
 		}
@@ -327,7 +342,7 @@ abstract class _entity extends _baseEntity{
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
-	 		$this->f->setDefaults();
+	 		$this->f->defaults();
 	 	}
 	}
 	
@@ -339,6 +354,17 @@ abstract class _entity extends _baseEntity{
 	
 	abstract protected function editForm();
 	
+	public function collectPostValues(){
+		$this->pageMode = $_POST['mode'];	
+		
+		$this->f->getPostVars();
+		$this->synchIds();
+	}
+		
+	protected function synchIds(){
+		$this->id = $this->f->id;
+		$this->idParent = $this->f->idParent;
+	}
 	
 	public function printPage(){
 		$this->echoState(true, 'printPage');
@@ -353,11 +379,13 @@ abstract class _entity extends _baseEntity{
 		$this->setPageTitle();
 		$this->setPageMenu();
 		
-		$heading = openDiv('section-heading-title');
+		$heading = openDiv('section-title');
 		$heading .= $this->_pageTitle;
 		$heading .= closeDiv();		
-		
+		$heading = openDiv('section-menu');
 		$heading .= $this->_pageMenu;
+		$heading .= closeDiv();		
+		
 		return $heading;
 	}
 	

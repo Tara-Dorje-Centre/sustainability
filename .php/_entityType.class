@@ -1,13 +1,7 @@
 <?php 
 
 abstract class _entityTypeFields extends _entityFields{
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
 
-_entityTypeFields  notes, displayOrder
-****/
 
     public $notes;
 	public $displayOrder = 0;
@@ -22,44 +16,50 @@ public function __construct(){
     }
 
 
-	public function setRowValues($row){
-		parent::setRowValues($row);
+	public function setRow($row){
+		parent::setRow($row);
 		$this->notes = ($row["notes"]);
 		$this->displayOrder = $row["display_order"];
 	}
 	
-	protected function formatForDisplay(){
-		parent::formatForDisplay();
-		$this->notes = displayLines($this->notes);
+	protected function format(){
+		parent::format();
+		$this->notes = displayText($this->notes);
 		
 	}
 	
 	public function listHeading(){
-			$heading = parent::listHeading();
-		$heading .= wrapTh('Display Order');		
-
-		$heading .= wrapTh('Notes');
-		return $heading;
+		$this->addContent(parent::listHeading(),true);
+		$this->listTh('Display Order');		
+		$this->listTh('Notes');
+		return $this->getContent();
 	}
 	
 	public function listDetail(){
-			$detail = parent::listDetail();
+		$this->addContent(parent::listDetail(),true);
 	
-		$detail .= wrapTd($this->displayOrder);
+		$this->listTd($this->displayOrder);
 
-		$detail .= wrapTd($this->notes);
+		$this->listTd($this->notes);
+		return $this->getContent();
+	}
+	
+	public function display(){
+		$this->addContent(parent::display(),true);
+		$this->detailPara('Display Order', $this->displayOrder);
+		$this->detailPara('Notes', $this->notes);
 		return $detail;
 	}
 	
-	public function displayDetail(){
-			$detail = parent::displayDetail();
 	
+	public function getPostVars(){
+		parent::getPostVars();
 	
-		$detail .= para('display-order', 'Display Order', $this->displayOrder);
-
+		$this->notes = $this->postString('notes');
+		$this->description = $this->postString('description');
+		$this->displayOrder = $this->postVar('displayOrder',0);
 		
-		$detail .= para('notes', 'Notes', $this->notes);
-		return $detail;
+				
 	}
 
 }
@@ -69,15 +69,6 @@ abstract class _entityType extends _entity{
 	protected $_titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';
 	
- 
- 
-/*
-	protected function setHelperClasses();
-		$this->f = new _entityTypeFields();
-		$this->sql = new _entityTypeSQL();
-		$this->links = new _entityTypeLinks();
-	}
-*/
 	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
@@ -91,8 +82,7 @@ abstract class _entityType extends _entity{
 		$menu .= $menuL->linkReference();
 		$menu .= $this->links->resetMenu();
 		
-		
-		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id);
+		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id,$this->f->idParent);
 		
 		$menu .= $this->links->list();
 		$menu .= $this->links->closeMenu();
@@ -104,23 +94,10 @@ abstract class _entityType extends _entity{
 	
 
 
-	public function collectPostValues(){
-
-		$this->f->id = $_POST['id'];
-
-		$this->f->name = dbEscapeString($_POST['name']); 
-		$this->f->description = dbEscapeString($_POST['description']); 
-		$this->f->notes = dbEscapeString($_POST['notes']); 		
-		$this->f->highlightStyle = dbEscapeString($_POST['highlightStyle']); 		
-		$this->f->displayOrder = $_POST['displayOrder'];
-		$this->pageMode = $_POST['mode'];	
-				$this->id = $this->f->id;
-						$this->idParent = $this->f->idParent;
-	}
 	
 	protected function setDefaults(){
 			if ($this->pageMode == 'ADD'){
-		$this->f->setDefaults();
+		$this->f->defaults();
 		
 		$s = $this->sql->count();
 		$next = dbGetCount($s, 'count_details');
@@ -133,8 +110,6 @@ abstract class _entityType extends _entity{
 
 	
 	protected function editForm(){
-
-		$this->setDefaults();
 		
 		$legend = $this->pageMode;
 		$legend .= $this->$_titleEntity;

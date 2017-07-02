@@ -8,13 +8,8 @@ abstract class _entityList extends _entity{
 	public $found = 0;
 	public $base;
 	
-	/*
-	protected function setHelperClasses();
 	
-		$this->base = new _entity?($this-pageMode,$this->id,$this->idParent);
-	}
-	*/
-	//overrde for listing
+	//override _entity.setDetails for listing
 	public function setDetails(){
 		$sql = $this->base->sql->count();
 		$this->found = dbGetCount($sql, 'count_details');
@@ -24,9 +19,8 @@ abstract class _entityList extends _entity{
 		$this->_pageTitle = $this->_titleEntity;
 	}
 	
-	//overrides __Entity.getPageDetails for listing query
+	//overrides _entity.getPageDetails for listing query
 	protected function getPageDetails(){
-
 		$details = $this->getListing();
 		return $details;
 	}
@@ -63,7 +57,7 @@ abstract class _entityList extends _entity{
 			$list = $this->base->listHeading();
 		  	while ($row = $result->fetch_assoc())
 			{	
-				$this->base->setRowValues($row);
+				$this->base->setRow($row);
 				$list .= $this->base->listRowFormat();
 			}
 			$result->close();
