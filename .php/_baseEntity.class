@@ -37,7 +37,7 @@ abstract class _baseEntityFields{
  	}
  }
  protected function postVar($varName, $default){
-
+		return $_POST[$varName];
  }
 	protected function postDate(){
 		return getTimestampPostValues($date);

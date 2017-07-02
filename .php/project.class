@@ -1,14 +1,8 @@
 ﻿<?php 
 class projectFields extends _entityFields{
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
 
-_entityTypeFields  notes, displayOrder
-****/
-	//public $idLocation = 0;
-	//public $nameLocation;
+	
+	
   
     public $summary;
     public $started;
@@ -25,11 +19,11 @@ public function __construct(){
     	$this->hasHighlight = true;
     	$this->hasLocation = true;
     	$this->hasParent = true;
-    	$this->hasProject = false;
+    	$this->hasUpdated = true;
     }
 	
-	public function setRowValues($row){
-		parent::setRowValues($row);
+	public function setRow($row){
+		parent::setRow($row);
 			
 			//$this->idLocation = $row["location_id"];
 			//$this->nameLocation = ($row['location_name']);
@@ -45,52 +39,67 @@ public function __construct(){
 			
 	}
 	
-	public function formatForDisplay(){
-		parent::formatForDisplay();
+	public function format(){
+		parent::format();
 	
-		$this->summary = displayLines($this->summary);
-		$this->goals = displayLines($this->goals);
-		$this->lessons = displayLines($this->lessons);		
-		$this->purpose = displayLines($this->purpose);		
-		$this->started = getTimestampDate($this->started);
+		$this->summary = $this->formatText($this->summary);
+		$this->goals = $this->formatText($this->goals);
+		$this->lessons = $this->formatText($this->lessons);		
+		$this->purpose = $this->formatText($this->purpose);		
+		$this->started = $this->formatDate($this->started);
 	
 	}
-	
-	
 	
 	public function listHeading(){
 		$heading = parent::listHeading();
 		
-		//$heading .= wrapTh('Location');
-		$heading .= wrapTh('Priority');
-		$heading .= wrapTh('%Done');
+		
 
-		return $heading;
+		$this->listTh('Priority');
+
+		$this->listTh('%Done');
+
+		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		$detail = parent::listDetail();
-		//$detail .=  wrapTd($this->nameLocation);
-		$detail .=  wrapTd($this->priority);
-		$detail .=  wrapTd($this->pctDone);
-
-
-		return $detail;
+		$this->addContent(parent::listDetail(),true);
+		$this->listTd($this->priority);
+		$this->listTd($this->pctDone);
+		return $this->getContent();
 	}
 	
-	public function displayDetail(){
-		$detail = parent::displayDetail();
+	public function display(){
+		$this->addContent(parent::display(),true);
 
-		//$detail .= para('location','Location', $this->nameLocation);
-		$detail .= para('priority', 'Priority', $this->priority);
-		$detail .= para('started', 'Started', $this->started);
-		$detail .= para('pct-done', '% Done', $this->pctDone);
-		$detail .= para('purpose', 'Purpose', $this->purpose);
-		$detail .= para('summary', 'Summary', $this->summary);
-		$detail .= para('goals', 'Goals', $this->goals);
-		$detail .= para('lessons', 'Lessons Learned', $this->lessons);
+		$this->detailPara('Priority', $this->priority);
+		$this->detailPara('Started', $this->started);
+		$this->detailPara('% Done', $this->pctDone);
+		$this->detailPara('Purpose', $this->purpose);
+		$this->detailPara('Summary', $this->summary);
+		$this->detailPara('Goals', $this->goals);
+		$this->detailPara('Lessons Learned', $this->lessons);
 		
-		return $detail;
+		return $this->getContent();
+	}
+
+	public function getPostVars(){
+		parent::getPostVars();
+		$this->notes = $this->postString('notes');
+		$this->displayOrder = $this->postVar('displayOrder',0);
+	}
+	
+	public function getPostVars(){
+		parent::getPostVars();
+		$this->goals = $this->postString('goals'); 
+		$this->summary = $this->postString('summary'); 
+		$this->lessons = $this->postString('lessons'); 
+		$this->started = $this->postDate('started');
+		$this->priority = $this->postVar('priority') 
+		$this->pctDone = $this->postVar('pctDone'); 
+		$this->purpose = $this->postString('purpose'); 
+		$this->showAlways = $this->postVar('showAlways') 
+		
 	}
 
 }
@@ -343,6 +352,8 @@ class summaryTotals{
 		$detail = para('effort-and-cost','Time, Materials and Receipts',$effortAndCost);		
 		return $detail;	
 	}
+	
+
 }
 
 class project extends _entity{
@@ -488,7 +499,7 @@ class project extends _entity{
 	
 	public function display(){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
-		$detail .= $this->f->displayDetail();
+		$detail .= $this->f->display();
 		$detail .= $this->totals->display();
 
 
@@ -545,8 +556,8 @@ class project extends _entity{
 	protected function setDefaults(){	
 		global $sessionTime;
 		$this->started = $sessionTime;	
-		$this->locationId = '0';
-		$this->typeId = '0';
+
+
 		$this->priority = 1;
 		$this->pctDone = '0';
 	}
@@ -622,30 +633,7 @@ class project extends _entity{
 		return $form;
 	}
 	
-	public function collectPostValues(){
-		$this->echoState(true, 'collectPostValues');
-		$this->f->id = $_POST['id'];
-		$this->f->idParent = $_POST['idParent'];
-		$this->id = $this->f->id;
-		$this->idParent = $this->f->idParent;
 
-		
-		$this->f->idType = $_POST['idType'];
-		$this->f->idLocation = $_POST['idLocation'];		
-		$this->f->name = dbEscapeString($_POST['name']); 
-		$this->f->description = dbEscapeString($_POST['description']); 
-		$this->f->goals = dbEscapeString($_POST['goals']); 
-		$this->f->summary = dbEscapeString($_POST['summary']); 
-		$this->f->lessons = dbEscapeString($_POST['lessons']); 
-		$this->f->started = getTimestampPostValues('started');
-		$this->f->priority = $_POST['priority']; 
-		$this->f->pctDone = $_POST['pctDone']; 
-		$this->f->purpose = dbEscapeString($_POST['purpose']); 
-		$this->showAlways = $_POST['showAlways']; 
-		
-		$this->pageMode = $_POST['mode'];	
-		
-	}
 
     public function UpdateTaskSummary(){
 		

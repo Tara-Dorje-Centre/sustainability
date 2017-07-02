@@ -1,12 +1,10 @@
 <?php 
 
 abstract class _entityTypeFields extends _entityFields{
-
-
     public $notes;
 	public $displayOrder = 0;
 
-public function __construct(){
+	public function __construct(){
     	$this->hasType = false;
     	$this->hasCreated = true;
     	$this->hasHighlight = true;
@@ -25,7 +23,6 @@ public function __construct(){
 	protected function format(){
 		parent::format();
 		$this->notes = displayText($this->notes);
-		
 	}
 	
 	public function listHeading(){
@@ -37,9 +34,7 @@ public function __construct(){
 	
 	public function listDetail(){
 		$this->addContent(parent::listDetail(),true);
-	
 		$this->listTd($this->displayOrder);
-
 		$this->listTd($this->notes);
 		return $this->getContent();
 	}
@@ -51,15 +46,10 @@ public function __construct(){
 		return $detail;
 	}
 	
-	
 	public function getPostVars(){
 		parent::getPostVars();
-	
 		$this->notes = $this->postString('notes');
-		$this->description = $this->postString('description');
 		$this->displayOrder = $this->postVar('displayOrder',0);
-		
-				
 	}
 
 }
@@ -105,10 +95,7 @@ abstract class _entityType extends _entity{
 		}
 	
 	}
-	
 
-
-	
 	protected function editForm(){
 		
 		$legend = $this->pageMode;

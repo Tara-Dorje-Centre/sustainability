@@ -10,31 +10,35 @@ class userFields extends _entityFields{
     	$this->hasParent = false;
     }
 
-	public function setRowValues($row){
-		parent::setRowValues($row);
+	public function setRow($row){
+		parent::setRow($row);
 		$this->sortKey = $row["sort_key"];
 		$this->sortKeyParent= $row["parent_sort_key"];
 	}
 	
+	
+	
 	public function listHeading(){
-		$this->resetContent();
-		$this->addContent(parent::listHeading);
+
+		$this->addContent(parent::listHeading(),true);
 		
 		$heading .= wrapTh('SortKey');
-		return $heading;
+		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		$detail = parent::listDetail();
+		$this->addContent(parent::listDetail(),true)
 		$detail .= wrapTd($this->sortKey);
-		return $detail;
+		return $this->getContent();
 	}
 	
-	public function displayDetail(){
-		$detail = parent::displayDetail();
+	public function display(){
+		$this->addContent(parent::display(),true)
 		$detail .= para('sortKey', 'SortKey', $this->sortKey);
-		return $detail;
+		return $this->getContent();
 	}
+	
+	public getPost
 
 }
 
