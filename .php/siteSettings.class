@@ -1,95 +1,163 @@
 ﻿<?php 
 
 class siteSettingsFields extends _entityFields{
+	 public $siteTitle = 'MyProjects';
+	 public $siteUrl = 'MyUrl';
+	 public $loginNotice = '';
+	 public $organizationUrl = 'MyOrganizationUrl';	
+	 public $organization = 'MyOrganization';
+	 public $organizationDescription = 'AboutMyOrganization';
+	 public $contactName = 'MySiteContact';
+	 public $contactEmail = 'MySiteContact@MyOrganization';
+	 public $showPublicSite = 'no';
+	 public $showCostReports = 'no';
+	 public $showRevenueReports = 'no';
+	 public $publicFillColor;
+	 public $publicSiteColor;
+	 public $publicPageColor;
+	 public $publicMenuColor;
+	 public $publicMenuColorHover;
+	 public $publicTextColor;
+	 public $publicTextColorHover;			
+	 public $publicFontFamily;
+	 public $publicFontSizeTitle = 20;
+	 public $publicfontSizeHeading = 16;
+	 public $publicFontSizeMenu = 12;
+	 public $publicFontSizeText = 12;
+	 
+	
 
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
 
-_entityTypeFields  notes, displayOrder
-****/
+	public function __construct(){
 
 
 
+	}
+	
+	public function setRow($row){
+		parent::setRow($row);
+		
+		 $this->siteTitle = $row["site_title"];
+		 $this->name = $this->siteTitle;
+		 $this->siteUrl = $row["site_url"];
+		 $this->loginNotice = $row["login_notice"];
+		 $this->organization = $row["organization"];
+		 $this->organizationUrl = $row["organization_url"];
+		 $this->organizationDescription = $row["organization_description"];
+		 $this->contactName = $row["contact_name"];
+		 $this->contactEmail = $row["contact_email"];
+		 $this->showPublicSite = $row["show_public_site"];
+		 $this->showCostReports = $row["show_cost_reports"];
+		 $this->showRevenueReports = $row["show_revenue_reports"];
+		 $this->publicFillColor = $row["public_fill_color"];
+		 $this->publicSiteColor = $row["public_site_color"];
+		 $this->publicPageColor = $row["public_page_color"];
+		 $this->publicMenuColor = $row["public_menu_color"];
+		 $this->publicMenuColorHover = $row["public_menu_color_hover"];
+		 $this->publicTextColor = $row["public_text_color"];
+		 $this->publicTextColorHover = $row["public_text_color_hover"];
+		 $this->publicFontFamily = $row["public_font_family"];
+		 $this->publicFontSizeTitle = $row["public_font_size_title"];
+		 $this->publicFontSizeHeading = $row["public_font_size_heading"];
+		 $this->publicFontSizeMenu = $row["public_font_size_menu"];
+		 $this->publicFontSizeText = $row["public_font_size_text"];
+		
+	}
+	
+	public function defaults(){
+		parent::defaults();
+		
+		
+		
+	}
+	
+	public function format(){
+		parent::format();
+		 $this->siteTitle = $this->formatText($this->siteTitle);
+		 $this->organization = $this->formatText($this->organization);
+		 $this->loginNotice = $this->formatText($this->loginNotice);
+	}
+	
+	public function listHeading(){
+		$this->addContent(parent::listHeading(),true);
+		
+		
+		return $this->getContent();
+	}
+	
+	public function listDetail(){
+		$this->addContent(parent::listDetail(),true);
+		
+		
+		return $this->getContent();
+	}
+	
+	public function display(){
+		$this->addContent(parent::display(),true);
+		$this->detailPara('Projects Title', $this->siteTitle);
+		$this->detailPara('Projects URL', $this->siteUrl);
+		$this->detailPara('Project Login Notice', $this->loginNotice);
+		$this->detailPara('Organization', $this->organization);
+		$this->detailPara('Org. URL', $this->organizationUrl);
+		$this->detailPara('Org. Description', $this->organizationDescription);
+		$this->detailPara('Contact Name', $this->contactName);
+		$this->detailPara('Contact Email', $this->contactEmail);
+		return $this->getContent();
+	}
+	
+	public function getPostVars(){
+		parent::getPostVars();
+		 $this->siteTitle = $this->postText('siteTitle');
+		 $this->siteUrl = $this->postText('siteUrl'); 
+		 $this->loginNotice = $this->postText('loginNotice');
+		 $this->organization = $this->postText('organization']); 
+		 $this->organizationUrl = $this->postText('organizationUrl');
+		 $this->organizationDescription = $this->postText('organizationDescription');
+		 $this->contactName = $this->postText('contactName'); 		
+		 $this->contactEmail = $this->postText('contactEmail');
+		 $this->showPublicSite = $this->postText('showPublicSite');
+		 $this->showCostReports = $this->postText('showCostReports');
+		 $this->showRevenueReports = $this->postText('showRevenueReports'); 		
+		 $this->publicFillColor = $this->postText('publicFillColor');
+		 $this->publicSiteColor = $this->postText('publicSiteColor');
+		 $this->publicPageColor = $this->postText('publicPageColor');
+		 $this->publicMenuColor = $this->postText('publicMenuColor');
+		 $this->publicMenuColorHover = $this->postText('publicMenuColorHover');
+		 $this->publicTextColor = $this->postText('publicTextColor');
+		 $this->publicTextColorHover = $this->postText('publicTextColorHover');
+		 $this->publicFontFamily = $this->postText('publicFontFamily');
+		 $this->publicFontSizeTitle = $this->postText('publicFontSizeTitle');
+		 $this->publicFontSizeHeading = $this->postText('publicFontSizeHeading');
+		 $this->publicFontSizeMenu = $this->postText('publicFontSizeMenu');
+		 $this->publicFontSizeText = $this->postText('publicFontSizeText');
+		
+	}
 }
 
 class siteSettings extends _entity{
-protected $__MyClassName = 'SiteSettings';
+	protected $__MyClassName = 'SiteSettings';
+	protected $_titleEntity = 'Site Settings';
 
-
-
-
-	public $siteTitle = 'MyProjects';
-	public $siteUrl = 'MyUrl';
-	public $loginNotice = '';
-	public $organizationUrl = 'MyOrganizationUrl';	
-	public $organization = 'MyOrganization';
-	public $organizationDescription = 'AboutMyOrganization';
-	public $contactName = 'MySiteContact';
-	public $contactEmail = 'MySiteContact@MyOrganization';
-	// property to support edit/view/add mode of calling page
-    //public $pageMode;
-	public $sql;
-	private $showPublicSite = 'no';
-	private $showCostReports = 'no';
-	private $showRevenueReports = 'no';
-	private $publicFillColor;
-	private $publicSiteColor;
-	private $publicPageColor;
-	private $publicMenuColor;
-	private $publicMenuColorHover;
-	private $publicTextColor;
-	private $publicTextColorHover;			
-	private $publicFontFamily;
-	private $publicFontSizeTitle = 20;
-	private $publicfontSizeHeading = 16;
-	private $publicFontSizeMenu = 12;
-	private $publicFontSizeText = 12;
-	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->sql = new siteSettingsSQL;
+	public function setHelperClasses(){
+		$this->f = new siteSettingsFields();
+		$this->links = new siteSettingsLinks();
+		$this->sql = new siteSettingsSQL();
 	}
 	
     // set class properties with record values from database
 	public function setDetails(){
-
 		$this->verifySettings();
 
 		$sql = $this->sql->info();
-		
 		$result = dbGetResult($sql);
 		if($result){
 		while ($row = $result->fetch_assoc())
 		{		
-			$this->siteTitle = ($row["site_title"]);
-			$this->siteUrl = ($row["site_url"]);
-			$this->loginNotice = ($row["login_notice"]);
-			$this->organization = ($row["organization"]);
-			$this->organizationUrl = ($row["organization_url"]);
-			$this->organizationDescription = ($row["organization_description"]);
-			$this->contactName = ($row["contact_name"]);
-			$this->contactEmail = ($row["contact_email"]);
-			$this->showPublicSite = ($row["show_public_site"]);
-			$this->showCostReports = ($row["show_cost_reports"]);
-			$this->showRevenueReports = ($row["show_revenue_reports"]);
-			$this->publicFillColor = ($row["public_fill_color"]);
-			$this->publicSiteColor = ($row["public_site_color"]);
-			$this->publicPageColor = ($row["public_page_color"]);
-			$this->publicMenuColor = ($row["public_menu_color"]);
-			$this->publicMenuColorHover = ($row["public_menu_color_hover"]);
-			$this->publicTextColor = ($row["public_text_color"]);
-			$this->publicTextColorHover = ($row["public_text_color_hover"]);
-			$this->publicFontFamily = ($row["public_font_family"]);
-			$this->publicFontSizeTitle = ($row["public_font_size_title"]);
-			$this->publicFontSizeHeading = ($row["public_font_size_heading"]);
-			$this->publicFontSizeMenu = ($row["public_font_size_menu"]);
-			$this->publicFontSizeText = ($row["public_font_size_text"]);
+			$this->f->setRow($row);
+		
 		}
 		$result->close();
 		}
-		
 		$this->setSessionDetails();	
 	}	
 	
@@ -103,17 +171,20 @@ protected $__MyClassName = 'SiteSettings';
 	}
 	
 	public function setSessionDetails(){
-		//$this->formatForDisplay();
-		$_SESSION['site-title'] = $this->siteTitle;	
-		$_SESSION['site-url'] = $this->siteUrl;
-		$_SESSION['site-login-notice'] = displayLines($this->loginNotice);
-		$_SESSION['site-org'] = $this->organization;
-		$_SESSION['site-org-url'] = $this->organizationUrl;
-		$_SESSION['site-contact-name'] = $this->contactName;
-		$_SESSION['site-contact-email'] = $this->contactEmail;
-		$_SESSION['show-public-site'] = $this->showPublicSite;
-		$_SESSION['show-cost-reports'] = $this->showCostReports;
-		$_SESSION['show-revenue-reports'] = $this->showRevenueReports;
+	//if format happens on setting details for edit
+		if ($this->pageMode != 'EDIT') && ($this->pageMode !,= 'ADD'){
+		$this->f->format();
+		}
+		$_SESSION['site-title'] = $this->f->siteTitle;	
+		$_SESSION['site-url'] = $this->f->siteUrl;
+		$_SESSION['site-login-notice'] = displayLines($this->f->loginNotice);
+		$_SESSION['site-org'] = $this->f->organization;
+		$_SESSION['site-org-url'] = $this->f->organizationUrl;
+		$_SESSION['site-contact-name'] = $this->f->contactName;
+		$_SESSION['site-contact-email'] = $this->f->contactEmail;
+		$_SESSION['show-public-site'] = $this->f->showPublicSite;
+		$_SESSION['show-cost-reports'] = $this->f->showCostReports;
+		$_SESSION['show-revenue-reports'] = $this->f->showRevenueReports;
 	}
 	
 	public function unsetSessionDetails(){
@@ -127,11 +198,6 @@ protected $__MyClassName = 'SiteSettings';
 		unset($_SESSION['show-public-site']);
 		unset($_SESSION['show-cost-reports']);
 		unset($_SESSION['show-revenue-reports']);
-	}
-	
-		
-	protected function setPageTitle(){
-		$this->_pageTitle = 'Site Settings';
 	}
 	
 	protected function setPageMenu(){
@@ -153,26 +219,9 @@ protected $__MyClassName = 'SiteSettings';
 		$this->_pageMenu = $menu;
 	}
 	
-	protected function formatForDisplay(){
-		$this->siteTitle = displayLines($this->siteTitle);
-		$this->organization = displayLines($this->organization);
-		$this->loginNotice = displayLines($this->loginNotice);
-	}
-	
-	
 	public function display(){
-		$this->formatForDisplay();
-				
-		$detail = openDisplayDetails('site-settings','Site Settings');
-	 						
-		$detail .= captionedParagraph('siteTitle', 'Projects Title', $this->siteTitle);
-		$detail .= captionedParagraph('siteUrl', 'Projects URL', $this->siteUrl);
-		$detail .= captionedParagraph('login-notice', 'Project Login Notice', $this->loginNotice);
-		$detail .= captionedParagraph('org', 'Organization', $this->organization);
-		$detail .= captionedParagraph('org-url', 'Org. URL', $this->organizationUrl);
-		$detail .= captionedParagraph('org-description','Org. Description', $this->organizationDescription);
-		$detail .= captionedParagraph('contact-name', 'Contact Name', $this->contactName);
-		$detail .= captionedParagraph('contact-email', 'Contact Email', $this->contactEmail);
+		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
+		$detail .= $this->f->display();
 		
 		$detail .= $this->getPublicSiteStylesFieldset('true');
 		
@@ -184,41 +233,41 @@ protected $__MyClassName = 'SiteSettings';
 
 		$styles = openFieldset('Public Site Presentation Styles');
 		$styles .= openDiv('public-styles','editing-table');
-		$input = getColorSelectList($this->publicFillColor, 'publicFillColor',$disabled);
+		$input = getColorSelectList($this->f->publicFillColor, 'publicFillColor',$disabled);
 		$styles .= captionedInput('Fill Color', $input);		
 
-		$input = getColorSelectList($this->publicSiteColor, 'publicSiteColor',$disabled);
+		$input = getColorSelectList($this->f->publicSiteColor, 'publicSiteColor',$disabled);
 		$styles .= captionedInput('Site Color', $input);		
 
-		$input = getColorSelectList($this->publicPageColor, 'publicPageColor',$disabled);
+		$input = getColorSelectList($this->f->publicPageColor, 'publicPageColor',$disabled);
 		$styles .= captionedInput('Page Color', $input);		
 
-		$input = getColorSelectList($this->publicMenuColor, 'publicMenuColor',$disabled);
+		$input = getColorSelectList($this->f->publicMenuColor, 'publicMenuColor',$disabled);
 		$styles .= captionedInput('Menu Color', $input);		
 
-		$input = getColorSelectList($this->publicMenuColorHover, 'publicMenuColorHover',$disabled);
+		$input = getColorSelectList($this->f->publicMenuColorHover, 'publicMenuColorHover',$disabled);
 		$styles .= captionedInput('Menu Color Hover', $input);		
 
-		$input = getColorSelectList($this->publicTextColor, 'publicTextColor',$disabled);
+		$input = getColorSelectList($this->f->publicTextColor, 'publicTextColor',$disabled);
 		$styles .= captionedInput('Text Color', $input);		
 
-		$input = getColorSelectList($this->publicTextColorHover, 'publicTextColorHover',$disabled);
+		$input = getColorSelectList($this->f->publicTextColorHover, 'publicTextColorHover',$disabled);
 		$styles .= captionedInput('Text Color Menu Hover', $input);		
 		
-		$input = getFontSizeSelectList($this->publicFontSizeTitle, 'publicFontSizeTitle',$disabled);
+		$input = getFontSizeSelectList($this->f->publicFontSizeTitle, 'publicFontSizeTitle',$disabled);
 		$styles .= captionedInput('Font Size Title px', $input);	
 
-		$input = getFontSizeSelectList($this->publicFontSizeHeading, 'publicFontSizeHeading',$disabled);
+		$input = getFontSizeSelectList($this->f->publicFontSizeHeading, 'publicFontSizeHeading',$disabled);
 		$styles .= captionedInput('Font Size Heading px', $input);	
 		
-		$input = getFontSizeSelectList($this->publicFontSizeMenu, 'publicFontSizeMenu',$disabled);
+		$input = getFontSizeSelectList($this->f->publicFontSizeMenu, 'publicFontSizeMenu',$disabled);
 		$styles .= captionedInput('Font Size Menu px', $input);	
 		
 			
-		$input = getFontSizeSelectList($this->publicFontSizeText, 'publicFontSizeText',$disabled);
+		$input = getFontSizeSelectList($this->f->publicFontSizeText, 'publicFontSizeText',$disabled);
 		$styles .= captionedInput('Font Size Text px', $input);	
 
-		$input = getFontFamilySelectList($this->publicFontFamily, 'publicFontFamily',$disabled);
+		$input = getFontFamilySelectList($this->f->publicFontFamily, 'publicFontFamily',$disabled);
 		$styles .= captionedInput('FontFamily', $input);	
 			
 		//add the sample region after the first color select
@@ -244,20 +293,20 @@ protected $__MyClassName = 'SiteSettings';
 		$td->addAttribute('rowspan',11);
 		$x .= $td->open();
 		
-		$style = minHeightPixels(200).setPadding(10).setFontFamily($this->publicFontFamily);
-		$style .= setFont($this->publicFontSizeText,'normal','normal').colorBackground($this->publicFillColor);
+		$style = minHeightPixels(200).setPadding(10).setFontFamily($this->f->publicFontFamily);
+		$style .= setFont($this->f->publicFontSizeText,'normal','normal').colorBackground($this->f->publicFillColor);
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
 
-		$style = setPadding(10).colorBackground($this->publicSiteColor);
+		$style = setPadding(10).colorBackground($this->f->publicSiteColor);
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
 		
 
 		$style = setPadding(10).widthPixels(75).setFloat('left');
-		$style .= colorBackground($this->publicMenuColor).setFont($this->publicFontSizeMenu,'normal','normal');
+		$style .= colorBackground($this->f->publicMenuColor).setFont($this->f->publicFontSizeMenu,'normal','normal');
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
@@ -268,13 +317,13 @@ protected $__MyClassName = 'SiteSettings';
 		$list->setStyle($style);
 		$x .= $list->open();
 		
-		$style = setDisplay('block').colorText($this->publicTextColor);
+		$style = setDisplay('block').colorText($this->f->publicTextColor);
 		$li = new _li();
 		$li->setStyle($style);
 		$x .= $li->wrap('Menu Item');
 	
-		$style = setDisplay('block').colorText($this->publicTextColorHover);
-		$style .= colorBackground($this->publicMenuColorHover);
+		$style = setDisplay('block').colorText($this->f->publicTextColorHover);
+		$style .= colorBackground($this->f->publicMenuColorHover);
 		$li = new _li();
 		$li->setStyle($style);
 		$x .= $li->wrap('Menu Item');
@@ -283,14 +332,14 @@ protected $__MyClassName = 'SiteSettings';
 		$x .= closeDiv();
 	
 		$style = setPadding(10).setMarginCustom('left',100);
-		$style .= colorBackground($this->publicPageColor).colorText($this->publicTextColor);
+		$style .= colorBackground($this->f->publicPageColor).colorText($this->f->publicTextColor);
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
 		
-		$x .= spanStyled('Titles',setFont($this->publicFontSizeTitle,'normal','bold')).br();
-		$x .= spanStyled('Headings',setFont($this->publicFontSizeHeading,'normal','bold')).br();
-		$x .= spanStyled('Content Text'.br().'...',setFont($this->publicFontSizeText,'normal','normal')).br();
+		$x .= spanStyled('Titles',setFont($this->f->publicFontSizeTitle,'normal','bold')).br();
+		$x .= spanStyled('Headings',setFont($this->f->publicFontSizeHeading,'normal','bold')).br();
+		$x .= spanStyled('Content Text'.br().'...',setFont($this->f->publicFontSizeText,'normal','normal')).br();
 		$x .= closeDiv();		
 		$x .= closeDiv();		
 		$x .= closeDiv();
@@ -298,9 +347,9 @@ protected $__MyClassName = 'SiteSettings';
 		return $x;		
 	}
 	
-	public function editForm(){
+	protected function editForm(){
 		if ($this->pageMode == 'ADD'){		
-			$this->setDefaults();
+			//$this->setDefaults();
 			$legend = 'Add Site Settings';
 		} else {
 			$legend = 'Edit Site Settings';	
@@ -314,37 +363,37 @@ protected $__MyClassName = 'SiteSettings';
 		$form = openEditForm($entity,$legend,'sys_SiteSettings_Save.php',$contextMenu);
 		
 		//start required fields
-		$fields = inputFieldName($entity,$this->siteTitle,'siteTitle','Projects Title');
+		$fields = inputFieldName($entity,$this->f->siteTitle,'siteTitle','Projects Title');
 
-		$fields .= inputFieldText($entity,$this->siteUrl,'siteUrl','Projects URL',50,255);
+		$fields .= inputFieldText($entity,$this->f->siteUrl,'siteUrl','Projects URL',50,255);
 				
-		$fields .= inputFieldName($entity,$this->contactName,'contactName','Contact Name');
+		$fields .= inputFieldName($entity,$this->f->contactName,'contactName','Contact Name');
 
-		$fields .= inputFieldText($entity,$this->contactEmail,'contactEmail','Contact Email',40,100);
+		$fields .= inputFieldText($entity,$this->f->contactEmail,'contactEmail','Contact Email',40,100);
 
 		//end required fields
 		$formRequired = $fields;
 
 		//start optional fields		
-		$fields = inputFieldName($entity,$this->organization,'organization','Organization');
+		$fields = inputFieldName($entity,$this->f->organization,'organization','Organization');
 
-		$fields .= inputFieldText($entity,$this->organizationUrl,'organizationUrl','Organization URL',50,255);
+		$fields .= inputFieldText($entity,$this->f->organizationUrl,'organizationUrl','Organization URL',50,255);
 
-		$fields .= inputFieldComments($entity,$this->organizationDescription,'organizationDescription','Organization Description');
+		$fields .= inputFieldComments($entity,$this->f->organizationDescription,'organizationDescription','Organization Description');
 
 
-		$input = getSelectYesNo('showCostReports',$this->showCostReports);
+		$input = getSelectYesNo('showCostReports',$this->f->showCostReports);
 		$fields .= captionedInput('Show Cost Reports',$input);		
 
-		$input = getSelectYesNo('showRevenueReports',$this->showRevenueReports);
+		$input = getSelectYesNo('showRevenueReports',$this->f->showRevenueReports);
 		$fields .= captionedInput('Show Revenue Reports',$input);		
 
-		$input = getSelectYesNo('showPublicSite',$this->showPublicSite);
+		$input = getSelectYesNo('showPublicSite',$this->f->showPublicSite);
 		$fields .= captionedInput('Show Public Site',$input);				
 		
 		$fields .= $this->getPublicSiteStylesFieldset('false');
 
-		$fields .= inputFieldComments($entity,$this->loginNotice,'loginNotice','Projects Login Notice',1000);
+		$fields .= inputFieldComments($entity,$this->f->loginNotice,'loginNotice','Projects Login Notice',1000);
 
 
 		//end optional fields (hidden by default)
@@ -352,6 +401,7 @@ protected $__MyClassName = 'SiteSettings';
 
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
+		
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 		
@@ -359,34 +409,6 @@ protected $__MyClassName = 'SiteSettings';
 		return $form;
 	}
 	
-	public function collectPostValues(){
-
-		$this->siteTitle = dbEscapeString($_POST['siteTitle']);
-		$this->siteUrl = dbEscapeString($_POST['siteUrl']); 
-		$this->loginNotice = dbEscapeString($_POST['loginNotice']);
-		$this->organization = dbEscapeString($_POST['organization']); 
-		$this->organizationUrl = dbEscapeString($_POST['organizationUrl']);
-		$this->organizationDescription = dbEscapeString($_POST['organizationDescription']);
-		$this->contactName = dbEscapeString($_POST['contactName']); 		
-		$this->contactEmail = dbEscapeString($_POST['contactEmail']);
-		$this->showPublicSite = dbEscapeString($_POST["showPublicSite"]);
-		$this->showCostReports = dbEscapeString($_POST["showCostReports"]);
-		$this->showRevenueReports = dbEscapeString($_POST["showRevenueReports"]); 		
-		$this->publicFillColor = dbEscapeString($_POST["publicFillColor"]);
-		$this->publicSiteColor = dbEscapeString($_POST["publicSiteColor"]);
-		$this->publicPageColor = dbEscapeString($_POST["publicPageColor"]);
-		$this->publicMenuColor = dbEscapeString($_POST["publicMenuColor"]);
-		$this->publicMenuColorHover = dbEscapeString($_POST["publicMenuColorHover"]);
-		$this->publicTextColor = dbEscapeString($_POST["publicTextColor"]);
-		$this->publicTextColorHover = dbEscapeString($_POST["publicTextColorHover"]);
-		$this->publicFontFamily = dbEscapeString($_POST["publicFontFamily"]);
-		$this->publicFontSizeTitle = dbEscapeString($_POST["publicFontSizeTitle"]);
-		$this->publicFontSizeHeading = dbEscapeString($_POST["publicFontSizeHeading"]);
-		$this->publicFontSizeMenu = dbEscapeString($_POST["publicFontSizeMenu"]);
-		$this->publicFontSizeText = dbEscapeString($_POST["publicFontSizeText"]);
-		$this->pageMode = $_POST['mode'];	
-	}
-
 	private function createSettings(){
 
 		
@@ -414,27 +436,27 @@ protected $__MyClassName = 'SiteSettings';
 			$sql .= " show_revenue_reports ";
 			$sql .= " ) ";
 			$sql .= " VALUES (";
-			$sql .= " '".$this->siteTitle."', ";
-			$sql .= " '".$this->organization."', ";
-			$sql .= " '".$this->organizationDescription."', ";
-			$sql .= " '".$this->siteUrl."', ";
-			$sql .= " '".$this->contactName."', ";
-			$sql .= " '".$this->contactEmail."', ";
-			$sql .= " '".$this->publicFillColor."', ";
-			$sql .= " '".$this->publicSiteColor."', ";
-			$sql .= " '".$this->publicPageColor."', ";
-			$sql .= " '".$this->publicMenuColor."', ";
-			$sql .= " '".$this->publicMenuColorHover."', ";
-			$sql .= " '".$this->publicTextColor."', ";
-			$sql .= " '".$this->publicTextColorHover."', ";
-			$sql .= " '".$this->publicFontFamily."', ";			
-			$sql .= " ".$this->publicFontSizeTitle.", ";
-			$sql .= " ".$this->publicFontSizeHeading.", ";
-			$sql .= " ".$this->publicFontSizeMenu.", ";
-			$sql .= " ".$this->publicFontSizeText.", ";			
-			$sql .= " '".$this->showPublicSite."', ";			
-			$sql .= " '".$this->showCostReports."', ";			
-			$sql .= " '".$this->showRevenueReports."' ";			
+			$sql .= " '".$this->f->siteTitle."', ";
+			$sql .= " '".$this->f->organization."', ";
+			$sql .= " '".$this->f->organizationDescription."', ";
+			$sql .= " '".$this->f->siteUrl."', ";
+			$sql .= " '".$this->f->contactName."', ";
+			$sql .= " '".$this->f->contactEmail."', ";
+			$sql .= " '".$this->f->publicFillColor."', ";
+			$sql .= " '".$this->f->publicSiteColor."', ";
+			$sql .= " '".$this->f->publicPageColor."', ";
+			$sql .= " '".$this->f->publicMenuColor."', ";
+			$sql .= " '".$this->f->publicMenuColorHover."', ";
+			$sql .= " '".$this->f->publicTextColor."', ";
+			$sql .= " '".$this->f->publicTextColorHover."', ";
+			$sql .= " '".$this->f->publicFontFamily."', ";			
+			$sql .= " ".$this->f->publicFontSizeTitle.", ";
+			$sql .= " ".$this->f->publicFontSizeHeading.", ";
+			$sql .= " ".$this->f->publicFontSizeMenu.", ";
+			$sql .= " ".$this->f->publicFontSizeText.", ";			
+			$sql .= " '".$this->f->showPublicSite."', ";			
+			$sql .= " '".$this->f->showCostReports."', ";			
+			$sql .= " '".$this->f->showRevenueReports."' ";			
 			$sql .= " ) ";
 			
 		$result = dbRunSQL($sql);
@@ -447,33 +469,33 @@ protected $__MyClassName = 'SiteSettings';
 
 			$sql = " UPDATE sitewide_settings AS sw ";
 			$sql .= " SET ";
-			$sql .= " sw.site_title = '".$this->siteTitle."', ";
-			$sql .= " sw.site_url = '".$this->siteUrl."', ";
-			$sql .= " sw.login_notice = '".$this->loginNotice."', ";
-			$sql .= " sw.organization = '".$this->organization."', ";
-			$sql .= " sw.organization_url = '".$this->organizationUrl."', ";
-			$sql .= " sw.organization_description = '".$this->organizationDescription."', ";
-			$sql .= " sw.contact_name = '".$this->contactName."', ";
-			$sql .= " sw.contact_email = '".$this->contactEmail."', ";
-			$sql .= " sw.public_fill_color = '".$this->publicFillColor."', ";
-			$sql .= " sw.public_site_color = '".$this->publicSiteColor."', ";
-			$sql .= " sw.public_page_color = '".$this->publicPageColor."', ";
-			$sql .= " sw.public_menu_color = '".$this->publicMenuColor."', ";
-			$sql .= " sw.public_menu_color_hover = '".$this->publicMenuColorHover."', ";
-			$sql .= " sw.public_text_color = '".$this->publicTextColor."', ";
-			$sql .= " sw.public_text_color_hover = '".$this->publicTextColorHover."', ";
-			$sql .= " sw.public_font_family = '".$this->publicFontFamily."', ";			
-			$sql .= " sw.public_font_size_title = ".$this->publicFontSizeTitle.", ";			
-			$sql .= " sw.public_font_size_heading = ".$this->publicFontSizeHeading.", ";			
-			$sql .= " sw.public_font_size_menu = ".$this->publicFontSizeMenu.", ";			
-			$sql .= " sw.public_font_size_text = ".$this->publicFontSizeText.", ";			
-			$sql .= " sw.show_public_site = '".$this->showPublicSite."', ";
-			$sql .= " sw.show_cost_reports = '".$this->showCostReports."', ";
-			$sql .= " sw.show_revenue_reports = '".$this->showRevenueReports."' ";
+			$sql .= " sw.site_title = '".$this->f->siteTitle."', ";
+			$sql .= " sw.site_url = '".$this->f->siteUrl."', ";
+			$sql .= " sw.login_notice = '".$this->f->loginNotice."', ";
+			$sql .= " sw.organization = '".$this->f->organization."', ";
+			$sql .= " sw.organization_url = '".$this->f->organizationUrl."', ";
+			$sql .= " sw.organization_description = '".$this->f->organizationDescription."', ";
+			$sql .= " sw.contact_name = '".$this->f->contactName."', ";
+			$sql .= " sw.contact_email = '".$this->f->contactEmail."', ";
+			$sql .= " sw.public_fill_color = '".$this->f->publicFillColor."', ";
+			$sql .= " sw.public_site_color = '".$this->f->publicSiteColor."', ";
+			$sql .= " sw.public_page_color = '".$this->f->publicPageColor."', ";
+			$sql .= " sw.public_menu_color = '".$this->f->publicMenuColor."', ";
+			$sql .= " sw.public_menu_color_hover = '".$this->f->publicMenuColorHover."', ";
+			$sql .= " sw.public_text_color = '".$this->f->publicTextColor."', ";
+			$sql .= " sw.public_text_color_hover = '".$this->f->publicTextColorHover."', ";
+			$sql .= " sw.public_font_family = '".$this->f->publicFontFamily."', ";			
+			$sql .= " sw.public_font_size_title = ".$this->f->publicFontSizeTitle.", ";			
+			$sql .= " sw.public_font_size_heading = ".$this->f->publicFontSizeHeading.", ";			
+			$sql .= " sw.public_font_size_menu = ".$this->f->publicFontSizeMenu.", ";			
+			$sql .= " sw.public_font_size_text = ".$this->f->publicFontSizeText.", ";			
+			$sql .= " sw.show_public_site = '".$this->f->showPublicSite."', ";
+			$sql .= " sw.show_cost_reports = '".$this->f->showCostReports."', ";
+			$sql .= " sw.show_revenue_reports = '".$this->f->showRevenueReports."' ";
 
 			$result = dbRunSQL($sql);
 		
-			$this->setSessionDetails();
+			$this->f->setSessionDetails();
 		
 	
 	}

@@ -39,6 +39,8 @@ class locationFields extends _entityFields{
 		return $detail;
 	}
 	
+	//getPostVars
+	
 	
 }
 
