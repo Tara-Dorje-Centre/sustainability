@@ -1,6 +1,18 @@
 <?php 
 
-abstract class _entityFields extends _baseEntityFields{
+
+interface IentityFields {
+	public function __construct();
+	public function setRow($row);
+	public function format();
+	public function defaults();
+	public function listHeading();
+	public function listDetail();
+	public function display();
+	public function getPostVars();
+}
+
+abstract class _entityFields extends _baseEntityFields implements IentityFields{
 
 	/******
 	 _entityFields    id, name, description, 
@@ -136,27 +148,17 @@ abstract class _entityFields extends _baseEntityFields{
 		$this->reset;
 		
 	}
-	/*
-	protected function formatText($text,$hasField=false){
-		return displayLines($text);
-	}
-	protected function formatDate($date,$hasField=false){
-		return getTimestampDate($date);
-	}*/
 	
-	protected function format(){
+	
+	public function format(){
 		$this->name = formatText($this->name,true);
 		$this->description = formatText($this->description,true);
-		if ( == true){
-			$this->created = formatDate($this->created,$this->hasCreated);
-		}
-		if ( == true){
-			$this->updated = formatDate($this->updated,$this->hasUpdated);
-		}
+		$this->created = formatDate($this->created,$this->hasCreated);
+		$this->updated = formatDate($this->updated,$this->hasUpdated);
 	}
 	
 	public function listHeading(){
-		$this->resetContent()
+		$this->resetContent();
 		$this->listTh('Id',true);
 		$this->listTh('Name',true);
 		$this->listTh('Description',true);
@@ -322,6 +324,11 @@ abstract class _entity extends _baseEntity{
 		return $listRow;
 	}
 	
+	public function listRow($row){
+		$this->f->setRow($row);
+		return $this->listRowFormat();
+	}
+	
 	protected function display($close = true){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
 		$detail .= $this->f->display();
@@ -356,7 +363,6 @@ abstract class _entity extends _baseEntity{
 	
 	public function collectPostValues(){
 		$this->pageMode = $_POST['mode'];	
-		
 		$this->f->getPostVars();
 		$this->synchIds();
 	}

@@ -1,5 +1,8 @@
 ﻿<?php 
 
+
+
+
 class userFields extends _entityFields{
 	
     public $loginName;
@@ -36,32 +39,69 @@ class userFields extends _entityFields{
 		$this->mustUpdatePwd = $row["must_update_pwd"];
 	}
 	
+	public function format(){
+		parent::format();
+		$this->focus = formatText($this->focus); 		
+		$this->interests = formatText($this->interests); 
+		$this->lastLogin = formatDate($this->lastLogin); 
+
+	}
 	
+	public function defaults(){
+		parent::defaults();
+		$this->isAdmin = 'no';
+		$this->mustUpdatePwd = 'yes';
+		$this->isActive = 'yes';
+		
+	}
 	
 	public function listHeading(){
-
 		$this->addContent(parent::listHeading(),true);
-		
-		$this->listTh('SortKey');
+		$this->listTh('Login Name');
+		$this->listTh('First Name');
+		$this->listTh('Last Name');
+		$this->listTh('Focus');
+		$this->listTh('Interests');
+		$this->listTh('Last Login');
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		$this->addContent(parent::listDetail(),true)
-		$this->listTd($this->sortKey);
+		$this->addContent(parent::listDetail(),true);
+		$this->listTh($this->nameFirst);			
+		$this->listTh($this->nameLast);		
+		$this->listTh($this->focus);		
+		$this->listTh($this->interests);		
+		$this->listTh($this->lastLogin);		
 		return $this->getContent();
 	}
 	
 	public function display(){
-		$this->addContent(parent::display(),true)
-		$this->detailPara('SortKey', $this->sortKey);
+		$this->addContent(parent::display(),true);
+		$this->detailPara('Login Name', $this->loginName);
+		$this->detailPara('First Name', $this->nameFirst);
+		$this->detailPara('Last Name', $this->nameLast);
+		$this->detailPara('Email Address', $this->email);
+		$this->detailPara('Focus', $this->focus);
+		$this->detailPara('Interests', $this->interests);
+		$this->detailPara('Last Login', $this->lastLogin);
+		$this->detailPara('Active Profile', $this->isActive);
+		$this->detailPara('Administrator', $this->isAdmin);
+		$this->detailPara('Must Update Password', $this->mustUpdatePwd);
 		return $this->getContent();
 	}
 	
-	public getPostVars(){
+	public function getPostVars(){
 		parent::getPostVars();
-	
-	
+		$this->nameFirst = $this->postString('nameFirst'); 
+		$this->nameLast = $this->postString('nameLast'); 
+		$this->email = $this->postString('email'); 
+		$this->focus = $this->postString('focus'); 
+		$this->interests = $this->postString('interests'); 
+		$this->isAdmin = $this->postString('isAdmin');
+		$this->isActive = $this->postString('isActive');
+		$this->mustUpdatePwd = $this->postString('mustUpdatePwd');
+		$this->loginName = $this->postString('loginName'); 
 	}
 
 }
@@ -74,7 +114,7 @@ protected $__MyClassName = 'User';
 	public $validationMessages;
 
 	
-	protected function setHelperClasses();
+	protected function setHelperClasses(){
 		$this->f = new UserFields();
 		$this->sql = new UserSQL();
 		$this->links = new UserLinks();
@@ -83,22 +123,7 @@ protected $__MyClassName = 'User';
 	public function setTypeId($id){
 		$this->typeId = $id;
 	}
-	/*
-	public function setDetails(){
 	
-		$this->echoState(true, 'setDetails');
-
-		$sql = $this->sql->info($this->id);
-		$result = dbGetResult($sql);*
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{
-			$this->f->setRow($row);
-		}
-		$result->close();
-		}
-
-	}	*/
 		
 	protected function setPageTitle(){
 
@@ -139,11 +164,6 @@ protected $__MyClassName = 'User';
 		$this->_pageMenu = $menu;
 	}
 	
-	public function formatForDisplay(){
-		$this->focus = displayLines($this->focus); 		
-		$this->interests = displayLines($this->interests); 
-	}
-
 
 	public function getPageDetails(){			
 		if ($_SESSION['is-admin'] == 'yes'){
@@ -170,23 +190,10 @@ protected $__MyClassName = 'User';
 		
 	}
 	
-	public function display(){
-		$this->formatForDisplay();
+	public function display($close = true){
+
 		$detail = openDisplayDetails('user','User Profile Details');		
-
-		$detail .= captionedParagraph('login-name', 'Login Name', $this->loginName);
-		$detail .= captionedParagraph('name-first', 'First Name', $this->nameFirst);
-		$detail .= captionedParagraph('name-last', 'Last Name', $this->nameLast);
-		$detail .= captionedParagraph('email', 'Email Address', $this->email);
-		$detail .= captionedParagraph('type-name', 'Profile Type', $this->typeName);
-		$detail .= captionedParagraph('focus', 'Focus', $this->focus);
-		$detail .= captionedParagraph('interests', 'Interests', $this->interests);
-		$detail .= captionedParagraph('last-login', 'Last Login', $this->lastLogin);
-		
-		$detail .= captionedParagraph('is-active', 'Active Profile', $this->isActive);
-		$detail .= captionedParagraph('is-admin','Administrator', $this->isAdmin);
-		$detail .= captionedParagraph('must-update-pwd','Must Update Password', $this->mustUpdatePwd);
-
+		$detail .= $this->f->display();
 		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){		
 			$detail .= $this->requestPasswordResetForm();
 		}
@@ -339,10 +346,10 @@ protected $__MyClassName = 'User';
 		
 	}
 	
-	private function setAddRecordDefaults(){
-		$this->isAdmin = 'no';
-		$this->mustUpdatePwd = 'yes';
-		$this->isActive = 'yes';
+	protected function setDefaults(){
+		$this->f->defaults();
+		
+		
 	}
 	
 	public function loginForm(){
@@ -410,10 +417,42 @@ protected $__MyClassName = 'User';
 		return $form;
 		
 	}
+	
+	//overrride entity.listrowlink to limit editing to administrators or self edit
+	protected function listRowLink(){
 
-	public function editForm(){
+		if ($_SESSION['is-admin'] == 'yes' || $_SESSION['user-id'] == $u->id){
+			$link = $this->links->itemViewEdit($this->f>loginName,$this->f->id);
+		} else {
+			$link = $this->links->view($this->f->loginName,$this->f->id);
+		}
+			
+	}
+		
+	public function addForm(){
+		if ($_SESSION['is-admin'] == 'yes'){
+			$this->pageMode = 'ADD';
+			$this->setDefaults();
+			$form = $this->editForm();
+		} else {
+			$quickEdit = 'Please request Administrator assistance to add users';
+		}
+		return $form;
+	}
+
+	
+	protected function editForm(){
+	
+		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] != $this->id)){
+			$form = $this->secureEditForm();
+		} else {
+			$form = $this->display();
+		}
+		return $form;
+	}
+	
+	protected function secureEditForm(){
 		if ($this->pageMode == 'ADD'){
-			$this->setAddRecordDefaults();
 			$legend = 'Add Profile';
 		} else {
 			$legend = 'Edit Profile';
@@ -460,7 +499,7 @@ protected $__MyClassName = 'User';
 
 
 		$m = new UserType;
-		$select = $m->getUserTypeSelectList($this->typeId,'typeId','false');
+		$select = $m->options($this->typeId,'typeId','false');
 		$fields .= captionedInput('User Type',$select);
 		
 
@@ -490,7 +529,7 @@ protected $__MyClassName = 'User';
 		
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('userId', $this->id);
+		$hidden .= getHiddenInput('id', $this->id);
 
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
@@ -500,22 +539,8 @@ protected $__MyClassName = 'User';
 	}
 	
 	
-	protected function collectPostValues(){
-
-		$this->id = $_POST['userId'];
-		$this->typeId = $_POST['typeId'];
-		
-		$this->nameFirst = dbEscapeString($_POST['nameFirst']); 
-		$this->nameLast = dbEscapeString($_POST['nameLast']); 
-		$this->email = dbEscapeString($_POST['email']); 
-		$this->focus = dbEscapeString($_POST['focus']); 
-		$this->interests = dbEscapeString($_POST['interests']); 
-		$this->isAdmin = dbEscapeString($_POST['isAdmin']);
-		$this->isActive = dbEscapeString($_POST['isActive']);
-		$this->mustUpdatePwd = dbEscapeString($_POST['mustUpdatePwd']);
-		$this->pageMode = $_POST['mode'];	
-		
-		$this->loginName = dbEscapeString($_POST['loginName']); 
+	public function collectPostValues(){
+		parent::collectPostValues();
 		//get password for local validation
 		$pwd = dbEscapeString($_POST['loginPwd']);
 		$pwdConfirm = dbEscapeString($_POST['loginPwdConfirm']);

@@ -20,7 +20,7 @@ abstract class _entityTypeFields extends _entityFields{
 		$this->displayOrder = $row["display_order"];
 	}
 	
-	protected function format(){
+	public function format(){
 		parent::format();
 		$this->notes = displayText($this->notes);
 	}

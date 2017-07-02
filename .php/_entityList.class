@@ -11,6 +11,10 @@ abstract class _entityList extends _entity{
 	
 	//override _entity.setDetails for listing
 	public function setDetails(){
+		$this->setFoundCount();
+	}
+	
+	public function setFoundCount(){
 		$sql = $this->base->sql->count();
 		$this->found = dbGetCount($sql, 'count_details');
 	}
@@ -57,8 +61,7 @@ abstract class _entityList extends _entity{
 			$list = $this->base->listHeading();
 		  	while ($row = $result->fetch_assoc())
 			{	
-				$this->base->setRow($row);
-				$list .= $this->base->listRowFormat();
+				$list .= $this->base->listRow($row);
 			}
 			$result->close();
 		} else {

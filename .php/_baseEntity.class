@@ -44,7 +44,7 @@ abstract class _baseEntityFields{
 	}
 	protected function postString($name, $default){
 		return dbEscapeString($_POST[$name]);
-	{
+	}
 	
 	protected function formatText($text){
 		return displayLines($text);
