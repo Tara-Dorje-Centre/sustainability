@@ -190,14 +190,12 @@ protected $__MyClassName = 'User';
 		
 	}
 	
-	public function display($close = true){
 
-		$detail = openDisplayDetails('user','User Profile Details');		
-		$detail .= $this->f->display();
-		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){		
+	public function afterDisplay(){
+		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		
 			$detail .= $this->requestPasswordResetForm();
 		}
-		$detail .= closeDisplayDetails();
+
 		return $detail;
 	}
 

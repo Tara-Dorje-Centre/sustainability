@@ -110,7 +110,7 @@ class siteSettingsFields extends _entityFields{
 		 $this->siteTitle = $this->postText('siteTitle');
 		 $this->siteUrl = $this->postText('siteUrl'); 
 		 $this->loginNotice = $this->postText('loginNotice');
-		 $this->organization = $this->postText('organization']); 
+		 $this->organization = $this->postText('organization'); 
 		 $this->organizationUrl = $this->postText('organizationUrl');
 		 $this->organizationDescription = $this->postText('organizationDescription');
 		 $this->contactName = $this->postText('contactName'); 		
@@ -172,7 +172,7 @@ class siteSettings extends _entity{
 	
 	public function setSessionDetails(){
 	//if format happens on setting details for edit
-		if ($this->pageMode != 'EDIT') && ($this->pageMode !,= 'ADD'){
+		if (($this->pageMode != 'EDIT') || ($this->pageMode != 'ADD')){
 		$this->f->format();
 		}
 		$_SESSION['site-title'] = $this->f->siteTitle;	
@@ -219,13 +219,8 @@ class siteSettings extends _entity{
 		$this->_pageMenu = $menu;
 	}
 	
-	public function display(){
-		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
-		$detail .= $this->f->display();
-		
-		$detail .= $this->getPublicSiteStylesFieldset('true');
-		
-		$detail .= closeDisplayDetails();
+	public function afterDisplay(){
+		$detail = $this->getPublicSiteStylesFieldset('true');
 		return $detail;
 	}
 	

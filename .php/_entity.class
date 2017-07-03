@@ -328,16 +328,17 @@ abstract class _entity extends _baseEntity{
 		$this->f->setRow($row);
 		return $this->listRowFormat();
 	}
-	
-	protected function display($close = true){
+
+
+	protected function display(){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
 		$detail .= $this->f->display();
-		if ($close == true){
-			$detail .= closeDisplayDetails();
-		}
+		$detail .= $this->afterDisplay();
+		$detail .= closeDisplayDetails();
 		return $detail;
 	}
 	
+	abstract protected function afterDisplay();
 	
 	protected function setPageTitle(){
 		$heading = $this->pageMode.':  '.$this->_titleEntity;

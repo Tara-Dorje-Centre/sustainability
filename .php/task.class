@@ -337,6 +337,8 @@ class task extends _entity{
 	protected function displayChildDetails(){
 	 //	$l = new TaskLinks();
 	 $baseLink = $this->links->detail('VIEW',$this->id);
+	 
+	 $detail = openDiv('taskDetails');
 
 	 if ($this->totals->tasks->count > 0){
 	 $activities = new ActivityList($this->pageMode, 0, $this->id);
@@ -374,16 +376,18 @@ class task extends _entity{
 	 $receipts->setDetails();
 	 $detail .= $receipts->getListing($baseLink);
 	 }
+	 $detail .= closeDiv();
+	 return $detail();
+
 
 	 }
 	 
-	 //override display to add summaries and child details
-	 public function display(){
-	 	$detail = openDisplayDetails('entity', $this-> $_titleEntity.':  Details');
-		$detail .= $this->f->display();
-		$detail .= $this->totals->display();
+	 
+	 public function afterDisplay(){
+				
+		$detail = $this->totals->display();
 		$detail .= $this->displayChildDetails();
-		$detail .= closeDisplayDetails();
+
 		return $detail;
 	}
 	
@@ -405,28 +409,11 @@ class task extends _entity{
 		
 		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS, $ajaxEvent, $ajaxEventType);
 		if ($showLink === true){
-			/*$l = new TaskLinks;	*/
+			
 			$links =$this->links->detailViewEditHref($selectedValue);
 			$select .= $links;
 		}
 		return $select;
-	}	
-	
-	
-	protected function setDefaults(){
-	/*
-		global $sessionTime;
-		$this->started = $sessionTime;	
-		$this->order = $this->project->tasksCount + 1;
-		$this->hoursActual = '0';
-		$this->hoursEstimated = '0';
-		
-		$this->locationId = $this->f->idLocation;		
-		$this->materialsAuthBy = 'Not Applicable';
-		$this->materialsAuthProject = 'no';
-		$this->receiptsAuthBy = 'Not Applicable';
-		$this->receiptsAuthProject = 'no';
-*/
 	}	
 	
 	public function editForm(){

@@ -33,15 +33,17 @@ class locationFields extends _entityFields{
 		return $detail;
 	}
 	
-	public function displayDetail(){
-		$detail = parent::displayDetail();
+	public function display(){
+		$detail = parent::display();
 		$detail .= para('sortKey', 'SortKey', $this->sortKey);
 		return $detail;
 	}
+	/*
+		public function getPostVars(){
+			parent::getPostVars();
 	
-	//getPostVars
-	
-	
+		}
+	*/
 }
 
 class location extends _entity{
@@ -49,19 +51,15 @@ class location extends _entity{
   	protected $_titleEntity = 'Location';
 	protected $pageSave = 'pr_Location_Save.php';
 	public $childLocations = 0;
-	
-	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-	
+
+	protected function setHelperClasses(){
 		$this->sql = new locationSQL();
 		$this->links = new locationLinks();
 		$this->f = new locationFields();
-		
 	}
 	
 	protected function listRowLink(){
-		$link = $this->links->detailViewEditHref($this->f->id,$this->f->sortKey);
+		$link = $this->links->detailViewEditHref($this->f->sortKey,$this->f->id);
 		return $link;
 	}
     public function setDetails(){
@@ -165,25 +163,21 @@ class location extends _entity{
 	}
 	
 	protected function setDefaults(){
-	
+		parent::setDefaults();
 		if ($this->pageMode == 'ADD'){
 			//if add came from all locations default, reset to 0 for no parent
 			if ($this->idParent == -1){
 				$this->idParent = 0;
 			}
-			$this->f->idParent = $this->id;
 		}
-		
-		$this->echoState(true,'setAddDefaults');
-		
 		
 	}  
 
-	public function editForm(){
+	protected function editForm(){
 	
 	$this->echoState(true,'editForm');
 	
-		$this->setDefaults();
+
 		if ($this->pageMode == 'ADD'){
 			$legend = 'Add Location';
 		} else {
@@ -214,21 +208,7 @@ class location extends _entity{
 		return $form;
 	}
 	
-	public function collectPostValues(){
-	
-			$this->echoState(true, 'collectPostValues');
-		$this->f->id = $_POST['id'];
-		$this->f->idParent = sessionVariablePOST('idParent', 0);
-		$this->id = $this->f->id;
-		$this->idParent = $this->f->idParent;
-		$this->f->idType = $_POST['idType'];
-		$this->f->name = dbEscapeString($_POST['name']); 
-		$this->f->description = dbEscapeString($_POST['description']); 		
-		$this->pageMode = $_POST['mode'];	
-		$this->echoState(true, 'collectPostValues.leaving');
-	}
- 	
-	public function getSortKey($id){
+	private function getSortKey($id){
 		$sql = $this->sql->sortKey($id);
 		$sortKey = dbGetScalar($sql, 'sort_key');
 		return $sortKey;		
@@ -271,7 +251,6 @@ class location extends _entity{
 			$sql .= " (name, ";
 			$sql .= " parent_id, ";
 			$sql .= " type_id, ";
-//			//$sql .= " sort_key, ";
 			$sql .= " created, ";
 			$sql .= " updated, ";
 			$sql .= " description) ";

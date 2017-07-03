@@ -86,7 +86,7 @@ abstract class _entityType extends _entity{
 
 	
 	protected function setDefaults(){
-			if ($this->pageMode == 'ADD'){
+		if ($this->pageMode == 'ADD'){
 		$this->f->defaults();
 		
 		$s = $this->sql->count();
