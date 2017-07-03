@@ -1,15 +1,11 @@
 ﻿<?php 
 
 class projectTypeList extends _entityTypeList{
-	protected $__MyClassName = 'ProjectTypeList';
+	protected $__MyClassName = 'projectTypeList';
 	protected $_titleEntity = 'Project Types';
-	public $base;
 	
-	
-	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new projectType($mode,$id,$idParent);
+	protected function setHelperClasses(){
+		$this->base = new projectType($this->pageMode,$this->id,$this->idParent);
 	}
 	
 	

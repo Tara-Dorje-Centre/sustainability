@@ -1,14 +1,12 @@
 ﻿<?php 
 
 class materialTypeList extends _entityTypeList{
-	protected $__MyClassName = 'MaterialTypeList';
+	protected $__MyClassName = 'materialTypeList';
 	protected $_titleEntity = 'Material Types';
-	public $base;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new materialType($mode,$id,$idParent);
+	
+	protected function setHelperClasses(){
+		$this->base = new materialType($this->pageMode,$this->id,$this->idParent);
 	}
-	
 }
 ?>

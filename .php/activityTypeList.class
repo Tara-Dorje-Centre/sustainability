@@ -4,11 +4,8 @@ class activityTypeList extends _entityTypeList{
 	protected $__MyClassName = 'ActivityTypeList';
 	protected $_titleEntity = 'Activity Types';
 	
-	public $base;
-	
-	public function __construct($mode = 'LIST', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new activityType($mode,$id,$idParent);
+	public function setHelperClasses(){
+		$this->base = new activityType($this->pageMode,$this->id,$this->idParent);
 	}
 	
 }

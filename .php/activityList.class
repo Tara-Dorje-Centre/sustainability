@@ -5,31 +5,15 @@ class activityList extends _entityList{
 	protected $_titleEntity = 'Activities';
 	public $myActivity = 'NO';
 	
+	protected function setHelperClasses(){
+		$this->base = new activity($this->pageMode, $this->id, $this->idParent);
 	
-	
-	public $task;
-	public $sql;
-	public $links;
-	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-		$this->sql = new ActivitySQL;	
-		$this->links = new ActivityLinks();
 	}
 	
 	public function setMyActivity($myActvity = 'NO'){
 		$this->myActivity = $myActivity;
 	}
 	
-	public function setDetails(){
-	
-   		$this->echoState(true, '#setDetails');
-		$this->task->setDetails();
-		$this->setFoundCount();
-	}
-
-
 	protected function setPageTitle(){
 		
 		$title = '';

@@ -3,13 +3,8 @@
 class taskTypeList extends _entityTypeList{
 	protected $__MyClassName = 'TaskTypeList';
 	protected $_titleEntity = 'Task Types';
-	
-	public $base;
-
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new taskType($mode,$id,$idParent);
-		
+	protected function setHelperClasses(){
+		$this->base = new taskType($this->pageMode,$this->id,$this->idParent);
 	}
 
 	

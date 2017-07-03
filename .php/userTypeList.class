@@ -4,7 +4,7 @@ class userTypeList extends _entityTypeList{
 	protected $__MyClassName = 'UserTypeList';
 	protected $_titleEntity = 'User Types';
 
-	public function setHelperClasses($mode = 'VIEW', $id = 0, $idParent = 0){
+	protected function setHelperClasses($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->base = new userType($this->mode,$this->id,$this->idParent);
 	}
 	

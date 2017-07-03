@@ -33,7 +33,7 @@ _entityTypeFields  notes, displayOrder
     	$this->hasProject = false;
     }
 	
-	public function setRowValues($row){
+	public function setRow($row){
 			//$this->id = $row["id"];
 			$this->task->id = $row["task_id"];
 			//$this->type->id = $row["type_id"];
@@ -67,51 +67,26 @@ _entityTypeFields  notes, displayOrder
 class activity extends _entity{       
 	protected $__MyClassName = 'Activity';
 	protected $_titleEntity = 'Activity';
-/*
-	public $typeId = 0;
-	public $doneBy;
-    public $started;
-    public $updated;
-    //public $order = 0;	
-    //public $hoursEstimated = 0;	
-	public $hoursActual = 0;
-    public $comments;
-	public $linkUrl;
-	public $linkText;
-	public $highlightStyle
-	*/
-	public $task;	
+
+	//public $task;	
 	//public $type;
 	public $f;
 	public $sql;
 	public $links;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-
-		//$this->type = new activtyType;
+	protected function setHelperClasses(){
 		$this->f = new activityFields;
 		$this->sql = new ActivitySQL;
 		$this->links = new ActivityLinks();
 	}
-	/*
-	public function setRowValues($row){
-			$this->id = $row["id"];
-			$this->task->id = $row["task_id"];
-			$this->typeId = $row["type_id"];
-			$this->doneBy = ($row["done_by"]);
-			$this->started = $row["started"];
-			$this->updated = $row["updated"];	
-			//$this->order = $row["activity_order"];	
-			//$this->hoursEstimated = $row["hours_estimated"];						
-			$this->hoursActual = $row["hours_actual"];						
-			$this->comments = ($row["comments"]);
-			$this->linkText = ($row["link_text"]);
-			$this->linkUrl = ($row["link_url"]);
-			$this->highlightStyle = $row['highlight_style'];
-			
-	}*/
+
+	protected function beforeSetDetails(){
+	}
+
+	protected function afterSetDetails(){
+		//$this->setParentTask();
+	}
+
 	
 	
 	protected function listingRowLink(){
@@ -174,28 +149,6 @@ class activity extends _entity{
 			}
 		
 	
-	public function setDetails(){
-		$this->echoState(true,'setDetails');
-	
-		if ($this->id > 0){
-		
-			$sql = $this->sql->info($this->id);
-			$result = dbGetResult($sql);
-			
-			if($result){
-	  			while ($row = $result->fetch_assoc())
-		  		{
-	  				$this->setRowValues($row);
-		
-				}
-				$result->close();
-			}
-
-		}
-
-		$this->setParentTask();			
-	
-	}	
 	
 	public function setParentTask(){
 		$this->task->setDetails();
@@ -236,15 +189,7 @@ class activity extends _entity{
 
 	}
 		
-		/*
-	protected function formatForDisplay(){
-		$this->doneBy = displayLines($this->doneBy);
-		$this->comments = displayLines($this->comments);		
-		$this->started = getTimestampDate($this->started);
-		$this->updated = getTimestampDate($this->updated);		
-	}
-
-		*/
+		
 		
 	public function display(){
 		$this->formatForDisplay();
@@ -271,6 +216,11 @@ class activity extends _entity{
 		return $detail;
 	}	
 	
+	public function afterDisplay(){
+	
+	
+	}
+	
 	public function setDefaults(){
 		global $sessionTime;
 		$this->started = $sessionTime;	
@@ -280,6 +230,10 @@ class activity extends _entity{
 		$this->doneBy = $_SESSION['login-name'];
 		$this->typeId = '0';
 	}
+	protected function afterSetDefaults(){
+	}
+	
+	
 	
 	public function editForm($editContext = 'ActivityDetail'){
 		$this->echoState(true, 'editForm');
@@ -383,6 +337,9 @@ class activity extends _entity{
 		
 		$this->setParentTask();
 		$this->hoursEstimated = $this->task->hoursEstimated;
+	}
+	public function afterCollectPostValues(){
+	
 	}
 	
 	protected function saveUpdate(){

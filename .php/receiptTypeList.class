@@ -3,15 +3,8 @@
 class receiptTypeList extends _entityTypeList{
 	protected $__MyClassName = 'ReceiptTypeList';
 	protected $_titleEntity = 'Receipt Types';
-	
-	public $base;
-
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new receiptType($mode,$id,$idParent);
-		
+	protected function setHelperClasses(){
+		$this->base = new receiptType($this->pageMode,$this->id,$this->idParent);
 	}
-	
-
 }
 ?>

@@ -3,14 +3,10 @@
 class locationTypeList extends _entityTypeList{
 	protected $__MyClassName = 'Location';
 	protected $_titleEntity = 'Location Types';
-	public $base;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new locationType($mode,$id,$idParent);
+	public function setHelperClasses(){
+		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
 	}
-	
-	
 	
 }
 ?>
