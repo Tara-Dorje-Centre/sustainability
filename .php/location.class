@@ -38,12 +38,12 @@ class locationFields extends _entityFields{
 		$detail .= para('sortKey', 'SortKey', $this->sortKey);
 		return $detail;
 	}
-	/*
-		public function getPostVars(){
-			parent::getPostVars();
 	
-		}
-	*/
+	public function getPostVars(){
+		parent::getPostVars();
+	
+	}
+	
 }
 
 class location extends _entity{
@@ -62,9 +62,12 @@ class location extends _entity{
 		$link = $this->links->detailViewEditHref($this->f->sortKey,$this->f->id);
 		return $link;
 	}
-    public function setDetails(){
-    	parent::setDetails();
-    	
+	
+	protected function beforeSetDetails(){
+
+	}
+	
+    protected function afterSetDetails(){
 			
 		$this->setChildCount();
 		
@@ -79,6 +82,10 @@ class location extends _entity{
 		$this->childLocations = 0;
 		}
 		
+	}
+	
+	protected function afterDisplay(){
+	
 	}
 	
 	protected function setPageTitle(){
@@ -162,8 +169,8 @@ class location extends _entity{
 
 	}
 	
-	protected function setDefaults(){
-		parent::setDefaults();
+	protected function afterSetDefaults(){
+		
 		if ($this->pageMode == 'ADD'){
 			//if add came from all locations default, reset to 0 for no parent
 			if ($this->idParent == -1){
@@ -206,6 +213,10 @@ class location extends _entity{
 		
 		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
 		return $form;
+	}
+	
+	protected function afterCollectPostValues(){
+	
 	}
 	
 	private function getSortKey($id){

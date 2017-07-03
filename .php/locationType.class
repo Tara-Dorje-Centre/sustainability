@@ -8,7 +8,7 @@ class locationType extends _entityType{
 	protected $pageSave = 'pr_LocationType_Save.php';
 	
 	
-	protected function setHelperClasses();
+	protected function setHelperClasses(){
 		$this->f = new locationTypeFields();
 		$this->sql = new locationTypeSQL();
 		$this->links = new locationTypeLinks();
