@@ -261,8 +261,11 @@ abstract class _entity extends _baseEntity{
 	
 	abstract protected function setHelperClasses();
 	
+	abstract protected function beforeSetDetails();
 	
 	public function setDetails(){
+		$this->beforeSetDetails();
+
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
 			$result = dbGetResult($sql);
@@ -305,7 +308,6 @@ abstract class _entity extends _baseEntity{
 		}
 		return $links;
 	}
-    
 	
 	public function listHeading(){
 		$heading = wrapTh($this->_titleEntity);
@@ -319,7 +321,7 @@ abstract class _entity extends _baseEntity{
 		return $link;
 	}
 	
-	public function listRowFormat(){
+	protected function listRowFormat(){
 		$detail = wrapTd($this->listRowLink());
 		$detail .= $this->f->listDetail();		
 		$listRow = wrapTr($detail,$this->f->highlightStyle);
@@ -330,7 +332,6 @@ abstract class _entity extends _baseEntity{
 		$this->f->setRow($row);
 		return $this->listRowFormat();
 	}
-
 
 	protected function display(){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
@@ -354,7 +355,10 @@ abstract class _entity extends _baseEntity{
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->defaults();
 	 	}
+	 	$this->afterSetDefaults();
 	}
+	
+	abstract protected function afterSetDefaults();
 	
 	public function addForm(){
 		$this->pageMode = 'ADD';
@@ -368,7 +372,10 @@ abstract class _entity extends _baseEntity{
 		$this->pageMode = $_POST['mode'];	
 		$this->f->getPostVars();
 		$this->synchIds();
+		$this->afterCollectPostValues();
 	}
+	
+	abstract protected function afterCollectPostValues();
 		
 	protected function synchIds(){
 		$this->id = $this->f->id;
@@ -379,7 +386,7 @@ abstract class _entity extends _baseEntity{
 		$this->echoState(true, 'printPage');
 		$heading = $this->getPageHeading();
 		$details = $this->getPageDetails();
-		$site = new _SiteTemplate;
+		$site = new _SiteTemplate();
 		$site->setSiteTemplateDetails($heading, $details);
 		$site->printSite();
 	}
@@ -399,6 +406,7 @@ abstract class _entity extends _baseEntity{
 	}
 	
 	protected function getPageDetails(){	
+	//case statement
 		if ($this->pageMode == 'VIEW'){
 			$details = $this->display();
 		} else {

@@ -59,6 +59,18 @@ abstract class _entityType extends _entity{
 	protected $_titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';
 	
+	protected function beforeSetDetails(){
+		
+	}
+	
+	protected function afterSetDetails(){
+	
+	}
+	
+	protected function afterDisplay(){
+	
+	}
+	
 	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
@@ -82,9 +94,6 @@ abstract class _entityType extends _entity{
 		$this->_pageMenu = $menu;
 	}
 	
-
-
-	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
 		$this->f->defaults();
@@ -93,9 +102,12 @@ abstract class _entityType extends _entity{
 		$next = dbGetCount($s, 'count_details');
 		$this->f->displayOrder = $next + 1;
 		}
+		
+	}
+	protected function afterSetDefaults(){
 	
 	}
-
+	
 	protected function editForm(){
 		
 		$legend = $this->pageMode;
@@ -126,7 +138,9 @@ abstract class _entityType extends _entity{
 		return $form;
 	}
 	
+	protected function afterCollectPostValues(){
 	
+	}
 	protected function saveUpdate(){
 
 			$sql = " UPDATE ".$this->sql->getBaseTable()." AS base ";

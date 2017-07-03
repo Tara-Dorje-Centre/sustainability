@@ -120,13 +120,28 @@ protected $__MyClassName = 'User';
 		$this->links = new UserLinks();
 	}
 	
-	protected function afterSetDetails(){
-	
-	
+	protected function beforeSetDetails(){
 	}
+		
+	protected function afterSetDetails(){
+	}
+	
+	protected function afterSetDefaults(){
+	}
+	
+		public function afterDisplay(){
+		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		
+			$detail = $this->requestPasswordResetForm();
+		} else {
+		$detail = '';
+		}
+
+		return $detail;
+	}
+	
 
 	public function setTypeId($id){
-		$this->typeId = $id;
+		$this->f->idType = $id;
 	}
 	
 		
@@ -134,7 +149,7 @@ protected $__MyClassName = 'User';
 
 		if ($this->pageMode != 'ADD'){
 			$heading = $this->loginName;
-			if ($_SESSION['user-id'] == $this->id && $_SESSION['must-update-pwd'] == 'yes'){
+			if (($_SESSION['user-id'] == $this->id) && ($_SESSION['must-update-pwd'] == 'yes')){
 				$heading .= br().'Please update your profile password.';
 			}
 
@@ -196,15 +211,7 @@ protected $__MyClassName = 'User';
 	}
 	
 
-	public function afterDisplay(){
-		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		
-			$detail = $this->requestPasswordResetForm();
-		} else {
-		$detail = '';
-		}
 
-		return $detail;
-	}
 
 	private function generatePassword($length = 11) {
 		$chars = '.!%^&*#@';
@@ -538,8 +545,8 @@ protected $__MyClassName = 'User';
 	}
 	
 	
-	public function collectPostValues(){
-		parent::collectPostValues();
+	public function afterCollectPostValues(){
+		//parent::collectPostValues();
 		//get password for local validation
 		$pwd = dbEscapeString($_POST['loginPwd']);
 		$pwdConfirm = dbEscapeString($_POST['loginPwdConfirm']);

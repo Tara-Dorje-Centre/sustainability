@@ -8,10 +8,17 @@ abstract class _entityList extends _entity{
 	public $found = 0;
 	public $base;
 	
+	public function beforeSetDetails(){
+	
+	}
 	
 	//override _entity.setDetails for listing
 	public function setDetails(){
+		$this->beforeSetDetails();
+		//check counts, dont fetch details
 		$this->setFoundCount();
+		
+		$this->afterSetDetails();
 	}
 	
 	public function setFoundCount(){
@@ -78,6 +85,18 @@ abstract class _entityList extends _entity{
 		return $list;
 	}
 	
+	public function afterSetDetails(){
+
+	}
+	public function afterSetDefaults(){
+	
+	}
+	public function afterDisplay(){
+	
+	}
+ 	protected function afterCollectPostValues(){
+ 	
+ 	}
 	protected function editForm(){
 		return 'editForm not available';
 	}
