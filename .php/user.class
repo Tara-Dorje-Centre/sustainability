@@ -119,6 +119,11 @@ protected $__MyClassName = 'User';
 		$this->sql = new UserSQL();
 		$this->links = new UserLinks();
 	}
+	
+	protected function afterSetDetails(){
+	
+	
+	}
 
 	public function setTypeId($id){
 		$this->typeId = $id;
@@ -193,7 +198,9 @@ protected $__MyClassName = 'User';
 
 	public function afterDisplay(){
 		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		
-			$detail .= $this->requestPasswordResetForm();
+			$detail = $this->requestPasswordResetForm();
+		} else {
+		$detail = '';
 		}
 
 		return $detail;
@@ -341,12 +348,6 @@ protected $__MyClassName = 'User';
 		$sql = $this->sql->updateLastLogin($loginName);
 		
 		$result = dbRunSQL($sql);
-		
-	}
-	
-	protected function setDefaults(){
-		$this->f->defaults();
-		
 		
 	}
 	

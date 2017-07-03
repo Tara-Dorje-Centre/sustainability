@@ -275,8 +275,10 @@ abstract class _entity extends _baseEntity{
 			}
 			$this->synchIds();
 		}
+		$this->afterSetDetails();
 	}	
 	
+	abstract protected function afterSetDetails();
 	
 	public function options(
 		$selectedId = 0, 
