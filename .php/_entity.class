@@ -1,5 +1,65 @@
 <?php 
 
+/*
+class anyclassFields extends _entityFields{
+//additional properties
+ public $dateField;
+ public $textField;
+ public $numericField;
+//expose primary fields
+public function __construct(){
+	$this->hasType = true;
+	$this->hasProject = true;
+$this->hasTask = true;
+$this->hasActivity = false;
+$this->hasCreated = true;
+	$this->hasUpdated = true;
+}
+//set additional fields
+public function setRow($row){
+	parent::setRow();
+ $this->dateField = $row["date_reported"];
+ $this->textField= ($row["done_by"]);
+ $this->numericField = $row["quantity"];	
+}
+//defaults for additional fields
+public function defaults(){
+	parent::defaults();
+ $this->field = 1;
+}
+//format custom fields
+public function format(){
+	parent::format();
+ $this->textField = formatText($this->notes);
+ $this->dateField = formatDate($this->dateReported);
+}
+//display custom fields for VIEW
+public function display(){
+	$this->addContent(parent::display(),true);
+	$this->detailPara('caption',$this->field);
+	return $this->getContent();
+}
+//add custom columns
+public function listHeading(){
+	$this->addContent(parent::listHeading(),true);
+	$this->listTh('caption');
+	return $this->getContent();
+}
+public function listDetail(){
+	$this->addContent(parent::listDetail(),true);
+	$this->listTd($this->field);
+	return $this->getContent();
+}
+//get edit form values
+public function getPostVars(){
+	parent::getPostVars();
+ $this->textField = $this->postString('notes'); 
+ $this->dateField = $this->postDate('dateReported');
+ $this->numericField = $this->postVar('quantity'); 
+}
+
+}*/
+
 
 interface IentityFields {
 	public function __construct();
@@ -13,12 +73,6 @@ interface IentityFields {
 }
 
 abstract class _entityFields extends _baseEntityFields implements IentityFields{
-
-	/******
-	 _entityFields    id, name, description, 
-	 highlightStyle, created, updated
-	 idType, idParent, idProject,idTask
-	 ****/
 
 	public $id = 0;
 	public $name;		

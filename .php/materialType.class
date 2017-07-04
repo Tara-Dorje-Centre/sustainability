@@ -8,7 +8,7 @@ class materialType extends _entityType {
   	protected $_titleEntity = 'Material Type';
   	protected $pageSave = 'pr_MaterialType_Save.php';
 	
-	protected function setHelperClasses();
+	protected function setHelperClasses(){
 		$this->f = new materialTypeFields();
 		$this->sql = new materialTypeSQL();
 		$this->links = new materialTypeLinks();

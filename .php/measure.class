@@ -1,67 +1,125 @@
 ﻿<?php 
 
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
 
-_entityTypeFields  notes, displayOrder
-****/
 
+
+ class measureFields extends _entityFields{
+	 public $dateReported;
+	 public $value;	
+	 public $measureTypeUnitId = 0;	
+	 public $measureType;
+	 public $unitType;
+	 public $unitSymbol;
+	 public $notes;
+
+ public function __construct(){
+
+ $this->hasProject = true;
+ $this->hasTask = true;
+ $this->hasActivity = false;
+ $this->hasLocation = true;
+ $this->hasUpdated = true;
+
+ }
+
+
+ public function setRow($row){
+ parent::setRow();
+
+	  $this->name = ($row["name"]);
+	  $this->description = ($row["description"]);
+	  $this->dateReported = $row["date_reported"];
+	
+	  $this->value = $row["value"];	
+	  $this->measureTypeUnitId = $row["measure_type_unit_id"];						
+	  $this->measureType = ($row["measure_type"]);
+	  $this->unitSymbol = ($row["unit_symbol"]);
+	  $this->unitType = ($row["unit_type"]);
+	  $this->notes = ($row["notes"]);
+
+ }
+
+ public function defaults(){
+ parent::defaults();
+
+	 /*
+	  global $sessionTime;
+	  $this->dateReported = $sessionTime;	
+	  $this->measureTypeUnitId = 0;
+	  $this->locationId = $this->task->locationId;*/
+ }
+
+ public function format(){
+ parent::format();
+
+ $this->notes = formatText($this->notes);
+ $this->dateReported = formatDate($this->dateReported);
+
+ }
+
+ public function display(){
+ $this->addContent(parent::display(),true);
+ $this->detailPara('Reported',$this->dateReported);
+ 
+	 
+	
+	  $detail .= captionedParagraph('measure-value','Value',$this->value);
+	/*  $m = new MeasureTypeUnit;
+	  $select = $m->options($this->measureTypeUnitId,'measureTypeUnitId','true');*/
+	  $detail .= captionedParagraph('measure-type-units','Measure Type', $select);
+	  $detail .= captionedParagraph('unit-of-measure','Unit Type',$this->unitType);
+ 
+ 
+ $this->detailPara('Notes',$this->notes);
+ return $this->getContent();
+ }
+
+ public function listHeading(){
+ $this->addContent(parent::listHeading(),true);
+ $this->listTh('caption');
+ return $this->getContent();
+ }
+
+ public function listDetail(){
+ $this->addContent(parent::listDetail(),true);
+
+ $this->listTd($this->field);
+ return $this->getContent();
+ }
+
+ public function getPostVars(){
+ 		parent::getPostVars();
+		$this->measureTypeUnitId = $this->postString('measureTypeUnitId'); 
+		$this->value = $this->postString('value'); 
+		$this->notes = $this->postString('notes'); 
+		$this->dateReported = $this->postDate('dateReported');
+ }
+
+ }
+ 
 
 class measure extends _entity {
 
 protected $__MyClassName = 'Measure';
+	protected $_titleEntity = 'Measurement';
+  	protected $pageSave = 'pr_Measure_Save.php';
 
 
-
-    public $locationId = 0;	
-	public $name;
-    public $description;
-    public $dateReported;
-    public $updated;
-    public $value;	
-    public $measureTypeUnitId = 0;	
-	public $measureType;
-	public $unitType;
-	public $unitSymbol;
-    public $notes;
 	public $task;	
-	public $sql;
+	//public $sql;
 	
     
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-		$this->sql = new MeasureSQL;
+	public function setHelperClasses(){
+		$this->f = new MeasureFields();
+		$this->links = new MeasureLinks();
+		$this->sql = new MeasureSQL();
 	}
+		protected function beforeSetDetails(){
+		}
+		
+	protected function afterSetDetails(){
 	
-	public function setDetails(){
-		if ($ths->id > 0){
-		
-		$sql = $this->sql->info($this->id);
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{	
-			$this->task->id = $row["task_id"];
-			$this->locationId = $row["location_id"];
-			$this->name = ($row["name"]);
-			$this->description = ($row["description"]);
-			$this->dateReported = $row["date_reported"];
-			$this->updated = $row["updated"];	
-			$this->value = $row["value"];	
-			$this->measureTypeUnitId = $row["measure_type_unit_id"];						
-			$this->measureType = ($row["measure_type"]);
-			$this->unitSymbol = ($row["unit_symbol"]);
-			$this->unitType = ($row["unit_type"]);
-			$this->notes = ($row["notes"]);
-		}
-		$result->close();
-		}
-		
-		}
 		$this->setParentTask();			
 		
 	}	
@@ -109,47 +167,17 @@ protected $__MyClassName = 'Measure';
 		$t = $this->measureType.'('.$this->unitSymbol.')';
 		return $t;
 	}
-
+	protected function afterDisplay(){	
 	
-	public function formatForDisplay(){
-		$this->name = displayLines($this->name);
-		$this->description = displayLines($this->description);
-		$this->notes = displayLines($this->notes);
 	}
-	
-	
-	
-	public function display(){
-		$this->formatForDisplay();
-		
-		$detail = openDisplayDetails('measure','Measure Details');
-		$detail .= captionedParagraph('measure-reported','Reported',$this->dateReported);
-		$detail .= captionedParagraph('measure-updated','Updated',$this->updated);		
-		$detail .= captionedParagraph('measure-value','Value',$this->value);
-		$m = new MeasureTypeUnit;
-		$select = $m->options($this->measureTypeUnitId,'measureTypeUnitId','true');
-		$detail .= captionedParagraph('measure-type-units','Measure Type', $select);
-		$detail .= captionedParagraph('unit-of-measure','Unit Type',$this->unitType);
-		$detail .= captionedParagraph('measure-name','Measurement',$this->name);
-		$detail .= captionedParagraph('measure-desc','Description',$this->description);		
- 		$detail .= captionedParagraph('measure-notes','Notes',$this->notes);
-		
-		$detail .= closeDisplayDetails();
-		
-		return $detail;
-	}
-	
 
-	protected function setDefaults(){	
-		global $sessionTime;
-		$this->dateReported = $sessionTime;	
-		$this->measureTypeUnitId = 0;
-		$this->locationId = $this->task->locationId;
+
+	protected function afterSetDefaults(){	
 	}
 	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
-			$this->setDefaults();
+			//$this->setDefaults();
 			$legend = 'Add Measure';
 		} else {
 			$legend = 'Edit Measure';
@@ -194,21 +222,9 @@ protected $__MyClassName = 'Measure';
 		return $form;
 	}
 	
-	public function collectPostValues(){
+	public function afterCollectPostValues(){
 		//called by save form prior to running adds/updates
-		$this->pageMode = $_POST['mode'];
 		
-		$this->task->id = $_POST['taskId'];
-		$this->idParent = $this->task->id;
-		$this->id = $_POST['measureId'];
-		$this->locationId = $_POST['locationId'];
-		$this->description = dbEscapeString($_POST['description']);
-		$this->name = dbEscapeString($_POST['name']);
-		$this->value = dbEscapeString($_POST['value']); 
-		$this->notes = dbEscapeString($_POST['notes']); 
-		$this->dateReported = getTimestampPostValues('dateReported');
-		$this->measureTypeUnitId = $_POST['measureTypeUnitId']; 
-
 		$this->setParentTask();
 	}
 

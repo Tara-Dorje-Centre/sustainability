@@ -13,16 +13,17 @@ class materialList extends _entityList{
 	
 	public $sql;
 
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-		$this->sql = new MaterialSQL;
+	public function setHelperClasses(){
+	//$mode = 'VIEW', $id = 0, $idParent = 0){
+		//parent::__construct($mode, $id, $idParent);
+		$this->base = new material($this->pageMode, $this->id,$this->idParent);
+		//$this->sql = new MaterialSQL;
 	}
 	
-	public function setDetails(){
+	public function afterSetDetails(){
 	
-		$this->task->setDetails();
-		$this->setFoundCount();
+		//$this->task->setDetails();
+		//$this->setFoundCount();
 		$this->setSummary();
 	}
 	
@@ -436,17 +437,6 @@ class materialList extends _entityList{
 
 		$heading = wrapTh('Task');	
 		
-		$heading .=  wrapTh('Material');
-		$heading .= wrapTh('Type');
-		$heading .=  wrapTh('Date Reported');
-		$heading .=  wrapTh('Done By');
-		$heading .= wrapTh('Qty Units');
-		$heading .=  wrapTh('Qty');
-		$heading .=  wrapTh('Unit Cost');
-		$heading .=  wrapTh('Cost Est');
-		$heading .= wrapTh('Paid To');
-		//$heading .=  wrapTh('Cost Actual');
-		$heading .=  wrapTh('Links');		
 		$list .=  wrapTr($heading);
 		
 		
@@ -487,15 +477,7 @@ class materialList extends _entityList{
 			//}
 			$link = $materialL->detailViewEditHref($m->id,$m->name);
 			$detail .= wrapTd($link);
-			$detail .= wrapTd($m->typeName);			
-			$detail .= wrapTd($m->dateReported);
-			$detail .= wrapTd($m->doneBy);
-			$detail .= wrapTd($m->quantityUnitMeasureName);
-			$detail .= wrapTd($m->quantity);
-			$detail .= wrapTd($m->costUnit);
-			$detail .= wrapTd($m->costEstimated);
-			$detail .= wrapTd($m->paidTo);
-			//$detail .= wrapTd($m->costActual);
+		
 			if ($m->linkText != '' && $m->linkUrl != ''){
 				$link = $materialL->formatHref($m->linkText,$m->linkUrl,'_blank');
 				$detail .= wrapTd($link);
@@ -510,11 +492,7 @@ class materialList extends _entityList{
 
 		$list .= closeDisplayList();
 
-
-
 		return $list;
-		
-	
 	
 	}
 
