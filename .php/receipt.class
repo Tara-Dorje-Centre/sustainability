@@ -1,9 +1,9 @@
 ﻿<?php 
 
 
-class receiptFields extends _entityFields(){
+class receiptFields extends _entityFields{
 
-   // public $activityId = 0;	
+   
 	
     public $dateReported;
 	public $receivedBy;
@@ -15,11 +15,12 @@ class receiptFields extends _entityFields(){
     public $costUnit = 0;	
 	public $costActual = 0;
     public $notes;
+    
 	public function __construct(){
 	
 		$this->hasType = true;
 		$this->listType = true;
-		$this>hasUpdated = true;
+		$this->hasUpdated = true;
 		$this->hasProject = true;
 		$this->hasTask = true;
 		$this->hasActivity = true;
@@ -41,7 +42,7 @@ class receiptFields extends _entityFields(){
 			
 	}
 	
-	protected fumction format(){
+	public function format(){
 		parent::format();
 		$this->notes = $this->formatText($this->notes);
 		$this->dateReported = $this->formatDate($this->dateReported);
@@ -61,8 +62,14 @@ class receiptFields extends _entityFields(){
 	}
 	
 	
-	//listheading
-	//listdetail
+	public function listHeading($displayMode){
+		$this->addContent(parent::listHeading(),true);
+	
+		return $this->getContent();
+	}
+	public function listDetail($displayMode){
+	
+	}
 	
 	public function display(){
 		$this->addContent(parent::display(),true);
@@ -101,13 +108,28 @@ class receipt extends _entity{
 protected $__MyClassName = 'Receipt';
 
 	protected $_titleEntity = 'Receipt';
-	
+	protected $pageSave = 'pr_Receipt_Save.php';
 
 	protected function setHelperClasses(){
 		$this->f = new receiptFields();
 		$this->sql = new receiptSQL;
 		$this->links = new receiptLinks();
 	}
+	
+	protected function beforeSetDetails(){
+	
+	}
+	protected function afterSetDetails(){
+
+	}
+	protected function afterSetDefaults(){
+
+	}
+	protected function afterDisplay(){
+
+	}
+	
+	
 	protected function setPageTitle(){	
 
 		$title = $this->f->nameProject->name.br();
@@ -210,9 +232,9 @@ protected $__MyClassName = 'Receipt';
 			$this->costActual = $this->f->costUnit * $this->f->quantity;
 	}
 	
-	public function collectPostValues(){
+	public function afterCollectPostValues(){
 		//called by save form prior to running adds/updates
-		parent::collectPostValues();
+		//parent::collectPostValues();
 		$this->setActualCost();
 
 		$this->setParentTask();

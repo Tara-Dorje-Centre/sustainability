@@ -75,24 +75,79 @@ interface IentityFields {
 abstract class _entityFields extends _baseEntityFields implements IentityFields{
 
 	public $id = 0;
-	public $name;		
-	public $description;
 	
+	
+	public $name;		
+	
+	
+	public $hasDisplayOrder = false;
+    public $listDisplayOrder = false;
+	public $displayOrder = 0;
+
+	public $hasDescription = false;
+    public $listDescription = false;
+	public $description = '';
+
+	public $hasNotes = false;
+   	public $listNotes = false;
+   	public $notes = '';
+	 
+	public $hasSummary = false;
+   	public $listSummary = false;
+   	public $summary = '';
+   	
+   	public $hasDoneBy = false;
+    public $listDoneBy = false;
+	public $doneBy = '';
+	
+	public $hasReviewed = false;
+    public $listReviewed = false;
+	public $reviewed;
+	
+	
+	public $hasReviewedBy = false;
+    public $listReviewedBy = false;
+	public $reviewedBy;
+	
+	public $hasQuantityEstimated = false;
+    public $listQuantityEstimated = false;
+	public $quantityEstimated = 0;
+	
+   	public $hasQuantityActual = false;
+    public $listQuantityActual = false;
+	public $quantityActual = 0;
+	
+	public $hasStarted = false;
+   	public $listStarted = false;
+   	public $started;
+	 
+	public $hasReported = false;
+   	public $listReported = false;
+   	public $reported;
+	 
     public $hasCreated = false;
     public $listCreated = false;
 	public $created;
+	
     public $hasUpdated = false;
     public $listUpdated = false;
     public $updated;
     
     public $hasHighlight = false;
     public $listHighlight = false;
+    public $highlight = 'none';
 	public $highlightStyle = 'none';
     
     public $hasType = false;
     public $listType = false;
 	public $idType = 0;
 	public $nameType;
+	
+	public $hasUnit = false;
+    public $listUnit = false;
+	public $idUnit = 0;
+	public $nameUnit;
+	
 	
 	public $hasLocation = false;
 	public $listLocation = false;
@@ -113,7 +168,13 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
    	public $listTask = false;
    	public $idTask = 0;
    	public $nameTask;
+   	
+	public $hasActivity = false;
+   	public $listActivity = false;
+   	public $idActivity = 0;
+   	public $nameActivity;
 	 
+	
     abstract public function __construct();
     
     protected function reset(){
@@ -310,12 +371,23 @@ abstract class _entity extends _baseEntity{
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
+		$this->setPageSave();
+		$this->setEntityTitle();
 		$this->setHelperClasses();
 	}
-	
+	/* next review cycle
+	abstract protected function setPageSave();
+	abstract protected function setEntityTitle();
+	abstract protected function afterConstruct();*/
 	abstract protected function setHelperClasses();
-	
 	abstract protected function beforeSetDetails();
+	abstract protected function afterSetDetails();
+	abstract protected function afterDisplay();
+	abstract protected function setPageMenu();
+	abstract protected function afterSetDefaults();
+	abstract protected function editForm();
+	abstract protected function afterCollectPostValues();
+		
 	
 	public function setDetails(){
 		$this->beforeSetDetails();
@@ -334,8 +406,6 @@ abstract class _entity extends _baseEntity{
 		}
 		$this->afterSetDetails();
 	}	
-	
-	abstract protected function afterSetDetails();
 	
 	public function options(
 		$selectedId = 0, 
@@ -395,15 +465,10 @@ abstract class _entity extends _baseEntity{
 		return $detail;
 	}
 	
-	abstract protected function afterDisplay();
-	
 	protected function setPageTitle(){
 		$heading = $this->pageMode.':  '.$this->_titleEntity;
 		$this->_pageTitle = $heading;
 	}
-	
-	abstract protected function setPageMenu();
-
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
@@ -411,26 +476,20 @@ abstract class _entity extends _baseEntity{
 	 	}
 	 	$this->afterSetDefaults();
 	}
-	
-	abstract protected function afterSetDefaults();
-	
+
 	public function addForm(){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
 		return $this->editForm();
 	}
-	
-	abstract protected function editForm();
-	
+
 	public function collectPostValues(){
 		$this->pageMode = $_POST['mode'];	
 		$this->f->getPostVars();
 		$this->synchIds();
 		$this->afterCollectPostValues();
 	}
-	
-	abstract protected function afterCollectPostValues();
-		
+				
 	protected function synchIds(){
 		$this->id = $this->f->id;
 		$this->idParent = $this->f->idParent;

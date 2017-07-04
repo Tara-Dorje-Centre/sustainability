@@ -6,20 +6,12 @@ protected $_titleEntity = 'Projects';
 
 	public $showMyProjects = 'NO';
 	public $status = 'OPEN';
+
 	
-	public $base;
-	//public $links;
-	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new project;	
-		//$this->links = new projectLinks();
+	public function setHelperClasses(){
+		$this->base = new project($this->pageMode, $this->id, $this->idParent);
+		
 	}
-	public function setDetails(){
-   		$this->echoState(true,'setDetails');
-		$this->setFoundCount();
-	}
-	
 	public function setMyProjects($showMyProjects = 'NO'){
 		$this->showMyProjects = $showMyProjects;
 	}

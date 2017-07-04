@@ -1,8 +1,8 @@
 ﻿<?php 
 
 class receiptList extends _entityList{
-protected $__MyClassName = 'ReceiptList';
-
+	protected $__MyClassName = 'receiptList';
+	protected $_titleEntity = 'Receipts';
 
 
 	public $task;
@@ -10,12 +10,13 @@ protected $__MyClassName = 'ReceiptList';
 	private $approved = 'no';
 	public $costActual = 0;
 	//public $costEstimated = 0;
-	public $sql;
+	//public $sql;
 
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-		$this->sql = new ReceiptSQL;
+	public function setHelperClasses(){
+	//($mode = 'VIEW', $id = 0, $idParent = 0){
+		//parent::__construct($mode, $id, $idParent);
+		$this->base = new receipt($this->pageMode, $this->id,$this->idParent);
+		//$this->sql = new ReceiptSQL;
 	}
 	
 	public function setDisplay($display = 'TASK'){
@@ -26,9 +27,9 @@ protected $__MyClassName = 'ReceiptList';
 		$this->approved = $approved;
 	}
 	
-	public function setDetails(){
-		$this->task->setDetails();
-		$this->setFoundCount();
+	public function afterSetDetails(){
+		//$this->task->setDetails();
+		//$this->setFoundCount();
 		$this->setSummary();
 	}
 		
@@ -77,7 +78,7 @@ protected $__MyClassName = 'ReceiptList';
 		$this->_pageMenu = $menu;			
 	}	
 	
-	public function setFoundCount(){
+	protected function setFoundCount(){
 		if ($this->displayProject == 'PROJECT'){
 			$sql = $this->sql->countReceiptsByProject($this->task->project->id, $this->approved);
 		} else {

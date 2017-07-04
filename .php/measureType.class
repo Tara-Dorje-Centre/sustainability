@@ -12,13 +12,13 @@ class measureType extends _entityType{
   	protected $pageSave = 'pr_MeasureType_Save.php';
 	
 		
-	protected function setHelperClasses();
+	protected function setHelperClasses(){
 		$this->f = new measureTypeFields();
 		$this->sql = new measureTypeSQL();
 		$this->links = new measureTypeLinks();
 		
 	}
-	
+
 	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
@@ -46,8 +46,8 @@ class measureType extends _entityType{
 	}
 	
 	
-	public function display(){
-	parent::display();
+	public function afterDisplay(){
+	//parent::display();
 	
 	
 	

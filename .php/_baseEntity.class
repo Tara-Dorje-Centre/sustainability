@@ -1,26 +1,24 @@
 <?php 
 
-
-abstract class _baseEntityFields{
-
+trait _contentWriter{
 	protected $_content = '';
-
- 	protected function resetContent(){
+ 	public function resetContent($reset = true){
  		$_content = '';
  	}
-	protected function addContent($value = '', $reset = false){
- 		if ($reset == true){
- 			$this->resetContent();
- 		}
+	public function addContent($value = '', $reset = false){
+		$this->resetContent($reset);
  		$_content .= $value;
  	}
-	protected function getContent($reset = true){
+	public function getContent($reset = true){
  		$value = $this->_content;
- 		if ($reset == true){
- 			$this->resetContent();
- 		}
+		$this->resetContent($reset);
  		return $value;
 	}
+}
+	
+abstract class _baseEntityFields{
+	use _contentWriter;
+	
 	protected function listTh($heading, $show = false, $reset = false){
  		if ($show == true){
  			$this->addContent(wrapTh($heading),$reset);

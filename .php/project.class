@@ -1,8 +1,5 @@
 ﻿<?php 
 class projectFields extends _entityFields{
-
-	
-	
   
     public $summary;
     public $started;
@@ -24,9 +21,6 @@ public function __construct(){
 	
 	public function setRow($row){
 		parent::setRow($row);
-			
-			//$this->idLocation = $row["location_id"];
-			//$this->nameLocation = ($row['location_name']);
 			
 			$this->summary = ($row["summary"]);
 			$this->started = ($row["started"]);	
@@ -52,13 +46,8 @@ public function __construct(){
 	
 	public function listHeading(){
 		$heading = parent::listHeading();
-		
-		
-
 		$this->listTh('Priority');
-
 		$this->listTh('%Done');
-
 		return $this->getContent();
 	}
 	
@@ -82,24 +71,23 @@ public function __construct(){
 		
 		return $this->getContent();
 	}
-
+/*
 	public function getPostVars(){
 		parent::getPostVars();
 		$this->notes = $this->postString('notes');
 		$this->displayOrder = $this->postVar('displayOrder',0);
 	}
-	
+	*/
 	public function getPostVars(){
 		parent::getPostVars();
 		$this->goals = $this->postString('goals'); 
 		$this->summary = $this->postString('summary'); 
 		$this->lessons = $this->postString('lessons'); 
 		$this->started = $this->postDate('started');
-		$this->priority = $this->postVar('priority') 
+		$this->priority = $this->postVar('priority');
 		$this->pctDone = $this->postVar('pctDone'); 
 		$this->purpose = $this->postString('purpose'); 
-		$this->showAlways = $this->postVar('showAlways') 
-		
+		$this->showAlways = $this->postVar('showAlways');
 	}
 
 }
@@ -361,48 +349,23 @@ class project extends _entity{
 	protected $_titleEntity = 'Project';
 	public $totals;
 	
-	public $f;
-	public $sql;
-	public $links;
-	
-
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		
-		$this->f = new projectFields;
-		$this->sql = new projectSQL;
-		$this->links = new projectLinks;
-		$this->totals = new summaryTotals;
+	public function setHelperClasses(){
+		$this->f = new projectFields();
+		$this->sql = new projectSQL();
+		$this->links = new projectLinks();
+		$this->totals = new summaryTotals();
 	}
 	
-    public function setDetails(){
-   		$this->echoState(true, 'setDetails');
-
-		if ($this->id > 0){
+	protected function beforeSetDetails(){
+		if ($this->pageMode == 'COPY'){
+		$this->copyProject();
+		$_SESSION['currentProjectId'] = $this->id;
+	}
+	}
+	protected function afterSetDetails(){
+		$this->totals->setProjectTotals($this->f->id);
 		
-			if ($this->pageMode == 'COPY'){
-				$this->copyProject();
-				$_SESSION['currentProjectId'] = $this->id;
-			}
-
-			$sql = $this->sql->info($this->id);
-		
-			$result = dbGetResult($sql);
-			if($result){
-			  	while ($row = $result->fetch_assoc())
-				{	
-					$this->f->setRowValues($row);
-					
-				}
-				$result->close();
-			}
-		
-			$this->totals->setProjectTotals($this->f->id);
-			
-		}
-	}	
-	
-	
+	}
 	private function setReceiptSummaryByType(){
 
 		$costs = openTable('receipt-info','displayListTable');
@@ -497,21 +460,18 @@ class project extends _entity{
 	
 	
 	
-	public function display(){
-		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
-		$detail .= $this->f->display();
+	protected function afterDisplay(){
 		$detail .= $this->totals->display();
 
 
-		$tasks = new TaskList('VIEW', 0, $this->id);
-		$tasks->setPaging($this->resultPage,10);
-		$link = $this->links->detail('VIEW',$this->id);
-		$detail .= $tasks->getListing($link);
-		
-		$detail .= closeDisplayDetails();
-		return $detail;
+		 $tasks = new TaskList('VIEW', 0, $this->id);
+		 $tasks->setPaging($this->resultPage,10);
+		 $link = $this->links->detail('VIEW',$this->id);
+		 $detail .= $tasks->getListing($link);
+
+		 $detail .= closeDisplayDetails();
+		 return $detail;
 	}
-	
 	public function options(
 		$selectedValue = 0, 
 		$idName = 'projectId', 
@@ -553,21 +513,20 @@ class project extends _entity{
 		return $select;
 	}	
 	
-	protected function setDefaults(){	
-		global $sessionTime;
-		$this->started = $sessionTime;	
+	protected function afterSetDefaults(){
+		/*	global $sessionTime;
+		 $this->started = $sessionTime;	
 
 
-		$this->priority = 1;
-		$this->pctDone = '0';
+		 $this->priority = 1;
+		 $this->pctDone = '0';*/
 	}
-	
 	public function editForm(){
 	
 	   		$this->echoState(true, 'editForm');
 	   		
 		if ($this->pageMode == 'ADD'){		
-			$this->setDefaults();
+			/*$this->setDefaults();*/
 			$legend = 'Add Project';
 		} else {
 			$legend = 'Edit Project';	
@@ -633,7 +592,9 @@ class project extends _entity{
 		return $form;
 	}
 	
+	protected function afterCollectPostValues(){
 
+	}
 
     public function UpdateTaskSummary(){
 		

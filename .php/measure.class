@@ -26,8 +26,8 @@
  public function setRow($row){
  parent::setRow();
 
-	  $this->name = ($row["name"]);
-	  $this->description = ($row["description"]);
+	//  $this->name = ($row["name"]);
+	//  $this->description = ($row["description"]);
 	  $this->dateReported = $row["date_reported"];
 	
 	  $this->value = $row["value"];	
@@ -36,7 +36,15 @@
 	  $this->unitSymbol = ($row["unit_symbol"]);
 	  $this->unitType = ($row["unit_type"]);
 	  $this->notes = ($row["notes"]);
-
+/*	$m->id = $row["id"];
+			$m->name = ($row["name"]);
+			$m->measureType = ($row["measure_type"]);
+			$m->unitSymbol = ($row["unit_symbol"]);
+			$m->unitType = ($row["unit_type"]);
+			$m->value = $row["value"];
+			$m->dateReported = $row["date_reported"];
+			$m->description = ($row["description"]);
+			$m->formatForDisplay();*/
  }
 
  public function defaults(){
@@ -77,11 +85,27 @@
  public function listHeading(){
  $this->addContent(parent::listHeading(),true);
  $this->listTh('caption');
+ 
+ /*	$heading =  wrapTh('Measure Type');
+		$heading .=  wrapTh('Value');
+		$heading .=  wrapTh('Name');
+		$heading .=  wrapTh('Description');
+		$heading .=  wrapTh('Date Reported');*/
+ 
  return $this->getContent();
  }
 
  public function listDetail(){
  $this->addContent(parent::listDetail(),true);
+
+
+/*	$link = $ml->detailViewEditHref($m->id,$m->getMeasureTypeAndUnitSymbol());
+			$detail =  wrapTd($link);			
+			$detail .=  wrapTd($m->value);
+			$detail .= wrapTd($m->name);
+			$detail .=  wrapTd($m->description);
+			$detail .=  wrapTd($m->dateReported);*/
+
 
  $this->listTd($this->field);
  return $this->getContent();

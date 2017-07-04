@@ -5,17 +5,18 @@ class measureList extends _entityList{
 
 
 
-	public $sql;
+	//public $sql;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->task = new Task($this->pageMode, $this->idParent);
-		$this->sql = new MeasureSQL;
+	public function setHelperClasses(){
+	//($mode = 'VIEW', $id = 0, $idParent = 0){
+		//$this-> = new measure($this->pageMode, $this->f->id, $this->f-idParent);
+		$this->base = new measure($this->pageMode, $this->idParent);
+		//$this->sql = new MeasureSQL;
 	}
 	
-	public function setDetails(){
-		$this->task->setDetails();
-		$this->setFoundCount();
+	public function afterSetDetails(){
+		//$this->task->setDetails();
+		//$this->setFoundCount();
 	}
 		
 	protected function setPageTitle(){
@@ -26,7 +27,7 @@ class measureList extends _entityList{
 		$this->_pageTitle = $title;	
 	}	
 
-	protected function pageMenu(){
+	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -70,11 +71,7 @@ class measureList extends _entityList{
 		$quickEdit = $m->editForm();
 		$list = openDisplayList('measure','Measures',$pagingLinks,$quickEdit);
 
-		$heading =  wrapTh('Measure Type');
-		$heading .=  wrapTh('Value');
-		$heading .=  wrapTh('Name');
-		$heading .=  wrapTh('Description');
-		$heading .=  wrapTh('Date Reported');
+	
 
 		$list .=  wrapTr($heading);
 
@@ -84,22 +81,9 @@ class measureList extends _entityList{
 	  	while ($row = $result->fetch_assoc())
 		{	
 			$m = new Measure(FETCH);
-			$m->id = $row["id"];
-			$m->name = ($row["name"]);
-			$m->measureType = ($row["measure_type"]);
-			$m->unitSymbol = ($row["unit_symbol"]);
-			$m->unitType = ($row["unit_type"]);
-			$m->value = $row["value"];
-			$m->dateReported = $row["date_reported"];
-			$m->description = ($row["description"]);
-			$m->formatForDisplay();
+		
 			
-			$link = $ml->detailViewEditHref($m->id,$m->getMeasureTypeAndUnitSymbol());
-			$detail =  wrapTd($link);			
-			$detail .=  wrapTd($m->value);
-			$detail .= wrapTd($m->name);
-			$detail .=  wrapTd($m->description);
-			$detail .=  wrapTd($m->dateReported);
+		
 			
 			$list .=  wrapTr($detail);
 		}
