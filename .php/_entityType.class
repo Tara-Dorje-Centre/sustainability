@@ -22,7 +22,7 @@ abstract class _entityTypeFields extends _entityFields{
 	
 	public function format(){
 		parent::format();
-		$this->notes = displayText($this->notes);
+		$this->notes = $this->formatText($this->notes);
 	}
 	
 	public function listHeading(){
@@ -94,7 +94,7 @@ abstract class _entityType extends _entity{
 		$this->_pageMenu = $menu;
 	}
 	
-	protected function setDefaults(){
+	protected function afterSetDefaults(){
 		if ($this->pageMode == 'ADD'){
 		$this->f->defaults();
 		
@@ -104,10 +104,6 @@ abstract class _entityType extends _entity{
 		}
 		
 	}
-	protected function afterSetDefaults(){
-	
-	}
-	
 	protected function editForm(){
 		
 		$legend = $this->pageMode;

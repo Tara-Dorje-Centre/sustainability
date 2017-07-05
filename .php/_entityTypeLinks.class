@@ -1,12 +1,12 @@
 ﻿<?php
 abstract class _entityTypeLinks extends _baseEntityLinks {
-/*
+
 	public function listingHref($caption = 'List'){
 	return $this->list($this->context.$caption);
 	}	
 	public function listingPaged($found, $resultPage, $perPage){
 			return $this->pagingLinks($found,$resultPage,$perPage);
-	}
+	}/*
 	public function detailAddHref($caption = '[+]'){
 	return $this->add($caption);
 		return $l;	
@@ -19,7 +19,7 @@ abstract class _entityTypeLinks extends _baseEntityLinks {
 	}
 	public function detailViewEditHref($id = 0, $caption = 'View'){
 			return $this->itemViewEdit($caption,$id);
-	}	
-	*/
+	}	*/
+	
 }
 ?>

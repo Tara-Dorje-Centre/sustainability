@@ -3,28 +3,22 @@
 class taskList extends _entityList{
 	protected $__MyClassName = 'TaskList';
 	protected $__titleEntity = 'Tasks';
-
+protected $project;
 	public $periodicTasks = 'NO';
-	public $base;
+	/*public $base;
 	//public $project;
 	//public $sql;
-	//public $links;
+	//public $links;*/
 	
 	protected function setHelperClasses(){
-	//$mode = 'VIEW', $id = 0, $idParent = 0){
-		//oparent::__construct($mode, $id, $idParent);
-		$this->base = new task($this->list, $this->id, $this-yidParent);
-		//$this->project = new Project($this->pageMode, $this->idParent);
+	
+		
+		$this->base = new task($this->pageMode, $this->id, $this-idParent);
+		$this->project = new Project($this->pageMode, $this->idParent);
 		//$this->sql = new TaskSQL;	
 	//	$this->links = new TaskLinks;
 	}
-	/*
-	public function setDetails(){
-   		$this->echoState(true, 'setDetails');
-		//$this->project->setDetails();
-		$this->setFoundCount();
-	}
-*/
+	
 	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
 	}
@@ -32,7 +26,7 @@ class taskList extends _entityList{
 	protected function setPageTitle(){
 
 		if ($this->periodicTasks == 'NO'){
-			$title = $this->base->project->name.br();
+			$title = $this->base->f->nameProject.br();
 			$title .= 'Project Tasks';
 		} else {
 			$title .= 'Periodic Tasks';
@@ -48,11 +42,11 @@ class taskList extends _entityList{
 	//	$projectL = new ProjectLinks($menuType,$menuStyle);
 
 		
-		$menu = $this->links->openMenu('section-heading-links');
+		$menu = $this->base->links->openMenu('section-heading-links');
 		if ($this->periodicTasks == 'NO'){
-			$menu .= $this->links->detailAddHref($this->project->id);
-			$menu .= $this->links->listingHref($this->project->id);
-			$menu .= $this->project->links->detailViewHref($this->project->id);	
+			$menu .= $this->base->links->detailAddHref($this->project->id);
+			$menu .= $this->base->links->listingHref($this->project->id);
+			$menu .= $this->project->links->detailViewHref($this->base->idProject);	
 		} else {
 			
 			//$menu .= $taskL->linksPeriodicTasks();
@@ -60,7 +54,7 @@ class taskList extends _entityList{
 			//$menu .= $projectL->listingAllProjects();
 							
 		}
-		$menu .= $this->links->closeMenu();
+		$menu .= $this->base->links->closeMenu();
 		$this->_pageMenu = $menu;			
 	}
 	
@@ -97,8 +91,9 @@ class taskList extends _entityList{
 	
 	protected function listingQuickEdit(){
 	//override to set add form
-		$at = new Task('ADD', 0, $this->idParent);
-		$quickEdit =$at->editForm();		
+		//$at = new Task('ADD', 0,
+		// $this->base->idParent = $this->idParent;
+		$quickEdit =$this->base->addForm($this->idParent);		
 		return $quickEdit;
 	}
 	

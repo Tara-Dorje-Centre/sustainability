@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class taskLinks extends _links {
+class taskLinks extends _entityLinks {
 
 
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){

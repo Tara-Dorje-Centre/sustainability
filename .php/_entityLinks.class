@@ -1,7 +1,7 @@
 ﻿<?php
 
 abstract class _entityLinks extends _baseEntityLinks {
-/*
+
 	public function listingPaged($idParent, $found, $resultPage=1, $perPage=10){
 		return $this->pagingLinksChildren($idParent, $found,$resultPage,$perPage);
 	}
@@ -9,7 +9,7 @@ abstract class _entityLinks extends _baseEntityLinks {
 	public function listingHref($idParent = -1, $caption = 'List'){
 	return $this->list($this->context.$caption,$idParent);
 	}	
-
+/*
 	public function detailAddHref($idParent = 0,$caption = '+'){
 		return $this->add($caption,$idParent);
 	}
