@@ -1,8 +1,8 @@
 ﻿<?php 
 class projectFields extends _entityFields{
   
-    public $summary;
-    public $started;
+  //  public $summary;
+//    public $started;
     public $pctDone = 0;	
     public $priority = 1;	
     public $goals;
@@ -12,18 +12,20 @@ class projectFields extends _entityFields{
 	
 public function __construct(){
     	$this->hasType = true;
-    	$this->hasCreated = false;
+    	$this->hasStarted = true;
     	$this->hasHighlight = true;
     	$this->hasLocation = true;
     	$this->hasParent = true;
     	$this->hasUpdated = true;
+    	$this->hasSummary = true;
+    	$this->hasDescription = true;
     }
 	
 	public function setRow($row){
 		parent::setRow($row);
 			
-			$this->summary = ($row["summary"]);
-			$this->started = ($row["started"]);	
+		//	$this->summary = ($row["summary"]);
+			//$this->started = ($row["started"]);	
 			$this->pctDone = $row["pct_done"];	
 			$this->priority = $row["priority"];						
 			$this->goals = ($row["goals"]);
@@ -36,18 +38,18 @@ public function __construct(){
 	public function format(){
 		parent::format();
 	
-		$this->summary = $this->formatText($this->summary);
+		//$this->summary = $this->formatText($this->summary);
 		$this->goals = $this->formatText($this->goals);
 		$this->lessons = $this->formatText($this->lessons);		
 		$this->purpose = $this->formatText($this->purpose);		
-		$this->started = $this->formatDate($this->started);
+		//$this->started = $this->formatDate($this->started);
 	
 	}
 	
 	public function listHeading(){
-		$heading = parent::listHeading();
-		$this->listTh('Priority');
-		$this->listTh('%Done');
+		$this->addContent(parent::listHeading(),true);
+		$this->listTh('Priority',true);
+		$this->listTh('%Done',true);
 		return $this->getContent();
 	}
 	
@@ -62,10 +64,10 @@ public function __construct(){
 		$this->addContent(parent::display(),true);
 
 		$this->detailPara('Priority', $this->priority);
-		$this->detailPara('Started', $this->started);
+	//	$this->detailPara('Started', $this->started);
 		$this->detailPara('% Done', $this->pctDone);
 		$this->detailPara('Purpose', $this->purpose);
-		$this->detailPara('Summary', $this->summary);
+	//	$this->detailPara('Summary', $this->summary);
 		$this->detailPara('Goals', $this->goals);
 		$this->detailPara('Lessons Learned', $this->lessons);
 		
@@ -81,9 +83,9 @@ public function __construct(){
 	public function getPostVars(){
 		parent::getPostVars();
 		$this->goals = $this->postString('goals'); 
-		$this->summary = $this->postString('summary'); 
+	//	$this->summary = $this->postString('summary'); 
 		$this->lessons = $this->postString('lessons'); 
-		$this->started = $this->postDate('started');
+	//	$this->started = $this->postDate('started');
 		$this->priority = $this->postVar('priority');
 		$this->pctDone = $this->postVar('pctDone'); 
 		$this->purpose = $this->postString('purpose'); 

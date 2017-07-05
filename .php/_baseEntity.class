@@ -1,13 +1,15 @@
 <?php 
 
-trait _contentWriter{
+abstract class _contentWriter{
 	protected $_content = '';
- 	public function resetContent($reset = true){
- 		$_content = '';
+ 	protected function resetContent($reset = true){
+ 		if ($reset == true){
+ 		$this->_content = '';
+ 		}
  	}
 	public function addContent($value = '', $reset = false){
 		$this->resetContent($reset);
- 		$_content .= $value;
+ 		$this->_content .= $value;
  	}
 	public function getContent($reset = true){
  		$value = $this->_content;
@@ -16,8 +18,7 @@ trait _contentWriter{
 	}
 }
 	
-abstract class _baseEntityFields{
-	use _contentWriter;
+abstract class _baseEntityFields extends _contentWriter{
 	
 	protected function listTh($heading, $show = false, $reset = false){
  		if ($show == true){
@@ -34,13 +35,13 @@ abstract class _baseEntityFields{
  			$this->addContent(para($caption,$value),$reset);
  		}
  	}
- 	protected function postVar($varName, $default){
+ 	protected function postVar($varName, $default = 0){
 		return $_POST[$varName];
  	}
 	protected function postDate(){
 		return getTimestampPostValues($date);
 	}
-	protected function postString($name, $default){
+	protected function postString($name, $default = ''){
 		return dbEscapeString($_POST[$name]);
 	}
 	
@@ -99,7 +100,7 @@ abstract class _baseEntity extends _echo {
 	protected function echoState_calendar($show = true, $f = '-use-current-', $c= '-use-current-'){
 
 		if ($this->isCalendarSet == true){
-			$s = $show;
+			$s = false;
 			$this->echoLocale($f, $c);
 			$this->echoValue($s, 'month', $this->month);
 			$this->echoValue($s, 'year', $this->year);
@@ -121,7 +122,7 @@ abstract class _baseEntity extends _echo {
 	protected function echoState_paging($show = true, $f = '-use-current-', $c= '-use-current-'){
 
 		if ($this->isPagingSet == true){
-			$s = $show;
+			$s = false;
 			$this->echoLocale($f, $c);
 			$this->echoValue($s, 'resultPage', $this->resultPage);
 			$this->echoValue($s, 'perPage', $this->perPage);

@@ -1,11 +1,11 @@
 ﻿<?php 
 include_once("_includes.php");
 
-$typeId = sessionVariableGET('userTypeId',0);
+$typeId = sessionVariableGET('id',0);
 $pageAction = sessionVariableGET('pageAction','VIEW');
 
-$t = new UserType;
-$t->setDetails($typeId, $pageAction);
+$t = new UserType($pageAction,$typeId);
+$t->setDetails();
 
 $t->printPage();
 ?>

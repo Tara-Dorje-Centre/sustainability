@@ -57,37 +57,37 @@ class userFields extends _entityFields{
 	
 	public function listHeading(){
 		$this->addContent(parent::listHeading(),true);
-		$this->listTh('Login Name');
-		$this->listTh('First Name');
-		$this->listTh('Last Name');
-		$this->listTh('Focus');
-		$this->listTh('Interests');
-		$this->listTh('Last Login');
+		$this->listTh('Login Name',true);
+		$this->listTh('First Name',true);
+		$this->listTh('Last Name',true);
+		$this->listTh('Focus',true);
+		$this->listTh('Interests',true);
+		$this->listTh('Last Login',true);
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
 		$this->addContent(parent::listDetail(),true);
-		$this->listTh($this->nameFirst);			
-		$this->listTh($this->nameLast);		
-		$this->listTh($this->focus);		
-		$this->listTh($this->interests);		
-		$this->listTh($this->lastLogin);		
+		$this->listTh($this->nameFirst,true);			
+		$this->listTh($this->nameLast,true);		
+		$this->listTh($this->focus,true);		
+		$this->listTh($this->interests,true);		
+		$this->listTh($this->lastLogin,true);		
 		return $this->getContent();
 	}
 	
 	public function display(){
 		$this->addContent(parent::display(),true);
-		$this->detailPara('Login Name', $this->loginName);
-		$this->detailPara('First Name', $this->nameFirst);
-		$this->detailPara('Last Name', $this->nameLast);
-		$this->detailPara('Email Address', $this->email);
-		$this->detailPara('Focus', $this->focus);
-		$this->detailPara('Interests', $this->interests);
-		$this->detailPara('Last Login', $this->lastLogin);
-		$this->detailPara('Active Profile', $this->isActive);
-		$this->detailPara('Administrator', $this->isAdmin);
-		$this->detailPara('Must Update Password', $this->mustUpdatePwd);
+		$this->detailPara('Login Name', $this->loginName,true);
+		$this->detailPara('First Name', $this->nameFirst,true);
+		$this->detailPara('Last Name', $this->nameLast,true);
+		$this->detailPara('Email Address', $this->email,true);
+		$this->detailPara('Focus', $this->focus,true);
+		$this->detailPara('Interests', $this->interests,true);
+		$this->detailPara('Last Login', $this->lastLogin,true);
+		$this->detailPara('Active Profile', $this->isActive,true);
+		$this->detailPara('Administrator', $this->isAdmin,true);
+		$this->detailPara('Must Update Password', $this->mustUpdatePwd,true);
 		return $this->getContent();
 	}
 	
@@ -435,7 +435,7 @@ protected $__MyClassName = 'User';
 			
 	}
 		
-	public function addForm(){
+	public function addForm($idParent = 0){
 		if ($_SESSION['is-admin'] == 'yes'){
 			$this->pageMode = 'ADD';
 			$this->setDefaults();

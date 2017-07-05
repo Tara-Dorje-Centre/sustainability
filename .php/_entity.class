@@ -79,11 +79,12 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	
 	public $name;		
 	
-	
+
 	public $hasDisplayOrder = false;
     public $listDisplayOrder = false;
 	public $displayOrder = 0;
 
+	//long text fields
 	public $hasDescription = false;
     public $listDescription = false;
 	public $description = '';
@@ -96,27 +97,24 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
    	public $listSummary = false;
    	public $summary = '';
    	
+   	public $hasComments = false;
+   	public $listComments = false;
+   	public $comments = '';
+   	
+   	//userid fields
    	public $hasDoneBy = false;
     public $listDoneBy = false;
 	public $doneBy = '';
-	
-	public $hasReviewed = false;
-    public $listReviewed = false;
-	public $reviewed;
-	
 	
 	public $hasReviewedBy = false;
     public $listReviewedBy = false;
 	public $reviewedBy = '';
 	
-	public $hasQuantityEstimated = false;
-    public $listQuantityEstimated = false;
-	public $quantityEstimated = 0;
+	public $hasApprovedBy = false;
+    public $listApprovedBy = false;
+	public $approvedBy = '';
 	
-   	public $hasQuantityActual = false;
-    public $listQuantityActual = false;
-	public $quantityActual = 0;
-	
+	//date fields
 	public $hasStarted = false;
    	public $listStarted = false;
    	public $started;
@@ -133,6 +131,11 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
     public $listUpdated = false;
     public $updated;
     
+    public $hasReviewed = false;
+    public $listReviewed = false;
+	public $reviewed;
+	
+    
     public $hasHighlight = false;
     public $listHighlight = false;
     public $highlight = 'none';
@@ -143,10 +146,18 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	public $idType = 0;
 	public $nameType;
 	
-	public $hasUnit = false;
-    public $listUnit = false;
-	public $idUnit = 0;
-	public $nameUnit;
+	public $hasQuantityEstimated = false;
+    public $listQuantityEstimated = false;
+	public $quantityEstimated = 0;
+	
+   	public $hasQuantityActual = false;
+    public $listQuantityActual = false;
+	public $quantityActual = 0;
+	
+	public $hasUnits = false;
+    public $listUnits = false;
+	public $idUnits = 0;
+	public $nameUnits;
 	
 	
 	public $hasLocation = false;
@@ -181,22 +192,55 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
     
     	$this->id = 0;
 		$this->name = '';
-		$this->description ='';
+		
+		if ($this->hasDescription == true){
+			$this->description = '';
+		}
+		
+		if ($this->hasComments == true){
+			$this->comments = '';
+		}
+		
+		if ($this->hasSummary == true){
+			$this->summary = '';
+		}
+		
+		if ($this->hasNotes == true){
+			$this->notes = '';
+		}
 		
 		if ($this->hasHighlight == true){
 			$this->highlightStyle = 'none';
 		}
+		
 		if ($this->hasCreated == true){
 			$this->created = '';	
 		}
+		
 		if ($this->hasUpdated == true){
 			$this->updated = '';
+		}
+		
+		if ($this->hasStarted == true){
+			$this->started = '';	
+		}
+		
+		if ($this->hasReported == true){
+			$this->reported = '';
+		}
+		
+		if ($this->hasReviewed == true){
+			$this->reviewed = '';	
+		}
+		if ($this->hasApproved == true){
+			$this->approved = '';
 		}
 		
 		if ($this->hasType == true){
 			$this->idType = 0;
 			$this->nameType = '';
 		}
+		
 		if ($this->hasParent == true){
 			$this->idParent = 0;
 			$this->nameParent = '';
@@ -216,15 +260,56 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 			$this->idTask = 0;
 			$this->nameTask = '';
 		}
+		
+		   if ($this->hasActivity == true){
+			$this->idActivity = 0;
+			$this->nameActivity = '';
+		}
+		
+		
     }
     
 	public function setRow($row){
 		$this->reset;
 		$this->id = $row["id"];
 		$this->name = ($row["name"]);
-		$this->description = ($row["description"]);
+		
+		if ($this->hasDescription == true){
+			$this->description = ($row["description"]);
+		}
+		
+		if ($this->hasNotes == true){
+			$this->notes = ($row["notes"]);
+		}
+		
+		if ($this->hasComments == true){
+			$this->comments = ($row["comments"]);
+		}
+		
+		if ($this->hasSummary == true){
+			$this->summary = ($row["summary"]);
+		}
+		
 		if ($this->hasHighlight == true){
 			$this->highlightStyle = ($row["highlight_style"]);
+		}
+		
+		if ($this->hasDisplayOrder == true){
+			$this->displayOrder = ($row["display_order"]);
+		}
+		
+		if ($this->hasStarted == true){
+			$this->started = ($row["started"]);		
+		}			
+		if ($this->hasReported == true){
+			$this->reported = ($row["reported"]);		
+		}
+		
+		if ($this->hasReviewed == true){
+			$this->reviewed = ($row["reviewed"]);		
+		}			
+		if ($this->hasApproved == true){
+			$this->approved = ($row["approved"]);		
 		}
 		if ($this->hasCreated == true){
 			$this->created = ($row["created"]);		
@@ -232,6 +317,7 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		if ($this->hasUpdated == true){
 			$this->updated = ($row["updated"]);		
 		}
+		
 		if ($this->hasType == true){
 			$this->idType = ($row["type_id"]);
 			$this->nameType = $row["type_name"];
@@ -261,6 +347,8 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	
 	public function defaults(){
 		$this->reset;
+		//set doneby
+		//set started or reported
 		
 	}
 	
@@ -280,18 +368,32 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	}
 	
 	public function listHeading(){
-		$this->resetContent();
-		$this->listTh('Id',true);
+		//$this->resetContent(true);
+		$this->listTh('Id',true,true);
+		$this->listTh('Order', listDisplayOrder);
 		$this->listTh('Name',true);
-		$this->listTh('Description',true);
+		
+		$this->listTh('Description',$this->listDescription);
+		$this->listTh('Notes',$this->listNotes);
+		$this->listTh('Summary',$this->listSummary);
+		$this->listTh('Comments',$this->listComments);
 		
 		$this->listTh('Type',$this->listType);
 		$this->listTh('Location',$this->listLocation);
+		
 		$this->listTh('Project',$this->listProject);
 		$this->listTh('Task',$this->listTask);
+		$this->listTh('Activity',$this->listActivity);
+		
 		$this->listTh('Parent',$this->listParent);
+		
 		$this->listTh('Created',$this->listCreated);
 		$this->listTh('Updated',$this->listUpdated);
+		$this->listTh('Started',$this->listStarted);
+		$this->listTh('Reported',$this->listReported);
+		$this->listTh('Reviewed',$this->listReviewed);
+		$this->listTh('Approved',$this->listApproved);
+		
 		$this->listTh('Highlight',$this->listHighlight);
 		return $this->getContent();
 	}
@@ -299,18 +401,34 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	public function listDetail(){
 		$this->format();
 		
-		$this->resetContent;
-		$this->listTd($this->id,true);
+		//$this->resetContent(true);
+		$this->listTd($this->id,true,true);
+		$this->listTd($this->displayOrder,$this->listDisplayOrder);
 		$this->listTd($this->name,true);
-		$this->listTd($this->description,true);
+		
+		$this->listTd($this->description,$this->listDescription);
+		$this->listTd($this->notes,$this->listNotes);
+		$this->listTd($this->comments,$this->listComments);
+		$this->listTd($this->summary,$this->listSummary);
+		
+		
 		
 		$this->listTd($this->nameType,$this->listType);
 		$this->listTd($this->nameLocation,$this->listLocation);
+		
 		$this->listTd($this->nameProject,$this->listProject);
 		$this->listTd($this->nameTask,$this->listTask);
+		$this->listTd($this->nameActivity,$this->listActivity);
+				
 		$this->listTd($this->nameParent,$this->listParent);
+		
 		$this->listTd($this->created,$this->listCreated);
 		$this->listTd($this->updated,$this->listUpdated);
+		$this->listTd($this->started,$this->listStarted);
+		$this->listTd($this->reported,$this->listReported);
+		$this->listTd($this->reviewed,$this->listReviewed);
+		$this->listTd($this->approved,$this->listApproved);
+		
 		$this->listTd($this->highlightStyle,$this->listHighlight);
 		return $this->getContent();
 
@@ -319,19 +437,35 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	public function display(){
 		$this->format();
 		
-		$this->resetContent;
+		$this->resetContent(true);
+		$this->detailPara('Order',$this->displayOrder,$this->hasDisplayOrder);
 		$this->detailPara('Id',$this->id,true);
 		$this->detailPara('Name',$this->name,true);
-		$this->detailPara('Description',$this->description,true);
 		
-		$this->detailPara('Type',$this->nameType,$this->listType);
-		$this->detailPara('Location',$this->nameLocation,$this->listLocation);
-		$this->detailPara('Project',$this->nameProject,$this->listProject);
-		$this->detailPara('Task',$this->nameTask,$this->listTask);
-		$this->detailPara('Parent',$this->nameParent,$this->listParent);
-		$this->detailPara('Created',$this->created,$this->listCreated);
-		$this->detailPara('Updated',$this->updated,$this->listUpdated);
-		$this->detailPara('Highlight',$this->highlightStyle,$this->listHighlight);
+		$this->detailPara('Description',$this->description,$this->hasDescription);
+		$this->detailPara('Summary',$this->summary,$this->hasSummary);
+		$this->detailPara('Notes',$this->notes,$this->hasNotes);
+		$this->detailPara('Comments',$this->comments,$this->hasComments);
+		
+		$this->detailPara('Type',$this->nameType,$this->hasType);
+		$this->detailPara('Location',$this->nameLocation,$this->hasLocation);
+		
+		$this->detailPara('Project',$this->nameProject,$this->hasProject);
+		$this->detailPara('Task',$this->nameTask,$this->hasTask);
+		$this->detailPara('Activity',$this->nameActivity,$this->hasActivity);
+		
+		
+		$this->detailPara('Parent',$this->nameParent,$this->hasParent);
+		
+		$this->detailPara('Created',$this->created,$this->hasCreated);
+		$this->detailPara('Updated',$this->updated,$this->hasUpdated);
+		
+		$this->detailPara('Started',$this->started,$this->hasStarted);
+		$this->detailPara('Reported',$this->reported,$this->hasReported);
+		$this->detailPara('Reviewed',$this->reviewed,$this->hasReviewed);
+		$this->detailPara('Approved',$this->approved,$this->hasApproved);
+		
+		$this->detailPara('Highlight',$this->highlightStyle,$this->hasHighlight);
 		return $this->getContent();
 		
 	}
@@ -342,7 +476,45 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	
 		$this->id = $this->postVar('id',0);
 		$this->name = $this->postString('name');
-		$this->description = $this->postString('description');
+		
+		if ($this->hasDisplayOrder == true){
+			$this->displayOrder = $this->postString('displayOrder');
+		}
+		
+		if ($this->hasDescription == true){
+			$this->description = $this->postString('description');
+		}
+		
+		if ($this->hasNotes == true){
+			$this->notes = $this->postString('notes');
+		}
+		
+		if ($this->hasComments == true){
+			$this->comments = $this->postString('comments');
+		}
+		
+		if ($this->hasSummary == true){
+			$this->summary = $this->postString('summary');
+		}
+		if ($this->hasStarted == true){
+			$this->started = $this->postDate('started');
+		}
+		
+		if ($this->hasReported == true){
+			$this->reported = $this->postDate('reported');
+		}
+		
+		if ($this->hasReviewed == true){
+			$this->reviewed = $this->postDate('reviewed');
+		}
+		
+		if ($this->hasApproved == true){
+			$this->approved = $this->postDate('approved');
+		}
+		
+		if ($this->hasHighlight == true){
+			$this->highlightStyle = $this->postString('highlightStyle');
+		}
 		if ($this->hasType == true){
 		$this->idType = $this->postVar('idType',0);
 		}
@@ -361,6 +533,9 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		if ($this->hasActivity == true){
 		$this->idActivity = $this->postVar('idActivity',0);
 		}
+		
+		
+		
 				
 	}
 }

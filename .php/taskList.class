@@ -3,7 +3,7 @@
 class taskList extends _entityList{
 	protected $__MyClassName = 'TaskList';
 	protected $__titleEntity = 'Tasks';
-protected $project;
+//protected $project;
 	public $periodicTasks = 'NO';
 	/*public $base;
 	//public $project;
@@ -11,10 +11,8 @@ protected $project;
 	//public $links;*/
 	
 	protected function setHelperClasses(){
-	
-		
-		$this->base = new task($this->pageMode, $this->id, $this-idParent);
-		$this->project = new Project($this->pageMode, $this->idParent);
+		$this->base = new task($this->pageMode, $this->id, $this->idParent);
+		//$this->project = new Project($this->pageMode, $this->idParent);
 		//$this->sql = new TaskSQL;	
 	//	$this->links = new TaskLinks;
 	}
@@ -44,8 +42,8 @@ protected $project;
 		
 		$menu = $this->base->links->openMenu('section-heading-links');
 		if ($this->periodicTasks == 'NO'){
-			$menu .= $this->base->links->detailAddHref($this->project->id);
-			$menu .= $this->base->links->listingHref($this->project->id);
+			$menu .= $this->base->links->add($this->idProject);
+			$menu .= $this->base->links->listingHref($this->base->idProject);
 			$menu .= $this->project->links->detailViewHref($this->base->idProject);	
 		} else {
 			

@@ -7,10 +7,10 @@ class locationFields extends _entityFields{
 	public function __construct(){
     	$this->hasType = true;
     	$this->hasCreated = true;
-    	$this->hasHighlight = false;
-    	$this->hasLocation = false;
+    	$this->hasHighlight = true;
+    	$this->hasUpdated = true;
     	$this->hasParent = true;
-    	$this->hasProject = false;
+    	$this->hasDescription = true;
     }
 	
 	public function setRowValues($row){
@@ -22,20 +22,20 @@ class locationFields extends _entityFields{
 	}
 	
 	public function listHeading(){
-		$heading = parent::listHeading();
-		$heading .= wrapTh('SortKey');
-		return $heading;
+		$this->addContent(parent::listHeading(),true);
+		$this->listTh('SortKey',true);
+		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		$detail = parent::listDetail();
-		$detail .= wrapTd($this->sortKey);
+		$this->addContent(parent::listDetail(), true);
+		$this->listTd($this->sortKey, true);
 		return $detail;
 	}
 	
 	public function display(){
 		$detail = parent::display();
-		$detail .= para('sortKey', 'SortKey', $this->sortKey);
+		$this->detailPara('SortKey', $this->sortKey, true);
 		return $detail;
 	}
 	
@@ -59,7 +59,7 @@ class location extends _entity{
 	}
 	
 	protected function listRowLink(){
-		$link = $this->links->detailViewEditHref($this->f->sortKey,$this->f->id);
+		$link = $this->links->itemViewEdit($this->f->sortKey,$this->f->id);
 		return $link;
 	}
 	
@@ -162,7 +162,7 @@ class location extends _entity{
 
 		if ($showLink == true){
 			$ll = new LocationLinks;	
-			$links =$ll->detailViewEditHref($selectedValue);
+			$links =$ll->itemViewEdit($this->_entityTitle,$selectedValue);
 			$select .= $links;	
 		}
 		return $select;
