@@ -118,9 +118,6 @@ public function __construct(){
 class task extends _entity{
 	protected $__MyClassName = 'Task';
     protected $_titleEntity = 'Task';
-    
-	
-	
 	public $totals;
 	
 	public $measureCount = 0;
@@ -136,7 +133,6 @@ class task extends _entity{
 		$this->sql = new TaskSQL();
 		$this->links = new TaskLinks();
 		$this->totals = new summaryTotals();
-		
 	}
 	
 	public function listHeading($periodicTasks = 'NO'){
@@ -202,25 +198,14 @@ class task extends _entity{
 	
 	
 	
-	public function setDetails(){
-   		$this->echoState('task.setDetails');
-		
-		if ($this->id > 0){
-		
+	public function beforeSetDetails(){
+   		
 		if ($this->pageMode == 'COPY'){
 			$this->copyTask();
 		}
-		
-		$sql = $this->sql->info($this->id);
-		$result = dbGetResult($sql);
-		if ($result){
-		while($row = $result->fetch_assoc())
-		{	
-			$this->f->setRow($row);
-			
-		}
-		$result->close();
-		}
+	}
+	
+	protected function afterSetDetails(){
 		
 		$this->totals->setTaskTotals($this->f->id);
 		 //if activity records with hours exist
@@ -232,12 +217,7 @@ class task extends _entity{
 
 		$this->setMeasureCount();
 		
-		
-		
-		}
-		
-		
-	}	
+	}
 	
 
 	
@@ -416,9 +396,13 @@ class task extends _entity{
 		return $select;
 	}	
 	
+	public function afterSetDefaults(){
+	
+	}
+	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		
-			$this->setDefaults();
+			//$this->setDefaults();
 			$legend = 'Add Task';
 		} else {
 			$legend = 'Edit Task';
@@ -526,7 +510,7 @@ class task extends _entity{
 	
 		
 
-	}
+	
 	
 	public function updateActivitySummary(){	
 		
@@ -580,6 +564,10 @@ class task extends _entity{
 		
 		$sql = $this->sql->updateReceiptsAuth($this->f->id, $project, $by);
 		$result = dbRunSQL($sql);
+	}
+	
+	protected function afterCollectPostValues(){
+	
 	}
 
 	private function copyTask(){

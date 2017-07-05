@@ -8,7 +8,7 @@ abstract class _entityList extends _entity{
 	public $found = 0;
 	public $base;
 	
-	public function beforeSetDetails(){
+	protected function beforeSetDetails(){
 	
 	}
 	
@@ -21,7 +21,12 @@ abstract class _entityList extends _entity{
 		$this->afterSetDetails();
 	}
 	
-	public function setFoundCount(){
+	protected function afterSetDetails(){
+
+	}
+	
+	
+	protected function setFoundCount(){
 		$sql = $this->base->sql->count();
 		$this->found = dbGetCount($sql, 'count_details');
 	}
@@ -85,9 +90,6 @@ abstract class _entityList extends _entity{
 		return $list;
 	}
 	
-	public function afterSetDetails(){
-
-	}
 	public function afterSetDefaults(){
 	
 	}

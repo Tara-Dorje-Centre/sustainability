@@ -10,20 +10,21 @@ class taskList extends _entityList{
 	//public $sql;
 	//public $links;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new task('LIST', 0, $idParent);
+	protected function setHelperClasses(){
+	//$mode = 'VIEW', $id = 0, $idParent = 0){
+		//oparent::__construct($mode, $id, $idParent);
+		$this->base = new task($this->list, $this->id, $this-yidParent);
 		//$this->project = new Project($this->pageMode, $this->idParent);
 		//$this->sql = new TaskSQL;	
 	//	$this->links = new TaskLinks;
 	}
-	
+	/*
 	public function setDetails(){
    		$this->echoState(true, 'setDetails');
 		//$this->project->setDetails();
 		$this->setFoundCount();
 	}
-
+*/
 	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
 	}
@@ -102,16 +103,8 @@ class taskList extends _entityList{
 	}
 	
 	
-	public function getListing($pagingBaseLink = 'USE_LISTING'){
-$this->setFoundCount();
-		$pagingLinks = $this->listingPagingLinks($pagingBaseLink);
+	public function getListingSQL(){
 	
-		$quickEdit = $this->listingQuickEdit;
-
-		$list = openDisplayList('task','Tasks',$pagingLinks,$quickEdit);
-
-	
-
 
 		if ($this->periodicTasks == 'NO'){
 			$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
@@ -119,21 +112,8 @@ $this->setFoundCount();
 			$sql = $this->base->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
 		}
 		
-		$result = dbGetResult($sql);
-		if ($result){
-			//$t = new Task('FETCH');
-			$list .= $this->base->listHeading($this->periodicTasks);
-			while($row = $result->fetch_assoc())
-			{	
-				$this->base->f->setRowValues($row);
-				$list .= $this->base->listRowFormat($this->periodicTasks);
-			}
-		
-			$result->close();
+		return $sql;
 		}
-
-		$list .= closeDisplayList();
-		return $list;
-	}
+		
 }
 ?>

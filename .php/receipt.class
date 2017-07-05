@@ -3,8 +3,6 @@
 
 class receiptFields extends _entityFields{
 
-   
-	
     public $dateReported;
 	public $receivedBy;
 	public $receivedFrom;
@@ -62,12 +60,14 @@ class receiptFields extends _entityFields{
 	}
 	
 	
-	public function listHeading($displayMode){
+	public function listHeading(){
+	//$displayMode){
 		$this->addContent(parent::listHeading(),true);
 	
 		return $this->getContent();
 	}
-	public function listDetail($displayMode){
+	public function listDetail(){
+	//$displayMode){
 	
 	}
 	
