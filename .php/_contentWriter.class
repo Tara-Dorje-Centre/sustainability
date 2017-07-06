@@ -1,0 +1,22 @@
+<?php 
+
+abstract class _contentWriter{
+	protected $_content = '';
+ 	protected function resetContent($reset = true){
+ 		if ($reset == true){
+ 		$this->_content = '';
+ 		}
+ 	}
+	public function addContent($value = '', $reset = false){
+		$this->resetContent($reset);
+ 		$this->_content .= $value;
+ 	}
+	public function getContent($reset = true){
+ 		$value = $this->_content;
+		$this->resetContent($reset);
+ 		return $value;
+	}
+}
+	
+ 
+?>

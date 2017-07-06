@@ -1,5 +1,6 @@
 <?php 
-
+include_once("_contentWriter.class");
+include_once("_baseEntityFields.class");
 abstract class _contentWriter{
 	protected $_content = '';
  	protected function resetContent($reset = true){

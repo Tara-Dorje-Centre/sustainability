@@ -1,0 +1,38 @@
+<?php 
+
+abstract class _baseEntityFields extends _contentWriter{
+	
+	protected function listTh($heading, $show = false, $reset = false){
+ 		if ($show == true){
+ 			$this->addContent(wrapTh($heading),$reset);
+ 		}
+ 	}
+ 	protected function listTd($value, $show = false,$reset = false){
+ 		if ($show == true){
+ 			$this->addContent(wrapTd($value),$reset);
+ 		}
+ 	}
+ 	protected function detailPara($caption,$value,$show = false,$reset = false){
+ 		if ($show == true){
+ 			$this->addContent(para($caption,$value),$reset);
+ 		}
+ 	}
+ 	protected function postVar($varName, $default = 0){
+		return $_POST[$varName];
+ 	}
+	protected function postDate(){
+		return getTimestampPostValues($date);
+	}
+	protected function postString($name, $default = ''){
+		return dbEscapeString($_POST[$name]);
+	}
+	
+	protected function formatText($text){
+		return displayLines($text);
+	}
+	protected function formatDate($date){
+		return getTimestampDate($date);
+	}
+}
+ 
+?>
