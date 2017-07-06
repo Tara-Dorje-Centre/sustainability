@@ -1,124 +1,78 @@
 <?php 
 
-/*
-class anyclassFields extends _entityFields{
-//additional properties
- public $dateField;
- public $textField;
- public $numericField;
-//expose primary fields
-public function __construct(){
-	$this->hasType = true;
-	$this->hasProject = true;
-$this->hasTask = true;
-$this->hasActivity = false;
-$this->hasCreated = true;
-	$this->hasUpdated = true;
-}
-//set additional fields
-public function setRow($row){
-	parent::setRow();
- $this->dateField = $row["date_reported"];
- $this->textField= ($row["done_by"]);
- $this->numericField = $row["quantity"];	
-}
-//defaults for additional fields
-public function defaults(){
-	parent::defaults();
- $this->field = 1;
-}
-//format custom fields
-public function format(){
-	parent::format();
- $this->textField = formatText($this->notes);
- $this->dateField = formatDate($this->dateReported);
-}
-//display custom fields for VIEW
-public function display(){
-	$this->addContent(parent::display(),true);
-	$this->detailPara('caption',$this->field);
-	return $this->getContent();
-}
-//add custom columns
-public function listHeading(){
-	$this->addContent(parent::listHeading(),true);
-	$this->listTh('caption');
-	return $this->getContent();
-}
-public function listDetail(){
-	$this->addContent(parent::listDetail(),true);
-	$this->listTd($this->field);
-	return $this->getContent();
-}
-//get edit form values
-public function getPostVars(){
-	parent::getPostVars();
- $this->textField = $this->postString('notes'); 
- $this->dateField = $this->postDate('dateReported');
- $this->numericField = $this->postVar('quantity'); 
-}
 
-}*/
+ interface IentityFields {
+ 
 
-
-interface IentityFields {
-	public function __construct();
-	public function setRow($row);
-	public function format();
-	public function defaults();
-	public function listHeading();
-	public function listDetail();
-	public function display();
-	public function getPostVars();
+ public function __construct();
+ public function setRow($row);
+ public function format();
+ public function defaults();
+ public function listHeading();
+ public function listDetail();
+ public function display();
+ public function getPostVars();
+ }
+ 
+ class field{
+ 
+ 
+ public $value;
+ public $type = 'NUMBER';
+ public $useRow = false;
+ public $usePost = false;
+ public $showList = false;
+ public $showDisplay = false;
+ public function __construct($type = 'ID'){
+ $this->type = $type;
+ }
+ public function reset($default = NULL){
+ if (($this->useRow == true) or ($this->usePost == true)){
+ $this->value = $default;
+ }
+ 
+ }
+ public function useField($row = true, $post = true, $list = true, $display = true){
+ $this->useRow = $row;
+ $this->usePost = $post;
+ $this->showList = $list;
+ $this->showDisplay = $display;
+ }
 }
-class field{
-
-public $value;
-public $type = 'NUMBER';
-public $getRow = false;
-public $getPost = false;
-public $showList = false;
-public $showDisplay = false;
-public function __construct($type = 'ID'){
-
-$this->type = $type;
-}
-public function useField($row = true, $post = true, $list = true, display = true){
-	$this->getRow = $row;
-	$this->getPost = $post;
-	$this->showList = $list;
-	$this->showDisplay = $display;
-}
+ 
 
 
 abstract class _entityFields extends _baseEntityFields implements IentityFields{
 
 	public $id = 0;
-	
-	
 	public $name;		
-	
-
+public $displayOrder;
+	public $description;
+	// = new field('TEXT');
+	   	public $notes = '';
+	   	   	public $summary = '';
+	   	   	public $comments = '';
+	   	
 	public $hasDisplayOrder = false;
     public $listDisplayOrder = false;
-	public $displayOrder = 0;
+	//public $displayOrder = 0;
 
 	//long text fields
-	public $hasDescription = false;
-    public $listDescription = false;
-	public $description = '';
+	//public $hasDescription = false;
+  //  public $listDescription = false;
+
 
 	public $hasNotes = false;
    	public $listNotes = false;
-   	public $notes = '';
+
 	 
 	public $hasSummary = false;
    	public $listSummary = false;
-   	public $summary = '';
+
    	
    	public $hasComments = false;
    	public $listComments = false;
-   	public $comments = '';
+
    	
    	//userid fields
    	public $hasDoneBy = false;
@@ -205,16 +159,20 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
    	public $nameActivity;
 	 
 	
-    abstract public function __construct();
+    public function __construct(){
+    
+    $this->description = new field('TEXT');
+    }
     
     protected function reset(){
     
     	$this->id = 0;
 		$this->name = '';
 		
-		if ($this->hasDescription == true){
-			$this->description = '';
-		}
+	//	if ($this->description->set == true){
+			$this->description->reset('');
+			
+	//	}
 		
 		if ($this->hasComments == true){
 			$this->comments = '';
@@ -293,8 +251,8 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		$this->id = $row["id"];
 		$this->name = ($row["name"]);
 		
-		if ($this->hasDescription == true){
-			$this->description = ($row["description"]);
+		if ($this->description->useRow == true){
+			$this->description->value = ($row["description"]);
 		}
 		
 		if ($this->hasNotes == true){
@@ -374,7 +332,7 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	
 	public function format(){
 		$this->name = $this->formatText($this->name,true);
-		$this->description = $this->formatText($this->description,$this->hasDescription);
+		$this->description->value = $this->formatText($this->description->value,$this->description->useRow);
 		$this->notes = $this->formatText($this->notes,$this->hasNotes);
 		$this->summary = $this->formatText($this->summary,$this->hasSummary);
 		$this->comments = $this->formatText($this->comments,$this->hasComments);
@@ -392,7 +350,7 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		$this->listTh('Order', listDisplayOrder);
 		$this->listTh('Name',true);
 		
-		$this->listTh('Description',$this->listDescription);
+		$this->listTh('Description',$this->description->showList);
 		$this->listTh('Notes',$this->listNotes);
 		$this->listTh('Summary',$this->listSummary);
 		$this->listTh('Comments',$this->listComments);
@@ -425,7 +383,7 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		$this->listTd($this->displayOrder,$this->listDisplayOrder);
 		$this->listTd($this->name,true);
 		
-		$this->listTd($this->description,$this->listDescription);
+		$this->listTd($this->description->value,$this->description->showList);
 		$this->listTd($this->notes,$this->listNotes);
 		$this->listTd($this->comments,$this->listComments);
 		$this->listTd($this->summary,$this->listSummary);
@@ -461,7 +419,7 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		$this->detailPara('Id',$this->id,true);
 		$this->detailPara('Name',$this->name,true);
 		
-		$this->detailPara('Description',$this->description,$this->hasDescription);
+		$this->detailPara('Description',$this->description->value,$this->description->showDisplay);
 		$this->detailPara('Summary',$this->summary,$this->hasSummary);
 		$this->detailPara('Notes',$this->notes,$this->hasNotes);
 		$this->detailPara('Comments',$this->comments,$this->hasComments);
@@ -500,8 +458,8 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 			$this->displayOrder = $this->postString('displayOrder');
 		}
 		
-		if ($this->hasDescription == true){
-			$this->description = $this->postString('description');
+		if ($this->description->usePost == true){
+			$this->description->value = $this->postString('description');
 		}
 		
 		if ($this->hasNotes == true){
@@ -559,212 +517,6 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	}
 }
 
-abstract class _entity extends _baseEntity{
-
-	protected $__MyClassName = '__Entity';
-	protected $_titleEntity = 'Entity';
-	protected $pageSave = 'save.php';
-	
-  	public $f;
-    public $sql;
-	public $links;
- 
- 
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		//$this->setPageSave();
-		//$this->setEntityTitle();
-		$this->setHelperClasses();
-	}
-	/* next review cycle
-	abstract protected function setPageSave();
-	abstract protected function setEntityTitle();
-	abstract protected function afterConstruct();*/
-	abstract protected function setHelperClasses();
-	abstract protected function beforeSetDetails();
-	abstract protected function afterSetDetails();
-	abstract protected function afterDisplay();
-	abstract protected function setPageMenu();
-	abstract protected function afterSetDefaults();
-	abstract protected function editForm();
-	abstract protected function afterCollectPostValues();
-		
-	
-	public function setDetails(){
-		$this->beforeSetDetails();
-
-		if ($this->id > 0){
-			$sql = $this->sql->info($this->id);
-			$result = dbGetResult($sql);
-			if($result){
-				while ($row = $result->fetch_assoc())
-				{	
-					$this->f->setRow($row);
-				}
-				$result->close();
-			}
-			$this->synchIds();
-		}
-		$this->afterSetDetails();
-	}	
-	
-	public function options(
-		$selectedId = 0, 
-		$idName = 'entityTypeId', 
-		$disabled = 'false', 
-		$showLink = true){
-
-		$sql = $this->sql->options($selectedId, $disabled);
-		$defaultValue = 0;
-		$defaultCaption = '-select '.$this->_titleEntity;
-		$allOptions = getSelectOptionsSQL($sql,$selectedId,$disabled,$defaultValue,$defaultCaption);		
-
-		$select = getSelectList($idName,$allOptions,'none',$disabled );
-		$select.= $this->optionsLink($showLink, $selectedId);
-		
-		return $select;
-	}	
-	
-	protected function optionsLink($showLink = true, $selectedId = 0){
-		if ($showLink == true){
-			$links =$this->links->view('View',$selectedId);
-		} else {
-			$links = '';
-		}
-		return $links;
-	}
-	
-	public function listHeading(){
-		$heading = wrapTh($this->_titleEntity);
-		$heading .= $this->f->listHeading();
-		$list = wrapTr($heading);
-		return $list;
-	}
-	
-	protected function listRowLink(){
-		$link = $this->links->itemViewEdit($this->f->name,$this->f->id);
-		return $link;
-	}
-	
-	protected function listRowFormat(){
-		$detail = wrapTd($this->listRowLink());
-		$detail .= $this->f->listDetail();		
-		$listRow = wrapTr($detail,$this->f->highlightStyle);
-		return $listRow;
-	}
-	
-	public function listRow($row){
-		$this->f->setRow($row);
-		return $this->listRowFormat();
-	}
-
-	protected function display(){
-		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
-		$detail .= $this->f->display();
-		$detail .= $this->afterDisplay();
-		$detail .= closeDisplayDetails();
-		return $detail;
-	}
-	
-	protected function setPageTitle(){
-		$heading = $this->pageMode.':  '.$this->_titleEntity;
-		$this->_pageTitle = $heading;
-	}
-	
-	protected function setDefaults(){
-		if ($this->pageMode == 'ADD'){
-	 		$this->f->defaults();
-	 	}
-	 	$this->afterSetDefaults();
-	}
-
-	public function addForm($idParent = 0){
-		$this->pageMode = 'ADD';
-		$this->setDefaults();
-		$this->f->idParent = $idParent;
-		return $this->editForm();
-	}
-
-	public function collectPostValues(){
-		$this->pageMode = $_POST['mode'];	
-		$this->f->getPostVars();
-	//	$this->synchIds();
-		$this->afterCollectPostValues();
-		$this->echoState(true,'collectPostValues');
-	}
-				
-	protected function synchIds(){
-		$this->id = $this->f->id;
-		$this->idParent = $this->f->idParent;
-	}
-	
-	public function printPage(){
-		$this->echoState(true, 'printPage');
-		$heading = $this->getPageHeading();
-		$details = $this->getPageDetails();
-		$site = new _SiteTemplate();
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
-	}
-	
-	protected function getPageHeading(){
-		$this->setPageTitle();
-		$this->setPageMenu();
-		
-		$heading = openDiv('section-title');
-		$heading .= $this->_pageTitle;
-		$heading .= closeDiv();		
-		$heading = openDiv('section-menu');
-		$heading .= $this->_pageMenu;
-		$heading .= closeDiv();		
-		
-		return $heading;
-	}
-	
-	protected function getPageDetails(){	
-	//case statement
-		if ($this->pageMode == 'VIEW'){
-			$details = $this->display();
-		} else {
-		
-			if ($this->pageMode == 'EDIT'){
-				$details = $this->editForm();
-			} else {
-				$details = $this->addForm();
-			}
-			
-		}
-			
-		return $details;
-	}
-	
-	protected function copy(){
-		$this->echoState(true, 'copy');
-		printLine('__Entity.copy not overridden');
-	}
-	
-	protected function saveUpdate(){
-		$this->echoState(true, 'saveUpdate');
-		printLine('__Entity.saveUpdate not overridden in child');
-	}
-	
-	protected function saveInsert(){
-		$this->echoState(true, 'saveInsert');
-		printLine ('__Entity.saveInsert not overridden in child');
-	}
-	
-	public function saveChanges(){
-		$this->echoState(true, 'saveChanges');
-		
-		if ($this->pageMode == 'EDIT'){
-			$this->saveUpdate();
-		} else {
-			$this->saveInsert();
-		}
-	}
-	
-	
-}
 
 
 ?>

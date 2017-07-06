@@ -1,4 +1,5 @@
 <?php 
+/*
 include_once("_contentWriter.class");
 include_once("_baseEntityFields.class");
 abstract class _contentWriter{
@@ -53,7 +54,7 @@ abstract class _baseEntityFields extends _contentWriter{
 		return getTimestampDate($date);
 	}
 }
- 
+ */
 abstract class _baseEntity extends _echo {
 	protected $__MyClassName = '__baseEntity.';
 	protected $_titleEntity = '__baseEntity';

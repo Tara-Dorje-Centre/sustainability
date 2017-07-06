@@ -30,7 +30,7 @@ class siteSettingsFields extends _entityFields{
 
 	public function __construct(){
 
-
+parent::__construct();
 
 	}
 	
