@@ -71,6 +71,25 @@ interface IentityFields {
 	public function display();
 	public function getPostVars();
 }
+class field{
+
+public $value;
+public $type = 'NUMBER';
+public $getRow = false;
+public $getPost = false;
+public $showList = false;
+public $showDisplay = false;
+public function __construct($type = 'ID'){
+
+$this->type = $type;
+}
+public function useField($row = true, $post = true, $list = true, display = true){
+	$this->getRow = $row;
+	$this->getPost = $post;
+	$this->showList = $list;
+	$this->showDisplay = $display;
+}
+
 
 abstract class _entityFields extends _baseEntityFields implements IentityFields{
 
@@ -162,7 +181,7 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	
 	public $hasLocation = false;
 	public $listLocation = false;
-	public $idLocation;
+	public $idLocation = 0;
 	public $nameLocation;
 	 
     public $hasParent = false;
@@ -230,10 +249,10 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		}
 		
 		if ($this->hasReviewed == true){
-			$this->reviewed = '';	
+			$this->reviewed = 'no';	
 		}
 		if ($this->hasApproved == true){
-			$this->approved = '';
+			$this->approved = 'no';
 		}
 		
 		if ($this->hasType == true){
@@ -662,15 +681,16 @@ abstract class _entity extends _baseEntity{
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
-		$this->idParent = $idParent;
+		$this->f->idParent = $idParent;
 		return $this->editForm();
 	}
 
 	public function collectPostValues(){
 		$this->pageMode = $_POST['mode'];	
 		$this->f->getPostVars();
-		$this->synchIds();
+	//	$this->synchIds();
 		$this->afterCollectPostValues();
+		$this->echoState(true,'collectPostValues');
 	}
 				
 	protected function synchIds(){

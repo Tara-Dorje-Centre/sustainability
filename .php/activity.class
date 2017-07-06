@@ -1,66 +1,68 @@
 ﻿<?php 
 
 class activityFields extends _entityFields{
-
-
-
-/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
-
-_entityTypeFields  notes, displayOrder
-****/
-	public $taskId = 0;
-	public $typeId = 0;
-	public $doneBy;
-    public $started;
-    public $updated;
-    //public $order = 0;	
-    //public $hoursEstimated = 0;	
 	public $hoursActual = 0;
-    public $comments;
+ 
 	public $linkUrl;
 	public $linkText;
-	//public $highlightStyle
+	
 	
     public function __construct(){
     	$this->hasType = true;
-    	$this->hasCreated = false;
+    	$this->hasComments = true;
     	$this->hasHighlight = true;
-    	$this->hasLocation = false;
-    	$this->hasParent = false;
-    	$this->hasProject = false;
+    	$this->hasDoneBy = true;
+		$this->hasStarted = true;
+    	$this->hasUpdated = true;
+    	$this->hasProject = true;
+    	$this->hasTask = true;
+    	$this->listProject = true;
+    	$this->listTask = true;
+    	$this->listType = true;
+    	$this->listDoneBy = true;
+    	
     }
 	
 	public function setRow($row){
-			//$this->id = $row["id"];
-			$this->task->id = $row["task_id"];
-			//$this->type->id = $row["type_id"];
-			$this->doneBy = ($row["done_by"]);
-			$this->started = $row["started"];
-			$this->updated = $row["updated"];	
-			//$this->order = $row["activity_order"];	
-			//$this->hoursEstimated = $row["hours_estimated"];						
 			$this->hoursActual = $row["hours_actual"];						
-			$this->comments = ($row["comments"]);
-			$this->linkText = ($row["link_text"]);
-			$this->linkUrl = ($row["link_url"]);
-			//$this->highlightStyle = $row['highlight_style'];
-			
 	}
 	
-	
-	
-	protected function formatForDisplay(){
-		$this->doneBy = displayLines($this->doneBy);
-		$this->comments = displayLines($this->comments);		
-		$this->started = getTimestampDate($this->started);
-		$this->updated = getTimestampDate($this->updated);		
+	public function format(){
+		parent::format();
 	}
-
+	
+	public function defaults(){
+		parent::defaults();
+		$this->hoursActual = 0;
+	}
+	
+	public function display(){
+	
+		$this->addContent(parent::display(),true);
+		$this->detailPara('HoursActual',true);
 		
+		return $this->getContent();
+	}
 	
+	public function listHeading(){
+		$this->addContent(parent::listTh(),true);
+		
+		$this->listTh('HoursActual',true);
+		return $this->getContent();
+	}
+	
+	public function listDetail(){
+		$this->addContent(parent::listTd(),true);
+		
+		$this->listTd($this->hoursActual,true);
+		return $this->getContent();
+	}
+	
+	public function getPostVars(){
+		parent::getPostVars();
+		$this->hoursActual = $this->postVar('hoursActual',0);
+	
+	}
 
 }
 
@@ -69,14 +71,14 @@ class activity extends _entity{
 	protected $_titleEntity = 'Activity';
 
 	//public $task;	
-	//public $type;
+	
 	public $f;
 	public $sql;
 	public $links;
 	
 	protected function setHelperClasses(){
-		$this->f = new activityFields;
-		$this->sql = new ActivitySQL;
+		$this->f = new activityFields();
+		$this->sql = new ActivitySQL();
 		$this->links = new ActivityLinks();
 	}
 
@@ -90,14 +92,18 @@ class activity extends _entity{
 	
 	
 	protected function listingRowLink(){
-		$link = $this->links->detailViewEditHref($this->id,$this->name);
+		$link = $this->links->itemViewEdit($this->name,$this->id);
 		return $link;
 	}
 	
 	public function listingHeading($myActivity = 'NO'){
+	
+		$this->f->listProject = false;
+		$this->f->listTask = false;
 		$heading = '';
 		if ($this->myActivity != 'NO'){
 			if ($this->myActivity != 'PROJECT'){
+			
 				$heading .= wrapTh('Project');
 			}
 			$heading .= wrapTh('Task');

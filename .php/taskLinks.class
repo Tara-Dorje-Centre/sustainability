@@ -1,8 +1,13 @@
 ﻿<?php 
 
-class taskLinks extends _entityLinks {
+class taskLinks extends _Links {
+/*
 
-
+Warning: Declaration of
+ taskLinks::listingPaged($baseLink, $found, $resultPage, $perPage)
+ should be compatible with
+  _entityLinks::listingPaged($idParent, $found, $resultPage = 1, $perPage = 10) 
+ */
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
 	}

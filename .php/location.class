@@ -13,8 +13,8 @@ class locationFields extends _entityFields{
     	$this->hasDescription = true;
     }
 	
-	public function setRowValues($row){
-		parent::setRowValues($row);
+	public function setRow($row){
+		parent::setRow($row);
 		
 		$this->sortKey = $row["sort_key"];
 		$this->sortKeyParent= $row["parent_sort_key"];
@@ -198,7 +198,7 @@ class location extends _entity{
 		//formRequired fields	
 		$formRequired = inputFieldName($entity,$this->f->name,'name','Name');
 
-		$type = new LocationType('SELECT');
+		$type = new locationType('OPTIONS');
 		$select = $type->options($this->f->idType,'idType','false',true);
 		$formOptional = captionedInput('Type',$select);
 					
@@ -207,7 +207,7 @@ class location extends _entity{
 						
 		$hidden = getHiddenInput('mode', $this->pageMode);
 		$hidden .= getHiddenInput('idParent', $this->f->idParent);
-		$hidden .= getHiddenInput('id', $this->id);
+		$hidden .= getHiddenInput('id', $this->f->id);
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $input.$hidden;
 		
@@ -249,7 +249,7 @@ class location extends _entity{
 			$sql .= " l.type_id = ".$this->f->idType.", ";
 			$sql .= " l.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " l.description = '".$this->f->description."' ";
-			$sql .= " WHERE l.id = ".$this->id."  ";			
+			$sql .= " WHERE l.id = ".$this->f->id."  ";			
 			
 			$result = dbRunSQL($sql);
 			
