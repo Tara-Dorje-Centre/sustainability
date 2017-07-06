@@ -26,13 +26,13 @@ abstract class _baseEntityFields extends _contentWriter{
 	protected function postString($name, $default = ''){
 		return dbEscapeString($_POST[$name]);
 	}
-	
+	/*
 	protected function formatText($text){
 		return displayLines($text);
 	}
 	protected function formatDate($date){
 		return getTimestampDate($date);
-	}
+	}*/
 }
  
 ?>

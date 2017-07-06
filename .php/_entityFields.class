@@ -2,8 +2,6 @@
 
 
  interface IentityFields {
- 
-
  public function __construct();
  public function setRow($row);
  public function format();
@@ -15,29 +13,143 @@
  }
  
  class field{
- 
- 
- public $value;
- public $type = 'NUMBER';
+ private $valueNumber = 0;
+ private $valueText = '';
+ private $valueDate = '';
+ private $type = 'NUMBER';
  public $useRow = false;
  public $usePost = false;
  public $showList = false;
  public $showDisplay = false;
- public function __construct($type = 'ID'){
+ 
+ public function __construct($type = 'NUMBER'){
  $this->type = $type;
  }
+ public function set($value){
+  	if ($this->type == 'NUMBER'){
+ 		$this->valueNumber = $value;
+ 	} else {
+ 		if ($this->type == 'DATE'){
+ 		 	$this->valueDate = $value;
+ 		} else {
+ 		 	$val = $this->valueText = $value;
+ 		}
+ 	} 
+ 
+ }
+ 
+ public function value(){
+ return $this->get();
+ }
+ public function get(){
+ 	if ($this->type == 'NUMBER'){
+ 		$val = $this->valueNumber;
+ 	} else {
+ 		if ($this->type == 'DATE'){
+ 		 	$val = $this->valueDate;
+ 		} else {
+ 		 	$val = $this->valueText;
+ 		}
+ 	} 
+ 	return $val;
+ }
+ 
  public function reset($default = NULL){
- if (($this->useRow == true) or ($this->usePost == true)){
- $this->value = $default;
+ if ($this->canSet == true){
+ 
+ $this->set($default);
+ 
  }
  
  }
- public function useField($row = true, $post = true, $list = true, $display = true){
- $this->useRow = $row;
- $this->usePost = $post;
- $this->showList = $list;
- $this->showDisplay = $display;
+ 
+  public function show($list = true, $display = true){
+	$this->showList = $list;
+	$this->showDisplay = $display;
  }
+ public function use($row = true, $post = true){
+	$this->useRow = $row;
+	$this->usePost = $post;
+ }
+ 	private function canSet(){
+ 	if (($this->useRow == true) or ($this->usePost == true)){
+   		$can = true;
+   	} else {
+   		$can = false;
+   	}
+   	return $can;
+	}
+ 
+	private function canShow(){
+ 	if (($this->showList == true) or ($this->showDisplay == true)){
+   		$can = true;
+   	} else {
+   		$can = false;
+   	}
+   	return $can;
+   	}
+ 
+ public function fetch($row,$field){
+ if ($this->useRow() == true){
+ 
+ $this->set($row[$field]);
+ 
+ }
+ 
+ 
+ }
+ public function post($varName){
+  	  if ($this->usePost() == true){
+  
+  $val = $_POST[$varName];
+  
+  if ($this->type == 'DATE'){
+  $this->valueDate = getTimestampPostValues($val);
+  }
+  
+  if ($this->type == 'TEXT'){
+        $this->valueText = dbEscapeString($val);
+  }
+  if ($this->type == 'NUMBER'){
+      $this->valueNumber = $val;
+  }
+ 
+
+ }
+ 
+ 
+ }
+ /*
+ protected function postVar($varName, $default = 0){
+		return $_POST[$varName];
+ 	}
+	protected function postDate(){
+		return getTimestampPostValues($val);
+	}
+	protected function postString($name, $default = ''){
+		return dbEscapeString($_POST[$name]);
+	}*/
+ 	public function format(){
+ 	if ($this->canShow() == true){
+  		if ($this->type == 'NUMBER'){
+  			if ($this->valueNumber == ''){
+  				$this->valueNumber = 0;
+  			}
+  		
+  		
+  		} else {
+  		  	if ($this->type == 'DATE'){
+  		  		$this->valueDate = getTimestampDate($this->valueDate);
+  		  	} else {
+  		  		$this->valueText = displayLines($this->valueText);
+  		  	}
+  		
+  		}
+ 	}
+ 	
+	}
+
+ 
 }
  
 
@@ -251,9 +363,9 @@ public $displayOrder;
 		$this->id = $row["id"];
 		$this->name = ($row["name"]);
 		
-		if ($this->description->useRow == true){
-			$this->description->value = ($row["description"]);
-		}
+		//if ($this->description->useRow == true){
+			$this->description->fetch($row,"description");
+		//}
 		
 		if ($this->hasNotes == true){
 			$this->notes = ($row["notes"]);
@@ -332,7 +444,8 @@ public $displayOrder;
 	
 	public function format(){
 		$this->name = $this->formatText($this->name,true);
-		$this->description->value = $this->formatText($this->description->value,$this->description->useRow);
+		$this->description->format();
+		// = $this->formatText($this->description->value,$this->description->useRow);
 		$this->notes = $this->formatText($this->notes,$this->hasNotes);
 		$this->summary = $this->formatText($this->summary,$this->hasSummary);
 		$this->comments = $this->formatText($this->comments,$this->hasComments);
@@ -459,7 +572,7 @@ public $displayOrder;
 		}
 		
 		if ($this->description->usePost == true){
-			$this->description->value = $this->postString('description');
+			$this->description->post('description');
 		}
 		
 		if ($this->hasNotes == true){
