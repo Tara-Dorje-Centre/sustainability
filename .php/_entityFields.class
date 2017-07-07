@@ -13,17 +13,26 @@
  }
  
  class field{
- private $valueNumber = 0;
- private $valueText = '';
- private $valueDate = '';
- private $type = 'NUMBER';
- public $useRow = false;
- public $usePost = false;
+ protected $valueNumber = 0;
+ protected $valueText = '';
+ protected $valueDate = '';
+ protected $type = 'NUMBER';
+ protected $caption = 'caption';
+ protected $dbColumn = 'not-used';
+ protected $postVariable = 'notUsed';
+ protected $useRow = false;
+ protected $usePost = false;
  public $showList = false;
  public $showDisplay = false;
  
- public function __construct($type = 'NUMBER'){
- $this->type = $type;
+ public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+// $this->type = $type;
+ if ($dbCol != 'not-used'){
+ $this->setFetch($dbColumn);
+ }
+ if ($postVariable != 'notUsed'){
+  $this->setPost($postVariable);
+ }
  }
  public function set($value){
   	if ($this->type == 'NUMBER'){
@@ -63,15 +72,23 @@
  
  }
  
-  public function show($list = true, $display = true){
+  public function setShow($caption, $list = true){
+ 
+	$this->caption = $caption;
 	$this->showList = $list;
-	$this->showDisplay = $display;
- }
- public function use($row = true, $post = true){
+	$this->showDisplay = true;
+	
+ } 
+ public function setFetch($dbColumn){
 	$this->useRow = $row;
-	$this->usePost = $post;
+	$this->dbColumn = $dbColumn;
  }
- 	private function canSet(){
+ 
+ public function setPost($postVariable){
+	$this->usePost = true;
+	$this->postVariable = $postVariable;
+ }
+ 	protected function canSet(){
  	if (($this->useRow == true) or ($this->usePost == true)){
    		$can = true;
    	} else {
@@ -80,7 +97,7 @@
    	return $can;
 	}
  
-	private function canShow(){
+	protected function canShow(){
  	if (($this->showList == true) or ($this->showDisplay == true)){
    		$can = true;
    	} else {
@@ -89,155 +106,142 @@
    	return $can;
    	}
  
- public function fetch($row,$field){
+ public function fetch($row){
  if ($this->useRow() == true){
  
- $this->set($row[$field]);
- 
+ $this->set($row[$this->dbColumn]);
+// $this->format();
  }
- 
- 
  }
- public function post($varName){
-  	  if ($this->usePost() == true){
+  public function tH(){
+ if ($this->showList == true){
+ 		$value = wrapTh($this->caption);
+ } else {
+ 	$value = '';
+ }
+ return $value;
+ }
+ public function tD(){
+ if ($this->showList == true){
+  		//$this->format();
+ 		$value = wrapTd($this->value());
+  		$this->format();
+ } else {
+ 	$value = '';
+ }
+ return $value;
+ }
+ public function p(){
+ if ($this->showDisplay == true){
+ 	//$this->format();
+ 	$value = para($this->caption,$this->value());
+ } else {
+ 	$value = '';
+ }
+ return $value;
+ }
+	public function post(){
+  		if ($this->usePost() == true){
   
-  $val = $_POST[$varName];
   
-  if ($this->type == 'DATE'){
-  $this->valueDate = getTimestampPostValues($val);
-  }
+    	if ($this->type == 'NUMBER'){
+ 				$this->valueNumber = $_POST[$this->postVariable];
+ 		} 
+ 	
+ 		if ($this->type == 'DATE'){
+ 		 	$this->valueDate = getTimestampPostValues($this->postVariable);
+ 		} 
+ 	
+ 		if ($this->type == 'TEXT'){
+ 		 	$this->valueText = dbEscapeString($_POST[$this->postVariable]);
+ 		}
+ 			
+ 		
   
-  if ($this->type == 'TEXT'){
-        $this->valueText = dbEscapeString($val);
-  }
-  if ($this->type == 'NUMBER'){
-      $this->valueNumber = $val;
-  }
- 
-
- }
- 
- 
- }
- /*
- protected function postVar($varName, $default = 0){
-		return $_POST[$varName];
- 	}
-	protected function postDate(){
-		return getTimestampPostValues($val);
+  
+ 		}
 	}
-	protected function postString($name, $default = ''){
-		return dbEscapeString($_POST[$name]);
-	}*/
- 	public function format(){
- 	if ($this->canShow() == true){
+ 
+ 	protected function format(){
+ 		if ($this->canShow() == true){
+ 	
   		if ($this->type == 'NUMBER'){
   			if ($this->valueNumber == ''){
   				$this->valueNumber = 0;
   			}
+  		} 
   		
-  		
-  		} else {
-  		  	if ($this->type == 'DATE'){
+  		if ($this->type == 'DATE'){
   		  		$this->valueDate = getTimestampDate($this->valueDate);
-  		  	} else {
-  		  		$this->valueText = displayLines($this->valueText);
-  		  	}
-  		
   		}
- 	}
+  		
+  		if ($this->type == 'TEXT'){
+  		  		$this->valueText = displayLines($this->valueText);
+  		}
+  		
+  		
+ 		}
  	
 	}
 
  
 }
  
+class _textField extends field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'TEXT';
+	}
+}
+class _numberField extends field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'NUMBER';
+	}
+}
 
+class _dateField extends field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'DATE';
+	}
+}
 
 abstract class _entityFields extends _baseEntityFields implements IentityFields{
-
-	public $id = 0;
+	public $displayOrder;
+	public $id;
 	public $name;		
-public $displayOrder;
+	
 	public $description;
-	// = new field('TEXT');
-	   	public $notes = '';
-	   	   	public $summary = '';
-	   	   	public $comments = '';
-	   	
-	public $hasDisplayOrder = false;
-    public $listDisplayOrder = false;
-	//public $displayOrder = 0;
-
-	//long text fields
-	//public $hasDescription = false;
-  //  public $listDescription = false;
-
-
-	public $hasNotes = false;
-   	public $listNotes = false;
-
-	 
-	public $hasSummary = false;
-   	public $listSummary = false;
-
+	public $notes;
+	public $summary;
+   	public $comments;
    	
-   	public $hasComments = false;
-   	public $listComments = false;
-
-   	
-   	//userid fields
-   	public $hasDoneBy = false;
-    public $listDoneBy = false;
-	public $doneBy = '';
+	public $doneBy;
+	public $reviewedBy;
+	public $approvedBy;
 	
-	public $hasReviewedBy = false;
-    public $listReviewedBy = false;
-	public $reviewedBy = '';
-	
-	public $hasApprovedBy = false;
-    public $listApprovedBy = false;
-	public $approvedBy = '';
-	
-	//date fields
-	public $hasStarted = false;
-   	public $listStarted = false;
    	public $started;
-	 
-	public $hasReported = false;
-   	public $listReported = false;
    	public $reported;
-	 
-    public $hasCreated = false;
-    public $listCreated = false;
 	public $created;
-	
-    public $hasUpdated = false;
-    public $listUpdated = false;
     public $updated;
-    
-    public $hasReviewed = false;
-    public $listReviewed = false;
 	public $reviewed;
 	
-    
-    public $hasHighlight = false;
-    public $listHighlight = false;
-    public $highlight = 'none';
-	public $highlightStyle = 'none';
+    public $highlight;
     
     public $hasType = false;
     public $listType = false;
 	public $idType = 0;
 	public $nameType;
 	
-	public $hasQuantityEstimated = false;
-    public $listQuantityEstimated = false;
+
+
 	public $quantityEstimated = 0;
-	
+	public $quantityActual = 0;
+		
    	public $hasQuantityActual = false;
     public $listQuantityActual = false;
-	public $quantityActual = 0;
+
 	
 	public $hasUnits = false;
     public $listUnits = false;
@@ -272,20 +276,42 @@ public $displayOrder;
 	 
 	
     public function __construct(){
-    
-    $this->description = new field('TEXT');
+        $this->displayOrder = new _numberField('display_order','displayOrder';
+    	$this->id = new _numberField('id','id');
+    	$this->name = new _textField('TEXT','name','name');
+    	
+    	$this->description = new _textField('description','description');
+    	$this->comments = new _textField('comments','comments');
+    	$this->notes = new _textField('notes','notes');
+    	$this->summary = new _textField('summary','summary');
+    	
+    	$this->updated = new dateField('updated');
+    	$this->created = new dateField('created');
+        $this->started = new dateField('started','started');           
+    	$this->reported = new dateField('reported','reported');
+    	$this->reviewed = new dateField('reviewed','reviewed');
+    	
+    	$this->doneBy = new textField('name','name');
+    	$this->reviewedBy = new textField('reviewed_by','reviewedBy');
+    	$this->approvedBy = new textField('approved_by','approvedBy');
+    	    	    	
+        $this->id->setShow('id',true);
+        $this->name->setShow('Name',true);
+        $this->description->setShow('Description',true);
+        $this->created->setShow('created',true);
+        $this->updated->setShow('updated',true);
+        
+        
     }
     
     protected function reset(){
     
-    	$this->id = 0;
-		$this->name = '';
-		
-	//	if ($this->description->set == true){
-			$this->description->reset('');
-			
-	//	}
-		
+    	$this->id->reset(0);
+		$this->name->reset('');
+		$this->description->reset('');
+		$this->updated->reset('');
+		$this->created->reset('');
+	/*
 		if ($this->hasComments == true){
 			$this->comments = '';
 		}
@@ -302,13 +328,6 @@ public $displayOrder;
 			$this->highlightStyle = 'none';
 		}
 		
-		if ($this->hasCreated == true){
-			$this->created = '';	
-		}
-		
-		if ($this->hasUpdated == true){
-			$this->updated = '';
-		}
 		
 		if ($this->hasStarted == true){
 			$this->started = '';	
@@ -353,20 +372,17 @@ public $displayOrder;
 		   if ($this->hasActivity == true){
 			$this->idActivity = 0;
 			$this->nameActivity = '';
-		}
+		}*/
 		
 		
     }
     
 	public function setRow($row){
 		$this->reset;
-		$this->id = $row["id"];
-		$this->name = ($row["name"]);
-		
-		//if ($this->description->useRow == true){
-			$this->description->fetch($row,"description");
-		//}
-		
+		$this->id->fetch($row);
+		$this->name->fetch($row);
+		$this->description->fetch($row);
+		/*
 		if ($this->hasNotes == true){
 			$this->notes = ($row["notes"]);
 		}
@@ -431,7 +447,7 @@ public $displayOrder;
 		if ($this->hasActivity == true){
 			$this->idActivity = $row["activity_id"];
 			$this->nameActivity = $row["activity_name"];
-		}
+		}*/
 	}
 	
 	public function defaults(){
@@ -443,14 +459,14 @@ public $displayOrder;
 	
 	
 	public function format(){
-		$this->name = $this->formatText($this->name,true);
-		$this->description->format();
-		// = $this->formatText($this->description->value,$this->description->useRow);
+		/*$this->id->format();
+		$this->name->format();
+		$this->description->format();*/
 		$this->notes = $this->formatText($this->notes,$this->hasNotes);
 		$this->summary = $this->formatText($this->summary,$this->hasSummary);
 		$this->comments = $this->formatText($this->comments,$this->hasComments);
-		$this->created = $this->formatDate($this->created,$this->hasCreated);
-		$this->updated = $this->formatDate($this->updated,$this->hasUpdated);
+		/*$this->created->format();
+		$this->updated->format();*/
 		$this->started = $this->formatDate($this->started,$this->hasStarted);
 		$this->reported = $this->formatDate($this->reported,$this->hasReported);
 		$this->reviewed = $this->formatDate($this->reviewed,$this->hasReviewed);
@@ -458,12 +474,13 @@ public $displayOrder;
 	}
 	
 	public function listHeading(){
-		//$this->resetContent(true);
-		$this->listTh('Id',true,true);
-		$this->listTh('Order', listDisplayOrder);
-		$this->listTh('Name',true);
+		$this->resetContent(true);
+		$this->addContent($this->f->id->tH());
+		$this->addContent($this->f->name->tH());
+		$this->addContent($this->f->description->tH());
+		$this->addContent($this->f->created->tH());
+		$this->addContent($this->f->updated->tH());
 		
-		$this->listTh('Description',$this->description->showList);
 		$this->listTh('Notes',$this->listNotes);
 		$this->listTh('Summary',$this->listSummary);
 		$this->listTh('Comments',$this->listComments);
@@ -489,9 +506,14 @@ public $displayOrder;
 	}
 	
 	public function listDetail(){
-		$this->format();
+			$this->format();
+			$this->resetContent(true);
+		$this->addContent($this->f->id->tD());
+		$this->addContent($this->f->name->tD());
+		$this->addContent($this->f->description->tD());
+		$this->addContent($this->f->created->tD());
+		$this->addContent($this->f->updated->tD());
 		
-		//$this->resetContent(true);
 		$this->listTd($this->id,true,true);
 		$this->listTd($this->displayOrder,$this->listDisplayOrder);
 		$this->listTd($this->name,true);
@@ -500,9 +522,7 @@ public $displayOrder;
 		$this->listTd($this->notes,$this->listNotes);
 		$this->listTd($this->comments,$this->listComments);
 		$this->listTd($this->summary,$this->listSummary);
-		
-		
-		
+	
 		$this->listTd($this->nameType,$this->listType);
 		$this->listTd($this->nameLocation,$this->listLocation);
 		
@@ -512,8 +532,8 @@ public $displayOrder;
 				
 		$this->listTd($this->nameParent,$this->listParent);
 		
-		$this->listTd($this->created,$this->listCreated);
-		$this->listTd($this->updated,$this->listUpdated);
+		//$this->listTd($this->created,$this->listCreated);
+		//$this->listTd($this->updated,$this->listUpdated);
 		$this->listTd($this->started,$this->listStarted);
 		$this->listTd($this->reported,$this->listReported);
 		$this->listTd($this->reviewed,$this->listReviewed);
@@ -528,11 +548,18 @@ public $displayOrder;
 		$this->format();
 		
 		$this->resetContent(true);
+		$this->addContent($this->f->id->p());
+		$this->addContent($this->f->name->tD());
+		$this->addContent($this->f->description->p());
+		$this->addContent($this->f->created->p());
+		$this->addContent($this->f->updated->p());
+		
 		$this->detailPara('Order',$this->displayOrder,$this->hasDisplayOrder);
-		$this->detailPara('Id',$this->id,true);
+		/*$this->detailPara('Id',$this->id,true);
 		$this->detailPara('Name',$this->name,true);
 		
 		$this->detailPara('Description',$this->description->value,$this->description->showDisplay);
+		*/
 		$this->detailPara('Summary',$this->summary,$this->hasSummary);
 		$this->detailPara('Notes',$this->notes,$this->hasNotes);
 		$this->detailPara('Comments',$this->comments,$this->hasComments);
@@ -546,10 +573,10 @@ public $displayOrder;
 		
 		
 		$this->detailPara('Parent',$this->nameParent,$this->hasParent);
-		
+		/*
 		$this->detailPara('Created',$this->created,$this->hasCreated);
 		$this->detailPara('Updated',$this->updated,$this->hasUpdated);
-		
+		*/
 		$this->detailPara('Started',$this->started,$this->hasStarted);
 		$this->detailPara('Reported',$this->reported,$this->hasReported);
 		$this->detailPara('Reviewed',$this->reviewed,$this->hasReviewed);
@@ -564,8 +591,11 @@ public $displayOrder;
 	
 	public function getPostVars(){
 	
-		$this->id = $this->postVar('id',0);
-		$this->name = $this->postString('name');
+		$this->id->post(); 
+		$this->name->post(); 
+		$this->description->post();
+		/*$this->created->post(); 
+		$this->updated->post(); */
 		
 		if ($this->hasDisplayOrder == true){
 			$this->displayOrder = $this->postString('displayOrder');

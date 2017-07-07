@@ -1,12 +1,13 @@
 <?php 
 
 abstract class _entityTypeFields extends _entityFields{
-   /* public $notes;
-	public $displayOrder = 0;*/
+   	public $notes;
+	public $displayOrder;
 
 	public function __construct(){
 	parent::__construct();
-    	$this->description->useField(true,true,true,true);
+    	$this->notes = new field('TEXT', 'notes','notes');
+    	//->useField(true,true,true,true);
     	$this->hasNotes = true;
     	$this->hasCreated = true;
     	$this->hasUpdated = true;
