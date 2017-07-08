@@ -1,34 +1,22 @@
 <?php 
 
 abstract class _entityTypeFields extends _entityFields{
-   	public $notes;
-	public $displayOrder;
 
 	public function __construct(){
-	parent::__construct();
-    	$this->notes = new field('TEXT', 'notes','notes');
-    	//->useField(true,true,true,true);
-    	$this->hasNotes = true;
-    	$this->hasCreated = true;
-    	$this->hasUpdated = true;
-    	$this->hasHighlight = true;
-    	$this->hasDisplayOrder = true;
-    	
-    	
-    	$this->listHighlight = true;
-    	$this->listDisplayOrder = true;
+		parent::__construct();
+	
+	    $this->notes->setShow('notes',true);
+        $this->displayOrder->setShow('order',true);
+        $this->highlight->setShow('highlight',true);
     }
 
 
 	public function setRow($row){
 		parent::setRow($row);
-	/*<	$this->notes = ($row["notes"]);
-		$this->displayOrder = $row["display_order"];*/
 	}
 	
 	public function format(){
-		parent::format();/*
-		$this->notes = $this->formatText($this->notes);*/
+		parent::format();
 	}
 	
 	public function listHeading(){
@@ -93,7 +81,7 @@ abstract class _entityType extends _entity{
 		$menu .= $menuL->linkReference();
 		$menu .= $this->links->resetMenu();
 		
-		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id,$this->f->idParent);
+		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id->value,$this->f->parent->id->value);
 		
 		$menu .= $this->links->list();
 		$menu .= $this->links->closeMenu();
@@ -109,7 +97,7 @@ abstract class _entityType extends _entity{
 		
 		$s = $this->sql->count();
 		$next = dbGetCount($s, 'count_details');
-		$this->f->displayOrder = $next + 1;
+		$this->f->displayOrder->set($next + 1);
 		}
 		
 	}
@@ -124,13 +112,13 @@ abstract class _entityType extends _entity{
 
 		//formRequired fields		
 		$fields = inputFieldName($entity,$this->f->name,'name',$this->_titleEntity);
-		$fields .= inputFieldNumber($entity,$this->f->displayOrder,'displayOrder','Display Order');
-		$fields .= inputFieldHighlightStyle($entity,$this->f->highlightStyle,'highlightStyle');
+		$fields .= inputFieldNumber($entity,$this->f->displayOrder->value,'displayOrder','Display Order');
+		$fields .= inputFieldHighlightStyle($entity,$this->f->highlight->value,'highlight');
 		$formRequired = $fields;
 		
 		//formOptional fields
 		$fields = inputFieldDescription($entity,$this->f->description->value,'description');
-		$fields .= inputFieldNotes($entity,$this->f->notes,'notes');
+		$fields .= inputFieldNotes($entity,$this->f->notes->value,'notes');
 		$formOptional = $fields;
 
 		//formSubmit fields

@@ -1,38 +1,275 @@
 <?php 
 
-abstract class _baseEntityFields extends _contentWriter{
+
+ interface IentityField{
+ 	//public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed');
+ 	public function set($value);
+ 	public function reset($default = NULL);
+ 	public function get();
+   	public function value();
+	public function setShow($caption, $list = true);
+	public function setFetch($dbColumn);
+	public function fetch($row);
+	public function tH();
+ 	public function tD();
+ 	public function p();
+ 	public function post();
+ 	public function format();
+ }
+ 
+ abstract class _field implements IentityField{
+ 	protected $valueNumber = 0;
+ 	protected $valueText = '';
+ 	protected $valueDate = '';
+ 	protected $type = 'NUMBER';
+ 	protected $caption = 'caption';
+ 	protected $dbColumn = 'not-used';
+ 	protected $postVariable = 'notUsed';
+ 	protected $useRow = false;
+ 	protected $usePost = false;
+ 	protected $showList = false;
+ 	protected $showDisplay = false;
+ 
+ 	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+ 		if ($dbColumn != 'not-used'){
+ 			$this->setFetch($dbColumn);
+ 		}
+ 		if ($postVariable != 'notUsed'){
+ 			$this->setPost($postVariable);
+ 		}
+ 	}
+ 
+	public function set($value){
+		switch ($this->type) {
+    		case 'NUMBER':
+ 				$this->valueNumber = $value;
+        		break;
+    		case 'DATE':
+ 		 		$this->valueDate = $value;
+        		break;
+    		case 'TEXT':
+ 		 		$this->valueText = $value;
+        		break;
+    		default:
+ 		 		$this->valueText = $value;
+		}
+	}
+ 
+ 	public function value(){
+ 		return $this->get();
+ 	}
+ 
+	public function get(){
 	
-	protected function listTh($heading, $show = false, $reset = false){
- 		if ($show == true){
- 			$this->addContent(wrapTh($heading),$reset);
+		switch ($this->type) {
+    		case 'NUMBER':
+ 				$val = $this->valueNumber;
+        		break;
+    		case 'DATE':
+ 		 		$val = $this->valueDate;
+        		break;
+    		case 'TEXT':
+ 		 		$val = $this->valueText;
+        		break;
+    		default:
+ 		 		$val = $this->valueText;
+		}
+	}
+	
+ 
+ 	public function reset($default = NULL){
+ 		if ($this->canSet == true){
+ 			$this->set($default);
+ 		}
+ 
+ 	}
+ 
+ 	public function setShow($caption, $list = true){
+		$this->caption = $caption;
+		$this->showList = $list;
+		$this->showDisplay = true;
+ 	} 
+ 
+	public function setFetch($dbColumn){
+		$this->useRow = true;
+		$this->dbColumn = $dbColumn;
+	}
+ 
+	public function setPost($postVariable){
+		$this->usePost = true;
+		$this->postVariable = $postVariable;
+	}
+ 
+ 	protected function canSet(){
+ 		if (($this->useRow == true) or ($this->usePost == true)){
+   		$can = true;
+   		} else {
+   		$can = false;
+   		}
+   		return $can;
+	}
+ 
+	protected function canShow(){
+ 		if (($this->showList == true) or ($this->showDisplay == true)){
+   			$can = true;
+   		} else {
+   			$can = false;
+   		}
+   		return $can;
+	}
+ 
+	public function fetch($row){
+		if ($this->useRow == true){
+ 			$this->set($row[$this->dbColumn]);
+ 		}
+	}
+
+	public function tH(){
+		if ($this->showList == true){
+ 			$value = wrapTh($this->caption);
+ 		} else {
+ 			$value = '';
+		}
+		return $value;
+ 	}
+ 	
+ 	public function tD(){
+ 		if ($this->showList == true){
+  		//$this->format();
+ 			$value = wrapTd($this->value());
+  		} else {
+  			$value = '';
+  		}
+ 		return $value;
+ 	}
+
+ 	public function p(){
+ 		if ($this->showDisplay == true){
+ 			//$this->format();
+ 			$value = para($this->caption,$this->value());
+ 		} else {
+ 			$value = '';
+ 		}
+ 		return $value;
+ 	}
+ 		
+	public function post(){
+  		if ($this->usePost() == true){
+			switch ($this->type) {
+    			case 'NUMBER':
+ 					$this->valueNumber = $_POST[$this->postVariable];
+        			break;
+    			case 'DATE':
+ 		 			$this->valueDate = getTimestampPostValues($this->postVariable);
+        			break;
+    			case 'TEXT':
+ 		 			$this->valueText = dbEscapeString($_POST[$this->postVariable]);
+        			break;
+    			default:
+ 		 			$this->valueText = dbEscapeString($_POST[$this->postVariable]);
+			}
+ 		}
+	}
+ 
+ 	public function format(){
+ 		if ($this->canShow() == true){
+ 			switch ($this->type) {
+    			case 'NUMBER':
+  					if ($this->valueNumber == ''){
+  					$this->valueNumber = 0;
+  					}
+        			break;
+    			case 'DATE':
+  		  			$this->valueDate = getTimestampDate($this->valueDate);
+        			break;
+    			case 'TEXT':
+  		  			$this->valueText = displayLines($this->valueText);
+        			break;
+    			default:
+  		  			$this->valueText = displayLines($this->valueText);
+			}
+  
  		}
  	}
- 	protected function listTd($value, $show = false,$reset = false){
- 		if ($show == true){
- 			$this->addContent(wrapTd($value),$reset);
- 		}
- 	}
- 	protected function detailPara($caption,$value,$show = false,$reset = false){
- 		if ($show == true){
- 			$this->addContent(para($caption,$value),$reset);
- 		}
- 	}
- 	protected function postVar($varName, $default = 0){
-		return $_POST[$varName];
- 	}
-	protected function postDate(){
-		return getTimestampPostValues($date);
+ 	
+}
+
+class _textField extends _field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'TEXT';
 	}
-	protected function postString($name, $default = ''){
-		return dbEscapeString($_POST[$name]);
+}
+class _numberField extends _field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'NUMBER';
 	}
-	/*
-	protected function formatText($text){
-		return displayLines($text);
+}
+
+class _dateField extends _field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'DATE';
 	}
-	protected function formatDate($date){
-		return getTimestampDate($date);
-	}*/
+
+}
+ 
+class _idNameField implements  IentityField{
+	public $id;
+	public $name;
+	
+	public function __construct($dbColumnId = 'entity_id', $postVariable = 'idEntity', $dbColumnName = 'entity_name'){
+		$this->id = new _numberField($dbColumnId, $postVariable);
+		$this->name = new _textField($dbColumnName);
+	}
+	
+	public function set($value){
+	 	$this->id->set($value);
+	}
+ 	public function reset($default = NULL){
+ 		$this->id->reset(0);
+ 	 	$this->name->reset('');
+ 	}
+ 	public function get(){
+ 	   	return $this->id->get();
+ 	}
+   	public function value(){
+   		return $this->id->value();
+   	}
+	public function setShow($caption, $list = true){
+		$this->name->setShow($caption,$list);
+	}
+	public function setFetch($dbColumn){
+	//,$dbColumnName){
+		$this->id->setFetch($dbColumn);
+		//$this->name->setFetch($dbColumnName);
+	}
+	public function setFetchName($dbColumnName){
+	//,$dbColumnName){
+		//$this->id->setFetch($dbColumn);
+		$this->name->setFetch($dbColumnName);
+	}
+	public function fetch($row){
+		$this->id->fetch($row);
+		$this->name->fetch($row);
+	}
+	public function tH(){
+		return $this->name->tH();
+	}
+	
+ 	public function tD(){
+ 		return $this->name->tD();
+ 	}
+ 	public function p(){
+ 		return $this->name->p();
+ 	}
+ 	public function post(){
+ 		$this->id->post();
+ 	}
+ 	public function format(){
+ 	$this->name->format();
+ 	}
 }
  
 ?>

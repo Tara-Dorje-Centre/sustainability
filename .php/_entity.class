@@ -104,7 +104,7 @@ abstract class _entity extends _baseEntity{
 	protected function listRowFormat(){
 		$detail = wrapTd($this->listRowLink());
 		$detail .= $this->f->listDetail();		
-		$listRow = wrapTr($detail,$this->f->highlightStyle->value);
+		$listRow = wrapTr($detail,$this->f->highlight->value);
 		return $listRow;
 	}
 	
@@ -136,7 +136,7 @@ abstract class _entity extends _baseEntity{
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
-		$this->f->idParent = $idParent;
+		$this->f->parent->set($idParent);
 		return $this->editForm();
 	}
 
@@ -150,7 +150,7 @@ abstract class _entity extends _baseEntity{
 				
 	protected function synchIds(){
 		$this->id = $this->f->id->value;
-		$this->idParent = $this->f->idParent;
+		$this->idParent = $this->f->parent->id->value;
 	}
 	
 	public function printPage(){

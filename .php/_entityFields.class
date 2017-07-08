@@ -1,8 +1,8 @@
 <?php 
 
 
- interface IentityFields {
- public function __construct();
+ interface IentityFieldset{
+ //public function __construct();
  public function setRow($row);
  public function format();
  public function defaults();
@@ -12,203 +12,11 @@
  public function getPostVars();
  }
  
- class field{
- protected $valueNumber = 0;
- protected $valueText = '';
- protected $valueDate = '';
- protected $type = 'NUMBER';
- protected $caption = 'caption';
- protected $dbColumn = 'not-used';
- protected $postVariable = 'notUsed';
- protected $useRow = false;
- protected $usePost = false;
- public $showList = false;
- public $showDisplay = false;
- 
- public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-// $this->type = $type;
- if ($dbCol != 'not-used'){
- $this->setFetch($dbColumn);
- }
- if ($postVariable != 'notUsed'){
-  $this->setPost($postVariable);
- }
- }
- public function set($value){
-  	if ($this->type == 'NUMBER'){
- 		$this->valueNumber = $value;
- 	} else {
- 		if ($this->type == 'DATE'){
- 		 	$this->valueDate = $value;
- 		} else {
- 		 	$val = $this->valueText = $value;
- 		}
- 	} 
- 
- }
- 
- public function value(){
- return $this->get();
- }
- public function get(){
- 	if ($this->type == 'NUMBER'){
- 		$val = $this->valueNumber;
- 	} else {
- 		if ($this->type == 'DATE'){
- 		 	$val = $this->valueDate;
- 		} else {
- 		 	$val = $this->valueText;
- 		}
- 	} 
- 	return $val;
- }
- 
- public function reset($default = NULL){
- if ($this->canSet == true){
- 
- $this->set($default);
- 
- }
- 
- }
- 
-  public function setShow($caption, $list = true){
- 
-	$this->caption = $caption;
-	$this->showList = $list;
-	$this->showDisplay = true;
-	
- } 
- public function setFetch($dbColumn){
-	$this->useRow = $row;
-	$this->dbColumn = $dbColumn;
- }
- 
- public function setPost($postVariable){
-	$this->usePost = true;
-	$this->postVariable = $postVariable;
- }
- 	protected function canSet(){
- 	if (($this->useRow == true) or ($this->usePost == true)){
-   		$can = true;
-   	} else {
-   		$can = false;
-   	}
-   	return $can;
-	}
- 
-	protected function canShow(){
- 	if (($this->showList == true) or ($this->showDisplay == true)){
-   		$can = true;
-   	} else {
-   		$can = false;
-   	}
-   	return $can;
-   	}
- 
- public function fetch($row){
- if ($this->useRow() == true){
- 
- $this->set($row[$this->dbColumn]);
-// $this->format();
- }
- }
-  public function tH(){
- if ($this->showList == true){
- 		$value = wrapTh($this->caption);
- } else {
- 	$value = '';
- }
- return $value;
- }
- public function tD(){
- if ($this->showList == true){
-  		//$this->format();
- 		$value = wrapTd($this->value());
-  		$this->format();
- } else {
- 	$value = '';
- }
- return $value;
- }
- public function p(){
- if ($this->showDisplay == true){
- 	//$this->format();
- 	$value = para($this->caption,$this->value());
- } else {
- 	$value = '';
- }
- return $value;
- }
-	public function post(){
-  		if ($this->usePost() == true){
-  
-  
-    	if ($this->type == 'NUMBER'){
- 				$this->valueNumber = $_POST[$this->postVariable];
- 		} 
- 	
- 		if ($this->type == 'DATE'){
- 		 	$this->valueDate = getTimestampPostValues($this->postVariable);
- 		} 
- 	
- 		if ($this->type == 'TEXT'){
- 		 	$this->valueText = dbEscapeString($_POST[$this->postVariable]);
- 		}
- 			
- 		
-  
-  
- 		}
-	}
- 
- 	protected function format(){
- 		if ($this->canShow() == true){
- 	
-  		if ($this->type == 'NUMBER'){
-  			if ($this->valueNumber == ''){
-  				$this->valueNumber = 0;
-  			}
-  		} 
-  		
-  		if ($this->type == 'DATE'){
-  		  		$this->valueDate = getTimestampDate($this->valueDate);
-  		}
-  		
-  		if ($this->type == 'TEXT'){
-  		  		$this->valueText = displayLines($this->valueText);
-  		}
-  		
-  		
- 		}
- 	
-	}
 
- 
-}
- 
-class _textField extends field{
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->type = 'TEXT';
-	}
-}
-class _numberField extends field{
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->type = 'NUMBER';
-	}
-}
-
-class _dateField extends field{
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->type = 'DATE';
-	}
-}
-
-abstract class _entityFields extends _baseEntityFields implements IentityFields{
+abstract class _entityFields extends _contentWriter {
+//implements IentityFieldset{
 	public $displayOrder;
+	public $highlight;
 	public $id;
 	public $name;		
 	
@@ -226,74 +34,41 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 	public $created;
     public $updated;
 	public $reviewed;
-	
-    public $highlight;
-    
-    public $hasType = false;
-    public $listType = false;
-	public $idType = 0;
-	public $nameType;
-	
-
-
-	public $quantityEstimated = 0;
-	public $quantityActual = 0;
-		
-   	public $hasQuantityActual = false;
-    public $listQuantityActual = false;
-
-	
-	public $hasUnits = false;
-    public $listUnits = false;
-	public $idUnits = 0;
-	public $nameUnits;
-	
-	
-	public $hasLocation = false;
-	public $listLocation = false;
-	public $idLocation = 0;
-	public $nameLocation;
+	public $approved;
+	public $type;
+	public $location;
+   	public $parent;
+   	public $project;
+   	public $task;
+   	public $activity;
 	 
-    public $hasParent = false;
-    public $listParent = false;
-   	public $idParent = 0;
-   	public $nameParent;
-   	
-   	public $hasProject = false;
-   	public $listProject = false;
-   	public $idProject = 0;
-   	public $nameProject;
+	public $qtyEstimated;
+	public $qtyActual;
+	public $qtyUnits;
 	
-	public $hasTask = false;
-   	public $listTask = false;
-   	public $idTask = 0;
-   	public $nameTask;
-   	
-	public $hasActivity = false;
-   	public $listActivity = false;
-   	public $idActivity = 0;
-   	public $nameActivity;
-	 
+	
+
 	
     public function __construct(){
-        $this->displayOrder = new _numberField('display_order','displayOrder';
+        $this->displayOrder = new _numberField('display_order','displayOrder');
+        $this->highlight = new _textField('highlight','highlight');
     	$this->id = new _numberField('id','id');
-    	$this->name = new _textField('TEXT','name','name');
+    	$this->name = new _textField('name','name');
     	
     	$this->description = new _textField('description','description');
     	$this->comments = new _textField('comments','comments');
     	$this->notes = new _textField('notes','notes');
     	$this->summary = new _textField('summary','summary');
     	
-    	$this->updated = new dateField('updated');
-    	$this->created = new dateField('created');
-        $this->started = new dateField('started','started');           
-    	$this->reported = new dateField('reported','reported');
-    	$this->reviewed = new dateField('reviewed','reviewed');
-    	
-    	$this->doneBy = new textField('name','name');
-    	$this->reviewedBy = new textField('reviewed_by','reviewedBy');
-    	$this->approvedBy = new textField('approved_by','approvedBy');
+    	$this->updated = new _dateField('updated');
+    	$this->created = new _dateField('created');
+        $this->started = new _dateField('started','started');           
+    	$this->reported = new _dateField('reported','reported');
+    	$this->reviewed = new _dateField('reviewed','reviewed');
+    	$this->approved = new _dateField('approved','approved');
+    	$this->doneBy = new _textField('name','name');
+    	$this->reviewedBy = new _textField('reviewed_by','reviewedBy');
+    	$this->approvedBy = new _textField('approved_by','approvedBy');
     	    	    	
         $this->id->setShow('id',true);
         $this->name->setShow('Name',true);
@@ -301,80 +76,40 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
         $this->created->setShow('created',true);
         $this->updated->setShow('updated',true);
         
-        
+    	$this->parent = new _idNameField('parent_id','idParent','parent_name');
+    	$this->type = new _idNameField('type_id','idType','type_name');
+    	$this->location = new _idNameField('location_id','idLocation','location_name');
+    	
+    	$this->project = new _idNameField('project_id','idProject','project_name');
+    	$this->task = new _idNameField('task_id','idTask','task_name');
+    	$this->activity = new _idNameField('activity_id','idActivity','activity_name');
+    	
     }
     
     protected function reset(){
-    
     	$this->id->reset(0);
 		$this->name->reset('');
 		$this->description->reset('');
-		$this->updated->reset('');
+		$this->comments->reset('');
+		$this->summary->reset('');
+		$this->notes->reset('');
+		$this->highlight->reset('none');
+		$this->displayOrder->reset(0);
 		$this->created->reset('');
-	/*
-		if ($this->hasComments == true){
-			$this->comments = '';
-		}
-		
-		if ($this->hasSummary == true){
-			$this->summary = '';
-		}
-		
-		if ($this->hasNotes == true){
-			$this->notes = '';
-		}
-		
-		if ($this->hasHighlight == true){
-			$this->highlightStyle = 'none';
-		}
-		
-		
-		if ($this->hasStarted == true){
-			$this->started = '';	
-		}
-		
-		if ($this->hasReported == true){
-			$this->reported = '';
-		}
-		
-		if ($this->hasReviewed == true){
-			$this->reviewed = 'no';	
-		}
-		if ($this->hasApproved == true){
-			$this->approved = 'no';
-		}
-		
-		if ($this->hasType == true){
-			$this->idType = 0;
-			$this->nameType = '';
-		}
-		
-		if ($this->hasParent == true){
-			$this->idParent = 0;
-			$this->nameParent = '';
-		}
-		
-		if ($this->hasLocation == true){
-			$this->idLocation = 0;
-			$this->nameLocation = '';
-		}
-    
-    	if ($this->hasProject == true){
-			$this->idProject = 0;
-			$this->nameProject = '';
-		}
-		
-    	if ($this->hasTask == true){
-			$this->idTask = 0;
-			$this->nameTask = '';
-		}
-		
-		   if ($this->hasActivity == true){
-			$this->idActivity = 0;
-			$this->nameActivity = '';
-		}*/
-		
-		
+		$this->updated->reset('');
+		$this->started->reset('');
+		$this->reported->reset('');
+		$this->reviewed->reset('');
+		$this->approved->reset('');
+		$this->doneBy->reset('');
+		$this->reviewedBy->reset('');
+		$this->approvedBy->reset('');
+		$this->type->reset(0);
+		$this->location->reset(0);
+		$this->parent->reset(0);
+		$this->project->reset(0);
+		$this->task->reset(0);
+		$this->activity->reset(0);
     }
     
 	public function setRow($row){
@@ -382,281 +117,168 @@ abstract class _entityFields extends _baseEntityFields implements IentityFields{
 		$this->id->fetch($row);
 		$this->name->fetch($row);
 		$this->description->fetch($row);
-		/*
-		if ($this->hasNotes == true){
-			$this->notes = ($row["notes"]);
-		}
+		$this->notes->fetch($row);
+		$this->comments->fetch($row);
+		$this->summary->fetch($row);
+		$this->displayOrder->fetch($row);
+		$this->highlight->fetch($row);
+		$this->started->fetch($row);
+		$this->reported->fetch($row);
+		$this->reviewed->fetch($row);
+		$this->approved->fetch($row);
+		$this->created->fetch($row);
+		$this->updated->fetch($row);
+		$this->doneBy->fetch($row);
+		$this->reviewedBy->fetch($row);
+		$this->approvedBy->fetch($row);
+		$this->type->fetch($row);
+		$this->location->fetch($row);
+		$this->parent->fetch($row);
+		$this->project->fetch($row);
+		$this->task->fetch($row);
+		$this->activity->fetch($row);
 		
-		if ($this->hasComments == true){
-			$this->comments = ($row["comments"]);
-		}
-		
-		if ($this->hasSummary == true){
-			$this->summary = ($row["summary"]);
-		}
-		
-		if ($this->hasHighlight == true){
-			$this->highlightStyle = ($row["highlight_style"]);
-		}
-		
-		if ($this->hasDisplayOrder == true){
-			$this->displayOrder = ($row["display_order"]);
-		}
-		
-		if ($this->hasStarted == true){
-			$this->started = ($row["started"]);		
-		}			
-		if ($this->hasReported == true){
-			$this->reported = ($row["reported"]);		
-		}
-		
-		if ($this->hasReviewed == true){
-			$this->reviewed = ($row["reviewed"]);		
-		}			
-		if ($this->hasApproved == true){
-			$this->approved = ($row["approved"]);		
-		}
-		if ($this->hasCreated == true){
-			$this->created = ($row["created"]);		
-		}			
-		if ($this->hasUpdated == true){
-			$this->updated = ($row["updated"]);		
-		}
-		
-		if ($this->hasType == true){
-			$this->idType = ($row["type_id"]);
-			$this->nameType = $row["type_name"];
-		}
-		if ($this->hasParent == true){
-			$this->idParent = $row["parent_id"];
-			$this->nameParent = $row["parent_name"];
-		}
-		if ($this->hasLocation == true){
-			$this->idLocation = $row["location_id"];
-			$this->nameLocation = ($row["location_name"]);
-		}
-		if ($this->hasProject == true){
-			$this->idProject = $row["project_id"];
-			$this->nameProject = $row["project_name"];
-		}
-		if ($this->hasTask == true){
-			$this->idTask = $row["task_id"];
-			$this->nameTask = $row["task_name"];
-		}
-		
-		if ($this->hasActivity == true){
-			$this->idActivity = $row["activity_id"];
-			$this->nameActivity = $row["activity_name"];
-		}*/
 	}
 	
 	public function defaults(){
 		$this->reset;
-		//set doneby
-		//set started or reported
-		
 	}
 	
 	
 	public function format(){
-		/*$this->id->format();
+		$this->id->format();
 		$this->name->format();
-		$this->description->format();*/
-		$this->notes = $this->formatText($this->notes,$this->hasNotes);
-		$this->summary = $this->formatText($this->summary,$this->hasSummary);
-		$this->comments = $this->formatText($this->comments,$this->hasComments);
-		/*$this->created->format();
-		$this->updated->format();*/
-		$this->started = $this->formatDate($this->started,$this->hasStarted);
-		$this->reported = $this->formatDate($this->reported,$this->hasReported);
-		$this->reviewed = $this->formatDate($this->reviewed,$this->hasReviewed);
-		$this->approved = $this->formatDate($this->approved,$this->hasApproved);
+		$this->description->format();
+		$this->notes->format();
+		$this->comments->format();
+		$this->summary->format();
+		$this->displayOrder->format();
+		$this->highlight->format();
+		$this->started->format();
+		$this->reported->format();
+		$this->reviewed->format();
+		$this->approved->format();
+		$this->created->format();
+		$this->updated->format();
+		$this->doneBy->format();
+		$this->reviewedBy->format();
+		$this->approvedBy->format();
+		$this->type->format();
+		$this->location->format();
+		$this->parent->format();
+		$this->project->format();
+		$this->task->format();
+		$this->activity->format();
+	}
+	public function display(){
+		$this->resetContent(true);
+		$this->addContent($this->displayOrder->p());
+		$this->addContent($this->id->p());
+		$this->addContent($this->name->tH());
+		$this->addContent($this->description->p());
+		$this->addContent($this->notes->p());
+		$this->addContent($this->summary->p());
+		$this->addContent($this->comments->p());
+		$this->addContent($this->created->p());
+		$this->addContent($this->updated->p());
+		$this->addContent($this->started->p());
+		$this->addContent($this->reported->p());
+		$this->addContent($this->reviewed->p());
+		$this->addContent($this->approved->p());
+		$this->addContent($this->doneBy->p());
+		$this->addContent($this->reviewedBy->p());
+		$this->addContent($this->approvedBy->p());
+		$this->addContent($this->type->p());
+		$this->addContent($this->location->p());
+		$this->addContent($this->parent->p());
+		$this->addContent($this->project->p());
+		$this->addContent($this->task->p());
+		$this->addContent($this->activity->p());
+		$this->addContent($this->highlight->p());		
+		return $this->getContent();
 	}
 	
 	public function listHeading(){
 		$this->resetContent(true);
-		$this->addContent($this->f->id->tH());
-		$this->addContent($this->f->name->tH());
-		$this->addContent($this->f->description->tH());
-		$this->addContent($this->f->created->tH());
-		$this->addContent($this->f->updated->tH());
-		
-		$this->listTh('Notes',$this->listNotes);
-		$this->listTh('Summary',$this->listSummary);
-		$this->listTh('Comments',$this->listComments);
-		
-		$this->listTh('Type',$this->listType);
-		$this->listTh('Location',$this->listLocation);
-		
-		$this->listTh('Project',$this->listProject);
-		$this->listTh('Task',$this->listTask);
-		$this->listTh('Activity',$this->listActivity);
-		
-		$this->listTh('Parent',$this->listParent);
-		
-		$this->listTh('Created',$this->listCreated);
-		$this->listTh('Updated',$this->listUpdated);
-		$this->listTh('Started',$this->listStarted);
-		$this->listTh('Reported',$this->listReported);
-		$this->listTh('Reviewed',$this->listReviewed);
-		$this->listTh('Approved',$this->listApproved);
-		
-		$this->listTh('Highlight',$this->listHighlight);
+		$this->addContent($this->displayOrder->tH());
+		$this->addContent($this->id->tH());
+		$this->addContent($this->name->tH());
+		$this->addContent($this->description->tH());
+		$this->addContent($this->notes->tH());
+		$this->addContent($this->summary->tH());
+		$this->addContent($this->comments->tH());
+		$this->addContent($this->created->tH());
+		$this->addContent($this->updated->tH());
+		$this->addContent($this->started->tH());
+		$this->addContent($this->reported->tH());
+		$this->addContent($this->reviewed->tH());
+		$this->addContent($this->approved->tH());
+		$this->addContent($this->doneBy->tH());
+		$this->addContent($this->reviewedBy->tH());
+		$this->addContent($this->approvedBy->tH());
+		$this->addContent($this->type->tH());
+		$this->addContent($this->location->tH());
+		$this->addContent($this->parent->tH());
+		$this->addContent($this->project->tH());
+		$this->addContent($this->task->tH());
+		$this->addContent($this->activity->tH());
+		$this->addContent($this->highlight->tH());		
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
-			$this->format();
-			$this->resetContent(true);
-		$this->addContent($this->f->id->tD());
-		$this->addContent($this->f->name->tD());
-		$this->addContent($this->f->description->tD());
-		$this->addContent($this->f->created->tD());
-		$this->addContent($this->f->updated->tD());
-		
-		$this->listTd($this->id,true,true);
-		$this->listTd($this->displayOrder,$this->listDisplayOrder);
-		$this->listTd($this->name,true);
-		
-		$this->listTd($this->description->value,$this->description->showList);
-		$this->listTd($this->notes,$this->listNotes);
-		$this->listTd($this->comments,$this->listComments);
-		$this->listTd($this->summary,$this->listSummary);
-	
-		$this->listTd($this->nameType,$this->listType);
-		$this->listTd($this->nameLocation,$this->listLocation);
-		
-		$this->listTd($this->nameProject,$this->listProject);
-		$this->listTd($this->nameTask,$this->listTask);
-		$this->listTd($this->nameActivity,$this->listActivity);
-				
-		$this->listTd($this->nameParent,$this->listParent);
-		
-		//$this->listTd($this->created,$this->listCreated);
-		//$this->listTd($this->updated,$this->listUpdated);
-		$this->listTd($this->started,$this->listStarted);
-		$this->listTd($this->reported,$this->listReported);
-		$this->listTd($this->reviewed,$this->listReviewed);
-		$this->listTd($this->approved,$this->listApproved);
-		
-		$this->listTd($this->highlightStyle,$this->listHighlight);
-		return $this->getContent();
-
-	}
-
-	public function display(){
 		$this->format();
-		
 		$this->resetContent(true);
-		$this->addContent($this->f->id->p());
-		$this->addContent($this->f->name->tD());
-		$this->addContent($this->f->description->p());
-		$this->addContent($this->f->created->p());
-		$this->addContent($this->f->updated->p());
-		
-		$this->detailPara('Order',$this->displayOrder,$this->hasDisplayOrder);
-		/*$this->detailPara('Id',$this->id,true);
-		$this->detailPara('Name',$this->name,true);
-		
-		$this->detailPara('Description',$this->description->value,$this->description->showDisplay);
-		*/
-		$this->detailPara('Summary',$this->summary,$this->hasSummary);
-		$this->detailPara('Notes',$this->notes,$this->hasNotes);
-		$this->detailPara('Comments',$this->comments,$this->hasComments);
-		
-		$this->detailPara('Type',$this->nameType,$this->hasType);
-		$this->detailPara('Location',$this->nameLocation,$this->hasLocation);
-		
-		$this->detailPara('Project',$this->nameProject,$this->hasProject);
-		$this->detailPara('Task',$this->nameTask,$this->hasTask);
-		$this->detailPara('Activity',$this->nameActivity,$this->hasActivity);
-		
-		
-		$this->detailPara('Parent',$this->nameParent,$this->hasParent);
-		/*
-		$this->detailPara('Created',$this->created,$this->hasCreated);
-		$this->detailPara('Updated',$this->updated,$this->hasUpdated);
-		*/
-		$this->detailPara('Started',$this->started,$this->hasStarted);
-		$this->detailPara('Reported',$this->reported,$this->hasReported);
-		$this->detailPara('Reviewed',$this->reviewed,$this->hasReviewed);
-		$this->detailPara('Approved',$this->approved,$this->hasApproved);
-		
-		$this->detailPara('Highlight',$this->highlightStyle,$this->hasHighlight);
+		$this->addContent($this->displayOrder->tD());
+		$this->addContent($this->id->tD());
+		$this->addContent($this->name->tD());
+		$this->addContent($this->description->tD());
+		$this->addContent($this->notes->tD());
+		$this->addContent($this->summary->tD());
+		$this->addContent($this->comments->tD());
+		$this->addContent($this->created->tD());
+		$this->addContent($this->updated->tD());
+		$this->addContent($this->started->tD());
+		$this->addContent($this->reported->tD());
+		$this->addContent($this->reviewed->tD());
+		$this->addContent($this->approved->tD());
+		$this->addContent($this->doneBy->tD());
+		$this->addContent($this->reviewedBy->tD());
+		$this->addContent($this->approvedBy->tD());
+		$this->addContent($this->type->tD());
+		$this->addContent($this->location->tD());
+		$this->addContent($this->parent->tD());
+		$this->addContent($this->project->tD());
+		$this->addContent($this->task->tD());
+		$this->addContent($this->activity->tD());
+		$this->addContent($this->highlight->tD());
 		return $this->getContent();
-		
 	}
-	
 
-	
 	public function getPostVars(){
-	
-		$this->id->post(); 
-		$this->name->post(); 
+		$this->id->post();
+		$this->name->post();
 		$this->description->post();
-		/*$this->created->post(); 
-		$this->updated->post(); */
-		
-		if ($this->hasDisplayOrder == true){
-			$this->displayOrder = $this->postString('displayOrder');
-		}
-		
-		if ($this->description->usePost == true){
-			$this->description->post('description');
-		}
-		
-		if ($this->hasNotes == true){
-			$this->notes = $this->postString('notes');
-		}
-		
-		if ($this->hasComments == true){
-			$this->comments = $this->postString('comments');
-		}
-		
-		if ($this->hasSummary == true){
-			$this->summary = $this->postString('summary');
-		}
-		if ($this->hasStarted == true){
-			$this->started = $this->postDate('started');
-		}
-		
-		if ($this->hasReported == true){
-			$this->reported = $this->postDate('reported');
-		}
-		
-		if ($this->hasReviewed == true){
-			$this->reviewed = $this->postDate('reviewed');
-		}
-		
-		if ($this->hasApproved == true){
-			$this->approved = $this->postDate('approved');
-		}
-		
-		if ($this->hasHighlight == true){
-			$this->highlightStyle = $this->postString('highlightStyle');
-		}
-		if ($this->hasType == true){
-		$this->idType = $this->postVar('idType',0);
-		}
-		if ($this->hasLocation == true){
-		$this->idLocation = $this->postVar('idLocation',0);
-		}
-		if ($this->hasParent == true){
-		$this->idParent = $this->postVar('idParent',0);
-		}
-		if ($this->hasProject == true){
-		$this->idProject = $this->postVar('idProject',0);
-		}
-		if ($this->hasTask == true){
-		$this->idTask = $this->postVar('idTask',0);
-		}
-		if ($this->hasActivity == true){
-		$this->idActivity = $this->postVar('idActivity',0);
-		}
-		
-		
-		
-				
+		$this->notes->post();
+		$this->comments->post();
+		$this->summary->post();
+		$this->displayOrder->post();
+		$this->highlight->post();
+		$this->started->post();
+		$this->reported->post();
+		$this->reviewed->post();
+		$this->approved->post();
+		$this->created->post();
+		$this->updated->post();
+		$this->doneBy->post();
+		$this->reviewedBy->post();
+		$this->approvedBy->post();
+		$this->type->post();
+		$this->location->post();
+		$this->parent->post();
+		$this->project->post();
+		$this->task->post();
+		$this->activity->post();
 	}
 }
 
