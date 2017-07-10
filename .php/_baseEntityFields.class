@@ -18,17 +18,17 @@
  }
  
  abstract class _field implements IentityField{
- 	protected float $valueNumber = 0;
- 	protected string $valueText = '';
- 	protected string $valueDate = '';
- 	protected string $type = 'NUMBER';
- 	protected string $caption = 'caption';
- 	protected string $dbColumn = 'not-used';
- 	protected string $postVariable = 'notUsed';
- 	protected bool $useRow = false;
- 	protected bool $usePost = false;
- 	protected bool $showList = false;
- 	protected bool $showDisplay = false;
+ 	protected  $valueNumber = 0;
+ 	protected  $valueText = '';
+ 	protected  $valueDate = '';
+ 	protected  $type = 'NUMBER';
+ 	protected  $caption = 'caption';
+ 	protected  $dbColumn = 'not-used';
+ 	protected  $postVariable = 'notUsed';
+ 	protected  $useRow = false;
+ 	protected  $usePost = false;
+ 	protected  $showList = false;
+ 	protected  $showDisplay = false;
  
  	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used'){
  		if ($dbColumn != 'not_used'){
@@ -91,7 +91,7 @@
  
  	}
  
- 	public function setShow(string $caption, string $list = true){
+ 	public function setShow(string $caption, bool $list = true){
 		$this->caption = $caption;
 		$this->showList = $list;
 		$this->showDisplay = true;
@@ -286,18 +286,18 @@ class _dateField extends _field{
 }
  
 class _idNameField implements  IentityField{
-	public _numberField $id;
-	public _textField $name;
+	public  $id;
+	public  $name;
 	
-	public function __construct($dbColumnId = 'entity_id', $postVariable = 'idEntity', $dbColumnName = 'entity_name'){
+	public function __construct(string $dbColumnId = 'entity_id', string $postVariable = 'idEntity', string $dbColumnName = 'entity_name'){
 		$this->id = new _numberField($dbColumnId, $postVariable);
 		$this->name = new _textField($dbColumnName);
 	}
 	
-	public function set(int $value){
+	public function set( $value){
 	 	$this->id->set($value);
 	}
- 	public function reset(int $default = 0){
+ 	public function reset( $default = 0){
  		$this->id->reset($default);
  	 	$this->name->reset('');
  	}

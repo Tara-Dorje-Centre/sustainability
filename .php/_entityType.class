@@ -138,7 +138,7 @@ abstract class _entityType extends _entity{
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= "'".$this->f->description->value()."', ";
 			$sql .= $this->f->displayOrder->value().", ";
-			$sql .= "'".$this->f->highlight.value()"', ";
+			$sql .= "'".$this->f->highlight->value()."', ";
 			$sql .= "'".$this->f->notes.value()."') ";
 			
 			$result = dbRunSQL($sql);
