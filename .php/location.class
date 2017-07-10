@@ -196,21 +196,20 @@ class location extends _entity{
 		
 		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
 		$edit->open($contextMenu,$this->_titleEntity);
+		
 		$edit->required->addContent($this->f->name->input($entity,'NAME'));
 
 		$type = new locationType('OPTIONS');
-		$select = $type->options($this->f->type->id->value,'idType','false',true);
-		$edit->required->addContent(captionedInput('Type',$select);
+		$select = $type->options($this->f->type->id->value(),'idType','false',true);
+		$edit->required->addContent(captionedInput('Type',$select));
 					
-		$edit->optional->addContent($this->f->description->input($entity,'DESCRIPTION');
-
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent .= $this->f->parent->id->inputHidden);
-		$edit->hidden->addContent .= $this->f-id->inputHidden);
-		$edit->submit->addContent = getSaveChangesResetButtons();
-		$formSubmit = $edit->buttons-getContent();
-		$formSubmit .= $edit->hidden->getContent();
+		$edit->optional->addContent($this->f->description->input($entity,'DESCRIPTION'));
 		
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->addContent($this->f->parent->id->inputHidden());
+		$edit->hidden->addContent($this->f-id->inputHidden());
+		$edit->submit->addContent(getSaveChangesResetButtons());
+
 		return $edit->close();
 	}
 
@@ -224,18 +223,23 @@ class location extends _entity{
 		return $sortKey;		
 	}
 
-	private function updateSortKey(){
-
-		if ($this->idParent == 0){
+	private function buildSortKey(){
+			if ($this->idParent == 0){
 			$sortKey = $this->f->name->value;
 		} else {
-		$this->f->sortKeyParent = $this->getSortKey($this->idParent);
-			$sortKey = $this->f->sortKeyParent->value.'.'.$this->f->name->value;
-		}
-		
-		$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
-		
+			$sortKey = $this->f->sortKeyParent->value();
+			$sortKey .= '.'.$this->f->name->value();
+			}
+			return $sortKey;
+
+	}
+	private function updateSortKey(){
+
+		$sortKey = $this->buildSortKey();
+		if ($sortKey != $this->f->sortKey->value({
+			$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
 		$result = dbRunSQL($sql);
+		}
 	
 	}
 

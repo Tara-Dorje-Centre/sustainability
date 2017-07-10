@@ -549,7 +549,7 @@ protected $__MyClassName = 'User';
 		$_POST['loginPwdConfirm'] = 'password';
 
 		//validate login name
-		if ($this->loginName == '' || is_null($this->loginName)){
+		if ($this->f->loginName->value == '' || is_null($this->loginName)){
 			$this->cancelPost('Login name cannot be blank','login');
 		}
 		//validate email address
@@ -589,25 +589,25 @@ protected $__MyClassName = 'User';
 			
 			$sql = " UPDATE users AS u ";
 			$sql .= " SET ";
-			$sql .= " u.name_first = '".$this->nameFirst."', ";
-			$sql .= " u.name_last = '".$this->nameLast."', ";
-			$sql .= " u.email = '".$this->email."', ";
-			$sql .= " u.focus = '".$this->focus."', ";
-			$sql .= " u.interests = '".$this->interests."', ";
-			$sql .= " u.login_name = '".$this->loginName."', ";
-			$sql .= " u.login_pwd = '".$this->loginPwd."', ";
-			$sql .= " u.is_admin = '".$this->isAdmin."', ";
-			$sql .= " u.is_active = '".$this->isActive."', ";
-			$sql .= " u.must_update_pwd = '".$this->mustUpdatePwd."', ";
-			$sql .= " u.type_id = ".$this->typeId." ";
-			$sql .= " WHERE u.id = ".$this->id."  ";			
+			$sql .= " u.name_first = '".$this->f->nameFirst->value()."', ";
+			$sql .= " u.name_last = '".$this->f->nameLast->value()."', ";
+			$sql .= " u.email = '".$this->f->email->value()."', ";
+			$sql .= " u.focus = '".$this->f->focus->value()."', ";
+			$sql .= " u.interests = '".$this->f->interests->value()."', ";
+			$sql .= " u.login_name = '".$this->f->loginName->value."', ";
+			$sql .= " u.login_pwd = '".$this->f->loginPwd->value()."', ";
+			$sql .= " u.is_admin = '".$this->f->isAdmin->value()."', ";
+			$sql .= " u.is_active = '".$this->f->isActive->value()."', ";
+			$sql .= " u.must_update_pwd = '".$this->f->mustUpdatePwd->value()."', ";
+			$sql .= " u.type_id = ".$this->f->type->id->value()." ";
+			$sql .= " WHERE u.id = ".$this->f->id->value()."  ";			
 
 			$result = dbRunSQL($sql);
 
 			$this->mailUser('Your User Profile Has Been Updated');
 			
-			if ($this->loginName == $_SESSION['login-name']){
-				$this->setSecurity($this->loginName);
+			if ($this->f->loginName == $_SESSION['login-name']){
+				$this->setSecurity($this->f->loginName);
 			}
 	}
 	
@@ -627,18 +627,18 @@ protected $__MyClassName = 'User';
 			$sql .= " created, ";
 			$sql .= " type_id) ";
 			$sql .= " VALUES (";
-			$sql .= " '".$this->nameFirst."', ";
-			$sql .= " '".$this->nameLast."', ";
-			$sql .= " '".$this->email."', ";
-			$sql .= " '".$this->focus."', ";
-			$sql .= " '".$this->interests."', ";
-			$sql .= " '".$this->loginName."', ";
-			$sql .= " '".$this->loginPwd."', ";
-			$sql .= " '".$this->isAdmin."', ";
-			$sql .= " '".$this->isActive."', ";
-			$sql .= " '".$this->mustUpdatePwd."', ";
+			$sql .= " '".$this->f->nameFirst->value()."', ";
+			$sql .= " '".$this->f->nameLast->value()."', ";
+			$sql .= " '".$this->f->email->value()."', ";
+			$sql .= " '".$this->f->focus->value()."', ";
+			$sql .= " '".$this->f->interests->value()."', ";
+			$sql .= " '".$this->f->loginName->value()."', ";
+			$sql .= " '".$this->f->loginPwd->value()."', ";
+			$sql .= " '".$this->f>isAdmin-value()."', ";
+			$sql .= " '".$this->f->isActive>value()."', ";
+			$sql .= " '".$this->f->mustUpdatePwd->value()."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";			
-			$sql .= " ".$this->typeId.") ";
+			$sql .= " ".$this->f->type->id->value().") ";
 			
 			$result = dbRunSQL($sql);
 

@@ -7,8 +7,8 @@
  	public function reset($default = NULL);
  	public function get();
    	public function value();
-	public function setShow($caption, $list = true);
-	public function setFetch($dbColumn);
+	public function setShow(string $caption, bool $list = true);
+	public function setFetch(string $dbColumn);
 	public function fetch($row);
 	public function th();
  	public function td();
@@ -18,25 +18,32 @@
  }
  
  abstract class _field implements IentityField{
- 	protected $valueNumber = 0;
- 	protected $valueText = '';
- 	protected $valueDate = '';
- 	protected $type = 'NUMBER';
- 	protected $caption = 'caption';
- 	protected $dbColumn = 'not-used';
- 	protected $postVariable = 'notUsed';
- 	protected $useRow = false;
- 	protected $usePost = false;
- 	protected $showList = false;
- 	protected $showDisplay = false;
+ 	protected float $valueNumber = 0;
+ 	protected string $valueText = '';
+ 	protected string $valueDate = '';
+ 	protected string $type = 'NUMBER';
+ 	protected string $caption = 'caption';
+ 	protected string $dbColumn = 'not-used';
+ 	protected string $postVariable = 'notUsed';
+ 	protected bool $useRow = false;
+ 	protected bool $usePost = false;
+ 	protected bool $showList = false;
+ 	protected bool $showDisplay = false;
  
- 	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
- 		if ($dbColumn != 'not-used'){
+ 	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used'){
+ 		if ($dbColumn != 'not_used'){
  			$this->setFetch($dbColumn);
  		}
- 		if ($postVariable != 'notUsed'){
+ 		if ($postVariable != 'not-used'){
  			$this->setPost($postVariable);
  		}
+ 		$this->enabled(false);
+ 	}
+ 	
+ 	public function enabled(bool $fetch = false, bool $show = false, bool $post = false){
+ 		$this->useRow = $fetch;
+ 		$this->usePost = $fetch;
+ 		$this->showDisplay = $show;
  	}
  
 	public function set($value){
@@ -84,18 +91,18 @@
  
  	}
  
- 	public function setShow($caption, $list = true){
+ 	public function setShow(string $caption, string $list = true){
 		$this->caption = $caption;
 		$this->showList = $list;
 		$this->showDisplay = true;
  	} 
  
-	public function setFetch($dbColumn){
+	public function setFetch(string $dbColumn){
 		$this->useRow = true;
 		$this->dbColumn = $dbColumn;
 	}
  
-	public function setPost($postVariable){
+	public function setPost(string $postVariable){
 		$this->usePost = true;
 		$this->postVariable = $postVariable;
 	}
@@ -192,7 +199,7 @@
  		}
  	}
  	
-	public function input($entity,$inputType){
+	public function input(string $entity,string $inputType){
 	
 		switch ($this->inputType){
 		
@@ -262,9 +269,6 @@ class _textField extends _field{
 		parent::__construct($dbColumn, $postVariable);
 		$this->type = 'TEXT';
 	}
-	
-	
-	
 }
 class _numberField extends _field{
 	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
@@ -282,19 +286,19 @@ class _dateField extends _field{
 }
  
 class _idNameField implements  IentityField{
-	public $id;
-	public $name;
+	public _numberField $id;
+	public _textField $name;
 	
 	public function __construct($dbColumnId = 'entity_id', $postVariable = 'idEntity', $dbColumnName = 'entity_name'){
 		$this->id = new _numberField($dbColumnId, $postVariable);
 		$this->name = new _textField($dbColumnName);
 	}
 	
-	public function set($value){
+	public function set(int $value){
 	 	$this->id->set($value);
 	}
- 	public function reset($default = NULL){
- 		$this->id->reset(0);
+ 	public function reset(int $default = 0){
+ 		$this->id->reset($default);
  	 	$this->name->reset('');
  	}
  	public function get(){
@@ -303,15 +307,15 @@ class _idNameField implements  IentityField{
    	public function value(){
    		return $this->id->value();
    	}
-	public function setShow($caption, $list = true){
+	public function setShow(string $caption, bool $list = true){
 		$this->name->setShow($caption,$list);
 	}
-	public function setFetch($dbColumn){
+	public function setFetch(string $dbColumn){
 	//,$dbColumnName){
 		$this->id->setFetch($dbColumn);
 		//$this->name->setFetch($dbColumnName);
 	}
-	public function setFetchName($dbColumnName){
+	public function setFetchName(string $dbColumnName){
 	//,$dbColumnName){
 		//$this->id->setFetch($dbColumn);
 		$this->name->setFetch($dbColumnName);
@@ -320,11 +324,11 @@ class _idNameField implements  IentityField{
 		$this->id->fetch($row);
 		$this->name->fetch($row);
 	}
-	public function tH(){
+	public function th(){
 		return $this->name->tH();
 	}
 	
- 	public function tD(){
+ 	public function td(){
  		return $this->name->tD();
  	}
  	public function p(){

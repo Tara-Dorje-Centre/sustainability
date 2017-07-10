@@ -96,12 +96,12 @@ abstract class _entityType extends _entity{
 		$edit->open($contextMenu,$this->_titleEntity);
 		$edit->required->addContent($this->f->name->input($entity, 'NAME'));
 		$edit->required->addContent($this->f->displayOrder->input($entity,'NUMBER'));
-		$edit->required->addContent($ inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight');
-		$edit->optional->addContent($$this->f->description->input($entity,'DESCRIPTION');
-		$edit->optional->addContent($$fields .= $this->f->notes->input($entity,'NOTES');
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode);
-		$edit->hidden->addContent($this->f->id->inputHidden();
-		$edit->submit->addContent(getSaveChangesResetButtons();
+		$edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));
+		$edit->optional->addContent($this->f->description->input($entity,'DESCRIPTION'));
+		$edit->optional->addContent($this->f->notes->input($entity,'NOTES'));
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->addContent($this->f->id->inputHidden());
+		$edit->submit->addContent(getSaveChangesResetButtons());
 		return $edit->close;
 	}
 	
