@@ -10,7 +10,7 @@ abstract class _entityTypeFields extends _entityFields{
         $this->highlight->setShow('highlight',true);
     }
 
-
+/*
 	public function setRow($row){
 		parent::setRow($row);
 	}
@@ -20,35 +20,21 @@ abstract class _entityTypeFields extends _entityFields{
 	}
 	
 	public function listHeading(){
-	return parent::listHeading();
-	/*	$this->addContent(parent::listHeading(),true);
-		$this->listTh('Display Order');		
-		$this->listTh('Notes');
-		return $this->getContent();*/
+		return parent::listHeading();
 	}
 	
 	public function listDetail(){
-	return parent::listDetail();
-		/*$this->addContent(parent::listDetail(),true);
-		$this->listTd($this->displayOrder);
-		$this->listTd($this->notes);
-		return $this->getContent();*/
+		return parent::listDetail();
 	}
 	
 	public function display(){
-	return parent::display();
-		/*$this->addContent(parent::display(),true);
-		$this->detailPara('Display Order', $this->displayOrder);
-		$this->detailPara('Notes', $this->notes);
-		return $this->getContent();*/
+		return parent::display();
 	}
 	
 	public function getPostVars(){
-		parent::getPostVars();/*
-		$this->notes = $this->postString('notes');
-		$this->displayOrder = $this->postVar('displayOrder',0);*/
+		parent::getPostVars();
 	}
-
+*/
 }
 
 abstract class _entityType extends _entity{
@@ -61,7 +47,7 @@ abstract class _entityType extends _entity{
 	}
 	
 	protected function afterSetDetails(){
-	
+			$this->f->name->caption = $this->_titleEntity;
 	}
 	
 	protected function afterDisplay(){
@@ -81,7 +67,7 @@ abstract class _entityType extends _entity{
 		$menu .= $menuL->linkReference();
 		$menu .= $this->links->resetMenu();
 		
-		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id->value,$this->f->parent->id->value);
+		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id->value(),$this->f->parent->id->value());
 		
 		$menu .= $this->links->list();
 		$menu .= $this->links->closeMenu();
@@ -93,42 +79,30 @@ abstract class _entityType extends _entity{
 	
 	protected function afterSetDefaults(){
 		if ($this->pageMode == 'ADD'){
-		$this->f->defaults();
+		/*$this->f->defaults();*/
 		
 		$s = $this->sql->count();
-		$next = dbGetCount($s, 'count_details');
-		$this->f->displayOrder->set($next + 1);
+		$next = dbGetCount($this->sql->count(), 'count_details');
+		$next += 1;
+		$this->f->displayOrder->set($next);
 		}
 		
 	}
 	protected function editForm(){
-		
-		$legend = $this->pageMode;
-		$legend .= $this->$_titleEntity;
 		$entity = 'entity-type';
-	
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
-		$form = openEditForm($entity,$legend,$this->pageSave,$contextMenu);
-
-		//formRequired fields		
-		$fields = inputFieldName($entity,$this->f->name,'name',$this->_titleEntity);
-		$fields .= inputFieldNumber($entity,$this->f->displayOrder->value,'displayOrder','Display Order');
-		$fields .= inputFieldHighlightStyle($entity,$this->f->highlight->value,'highlight');
-		$formRequired = $fields;
 		
-		//formOptional fields
-		$fields = inputFieldDescription($entity,$this->f->description->value,'description');
-		$fields .= inputFieldNotes($entity,$this->f->notes->value,'notes');
-		$formOptional = $fields;
-
-		//formSubmit fields
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('id', $this->id);
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-	
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);	
-		return $form;
+		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->required->addContent($this->f->name->input($entity, 'NAME'));
+		$edit->required->addContent($this->f->displayOrder->input($entity,'NUMBER'));
+		$edit->required->addContent($ inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight');
+		$edit->optional->addContent($$this->f->description->input($entity,'DESCRIPTION');
+		$edit->optional->addContent($$fields .= $this->f->notes->input($entity,'NOTES');
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode);
+		$edit->hidden->addContent($this->f->id->inputHidden();
+		$edit->submit->addContent(getSaveChangesResetButtons();
+		return $edit->close;
 	}
 	
 	protected function afterCollectPostValues(){
@@ -138,13 +112,13 @@ abstract class _entityType extends _entity{
 
 			$sql = " UPDATE ".$this->sql->getBaseTable()." AS base ";
 			$sql .= " SET ";
-			$sql .= " base.name = '".$this->f->name."', ";
-			$sql .= " base.description = '".$this->f->description->value."', ";
+			$sql .= " base.name = '".$this->f->name->value()."', ";
+			$sql .= " base.description = '".$this->f->description->value()."', ";
 			$sql .= " base.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " base.highlight_style = '".$this->f->highlightStyle."', ";
-			$sql .= " base.display_order = ".$this->f->displayOrder.", ";
-			$sql .= " base.notes = '".$this->f->notes."' ";
-			$sql .= " WHERE base.id = ".$this->f->id."  ";		
+			$sql .= " base.highlight_style = '".$this->f->highlight->value()."', ";
+			$sql .= " base.display_order = ".$this->f->displayOrder->value().", ";
+			$sql .= " base.notes = '".$this->f->notes->value()."' ";
+			$sql .= " WHERE base.id = ".$this->f->id->value()."  ";		
 				
 			$result = dbRunSQL($sql);
 	}
@@ -159,18 +133,18 @@ abstract class _entityType extends _entity{
 			$sql .= " highlight_style, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name."', ";
+			$sql .= "'".$this->f->name->value()."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->f->description."', ";
-			$sql .= $this->f->displayOrder.", ";
-			$sql .= "'".$this->f->highlightStyle."', ";
-			$sql .= "'".$this->f->notes."') ";
+			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= $this->f->displayOrder->value().", ";
+			$sql .= "'".$this->f->highlight.value()"', ";
+			$sql .= "'".$this->f->notes.value()."') ";
 			
 			$result = dbRunSQL($sql);
 			
-			$this->id = dbInsertedId();
-			$this->f->id = $this->id;
+			$this->f->id = dbInsertedId();
+			$this->synchIds();
 	}
 	
 		

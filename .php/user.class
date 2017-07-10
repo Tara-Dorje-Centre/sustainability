@@ -12,96 +12,122 @@ class userFields extends _entityFields{
 	public $interests;
 	public $focus;
 	public $lastLogin;
-	public $isAdmin = 'no';
-	public $isActive = 'no';
-	public $mustUpdatePwd = 'no';
+	public $isAdmin;
+	public $isActive;
+	public $mustUpdatePwd;
 	
 
 	public function __construct(){
-    	$this->hasType = true;
-    	$this->hasCreated = true;
-    	$this->hasHighlight = true;
-    	$this->hasUpdated = true;
+		parent::__construct();
+    	$this->type->setShow('user-type',true);
+    	$this->created->setShow('created',true);
+    	$this->highlight->setShow('highlight',true);
+    	$this->updated->setShow('updated',true);
+    	
+    	
+    	$this->nameFirst = new _textField('name_first','nameFirst'); 
+		$this->nameLast = new _textField('name_last','nameLast'); 
+		$this->email = new _textField('email','email'); 
+		$this->focus = new _textField('focus','focus');
+		$this->interests = new _textField('interests','interests');
+		$this->loginName = new _textField('login_name','loginName');
+		$this->lastLogin = new _dateField('last_login','lastLogin'); 
+		$this->isAdmin = new _textField('is_admin','isAdmin';
+		$this->isActive = new _textField('is_active','isActive');
+		$this->mustUpdatePwd = new _textField('must_update_pwd', 'mustUpdatePwd');
+		
+		$this->nameFirst->setShow('name_first', true)); 
+		$this->nameLast->setShow('name_last', true)); 
+		$this->email->setShow('email', true)); 
+		$this->focus->setShow('focus', true));
+		$this->interests->setShow('interests', true));
+		$this->loginName->setShow('login_name', true));
+		$this->lastLogin->setShow('last_login', true); 
+		$this->isAdmin->setShow('is_admin', true);
+		$this->isActive->setShow('is_active', true);
+		$this->mustUpdatePwd->setShow('must_update_pwd', true);
+		
     }
 
 	public function setRow($row){
 		parent::setRow($row);
-		$this->nameFirst = ($row["name_first"]); 
-		$this->nameLast = ($row["name_last"]); 
-		$this->name = $this->nameLast.', '.$this->nameFirst;
-		$this->email = ($row["email"]); 
-		$this->focus = ($row["focus"]);
-		$this->interests = ($row["interests"]);
-		$this->loginName = ($row["login_name"]);
-		$this->lastLogin = $row["last_login"]; 
-		$this->isAdmin = $row["is_admin"];
-		$this->isActive = $row["is_active"];
-		$this->mustUpdatePwd = $row["must_update_pwd"];
+		$this->nameFirst->setRow($row);
+		$this->nameLast->setRow($row);
+		$this->name->set($this->nameLast->value().', '.$this->nameFirst->value());
+		$this->email->setRow($row);
+		$this->focus->setRow($row);
+		$this->interests->setRow($row);
+		$this->loginName->setRow($row);
+		$this->lastLogin->setRow($row);
+		$this->isAdmin->setRow($row);
+		$this->isActive->setRow($row);
+		$this->mustUpdatePwd->setRow($row);
 	}
 	
 	public function format(){
 		parent::format();
-		$this->focus = formatText($this->focus); 		
-		$this->interests = formatText($this->interests); 
-		$this->lastLogin = formatDate($this->lastLogin); 
-
+		$this->focus->format();
+		$this->interests->format();
+		$this->lastLogin->format():
 	}
 	
 	public function defaults(){
 		parent::defaults();
-		$this->isAdmin = 'no';
-		$this->mustUpdatePwd = 'yes';
-		$this->isActive = 'yes';
+		$this->isAdmin->reset('no');
+		$this->mustUpdatePwd->reset('yes');
+		$this->isActive->reset('yes');
 		
 	}
 	
 	public function listHeading(){
 		$this->addContent(parent::listHeading(),true);
-		$this->listTh('Login Name',true);
-		$this->listTh('First Name',true);
-		$this->listTh('Last Name',true);
-		$this->listTh('Focus',true);
-		$this->listTh('Interests',true);
-		$this->listTh('Last Login',true);
+		$this->addContent($this->loginName->th));
+		$this->addContent($this->nameFirst->th));
+		$this->addContent($this->nameLast->th));
+		$this->addContent($this->focus->th));
+		$this->addContent($this->interests->th));
+		$this->addContent($this->lastLogin->th));
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
 		$this->addContent(parent::listDetail(),true);
-		$this->listTh($this->nameFirst,true);			
-		$this->listTh($this->nameLast,true);		
-		$this->listTh($this->focus,true);		
-		$this->listTh($this->interests,true);		
-		$this->listTh($this->lastLogin,true);		
+		$this->addContent($this->loginName->th));
+		$this->addContent($this->nameFirst->th));
+		$this->addContent($this->nameLast->th));
+		$this->addContent($this->focus->th));
+		$this->addContent($this->interests->th));
+		$this->addContent($this->lastLogin->th));
 		return $this->getContent();
 	}
 	
 	public function display(){
 		$this->addContent(parent::display(),true);
-		$this->detailPara('Login Name', $this->loginName,true);
-		$this->detailPara('First Name', $this->nameFirst,true);
-		$this->detailPara('Last Name', $this->nameLast,true);
-		$this->detailPara('Email Address', $this->email,true);
-		$this->detailPara('Focus', $this->focus,true);
-		$this->detailPara('Interests', $this->interests,true);
-		$this->detailPara('Last Login', $this->lastLogin,true);
-		$this->detailPara('Active Profile', $this->isActive,true);
-		$this->detailPara('Administrator', $this->isAdmin,true);
-		$this->detailPara('Must Update Password', $this->mustUpdatePwd,true);
+		
+		$this->addContent($this->loginName->td));
+		$this->addContent($this->nameFirst->td));
+		$this->addContent($this->nameLast->td));
+		$this->addContent($this->email->td));
+		$this->addContent($this->focus->td));
+		$this->addContent($this->interests->td));
+		$this->addContent($this->lastLogin->td));
+		$this->addContent($this->mustUpdatePwd->td));
+		$this->addContent($this->isActive->td));
+		$this->addContent($this->isAdmin->td));
 		return $this->getContent();
 	}
 	
 	public function getPostVars(){
 		parent::getPostVars();
-		$this->nameFirst = $this->postString('nameFirst'); 
-		$this->nameLast = $this->postString('nameLast'); 
-		$this->email = $this->postString('email'); 
-		$this->focus = $this->postString('focus'); 
-		$this->interests = $this->postString('interests'); 
-		$this->isAdmin = $this->postString('isAdmin');
-		$this->isActive = $this->postString('isActive');
-		$this->mustUpdatePwd = $this->postString('mustUpdatePwd');
-		$this->loginName = $this->postString('loginName'); 
+		$this->nameFirst->post();
+		$this->nameLast->post;
+		$this->email->post();
+		$this->focus->post();
+		$this->interests->post();
+		$this->isAdmin->post();
+		$this->isActive->post();
+		$this->mustUpdatePwd->post();
+		$this->loginName->post;
 	}
 
 }
@@ -141,7 +167,7 @@ protected $__MyClassName = 'User';
 	
 
 	public function setTypeId($id){
-		$this->f->idType = $id;
+		$this->f->type->set($id);
 	}
 	
 		
@@ -282,15 +308,8 @@ protected $__MyClassName = 'User';
 	public function validateLoginAndEmail($loginName, $loginEmail){
 		$validLoginEmail = false;
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
-	
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{
-			$found = $row["user_count"];  
-		}
-		$result->close;
-		}
+		$found = dbGetCount($sql,'user_count');
+		
 
 		if ($found == 1){
 			$validLoginEmail = true;
@@ -302,16 +321,8 @@ protected $__MyClassName = 'User';
 		$loginPwdCrypt = $this->obfuscate($loginPwd,$loginName);
 		$validUser = false;
 		$sql = $this->sql->validateUser($loginName, $loginPwdCrypt);
-		
-		$result = dbGetResult($sql);
-		if($result){
-	  		while ($row = $result->fetch_assoc())
-			{
-				$found = $row["user_count"];  
-			}
-		
-		$result->close();
-		}
+		$found = dbGetCount($sql,'user_count');
+	
 		
 		
 		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
@@ -367,7 +378,7 @@ protected $__MyClassName = 'User';
 		$contextMenu = $c->formatToggleLink('formOptional','Lost Password');
 		$form = openEditForm('site-login', $message, 'sys_Login.php',$contextMenu);
 
-		$fields = inputFieldUser($entity,$this->loginName,'login-name','Login Name');
+		$fields = inputFieldUser($entity,$this->loginName,'loginName','Login Name');
 
 		$input = getPasswordInput('login-pwd', 10, 50);
 		$fields .= captionedInput('Password',$input);
@@ -376,11 +387,12 @@ protected $__MyClassName = 'User';
 		$formRequired = $fields;
 		//formOptional
 
-		$fields = inputFieldText($entity,$this->email,'login-email','Login Email',50,255);
-		$fields .= getLoginLogoutButton('Reset Password','submit-pwd-reset');		
-		$input = 'To reset password, enter your login name and profile email.'.br();
-		$input .= 'If your email is not registered, please contact an administrator to setup a profile.';
-		$fields .= captionedInput('Lost Password Instructions',$input);
+		$fields = inputFieldText($entity,$this->email->inputText($entity);
+		//'login-email','Login Email',50,255);
+		$fields .= getLoginLogoutButton('Reset Password','submit-pwd-reset').br();	
+		$msg = 'To reset password, enter your login name and profile email.'.br();
+		$msg .= 'If your email is not registered, please contact an administrator to setup a profile.';
+		$fields .= captionedInput('Lost Password Instructions',$msg);
 
 	
 		//end optional fields
@@ -413,9 +425,9 @@ protected $__MyClassName = 'User';
 	public function requestPasswordResetForm(){
 		
 		$form = openForm('user-password-reset','sys_User_Save.php','none');
-		$hidden = getHiddenInput('userId',$this->id);
-		$hidden .= getHiddenInput('login-email',$this->email);	
-		$hidden .= getHiddenInput('login-name', $this->loginName);
+		$hidden = $this->f->id->inputHidden();
+		$hidden .= $this->f->email->inputHidden();	
+		$hidden .= $this->f->loginName->inputHidden();
 		$button = getSubmitButton('Request Reset','submit-pwd-reset');
 		$messages = $this->getLoginMessages();
 		$form .= $messages.$button.$hidden;
@@ -427,10 +439,10 @@ protected $__MyClassName = 'User';
 	//overrride entity.listrowlink to limit editing to administrators or self edit
 	protected function listRowLink(){
 
-		if ($_SESSION['is-admin'] == 'yes' || $_SESSION['user-id'] == $u->id){
-			$link = $this->links->itemViewEdit($this->f>loginName,$this->f->id);
+		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] == $this->f->id->value)){
+			$link = $this->links->itemViewEdit($this->f>loginName->value,$this->f->id->value());
 		} else {
-			$link = $this->links->view($this->f->loginName,$this->f->id);
+			$link = $this->links->view($this->f->loginName->value,$this->f->id->value);
 		}
 			
 	}
@@ -449,7 +461,7 @@ protected $__MyClassName = 'User';
 	
 	protected function editForm(){
 	
-		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] != $this->id)){
+		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] != $this->id->value)){
 			$form = $this->secureEditForm();
 		} else {
 			$form = $this->display();
@@ -458,26 +470,23 @@ protected $__MyClassName = 'User';
 	}
 	
 	protected function secureEditForm(){
-		if ($this->pageMode == 'ADD'){
-			$legend = 'Add Profile';
-		} else {
-			$legend = 'Edit Profile';
-		}
+		
 
 		$entity = 'user';
-		$c = new ProjectLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		
-		$form = openEditForm($entity,$legend,'sys_User_Save.php',$contextMenu);
+		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->_titleEntity);
 
 		if ($this->pageMode == 'ADD'){
-			$input = getTextInput('loginName', $this->loginName, 20,50,'Login Name','false');
+			$input = $this->loginName->input($entity,'TEXT');
+			, 20,50,'Login Name','false');
 			$messages = @$this->validationMessages['login'];			
 		} else {
-			$input = $this->loginName.getHiddenInput('loginName',$this->loginName);
+			$input = $this->f->loginName->inputHidden();
 			$messages = '(cannot be changed)';
 		}
-		$fields = captionedInput('Login Name '.$messages,$input);
+		$edit->required->addContent( captionedInput('Login Name '.$messages,$input));
 
 
 
@@ -487,61 +496,46 @@ protected $__MyClassName = 'User';
 		$input = getPasswordInput('loginPwdConfirm', 10,20,'Confirm Password');
 		$messages = @$this->validationMessages['password'];
 		$passwordGroup .= captionedInput('Password Confirm '.$messages,$input);
-		$fields .= wrapDivFieldGrouping($entity,$passwordGroup);
+		$edit->required->addContent(wrapDivFieldGrouping($entity,$passwordGroup));
 
-		$input = getTextInput('email', $this->email, 50,255);
+		$input = $this->email->inputText();
 		$messages = @$this->validationMessages['email'];
-		$fields .= captionedInput('Email Address '.$messages,$input);
-
-
-				
-		//end required fields
-		$formRequired = $fields;		
-		
-		//formOptional
-		$fields = inputFieldName($entity,$this->nameFirst,'nameFirst','First Name');
-		
-		$fields .= inputFieldName($entity,$this->nameLast,'nameLast','Last Name');
+		$edit->required->addContent(captionedInput('Email Address '.$messages,$input));
+		$edit->optional->addContent($this->nameFirst->input($entity,'NAME'));
+		$edit->optional->addContent($this->nameLast->input($entity,'NAME'));
 
 
 		$m = new UserType;
 		$select = $m->options($this->typeId,'typeId','false');
-		$fields .= captionedInput('User Type',$select);
+		$edit->optional->addContent(captionedInput('User Type',$select));
 		
 
-		$fields .= inputFieldComments($entity,$this->focus,'focus','Focus Areas',1000);
-		
-		$fields .= inputFieldComments($entity,$this->interests,'interests','Interests',1000);
+		$edit->optional->addContent($this->focus->input($entity, 'COMMENTS'));
+		$edit->optional->addContent($this->interests->input($entity,'COMMENTS'));
+	
 		
 		
 		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){
 			//if admin and not editing self allow setting admin
 			//prevents admins from disabling their own accounts
-			$input1 = getSelectYesNo('isAdmin',$this->isAdmin,'Is Administrator','false');
-			$input2 = getSelectYesNo('isActive',$this->isActive,'Is Active','false');
-			$input3 = getSelectYesNo('mustUpdatePwd',$this->mustUpdatePwd,'Must Update Password','false');
+			$input1 = getSelectYesNo('isAdmin',$this->isAdmin->value,'Is Administrator','false');
+			$input2 = getSelectYesNo('isActive',$this->isActive->value,'Is Active','false');
+			$input3 = getSelectYesNo('mustUpdatePwd',$this->mustUpdatePwd->value,'Must Update Password','false');
 		} else {
-			$input1 = $this->isAdmin.getHiddenInput('isAdmin',$this->isAdmin);
-			$input2 = $this->isActive.getHiddenInput('isActive',$this->isActive);
-			$input3 = $this->mustUpdatePwd.getHiddenInput('mustUpdatePwd','no');
+			$input1 = $this->$this->isAdmin->inputHidden());
+			$input2 = $this->isActive->inputHidden);
+			$input3 = $this->mustUpdatePwd->inputHidden();
 		}				
 		$input = captionedInput('Administrator',$input1);
 		$input .= captionedInput('Active Profile',$input2);
 		$input .= captionedInput('Must Update Password', $input3);
-		$fields .= captionedInput('Profile Settings',$input);
+				$edit->optional->addContent(captionedInput('Profile Settings',$input);
 		
-		//end optional fields
-		$formOptional = $fields;
-		
-		
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('id', $this->id);
+				$edit->hidden->addContent( = getHiddenInput('mode', $this->pageMode);
+				$edit->hidden->addContent( .= $this->f->id->inputHidden();
 
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);		
-		return $form;
+				$edit->submit->addContent( = getSaveChangesResetButtons();
+			return $edit->close();
 	}
 	
 	

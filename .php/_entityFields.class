@@ -51,7 +51,7 @@ abstract class _entityFields extends _contentWriter {
 	
     public function __construct(){
         $this->displayOrder = new _numberField('display_order','displayOrder');
-        $this->highlight = new _textField('highlight','highlight');
+        $this->highlight = new _textField('highlight_style','highlight');
     	$this->id = new _numberField('id','id');
     	$this->name = new _textField('name','name');
     	
@@ -69,20 +69,21 @@ abstract class _entityFields extends _contentWriter {
     	$this->doneBy = new _textField('name','name');
     	$this->reviewedBy = new _textField('reviewed_by','reviewedBy');
     	$this->approvedBy = new _textField('approved_by','approvedBy');
-    	    	    	
+    	$this->parent = new _idNameField('parent_id','idParent','parent_name');
+    	$this->type = new _idNameField('type_id','idType','type_name');
+    	$this->location = new _idNameField('location_id','idLocation','location_name');
+    	$this->project = new _idNameField('project_id','idProject','project_name');
+    	$this->task = new _idNameField('task_id','idTask','task_name');
+    	$this->activity = new _idNameField('activity_id','idActivity','activity_name');
+    	
+    	
         $this->id->setShow('id',true);
         $this->name->setShow('Name',true);
         $this->description->setShow('Description',true);
         $this->created->setShow('created',true);
         $this->updated->setShow('updated',true);
-        
-    	$this->parent = new _idNameField('parent_id','idParent','parent_name');
-    	$this->type = new _idNameField('type_id','idType','type_name');
-    	$this->location = new _idNameField('location_id','idLocation','location_name');
+        $this->highlight->setShow('highlight',true);
     	
-    	$this->project = new _idNameField('project_id','idProject','project_name');
-    	$this->task = new _idNameField('task_id','idTask','task_name');
-    	$this->activity = new _idNameField('activity_id','idActivity','activity_name');
     	
     }
     

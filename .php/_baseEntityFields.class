@@ -10,8 +10,8 @@
 	public function setShow($caption, $list = true);
 	public function setFetch($dbColumn);
 	public function fetch($row);
-	public function tH();
- 	public function tD();
+	public function th();
+ 	public function td();
  	public function p();
  	public function post();
  	public function format();
@@ -124,7 +124,7 @@
  		}
 	}
 
-	public function tH(){
+	public function th(){
 		if ($this->showList == true){
  			$value = wrapTh($this->caption);
  		} else {
@@ -133,7 +133,7 @@
 		return $value;
  	}
  	
- 	public function tD(){
+ 	public function td(){
  		if ($this->showList == true){
   		//$this->format();
  			$value = wrapTd($this->value());
@@ -192,6 +192,69 @@
  		}
  	}
  	
+	public function input($entity,$inputType){
+	
+		switch ($this->inputType){
+		
+			case 'TEXT':
+			$inputField = $this->inputAsText($entity);
+			break;
+			
+			case 'NUMBER':
+			$inputField = $this->inputAsNumber($entity);
+			break;
+			
+			case 'HIDDEN':
+			$inputField = $this->inputHidden();
+			break;
+			
+			case 'NAME':
+			$inputField = $this->inputAsName($entity);
+			break;
+			
+			case 'DESCRIPTION':
+			$inputField = $this->inputAsDescription($entity);
+			break;
+			
+			case 'COMMENTS':
+			$inputField = $this->inputAsComments($entity);
+			break;
+			
+			case 'NOTES':
+			$inputField = $this->inputAsNotes($entity);
+			break;
+
+			default:
+			$inputField = $this->inputAsText($entity);
+		}
+		return $inputField;
+	
+	}
+	
+	public function inputAsText($entity){
+		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	public function inputAsDescription($entity){
+		return inputFieldDescription($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	public function inputAsNotes($entity){
+		return inputFieldNotes($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	public function inputAsComments($entity){
+		return inputFieldComments($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	public function inputAsName($entity){
+		return inputFieldName($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	
+	public function inputAsNumber($entity){
+		return inputFieldNumber($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	
+	public function inputHidden(){
+		return getHiddenInput($this->postVariable, $this->value());
+	}
+ 	
 }
 
 class _textField extends _field{
@@ -199,6 +262,9 @@ class _textField extends _field{
 		parent::__construct($dbColumn, $postVariable);
 		$this->type = 'TEXT';
 	}
+	
+	
+	
 }
 class _numberField extends _field{
 	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){

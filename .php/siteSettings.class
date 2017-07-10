@@ -1,17 +1,20 @@
 ﻿<?php 
 
 class siteSettingsFields extends _entityFields{
-	 public $siteTitle = 'MyProjects';
-	 public $siteUrl = 'MyUrl';
-	 public $loginNotice = '';
-	 public $organizationUrl = 'MyOrganizationUrl';	
-	 public $organization = 'MyOrganization';
-	 public $organizationDescription = 'AboutMyOrganization';
-	 public $contactName = 'MySiteContact';
-	 public $contactEmail = 'MySiteContact@MyOrganization';
-	 public $showPublicSite = 'no';
-	 public $showCostReports = 'no';
-	 public $showRevenueReports = 'no';
+	 public $siteTitle;
+	 = 'MyProjects';
+	 public $siteUrl;
+	 = 'MyUrl';
+	 public $loginNotice;
+	  = '';
+	 public $organizationUrl;
+	 public $organization;
+	 public $organizationDescription;
+	 public $contactName;
+	 public $contactEmail;
+	 public $showPublicSite;
+	 public $showCostReports;
+	 public $showRevenueReports;
 	 public $publicFillColor;
 	 public $publicSiteColor;
 	 public $publicPageColor;
@@ -25,12 +28,8 @@ class siteSettingsFields extends _entityFields{
 	 public $publicFontSizeMenu;
 	 public $publicFontSizeText;
 	 
-	
-
-
 	public function __construct(){
-
-parent::__construct();
+		parent::__construct();
 
 	 $this->siteTitle = new _textField('site_title','siteTitle');
 	 $this->siteUrl = new _textField('site_url','siteUrl');
