@@ -10,11 +10,10 @@
 //  without showing the user the .php/ directory
 
 include(".php/index.php");
-
-//   current code assumes all php scripts are in docroot
+//   the /css folder in the /.php directory is for developent purposes only
+//   the current code assumes all php scripts are in docroot
 //   if working code is in htdocs/dev/sustainability
-//   use [server]/dev/sustainability/.php/index.php
+//   use [server]/dev/sustainability/.php/index.php for testing and development.
 //   then all links will work without any redirects
-
 
 ?>
