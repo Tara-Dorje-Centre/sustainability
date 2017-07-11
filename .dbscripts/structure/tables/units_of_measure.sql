@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS units_of_measure (
   symbol varchar(20) COLLATE latin1_general_ci NOT NULL,
   PRIMARY KEY (id)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
-
+ALTER TABLE `units_of_measure`  ADD `display_order` INT(4) NULL DEFAULT '0'  AFTER `created`;
