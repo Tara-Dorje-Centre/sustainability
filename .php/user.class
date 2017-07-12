@@ -19,12 +19,12 @@ class userFields extends _entityFields{
 
 	public function __construct(){
 		parent::__construct();
-		    	$this->name->enabled(true);
+		$this->id->enabled(true);
+		$this->name->enabled(true);
     	$this->type->enabled(true);
     	$this->created->enabled(true);
-    	$this->highlight->enabled(true);
     	$this->updated->enabled(true);
-    	
+    	$this->highlight->enabled(true);
     	
     	$this->nameFirst = new _textField('name_first','nameFirst','First Name', true); 
 		$this->nameLast = new _textField('name_last','nameLast','Last Name', true); 
@@ -36,37 +36,34 @@ class userFields extends _entityFields{
 		$this->isAdmin = new _textField('is_admin','isAdmin','Administrator', true);
 		$this->isActive = new _textField('is_active','isActive','Active Profile', true);
 		$this->mustUpdatePwd = new _textField('must_update_pwd', 'mustUpdatePwd','Must Update Password', true);
-		/*
-		$this->nameFirst->setShow('name_first', true); 
-		$this->nameLast->setShow('name_last', true); 
-		$this->email->setShow('email', true); 
-		$this->focus->setShow('focus', true);
-		$this->interests->setShow('interests', true);
-		$this->loginName->setShow('login_name', true);
-		$this->lastLogin->setShow('last_login', true); 
-		$this->isAdmin->setShow('is_admin', true);
-		$this->isActive->setShow('is_active', true);
-		$this->mustUpdatePwd->setShow('must_update_pwd', true);*/
 		
     }
-
+	protected function formatUserName($last,$first = 'not-given'){
+		$name = $this->nameLast->value();
+		if($this->nameFirst != ''){
+			$name .= ', '.$this->nameFirst->value();
+		}
+		return $name;
+	}
 	public function setRow($row){
-		parent::setRow($row);
-		$this->nameFirst->setRow($row);
-		$this->nameLast->setRow($row);
-		$this->name->set($this->nameLast->value().', '.$this->nameFirst->value());
-		$this->email->setRow($row);
-		$this->focus->setRow($row);
-		$this->interests->setRow($row);
-		$this->loginName->setRow($row);
-		$this->lastLogin->setRow($row);
-		$this->isAdmin->setRow($row);
-		$this->isActive->setRow($row);
-		$this->mustUpdatePwd->setRow($row);
+		parent::fetch($row);
+		$this->nameFirst->fetch($row);
+		$this->nameLast->fetch($row);
+		$this->name->set($this->formatUserName());
+		$this->email->fetch($row);
+		$this->focus->fetch($row);
+		$this->interests->fetch($row);
+		$this->loginName->fetch($row);
+		$this->lastLogin->fetch($row);
+		$this->isAdmin->fetch($row);
+		$this->isActive->fetch($row);
+		$this->mustUpdatePwd->fetch($row);
 	}
 	
 	public function format(){
 		parent::format();
+		$this->nameFirst->format();
+		$this->nameLast->format();
 		$this->focus->format();
 		$this->interests->format();
 		$this->lastLogin->format();
@@ -121,14 +118,14 @@ class userFields extends _entityFields{
 	public function getPostVars(){
 		parent::getPostVars();
 		$this->nameFirst->post();
-		$this->nameLast->post;
+		$this->nameLast->post();
 		$this->email->post();
 		$this->focus->post();
 		$this->interests->post();
 		$this->isAdmin->post();
 		$this->isActive->post();
 		$this->mustUpdatePwd->post();
-		$this->loginName->post;
+		$this->loginName->post();
 	}
 
 }
@@ -145,10 +142,10 @@ protected $__MyClassName = 'User';
 		$this->f = new UserFields();
 		$this->sql = new UserSQL();
 		$this->links = new UserLinks();
-	}
+	}/*
 	
 	protected function beforeSetDetails(){
-	}
+	}*/
 		
 	protected function afterSetDetails(){
 	}
@@ -156,7 +153,7 @@ protected $__MyClassName = 'User';
 	protected function afterSetDefaults(){
 	}
 	
-		public function afterDisplay(){
+	public function afterDisplay(){
 		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		
 			$detail = $this->requestPasswordResetForm();
 		} else {
@@ -175,7 +172,7 @@ protected $__MyClassName = 'User';
 	protected function setPageTitle(){
 
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->loginName;
+			$heading = $this->f->loginName;
 			if (($_SESSION['user-id'] == $this->id) && ($_SESSION['must-update-pwd'] == 'yes')){
 				$heading .= br().'Please update your profile password.';
 			}
@@ -297,7 +294,7 @@ protected $__MyClassName = 'User';
 		$headers .= "Content-Type: text/html; charset=utf-8\n"; 
 		$headers .= "Content-Transfer-Encoding: 8bit\n"; 
 		$newSubject = $_SESSION['site-title'].':'.$subject;
-		mail($this->email,$newSubject,$message,$headers, '-f '.$fromAddress);
+		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
 	}
 	
 	private function obfuscate($pass,$login){
@@ -325,12 +322,14 @@ protected $__MyClassName = 'User';
 		$found = dbGetCount($sql,'user_count');
 	
 		
-		
+		$this->echoValue(true, 'foundUser', $found, 'validateLogin');
+	
+}*/
 		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
 		//then comment this line
 		//printLine('forcing login');
 		$found = 1;
-
+		$this->echoValue(true, 'foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
 		if ($found == 1){
 			$validUser = true;
 			printLine('validateLogin.updatingLastLogin');

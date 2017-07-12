@@ -26,7 +26,7 @@ class siteSettingsFields extends _entityFields{
 	 public $publicFontSizeText;
 	 
 	public function __construct(){
-		parent::__construct();
+		/*parent::__construct();*/
 
 		$this->siteTitle = new _textField('site_title','site-title','Site Title', true);
 	 	$this->siteUrl = new _textField('site_url','site-url','Site URL', true);
@@ -51,31 +51,7 @@ class siteSettingsFields extends _entityFields{
 	 	$this->publicFontSizeHeading = new _numberField('public_font_size_heading','public-font-size-heading','publicFontSizeHeading', true);
 	 	$this->publicFontSizeMenu = new _numberField('public_font_size_menu','public-font-size-menu','publicFontSizeMenu', true);
 	 	$this->publicFontSizeText = new _textField('public_font_size_text','public-font-size-text','publicFontSizeText', true);
-		/*
-		$this->name->enabled(true);
-		$this->id->enabled(true);
-		$this->description->enabled(true);
-		$this->organization->enabled(true);
-		$this->organizationUrl->enabled(true);
-		$this->organizationDescription->enabled(true);
-		$this->contactName->enabled(true);
-		$this->contactEmail->enabled(true);
-		$this->showCostReports->enabled(true);
-		$this->showRevenueReports->enabled(true);
-		$this->showPublicSite->enabled(true);
-		$this->publicFillColor->enabled(true);
-		$this->publicSiteColor->enabled(true);
-		$this->publicPageColor->enabled(true);
-		$this->publicMenuColor->enabled(true);
-		$this->publicMenuColorHover->enabled(true);
-		$this->publicTextColor->enabled(true);
-		$this->publicTextColorHover->enabled(true);
-		$this->publicFontFamily->enabled(true);
-		$this->publicFontSizeTitle->enabled(true);
-		$this->publicFontSizeHeading->enabled(true);
-		$this->publicFontSizeMenu->enabled(true);
-		$this->publicFontSizeText->enabled(true);*/
-	
+		
 	}
 	
 	public function setRow($row){

@@ -25,12 +25,14 @@ protected function echoVN($v, $n = '-not-set-'){
 protected function echoCF(){
 		return $this->__MyClassName.'.'.$this->__MyFunctionName.':';
 }
+
 public function echoValue($show = true, $n, $v, $f = '-use-current-', $c= '-use-current-'){
 	$this->echoLocale($f, $c);
 	if ($show == true){
 		$this->echoPrintline($this->echoCF().$this->echoVN($v, $n));
 	}
 }
+
 public function echoPrint($show = true, $msg, $f = '-use-current-', $c= '-use-current-'){
 	$this->echoLocale($f, $c);
 	if ($show == true){
