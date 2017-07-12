@@ -15,13 +15,13 @@
 
 abstract class _entityFields extends _contentWriter {
 //implements IentityFieldset{
-	public $displayOrder;
+	/*public $displayOrder;*/
 	public $highlight;
 	public $id;
 	public $name;		
 	
-	public $description;
-	public $notes;
+	public $description;/*
+	public $notes;*//*
 	public $summary;
    	public $comments;
    	
@@ -30,9 +30,9 @@ abstract class _entityFields extends _contentWriter {
 	public $approvedBy;
 	
    	public $started;
-   	public $reported;
+   	public $reported;*/
 	public $created;
-    public $updated;
+    public $updated;/*
 	public $reviewed;
 	public $approved;
 	public $type;
@@ -40,29 +40,29 @@ abstract class _entityFields extends _contentWriter {
    	public $parent;
    	public $project;
    	public $task;
-   	public $activity;
-	 
+   	public $activity;*/
+	 /*
 	public $qtyEstimated;
 	public $qtyActual;
 	public $qtyUnits;
-	
+	*/
 	
 
 	
     public function __construct(){
-        $this->displayOrder = new _numberField('display_order','displayOrder');
+     /*   $this->displayOrder = new _numberField('display_order','displayOrder');*/
         $this->highlight = new _textField('highlight_style','highlight');
     	$this->id = new _numberField('id','id');
     	$this->name = new _textField('name','name');
-    	
-    	$this->description = new _textField('description','description');
-    	$this->comments = new _textField('comments','comments');
-    	$this->notes = new _textField('notes','notes');
-    	$this->summary = new _textField('summary','summary');
-    	
-    	$this->updated = new _dateField('updated');
+		$this->updated = new _dateField('updated');
     	$this->created = new _dateField('created');
-        $this->started = new _dateField('started','started');           
+    	$this->description = new _textField('description','description');
+    	/*$this->comments = new _textField('comments','comments');
+    	$this->notes = new _textField('notes','notes');
+    	$this->summary = new _textField('summary','summary');*/
+    	
+  
+      /*  $this->started = new _dateField('started','started');           
     	$this->reported = new _dateField('reported','reported');
     	$this->reviewed = new _dateField('reviewed','reviewed');
     	$this->approved = new _dateField('approved','approved');
@@ -75,14 +75,8 @@ abstract class _entityFields extends _contentWriter {
     	$this->project = new _idNameField('project_id','idProject','project_name');
     	$this->task = new _idNameField('task_id','idTask','task_name');
     	$this->activity = new _idNameField('activity_id','idActivity','activity_name');
+    	*/
     	
-    	
-        $this->id->setShow('id',true);
-        $this->name->setShow('Name',true);
-        $this->description->setShow('Description',true);
-        $this->created->setShow('created',true);
-        $this->updated->setShow('updated',true);
-        $this->highlight->setShow('highlight',true);
     	
     	
     }
@@ -90,14 +84,14 @@ abstract class _entityFields extends _contentWriter {
     protected function reset(){
     	$this->id->reset(0);
 		$this->name->reset('');
-		$this->description->reset('');
+		$this->description->reset('');/*
 		$this->comments->reset('');
 		$this->summary->reset('');
-		$this->notes->reset('');
-		$this->highlight->reset('none');
-		$this->displayOrder->reset(0);
+		$this->notes->reset('');*/
+		$this->highlight->reset('none');/*
+		$this->displayOrder->reset(0);*/
 		$this->created->reset('');
-		$this->updated->reset('');
+		$this->updated->reset('');/*
 		$this->started->reset('');
 		$this->reported->reset('');
 		$this->reviewed->reset('');
@@ -106,38 +100,38 @@ abstract class _entityFields extends _contentWriter {
 		$this->reviewedBy->reset('');
 		$this->approvedBy->reset('');
 		$this->type->reset(0);
-		$this->location->reset(0);
-		$this->parent->reset(0);
-		$this->project->reset(0);
+		$this->location->reset(0);*/
+		/*$this->parent->reset(0);*/
+	/*	$this->project->reset(0);
 		$this->task->reset(0);
-		$this->activity->reset(0);
+		$this->activity->reset(0);*/
     }
     
 	public function setRow($row){
 		$this->reset;
 		$this->id->fetch($row);
 		$this->name->fetch($row);
-		$this->description->fetch($row);
+		$this->description->fetch($row);/*
 		$this->notes->fetch($row);
 		$this->comments->fetch($row);
 		$this->summary->fetch($row);
-		$this->displayOrder->fetch($row);
-		$this->highlight->fetch($row);
+		$this->displayOrder->fetch($row);*/
+		$this->highlight->fetch($row);/*
 		$this->started->fetch($row);
 		$this->reported->fetch($row);
 		$this->reviewed->fetch($row);
-		$this->approved->fetch($row);
+		$this->approved->fetch($row);*/
 		$this->created->fetch($row);
-		$this->updated->fetch($row);
+		$this->updated->fetch($row);/*
 		$this->doneBy->fetch($row);
 		$this->reviewedBy->fetch($row);
-		$this->approvedBy->fetch($row);
-		$this->type->fetch($row);
-		$this->location->fetch($row);
-		$this->parent->fetch($row);
+		$this->approvedBy->fetch($row);*/
+	/*	$this->type->fetch($row);
+		$this->location->fetch($row);*/
+	/*	$this->parent->fetch($row);
 		$this->project->fetch($row);
 		$this->task->fetch($row);
-		$this->activity->fetch($row);
+		$this->activity->fetch($row);*/
 		
 	}
 	
@@ -149,67 +143,67 @@ abstract class _entityFields extends _contentWriter {
 	public function format(){
 		$this->id->format();
 		$this->name->format();
-		$this->description->format();
+		$this->description->format();/*
 		$this->notes->format();
 		$this->comments->format();
 		$this->summary->format();
-		$this->displayOrder->format();
-		$this->highlight->format();
+		$this->displayOrder->format();*/
+		$this->highlight->format();/*
 		$this->started->format();
 		$this->reported->format();
 		$this->reviewed->format();
-		$this->approved->format();
+		$this->approved->format();*/
 		$this->created->format();
-		$this->updated->format();
+		$this->updated->format();/*
 		$this->doneBy->format();
 		$this->reviewedBy->format();
 		$this->approvedBy->format();
 		$this->type->format();
-		$this->location->format();
-		$this->parent->format();
+		$this->location->format();*/
+	/*	$this->parent->format();*//*
 		$this->project->format();
 		$this->task->format();
-		$this->activity->format();
+		$this->activity->format();*/
 	}
 	public function display(){
-		$this->resetContent(true);
-		$this->addContent($this->displayOrder->p());
+		$this->resetContent(true);/*
+		$this->addContent($this->displayOrder->p());*/
 		$this->addContent($this->id->p());
 		$this->addContent($this->name->tH());
-		$this->addContent($this->description->p());
+		$this->addContent($this->description->p());/*
 		$this->addContent($this->notes->p());
 		$this->addContent($this->summary->p());
-		$this->addContent($this->comments->p());
+		$this->addContent($this->comments->p());*/
 		$this->addContent($this->created->p());
-		$this->addContent($this->updated->p());
+		$this->addContent($this->updated->p());/*
 		$this->addContent($this->started->p());
 		$this->addContent($this->reported->p());
 		$this->addContent($this->reviewed->p());
 		$this->addContent($this->approved->p());
 		$this->addContent($this->doneBy->p());
 		$this->addContent($this->reviewedBy->p());
-		$this->addContent($this->approvedBy->p());
+		$this->addContent($this->approvedBy->p());*//*
 		$this->addContent($this->type->p());
-		$this->addContent($this->location->p());
-		$this->addContent($this->parent->p());
+		$this->addContent($this->location->p());*//*
+		$this->addContent($this->parent->p());*//*
 		$this->addContent($this->project->p());
 		$this->addContent($this->task->p());
-		$this->addContent($this->activity->p());
+		$this->addContent($this->activity->p());*/
 		$this->addContent($this->highlight->p());		
 		return $this->getContent();
 	}
 	
 	public function listHeading(){
-		$this->resetContent(true);
-		$this->addContent($this->displayOrder->tH());
+		$this->resetContent(true);/*
+		$this->addContent($this->displayOrder->tH());*/
 		$this->addContent($this->id->tH());
 		$this->addContent($this->name->tH());
-		$this->addContent($this->description->tH());
+		$this->addContent($this->description->tH());/*
 		$this->addContent($this->notes->tH());
 		$this->addContent($this->summary->tH());
-		$this->addContent($this->comments->tH());
+		$this->addContent($this->comments->tH());*/
 		$this->addContent($this->created->tH());
-		$this->addContent($this->updated->tH());
+		$this->addContent($this->updated->tH());/*
 		$this->addContent($this->started->tH());
 		$this->addContent($this->reported->tH());
 		$this->addContent($this->reviewed->tH());
@@ -222,23 +216,23 @@ abstract class _entityFields extends _contentWriter {
 		$this->addContent($this->parent->tH());
 		$this->addContent($this->project->tH());
 		$this->addContent($this->task->tH());
-		$this->addContent($this->activity->tH());
+		$this->addContent($this->activity->tH());*/
 		$this->addContent($this->highlight->tH());		
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
 		$this->format();
-		$this->resetContent(true);
-		$this->addContent($this->displayOrder->tD());
+		$this->resetContent(true);/*
+		$this->addContent($this->displayOrder->tD());*/
 		$this->addContent($this->id->tD());
 		$this->addContent($this->name->tD());
-		$this->addContent($this->description->tD());
+		$this->addContent($this->description->tD());/*
 		$this->addContent($this->notes->tD());
 		$this->addContent($this->summary->tD());
-		$this->addContent($this->comments->tD());
+		$this->addContent($this->comments->tD());*/
 		$this->addContent($this->created->tD());
-		$this->addContent($this->updated->tD());
+		$this->addContent($this->updated->tD());/*
 		$this->addContent($this->started->tD());
 		$this->addContent($this->reported->tD());
 		$this->addContent($this->reviewed->tD());
@@ -251,7 +245,7 @@ abstract class _entityFields extends _contentWriter {
 		$this->addContent($this->parent->tD());
 		$this->addContent($this->project->tD());
 		$this->addContent($this->task->tD());
-		$this->addContent($this->activity->tD());
+		$this->addContent($this->activity->tD());*/
 		$this->addContent($this->highlight->tD());
 		return $this->getContent();
 	}
@@ -259,7 +253,7 @@ abstract class _entityFields extends _contentWriter {
 	public function getPostVars(){
 		$this->id->post();
 		$this->name->post();
-		$this->description->post();
+		$this->description->post();/*
 		$this->notes->post();
 		$this->comments->post();
 		$this->summary->post();
@@ -268,9 +262,9 @@ abstract class _entityFields extends _contentWriter {
 		$this->started->post();
 		$this->reported->post();
 		$this->reviewed->post();
-		$this->approved->post();
+		$this->approved->post();*/
 		$this->created->post();
-		$this->updated->post();
+		$this->updated->post();/*
 		$this->doneBy->post();
 		$this->reviewedBy->post();
 		$this->approvedBy->post();
@@ -279,7 +273,7 @@ abstract class _entityFields extends _contentWriter {
 		$this->parent->post();
 		$this->project->post();
 		$this->task->post();
-		$this->activity->post();
+		$this->activity->post();*/
 	}
 }
 

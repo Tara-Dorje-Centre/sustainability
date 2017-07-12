@@ -34,9 +34,9 @@ abstract class _entity extends _baseEntity{
 	/* next review cycle
 	abstract protected function setPageSave();
 	abstract protected function setEntityTitle();
-	abstract protected function afterConstruct();*/
+	abstract protected function afterConstruct($);*/
 	abstract protected function setHelperClasses();
-	abstract protected function beforeSetDetails();
+	/*abstract protected function beforeSetDetails();*/
 	abstract protected function afterSetDetails();
 	abstract protected function afterDisplay();
 	abstract protected function setPageMenu();
@@ -46,7 +46,7 @@ abstract class _entity extends _baseEntity{
 		
 	
 	public function setDetails(){
-		$this->beforeSetDetails();
+		/*$this->beforeSetDetails();*/
 
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
@@ -58,7 +58,7 @@ abstract class _entity extends _baseEntity{
 				}
 				$result->close();
 			}
-			$this->synchIds();
+			$this->getFieldIds();
 		}
 		$this->afterSetDetails();
 	}	
@@ -89,7 +89,7 @@ abstract class _entity extends _baseEntity{
 		return $links;
 	}
 	
-	public function listHeading(){
+	protected function listHeading(){
 		$heading = wrapTh($this->_titleEntity);
 		$heading .= $this->f->listHeading();
 		$list = wrapTr($heading);
@@ -122,8 +122,7 @@ abstract class _entity extends _baseEntity{
 	}
 	
 	protected function setPageTitle(){
-		$heading = $this->pageMode.':  '.$this->_titleEntity;
-		$this->_pageTitle = $heading;
+		$this->_pageTitle = $this->pageMode.':  '.$this->_titleEntity;
 	}
 	
 	protected function setDefaults(){
@@ -177,17 +176,18 @@ abstract class _entity extends _baseEntity{
 	}
 	
 	protected function getPageDetails(){	
-	//case statement
-		if ($this->pageMode == 'VIEW'){
+		switch($this->pageMode){
+		case 'VIEW':
 			$details = $this->display();
-		} else {
-		
-			if ($this->pageMode == 'EDIT'){
-				$details = $this->editForm();
-			} else {
-				$details = $this->addForm();
-			}
-			
+			break;
+		case 'ADD':
+			$details = $this->addForm();
+			break;
+		case 'EDIT':
+			$details = $this->editForm()
+			break;
+		default:
+			$details = $this->display();
 		}
 			
 		return $details;

@@ -1,26 +1,41 @@
 <?php 
 
 abstract class _entityTypeFields extends _entityFields{
-
+	public $displayOrder;
+	public $notes;
+	
+	
 	public function __construct(){
 		parent::__construct();
-	
-	    $this->notes->setShow('notes',true);
-        $this->displayOrder->setShow('order',true);
-        $this->highlight->setShow('highlight',true);
+		$this->notes = new _textField('notes','notes','Notes',true);
+		$this->displayOrder = new _numberField('display_order','displayOrder','Display Order',true);
+		//enable base entity fields
+		$this->id->enabled(true);
+		$this->name->enabled(true);
+		$this->description->enabled(true);
+		$this->created->setEnabled(true,true,true);
+        $this->updated->setEnabled(true,true,true);
+        $this->highlight->enabled(true);
     }
 
-/*
+
 	public function setRow($row){
 		parent::setRow($row);
+		$this->displayOrder->fetch($row);
+		$this->displayOrder->fetch($row);
+		
 	}
 	
 	public function format(){
 		parent::format();
+		$this->displayOrder->fetch($row);
 	}
 	
 	public function listHeading(){
-		return parent::listHeading();
+		$this->addContent(parent::listHeading(),true);
+		$this->addContent($this->displayOrder->th();
+		$this->addContent($this->notes->th();
+		
 	}
 	
 	public function listDetail(){
@@ -28,13 +43,16 @@ abstract class _entityTypeFields extends _entityFields{
 	}
 	
 	public function display(){
+		/*
+		 $this->addContent($this->displayOrder->p());*/
 		return parent::display();
+		
 	}
 	
 	public function getPostVars(){
 		parent::getPostVars();
 	}
-*/
+
 }
 
 abstract class _entityType extends _entity{

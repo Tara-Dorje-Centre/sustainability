@@ -19,23 +19,24 @@ class userFields extends _entityFields{
 
 	public function __construct(){
 		parent::__construct();
-    	$this->type->setShow('user-type',true);
-    	$this->created->setShow('created',true);
-    	$this->highlight->setShow('highlight',true);
-    	$this->updated->setShow('updated',true);
+		    	$this->name->enabled(true);
+    	$this->type->enabled(true);
+    	$this->created->enabled(true);
+    	$this->highlight->enabled(true);
+    	$this->updated->enabled(true);
     	
     	
-    	$this->nameFirst = new _textField('name_first','nameFirst'); 
-		$this->nameLast = new _textField('name_last','nameLast'); 
-		$this->email = new _textField('email','email'); 
-		$this->focus = new _textField('focus','focus');
-		$this->interests = new _textField('interests','interests');
-		$this->loginName = new _textField('login_name','loginName');
-		$this->lastLogin = new _dateField('last_login','lastLogin'); 
-		$this->isAdmin = new _textField('is_admin','isAdmin');
-		$this->isActive = new _textField('is_active','isActive');
-		$this->mustUpdatePwd = new _textField('must_update_pwd', 'mustUpdatePwd');
-		
+    	$this->nameFirst = new _textField('name_first','nameFirst','First Name', true); 
+		$this->nameLast = new _textField('name_last','nameLast','Last Name', true); 
+		$this->email = new _textField('email','email','Email Address', true); 
+		$this->focus = new _textField('focus','focus','Focus Area', true);
+		$this->interests = new _textField('interests','interests','Interests', true);
+		$this->loginName = new _textField('login_name','loginName','loginId', true);
+		$this->lastLogin = new _dateField('last_login','lastLogin','Last Login', true); 
+		$this->isAdmin = new _textField('is_admin','isAdmin','Administrator', true);
+		$this->isActive = new _textField('is_active','isActive','Active Profile', true);
+		$this->mustUpdatePwd = new _textField('must_update_pwd', 'mustUpdatePwd','Must Update Password', true);
+		/*
 		$this->nameFirst->setShow('name_first', true); 
 		$this->nameLast->setShow('name_last', true); 
 		$this->email->setShow('email', true); 
@@ -45,7 +46,7 @@ class userFields extends _entityFields{
 		$this->lastLogin->setShow('last_login', true); 
 		$this->isAdmin->setShow('is_admin', true);
 		$this->isActive->setShow('is_active', true);
-		$this->mustUpdatePwd->setShow('must_update_pwd', true);
+		$this->mustUpdatePwd->setShow('must_update_pwd', true);*/
 		
     }
 

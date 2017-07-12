@@ -31,7 +31,7 @@
  	protected  $showList = false;
  	protected  $showDisplay = false;
  
- 	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption'){
+ 	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = faose){
  		if ($dbColumn != 'not_used'){
  			$this->setFetch($dbColumn);
  		}
@@ -41,7 +41,7 @@
  		if ($caption != 'no caption'){
  			$this->setShow($caption);
  		}
- 		$this->enabled(false);
+ 		$this->enabled($enable);
  	}
  	
  	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
