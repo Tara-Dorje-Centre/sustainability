@@ -2,11 +2,11 @@
 
 class siteSettingsFields extends _entityFields{
 	 public $siteTitle;
-	 = 'MyProjects';
+	 //= 'MyProjects';
 	 public $siteUrl;
-	 = 'MyUrl';
+	// = 'MyUrl';
 	 public $loginNotice;
-	  = '';
+	//  = '';
 	 public $organizationUrl;
 	 public $organization;
 	 public $organizationDescription;
@@ -345,48 +345,25 @@ class siteSettings extends _entity{
 	private function getPublicSiteStylesFieldset($disabled = 'false'){
 
 		$styles = openFieldset('Public Site Presentation Styles');
-		$styles .= openDiv('public-styles','editing-table');
-		$input = getColorSelectList($this->f->publicFillColor->value, 'publicFillColor',$disabled);
-		$styles .= captionedInput('Fill Color', $input);		
-
-		$input = getColorSelectList($this->f->publicSiteColor->value,'publicSiteColor',$disabled);
-		$styles .= captionedInput('Site Color', $input);		
-
-		$input = getColorSelectList($this->f->publicPageColor->value, 'publicPageColor',$disabled);
-		$styles .= captionedInput('Page Color', $input);		
-
-		$input = getColorSelectList($this->f->publicMenuColor->value, 'publicMenuColor',$disabled);
-		$styles .= captionedInput('Menu Color', $input);		
-
-		$input = getColorSelectList($this->f->publicMenuColorHover->value, 'publicMenuColorHover',$disabled);
-		$styles .= captionedInput('Menu Color Hover', $input);		
-
-		$input = getColorSelectList($this->f->publicTextColor->value, 'publicTextColor',$disabled);
-		$styles .= captionedInput('Text Color', $input);		
-
-		$input = getColorSelectList($this->f->publicTextColorHover->value, 'publicTextColorHover',$disabled);
-		$styles .= captionedInput('Text Color Menu Hover', $input);		
 		
-		$input = getFontSizeSelectList($this->f->publicFontSizeTitle->value, 'publicFontSizeTitle',$disabled);
-		$styles .= captionedInput('Font Size Title px', $input);	
-
-		$input = getFontSizeSelectList($this->f->publicFontSizeHeading->value, 'publicFontSizeHeading',$disabled);
-		$styles .= captionedInput('Font Size Heading px', $input);	
+		$styles .= $this->f->publicFillColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicSiteColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicPageColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicMenuColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicMenuColorHover->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicTextColor->input('CSS-COLOR');
+		$styles .= $this->f->publicTextColorHover->input('CSS-COLOR');
 		
-		$input = getFontSizeSelectList($this->f->publicFontSizeMenu->value, 'publicFontSizeMenu',$disabled);
-		$styles .= captionedInput('Font Size Menu px', $input);	
-		
-			
-		$input = getFontSizeSelectList($this->f->publicFontSizeText->value, 'publicFontSizeText',$disabled);
-		$styles .= captionedInput('Font Size Text px', $input);	
-
-		$input = getFontFamilySelectList($this->f->publicFontFamily->value, 'publicFontFamily',$disabled);
-		$styles .= captionedInput('FontFamily', $input);	
-			
+		$styles .= $this->f->publicFontSizeTitle->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontSizeHeading->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontSizeMenu->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontSizeText->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontFamily->input($entity, 'CSS-FONT-FAMILY');
+	
 		//add the sample region after the first color select
-		$styles .= wrapDiv($this->publicSiteSample(),'public-site-sample','site-sample');
+		//$styles .= wrapDiv($this->publicSiteSample(),'public-site-sample','site-sample');
 
-		$styles .= closeDiv();
+		//$styles .= closeDiv();
 		$styles .= closeFieldset();
 		return $styles;
 	}
@@ -439,7 +416,7 @@ class siteSettings extends _entity{
 		$style .= colorBackground($this->f->publicMenuColorHover->value);
 		$li = new _li();
 		$li->setStyle($style);
-		$x .= $li->wrap('Menu Item');
+		$x .= $li->wrap('Menu Item Hover');
 	
 		$x .= closeList();
 		$x .= closeDiv();
@@ -461,65 +438,31 @@ class siteSettings extends _entity{
 	}
 	
 	protected function editForm(){
-		if ($this->pageMode == 'ADD'){		
-			//$this->setDefaults();
-			$legend = 'Add Site Settings';
-		} else {
-			$legend = 'Edit Site Settings';	
-		}
-
+		
 		$entity = 'site-settings';
-		$c = new ProjectLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 
-
-		$form = openEditForm($entity,$legend,'sys_SiteSettings_Save.php',$contextMenu);
+		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->_titleEntity);
 		
-		//start required fields
-		$fields = inputFieldName($entity,$this->f->siteTitle->value,'siteTitle','Projects Title');
-
-		$fields .= inputFieldText($entity,$this->f->siteUrl->value,'siteUrl','Projects URL',50,255);
-				
-		$fields .= inputFieldName($entity,$this->f->contactName->value,'contactName','Contact Name');
-
-		$fields .= inputFieldText($entity,$this->f->contactEmail->value,'contactEmail','Contact Email',40,100);
-
-		//end required fields
-		$formRequired = $fields;
-
-		//start optional fields		
-		$fields = inputFieldName($entity,$this->f->organization->value,'organization','Organization');
-
-		$fields .= inputFieldText($entity,$this->f->organizationUrl->value,'organizationUrl','Organization URL',50,255);
-
-		$fields .= inputFieldComments($entity,$this->f->organizationDescription->value,'organizationDescription','Organization Description');
-
-
-		$input = getSelectYesNo('showCostReports',$this->f->showCostReports->value);
-		$fields .= captionedInput('Show Cost Reports',$input);		
-
-		$input = getSelectYesNo('showRevenueReports',$this->f->showRevenueReports->value);
-		$fields .= captionedInput('Show Revenue Reports',$input);		
-
-		$input = getSelectYesNo('showPublicSite',$this->f->showPublicSite);
-		$fields .= captionedInput('Show Public Site',$input);				
+		$edit->required->addContent($this->f->siteTitle->INPUT($entity, 'NAME'));
+		$edit->required->addContent($this->f->siteUrl->input($entity,'TEXT'));	
+		$edit->required->addContent($this->f->contactName->input($entity,'NAME'));
+		$edit->required->addContent($this->f->contactEmail->input($entity,'TEXT'));
+		$edit->optional->addContent($this->f->organization->input($entity,'NAME'));
+		$edit->optional->addContent($this->f->organizationUrl->input($entity,'TEXT'));
+		$edit->optional->addContent($this->f->organizationDescription->input($entity,'COMMENTS'));
+		$edit->optional->addContent($this->f->loginNotice->input($enity,'COMMENTS'));
+		$edit->optional->addContent($this->f->showCostReports->input($entity, 'YES-NO'));
+		$edit->optional->addContent($this->f->showRevenueReports->input($entity,'YES-NO'));
+		$edit->optional->addContent($this->f->showPublicSite->input($entity, 'YES-NO'));	
 		
-		$fields .= $this->getPublicSiteStylesFieldset('false');
+		$edit->optional->addContent($this->getPublicSiteStylesFieldset('false'));
 
-		$fields .= inputFieldComments($entity,$this->f->loginNotice->value,'loginNotice','Projects Login Notice',1000);
-
-
-		//end optional fields (hidden by default)
-		$formOptional = $fields;
-
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-		
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
-		return $form;
+		$edit->submit->addContent(getSaveChangesResetButtons());
+		return $edit->close();
 	}
 	
 	protected function afterCollectPostValues(){
@@ -529,52 +472,34 @@ class siteSettings extends _entity{
 	private function createSettings(){
 
 		
-			$sql = " INSERT INTO sitewide_settings ";
-			$sql .= " (site_title, ";
-			$sql .= " organization, ";
-			$sql .= " organization_description, ";
-			$sql .= " site_url, ";
-			$sql .= " contact_name, ";
-			$sql .= " contact_email, ";
-			$sql .= " public_fill_color, ";
-			$sql .= " public_site_color, ";
-			$sql .= " public_page_color, ";
-			$sql .= " public_menu_color, ";
-			$sql .= " public_menu_color_hover, ";
-			$sql .= " public_text_color, ";
-			$sql .= " public_text_color_hover, ";
-			$sql .= " public_font_family, ";
-			$sql .= " public_font_size_title, ";
-			$sql .= " public_font_size_heading, ";
-			$sql .= " public_font_size_menu, ";
-			$sql .= " public_font_size_text, ";
-			$sql .= " show_public_site, ";
-			$sql .= " show_cost_reports, ";
-			$sql .= " show_revenue_reports ";
-			$sql .= " ) ";
-			$sql .= " VALUES (";
-			$sql .= " '".$this->f->siteTitle."', ";
-			$sql .= " '".$this->f->organization."', ";
-			$sql .= " '".$this->f->organizationDescription."', ";
-			$sql .= " '".$this->f->siteUrl."', ";
-			$sql .= " '".$this->f->contactName."', ";
-			$sql .= " '".$this->f->contactEmail."', ";
-			$sql .= " '".$this->f->publicFillColor."', ";
-			$sql .= " '".$this->f->publicSiteColor."', ";
-			$sql .= " '".$this->f->publicPageColor."', ";
-			$sql .= " '".$this->f->publicMenuColor."', ";
-			$sql .= " '".$this->f->publicMenuColorHover."', ";
-			$sql .= " '".$this->f->publicTextColor."', ";
-			$sql .= " '".$this->f->publicTextColorHover."', ";
-			$sql .= " '".$this->f->publicFontFamily."', ";			
-			$sql .= " ".$this->f->publicFontSizeTitle.", ";
-			$sql .= " ".$this->f->publicFontSizeHeading.", ";
-			$sql .= " ".$this->f->publicFontSizeMenu.", ";
-			$sql .= " ".$this->f->publicFontSizeText.", ";			
-			$sql .= " '".$this->f->showPublicSite."', ";			
-			$sql .= " '".$this->f->showCostReports."', ";			
-			$sql .= " '".$this->f->showRevenueReports."' ";			
-			$sql .= " ) ";
+		$sql = new _sqlWriter('INSERT');
+
+		$sql->editField($this->f->siteTitle);
+		$sql->editField($this->f->siteUrl);
+		$sql->editField($this->f->loginNotice);
+		$sql->editField($this->f->organization);
+		$sql->editField($this->f->organizationUrl);
+		$sql->editField($this->f->organizationDescription);
+		$sql->editField($this->f->contactName);
+		$sql->editField($this->f->contactEmail);
+		$sql->editField($this->f->publicFillColor);
+		$sql->editField($this->f->publicSiteColor);
+		$sql->editField($this->f->publicPageColor);
+		$sql->editField($this->f->publicMenuColor);
+		$sql->editField($this->f->publicMenuColorHover);
+		$sql->editField($this->f->publicTextColor);
+		$sql->editField($this->f->publicTextColorHover);
+		$sql->editField($this->f->publicFontFamily);
+		$sql->editField($this->f->publicFontSizeTitle);
+		$sql->editField($this->f->publicFontSizeHeading);
+		$sql->editField($this->f->publicFontSizeMenu);
+		$sql->editField($this->f->publicFontSizeText);
+		$sql->editField($this->f->showPublicSite);
+		$sql->editField($this->f->showCostReports);
+		$sql->editField($this->f->showRevenueReports,true);
+		
+		$result = dbRunSQL($sql->editStatement('sitewide_settings'));
+		
 			
 		$result = dbRunSQL($sql);
 
@@ -582,37 +507,35 @@ class siteSettings extends _entity{
 
 
 	protected function saveUpdate(){
-			
+		$sql = new _sqlWriter('UPDATE');
 
-			$sql = " UPDATE sitewide_settings AS sw ";
-			$sql .= " SET ";
-			$sql .= " sw.site_title = '".$this->f->siteTitle."', ";
-			$sql .= " sw.site_url = '".$this->f->siteUrl."', ";
-			$sql .= " sw.login_notice = '".$this->f->loginNotice."', ";
-			$sql .= " sw.organization = '".$this->f->organization."', ";
-			$sql .= " sw.organization_url = '".$this->f->organizationUrl."', ";
-			$sql .= " sw.organization_description = '".$this->f->organizationDescription."', ";
-			$sql .= " sw.contact_name = '".$this->f->contactName."', ";
-			$sql .= " sw.contact_email = '".$this->f->contactEmail."', ";
-			$sql .= " sw.public_fill_color = '".$this->f->publicFillColor."', ";
-			$sql .= " sw.public_site_color = '".$this->f->publicSiteColor."', ";
-			$sql .= " sw.public_page_color = '".$this->f->publicPageColor."', ";
-			$sql .= " sw.public_menu_color = '".$this->f->publicMenuColor."', ";
-			$sql .= " sw.public_menu_color_hover = '".$this->f->publicMenuColorHover."', ";
-			$sql .= " sw.public_text_color = '".$this->f->publicTextColor."', ";
-			$sql .= " sw.public_text_color_hover = '".$this->f->publicTextColorHover."', ";
-			$sql .= " sw.public_font_family = '".$this->f->publicFontFamily."', ";			
-			$sql .= " sw.public_font_size_title = ".$this->f->publicFontSizeTitle.", ";			
-			$sql .= " sw.public_font_size_heading = ".$this->f->publicFontSizeHeading.", ";			
-			$sql .= " sw.public_font_size_menu = ".$this->f->publicFontSizeMenu.", ";			
-			$sql .= " sw.public_font_size_text = ".$this->f->publicFontSizeText.", ";			
-			$sql .= " sw.show_public_site = '".$this->f->showPublicSite."', ";
-			$sql .= " sw.show_cost_reports = '".$this->f->showCostReports."', ";
-			$sql .= " sw.show_revenue_reports = '".$this->f->showRevenueReports."' ";
-
-			$result = dbRunSQL($sql);
+		$sql->editField($this->f->siteTitle);
+		$sql->editField($this->f->siteUrl);
+		$sql->editField($this->f->loginNotice);
+		$sql->editField($this->f->organization);
+		$sql->editField($this->f->organizationUrl);
+		$sql->editField($this->f->organizationDescription);
+		$sql->editField($this->f->contactName);
+		$sql->editField($this->f->contactEmail);
+		$sql->editField($this->f->publicFillColor);
+		$sql->editField($this->f->publicSiteColor);
+		$sql->editField($this->f->publicPageColor);
+		$sql->editField($this->f->publicMenuColor);
+		$sql->editField($this->f->publicMenuColorHover);
+		$sql->editField($this->f->publicTextColor);
+		$sql->editField($this->f->publicTextColorHover);
+		$sql->editField($this->f->publicFontFamily);
+		$sql->editField($this->f->publicFontSizeTitle);
+		$sql->editField($this->f->publicFontSizeHeading);
+		$sql->editField($this->f->publicFontSizeMenu);
+		$sql->editField($this->f->publicFontSizeText);
+		$sql->editField($this->f->showPublicSite);
+		$sql->editField($this->f->showCostReports);
+		$sql->editField($this->f->showRevenueReports,true);
 		
-			$this->f->setSessionDetails();
+		$result = dbRunSQL($sql->editStatement('sitewide_settings'));
+		
+		$this->f->setSessionDetails();
 		
 	
 	}

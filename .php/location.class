@@ -5,7 +5,7 @@ class locationFields extends _entityFields{
 	public $sortKey;
 	
 	public function __construct(){
-	parent::construct()
+		parent::construct();
 		$this->type->setShow('user-type',true);
     	//$this->created->setShow('created',true);
     	//$this->highlight->setShow('highlight',true);
@@ -207,7 +207,7 @@ class location extends _entity{
 		
 		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		$edit->hidden->addContent($this->f->parent->id->inputHidden());
-		$edit->hidden->addContent($this->f-id->inputHidden());
+		$edit->hidden->addContent($this->f->id->inputHidden());
 		$edit->submit->addContent(getSaveChangesResetButtons());
 
 		return $edit->close();
@@ -236,7 +236,7 @@ class location extends _entity{
 	private function updateSortKey(){
 
 		$sortKey = $this->buildSortKey();
-		if ($sortKey != $this->f->sortKey->value({
+		if ($sortKey != $this->f->sortKey->value){
 			$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
 		$result = dbRunSQL($sql);
 		}

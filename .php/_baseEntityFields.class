@@ -18,13 +18,14 @@
  }
  
  abstract class _field implements IentityField{
+ 	protected $valueRaw;
  	protected  $valueNumber = 0;
  	protected  $valueText = '';
  	protected  $valueDate = '';
  	protected  $type = 'NUMBER';
- 	protected  $caption = 'caption';
- 	protected  $dbColumn = 'not-used';
- 	protected  $postVariable = 'notUsed';
+ 	public  $caption = 'caption';
+ 	public  $dbColumn = 'not-used';
+ 	public  $postVariable = 'notUsed';
  	protected  $useRow = false;
  	protected  $usePost = false;
  	protected  $showList = false;
@@ -47,6 +48,7 @@
  	}
  
 	public function set($value){
+		$this->valueRaw = $value;
 		switch ($this->type) {
     		case 'NUMBER':
  				$this->valueNumber = $value;
@@ -177,7 +179,26 @@
 			}
  		}
 	}
- 
+	
+  	public function sqlValue(){
+ 		//if ($this->canSet() == true){
+ 			$baseValue = $this->get();
+ 			if ($this->type != 'NUMBER'){
+ 				$v = new _sqlClause();
+    			$quoted = $v->encloseString($baseValue);
+    			$value = $quoted;
+    		} else {
+    		  	if (($baseValue == '') or IsNull($baseValue)){
+  					$value = 0;
+  				} else {
+  					$value = $baseValue;
+  				}
+ 			}
+			
+			return $value;
+  
+ 		//}
+ 	}
  	public function format(){
  		if ($this->canShow() == true){
  			switch ($this->type) {
@@ -215,6 +236,7 @@
 			$inputField = $this->inputHidden();
 			break;
 			
+
 			case 'NAME':
 			$inputField = $this->inputAsName($entity);
 			break;
@@ -230,12 +252,52 @@
 			case 'NOTES':
 			$inputField = $this->inputAsNotes($entity);
 			break;
-
+			
+			case 'YES-NO':
+			$inputField = $this->inputAsYesNo($entity);
+			break;
+			
+			case 'CSS-COLOR':
+			$inputField = $this->inputAsCssColor($entity);
+			break;
+			
+			case 'CSS-FONT-SIZE':
+			$inputField = $this->inputAsCssFontSize($entity);
+			break;
+			
+			
+			case 'CSS-FONT-FAMILY':
+			$inputField = $this->inputAsCssFontFamily($entity);
+			break;
+			
 			default:
 			$inputField = $this->inputAsText($entity);
 		}
 		return $inputField;
 	
+	}
+	
+	public function inputAsCssColor($entity){
+		$input = getColorSelectList($this->value, $this->postVariable,'false');
+		return captionedInput($this->caption,$input);
+	}
+	
+	
+	public function inputAsCssFontSize($entity){
+		$input = getFontSizeSelectList($this->value, $this->postVariable,'false');
+		return captionedInput($this->caption,$input);
+	}
+	
+		public function inputAsCssFontFamily($entity){
+		$input = getFontFamilySelectList($this->value, $this->postVariable,'false');
+		return captionedInput($this->caption,$input);
+	}
+	
+	
+	public function inputAsYesNo($entity){
+	
+		$input = getSelectYesNo($this->postVariable, $this->value());
+		return captionedInput($this->caption, $input);
 	}
 	
 	public function inputAsText($entity){

@@ -480,7 +480,7 @@ protected $__MyClassName = 'User';
 
 		if ($this->pageMode == 'ADD'){
 			$input = $this->loginName->input($entity,'TEXT');
-			//, 20,50,'Login Name','false');
+			
 			$messages = @$this->validationMessages['login'];			
 		} else {
 			$input = $this->f->loginName->inputHidden();
@@ -518,9 +518,11 @@ protected $__MyClassName = 'User';
 		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){
 			//if admin and not editing self allow setting admin
 			//prevents admins from disabling their own accounts
-			$input1 = getSelectYesNo('isAdmin',$this->f->isAdmin->value,'Is Administrator','false');
-			$input2 = getSelectYesNo('isActive',$this->f->isActive->value,'Is Active','false');
-			$input3 = getSelectYesNo('mustUpdatePwd',$this->f->mustUpdatePwd->value,'Must Update Password','false');
+			$input1 = $this->f->isAdmin->input($entity,'YES-NO');
+			//,'Is Administrator','false');
+			$input2 = $this->f->isActive->input($entity,'YES-NO');
+			$input3 = $this->f->mustUpdatePwd->input($entity, 'YES-NO');
+			//,'Must Update Password','false');
 		} else {
 			$input1 = $this->f->isAdmin->inputHidden();
 			$input2 = $this->f->isActive->inputHidden();
