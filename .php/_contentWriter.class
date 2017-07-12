@@ -123,6 +123,7 @@ public function __construct(){
  $this->addContent($this->_cols->getContent());
  $this->addContent(") VALUES (");
  $this->addContent($this->_values->getContent());
+  $this->addContent(") ");
  return $this->getContent();
  }
 

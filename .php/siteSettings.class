@@ -2,11 +2,8 @@
 
 class siteSettingsFields extends _entityFields{
 	 public $siteTitle;
-	 //= 'MyProjects';
 	 public $siteUrl;
-	// = 'MyUrl';
 	 public $loginNotice;
-	//  = '';
 	 public $organizationUrl;
 	 public $organization;
 	 public $organizationDescription;
@@ -31,41 +28,54 @@ class siteSettingsFields extends _entityFields{
 	public function __construct(){
 		parent::__construct();
 
-	 $this->siteTitle = new _textField('site_title','siteTitle');
-	 $this->siteUrl = new _textField('site_url','siteUrl');
-	 $this->loginNotice = new _textField('login_notice','loginNotice');
-	 $this->organizationUrl = new _textField('organization_url','organizationUrl');
-	 $this->organization = new _textField('organization','organization');
-	 $this->organizationDescription = new _textField('organization_description','organizationDescription');
-	 $this->contactName = new _textField('contact_name','contactName');
-	 $this->contactEmail = new _textField('contact_email','contactEmail');
-	 $this->showPublicSite = new _textField('show_public_site','showPublicSite');
-	 $this->showCostReports = new _textField('show_cost_reports','showCostReports');
-	 $this->showRevenueReports = new _textField('show_revenue_reports','showRevenueReports');
-	 $this->publicFillColor = new _textField('public_fill_color','publicFillColor');
-	 $this->publicSiteColor = new _textField('public_site_color','publicSiteColor');
-	 $this->publicPageColor = new _textField('public_page_color','publicPageColor');
-	 $this->publicMenuColor = new _textField('public_menu_color','publicMenuColor');
-	 $this->publicMenuColorHover = new _textField('public_menu_color_hover','publicMenuColorHover');
-	 $this->publicTextColor = new _textField('public_text_color','publicTextColor');
-	 $this->publicTextColorHover = new _textField('public_text_color_hover','publicTextColorHover');
-	 $this->publicFontFamily = new _textField('public_font_family','publicFontFamily');
-	 $this->publicFontSizeTitle = new _numberField('public_font_size_title','publicFontSizeTitle');
-	 $this->publicFontSizeHeading = new _textField('public_font_size_heading','publicfontSizeHeading');
-	 $this->publicFontSizeMenu = new _textField('public_font_size_menu','publicFontSizeMenu');
-	 $this->publicFontSizeText = new _textField('public_font_size_text','publicFontSizeText');
-	 
-	 	$this->siteTitle->setShow('Projects Title');
-		 $this->name->set($this->siteTitle->value);
-		 $this->siteUrl->setShow('Projects URL');
-		 $this->loginNotice->setShow('Login Notice');
-		 $this->organization->setShow('Organization');
-		 $this->organizationUrl->setShow('Organization URL');
-		 $this->organizationDescription->setShow('Organization Description');
-		 $this->contactName->setShow('Contact');
-		 $this->contactEmail->setShow('Contact Email');
-	 
-	 
+		$this->siteTitle = new _textField('site_title','site-title','Site Title');
+	 	$this->siteUrl = new _textField('site_url','site-url','Site URL');
+	 	$this->loginNotice = new _textField('login_notice','login-notice', 'Login Notices');
+	 	$this->organizationUrl = new _textField('organization_url','organization-url','Org. URL');
+	 	$this->organization = new _textField('organization','organization','Organization');
+	 	$this->organizationDescription = new _textField('organization_description','organization-description','Org. Description');
+	 	$this->contactName = new _textField('contact_name','contact-name','Contact Name');
+	 	$this->contactEmail = new _textField('contact_email','contact-email','Contact Email');
+		$this->showPublicSite = new _textField('show_public_site','show-public-site','showPublicSite');
+		$this->showCostReports = new _textField('show_cost_reports','show-cost-reports','showCostReports');
+		$this->showRevenueReports = new _textField('show_revenue_reports','show-revenue-reports','showRevenueReports');
+		$this->publicFillColor = new _textField('public_fill_color','public-fill-color','publicFillColor');
+		$this->publicSiteColor = new _textField('public_site_color','public-site-color','publicSiteColor');
+		$this->publicPageColor = new _textField('public_page_color','public-page-color','publicPageColor');
+		$this->publicMenuColor = new _textField('public_menu_color','public-menu-color','publicMenuColor');
+		$this->publicMenuColorHover = new _textField('public_menu_color_hover','public-menu-color-hover','publicMenuColorHover');
+	 	$this->publicTextColor = new _textField('public_text_color','public-text-color','publicTextColor');
+	 	$this->publicTextColorHover = new _textField('public_text_color_hover','public-text-color-hover','publicTextColorHover');
+	 	$this->publicFontFamily = new _textField('public_font_family','public-font-family','publicFontFamily');
+	 	$this->publicFontSizeTitle = new _numberField('public_font_size_title','public-font-size-title','publicFontSizeTitle');
+	 	$this->publicFontSizeHeading = new _numberField('public_font_size_heading','public-font-size-heading','publicFontSizeHeading');
+	 	$this->publicFontSizeMenu = new _numberField('public_font_size_menu','public-font-size-menu','publicFontSizeMenu');
+	 	$this->publicFontSizeText = new _textField('public_font_size_text','public-font-size-text','publicFontSizeText');
+		
+		$this->siteTitle->enabled(true);
+		$this->siteUrl->enabled(true);
+		$this->loginNotice->enabled(true);
+		$this->organization->enabled(true);
+		$this->organizationUrl->enabled(true);
+		$this->organizationDescription->enabled(true);
+		$this->contactName->enabled(true);
+		$this->contactEmail->enabled(true);
+		$this->showCostReports->enabled(true);
+		$this->showRevenueReports->enabled(true);
+		$this->showPublicSite->enabled(true);
+		$this->publicFillColor->enabled(true);
+		$this->publicSiteColor->enabled(true);
+		$this->publicPageColor->enabled(true);
+		$this->publicMenuColor->enabled(true);
+		$this->publicMenuColorHover->enabled(true);
+		$this->publicTextColor->enabled(true);
+		$this->publicTextColorHover->enabled(true);
+		$this->publicFontFamily->enabled(true);
+		$this->publicFontSizeTitle->enabled(true);
+		$this->publicFontSizeHeading->enabled(true);
+		$this->publicFontSizeMenu->enabled(true);
+		$this->publicFontSizeText->enabled(true);
+	
 	}
 	
 	public function setRow($row){
@@ -101,7 +111,30 @@ class siteSettingsFields extends _entityFields{
 	public function defaults(){
 		parent::defaults();
 		
-		
+		$this->siteTitle->reset('default');
+		 $this->name->set($this->siteTitle->value);
+		 $this->siteUrl->reset('default');
+		 $this->loginNotice->reset('default');
+		 $this->organization->reset('default');
+		 $this->organizationUrl->reset('default');
+		 $this->organizationDescription->reset('default');
+		 $this->contactName->reset('default');
+		 $this->contactEmail->reset('default');
+		 $this->showPublicSite->reset('default');
+		 $this->showCostReports->reset('default');
+		 $this->showRevenueReports->reset('default');
+		 $this->publicFillColor->reset('default');
+		 $this->publicSiteColor->reset('default');
+		 $this->publicPageColor->reset('default');
+		 $this->publicMenuColor->reset('default');
+		 $this->publicMenuColorHover->reset('default');
+		 $this->publicTextColor->reset('default');
+		 $this->publicTextColorHover->reset('default');
+		 $this->publicFontFamily->reset('Arial');
+		 $this->publicFontSizeTitle->reset(22);
+		 $this->publicFontSizeHeading->reset(16);
+		 $this->publicFontSizeMenu->reset(14);
+		 $this->publicFontSizeText->reset(10);
 		
 	}
 	
@@ -345,15 +378,14 @@ class siteSettings extends _entity{
 	private function getPublicSiteStylesFieldset($disabled = 'false'){
 
 		$styles = openFieldset('Public Site Presentation Styles');
-		
+		//need disabled swtch for relevant inputs
 		$styles .= $this->f->publicFillColor->input($entity,'CSS-COLOR');
 		$styles .= $this->f->publicSiteColor->input($entity,'CSS-COLOR');
 		$styles .= $this->f->publicPageColor->input($entity,'CSS-COLOR');
 		$styles .= $this->f->publicMenuColor->input($entity,'CSS-COLOR');
 		$styles .= $this->f->publicMenuColorHover->input($entity,'CSS-COLOR');
-		$styles .= $this->f->publicTextColor->input('CSS-COLOR');
-		$styles .= $this->f->publicTextColorHover->input('CSS-COLOR');
-		
+		$styles .= $this->f->publicTextColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicTextColorHover->input($entity,'CSS-COLOR');
 		$styles .= $this->f->publicFontSizeTitle->input($entity, 'CSS-FONT-SIZE');
 		$styles .= $this->f->publicFontSizeHeading->input($entity, 'CSS-FONT-SIZE');
 		$styles .= $this->f->publicFontSizeMenu->input($entity, 'CSS-FONT-SIZE');
@@ -500,8 +532,6 @@ class siteSettings extends _entity{
 		
 		$result = dbRunSQL($sql->editStatement('sitewide_settings'));
 		
-			
-		$result = dbRunSQL($sql);
 
 	}
 
