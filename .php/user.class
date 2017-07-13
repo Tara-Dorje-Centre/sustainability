@@ -324,7 +324,7 @@ protected $__MyClassName = 'User';
 		
 		$this->echoValue(true, 'foundUser', $found, 'validateLogin');
 	
-}*/
+
 		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
 		//then comment this line
 		//printLine('forcing login');

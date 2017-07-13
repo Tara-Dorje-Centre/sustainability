@@ -1,18 +1,7 @@
 <?php 
 
 
-/*
 
-interface IentityFields {
-	public function __construct();
-	public function setRow($row);
-	public function format();
-	public function defaults();
-	public function listHeading();
-	public function listDetail();
-	public function display();
-	public function getPostVars();
-}*/
 
 abstract class _entity extends _baseEntity{
 
@@ -184,7 +173,7 @@ abstract class _entity extends _baseEntity{
 			$details = $this->addForm();
 			break;
 		case 'EDIT':
-			$details = $this->editForm()
+			$details = $this->editForm();
 			break;
 		default:
 			$details = $this->display();

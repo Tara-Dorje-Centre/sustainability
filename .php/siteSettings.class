@@ -26,7 +26,7 @@ class siteSettingsFields extends _entityFields{
 	 public $publicFontSizeText;
 	 
 	public function __construct(){
-		/*parent::__construct();*/
+		parent::__construct();
 
 		$this->siteTitle = new _textField('site_title','site-title','Site Title', true);
 	 	$this->siteUrl = new _textField('site_url','site-url','Site URL', true);
@@ -55,7 +55,7 @@ class siteSettingsFields extends _entityFields{
 	}
 	
 	public function setRow($row){
-		parent::setRow($row);
+		//parent::setRow($row);
 		
 		 $this->siteTitle->setRow($row);
 		 $this->name->set($this->siteTitle->value);
@@ -85,7 +85,7 @@ class siteSettingsFields extends _entityFields{
 	}
 	
 	public function defaults(){
-		parent::defaults();
+		//parent::defaults();
 		
 		$this->siteTitle->reset('default');
 		 $this->name->set($this->siteTitle->value);
@@ -115,7 +115,7 @@ class siteSettingsFields extends _entityFields{
 	}
 	
 	public function format(){
-		parent::format();
+		//parent::format();
 		
 		 $this->siteTitle->format();
 		 $this->name->set($this->siteTitle->value);
@@ -144,41 +144,39 @@ class siteSettingsFields extends _entityFields{
 	}
 	
 	public function listHeading(){
-		$this->addContent(parent::listHeading(),true);
+		//$this->addContent(parent::listHeading(),true);
 		
 
-		 $this->addContent($this->siteTitle->tH());
-		 $this->addContent($this->siteUrl->tH());
-		 $this->addContent($this->loginNotice->tH());
-		 $this->addContent($this->organization->tH());
-		 $this->addContent($this->organizationUrl->tH());
-		 $this->addContent($this->organizationDescription->tH());
-		 $this->addContent($this->contactName->tH());
-		 $this->addContent($this->contactEmail->tH());
-		 $this->addContent($this->showPublicSite->tH());
-		 $this->addContent($this->showCostReports->tH());
-		 $this->addContent($this->showRevenueReports->tH());
-		 $this->addContent($this->publicFillColor->tH());
-		 $this->addContent($this->publicSiteColor->tH());
-		 $this->addContent($this->publicPageColor->tH());
-		 $this->addContent($this->publicMenuColor->tH());
-		 $this->addContent($this->publicMenuColorHover->tH());
-		 $this->addContent($this->publicTextColor->tH());
-		 $this->addContent($this->publicTextColorHover->tH());
-		 $this->addContent($this->publicFontFamily->tH());
-		 $this->addContent($this->publicFontSizeTitle->tH());
-		 $this->addContent($this->publicFontSizeHeading->tH());
-		 $this->addContent($this->publicFontSizeMenu->tH());
-		 $this->addContent($this->publicFontSizeText->tH());
-		
-		
+		 $this->addContent($this->siteTitle->th(),true);
+		 $this->addContent($this->siteUrl->th());
+		 $this->addContent($this->loginNotice->th());
+		 $this->addContent($this->organization->th());
+		 $this->addContent($this->organizationUrl->th());
+		 $this->addContent($this->organizationDescription->th());
+		 $this->addContent($this->contactName->th());
+		 $this->addContent($this->contactEmail->th());
+		 $this->addContent($this->showPublicSite->th());
+		 $this->addContent($this->showCostReports->th());
+		 $this->addContent($this->showRevenueReports->th());
+		 $this->addContent($this->publicFillColor->th());
+		 $this->addContent($this->publicSiteColor->th());
+		 $this->addContent($this->publicPageColor->th());
+		 $this->addContent($this->publicMenuColor->th());
+		 $this->addContent($this->publicMenuColorHover->th());
+		 $this->addContent($this->publicTextColor->th());
+		 $this->addContent($this->publicTextColorHover->th());
+		 $this->addContent($this->publicFontFamily->th());
+		 $this->addContent($this->publicFontSizeTitle->th());
+		 $this->addContent($this->publicFontSizeHeading->th());
+		 $this->addContent($this->publicFontSizeMenu->th());
+		 $this->addContent($this->publicFontSizeText->th());
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
+		//$this->addContent(parent::listDetail(),true);
 		
-		 $this->addContent($this->siteTitle->tD());
+		 $this->addContent($this->siteTitle->tD(),true);
 		 $this->addContent($this->siteUrl->tD());
 		 $this->addContent($this->loginNotice->tD());
 		 $this->addContent($this->organization->tD());
@@ -206,9 +204,9 @@ class siteSettingsFields extends _entityFields{
 	}
 	
 	public function display(){
-		$this->addContent(parent::display(),true);
+		//$this->addContent(parent::display(),true);
 		
-		 $this->addContent($this->siteTitle->p());
+		 $this->addContent($this->siteTitle->p(),true);
 		 $this->addContent($this->siteUrl->p());
 		 $this->addContent($this->loginNotice->p());
 		 $this->addContent($this->organization->p());
@@ -232,12 +230,11 @@ class siteSettingsFields extends _entityFields{
 		 $this->addContent($this->publicFontSizeMenu->p());
 		 $this->addContent($this->publicFontSizeText->p());
 		
-		
 		return $this->getContent();
 	}
 	
 	public function getPostVars(){
-		parent::getPostVars();
+		//parent::getPostVars();
 		
 		 $this->siteTitle->post();
 		 $this->name->set($this->siteTitle->value);
@@ -281,6 +278,7 @@ class siteSettings extends _entity{
 	}
     
 	protected function afterSetDetails(){
+	
 		$this->setSessionDetails();	
 	}
 	

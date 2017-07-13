@@ -33,24 +33,30 @@ abstract class _entityTypeFields extends _entityFields{
 	
 	public function listHeading(){
 		$this->addContent(parent::listHeading(),true);
-		$this->addContent($this->displayOrder->th();
-		$this->addContent($this->notes->th();
-		
+		$this->addContent($this->displayOrder->th());
+		$this->addContent($this->notes->th());
+		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		return parent::listDetail();
+		$this->addContent(parent::listHeading(),true);
+		$this->addContent($this->displayOrder->td());
+		$this->addContent($this->notes->td());
+		return $this->getContent();
 	}
 	
 	public function display(){
-		/*
-		 $this->addContent($this->displayOrder->p());*/
-		return parent::display();
+		$this->addContent(parent::display(),true);
+		$this->addContent($this->displayOrder->p());
+		$this->addContent($this->notes->p());
+		return $this->getContent();
 		
 	}
 	
 	public function getPostVars(){
 		parent::getPostVars();
+		$this->displayOrder->post();
+		$this->notes->post();
 	}
 
 }

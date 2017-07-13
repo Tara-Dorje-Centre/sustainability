@@ -1,6 +1,17 @@
 <?php 
 
+/*
 
+interface IentityFields {
+	public function __construct();
+	public function setRow($row);
+	public function format();
+	public function defaults();
+	public function listHeading();
+	public function listDetail();
+	public function display();
+	public function getPostVars();
+}*/
  interface IentityFieldset{
  //public function __construct();
  public function setRow($row);
@@ -57,6 +68,8 @@ abstract class _entityFields extends _contentWriter {
 		$this->updated = new _dateField('updated');
     	$this->created = new _dateField('created');
     	$this->description = new _textField('description','description');
+    	$this->type = new _idNameField('type_id','idType','type_name','Type',true);
+    	$this->location = new _idNameField('location_id','idLocation','location_name','Location',true);
     	/*$this->comments = new _textField('comments','comments');
     	$this->notes = new _textField('notes','notes');
     	$this->summary = new _textField('summary','summary');*/
@@ -70,8 +83,7 @@ abstract class _entityFields extends _contentWriter {
     	$this->reviewedBy = new _textField('reviewed_by','reviewedBy');
     	$this->approvedBy = new _textField('approved_by','approvedBy');
     	$this->parent = new _idNameField('parent_id','idParent','parent_name');
-    	$this->type = new _idNameField('type_id','idType','type_name');
-    	$this->location = new _idNameField('location_id','idLocation','location_name');
+    	
     	$this->project = new _idNameField('project_id','idProject','project_name');
     	$this->task = new _idNameField('task_id','idTask','task_name');
     	$this->activity = new _idNameField('activity_id','idActivity','activity_name');
