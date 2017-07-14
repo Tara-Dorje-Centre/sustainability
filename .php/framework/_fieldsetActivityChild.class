@@ -1,9 +1,10 @@
 <?php 
 
-abstract class _fieldsActivityChild extends _fieldsTaskChild
-implements Iecho, IcontentWriter{
+abstract class _fieldsetActivityChild extends _fieldsetTaskChild
+implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWriter{
 
 	public $activity;
+	
 	
     public function __construct(){
     	parent::__construct();

@@ -1,74 +1,12 @@
 <?php 
 
-abstract class _entityTypeFields extends _entityFields{
-	public $displayOrder;
-	public $notes;
-	
-	
-	public function __construct(){
-		parent::__construct();
-		$this->notes = new _textField('notes','notes','Notes',true);
-		$this->displayOrder = new _numberField('display_order','displayOrder','Display Order',true);
-		//enable base entity fields
-		$this->id->enabled(true);
-		$this->name->enabled(true);
-		$this->description->enabled(true);
-		$this->created->setEnabled(true,true,true);
-        $this->updated->setEnabled(true,true,true);
-        $this->highlight->enabled(true);
-    }
-
-
-	public function setRow($row){
-		parent::setRow($row);
-		$this->displayOrder->fetch($row);
-		$this->displayOrder->fetch($row);
-		
-	}
-	
-	public function format(){
-		parent::format();
-		$this->displayOrder->fetch($row);
-	}
-	
-	public function listHeading(){
-		$this->addContent(parent::listHeading(),true);
-		$this->addContent($this->displayOrder->th());
-		$this->addContent($this->notes->th());
-		return $this->getContent();
-	}
-	
-	public function listDetail(){
-		$this->addContent(parent::listHeading(),true);
-		$this->addContent($this->displayOrder->td());
-		$this->addContent($this->notes->td());
-		return $this->getContent();
-	}
-	
-	public function display(){
-		$this->addContent(parent::display(),true);
-		$this->addContent($this->displayOrder->p());
-		$this->addContent($this->notes->p());
-		return $this->getContent();
-		
-	}
-	
-	public function getPostVars(){
-		parent::getPostVars();
-		$this->displayOrder->post();
-		$this->notes->post();
-	}
-
-}
 
 abstract class _entityType extends _entity{
 	protected $__MyClassName = '_entityType';
 	protected $_titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';
 	
-	protected function beforeSetDetails(){
-		
-	}
+
 	
 	protected function afterSetDetails(){
 			$this->f->name->caption = $this->_titleEntity;

@@ -6,11 +6,25 @@ include_once("_formFunctions.php");
 include_once("_sqlFunctions.php");
 showProgress('general functions loaded');
 //
+include_once("_echo.class");
 include_once("_contentWriter.class");
 include_once("_sqlWriter.class");
 include_once("_calendar.class");
 include_once("_database.class");
 include_once("_links.class");
+
+include_once("_field.class");
+
+include_once("_field_basic.class");
+include_once("_field_specialized.class");
+include_once("_field_idName.class");
+
+include_once("_fieldset.class");
+include_once("_fieldsetEntityType.class");
+include_once("_fieldsetChild.class");
+include_once("_fieldsetProjectChild.class");
+include_once("_fieldsetTaskChild.class");
+include_once("_fieldsetActivityChild.class");
 
 include_once("__EntityInterfaces.class");
 
@@ -24,7 +38,7 @@ include_once("_baseEntityFields.class");
 include_once("_baseEntityLinks.class");
 include_once("_baseEntity.class");
 
-include_once("_entityFields.class");
+
 include_once("_entityLinks.class");
 include_once("_entity.class");
 include_once("_entityList.class");

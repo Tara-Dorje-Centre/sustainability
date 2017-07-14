@@ -1,0 +1,69 @@
+<?php 
+
+abstract class _fieldsetTaskChild extends _fieldsetProjectChild
+implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWriter{
+
+	public $task;
+	public $reported;
+	public $doneBy;
+	
+    public function __construct(){
+    	parent::__construct();
+    	$this->task = new _idNameField('task_id','idTask','task_name',true);
+		 $this->reported = new _dateField('reported','reported');
+		 $this->doneBy = new _textField('name','name');
+/*
+		 $this->reviewed = new _dateField('reviewed','reviewed');
+		 $this->reviewedBy = new _textField('reviewed_by','reviewedBy');*/
+    	
+    }
+    protected function reset(){
+    	parent::reset(){
+		$this->task->reset(0);
+		$this->reported->reset('');
+		$this->-doneBy->reset(0);
+    }
+	public function setRow($row){
+		parent::setRow($row);
+		$this->task->fetch($row);
+		$this->reported->fetch($row);
+		$this->-doneBy->fetch($row);
+	}
+	public function format(){
+		parent::format();
+		$this->task->format();
+		$this->reported->format();
+		$this->-doneBy->format();
+	}
+	public function display(){;
+		$this->addContent(parent::display(),true);
+		$this->addContent($this->task->p());		
+		$this->addContent($this->reported->p());		
+		$this->addContent($this->doneBy->p());		
+		return $this->getContent();
+	}
+	public function listHeading(){
+		$this->addContent(parent::listHeading(),true);
+		$this->addContent($this->task->th());		
+		$this->addContent($this->reported->th());		
+		$this->addContent($this->doneBy->th());		
+		
+		return $this->getContent();
+	}
+	public function listDetail(){
+		$this->addContent(parent::listDetail(),true);
+		$this->addContent($this->task->td());
+		$this->addContent($this->reported->td());		
+		$this->addContent($this->doneBy->td());		
+		return $this->getContent();
+	}
+	public function getPostVars(){
+		parent::getPostVars();
+		$this->task->post();
+		$this->reported->post();
+		$this->doneBy->post();
+	}
+}
+
+
+?>
