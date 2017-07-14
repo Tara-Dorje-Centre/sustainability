@@ -99,7 +99,7 @@ public function __construct(){
  return $edit;
  }
 
- public function insert($table){
+ protected function insertSQL($table){
  $this->addContent(" INSERT INTO ".$table." ( ");
  $this->addContent($this->_cols->getContent());
  $this->addContent(") VALUES (");
@@ -108,7 +108,7 @@ public function __construct(){
  return $this->getContent();
  }
 
- public function update($table){
+ protected function updateSQL($table){
  $this->addContent(" UPDATE ".$table." SET ");
  $this->addContent($this->_values->getContent());
  if ($this->useWhere == true){
@@ -119,56 +119,6 @@ public function __construct(){
 
  }
 
-class _editSection extends _contentWriter{
-public $sectionId = '';
-public function __construct($sectionId){
-$this->sectionId = $sectionId;
-}
-
-}
-
-class _editForm extends _contentWriter{
-public $entity;
-public $mode;
-public $url;
-
-public $required;
-public $optional;
-public $hidden;
-public $submit;
-
-public function __construct($entity, $mode, $url){
-$this->entity = $entity;
-$this->mode = $mode;
-$this->url = $url;
-
-
-$this->required = new _editSection('required');
-$this->optional = new _editSection('optional');
-$this->hidden = new _editSection('hidden');
-$this->submit = new _editSection('submit');
-}
-
-public function open($contextMenu = '',$titleEntity = ''){
-		$legend = $this->mode.':  '.$titleEntity;
-		$form = openEditForm($this-entity,$legend,$this->url, $contextMenu);
-		$this->writeContent($form);
-	}
-	public function close(){
-	
-		$this->submit->addContent($this->hidden->getContent());
-		
-		$optional = $this->optional->getContent();
-		$required = $this->required->getContent();
-		$submit = $this->submit->getContent();
-	
-		$this->addContent( closeEditForm($entity,$required,$optional,$submit));
-		return $this->getContent;
-	}
-
-
-}
-
-
+*/
  
 ?>

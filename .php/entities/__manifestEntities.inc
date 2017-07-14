@@ -1,21 +1,14 @@
 <?php
-include_once('_echo.class');
-include_once("_contentWriter.class");
-//
-function showProgress($msg, $show = false){
-	$e = new _echo();
-	$e->echoPrint($show,$msg,'includes','manifest.inc');
-}
-//
 
 
 
 //classes - secure login framework entities
-//
+
 include_once("_MenuLinks.class");
 include_once("_Menu.class");
 
 showProgress('menu classes loaded');
+
 //
 //include_once("userFields.class");
 include_once("userLinks.class");
@@ -194,5 +187,5 @@ include_once("cropPlantingLinks.class");
 include_once("cropPlantingSQL.class");
 showProgress('crop planting classes loaded');
 //
-showProgress('exit manifest.inc');
+showProgress('exit manifestEntities.inc');
 ?>

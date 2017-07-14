@@ -1,6 +1,6 @@
 <?php 
 
-abstract class _taskChildFields extends _projectChildFields
+abstract class _fieldsTaskChild extends _fieldsProjectChild
 implements Iecho, IcontentWriter{
 
 	public $task;

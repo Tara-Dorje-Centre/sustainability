@@ -1,7 +1,7 @@
 <?php 
 
-abstract class _childFields extends _entityFields
-implements Iecho, IcontentWriter{
+abstract class _fieldsChild extends _fieldsTyped
+implements IentityFields, Iecho, IcontentWriter{
 
 	public $parent;
     public function __construct(){

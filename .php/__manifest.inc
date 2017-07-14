@@ -1,16 +1,19 @@
 <?php
-include_once('_echo.class');
-include_once("_contentWriter.class");
+
+$pathFramework = './framework/';
+$pathEntities = './entities/';
+include_once($pathFramework."_echo.class");
+
 //
 function showProgress($msg, $show = false){
 	$e = new _echo();
 	$e->echoPrint($show,$msg,'includes','manifest.inc');
 }
 //
-$pathFramework = './framework/';
-include_once($frameworkPath."__manifestFramework.inc");
-$pathEntities = './entities/';
-include_once($frameworkPath."__manifestEntities.inc");
+
+include_once($pathFramework."__manifestFramework.inc");
+
+include_once($pathEntities."__manifestEntities.inc");
 
 showProgress('exit manifest.inc');
 ?>

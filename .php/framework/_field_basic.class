@@ -1,0 +1,46 @@
+<?php 
+
+class _textField extends _field
+ implements Ifield, Iecho, IcontentWriter {
+
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'TEXT';
+		$this->inputAsType = 'TEXT';
+	}
+	/*
+	public function input($entity){
+		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
+	}*/
+}
+class _numberField extends _field
+ implements Ifield, Iecho, IcontentWriter {
+
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'NUMBER';
+		$this->inputAsType = 'NUMBER';
+	}
+	
+	public function input($entity){
+		return inputFieldNumber($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+}
+
+class _dateField extends _field
+ implements Ifield, Iecho, IcontentWriter {
+
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'DATE';
+		$this->inputAsType = 'DATE';
+	}
+	
+	public function input($entity){
+		return inputFieldDate($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+
+}
+ 
+ 
+?>

@@ -1,6 +1,14 @@
 <?php 
 
- interface IentityFields{
+ interface Ifieldset{
+ 	public $highlight;
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+ 	public $highlight;
+
  	public function setRow($row);
  	public function format();
  	public function defaults();
@@ -10,16 +18,15 @@
 	public function getPostVars();
  }
  
-abstract class _entityFields extends _contentWriter 
-implements IentityFields, Iecho, IcontentWriter{
-	
-	public $highlight;
+abstract class _fieldset extends _contentWriter 
+implements Ifieldset, Iecho, IcontentWriter{
+
 	public $id;
 	public $name;		
 	public $created;
     public $updated;
 	public $description;
-	
+	public $highlight;
 	/*
 	public $displayOrder;
 	public $notes;
@@ -58,11 +65,11 @@ implements IentityFields, Iecho, IcontentWriter{
     	$this->approved = new _dateField('approved','approved');
     	$this->doneBy = new _textField('name','name');
     	$this->reviewedBy = new _textField('reviewed_by','reviewedBy');
-    	$this->approvedBy = new _textField('approved_by','approvedBy');
+    	$this->approvedBy = new _textField('approved_by','approvedBy');*/
     	
-    	$this->location = new _idNameField('location_id','idLocation','location_name','Location',true);
+
  
-    	*/
+    	
     }
     
     protected function reset(){
@@ -86,7 +93,6 @@ implements IentityFields, Iecho, IcontentWriter{
 		$this->reviewedBy->reset('');
 		$this->approvedBy->reset('');
 
-		$this->location->reset(0);
 		*/
     }
     
@@ -110,9 +116,7 @@ implements IentityFields, Iecho, IcontentWriter{
 		$this->approved->fetch($row);
 		$this->doneBy->fetch($row);
 		$this->reviewedBy->fetch($row);
-		$this->approvedBy->fetch($row);
-		
-		$this->location->fetch($row);*/
+		$this->approvedBy->fetch($row);*/
 	}
 	
 	public function defaults(){
@@ -138,10 +142,7 @@ implements IentityFields, Iecho, IcontentWriter{
 		$this->approved->format();
 		$this->doneBy->format();
 		$this->reviewedBy->format();
-		$this->approvedBy->format();
-	
-		$this->location->format();
-		*/
+		$this->approvedBy->format();*/
 	}
 	public function display(){
 		$this->addContent($this->id->p(),true);
@@ -161,9 +162,7 @@ implements IentityFields, Iecho, IcontentWriter{
 		$this->addContent($this->approved->p());
 		$this->addContent($this->doneBy->p());
 		$this->addContent($this->reviewedBy->p());
-		$this->addContent($this->approvedBy->p());
-		$this->addContent($this->location->p());
-		*/
+		$this->addContent($this->approvedBy->p());*/
 		return $this->getContent();
 	}
 	
@@ -188,10 +187,7 @@ implements IentityFields, Iecho, IcontentWriter{
 		$this->addContent($this->approved->tH());
 		$this->addContent($this->doneBy->tH());
 		$this->addContent($this->reviewedBy->tH());
-		$this->addContent($this->approvedBy->tH());
-		$this->addContent($this->location->tH());
-
-		*/
+		$this->addContent($this->approvedBy->tH());*/
 
 	}
 	
@@ -217,10 +213,7 @@ implements IentityFields, Iecho, IcontentWriter{
 		$this->addContent($this->approved->tD());
 		$this->addContent($this->doneBy->tD());
 		$this->addContent($this->reviewedBy->tD());
-		$this->addContent($this->approvedBy->tD());
-		
-		$this->addContent($this->location->tD());
-		*/
+		$this->addContent($this->approvedBy->tD());*/
 
 	}
 
@@ -244,9 +237,7 @@ implements IentityFields, Iecho, IcontentWriter{
 		$this->approved->post();
 		$this->doneBy->post();
 		$this->reviewedBy->post();
-		$this->approvedBy->post();
-		$this->location->post();
-		*/
+		$this->approvedBy->post();*/
 	}
 }
 

@@ -1,6 +1,54 @@
 <?php 
 
+class _editSection extends _contentWriter{
+public $sectionId = '';
+public function __construct(string $sectionId){
+$this->sectionId = $sectionId;
+}
 
+}
+
+class _editForm extends _contentWriter{
+public $entity;
+public $mode;
+public $url;
+
+public $required;
+public $optional;
+public $hidden;
+public $submit;
+
+public function __construct(string $entity,string $mode, string $url){
+$this->entity = $entity;
+$this->mode = $mode;
+$this->url = $url;
+
+
+$this->required = new _editSection('required');
+$this->optional = new _editSection('optional');
+$this->hidden = new _editSection('hidden');
+$this->submit = new _editSection('submit');
+}
+
+	public function open(string $contextMenu = '',string $titleEntity = ''){
+		$legend = $this->mode.':  '.$titleEntity;
+		$form = openEditForm($this-entity,$legend,$this->url, $contextMenu);
+		$this->writeContent($form);
+	}
+	public function close(){
+	
+		$this->submit->addContent($this->hidden->getContent());
+		
+		$optional = $this->optional->getContent();
+		$required = $this->required->getContent();
+		$submit = $this->submit->getContent();
+	
+		$this->addContent( closeEditForm($entity,$required,$optional,$submit));
+		return $this->getContent;
+	}
+
+
+}
 
 
  

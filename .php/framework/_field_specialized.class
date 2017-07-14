@@ -1,0 +1,121 @@
+<?php 
+
+
+class _nameField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'NAME';
+	}
+	
+	public function input($entity){
+		return inputFieldName($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+}
+
+class _idField extends _numberField
+ implements Ifield, Iecho, IcontentWriter {
+
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'NUMBER';
+	}
+}
+
+class _descriptionField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'DESCRIPTION';
+	}
+	
+	public function input($entity){
+		return inputFieldDescription($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	
+class _notesField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'NOTES';
+	}
+	
+	public function input($entity){
+		return inputFieldNotes($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+}
+	
+class _commentsField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'COMMENTS';
+	}
+
+	public function input($entity){
+		return inputFieldComments($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+}
+	
+class _yesNoField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'YES-NO';
+	}
+	
+	public function input($entity){
+		$input = getSelectYesNo($this->postVariable, $this->value());
+		return $this->inputChoice($entity,$input);
+	}
+	
+}
+
+class _colorField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'CSS-COLOR';
+	}
+	
+	public function input($entity){
+		$input = getColorSelectList($this->value, $this->postVariable,'false');
+		return $this->inputChoice($entity,$input);
+	}
+}
+ 
+ class _fontsizeField extends _numberField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'CSS-FONT-SIZE';
+	}
+	
+	public function input($entity){
+		$input = getFontSizeSelectList($this->value, $this->postVariable,'false');
+		return $this->inputChoice($entity,$input);
+	}
+}
+ 
+class _fontFamilyField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->inputAsType = 'CSS-FONT-FAMILY';
+	}
+	
+	public function input($entity){
+		$input = getFontFamilySelectList($this->value, $this->postVariable,'false');
+		return $this->inputChoice($entity,$input);
+	}
+}
+ 
+?>

@@ -2,9 +2,9 @@
 
 Interface IcontentWriter{
  	public function resetContent(bool $reset = true);
-	public function addContent(bool $value = '',bool $reset = false);
+	public function addContent(string $value = '',bool $reset = false);
 	public function getContent(bool $reset = true);
-	public function encloseString(bool $value = '', $delimiter = "'");
+	public function encloseString(string $value = '', $delimiter = "'");
 }
 
 abstract class _contentWriter extends _echo implements Iecho, IcontentWriter{
@@ -14,7 +14,7 @@ abstract class _contentWriter extends _echo implements Iecho, IcontentWriter{
  		$this->_content = '';
  		}
  	}
-	public function addContent(bool $value = '',bool $reset = false){
+	public function addContent(string $value = '',bool $reset = false){
 		$this->resetContent($reset);
  		$this->_content .= $value;
  	}
@@ -23,7 +23,7 @@ abstract class _contentWriter extends _echo implements Iecho, IcontentWriter{
 		$this->resetContent($reset);
  		return $value;
 	}
-	public function encloseString(bool $value = '', $delimiter = "'"){
+	public function encloseString(string $value = '', $delimiter = "'"){
 		return $delimiter.$value.$delimiter;
 	}
 }
