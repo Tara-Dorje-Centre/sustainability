@@ -1,6 +1,7 @@
 ﻿<?php 
 
-class _htmlBasePublic extends _contentWriter implements Iecho, IcontentWriter{
+class _htmlPagePublic extends _contentWriter 
+implements IhtmlPage,Iecho, IcontentWriter{
 	public $mainTitle;
 	public $mainImage;
 	public $mainFooter;

@@ -1,9 +1,23 @@
 <?php 
-interface Ilinks{
+interface Ilinks{;
+	public $cssItem;
 
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+	public function setStyle($styleBase = 'menu'){
+	public function setType($menuType = 'DIV'){
+	public function formatToggleLink($elementId = 'formOptional', $linkText = '+Options'){
+	public function formatHref($caption,$link,$target = '_self',$cssSuffix = '',$onClickJS = NULL){
+	public function formatTextItem($text){
+	public function openMenu($name = 'menu-listing'){
+	public function closeMenu(){
+	public function resetMenu($newLines = 0){
+	public function saveMenuSettings(){
+	public function restoreMenuSettings(){
+	public function getPagedLinks($baseUrl, $recordCount, $recordsPerPage, $currentPage){
+	public function formatCalendarLink($baseUrl, $year, $month){
+	public function formatCalendarHref($linkCaption, $baseUrl, $year, $month){
 }
-
-class _links{
+class _links implements Ilinks{
 	private $cssStyleBase;
 	public $cssItem;
 	private $cssList;

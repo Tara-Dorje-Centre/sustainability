@@ -1,132 +1,13 @@
 ﻿<?php 
 
 
-class _htmlBase extends _echo{
-	protected $_title;
-	protected $_styles;
-	protected $_scripts;
-	protected $_onLoad = 'none';
 
-	protected $_links;
-	protected $_heading;	
-	protected $_details;
-	protected $_content;
-	protected $_footerLinks;
-	protected $_footerNotices;
-	protected $_footerLogo;
+class _htmlSite extends _htmlPage
+implements IhtmlPage, IcontentWriter, Iecho{
 
-
-	
-	public function printSite(){		
-		$content = $this->build();
-		echo $content;		
-		//close db connection
-		global $conn;
-		$conn->close;
-	}
-
-	protected function build(){		
-		$content = $this->documentOpen();
-		$content .= $this->siteHeading();
-		$content .= $this->siteContent();	
-		$content .= $this->siteFooter();
-		$content .= $this->documentClose();
-		return $content;		
-	}
-
-	protected function documentOpen(){
-		$content = doctypeHtml();
-		$content .= openHTML();
-		$content .= openHead();
-		$content .= metaHttpEquivs();		
-		$content .= $this->_styles;
-		$content .= htmlTitle($this->_title);
-		$content .= $this->_scripts;
-		$content .= closeHead();
-		$content .= openBody($this->_onLoad);
-		$content .= openDiv('site-container');
-		return $content;	
-	}
-	
-	protected function documentClose(){
-		//close site page container
-		$content = closeDiv();
-		$content .= closeBody();
-		$content .= closeHTML();
-		return $content;
-	}
-	
-	protected function siteHeading(){
-		$content = openDiv('site-heading');
-		$content .= $this->siteTitle();
-		$content .= $this->siteLinks();
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteTitle(){
-		$content = openDiv('site-heading-title');
-		$content .= $this->_title;
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteLinks(){
-		$content = openDiv('site-heading-links');
-		$content .= $this->_links;
-		$content .= closeDiv(); //close site links
-		return $content;	
-	}
-
-	protected function siteContent(){
-		$content = openDiv('site-content');
-		$content .= $this->_content;
-		$content .= closeDiv(); // close site content
-		return $content;
-	}
-
-	protected function siteFooter(){
-		$content = openDiv('site-footer');
-		$content .= $this->siteFooterLogos();
-		$content .= $this->siteFooterNotices();
-		$content .= $this->siteFooterLinks();
-		$content .= closeDiv(); //close site footer
-		return $content;
-	}
-
-	protected function siteFooterLogos(){
-		$content = openDiv('site-footer-logos');
-		$content .= $this->_footerLogo;
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteFooterNotices(){
-		$content = openDiv('site-footer-notices');
-		$content .= $this->_footerNotices;
-		$content .= closeDiv();
-		return $content;	
-	}
-
-	protected function siteFooterLinks(){	
-		$content = openDiv('site-footer-links');
-		$content .= $this->_footerLinks;
-		$content .= closeDiv();
-		return $content;		
-	}
-
-
-
-}
-/*
-class _SiteTemplate extends __TemplateHTML implements Iecho{
-
-
-
-
-public function setSiteTemplateDetails($contentHeading = 'page heading', $contentDetails = 'page details'){
-	$this->_details = $contentDetails;
-	$this->_heading = $contentHeading;
+public function set($details = ' heading', $details = ' details'){
+	$this->_details = $details;
+	$this->_heading = $details;
 
 	$this->getSiteSettings();
 	$this->setOnLoad();
@@ -144,14 +25,14 @@ protected function getSiteSettings(){
 	$settings->setDetails('VIEW');
 }
 
-	protected function setOnLoad(){
+protected function setOnLoad(){
 		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){	
 			$onLoad = 'none';
 		} else {
 			$onLoad='displayClientTime();';
 		}
 		$this->_onLoad = $onLoad;
-	}
+}
 
 
 protected function setTitle(){
@@ -303,6 +184,6 @@ protected function setContents(){
 		//return $scripts;
 	}
 	
-}*/
+}
 
 ?>

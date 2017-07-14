@@ -1,6 +1,6 @@
 <?php 
 
-abstract class _baseEntity extends _contentWriter 
+abstract class _entityBase extends _contentWriter 
 implements Iecho, IcontentWriter {
 	protected $__MyClassName = '__baseEntity.';
 	protected $_titleEntity = '__baseEntity';

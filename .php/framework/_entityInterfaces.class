@@ -41,7 +41,7 @@ interface Ientity{
 	public function getListing();
 	public function printPage();
 	public function editForm();
-	
+		public function addForm();
 	public function saveChanges();
 	
 	public function options(

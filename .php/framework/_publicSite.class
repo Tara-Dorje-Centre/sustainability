@@ -1,6 +1,6 @@
 <?php
 
-class _publicSite extends _htmlBasePublic{
+class _publicSite extends _htmlPagePublic{
 	private $links;
 	private $sql;
 	private $viewMode = 'MAIN';
