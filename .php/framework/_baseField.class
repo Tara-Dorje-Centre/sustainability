@@ -1,0 +1,450 @@
+<?php 
+
+
+ interface IbaseField{
+ 	public  $caption = 'no caption';
+ 	public  $dbColumn = 'not-used';
+ 	public  $postVariable = 'notUsed';
+ 	public function enabled(bool $isEnabled = false);
+ 	public function disable();
+ 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
+ 	public function setShow(string $caption, bool $list = true);
+	public function setFetch(string $dbColumn);
+ 	public function setPost(string $postVariable);
+ 	public function set($value);
+ 	public function reset($default = NULL);
+ 	public function get();
+   	public function value();
+ 	public function sqlValue();
+	public function fetch($row);
+	public function format();
+	public function th();
+ 	public function td();
+ 	public function p();
+ 	public function input(string $entity,string $inputType);
+ 	public function post();
+ 	public function format();
+ }
+ 
+ abstract class _baseField implements IbaseField{
+ public  $caption = 'no caption';
+ 	public  $dbColumn = 'not-used';
+ 	public  $postVariable = 'notUsed';
+ 
+ 	protected $valueRaw = NULL;
+ 	protected  $valueNumber = 0;
+ 	protected  $valueText = '';
+ 	protected  $valueDate = '';
+ 	protected  $type = 'NUMBER';
+ 	
+ 	protected  $useRow = false;
+ 	protected  $usePost = false;
+ 	protected  $showList = false;
+ 	protected  $showDisplay = false;
+ 
+ 	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+ 		if ($dbColumn != 'not_used'){
+ 			$this->setFetch($dbColumn);
+ 		}
+ 		if ($postVariable != 'not-used'){
+ 			$this->setPost($postVariable);
+ 		}
+ 		if ($caption != 'no caption'){
+ 			$this->setShow($caption);
+ 		}
+ 		$this->enabled($enable);
+ 	}
+ 	
+ 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
+ 		$this->useRow = $fetch;
+ 		$this->usePost = $fetch;
+ 		$this->showDisplay = $show;
+ 		$this->showList = $list;
+ 	}
+ 	
+ 	public function enabled(bool $isEnabled = false){
+ 		$this->setEnabled($isEnabled,$isEnabled,$isEnabled,$isEnabled);
+ 	}
+ 	
+ 	 public function disable(){
+ 		$this->enabled(false);
+ 	}
+ 
+ 	public function setShow(string $caption, bool $display = false, bool $list = false ){
+		$this->caption = $caption;
+		$this->showList = $list;
+		$this->showDisplay = $display;
+ 	} 
+ 
+	public function setFetch(string $dbColumn){
+		$this->useRow = true;
+		$this->dbColumn = $dbColumn;
+	}
+ 
+	public function setPost(string $postVariable){
+		$this->usePost = true;
+		$this->postVariable = $postVariable;
+	}
+ 
+ 	protected function canSet(){
+ 		if (($this->useRow == true) or ($this->usePost == true)){
+   		$can = true;
+   		} else {
+   		$can = false;
+   		}
+   		return $can;
+	}
+ 
+	protected function canShow(){
+ 		if (($this->showList == true) or ($this->showDisplay == true)){
+   			$can = true;
+   		} else {
+   			$can = false;
+   		}
+   		return $can;
+	}
+ 
+	public function set($value){
+		$this->valueRaw = $value;
+		switch ($this->type) {
+    		case 'NUMBER':
+ 				$this->valueNumber = $value;
+        		break;
+    		case 'DATE':
+ 		 		$this->valueDate = $value;
+        		break;
+    		case 'TEXT':
+ 		 		$this->valueText = $value;
+        		break;
+    		default:
+ 		 		$this->valueText = $value;
+		}
+	}
+ 
+ 	public function value(){
+ 		return $this->get();
+ 	}
+ 
+	public function get(){
+	
+		switch ($this->type) {
+    		case 'NUMBER':
+ 				$val = $this->valueNumber;
+        		break;
+    		case 'DATE':
+ 		 		$val = $this->valueDate;
+        		break;
+    		case 'TEXT':
+ 		 		$val = $this->valueText;
+        		break;
+    		default:
+ 		 		$val = $this->valueText;
+		}
+	}
+	
+ 
+ 	public function reset($default = NULL){
+ 		if ($this->canSet == true){
+ 			$this->set($default);
+ 		}
+ 
+ 	}
+ 
+ 
+	public function fetch($row){
+	//could pass optional override column alias here
+	
+		if ($this->useRow == true){
+ 			$this->set($row[$this->dbColumn]);
+ 		}
+	}
+
+	public function th(){
+	 	$value = '';
+		if ($this->showList == true){
+ 			$value = wrapTh($this->caption);
+		}
+		return $value;
+ 	}
+ 	
+ 	public function td(){
+ 	 	$value = '';
+ 		if ($this->showList == true){
+  		    //$this->format();
+ 			$value = wrapTd($this->value());
+  		}
+ 		return $value;
+ 	}
+
+ 	public function p(){
+ 	 	$value = '';
+ 		if ($this->showDisplay == true){
+ 			//$this->format();
+ 			$value = para($this->caption,$this->value());
+ 		}
+ 		return $value;
+ 	}
+ 		
+	public function post(){
+  		if ($this->usePost() == true){
+			switch ($this->type) {
+    			case 'NUMBER':
+ 					$this->valueNumber = $_POST[$this->postVariable];
+        			break;
+    			case 'DATE':
+ 		 			$this->valueDate = getTimestampPostValues($this->postVariable);
+        			break;
+    			case 'TEXT':
+ 		 			$this->valueText = dbEscapeString($_POST[$this->postVariable]);
+        			break;
+    			default:
+ 		 			$this->valueText = dbEscapeString($_POST[$this->postVariable]);
+			}
+ 		}
+	}
+	
+  	public function sqlValue(){
+ 		//if ($this->canSet() == true){
+ 			$baseValue = $this->get();
+ 			if ($this->type != 'NUMBER'){
+ 				$v = new _sqlClause();
+    			$value = $v->encloseString($baseValue);
+    		} else {
+    		  	if (($baseValue == '') or IsNull($baseValue)){
+  					$value = 0;
+  				} else {
+  					$value = $baseValue;
+  				}
+ 			}
+			return $value;
+ 		//}
+ 	}
+ 	public function format(){
+ 		if ($this->canShow() == true){
+ 			switch ($this->type) {
+    			case 'NUMBER':
+  					if (($this->valueNumber == '') or IsNull($this->valueNumber)){
+  					    $this->valueNumber = 0;
+  					}
+        			break;
+    			case 'DATE':
+  		  			$this->valueDate = getTimestampDate($this->valueDate);
+        			break;
+    			case 'TEXT':
+  		  			$this->valueText = displayLines($this->valueText);
+        			break;
+    			default:
+  		  			$this->valueText = displayLines($this->valueText);
+			}
+  
+ 		}
+ 	}
+ 	
+	public function input(string $entity,string $inputType){
+	
+		switch ($this->inputType){
+		
+			case 'TEXT':
+			$inputField = $this->inputAsText($entity);
+			break;
+			
+			case 'NUMBER':
+			$inputField = $this->inputAsNumber($entity);
+			break;
+			
+			case 'HIDDEN':
+			$inputField = $this->inputHidden($entity);
+			break;
+			
+			
+			case 'PASSWORD':
+			$inputField = $this->inputAsPassword($entity);
+			break;
+			
+
+			case 'NAME':
+			$inputField = $this->inputAsName($entity);
+			break;
+			
+			case 'DESCRIPTION':
+			$inputField = $this->inputAsDescription($entity);
+			break;
+			
+			case 'COMMENTS':
+			$inputField = $this->inputAsComments($entity);
+			break;
+			
+			case 'NOTES':
+			$inputField = $this->inputAsNotes($entity);
+			break;
+			
+			case 'YES-NO':
+			$inputField = $this->inputAsYesNo($entity);
+			break;
+			
+			case 'CSS-COLOR':
+			$inputField = $this->inputAsCssColor($entity);
+			break;
+			
+			case 'CSS-FONT-SIZE':
+			$inputField = $this->inputAsCssFontSize($entity);
+			break;
+			
+			
+			case 'CSS-FONT-FAMILY':
+			$inputField = $this->inputAsCssFontFamily($entity);
+			break;
+			
+			default:
+			$inputField = $this->inputAsText($entity);
+		}
+		return $inputField;
+	
+	}
+	
+	public function inputAsCssColor($entity){
+		$input = getColorSelectList($this->value, $this->postVariable,'false');
+		return captionedInput($this->caption,$input);
+	}
+	
+	
+	public function inputAsCssFontSize($entity){
+		$input = getFontSizeSelectList($this->value, $this->postVariable,'false');
+		return captionedInput($this->caption,$input);
+	}
+	
+	public function inputAsCssFontFamily($entity){
+		$input = getFontFamilySelectList($this->value, $this->postVariable,'false');
+		return captionedInput($this->caption,$input);
+	}
+	
+	
+	public function inputAsYesNo($entity){
+		$input = getSelectYesNo($this->postVariable, $this->value());
+		return captionedInput($this->caption, $input);
+	}
+	
+	public function inputAsText($entity){
+		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	
+	public function inputAsDescription($entity){
+		return inputFieldDescription($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	public function inputAsNotes($entity){
+		return inputFieldNotes($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	public function inputAsComments($entity){
+		return inputFieldComments($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	public function inputAsName($entity){
+		return inputFieldName($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	
+	public function inputAsNumber($entity){
+		return inputFieldNumber($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+	
+	public function inputAsHidden(){
+		return getHiddenInput($this->postVariable, $this->value());
+	}
+	
+	public function inputAsPassword(){
+		return getPasswordInput($this->postVariable, '');
+		//$this->value()); password input should always be blank
+	}
+ 	
+ 	
+}
+/*
+class _textField extends _field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'TEXT';
+	}
+}
+class _numberField extends _field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'NUMBER';
+	}
+}
+
+class _dateField extends _field{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'DATE';
+	}
+
+}
+ 
+class _idNameField implements  IentityField{
+	public  $id;
+	public  $name;
+	
+	public function __construct(string $dbColumnId = 'entity_id', string $postVariable = 'idEntity', string $dbColumnName = 'entity_name',string $caption = 'caption',bool $enable = false){
+		$this->id = new _numberField($dbColumnId, $postVariable);
+		$this->name = new _textField($dbColumnName);
+		$this->name->caption = $caption;
+		$this->enabled($enable);
+	}
+	public function enabled(bool $enable = false){
+		if ($enable == true){
+ 	//public function setEnabled( $fetch = ,  $show = ,  $list = ,  $post = ){
+			$this->name->setEnabled(true,true,true,false);
+			$this->id->setEnabled(true,false,false,true);
+		
+		} else {
+			$this->name->disable();
+			$this->id->disable();
+		}
+	}
+	public function set( $value){
+	 	$this->id->set($value);
+	}
+ 	public function reset( $default = 0){
+ 		$this->id->reset($default);
+ 	 	$this->name->reset('');
+ 	}
+ 	public function get(){
+ 	   	return $this->id->get();
+ 	}
+   	public function value(){
+   		return $this->id->value();
+   	}
+	public function setShow(string $caption, bool $list = true){
+		$this->name->setShow($caption,$list);
+	}
+	public function setFetch(string $dbColumn){
+	//,$dbColumnName){
+		$this->id->setFetch($dbColumn);
+		//$this->name->setFetch($dbColumnName);
+	}
+	public function setFetchName(string $dbColumnName){
+	//,$dbColumnName){
+		//$this->id->setFetch($dbColumn);
+		$this->name->setFetch($dbColumnName);
+	}
+	public function fetch($row){
+		$this->id->fetch($row);
+		$this->name->fetch($row);
+	}
+	public function th(){
+		return $this->name->tH();
+	}
+	
+ 	public function td(){
+ 		return $this->name->tD();
+ 	}
+ 	public function p(){
+ 		return $this->name->p();
+ 	}
+ 	public function post(){
+ 		$this->id->post();
+ 	}
+ 	public function format(){
+ 	$this->name->format();
+ 	}
+}*/
+ 
+?>

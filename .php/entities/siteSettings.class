@@ -1,0 +1,548 @@
+﻿<?php 
+
+class siteSettingsFields extends _entityFields{
+	 public $siteTitle;
+	 public $siteUrl;
+	 public $loginNotice;
+	 public $organizationUrl;
+	 public $organization;
+	 public $organizationDescription;
+	 public $contactName;
+	 public $contactEmail;
+	 public $showPublicSite;
+	 public $showCostReports;
+	 public $showRevenueReports;
+	 public $publicFillColor;
+	 public $publicSiteColor;
+	 public $publicPageColor;
+	 public $publicMenuColor;
+	 public $publicMenuColorHover;
+	 public $publicTextColor;
+	 public $publicTextColorHover;			
+	 public $publicFontFamily;
+	 public $publicFontSizeTitle;
+	 public $publicfontSizeHeading;
+	 public $publicFontSizeMenu;
+	 public $publicFontSizeText;
+	 
+	public function __construct(){
+		parent::__construct();
+
+		$this->siteTitle = new _textField('site_title','site-title','Site Title', true);
+	 	$this->siteUrl = new _textField('site_url','site-url','Site URL', true);
+	 	$this->loginNotice = new _textField('login_notice','login-notice', 'Login Notices', true);
+	 	$this->organizationUrl = new _textField('organization_url','organization-url','Org. URL', true);
+	 	$this->organization = new _textField('organization','organization','Organization', true);
+	 	$this->organizationDescription = new _textField('organization_description','organization-description','Org. Description', true);
+	 	$this->contactName = new _textField('contact_name','contact-name','Contact Name', true);
+	 	$this->contactEmail = new _textField('contact_email','contact-email','Contact Email', true);
+		$this->showPublicSite = new _textField('show_public_site','show-public-site','showPublicSite', true);
+		$this->showCostReports = new _textField('show_cost_reports','show-cost-reports','showCostReports', true);
+		$this->showRevenueReports = new _textField('show_revenue_reports','show-revenue-reports','showRevenueReports', true);
+		$this->publicFillColor = new _textField('public_fill_color','public-fill-color','publicFillColor', true);
+		$this->publicSiteColor = new _textField('public_site_color','public-site-color','publicSiteColor', true);
+		$this->publicPageColor = new _textField('public_page_color','public-page-color','publicPageColor', true);
+		$this->publicMenuColor = new _textField('public_menu_color','public-menu-color','publicMenuColor', true);
+		$this->publicMenuColorHover = new _textField('public_menu_color_hover','public-menu-color-hover','publicMenuColorHover', true);
+	 	$this->publicTextColor = new _textField('public_text_color','public-text-color','publicTextColor', true);
+	 	$this->publicTextColorHover = new _textField('public_text_color_hover','public-text-color-hover','publicTextColorHover', true);
+	 	$this->publicFontFamily = new _textField('public_font_family','public-font-family','publicFontFamily', true);
+	 	$this->publicFontSizeTitle = new _numberField('public_font_size_title','public-font-size-title','publicFontSizeTitle', true);
+	 	$this->publicFontSizeHeading = new _numberField('public_font_size_heading','public-font-size-heading','publicFontSizeHeading', true);
+	 	$this->publicFontSizeMenu = new _numberField('public_font_size_menu','public-font-size-menu','publicFontSizeMenu', true);
+	 	$this->publicFontSizeText = new _textField('public_font_size_text','public-font-size-text','publicFontSizeText', true);
+		
+	}
+	
+	public function setRow($row){
+		//parent::setRow($row);
+		
+		 $this->siteTitle->setRow($row);
+		 $this->name->set($this->siteTitle->value);
+		 $this->siteUrl->setRow($row);
+		 $this->loginNotice->setRow($row);
+		 $this->organization->setRow($row);
+		 $this->organizationUrl->setRow($row);
+		 $this->organizationDescription->setRow($row);
+		 $this->contactName->setRow($row);
+		 $this->contactEmail->setRow($row);
+		 $this->showPublicSite->setRow($row);
+		 $this->showCostReports->setRow($row);
+		 $this->showRevenueReports->setRow($row);
+		 $this->publicFillColor->setRow($row);
+		 $this->publicSiteColor->setRow($row);
+		 $this->publicPageColor->setRow($row);
+		 $this->publicMenuColor->setRow($row);
+		 $this->publicMenuColorHover->setRow($row);
+		 $this->publicTextColor->setRow($row);
+		 $this->publicTextColorHover->setRow($row);
+		 $this->publicFontFamily->setRow($row);
+		 $this->publicFontSizeTitle->setRow($row);
+		 $this->publicFontSizeHeading->setRow($row);
+		 $this->publicFontSizeMenu->setRow($row);
+		 $this->publicFontSizeText->setRow($row);
+		
+	}
+	
+	public function defaults(){
+		//parent::defaults();
+		
+		$this->siteTitle->reset('default');
+		 $this->name->set($this->siteTitle->value);
+		 $this->siteUrl->reset('default');
+		 $this->loginNotice->reset('default');
+		 $this->organization->reset('default');
+		 $this->organizationUrl->reset('default');
+		 $this->organizationDescription->reset('default');
+		 $this->contactName->reset('default');
+		 $this->contactEmail->reset('default');
+		 $this->showPublicSite->reset('default');
+		 $this->showCostReports->reset('default');
+		 $this->showRevenueReports->reset('default');
+		 $this->publicFillColor->reset('default');
+		 $this->publicSiteColor->reset('default');
+		 $this->publicPageColor->reset('default');
+		 $this->publicMenuColor->reset('default');
+		 $this->publicMenuColorHover->reset('default');
+		 $this->publicTextColor->reset('default');
+		 $this->publicTextColorHover->reset('default');
+		 $this->publicFontFamily->reset('Arial');
+		 $this->publicFontSizeTitle->reset(22);
+		 $this->publicFontSizeHeading->reset(16);
+		 $this->publicFontSizeMenu->reset(14);
+		 $this->publicFontSizeText->reset(10);
+		
+	}
+	
+	public function format(){
+		//parent::format();
+		
+		 $this->siteTitle->format();
+		 $this->name->set($this->siteTitle->value);
+		 $this->siteUrl->format();
+		 $this->loginNotice->format();
+		 $this->organization->format();
+		 $this->organizationUrl->format();
+		 $this->organizationDescription->format();
+		 $this->contactName->format();
+		 $this->contactEmail->format();
+		 $this->showPublicSite->format();
+		 $this->showCostReports->format();
+		 $this->showRevenueReports->format();
+		 $this->publicFillColor->format();
+		 $this->publicSiteColor->format();
+		 $this->publicPageColor->format();
+		 $this->publicMenuColor->format();
+		 $this->publicMenuColorHover->format();
+		 $this->publicTextColor->format();
+		 $this->publicTextColorHover->format();
+		 $this->publicFontFamily->format();
+		 $this->publicFontSizeTitle->format();
+		 $this->publicFontSizeHeading->format();
+		 $this->publicFontSizeMenu->format();
+		 $this->publicFontSizeText->format();
+	}
+	
+	public function listHeading(){
+		//$this->addContent(parent::listHeading(),true);
+		
+
+		 $this->addContent($this->siteTitle->th(),true);
+		 $this->addContent($this->siteUrl->th());
+		 $this->addContent($this->loginNotice->th());
+		 $this->addContent($this->organization->th());
+		 $this->addContent($this->organizationUrl->th());
+		 $this->addContent($this->organizationDescription->th());
+		 $this->addContent($this->contactName->th());
+		 $this->addContent($this->contactEmail->th());
+		 $this->addContent($this->showPublicSite->th());
+		 $this->addContent($this->showCostReports->th());
+		 $this->addContent($this->showRevenueReports->th());
+		 $this->addContent($this->publicFillColor->th());
+		 $this->addContent($this->publicSiteColor->th());
+		 $this->addContent($this->publicPageColor->th());
+		 $this->addContent($this->publicMenuColor->th());
+		 $this->addContent($this->publicMenuColorHover->th());
+		 $this->addContent($this->publicTextColor->th());
+		 $this->addContent($this->publicTextColorHover->th());
+		 $this->addContent($this->publicFontFamily->th());
+		 $this->addContent($this->publicFontSizeTitle->th());
+		 $this->addContent($this->publicFontSizeHeading->th());
+		 $this->addContent($this->publicFontSizeMenu->th());
+		 $this->addContent($this->publicFontSizeText->th());
+		return $this->getContent();
+	}
+	
+	public function listDetail(){
+		//$this->addContent(parent::listDetail(),true);
+		
+		 $this->addContent($this->siteTitle->tD(),true);
+		 $this->addContent($this->siteUrl->tD());
+		 $this->addContent($this->loginNotice->tD());
+		 $this->addContent($this->organization->tD());
+		 $this->addContent($this->organizationUrl->tD());
+		 $this->addContent($this->organizationDescription->tD());
+		 $this->addContent($this->contactName->tD());
+		 $this->addContent($this->contactEmail->tD());
+		 $this->addContent($this->showPublicSite->tD());
+		 $this->addContent($this->showCostReports->tD());
+		 $this->addContent($this->showRevenueReports->tD());
+		 $this->addContent($this->publicFillColor->tD());
+		 $this->addContent($this->publicSiteColor->tD());
+		 $this->addContent($this->publicPageColor->tD());
+		 $this->addContent($this->publicMenuColor->tD());
+		 $this->addContent($this->publicMenuColorHover->tD());
+		 $this->addContent($this->publicTextColor->tD());
+		 $this->addContent($this->publicTextColorHover->tD());
+		 $this->addContent($this->publicFontFamily->tD());
+		 $this->addContent($this->publicFontSizeTitle->tD());
+		 $this->addContent($this->publicFontSizeHeading->tD());
+		 $this->addContent($this->publicFontSizeMenu->tD());
+		 $this->addContent($this->publicFontSizeText->tD());
+
+		return $this->getContent();
+	}
+	
+	public function display(){
+		//$this->addContent(parent::display(),true);
+		
+		 $this->addContent($this->siteTitle->p(),true);
+		 $this->addContent($this->siteUrl->p());
+		 $this->addContent($this->loginNotice->p());
+		 $this->addContent($this->organization->p());
+		 $this->addContent($this->organizationUrl->p());
+		 $this->addContent($this->organizationDescription->p());
+		 $this->addContent($this->contactName->p());
+		 $this->addContent($this->contactEmail->p());
+		 $this->addContent($this->showPublicSite->p());
+		 $this->addContent($this->showCostReports->p());
+		 $this->addContent($this->showRevenueReports->p());
+		 $this->addContent($this->publicFillColor->p());
+		 $this->addContent($this->publicSiteColor->p());
+		 $this->addContent($this->publicPageColor->p());
+		 $this->addContent($this->publicMenuColor->p());
+		 $this->addContent($this->publicMenuColorHover->p());
+		 $this->addContent($this->publicTextColor->p());
+		 $this->addContent($this->publicTextColorHover->p());
+		 $this->addContent($this->publicFontFamily->p());
+		 $this->addContent($this->publicFontSizeTitle->p());
+		 $this->addContent($this->publicFontSizeHeading->p());
+		 $this->addContent($this->publicFontSizeMenu->p());
+		 $this->addContent($this->publicFontSizeText->p());
+		
+		return $this->getContent();
+	}
+	
+	public function getPostVars(){
+		//parent::getPostVars();
+		
+		 $this->siteTitle->post();
+		 $this->name->set($this->siteTitle->value);
+		 $this->siteUrl->post();
+		 $this->loginNotice->post();
+		 $this->organization->post();
+		 $this->organizationUrl->post();
+		 $this->organizationDescription->post();
+		 $this->contactName->post();
+		 $this->contactEmail->post();
+		 $this->showPublicSite->post();
+		 $this->showCostReports->post();
+		 $this->showRevenueReports->post();
+		 $this->publicFillColor->post();
+		 $this->publicSiteColor->post();
+		 $this->publicPageColor->post();
+		 $this->publicMenuColor->post();
+		 $this->publicMenuColorHover->post();
+		 $this->publicTextColor->post();
+		 $this->publicTextColorHover->post();
+		 $this->publicFontFamily->post();
+		 $this->publicFontSizeTitle->post();
+		 $this->publicFontSizeHeading->post();
+		 $this->publicFontSizeMenu->post();
+		 $this->publicFontSizeText->post();
+	}
+}
+
+class siteSettings extends _entity{
+	protected $__MyClassName = 'SiteSettings';
+	protected $_titleEntity = 'Site Settings';
+
+	protected function setHelperClasses(){
+		$this->f = new siteSettingsFields();
+		$this->links = new siteSettingsLinks();
+		$this->sql = new siteSettingsSQL();
+	}
+	
+	protected function beforeSetDetails(){
+			$this->verifySettings();
+	}
+    
+	protected function afterSetDetails(){
+	
+		$this->setSessionDetails();	
+	}
+	
+	protected function verifySettings(){
+		$sql = $this->sql->count();
+		
+		$i = dbGetCount($sql, 'count_settings', 0, 'verifySettings');
+		if ($i == 0){
+			$this->createSettings();	
+		}
+	}
+	
+	protected function afterSetDefaults(){
+	
+	}
+	
+	protected function setSessionDetails(){
+	//if format happens on setting details for edit
+		if (($this->pageMode != 'EDIT') || ($this->pageMode != 'ADD')){
+		$this->f->format();
+		}
+		$_SESSION['site-title'] = $this->f->siteTitle->value();	
+		$_SESSION['site-url'] = $this->f->siteUrl->value();	
+		$_SESSION['site-login-notice'] = $this->f->loginNotice->value();
+		$_SESSION['site-org'] = $this->f->organization->value();	
+		$_SESSION['site-org-url'] = $this->f->organizationUrl->value();
+		$_SESSION['site-contact-name'] = $this->f->contactName->value();	
+		$_SESSION['site-contact-email'] = $this->f->contactEmail->value();	
+		$_SESSION['show-public-site'] = $this->f->showPublicSite->value();	
+		$_SESSION['show-cost-reports'] = $this->f->showCostReports->value();
+		$_SESSION['show-revenue-reports'] = $this->f->showRevenueReports->value();
+	}
+	
+	protected function unsetSessionDetails(){
+		unset($_SESSION['site-title']);
+		unset($_SESSION['site-url']);
+		unset($_SESSION['site-login-notice']);
+		unset($_SESSION['site-org']);
+		unset($_SESSION['site-org-url']);
+		unset($_SESSION['site-contact-name']);
+		unset($_SESSION['site-contact-email']);
+		unset($_SESSION['show-public-site']);
+		unset($_SESSION['show-cost-reports']);
+		unset($_SESSION['show-revenue-reports']);
+	}
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';		
+		$settingsL = new SiteSettingsLinks($menuType,$menuStyle);
+		$menuL = new MenuLinks($menuType,$menuStyle);
+
+		$menu = $settingsL->openMenu('section-heading-links');
+		
+		$menu .= $menuL->linkReference();
+		$menu .= $settingsL->resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $settingsL->detailEditHref();
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $settingsL->detailViewHref();
+		}
+		$menu .= $settingsL->closeMenu();
+		$this->_pageMenu = $menu;
+	}
+	
+	protected function afterDisplay(){
+		$detail = $this->getPublicSiteStylesFieldset('true');
+		return $detail;
+	}
+	
+	private function getPublicSiteStylesFieldset($disabled = 'false'){
+
+		$styles = openFieldset('Public Site Presentation Styles');
+		//need disabled swtch for relevant inputs
+		$styles .= $this->f->publicFillColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicSiteColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicPageColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicMenuColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicMenuColorHover->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicTextColor->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicTextColorHover->input($entity,'CSS-COLOR');
+		$styles .= $this->f->publicFontSizeTitle->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontSizeHeading->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontSizeMenu->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontSizeText->input($entity, 'CSS-FONT-SIZE');
+		$styles .= $this->f->publicFontFamily->input($entity, 'CSS-FONT-FAMILY');
+	
+		//add the sample region after the first color select
+		//$styles .= wrapDiv($this->publicSiteSample(),'public-site-sample','site-sample');
+
+		//$styles .= closeDiv();
+		$styles .= closeFieldset();
+		return $styles;
+	}
+	
+	public function publicSiteSample(){
+		
+		
+		//sample is inserted into the editing td just after the first color select list
+		//force a close on the td and reopen a td with rowspan set to all seven selects
+		//this inserts the sample neatly beside all select lists
+		
+		$td = new _td();
+		$x = $td->close();
+		
+		$td = new _td('none','editing-td');
+		$td->addAttribute('width', '50%');
+		$td->addAttribute('rowspan',11);
+		$x .= $td->open();
+		
+		$style = minHeightPixels(200).setPadding(10).setFontFamily($this->f->publicFontFamily->value);
+		$style .= setFont($this->f->publicFontSizeText->value,'normal','normal').colorBackground($this->f->publicFillColor->value);
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+
+		$style = setPadding(10).colorBackground($this->f->publicSiteColor->value);
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+		
+
+		$style = setPadding(10).widthPixels(75).setFloat('left');
+		$style .= colorBackground($this->f->publicMenuColor->value).setFont($this->f->publicFontSizeMenu->value,'normal','normal');
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+		
+		
+		$style = clearListStyle().clearMarginPadding();
+		$list = new _ul();
+		$list->setStyle($style);
+		$x .= $list->open();
+		
+		$style = setDisplay('block').colorText($this->f->publicTextColor->value);
+		$li = new _li();
+		$li->setStyle($style);
+		$x .= $li->wrap('Menu Item');
+	
+		$style = setDisplay('block').colorText($this->f->publicTextColorHover->value);
+		$style .= colorBackground($this->f->publicMenuColorHover->value);
+		$li = new _li();
+		$li->setStyle($style);
+		$x .= $li->wrap('Menu Item Hover');
+	
+		$x .= closeList();
+		$x .= closeDiv();
+	
+		$style = setPadding(10).setMarginCustom('left',100);
+		$style .= colorBackground($this->f->publicPageColor->value).colorText($this->f->publicTextColor->value);
+		$div = new _div();
+		$div->setStyle($style);
+		$x .= $div->open();
+		
+		$x .= spanStyled('Titles',setFont($this->f->publicFontSizeTitle->value,'normal','bold')).br();
+		$x .= spanStyled('Headings',setFont($this->f->publicFontSizeHeading->value,'normal','bold')).br();
+		$x .= spanStyled('Content Text'.br().'...',setFont($this->f->publicFontSizeText->value,'normal','normal')).br();
+		$x .= closeDiv();		
+		$x .= closeDiv();		
+		$x .= closeDiv();
+
+		return $x;		
+	}
+	
+	protected function editForm(){
+		
+		$entity = 'site-settings';
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
+
+		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->_titleEntity);
+		
+		$edit->required->addContent($this->f->siteTitle->INPUT($entity, 'NAME'));
+		$edit->required->addContent($this->f->siteUrl->input($entity,'TEXT'));	
+		$edit->required->addContent($this->f->contactName->input($entity,'NAME'));
+		$edit->required->addContent($this->f->contactEmail->input($entity,'TEXT'));
+		$edit->optional->addContent($this->f->organization->input($entity,'NAME'));
+		$edit->optional->addContent($this->f->organizationUrl->input($entity,'TEXT'));
+		$edit->optional->addContent($this->f->organizationDescription->input($entity,'COMMENTS'));
+		$edit->optional->addContent($this->f->loginNotice->input($enity,'COMMENTS'));
+		$edit->optional->addContent($this->f->showCostReports->input($entity, 'YES-NO'));
+		$edit->optional->addContent($this->f->showRevenueReports->input($entity,'YES-NO'));
+		$edit->optional->addContent($this->f->showPublicSite->input($entity, 'YES-NO'));	
+		
+		$edit->optional->addContent($this->getPublicSiteStylesFieldset('false'));
+
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		
+		$edit->submit->addContent(getSaveChangesResetButtons());
+		return $edit->close();
+	}
+	
+	protected function afterCollectPostValues(){
+	
+	}
+	
+	private function createSettings(){
+
+		
+		$sql = new _sqlWriter('INSERT');
+
+		$sql->editField($this->f->siteTitle);
+		$sql->editField($this->f->siteUrl);
+		$sql->editField($this->f->loginNotice);
+		$sql->editField($this->f->organization);
+		$sql->editField($this->f->organizationUrl);
+		$sql->editField($this->f->organizationDescription);
+		$sql->editField($this->f->contactName);
+		$sql->editField($this->f->contactEmail);
+		$sql->editField($this->f->publicFillColor);
+		$sql->editField($this->f->publicSiteColor);
+		$sql->editField($this->f->publicPageColor);
+		$sql->editField($this->f->publicMenuColor);
+		$sql->editField($this->f->publicMenuColorHover);
+		$sql->editField($this->f->publicTextColor);
+		$sql->editField($this->f->publicTextColorHover);
+		$sql->editField($this->f->publicFontFamily);
+		$sql->editField($this->f->publicFontSizeTitle);
+		$sql->editField($this->f->publicFontSizeHeading);
+		$sql->editField($this->f->publicFontSizeMenu);
+		$sql->editField($this->f->publicFontSizeText);
+		$sql->editField($this->f->showPublicSite);
+		$sql->editField($this->f->showCostReports);
+		$sql->editField($this->f->showRevenueReports,true);
+		
+		$result = dbRunSQL($sql->editStatement('sitewide_settings'));
+		
+
+	}
+
+
+	protected function saveUpdate(){
+		$sql = new _sqlWriter('UPDATE');
+
+		$sql->editField($this->f->siteTitle);
+		$sql->editField($this->f->siteUrl);
+		$sql->editField($this->f->loginNotice);
+		$sql->editField($this->f->organization);
+		$sql->editField($this->f->organizationUrl);
+		$sql->editField($this->f->organizationDescription);
+		$sql->editField($this->f->contactName);
+		$sql->editField($this->f->contactEmail);
+		$sql->editField($this->f->publicFillColor);
+		$sql->editField($this->f->publicSiteColor);
+		$sql->editField($this->f->publicPageColor);
+		$sql->editField($this->f->publicMenuColor);
+		$sql->editField($this->f->publicMenuColorHover);
+		$sql->editField($this->f->publicTextColor);
+		$sql->editField($this->f->publicTextColorHover);
+		$sql->editField($this->f->publicFontFamily);
+		$sql->editField($this->f->publicFontSizeTitle);
+		$sql->editField($this->f->publicFontSizeHeading);
+		$sql->editField($this->f->publicFontSizeMenu);
+		$sql->editField($this->f->publicFontSizeText);
+		$sql->editField($this->f->showPublicSite);
+		$sql->editField($this->f->showCostReports);
+		$sql->editField($this->f->showRevenueReports,true);
+		
+		$result = dbRunSQL($sql->editStatement('sitewide_settings'));
+		
+		$this->f->setSessionDetails();
+		
+	
+	}
+	
+}
+?>

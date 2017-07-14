@@ -1,0 +1,46 @@
+<?php 
+
+abstract class _projectChildFields extends _typedChildFields
+implements Iecho, IcontentWriter{
+
+	public $project;
+	
+    public function __construct(){
+    	parent::__construct();
+    	$this->project = new _idNameField('project_id','idProject','project_name',true);
+    }
+    protected function reset(){
+    	parent::reset(){
+    	$this->project->reset(0);
+    }
+	public function setRow($row){
+		parent::setRow($row);
+		$this->project->fetch($row);
+	}
+	public function format(){
+		parent::format();
+		$this->project->format();
+	}
+	public function display(){;
+		$this->addContent(parent::display(),true);
+		$this->addContent($this->project->p());		
+		return $this->getContent();
+	}
+	public function listHeading(){
+		$this->addContent(parent::listHeading(),true);
+		$this->addContent($this->project->th());		
+		return $this->getContent();
+	}
+	public function listDetail(){
+		$this->addContent(parent::listDetail(),true);
+		$this->addContent($this->project->td());
+		return $this->getContent();
+	}
+	public function getPostVars(){
+		parent::getPostVars();
+		$this->project->post();
+	}
+}
+
+
+?>

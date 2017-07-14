@@ -1,0 +1,100 @@
+<?php 
+
+class _textField extends _baseField
+implements IbaseField{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'TEXT';
+	}
+}
+class _numberField extends _baseField
+implements IbaseField{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'NUMBER';
+	}
+}
+
+class _dateField extends _baseField
+implements IbaseField{
+	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
+		parent::__construct($dbColumn, $postVariable);
+		$this->type = 'DATE';
+	}
+
+}
+ 
+class _idNameField implements IbaseField{
+	public  $id;
+	public  $name;
+	
+	public function __construct(string $dbColumnId = 'entity_id', string $postVariable = 'idEntity', string $dbColumnName = 'entity_name',string $caption = 'caption',bool $enable = false){
+		$this->id = new _numberField($dbColumnId, $postVariable,'not-used');
+		$this->name = new _textField($dbColumnName,'not-used',$caption);
+		//$this->name->caption = $caption;
+		$this->enabled($enable);
+	}
+	public function enabled(bool $enable = false){
+		if ($enable == true){
+ 	//public function setEnabled( $fetch = ,  $show = ,  $list = ,  $post = ){
+			$this->name->setEnabled(true,true,true,false);
+			$this->id->setEnabled(true,false,false,true);
+		
+		} else {
+			$this->name->disable();
+			$this->id->disable();
+		}
+	}
+	public function set( $value){
+	 	$this->id->set($value);
+	}
+ 	public function reset( $default = 0){
+ 		$this->id->reset($default);
+ 	 	$this->name->reset('');
+ 	}
+ 	public function get(){
+ 	   	return $this->id->get();
+ 	}
+   	public function value(){
+   		return $this->id->value();
+   	}
+   	public function sqlValue(){
+   	
+   		return $this->id->sqlValue();
+   	}
+	public function setShow(string $caption, bool $list = true){
+		$this->name->setShow($caption,$list);
+	}
+	public function setFetch(string $dbColumn){
+	//,$dbColumnName){
+		$this->id->setFetch($dbColumn);
+		//$this->name->setFetch($dbColumnName);
+	}
+	public function setFetchName(string $dbColumnName){
+	//,$dbColumnName){
+		//$this->id->setFetch($dbColumn);
+		$this->name->setFetch($dbColumnName);
+	}
+	public function fetch($row){
+		$this->id->fetch($row);
+		$this->name->fetch($row);
+	}
+	public function th(){
+		return $this->name->tH();
+	}
+	
+ 	public function td(){
+ 		return $this->name->tD();
+ 	}
+ 	public function p(){
+ 		return $this->name->p();
+ 	}
+ 	public function post(){
+ 		$this->id->post();
+ 	}
+ 	public function format(){
+ 	$this->name->format();
+ 	}
+}
+ 
+?>

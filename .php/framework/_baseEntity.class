@@ -1,0 +1,132 @@
+<?php 
+
+abstract class _baseEntity extends _contentWriter 
+implements Iecho, IcontentWriter {
+	protected $__MyClassName = '__baseEntity.';
+	protected $_titleEntity = '__baseEntity';
+
+    public $pageMode = 'VIEW';
+	public $id = 0;
+	public $idParent = 0;
+
+	protected $isPagingSet = false;
+	public $resultPage = 1;
+	public $perPage = 10;
+	 
+	protected $isCalendarSet = false;
+	public $month = -1;
+	public $year = -1;
+	public $showCalendar = 'NO';
+	
+	public $prevCalendarLink = '';
+	public $nextCalendarLink = '';
+	
+	public $countAll = 0;
+	public $countChildren = 0;
+	public $isCountSet = false;
+	
+	protected $_pageTitle = 'entity.pageTitle';
+	protected $_pageMenu = 'entity.pageMenu';
+	
+	protected function echoState($show = true, $f = '-use-current-', $c= '-use-current-'){
+		if ($show == true){
+			$this->echoState_ids($show, $f, $c);
+			$this->echoState_paging($show, $f, $c);
+			$this->echoState_calendar($show, $f, $c);
+			$this->echoState_count($show, $f, $c);
+		}
+	}
+	
+	protected function echoState_ids($show = true, $f = '-use-current-', $c= '-use-current-'){
+		$this->echoLocale($f, $c);
+		$s = $show;
+		$this->echoValue($s, 'id', $this->id);
+		$this->echoValue($s, 'idParent', $this->idParent);
+		$this->echoValue($s, 'pageMode', $this->pageMode);
+	}
+	
+	protected function echoState_calendar($show = true, $f = '-use-current-', $c= '-use-current-'){
+
+		if ($this->isCalendarSet == true){
+			$s = false;
+			$this->echoLocale($f, $c);
+			$this->echoValue($s, 'month', $this->month);
+			$this->echoValue($s, 'year', $this->year);
+			$this->echoValue($s, 'showCalendar', $this->showCalendar);
+		}
+	}
+	
+	protected function echoState_count($show = true, $f = '-use-current-', $c= '-use-current-'){
+
+		if ($this->isCountSet == true){
+			$s = $show;
+			$this->echoLocale($f, $c);
+			$this->echoValue($s, 'count', $this->count);
+			$this->echoValue($s, 'countChilden', $this->countChildren);
+		}
+	}
+	
+	
+	protected function echoState_paging($show = true, $f = '-use-current-', $c= '-use-current-'){
+
+		if ($this->isPagingSet == true){
+			$s = false;
+			$this->echoLocale($f, $c);
+			$this->echoValue($s, 'resultPage', $this->resultPage);
+			$this->echoValue($s, 'perPage', $this->perPage);
+		}
+	}
+    
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0, $page = 1, $rows = 10, $year = -1, $month = -1, $calendar = 'NO'){
+		$this->setIdentifiers($mode, $id, $idParent);
+		$this->setPaging($page, $rows, $calendar);
+		$this->setCalendar($year, $month, $calendar);
+		//$this->echoState(true);
+	}
+
+
+	public function setPaging($page = 1, $perPage = 10){
+		$this->resultPage = $page;
+		$this->perPage = $perPage;
+		
+		$this->isPagingSet = true;
+		$this->echoState_paging(true, 'setPaging');
+	 }
+	 
+	public function setCalendar($year = -1, $month = -1, $show = 'NO'){
+		$this->showCalendar = $show;
+	
+		 if ($year != 0 && $year != -1){
+		 	$this->year = $year;
+		 	$this->month = $month;
+		 } else {
+		 //dates not set, use current month and year
+		 	global $sessionTime;
+		 	$this->year = getTimestampYear($sessionTime);
+		 	$this->month = getTimestampMonth($sessionTime);
+		 }
+		 
+		$this->isCalendarSet = true;
+		$this->echoState_calendar(true, 'setCalendar');
+	}
+	
+	protected function setCounts($count = 0, $countChildren = 0){
+		$this->countAll = $count;
+		$this->countChildren = $countChildren;
+		
+		$this->isCountSet = true;
+		$this->echoState_count(true, 'setCount');
+	}
+	
+	public function setIdentifiers($mode, $id = 0, $idParent = 0){
+		$this->pageMode = $mode;
+		$this->id = $id;
+		$this->idParent = $idParent;
+		$this->echoState_ids(true, 'setIdentifiers');
+	}
+
+
+	
+}
+
+?>

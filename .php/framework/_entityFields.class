@@ -1,0 +1,255 @@
+<?php 
+
+ interface IentityFields{
+ 	public function setRow($row);
+ 	public function format();
+ 	public function defaults();
+ 	public function listHeading();
+ 	public function listDetail();
+ 	public function display();
+	public function getPostVars();
+ }
+ 
+abstract class _entityFields extends _contentWriter 
+implements IentityFields, Iecho, IcontentWriter{
+	
+	public $highlight;
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	
+	/*
+	public $displayOrder;
+	public $notes;
+	public $summary;
+   	public $comments;
+	public $doneBy;
+	public $reviewedBy;
+	public $approvedBy;
+   	public $started;
+   	public $reported;
+	public $reviewed;
+	public $approved;
+
+	public $location;
+	public $qtyEstimated;
+	public $qtyActual;
+	public $qtyUnits;
+	*/
+	
+    public function __construct(){
+    	$this->id = new _numberField('id','id','Id',true);
+    	$this->name = new _textField('name','name','Name',true);
+    	$this->description = new _textField('description','description','Description',true);
+		$this->updated = new _dateField('updated','not-used',Updated',true);
+    	$this->created = new _dateField('created','not-used','Created',true);
+        $this->highlight = new _textField('highlight_style','highlight','Highlight',true);
+
+    	/*
+    	$this->displayOrder = new _numberField('display_order','displayOrder');
+    	$this->comments = new _textField('comments','comments');
+    	$this->notes = new _textField('notes','notes');
+    	$this->summary = new _textField('summary','summary');
+      	$this->started = new _dateField('started','started');           
+    	$this->reported = new _dateField('reported','reported');
+    	$this->reviewed = new _dateField('reviewed','reviewed');
+    	$this->approved = new _dateField('approved','approved');
+    	$this->doneBy = new _textField('name','name');
+    	$this->reviewedBy = new _textField('reviewed_by','reviewedBy');
+    	$this->approvedBy = new _textField('approved_by','approvedBy');
+    	
+    	$this->location = new _idNameField('location_id','idLocation','location_name','Location',true);
+ 
+    	*/
+    }
+    
+    protected function reset(){
+    	$this->id->reset(0);
+		$this->name->reset('');
+		$this->description->reset('');
+		$this->created->reset('');
+		$this->updated->reset('');
+		$this->highlight->reset('none');
+		
+		/*
+		$this->comments->reset('');
+		$this->summary->reset('');
+		$this->notes->reset('');
+		$this->displayOrder->reset(0);
+		$this->started->reset('');
+		$this->reported->reset('');
+		$this->reviewed->reset('');
+		$this->approved->reset('');
+		$this->doneBy->reset('');
+		$this->reviewedBy->reset('');
+		$this->approvedBy->reset('');
+
+		$this->location->reset(0);
+		*/
+    }
+    
+	public function setRow($row){
+		$this->reset;
+		$this->id->fetch($row);
+		$this->name->fetch($row);
+		$this->description->fetch($row);
+		$this->created->fetch($row);
+		$this->updated->fetch($row);
+		$this->highlight->fetch($row);
+		
+		/*
+		$this->notes->fetch($row);
+		$this->comments->fetch($row);
+		$this->summary->fetch($row);
+		$this->displayOrder->fetch($row);
+		$this->started->fetch($row);
+		$this->reported->fetch($row);
+		$this->reviewed->fetch($row);
+		$this->approved->fetch($row);
+		$this->doneBy->fetch($row);
+		$this->reviewedBy->fetch($row);
+		$this->approvedBy->fetch($row);
+		
+		$this->location->fetch($row);*/
+	}
+	
+	public function defaults(){
+		$this->reset;
+	}
+	
+	
+	public function format(){
+		$this->id->format();
+		$this->name->format();
+		$this->description->format();
+		$this->created->format();
+		$this->updated->format();
+		$this->highlight->format();
+		/*
+		$this->notes->format();
+		$this->comments->format();
+		$this->summary->format();
+		$this->displayOrder->format();
+		$this->started->format();
+		$this->reported->format();
+		$this->reviewed->format();
+		$this->approved->format();
+		$this->doneBy->format();
+		$this->reviewedBy->format();
+		$this->approvedBy->format();
+	
+		$this->location->format();
+		*/
+	}
+	public function display(){
+		$this->addContent($this->id->p(),true);
+		$this->addContent($this->name->p());
+		$this->addContent($this->description->p());
+		$this->addContent($this->created->p());
+		$this->addContent($this->updated->p());
+		$this->addContent($this->highlight->p());	
+		/*
+		$this->addContent($this->displayOrder->p());
+		$this->addContent($this->notes->p());
+		$this->addContent($this->summary->p());
+		$this->addContent($this->comments->p());
+		$this->addContent($this->started->p());
+		$this->addContent($this->reported->p());
+		$this->addContent($this->reviewed->p());
+		$this->addContent($this->approved->p());
+		$this->addContent($this->doneBy->p());
+		$this->addContent($this->reviewedBy->p());
+		$this->addContent($this->approvedBy->p());
+		$this->addContent($this->location->p());
+		*/
+		return $this->getContent();
+	}
+	
+	public function listHeading(){
+		$this->resetContent(true);
+		$this->addContent($this->id->th());
+		$this->addContent($this->name->th());
+		$this->addContent($this->description->th());
+		$this->addContent($this->created->th());
+		$this->addContent($this->updated->th());
+		$this->addContent($this->highlight->th());		
+		return $this->getContent();
+		
+		/*
+		$this->addContent($this->displayOrder->tH());
+		$this->addContent($this->notes->tH());
+		$this->addContent($this->summary->tH());
+		$this->addContent($this->comments->tH());
+		$this->addContent($this->started->tH());
+		$this->addContent($this->reported->tH());
+		$this->addContent($this->reviewed->tH());
+		$this->addContent($this->approved->tH());
+		$this->addContent($this->doneBy->tH());
+		$this->addContent($this->reviewedBy->tH());
+		$this->addContent($this->approvedBy->tH());
+		$this->addContent($this->location->tH());
+
+		*/
+
+	}
+	
+	public function listDetail(){
+		$this->format();
+		$this->resetContent(true);
+		$this->addContent($this->id->td(),true);
+		$this->addContent($this->name->td());
+		$this->addContent($this->description->td());
+		$this->addContent($this->created->td());
+		$this->addContent($this->updated->td());
+		$this->addContent($this->highlight->td());
+		return $this->getContent();
+		
+		/*
+		$this->addContent($this->displayOrder->tD());
+		$this->addContent($this->notes->tD());
+		$this->addContent($this->summary->tD());
+		$this->addContent($this->comments->tD());
+		$this->addContent($this->started->tD());
+		$this->addContent($this->reported->tD());
+		$this->addContent($this->reviewed->tD());
+		$this->addContent($this->approved->tD());
+		$this->addContent($this->doneBy->tD());
+		$this->addContent($this->reviewedBy->tD());
+		$this->addContent($this->approvedBy->tD());
+		
+		$this->addContent($this->location->tD());
+		*/
+
+	}
+
+	public function getPostVars(){
+		$this->id->post();
+		$this->name->post();
+		$this->description->post();
+		$this->created->post();
+		$this->updated->post();
+		$this->highlight->post();
+		
+		
+		/*
+		$this->notes->post();
+		$this->comments->post();
+		$this->summary->post();
+		$this->displayOrder->post();
+		$this->started->post();
+		$this->reported->post();
+		$this->reviewed->post();
+		$this->approved->post();
+		$this->doneBy->post();
+		$this->reviewedBy->post();
+		$this->approvedBy->post();
+		$this->location->post();
+		*/
+	}
+}
+
+
+
+?>
