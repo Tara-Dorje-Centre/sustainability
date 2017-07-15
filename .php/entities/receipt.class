@@ -1,7 +1,7 @@
 ﻿<?php 
 
 
-class receiptFields extends _entityFields{
+class receiptFields extends _fieldsetTaskChild{
 
     public $dateReported;
 	public $receivedBy;

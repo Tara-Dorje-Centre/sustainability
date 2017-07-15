@@ -1,5 +1,5 @@
 ﻿<?php 
-class activityTypeFields extends _entityTypeFields{
+class activityTypeFields extends _fieldsetEntityType{
 
 }
 

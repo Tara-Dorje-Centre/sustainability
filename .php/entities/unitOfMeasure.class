@@ -1,5 +1,5 @@
 ﻿<?php 
-class unitOfMeasureFields extends _entityTypeFields{
+class unitOfMeasureFields extends _fieldsetEntityType{
 	/******
 _entityFields    id, name, description, 
 highlightStyle, created, updated

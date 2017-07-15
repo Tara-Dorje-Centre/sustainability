@@ -1,5 +1,5 @@
 ﻿<?php 
-class receiptTypeFields extends _entityTypeFields{
+class receiptTypeFields extends _fieldsetEntityType{
 
 }
 class receiptType extends _entityType{

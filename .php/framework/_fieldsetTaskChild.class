@@ -1,7 +1,7 @@
 <?php 
 
 abstract class _fieldsetTaskChild extends _fieldsetProjectChild
-implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWriter{
+implements Ifieldset, Iecho, IcontentWriter{
 
 	public $task;
 	public $reported;
@@ -18,22 +18,22 @@ implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWri
     	
     }
     protected function reset(){
-    	parent::reset(){
+    	parent::reset();
 		$this->task->reset(0);
 		$this->reported->reset('');
-		$this->-doneBy->reset(0);
+		$this->doneBy->reset(0);
     }
 	public function setRow($row){
 		parent::setRow($row);
 		$this->task->fetch($row);
 		$this->reported->fetch($row);
-		$this->-doneBy->fetch($row);
+		$this->doneBy->fetch($row);
 	}
 	public function format(){
 		parent::format();
 		$this->task->format();
 		$this->reported->format();
-		$this->-doneBy->format();
+		$this->doneBy->format();
 	}
 	public function display(){;
 		$this->addContent(parent::display(),true);

@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class userTypeFields extends _entityTypeFields{
+class userTypeFields extends _fieldsetEntityType{
 
 }
 

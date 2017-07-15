@@ -2,15 +2,10 @@
 
 
  interface Ifield{
- 	public  $caption = 'no caption';
- 	public  $dbColumn = 'not-used';
- 	public  $postVariable = 'notUsed';
- 	public  $type = 'TEXT';
- 	public $inputAsType = 'TEXT';
- 	public $valueRaw = NULL;
+ 	
  	public function enabled(bool $isEnabled = false);
  	public function disable();
- 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
+ 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false);
  	public function setShow(string $caption, bool $list = true);
 	public function setFetch(string $dbColumn);
  	public function setPost(string $postVariable);
@@ -26,9 +21,10 @@
  	public function p();
  	public function input(string $entity);
  	public function inputChoice(string $entity,string $options);
- 	public function inputFree($entity);
+ 	public function inputFree(string $entity);
+ 	public function inputHidden(string $entity);
  	public function post();
- 	public function format();
+
  }
  
  abstract class _field extends _contentWriter
@@ -246,12 +242,12 @@
  	}
  	
 
-	public function input($entity){
+	public function input(string $entity){
 		//default usage is free text
-		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
+		return $this->inputFree($entity,$this->value(),$this->postVariable,$this->caption);
 	}
 	
-	public function inputFree(){
+	public function inputFree(string $entity){
 		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
 		//$this->value()); password input should always be blank
 	}
@@ -261,7 +257,7 @@
 	public function inputChoice(string $entity, string $options){
 		return $this->inputCaptioned($entity, $options);
 	}
-	public function inputHidden(){
+	public function inputHidden(string $entity){
 		return getHiddenInput($this->postVariable, $this->value());
 	}
 	

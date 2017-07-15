@@ -1,12 +1,8 @@
 <?php 
 
-interface IfieldsetChild extends Ifieldset{
-	public $parent;
-	public $type;
-}
 
 abstract class _fieldsetChild extends _fieldset
-implements IfieldsetChild, Ifieldset, Iecho, IcontentWriter{
+implements Ifieldset, Iecho, IcontentWriter{
 
 	public $parent;
 	public $type;
@@ -26,7 +22,7 @@ implements IfieldsetChild, Ifieldset, Iecho, IcontentWriter{
     }
     
     protected function reset(){
-    	parent::reset(){
+    	parent::reset();
     	$this->parent->reset(0);
     	$this->type->reset(0);
     }

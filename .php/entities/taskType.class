@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class taskTypeFields extends _entityTypeFields{
+class taskTypeFields extends _fieldsetEntityType{
 
 
 	public $frequency = 'none';

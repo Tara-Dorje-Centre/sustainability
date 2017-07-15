@@ -1,6 +1,6 @@
 <?php 
 
-abstract class _fieldsetEntity extends _fieldset{
+abstract class _fieldsetEntityType extends _fieldset{
 	public $displayOrder;
 	public $notes;
 	
@@ -17,18 +17,23 @@ abstract class _fieldsetEntity extends _fieldset{
         $this->updated->setEnabled(true,true,true);
         $this->highlight->enabled(true);
     }
-
+    protected function reset(){
+    	parent::reset();
+		$this->displayOrder->reset(0);
+		$this->notes->reset('');
+    }
 
 	public function setRow($row){
 		parent::setRow($row);
 		$this->displayOrder->fetch($row);
-		$this->displayOrder->fetch($row);
+		$this->notes->fetch($row);
 		
 	}
 	
 	public function format(){
 		parent::format();
-		$this->displayOrder->fetch($row);
+		$this->displayOrder->format($row);
+		$this->notes->format($row);
 	}
 	
 	public function listHeading(){

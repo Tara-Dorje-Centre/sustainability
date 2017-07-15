@@ -3,7 +3,7 @@
 
 
 
-class userFields extends _entityFields{
+class userFields extends _fieldset{
 	
     public $loginName;
     public $nameFirst;
@@ -15,7 +15,7 @@ class userFields extends _entityFields{
 	public $isAdmin;
 	public $isActive;
 	public $mustUpdatePwd;
-	
+	public $type;
 
 	public function __construct(){
 		parent::__construct();

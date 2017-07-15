@@ -3,7 +3,7 @@
 
 
 
- class measureFields extends _entityFields{
+class measureFields extends _fieldsetTaskChild{
 	 public $dateReported;
 	 public $value;	
 	 public $measureTypeUnitId = 0;	

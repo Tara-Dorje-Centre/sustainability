@@ -1,5 +1,5 @@
 ﻿<?php 
-class projectTypeFields extends _entityTypeFields{
+class projectTypeFields extends _fieldsetEntityType{
 
 }
 class projectType extends _entityType{

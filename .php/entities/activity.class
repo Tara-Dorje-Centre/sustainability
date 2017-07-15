@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class activityFields extends _entityFields{
+class activityFields extends _fieldsetTaskChild{
 	public $hoursActual = 0;
  
 	public $linkUrl;

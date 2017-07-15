@@ -1,5 +1,5 @@
 ﻿<?php 
-class locationFields extends _entityFields{
+class locationFields extends _fieldsetChild{
 
 	public $sortKeyParent;
 	public $sortKey;

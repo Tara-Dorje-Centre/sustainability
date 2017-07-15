@@ -1,5 +1,5 @@
 ﻿<?php 
-class locationTypeFields extends _entityTypeFields{
+class locationTypeFields extends _fieldsetEntityType{
 
 }
 class locationType extends _entityType{

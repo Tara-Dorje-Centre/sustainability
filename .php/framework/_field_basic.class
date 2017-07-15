@@ -22,7 +22,7 @@ class _numberField extends _field
 		$this->inputAsType = 'NUMBER';
 	}
 	
-	public function input($entity){
+	public function input(string $entity){
 		return inputFieldNumber($entity,$this->value(),$this->postVariable,$this->caption);
 	}
 }
@@ -36,7 +36,7 @@ class _dateField extends _field
 		$this->inputAsType = 'DATE';
 	}
 	
-	public function input($entity){
+	public function input(string $entity){
 		return inputFieldDate($entity,$this->value(),$this->postVariable,$this->caption);
 	}
 

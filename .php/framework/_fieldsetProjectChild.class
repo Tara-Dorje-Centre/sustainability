@@ -1,15 +1,8 @@
 <?php 
-interface IfieldsetProjectChild{
-	public $project;
-	public $location;
-	public $started;
-	public $approved;
-	public $approvedBy;
 
-}
 
 abstract class _fieldsetProjectChild extends _fieldsetChild
-implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWriter{
+implements  Ifieldset, Iecho, IcontentWriter{
 
 	public $project;
 	public $location;
@@ -25,7 +18,7 @@ implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWri
     	$this->approvedBy = new _textField('approved_by','approvedBy','Approved By',true);
     }
     protected function reset(){
-    	parent::reset(){
+    	parent::reset();
     	$this->project->reset(0);
     	$this->location->reset(0);
     	$this->started->reset('');

@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class measureTypeFields extends _entityTypeFields{
+class measureTypeFields extends _fieldsetEntityType{
 
 
 }

@@ -1,7 +1,7 @@
 <?php 
 
 abstract class _fieldsetActivityChild extends _fieldsetTaskChild
-implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWriter{
+implements Ifieldset, Iecho, IcontentWriter{
 
 	public $activity;
 	
@@ -11,8 +11,8 @@ implements  IfieldsetProjectChild, IfieldsetChild, Ifieldset, Iecho, IcontentWri
     	$this->activity = new _idNameField('activity_id','idActivity','activity_name',true);
     }
     protected function reset(){
-    	parent::reset(){
-			$this->activity->reset(0);
+    	parent::reset();
+		$this->activity->reset(0);
     }
 	public function setRow($row){
 		parent::setRow($row);

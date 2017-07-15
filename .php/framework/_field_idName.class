@@ -17,9 +17,19 @@ class _idNameField implements Ifield{
 			$this->id->setEnabled(true,false,false,true);
 		
 		} else {
-			$this->name->disable();
-			$this->id->disable();
+			$this->name->enabled();
+			$this->id->enabled();
 		}
+	}
+	public function disable(){
+		$this->enabled(false);
+	}
+ 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
+	
+		$this->id->setEnabled($fetch,false,false,$post);
+	
+		$this->name->setEnabled($fetch,$show,$list,false);
+	
 	}
 	public function set( $value){
 	 	$this->id->set($value);
@@ -46,11 +56,16 @@ class _idNameField implements Ifield{
 		$this->id->setFetch($dbColumn);
 		//$this->name->setFetch($dbColumnName);
 	}
+	public function setPost(string $postVariable){
+		$this->id->setPost(postVariable);
+	}
 	public function setFetchName(string $dbColumnName){
 	//,$dbColumnName){
 		//$this->id->setFetch($dbColumn);
 		$this->name->setFetch($dbColumnName);
 	}
+	
+
 	public function fetch($row){
 		$this->id->fetch($row);
 		$this->name->fetch($row);
@@ -71,6 +86,25 @@ class _idNameField implements Ifield{
  	public function format(){
  	$this->name->format();
  	}
+	public function input(string $entity){
+		//default usage is free text
+		return $this->id->input($entity);
+		//$this->value(),$this->postVariable,$this->caption);
+	}
+	
+	public function inputFree(string $entity){
+		return $this->id->inputFree($entity);
+		//$this->value()); password input should always be blank
+	}
+	public function inputCaptioned(string $entity, string $input){
+		return $this->id->inputCaptioned($entity,$input);
+	}
+	public function inputChoice(string $entity, string $options){
+		return $this->id->inputChoice($entity,$options);
+	}
+	public function inputHidden(string $entity){
+		return $this->id->inputHidden();
+	}
 }
  
 ?>

@@ -1,5 +1,5 @@
 ﻿<?php 
-class materialTypeFields extends _entityTypeFields { 
+class materialTypeFields extends _fieldsetEntityType { 
 
 }
  
