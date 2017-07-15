@@ -5,7 +5,7 @@
 class _htmlSite extends _htmlPage
 implements IhtmlPage, IcontentWriter, Iecho{
 
-public function set($details = ' heading', $details = ' details'){
+public function set($heading = ' heading', $details = ' details'){
 	$this->_details = $details;
 	$this->_heading = $details;
 

@@ -4,8 +4,8 @@
 
 //classes - secure login framework entities
 
-include_once("_MenuLinks.class");
-include_once("_Menu.class");
+
+
 
 showProgress('menu classes loaded');
 

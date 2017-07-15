@@ -22,7 +22,7 @@ implements IhtmlPage,Iecho, IcontentWriter{
 	public $fontSizeMenu = 16;
 	public $fontSizeText = 14;
 	
-public function printSite(){
+public function print(){
 		
 		$content = $this->build();
 		echo $content;	
