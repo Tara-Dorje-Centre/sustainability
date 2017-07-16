@@ -15,8 +15,8 @@ include_once("_includes.php");
 	$sw = new SiteSettings;
 	$sw->unsetSessionDetails();
 
-$site = new _SiteTemplate;
-$site->setSiteTemplateDetails();
-$site->printSite();
+$site = new _htmlSite();
+$site->set();
+$site->print();
 
 ?>

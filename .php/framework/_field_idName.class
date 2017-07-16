@@ -1,5 +1,5 @@
 <?php 
-
+		//$fields = inputFieldUser($entity,$this->f->loginName->value(),'loginName','Login Name');
 class _idNameField implements Ifield{
 	public  $id;
 	public  $name;

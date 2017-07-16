@@ -21,22 +21,22 @@ class userFields extends _fieldset{
 		parent::__construct();
 		$this->id->enabled(true);
 		$this->name->enabled(true);
-    	$this->type->enabled(true);
+    	//$this->type->enabled(true);
     	$this->created->enabled(true);
     	$this->updated->enabled(true);
     	$this->highlight->enabled(true);
     	
-    	$this->nameFirst = new _textField('name_first','nameFirst','First Name', true); 
-		$this->nameLast = new _textField('name_last','nameLast','Last Name', true); 
+    	$this->nameFirst = new _nameField('name_first','nameFirst','First Name', true); 
+		$this->nameLast = new _nameField('name_last','nameLast','Last Name', true); 
 		$this->email = new _textField('email','email','Email Address', true); 
-		$this->focus = new _textField('focus','focus','Focus Area', true);
-		$this->interests = new _textField('interests','interests','Interests', true);
-		$this->loginName = new _textField('login_name','loginName','loginId', true);
+		$this->focus = new _notesField('focus','focus','Focus Area', true);
+		$this->interests = new _notesField('interests','interests','Interests', true);
+		$this->loginName = new _userField('login_name','loginName','loginId', true);
 		$this->lastLogin = new _dateField('last_login','lastLogin','Last Login', true); 
-		$this->isAdmin = new _textField('is_admin','isAdmin','Administrator', true);
-		$this->isActive = new _textField('is_active','isActive','Active Profile', true);
-		$this->mustUpdatePwd = new _textField('must_update_pwd', 'mustUpdatePwd','Must Update Password', true);
-		
+		$this->isAdmin = new _yesNoField('is_admin','isAdmin','Administrator', true);
+		$this->isActive = new _yesNoField('is_active','isActive','Active Profile', true);
+		$this->mustUpdatePwd = new _yesNoField('must_update_pwd', 'mustUpdatePwd','Must Update Password', true);
+		$this->type = new _idNameField('type_id', 'type_name','idType','Type', true);
     }
 	protected function formatUserName($last,$first = 'not-given'){
 		$name = $this->nameLast->value();
@@ -58,6 +58,7 @@ class userFields extends _fieldset{
 		$this->isAdmin->fetch($row);
 		$this->isActive->fetch($row);
 		$this->mustUpdatePwd->fetch($row);
+		$this->type->fetch($row);
 	}
 	
 	public function format(){
@@ -84,6 +85,7 @@ class userFields extends _fieldset{
 		$this->addContent($this->nameLast->th());
 		$this->addContent($this->focus->th());
 		$this->addContent($this->interests->th());
+		$this->addContent($this->type->th());
 		$this->addContent($this->lastLogin->th());
 		return $this->getContent();
 	}
@@ -95,6 +97,7 @@ class userFields extends _fieldset{
 		$this->addContent($this->nameLast->th());
 		$this->addContent($this->focus->th());
 		$this->addContent($this->interests->th());
+		$this->addContent($this->type->th());
 		$this->addContent($this->lastLogin->th());
 		return $this->getContent();
 	}
@@ -108,6 +111,7 @@ class userFields extends _fieldset{
 		$this->addContent($this->email->p());
 		$this->addContent($this->focus->p());
 		$this->addContent($this->interests->p());
+		$this->addContent($this->type->p());
 		$this->addContent($this->lastLogin->p());
 		$this->addContent($this->mustUpdatePwd->p());
 		$this->addContent($this->isActive->p());
@@ -122,6 +126,7 @@ class userFields extends _fieldset{
 		$this->email->post();
 		$this->focus->post();
 		$this->interests->post();
+		$this->type->post();
 		$this->isAdmin->post();
 		$this->isActive->post();
 		$this->mustUpdatePwd->post();
@@ -142,10 +147,7 @@ protected $__MyClassName = 'User';
 		$this->f = new UserFields();
 		$this->sql = new UserSQL();
 		$this->links = new UserLinks();
-	}/*
-	
-	protected function beforeSetDetails(){
-	}*/
+	}
 		
 	protected function afterSetDetails(){
 	}
@@ -165,14 +167,14 @@ protected $__MyClassName = 'User';
 	
 
 	public function setTypeId($id){
-		$this->f->type->set($id);
+		$this->f->type->id->set($id);
 	}
 	
 		
 	protected function setPageTitle(){
 
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->f->loginName;
+			$heading = $this->f->loginName.value();
 			if (($_SESSION['user-id'] == $this->id) && ($_SESSION['must-update-pwd'] == 'yes')){
 				$heading .= br().'Please update your profile password.';
 			}
@@ -261,7 +263,7 @@ protected $__MyClassName = 'User';
 		//verify that login and email exist for an active account
 		if ($this->validateLoginAndEmail($loginName,$loginEmail) == true){
 			//login and email are valid and account is active 
-			$this->email = $loginEmail;
+			$this->f->email->set($loginEmail);
 		
 			$newPass = $this->generatePassword();
 			$newPassCrypt = $this->obfuscate(dbEscapeString($newPass),$loginName);
@@ -374,42 +376,35 @@ protected $__MyClassName = 'User';
 
 		$message = 'Please Login...';
 		$message .= $this->getLoginMessages();
-		$entity = 'user-type';
+		$entity = 'site-login';
 
 		$contextMenu = $this->links->formatToggleLink('formOptional','Lost Password');
-		$form = openEditForm('site-login', $message, 'sys_Login.php',$contextMenu);
 
-		$fields = inputFieldUser($entity,$this->f->loginName->value(),'loginName','Login Name');
+		$login = new _editForm($entity,$message,'sys_Login.php');
+		$login->open($contextMenu,$this->_titleEntity);
+		$login->required->addContent($this->f->loginName->input($entity));
 
 		$input = getPasswordInput('login-pwd', 10, 50);
-		$fields .= captionedInput('Password',$input);
+		$login->required->addContent(captionedInput('Password',$input));
 
-		//end required fields
-		$formRequired = $fields;
-		//formOptional
-			$this->echoPrint(true, 'building login form.password recovery email input ','loginForm');
-		$fields = $this->f->email->input($entity,'TEXT');
-		//'login-email','Login Email',50,255);
-		$fields .= getLoginLogoutButton('Reset Password','submit-pwd-reset').br();	
+		
+
+		$login->optional->addContent($this->f->email->input($entity));
+		$login->optional->addContent(getLoginLogoutButton('Reset Password','submit-pwd-reset'));
+
 		$msg = 'To reset password, enter your login name and profile email.'.br();
 		$msg .= 'If your email is not registered, please contact an administrator to setup a profile.';
-		$fields .= captionedInput('Lost Password Instructions',$msg);
-
-	
-		//end optional fields
-		$formOptional = $fields;
+		$login->optional->addContent(captionedInput('Lost Password Instructions',$msg));
 		
-		$hidden = getHiddenInput('client-time-zone','');
-		$input = getLoginLogoutButton('Login','submit-login');
-		$formSubmit = $hidden.$input;
-			
+		$login->hidden->addContent = getHiddenInput('client-time-zone','');
+		$login->submit->addContent(getLoginLogoutButton('Login','submit-login'));
 
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+		$form = $login->close();
 
 		$form .= openDiv('site-login-notices');
 		$form .= $_SESSION['site-login-notice'];
 		$form .= closeDiv();
-			$this->echoPrint(true, 'returning login form','loginForm');
+		$this->echoPrint(true, 'returning login form','loginForm');
 		return $form;			
 	}
 	
@@ -424,16 +419,18 @@ protected $__MyClassName = 'User';
 	}
 	
 	public function requestPasswordResetForm(){
-		
-		$form = openForm('user-password-reset','sys_User_Save.php','none');
-		$hidden = $this->f->id->inputHidden();
-		$hidden .= $this->f->email->inputHidden();	
-		$hidden .= $this->f->loginName->inputHidden();
-		$button = getSubmitButton('Request Reset','submit-pwd-reset');
-		$messages = $this->getLoginMessages();
-		$form .= $messages.$button.$hidden;
-		$form .= closeForm();		
-		return $form;
+		$entity = 'user-password-reset';
+		$contextMenu = null;
+		$request = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$request->open($contextMenu,$this->_titleEntity);
+
+		$request->hidden->addContent($this->f->id->inputHidden());
+		$request->hidden->addContent($this->f->email->inputHidden());	
+		$request->hidden->addContent($this->f->loginName->inputHidden());
+		$request->submit->addContent(getSubmitButton('Request Reset','submit-pwd-reset'));
+		$request->submit->addContent($this->getLoginMessages());
+
+		return $request->close();
 		
 	}
 	
@@ -480,7 +477,7 @@ protected $__MyClassName = 'User';
 		$edit->open($contextMenu,$this->_titleEntity);
 
 		if ($this->pageMode == 'ADD'){
-			$input = $this->f->loginName->input($entity,'TEXT');
+			$input = $this->f->loginName->input($entity);
 			
 			$messages = @$this->validationMessages['login'];			
 		} else {
@@ -499,11 +496,11 @@ protected $__MyClassName = 'User';
 		$passwordGroup .= captionedInput('Password Confirm '.$messages,$input);
 		$edit->required->addContent(wrapDivFieldGrouping($entity,$passwordGroup));
 
-		$input = $this->f->email->inputText();
+		$input = $this->f->email->input($entity);
 		$messages = @$this->validationMessages['email'];
 		$edit->required->addContent(captionedInput('Email Address '.$messages,$input));
-		$edit->optional->addContent($this->f->nameFirst->input($entity,'NAME'));
-		$edit->optional->addContent($this->f->nameLast->input($entity,'NAME'));
+		$edit->optional->addContent($this->f->nameFirst->input($entity));
+		$edit->optional->addContent($this->f->nameLast->input($entity));
 
 
 		$m = new UserType;

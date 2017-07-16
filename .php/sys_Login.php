@@ -2,7 +2,7 @@
 //session_start();
 include_once("_includes.php");
 
-//get a efeence to mysqli connection
+//get a refeence to mysqli connection
 global $conn;
 
 if (isset($_POST['submit-login'])){
@@ -34,7 +34,7 @@ if (isset($_POST['submit-pwd-reset'])){
 		$login = $conn->escape_string($_POST['login-name']);	
 		$email = $conn->escape_string($_POST['login-email']);
 		
-		$u = new User;
+		$u = new User('RESET-PASSWORD');
 		$u->resetPassword($login, $email);
 	}
 }
@@ -42,9 +42,9 @@ if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
 	include("pr_Task_List.php");
 } else {
 	
-	$site = new _SiteTemplate;
-	$site->setSiteTemplateDetails();
-	$site->printSite();
+	$site = new _htmlSite('LOGIN-FORM');
+	$site->set();
+	$site->print();
 
 }
 

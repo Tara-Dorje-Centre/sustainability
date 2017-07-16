@@ -63,6 +63,7 @@ function dbGetScalar($sql, $field, $default = 0, $callingFunction = 'dbGetScalar
 
 function dbGetCount($sql, $field, $callingFunction = 'dbGetCount'){
 	$i = dbGetScalar($sql, $field, 0, $callingFunction);
+	printLine('dbCount['.$i.']');
 	return $i;
 }
 

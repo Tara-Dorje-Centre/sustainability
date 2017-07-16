@@ -1,13 +1,24 @@
 ﻿<?php 
 
-
+interface IhtmlSite{
+public function set(string $heading = 'page heading', string $details = 'page details');
+}
 
 class _htmlSite extends _htmlPage
-implements IhtmlPage, IcontentWriter, Iecho{
+implements IhtmlPage, Iecho{
+protected $settings;
 
-public function set($heading = ' heading', $details = ' details'){
+protected $pageMode = 'VIEW';
+public function __construct($mode = 'VIEW'){
+$this->echoPrint(true,'begin','__construct','htmlSite');
+$this->pageMode = $mode;
+$this->settings = new siteSettings($mode);
+
+}
+public function set(string $heading = 'page heading', string $details = 'page details'){
+$this->echoPrint(true,'begin','set','htmlSite');
 	$this->_details = $details;
-	$this->_heading = $details;
+	$this->_heading = $heading;
 
 	$this->getSiteSettings();
 	$this->setOnLoad();
@@ -18,14 +29,16 @@ public function set($heading = ' heading', $details = ' details'){
 	$this->setContents();	
 	$this->setFooterNotices();
 	$this->setFooterLinks();	
+	$this->echoPrint(true,'finished','set','htmlSite');
 }
 
 protected function getSiteSettings(){
-	$settings = new SiteSettings;
-	$settings->setDetails('VIEW');
+	$this->echoPrint(true,'begin','getSiteSettings','htmlSite');
+	$this->settings->setDetails();
 }
 
 protected function setOnLoad(){
+
 		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){	
 			$onLoad = 'none';
 		} else {
@@ -36,8 +49,8 @@ protected function setOnLoad(){
 
 
 protected function setTitle(){
-	$title = $_SESSION['site-title'];
-	$this->_title = $title;		
+	//$title = $_SESSION['site-title'];
+	$this->_title = $this->settings->f->siteTitle->value();		
 }
 
 
@@ -56,7 +69,8 @@ protected function setLinks(){
 		$a = new ActivityLinks($menuType, $menuStyle);
 		
 		$content = $m->openMenu('site');
-		if (isset($_SESSION['show-public-site']) && $_SESSION['show-public-site'] == 'yes'){
+		if ($this->settings->f->showPublicSite->value == 'yes'){
+		//isset($_SESSION['show-public-site']) && $_SESSION['show-public-site'] == 'yes'){
 			$content .= $m->formatHref('Library','public.php');	
 		}
 		
@@ -97,9 +111,11 @@ protected function setLinks(){
 protected function setContents(){ 
 
 	if (!isset($_SESSION['logged-in']) || $_SESSION['logged-in'] == false){
-		$user = new User;
+	$this->echoPrint(true,'not logged-in','setContents','htmlSite');
+		$user = new User('LOGIN-FORM');
 		$content = $user->loginForm();
 	} else {
+	$this->echoPrint(true,'logged-in,setting contents','setConents','htmlSite');
 		//section-heading div commented out to allow section-links to float closer to section details
 		//  pageHeading contains section-title and section-links div containers
 		//  wrap title and links in section-heading div
@@ -112,7 +128,7 @@ protected function setContents(){
 		$content .= closeDiv(); //close section details
 	}
 	
-	$this->_content = $content;
+	$this->_contents = $content;
 }
 
 
@@ -141,8 +157,10 @@ protected function setContents(){
 		
 
 		$content .= openDiv('site-organization');
-		$org = $_SESSION['site-org'];
-		$orgUrl = $_SESSION['site-org-url'];
+		$org = $this->settings->f->organization->value();
+		//$_SESSION['site-org'];
+		$orgUrl = $this->settings->f->organizationUrl->value();
+		//$_SESSION['site-org-url'];
 		if ($orgUrl == '' || is_null($orgUrl)){
 			$content .= $org;
 		} else {
@@ -164,8 +182,8 @@ protected function setContents(){
 		//$content = $this->buildInternalStyles();
 
 		//use external stylesheet
-		$content = LinkStylesheet('css/styles.css');
-		$content .= Linkstylesheet('css/override.css');
+		$content = LinkStylesheet('/css/styles.css');
+		$content .= Linkstylesheet('/css/override.css');
 		$this->_styles = $content;
 		//return $content;
 		
@@ -176,7 +194,7 @@ protected function setContents(){
 		//start oputput buffering
 		ob_start();
 		//include scripts to buffer
-		include('_siteJavascriptFunctions.inc');		
+		include('./_siteJavascriptFunctions.inc');		
 		//clear buffer to local variable
 		$scripts .= ob_get_clean();  
 		$scripts .= closeScript();

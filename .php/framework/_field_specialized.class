@@ -1,14 +1,45 @@
 <?php 
+class _userField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
+	}
+	
+	public function input(string $entity){
+		return inputFieldUser($entity,$this->value(),$this->postVariable,$this->caption);
+	}
 
+}
+class _emailField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
+	}
+/*
+	public function input(string $entity){
+		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
+	}*/
+}
+class _urlField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
+	}
+
+	public function input(string $entity){
+		return inputFieldComments($entity,$this->value(),$this->postVariable,$this->caption);
+	}
+}
 
 class _nameField extends _textField
  implements Ifield, Iecho, IcontentWriter {
- 
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'NAME';
+
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
-	
 	public function input(string $entity){
 		return inputFieldName($entity,$this->value(),$this->postVariable,$this->caption);
 	}
@@ -17,18 +48,16 @@ class _nameField extends _textField
 class _idField extends _numberField
  implements Ifield, Iecho, IcontentWriter {
 
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'NUMBER';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 }
 
 class _descriptionField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'DESCRIPTION';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 	
 	public function input(string $entity){
@@ -38,9 +67,8 @@ class _descriptionField extends _textField
 class _notesField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'NOTES';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 	
 	public function input(string $entity){
@@ -51,9 +79,8 @@ class _notesField extends _textField
 class _commentsField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'COMMENTS';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 
 	public function input(string $entity){
@@ -61,12 +88,14 @@ class _commentsField extends _textField
 	}
 }
 	
+	
+	
+	
 class _yesNoField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'YES-NO';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 	
 	public function input(string $entity){
@@ -76,12 +105,11 @@ class _yesNoField extends _textField
 	
 }
 
-class _colorField extends _textField
+class _cssColorField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'CSS-COLOR';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 	
 	public function input(string $entity){
@@ -93,9 +121,8 @@ class _colorField extends _textField
  class _fontsizeField extends _numberField
  implements Ifield, Iecho, IcontentWriter {
  
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'CSS-FONT-SIZE';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 	
 	public function input(string $entity){
@@ -107,9 +134,8 @@ class _colorField extends _textField
 class _fontFamilyField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
-		$this->inputAsType = 'CSS-FONT-FAMILY';
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 	}
 	
 	public function input(string $entity){

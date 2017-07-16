@@ -25,3 +25,7 @@ CREATE TABLE IF NOT EXISTS sitewide_settings (
   show_revenue_reports varchar(10) NOT NULL DEFAULT 'no'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+1
+
+ALTER TABLE `sitewide_settings` ADD UNIQUE(`site_title`);
+

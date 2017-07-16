@@ -3,8 +3,8 @@
 interface IhtmlPage{
 	public function print();
 }
-class _htmlPage extends _contentWriter
-implements IhtmlPage,IcontentWriter,Iecho{
+class _htmlPage extends _echo
+implements IhtmlPage,Iecho{
 	protected $_title;
 	protected $_styles;
 	protected $_scripts;
@@ -13,7 +13,7 @@ implements IhtmlPage,IcontentWriter,Iecho{
 	protected $_links;
 	protected $_heading;	
 	protected $_details;
-	protected $_content;
+	protected $_contents;
 	protected $_footerLinks;
 	protected $_footerNotices;
 	protected $_footerLogo;
@@ -29,15 +29,18 @@ implements IhtmlPage,IcontentWriter,Iecho{
 	}
 
 	protected function build(){		
+	$this->echoPrint(true,'begin','build','htmlPage');
 		$content = $this->documentOpen();
 		$content .= $this->siteHeading();
 		$content .= $this->siteContent();	
 		$content .= $this->siteFooter();
 		$content .= $this->documentClose();
+	$this->echoPrint(true,'finished','build','htmlPage');
 		return $content;		
 	}
 
 	protected function documentOpen(){
+		$this->echoPrint(true,'begin','documentOpen','htmlPage');
 		$content = doctypeHtml();
 		$content .= openHTML();
 		$content .= openHead();
@@ -60,6 +63,7 @@ implements IhtmlPage,IcontentWriter,Iecho{
 	}
 	
 	protected function siteHeading(){
+		$this->echoPrint(true,'begin','siteHeading','htmlPage');
 		$content = openDiv('site-heading');
 		$content .= $this->siteTitle();
 		$content .= $this->siteLinks();
@@ -82,8 +86,9 @@ implements IhtmlPage,IcontentWriter,Iecho{
 	}
 
 	protected function siteContent(){
+		$this->echoPrint(true,'begin','siteHeading','htmlPage');
 		$content = openDiv('site-content');
-		$content .= $this->_content;
+		$content .= $this->_contents;
 		$content .= closeDiv(); // close site content
 		return $content;
 	}

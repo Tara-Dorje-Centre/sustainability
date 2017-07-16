@@ -1,5 +1,5 @@
 ﻿<?php 
-class projectFields extends _childFields{
+class projectFields extends _fieldsetChild{
   
   //  public $summary;
 //    public $started;

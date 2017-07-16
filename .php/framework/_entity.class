@@ -23,17 +23,17 @@ implements Iecho, IcontentWriter{
 	abstract protected function setEntityTitle();
 	abstract protected function afterConstruct($);*/
 	abstract protected function setHelperClasses();
-	/*abstract protected function beforeSetDetails();*/
+	/*abstract protected function beforeSetDetails();
 	abstract protected function afterSetDetails();
-	abstract protected function afterDisplay();
-	abstract protected function setPageMenu();
-	abstract protected function afterSetDefaults();
-	abstract protected function editForm();
-	abstract protected function afterCollectPostValues();
+	abstract protected function afterDisplay();*/
+	abstract protected function setPageMenu();/*
+	abstract protected function afterSetDefaults();*/
+	abstract protected function editForm();/*
+	abstract protected function afterCollectPostValues();*/
 		
 	
 	public function setDetails(){
-		/*$this->beforeSetDetails();*/
+		
 
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
@@ -44,10 +44,11 @@ implements Iecho, IcontentWriter{
 					$this->f->setRow($row);
 				}
 				$result->close();
+				$this->getFieldIds();
 			}
-			$this->getFieldIds();
+			
 		}
-		$this->afterSetDetails();
+		/*$this->afterSetDetails();*/
 	}	
 	
 	public function options(

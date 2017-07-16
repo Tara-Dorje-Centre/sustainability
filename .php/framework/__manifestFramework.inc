@@ -26,7 +26,7 @@ include_once("_fieldsetChild.class");
 include_once("_fieldsetProjectChild.class");
 include_once("_fieldsetTaskChild.class");
 include_once("_fieldsetActivityChild.class");
-
+include_once("_summary.class");
 include_once("_entityInterfaces.class");
 
 include_once("_entitySQL.class");

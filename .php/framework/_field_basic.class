@@ -3,8 +3,8 @@
 class _textField extends _field
  implements Ifield, Iecho, IcontentWriter {
 
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 		$this->type = 'TEXT';
 		$this->inputAsType = 'TEXT';
 	}
@@ -16,8 +16,8 @@ class _textField extends _field
 class _numberField extends _field
  implements Ifield, Iecho, IcontentWriter {
 
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 		$this->type = 'NUMBER';
 		$this->inputAsType = 'NUMBER';
 	}
@@ -30,8 +30,8 @@ class _numberField extends _field
 class _dateField extends _field
  implements Ifield, Iecho, IcontentWriter {
 
-	public function __construct($dbColumn = 'not-used', $postVariable = 'notUsed'){
-		parent::__construct($dbColumn, $postVariable);
+	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+		parent::__construct($dbColumn, $postVariable,$caption,$enable);
 		$this->type = 'DATE';
 		$this->inputAsType = 'DATE';
 	}

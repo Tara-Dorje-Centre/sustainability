@@ -32,8 +32,8 @@ $this->submit = new _editSection('submit');
 
 	public function open(string $contextMenu = '',string $titleEntity = ''){
 		$legend = $this->mode.':  '.$titleEntity;
-		$form = openEditForm($this-entity,$legend,$this->url, $contextMenu);
-		$this->writeContent($form);
+		$form = openEditForm($this->entity,$legend,$this->url, $contextMenu);
+		$this->addContent($form);
 	}
 	public function close(){
 	
@@ -43,8 +43,8 @@ $this->submit = new _editSection('submit');
 		$required = $this->required->getContent();
 		$submit = $this->submit->getContent();
 	
-		$this->addContent( closeEditForm($entity,$required,$optional,$submit));
-		return $this->getContent;
+		$this->addContent(closeEditForm($entity,$required,$optional,$submit));
+		return $this->getContent();
 	}
 
 

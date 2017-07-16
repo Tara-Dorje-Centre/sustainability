@@ -58,7 +58,7 @@
  	
  	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
  		$this->useRow = $fetch;
- 		$this->usePost = $fetch;
+ 		$this->usePost = $post;
  		$this->showDisplay = $show;
  		$this->showList = $list;
  	}
@@ -141,6 +141,7 @@
     		default:
  		 		$val = $this->valueText;
 		}
+		return $val;
 	}
 	
  
@@ -156,6 +157,7 @@
 	//could pass optional override column alias here
 	
 		if ($this->useRow == true){
+		$this->echoPrint(true,'fetching '.$this->dbColumn,'fetch');
  			$this->set($row[$this->dbColumn]);
  		}
 	}
@@ -211,7 +213,7 @@
  				$v = new _sqlClause();
     			$value = $v->encloseString($baseValue);
     		} else {
-    		  	if (($baseValue == '') or IsNull($baseValue)){
+    		  	if (($baseValue == '') or is_null($baseValue)){
   					$value = 0;
   				} else {
   					$value = $baseValue;
@@ -224,7 +226,7 @@
  		if ($this->canShow() == true){
  			switch ($this->type) {
     			case 'NUMBER':
-  					if (($this->valueNumber == '') or IsNull($this->valueNumber)){
+  					if (($this->valueNumber == '') or is_null($this->valueNumber)){
   					    $this->valueNumber = 0;
   					}
         			break;
@@ -262,7 +264,9 @@
 	}
 	
 	public function inputPassword(){
-		return getPasswordInput($this->postVariable, '');
+		$input = getPasswordInput($this->postVariable, '');
+		//$input = getPasswordInput('login-pwd', 10, 50);
+		return $this->inputCaptioned('Password',$input);
 		//$this->value()); password input should always be blank
 	}
  	
