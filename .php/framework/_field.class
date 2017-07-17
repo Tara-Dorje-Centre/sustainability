@@ -23,7 +23,14 @@
  	public function inputChoice(string $entity,string $options);
  	public function inputFree(string $entity);
  	public function inputHidden(string $entity);
- 	public function post();
+ 	public function readPost();
+ 	public function overwritePost($varName);
+ 	public function readGet();
+ 	public function overwriteGet();
+ 	public function readSession();
+ 	public function writeSession();
+ 	public function read(string $readType = 'POST',$var = '-use-current-');
+ 	public function write(string $writeType = 'POST',$var = '-use-current-');
 
  }
  
@@ -157,7 +164,7 @@
 	//could pass optional override column alias here
 	
 		if ($this->useRow == true){
-		$this->echoPrint(true,'fetching '.$this->dbColumn,'fetch');
+		//$this->echoPrint(true,'fetching '.$this->dbColumn,'fetch');
  			$this->set($row[$this->dbColumn]);
  		}
 	}
@@ -187,7 +194,7 @@
  		}
  		return $value;
  	}
- 		
+ 	
 	public function post(){
   		if ($this->usePost() == true){
 			switch ($this->type) {
@@ -204,7 +211,94 @@
  		 			$this->valueText = dbEscapeString($_POST[$this->postVariable]);
 			}
  		}
+	} 
+
+	public function readPost(){
+	 	return $this->read('POST');
 	}
+
+ 	public function readGet(){
+ 		return $this->read('GET');
+ 	}
+
+ 	public function readSession(){
+ 	 	return $this->read('SESSION');
+ 	}
+
+ 	public function read(string $varType = 'POST',string $var = '-use-current-'){
+ 	 	$actualVar = $this->getVar($var);
+ 		switch ($varType){
+ 			case 'GET':
+ 				$raw = $_GET[$actualVar];
+ 			
+ 				break;
+ 			case 'POST':
+ 				$raw = $_POST[$actualVar];
+ 				break;
+ 			case 'SESSION':
+ 				$raw = $_SESSION[$actualVar];
+ 				break;
+ 			default:
+ 				die("invalid variable GET/POST/SESSION request: ".$type;
+ 		}
+ 		
+ 			switch ($this->type) {
+    			case 'NUMBER':
+ 					$this->valueNumber = $raw;
+        			break;
+    			case 'DATE':
+    			//will only return post values
+ 		 			$this->valueDate = getTimestampPostValues($actualVar);
+        			break;
+    			case 'TEXT':
+ 		 			$this->valueText = dbEscapeString($raw);
+        			break;
+    			default:
+ 		 			$this->valueText = dbEscapeString($raw);
+			}
+ 		
+ 	
+ 	}
+ 	
+ 	
+ 	
+  	protected fuction getVar(string $var = '-use-current-'){
+  		if ($var != '-use-current-'){
+  			$actualVar = $var;
+  		} else {
+  			$actualVar = $this->postVariable;
+  		}
+  		return $actualVar;
+  	}
+  	
+ 	public fuction write($writeType = 'POST',$var = '-use-current-'){
+ 			$actualVar = $this->getVar($var);
+ 	 		switch ($writeType){
+ 			case 'GET':
+ 				$_GET[$actualVar] = $this->get();
+ 				break;
+ 			case 'POST':
+ 			 	$_POST[$actualVar] = $this->get();
+ 				break;
+ 			case 'SESSION':
+ 				 $_SESSION[$actualVar] = $this->get();
+ 				break;
+ 			default:
+ 				die("invalid variable GET/POST/SESSION request: ".$type.
+ 		
+ 		}
+ 	
+ 	}
+ 	
+ 	public function overwritePost(){
+		$this->write('POST');
+	}
+	public function writeSession(){
+		$this->write('SESSION');
+	}
+	public function overwriteGet(){
+		$this->write('GET');
+	)
 	
   	public function sqlValue(){
  		//if ($this->canSet() == true){

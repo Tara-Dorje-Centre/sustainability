@@ -1,5 +1,226 @@
 ﻿<?php 
 
+class userLoginFields extends _contentWriter {
+	
+    public $loginId;
+    public $loginPassword;
+	public $loginEmail;
+
+
+	public function __construct(){
+		$this->loginId = new _nameField('not-used','login-id','LoginId', true); 
+		$this->loginEmail = new _emailField('not-used','login-email','loginEmail', true); 
+		$this->loginPwd = new _passwordField('not-used','login-pwd','Password', true); 
+    }
+
+	public function getPostVars(){
+		parent::getPostVars();
+		$this->loginId->post();
+		$this->loginPwd->post();
+		$this->loginEmail->post();
+	}
+
+}
+
+class userLogin extends _contentWriter{
+	private $links;
+	private $f;
+	private $sql;
+	private $loginPwd;
+	private $loginPwdConfirm;
+	public $validationMessages;
+
+	
+	protected function __construct(){
+		$this->f = new userLoginFields();
+		$this->sql = new UserSQL();
+		$this->links = new UserLinks();
+	}
+
+	private function generatePassword($length = 11) {
+		$chars = '.!%^&*#@';
+		$clen = mb_strlen($chars);
+		$base = md5(microtime());
+		$password = substr(base_convert(substr($base,1),16,36),0,$length);
+		$len = mb_strlen($password);
+		for($i = 0;$i < $len;$i++)
+		{
+			if(rand(0,1) && 1){
+				$password[$i] = strtoupper($password[$i]);
+			} elseif(rand(0,2) && 1 && $clen){
+				$password[$i] = $chars[rand(0,$clen - 1)];
+			}
+		}
+		return $password;
+	}
+	
+	
+	
+	public function resetPassword($loginName, $loginEmail){
+		
+		//verify that login and email exist for an active account
+		if ($this->validateLoginAndEmail($loginName,$loginEmail) == true){
+			//login and email are valid and account is active 
+			$this->f->email->set($loginEmail);
+		
+			$newPass = $this->generatePassword();
+			$newPassCrypt = $this->obfuscate(dbEscapeString($newPass),$loginName);
+		
+		
+			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
+		
+			$result = dbRunSQL($sql);
+			
+			$links = new UserLinks;	
+			$message = $_SESSION['site-title'].br();
+			$message .= $links->formatHref($_SESSION['site-org'],$_SESSION['site-org-url']).br();
+			$message .= "Profile password has been reset".br();
+			$message .= "Login Name = ".$loginName.br();
+			$message .= "New Password = ".$newPass.br();
+			$message .= $links->formatHref($_SESSION['site-url'],$_SESSION['site-url']).br();
+			$this->mailUser($message,'Password Reset');
+			$_SESSION['login-messages'] = 'Profile password reset';
+		} else {
+			$_SESSION['login-messages'] = 'Active profile not found, contact an administrator';	
+		}
+	}
+
+	private function mailUser($message = '', $subject = 'User Notification'){
+
+		$fromAddress = ini_get('sendmail_from');
+		$headers = "From: ".$fromAddress."\n";
+		$headers .= "X-Mailer: PHP/".phpversion()."\n"; 
+		$headers .= "MIME-Version: 1.0\n"; 
+		$headers .= "Content-Type: text/html; charset=utf-8\n"; 
+		$headers .= "Content-Transfer-Encoding: 8bit\n"; 
+		$newSubject = $_SESSION['site-title'].':'.$subject;
+		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
+	}
+	
+	private function obfuscate($pass,$login){
+		//$salt = crypt($login);
+		$hash = md5($pass.$login);
+		return $hash;	
+	}
+
+	public function validateLoginAndEmail($loginName, $loginEmail){
+		$validLoginEmail = false;
+		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
+		$found = dbGetCount($sql,'user_count');
+		
+
+		if ($found == 1){
+			$validLoginEmail = true;
+		} 
+		return $validLoginEmail;
+	}
+	
+	public function validateLogin($loginName, $loginPwd){
+	$this->echoPrint(true, 'checking email & password','validateLogin');
+		$loginPwdCrypt = $this->obfuscate($loginPwd,$loginName);
+		$validUser = false;
+		$sql = $this->sql->validateUser($loginName, $loginPwdCrypt);
+		$found = dbGetCount($sql,'user_count');
+	
+		
+		$this->echoValue(true, 'foundUser', $found, 'validateLogin');
+	
+
+		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
+		//then comment this line
+		//printLine('forcing login');
+		$found = 1;
+		$this->echoValue(true, 'foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
+		if ($found == 1){
+			$validUser = true;
+			printLine('validateLogin.updatingLastLogin');
+			$this->updateLastLogin($loginName);
+			$this->setSecurity($loginName);
+			$_SESSION['login-messages'] = '';
+		} else {
+			$_SESSION['login-messages'] = 'Could not validate login';
+		}
+		
+		return $validUser;
+		
+	}
+	
+	
+	private function setSecurity($loginName){
+		$sql = $this->sql->securityUser($loginName);
+
+		$result = dbGetResult($sql);
+		if($result){
+	  		while ($row = $result->fetch_assoc())
+			{
+				$_SESSION['user-id'] = $row["id"];
+				$_SESSION['is-admin'] = $row["is_admin"];  
+				$_SESSION['must-update-pwd'] = $row["must_update_pwd"];
+			}
+		$result->close();
+		}
+			
+	}
+	
+	private function updateLastLogin(string loginId = 'unknkownId'){
+		
+		$sql = $this->sql->updateLastLogin($loginName);
+		
+		$result = dbRunSQL($sql);
+		
+	}
+	
+	public function loginForm(){
+
+		$message = 'Please Login...';
+		$message .= $this->getLoginMessages();
+		$entity = 'site-login';
+$links = new _links();
+		$contextMenu = $links->formatToggleLink('formOptional','Lost Password');
+
+		$login = new _editForm($entity,$message,'sys_Login.php');
+		$login->open($contextMenu,'Login');
+		$login->required->addContent($this->f->loginId->input($entity));
+
+		//$input = getPasswordInput('login-pwd', 10, 50);
+		$login->required->addContent($this->f->loginPwd->input($entity));
+		//'Password',$input));
+
+		
+
+		$login->optional->addContent($this->f->loginEmail->input($entity));
+		$login->optional->addContent(getLoginLogoutButton('Reset Password','submit-pwd-reset'));
+
+		$msg = 'To reset password, enter your login name and profile email.'.br();
+		$msg .= 'If your email is not registered, please contact an administrator to setup a profile.';
+		$login->optional->addContent(captionedInput('Lost Password Instructions',$msg));
+		
+		$login->hidden->addContent = getHiddenInput('client-time-zone','');
+		$login->submit->addContent(getLoginLogoutButton('Login','submit-login'));
+		
+		$login->submit->addContent($_SESSION['site-login-notice']);
+		//etLoginLogoutButton('Login','submit-login'));
+		$form = $login->close();
+/*
+		$form .= openDiv('site-login-notices');
+		$form .= $_SESSION['site-login-notice'];
+		$form .= closeDiv();*/
+		$this->echoPrint(true, 'returning login form','loginForm');
+		return $form;			
+	}
+	
+	private function getLoginMessages(){
+		if (isset($_SESSION['login-messages']) && $_SESSION['login-messages'] != ''){
+			$messages = $_SESSION['login-messages'].br();
+			unset($_SESSION['login-messages']);
+		} else {
+			$messages = '';
+		}
+		return $messages;
+	}
+	
+	
+} 
 
 
 
@@ -28,10 +249,10 @@ class userFields extends _fieldset{
     	
     	$this->nameFirst = new _nameField('name_first','nameFirst','First Name', true); 
 		$this->nameLast = new _nameField('name_last','nameLast','Last Name', true); 
-		$this->email = new _textField('email','email','Email Address', true); 
+		$this->email = new _emailField('email','email','Email Address', true); 
 		$this->focus = new _notesField('focus','focus','Focus Area', true);
 		$this->interests = new _notesField('interests','interests','Interests', true);
-		$this->loginName = new _userField('login_name','loginName','loginId', true);
+		$this->loginName = new _userField('login_name','login-name','loginId', true);
 		$this->lastLogin = new _dateField('last_login','lastLogin','Last Login', true); 
 		$this->isAdmin = new _yesNoField('is_admin','isAdmin','Administrator', true);
 		$this->isActive = new _yesNoField('is_active','isActive','Active Profile', true);
@@ -140,6 +361,7 @@ protected $__MyClassName = 'User';
 	   		
 
 	private $loginPwd;
+	private $loginPwdConfirm;
 	public $validationMessages;
 
 	

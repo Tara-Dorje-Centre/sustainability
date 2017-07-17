@@ -6,13 +6,13 @@ include_once("_includes.php");
 global $conn;
 
 if (isset($_POST['submit-login'])){
-	if (!empty($_POST['login-name']) && !empty($_POST['login-pwd'])){
+	if (!empty($_POST['login-id']) && !empty($_POST['login-pwd'])){
 		$login = $conn->escape_string($_POST['login-name']);
 		$pass = $conn->escape_string($_POST['login-pwd']);
 
 		$_POST['login-pwd'] = 'none';
 		
-		$u = new User;
+		$u = new UserLogin();
 		if ($u->validateLogin($login, $pass) == true){
 			$_SESSION['login-name'] = $login;
 			$_SESSION['logged-in'] = true;
@@ -34,7 +34,7 @@ if (isset($_POST['submit-pwd-reset'])){
 		$login = $conn->escape_string($_POST['login-name']);	
 		$email = $conn->escape_string($_POST['login-email']);
 		
-		$u = new User('RESET-PASSWORD');
+		$u = new UserLogin('RESET-PASSWORD');
 		$u->resetPassword($login, $email);
 	}
 }

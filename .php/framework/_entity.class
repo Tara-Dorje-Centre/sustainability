@@ -17,7 +17,7 @@ implements Iecho, IcontentWriter{
 		//$this->setPageSave();
 		//$this->setEntityTitle();
 		$this->setHelperClasses();
-	}
+}
 	/* next review cycle
 	abstract protected function setPageSave();
 	abstract protected function setEntityTitle();
@@ -123,7 +123,9 @@ implements Iecho, IcontentWriter{
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
+		if (!is_null($this->f->parent)){
 		$this->f->parent->set($idParent);
+		}
 		return $this->editForm();
 	}
 

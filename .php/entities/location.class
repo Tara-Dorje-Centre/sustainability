@@ -5,7 +5,7 @@ class locationFields extends _fieldsetChild{
 	public $sortKey;
 	
 	public function __construct(){
-		parent::construct();
+		parent::__construct();
 		$this->type->setShow('user-type',true);
     	//$this->created->setShow('created',true);
     	//$this->highlight->setShow('highlight',true);

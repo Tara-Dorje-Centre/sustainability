@@ -23,11 +23,11 @@ implements Ifieldset, Iecho, IcontentWriter{
 	
     public function __construct(){
     	$this->id = new _numberField('id','id','Id',true);
-    	$this->name = new _textField('name','name','Name',true);
-    	$this->description = new _textField('description','description','Description',true);
+    	$this->name = new _textField('name','post-name','Name',true);
+    	$this->description = new _textField('description','post-description','Description',true);
 		$this->updated = new _dateField('updated','not-used','Updated',true);
     	$this->created = new _dateField('created','not-used','Created',true);
-        $this->highlight = new _textField('highlight_style','highlight','Highlight',true);
+        $this->highlight = new _textField('highlight_style','post-highlight','Highlight',true);
     }
     
     protected function reset(){

@@ -10,8 +10,8 @@ implements Ifieldset, Iecho, IcontentWriter{
     public function __construct(){
     	parent::__construct();
     	$this->task = new _idNameField('task_id','idTask','task_name',true);
-		 $this->reported = new _dateField('reported','reported');
-		 $this->doneBy = new _textField('name','name');
+		 $this->reported = new _dateField('reported','reported',Reported',true);
+		 $this->doneBy = new _textField('name','name','DoneBy',true);
 /*
 		 $this->reviewed = new _dateField('reviewed','reviewed');
 		 $this->reviewedBy = new _textField('reviewed_by','reviewedBy');*/
