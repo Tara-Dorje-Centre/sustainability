@@ -12,7 +12,7 @@ if (isset($_POST['submit-login'])){
 
 		$_POST['login-pwd'] = 'none';
 		
-		$u = new UserLogin();
+		$u = new UserLogin('LOGIN');
 		if ($u->validateLogin($login, $pass) == true){
 			$_SESSION['login-name'] = $login;
 			$_SESSION['logged-in'] = true;
@@ -42,7 +42,7 @@ if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
 	include("pr_Task_List.php");
 } else {
 	
-	$site = new _htmlSite('LOGIN-FORM');
+	$site = new _htmlSite('LOGIN');
 	$site->set();
 	$site->print();
 

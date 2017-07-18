@@ -1,12 +1,91 @@
 <?php
+/*
+class _environmentVar{
+private $_varName = 'not-set';
+private $_valueRaw = NULL;
+private $_valueDefault = NULL;
+private $_envType = 'GET';
+private $_dataType = 'TEXT';
+private $_allowNull = false;
+private $_exists = false;
 
-function sessionVariableGET($urlVariable,$defaultValue){
-	if (isset($_GET[$urlVariable])){
-		$returnValue = $_GET[$urlVariable];
-	} else {
-		$returnValue = $defaultValue;
+public function __construct(string $varName,string $dataType = 'TEXT,string $envType = 'GET' ){
+	$this->_envType = $envType;
+	$this->_varName = $varName;
+	$this->_dataType = $dataType;
+}
+public function exists(){
+	switch ($this->_envType){
+		case 'GET':
+			$this->_exists = isset($_GET[$this->_varName]);
+			break;
+		case 'POST':
+			$this->_exists = isset($_POST[$this->_varName]);
+			break;
+		case 'SESSION':
+			$this->_exists = isset($_SESSION[$this->_varName]);
+			break;
+		default:
+			die('invalid environment variable type '.$this->_envType)
 	}
-	return $returnValue;
+	return $this->_exists;
+}
+public function remove(){
+	if($this->exists() == true){
+		switch ($this->_envType){
+		case 'GET':
+			unset($_GET[$this->_varName]);
+			break;
+		case 'POST':
+			unset($_POST[$this->_varName]);
+			break;
+		case 'SESSION':
+			unset($_SESSION[$this->_varName]);
+			break;
+		default:
+			die('invalid environment variable type '.$this->_envType)
+		}
+		$this->_exists = false;
+		$this->_valueRaw = NULL;
+	}
+}
+public function read($default = null){
+	if ($this->exists() == true){
+		switch ($this->_envType){
+		case 'GET':
+			$this->_valueRaw = $_GET[$this->_varName];
+			break;
+		case 'POST':
+			$this->_valueRaw = $_POST[$this->_varName];
+			break;
+		case 'SESSION':
+			$this->_valueRaw = $_SESSION[$this->_varName];
+			break;
+		default:
+			die('invalid environment variable type '.$this->_envType)
+		}
+	} else {
+		$this->_valueRaw = $default;
+	}
+	return $this->_valueRaw;
+}
+public function write($value = NULL){
+	$this->_valueRaw = $value;
+
+	switch ($this->_envType){
+		case 'GET':
+			$_GET[$this->_varName] = $this->_valueRaw;
+			break;
+		case 'POST':
+			$_POST[$this->_varName] = $this->_valueRaw;
+			break;
+		case 'SESSION':
+			$_SESSION[$this->_varName] = $this->_valueRaw;
+			break;
+		default:
+			die('invalid environment variable type '.$this->_envType)
+	}
+
 }
 
 function sessionVariablePOST($urlVariable,$defaultValue){
@@ -26,8 +105,8 @@ function sessionVariableSESSION($urlVariable,$defaultValue){
 	}
 	return $returnValue;
 }
-
-
+}
+*/
 
 class _element
 {

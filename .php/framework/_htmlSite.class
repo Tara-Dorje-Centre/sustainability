@@ -112,7 +112,7 @@ protected function setContents(){
 
 	if (!isset($_SESSION['logged-in']) || $_SESSION['logged-in'] == false){
 	$this->echoPrint(true,'not logged-in','setContents','htmlSite');
-		$user = new User('LOGIN-FORM');
+		$user = new UserLogin('LOGIN-FORM');
 		$content = $user->loginForm();
 	} else {
 	$this->echoPrint(true,'logged-in,setting contents','setConents','htmlSite');

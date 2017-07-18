@@ -7,7 +7,8 @@
  	public function listHeading();
  	public function listDetail();
  	public function display();
-	public function getPostVars();
+	public function readPost();
+	public function setEnv(string $env = 'POST');
  }
  
 abstract class _fieldset extends _contentWriter 
@@ -22,7 +23,7 @@ implements Ifieldset, Iecho, IcontentWriter{
 	
 	
     public function __construct(){
-    	$this->id = new _numberField('id','id','Id',true);
+    	$this->id = new _numberField('id','post-id','Id',true);
     	$this->name = new _textField('name','post-name','Name',true);
     	$this->description = new _textField('description','post-description','Description',true);
 		$this->updated = new _dateField('updated','not-used','Updated',true);
@@ -37,8 +38,16 @@ implements Ifieldset, Iecho, IcontentWriter{
 		$this->created->reset('');
 		$this->updated->reset('');
 		$this->highlight->reset('none');
+		
     }
-    
+    public function setEnv(string $env = 'POST'){
+        $this->id->setEnv($env);
+		$this->name->setEnv($env);
+		$this->description->setEnv($env);
+		$this->created->setEnv($env);
+		$this->updated->setEnv($env);
+		$this->highlight->setEnv($env);
+    }
 	public function setRow($row){
 		$this->reset;
 		$this->id->fetch($row);
@@ -92,13 +101,14 @@ implements Ifieldset, Iecho, IcontentWriter{
 		return $this->getContent();
 	}
 
-	public function getPostVars(){
-		$this->id->post();
-		$this->name->post();
-		$this->description->post();
-		$this->created->post();
-		$this->updated->post();
-		$this->highlight->post();
+	public function readPost(){
+		$this->setEnv('POST');
+		$this->id->readPost();
+		$this->name->readPost();
+		$this->description->readPost();
+		//$this->created->post();
+		//$this->updated->post();
+		$this->highlight->readPost();
 	}
 }
 

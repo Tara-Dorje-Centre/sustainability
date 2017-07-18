@@ -1,7 +1,7 @@
 ﻿<?php 
 
 class userLoginFields extends _contentWriter {
-	
+	//public $action;
     public $loginId;
     public $loginPassword;
 	public $loginEmail;
@@ -10,20 +10,22 @@ class userLoginFields extends _contentWriter {
 	public function __construct(){
 		$this->loginId = new _nameField('not-used','login-id','LoginId', true); 
 		$this->loginEmail = new _emailField('not-used','login-email','loginEmail', true); 
-		$this->loginPwd = new _passwordField('not-used','login-pwd','Password', true); 
+		$this->loginPassword = new _passwordField('not-used','login-pwd','Password', true); 
+    	//$this->password = new _passwordField('not-used','login-pwd','Password', true); 
+    //	$this->action = new _textField('not-used','login-pwd','button', true); 
     }
 
 	public function getPostVars(){
-		parent::getPostVars();
 		$this->loginId->post();
-		$this->loginPwd->post();
+		$this->loginPassword->post();
 		$this->loginEmail->post();
 	}
 
 }
 
 class userLogin extends _contentWriter{
-	private $links;
+	private $form = 'LOGIN';
+	//private $links;
 	private $f;
 	private $sql;
 	private $loginPwd;
@@ -31,10 +33,11 @@ class userLogin extends _contentWriter{
 	public $validationMessages;
 
 	
-	protected function __construct(){
+	public function __construct($form = 'LOGIN'){
+		$this->form = $form;
 		$this->f = new userLoginFields();
 		$this->sql = new UserSQL();
-		$this->links = new UserLinks();
+		//$this->links = new UserLinks();
 	}
 
 	private function generatePassword($length = 11) {
@@ -79,7 +82,7 @@ class userLogin extends _contentWriter{
 			$message .= "New Password = ".$newPass.br();
 			$message .= $links->formatHref($_SESSION['site-url'],$_SESSION['site-url']).br();
 			$this->mailUser($message,'Password Reset');
-			$_SESSION['login-messages'] = 'Profile password reset';
+			$_SESSION['login-messages']  = 'Profile password reset';
 		} else {
 			$_SESSION['login-messages'] = 'Active profile not found, contact an administrator';	
 		}
@@ -162,7 +165,7 @@ class userLogin extends _contentWriter{
 			
 	}
 	
-	private function updateLastLogin(string loginId = 'unknkownId'){
+	private function updateLastLogin(string $loginId = 'unknkownId'){
 		
 		$sql = $this->sql->updateLastLogin($loginName);
 		
@@ -181,12 +184,7 @@ $links = new _links();
 		$login = new _editForm($entity,$message,'sys_Login.php');
 		$login->open($contextMenu,'Login');
 		$login->required->addContent($this->f->loginId->input($entity));
-
-		//$input = getPasswordInput('login-pwd', 10, 50);
-		$login->required->addContent($this->f->loginPwd->input($entity));
-		//'Password',$input));
-
-		
+		$login->required->addContent($this->f->loginPassword->input($entity));
 
 		$login->optional->addContent($this->f->loginEmail->input($entity));
 		$login->optional->addContent(getLoginLogoutButton('Reset Password','submit-pwd-reset'));
@@ -199,12 +197,9 @@ $links = new _links();
 		$login->submit->addContent(getLoginLogoutButton('Login','submit-login'));
 		
 		$login->submit->addContent($_SESSION['site-login-notice']);
-		//etLoginLogoutButton('Login','submit-login'));
+		
 		$form = $login->close();
-/*
-		$form .= openDiv('site-login-notices');
-		$form .= $_SESSION['site-login-notice'];
-		$form .= closeDiv();*/
+
 		$this->echoPrint(true, 'returning login form','loginForm');
 		return $form;			
 	}

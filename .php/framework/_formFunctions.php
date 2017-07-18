@@ -552,7 +552,15 @@ function getTimestampDay($timestamp,$trim = 'NO'){
 	}
 	return $day;
 }
-
+function getTimestampValues($selectName){
+	$year = $_POST[$selectName.'_YYYY'];
+	$month = $_POST[$selectName.'_MM'];
+	$day = $_POST[$selectName.'_DD'];
+	$hour = $_POST[$selectName.'_HH'];
+	$min = $_POST[$selectName.'_mm'];
+	$time = $year.'-'.$month.'-'.$day.' '.$hour.':'.$min.':00';
+	return $time;
+} 
 function getTimestampPostValues($selectName){
 	$year = $_POST[$selectName.'_YYYY'];
 	$month = $_POST[$selectName.'_MM'];

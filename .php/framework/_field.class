@@ -1,70 +1,122 @@
 <?php 
 
-
- interface Ifield{
+interface Ifield{
+	public function setEntity(string $entity);
+	public function setEnvironment(string $environment = 'POST');
+ 	public function setEnvironmentVariable(string $var = 'get|post|session-variable');
+ 	public function setDatabaseColumn(string $dbCol = 'query_alias|column_name');
  	
- 	public function enabled(bool $isEnabled = false);
+ 	public function setEnabledState(bool $isEnabled = false);
  	public function disable();
- 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false);
- 	public function setShow(string $caption, bool $list = true);
-	public function setFetch(string $dbColumn);
- 	public function setPost(string $postVariable);
+ 	public function enable();
+ 	public function setEnabled(bool $fetchDatabase = false, bool $showDetail = false, bool $showList = false, bool $post = false);
+ 	public function setCaption(string $caption = 'list|detail|input caption');
+
+
  	public function set($value);
  	public function reset($default = NULL);
  	public function get();
    	public function value();
- 	public function sqlValue();
+ 	public function valueSQL();
+ 	public function valueRaw();
+ 	
 	public function fetch($row);
+	
 	public function format();
-	public function th();
- 	public function td();
- 	public function p();
- 	public function input(string $entity);
- 	public function inputChoice(string $entity,string $options);
- 	public function inputFree(string $entity);
- 	public function inputHidden(string $entity);
- 	public function readPost();
- 	public function overwritePost($varName);
+ 	public function caption();
+ 	public function listDetail();
+ 	public function displayDetail();
+ 	
+ 	public function input();
+ 	public function inputChoice(string $options);
+ 	public function inputFree();
+ 	public function inputHidden();
+ 	public function read();
  	public function readGet();
- 	public function overwriteGet();
+ 	public function readPost();
  	public function readSession();
+ 	public function writeGet();
  	public function writeSession();
- 	public function read(string $readType = 'POST',$var = '-use-current-');
- 	public function write(string $writeType = 'POST',$var = '-use-current-');
-
+ 	public function writePost();
+ 	public function write();
+ 	public function remove();
  }
- 
+
  abstract class _field extends _contentWriter
  implements Ifield, Iecho, IcontentWriter {
- 	public  $caption = 'no caption';
- 	public  $dbColumn = 'not-used';
- 	public  $postVariable = 'notUsed';
- 	public  $type = 'TEXT';
-  	public $inputAsType = 'TEXT';
- 	public $valueRaw = NULL;
- 	protected  $valueNumber = 0;
- 	protected  $valueText = '';
- 	protected  $valueDate = '';
- 	protected  $useRow = false;
- 	protected  $usePost = false;
- 	protected  $showList = false;
- 	protected  $showDisplay = false;
+ 	protected $_env;
+ 	protected $_dbCol = 'not_used';
+ 	protected $_caption = 'no caption';
+ 	protected  $_dataType = 'TEXT';
+ 	protected 	$_raw = NULL;
+ 	protected  $_number = 0;
+ 	protected  $_text = '';
+ 	protected  $_date = '';
+ 	protected $_formatted = '';
+ 	protected  $_fetchEnabled = false;
+ 	protected  $_envEnabled = false;
+ 	protected  $_listEnabled = false;
+ 	protected  $_displayEnabled = false;
  
- 	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
+ 	public function __construct(string $dbColumn = 'not_used', string $envVar = 'not-used', string $caption = 'no caption',bool $enable = false){
+ 		$this->env = new _environmentVariable($envVar,'POST');
  		if ($dbColumn != 'not_used'){
  			$this->setFetch($dbColumn);
  		}
  		if ($postVariable != 'not-used'){
- 			$this->setPost($postVariable);
+ 			$this->setPost($envVar);
  		}
  		if ($caption != 'no caption'){
  			$this->setShow($caption);
  		}
  		$this->enabled($enable);
  	}
+	public function setEntity(string $entity);
+	public function setEnvironment(string $environment = 'POST');
+ 	public function setEnvironmentVariable(string $var = 'get|post|session-variable');
+ 	public function setDatabaseColumn(string $dbCol = 'query_alias|column_name');
  	
- 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
- 		$this->useRow = $fetch;
+ 	public function setEnabledState(bool $isEnabled = false);
+ 	public function disable();
+ 	public function enable();
+
+ 	public function setCaption(string $caption = 'list|detail|input caption');
+
+ 	protected  $_fetchEnabled = false;
+ 	protected  $_envEnabled = false;
+ 	protected  $_listEnabled = false;
+ 	protected  $_displayEnabled = false;
+ 	public function set($value);
+ 	public function reset($default = NULL);
+ 	public function get();
+   	public function value();
+ 	public function valueSQL();
+ 	public function valueRaw();
+ 	
+	public function fetch($row);
+	
+	public function format();
+ 	public function caption();
+ 	public function listDetail();
+ 	public function displayDetail();
+ 	
+ 	public function input();
+ 	public function inputChoice(string $options);
+ 	public function inputFree();
+ 	public function inputHidden();
+ 	public function read();
+ 	public function readGet();
+ 	public function readPost();
+ 	public function readSession();
+ 	public function writeGet();
+ 	public function writeSession();
+ 	public function writePost();
+ 	public function write();
+ 	public function remove();
+ 	
+ 	public function setEnabled(bool $fetchDatabase = false, bool $showDetail = false, bool $showList = false);
+ 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false){
+ 		$this->$_fetchEenabled = $fetch;
  		$this->usePost = $post;
  		$this->showDisplay = $show;
  		$this->showList = $list;
@@ -78,10 +130,11 @@
  		$this->enabled(false);
  	}
  
- 	public function setShow(string $caption, bool $display = false, bool $list = false ){
+ 	public function setShow(string $caption){
+ 	//, bool $display = false, bool $list = false ){
 		$this->caption = $caption;
-		$this->showList = $list;
-		$this->showDisplay = $display;
+		$this->showList = true;
+		$this->showDisplay = true;
  	} 
  
 	public function setFetch(string $dbColumn){
@@ -91,7 +144,8 @@
  
 	public function setPost(string $postVariable){
 		$this->usePost = true;
-		$this->postVariable = $postVariable;
+		$this->envVar = new _environmentVariable($postVariable,'POST');
+		
 	}
  
  	protected function canSet(){
@@ -156,11 +210,10 @@
  		if ($this->canSet == true){
  			$this->set($default);
  		}
- 
  	}
  
  
-	public function fetch($row){
+	public function fetchDb($row){
 	//could pass optional override column alias here
 	
 		if ($this->useRow == true){
@@ -169,7 +222,7 @@
  		}
 	}
 
-	public function th(){
+	public function listCaption(){
 	 	$value = '';
 		if ($this->showList == true){
  			$value = wrapTh($this->caption);
@@ -177,7 +230,7 @@
 		return $value;
  	}
  	
- 	public function td(){
+ 	public function listDetail(){
  	 	$value = '';
  		if ($this->showList == true){
   		    //$this->format();
@@ -186,7 +239,7 @@
  		return $value;
  	}
 
- 	public function p(){
+ 	public function detail(){
  	 	$value = '';
  		if ($this->showDisplay == true){
  			//$this->format();
@@ -194,111 +247,47 @@
  		}
  		return $value;
  	}
- 	
-	public function post(){
+ 	public function writeEnvVar(){
+ 	$this->envVar->set($this->get(),true);
+ 	//$this->envVar->write();
+ 	}
+ 	public function readEnvVar(){
+ 	//$this->envVar->read(true);
+ 	$this->set($this->envVar->get(true));
+ 	}
+ 	public function removeEnvVar(){
+ 	$this->envVar->remove();
+ 	}
+ 	public function setEnvironment(string $env){
+ 	$this->envVar->setEnvironment($env);
+ 	}
+	public function readPost(){
+
   		if ($this->usePost() == true){
+  			$this->envVar->setEnvironment('POST');
 			switch ($this->type) {
     			case 'NUMBER':
- 					$this->valueNumber = $_POST[$this->postVariable];
+    			   // $this->envVar->read();
+  		 			$this->valueRaw = $this->envVar->get(true);
+ 					$this->valueNumber = $this->valueRaw;
         			break;
     			case 'DATE':
- 		 			$this->valueDate = getTimestampPostValues($this->postVariable);
+ 		 			$this->valueRaw = getTimestampPostValues($this->envVar->_var);
+        			 $this->valueDate = $this->valueRaw;
         			break;
     			case 'TEXT':
- 		 			$this->valueText = dbEscapeString($_POST[$this->postVariable]);
+    			  	//$this->envVar->read();
+  		 			$this->valueRaw = $this->envVar->get(true);
+ 		 			$this->valueText = dbEscapeString($this->valueRaw);
         			break;
     			default:
- 		 			$this->valueText = dbEscapeString($_POST[$this->postVariable]);
+    			  	$this->envVar->read();
+  		 			$this->valueRaw = $this->envVar->get(true);
+ 		 			$this->valueText = dbEscapeString($this->valueRaw);
 			}
  		}
 	} 
 
-	public function readPost(){
-	 	return $this->read('POST');
-	}
-
- 	public function readGet(){
- 		return $this->read('GET');
- 	}
-
- 	public function readSession(){
- 	 	return $this->read('SESSION');
- 	}
-
- 	public function read(string $varType = 'POST',string $var = '-use-current-'){
- 	 	$actualVar = $this->getVar($var);
- 		switch ($varType){
- 			case 'GET':
- 				$raw = $_GET[$actualVar];
- 			
- 				break;
- 			case 'POST':
- 				$raw = $_POST[$actualVar];
- 				break;
- 			case 'SESSION':
- 				$raw = $_SESSION[$actualVar];
- 				break;
- 			default:
- 				die("invalid variable GET/POST/SESSION request: ".$type;
- 		}
- 		
- 			switch ($this->type) {
-    			case 'NUMBER':
- 					$this->valueNumber = $raw;
-        			break;
-    			case 'DATE':
-    			//will only return post values
- 		 			$this->valueDate = getTimestampPostValues($actualVar);
-        			break;
-    			case 'TEXT':
- 		 			$this->valueText = dbEscapeString($raw);
-        			break;
-    			default:
- 		 			$this->valueText = dbEscapeString($raw);
-			}
- 		
- 	
- 	}
- 	
- 	
- 	
-  	protected fuction getVar(string $var = '-use-current-'){
-  		if ($var != '-use-current-'){
-  			$actualVar = $var;
-  		} else {
-  			$actualVar = $this->postVariable;
-  		}
-  		return $actualVar;
-  	}
-  	
- 	public fuction write($writeType = 'POST',$var = '-use-current-'){
- 			$actualVar = $this->getVar($var);
- 	 		switch ($writeType){
- 			case 'GET':
- 				$_GET[$actualVar] = $this->get();
- 				break;
- 			case 'POST':
- 			 	$_POST[$actualVar] = $this->get();
- 				break;
- 			case 'SESSION':
- 				 $_SESSION[$actualVar] = $this->get();
- 				break;
- 			default:
- 				die("invalid variable GET/POST/SESSION request: ".$type.
- 		
- 		}
- 	
- 	}
- 	
- 	public function overwritePost(){
-		$this->write('POST');
-	}
-	public function writeSession(){
-		$this->write('SESSION');
-	}
-	public function overwriteGet(){
-		$this->write('GET');
-	)
 	
   	public function sqlValue(){
  		//if ($this->canSet() == true){
@@ -340,11 +329,11 @@
 
 	public function input(string $entity){
 		//default usage is free text
-		return $this->inputFree($entity,$this->value(),$this->postVariable,$this->caption);
+		return $this->inputFree($entity,$this->value(),$this->envVar->variable,$this->caption);
 	}
 	
 	public function inputFree(string $entity){
-		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
+		return inputFieldText($entity,$this->value(),$this->envVar->variable,$this->caption);
 		//$this->value()); password input should always be blank
 	}
 	public function inputCaptioned(string $entity, string $input){
@@ -354,7 +343,7 @@
 		return $this->inputCaptioned($entity, $options);
 	}
 	public function inputHidden(string $entity){
-		return getHiddenInput($this->postVariable, $this->value());
+		return getHiddenInput($this->envVar->variable, $this->value());
 	}
 	
 	public function inputPassword(){
