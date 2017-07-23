@@ -1,34 +1,34 @@
 <?php 
 
-class _editSection extends _contentWriter{
-public $sectionId = '';
-public function __construct(string $sectionId){
-$this->sectionId = $sectionId;
+class _inputSection extends _contentWriter{
+public $sectionName = '';
+public function __construct(string $sectionName){
+$this->sectionNae = $sectionName;
 }
 
 }
 
-class _editForm extends _contentWriter{
-public $entity;
-public $mode;
-public $url;
+class _inputForm extends _contentWriter{
+	public $entity;
+	public $mode;
+	public $url;
 
-public $required;
-public $optional;
-public $hidden;
-public $submit;
+	public $required;
+	public $optional;
+	public $hidden;
+	public $submit;
 
-public function __construct(string $entity,string $mode, string $url){
-$this->entity = $entity;
-$this->mode = $mode;
-$this->url = $url;
+	public function __construct(string $entity,string $mode, string $url){
+		$this->entity = $entity;
+		$this->mode = $mode;
+		$this->url = $url;
 
 
-$this->required = new _editSection('required');
-$this->optional = new _editSection('optional');
-$this->hidden = new _editSection('hidden');
-$this->submit = new _editSection('submit');
-}
+		$this->required = new _inputSection('required');
+		$this->optional = new _inputSection('optional');
+		$this->hidden = new _inputSection('hidden');
+		$this->submit = new _inputSection('submit');
+	}
 
 	public function open(string $contextMenu = '',string $titleEntity = ''){
 		$legend = $this->mode.':  '.$titleEntity;

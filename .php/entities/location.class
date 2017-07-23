@@ -1,51 +1,55 @@
 ﻿<?php 
 class locationFields extends _fieldsetChild{
-
+/*
+	//from _fieldset
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	
+	public $parent;
+	public $type;*/
 	public $sortKeyParent;
 	public $sortKey;
 	
 	public function __construct(){
 		parent::__construct();
-		$this->type->setShow('user-type',true);
-    	//$this->created->setShow('created',true);
-    	//$this->highlight->setShow('highlight',true);
-    	
-    	//$this->updated->setShow('updated',true);
-		//$this->description->setShow('description',true);
-		$this->parent->setShow('parent',true);
+
     	$this->sortKey = new _textField('sort_key'); 
 		$this->sortKeyParent = new _textField('parent_sort_key'); 
 		
     }
 	
-	public function setRow($row){
-		parent::setRow($row);
-		$this->sortKey->setRow($row);
-		$this->sortKeyParent->setRow($row);
+	public function fetch($row){
+		parent::fetch($row);
+		$this->sortKey->fetch($row);
+		$this->sortKeyParent->fetch($row);
 	}
 	
-	public function listHeading(){
-		$this->addContent(parent::listHeading(),true);
-		$this->addContent($this->sortKey->tH());
+	public function listCaption(){
+		$this->addContent(parent::listCaption(),true);
+		$this->addContent($this->sortKey->listCaption());
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
 		$this->addContent(parent::listDetail(), true);
-		$this->addContent($this->sortKey->tD());
+		$this->addContent($this->sortKey->listDetail());
 		return $this->getContent;
 	}
 	
-	public function display(){
-		$this->addContent(parent::display(),true);
-		$this->addContent($this->sortKey->p());
-		$this->addContent($this->sortKeyParent->p());
-		
+	public function displayDetail(){
+		$this->addContent(parent::displayDetail(),true);
+		$this->addContent($this->sortKey->displayDetail());
+		$this->addContent($this->sortKeyParent->displayDetail());
 		return $this->getContent();
 	}
 	
-	public function getPostVars(){
-		parent::getPostVars();
+	public function read(){
+		parent::read();
+		
 	}
 	
 }
@@ -67,14 +71,10 @@ class location extends _entity{
 		return $link;
 	}
 	
-	protected function beforeSetDetails(){
-
-	}
-	
-    protected function afterSetDetails(){
+    public function setDetails(){
+    	parent::setDetails();
 			
 		$this->setChildCount();
-		
 	}	
 	
 	private function setChildCount(){
@@ -85,12 +85,10 @@ class location extends _entity{
 		} else {
 		$this->childLocations = 0;
 		}
-		
+		$this->echoState(true,'setChildCount');
 	}
 	
-	protected function afterDisplay(){
 	
-	}
 	
 	protected function setPageTitle(){
 		if ($this->pageMode != 'ADD'){
@@ -173,15 +171,16 @@ class location extends _entity{
 
 	}
 	
-	protected function afterSetDefaults(){
-		
-		if ($this->pageMode == 'ADD'){
+	protected function setDefaults(){
+	
+
+		//if ($this->pageMode == 'ADD'){
 			//if add came from all locations default, reset to 0 for no parent
 			if ($this->idParent == -1){
 				$this->idParent = 0;
 			}
-		}
-		
+		//}
+		parent::setDefaults();
 	}  
 //add to entity
 
@@ -193,30 +192,28 @@ class location extends _entity{
 		$this->echoState(true,'editForm');
 		$entity = 'location';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		
-		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$this->f->setEntity($entity);
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
 		$edit->open($contextMenu,$this->_titleEntity);
 		
-		$edit->required->addContent($this->f->name->input($entity,'NAME'));
+		$edit->required->addContent($this->f->name->input());
 
 		$type = new locationType('OPTIONS');
-		$select = $type->options($this->f->type->id->value(),'idType','false',true);
-		$edit->required->addContent(captionedInput('Type',$select));
+		$select = $type->options($this->f->type->value(),$this->f->type->env->variable,'false',true);
+		$edit->required->addContent($this->f->type->inputChoice($select));
+		//captionedInput('Type',$select));
 					
-		$edit->optional->addContent($this->f->description->input($entity,'DESCRIPTION'));
+		$edit->optional->addContent($this->f->description->input());
 		
 		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->parent->id->inputHidden());
+		$edit->hidden->addContent($this->f->parent->inputHidden());
 		$edit->hidden->addContent($this->f->id->inputHidden());
 		$edit->submit->addContent(getSaveChangesResetButtons());
 
 		return $edit->close();
 	}
 
-	protected function afterCollectPostValues(){
-	
-	}
-	
+
 	private function getSortKey($id){
 		$sql = $this->sql->sortKey($id);
 		$sortKey = dbGetScalar($sql, 'sort_key');
@@ -225,7 +222,7 @@ class location extends _entity{
 
 	private function buildSortKey(){
 			if ($this->idParent == 0){
-			$sortKey = $this->f->name->value;
+			$sortKey = $this->f->name->value();
 		} else {
 			$sortKey = $this->f->sortKeyParent->value();
 			$sortKey .= '.'.$this->f->name->value();
@@ -236,7 +233,7 @@ class location extends _entity{
 	private function updateSortKey(){
 
 		$sortKey = $this->buildSortKey();
-		if ($sortKey != $this->f->sortKey->value){
+		if ($sortKey != $this->f->sortKey->value()){
 			$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
 		$result = dbRunSQL($sql);
 		}
@@ -269,12 +266,12 @@ class location extends _entity{
 			$sql .= " updated, ";
 			$sql .= " description) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name->value."', ";
-			$sql .= " ".$this->idParent.", ";
-			$sql .= " ".$this->f->type->id->value.", ";
+			$sql .= "'".$this->f->name->value()."', ";
+			$sql .= " ".$this->parent->value().", ";
+			$sql .= " ".$this->f->type->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->f->description->value."') ";
+			$sql .= "'".$this->f->description->value()."') ";
 			
 			$result = dbRunSQL($sql);
 			

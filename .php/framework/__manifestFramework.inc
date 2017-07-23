@@ -14,7 +14,7 @@ include_once("_editForm.class");
 include_once("_calendar.class");
 include_once("_database.class");
 include_once("_links.class");
-
+include_once("_environmentVariable.class");
 include_once("_field.class");
 include_once("_field_basic.class");
 include_once("_field_specialized.class");

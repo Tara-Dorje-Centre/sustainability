@@ -1,19 +1,20 @@
 <?php 
 
  interface Ifieldset{
- 	public function setRow($row);
+ 	public function fetch($row);
  	public function format();
  	public function defaults();
- 	public function listHeading();
+ 	public function listCaption();
  	public function listDetail();
- 	public function display();
-	public function readPost();
-	public function setEnv(string $env = 'POST');
+ 	public function displayDetail();
+	public function read();
+	public function write();
+	public function setEnvironment(string $env = 'POST');
  }
  
 abstract class _fieldset extends _contentWriter 
 implements Ifieldset, Iecho, IcontentWriter{
-
+//_fieldset
 	public $id;
 	public $name;		
 	public $created;
@@ -23,12 +24,12 @@ implements Ifieldset, Iecho, IcontentWriter{
 	
 	
     public function __construct(){
-    	$this->id = new _numberField('id','post-id','Id',true);
-    	$this->name = new _textField('name','post-name','Name',true);
-    	$this->description = new _textField('description','post-description','Description',true);
-		$this->updated = new _dateField('updated','not-used','Updated',true);
-    	$this->created = new _dateField('created','not-used','Created',true);
-        $this->highlight = new _textField('highlight_style','post-highlight','Highlight',true);
+    	$this->id = new _numberField('id','id','Id');
+    	$this->name = new _nameField('name','name','Name');
+    	$this->description = new _descriptionField('description','description','Description');
+		$this->updated = new _dateField('updated','updated','Updated');
+    	$this->created = new _dateField('created','created','Created');
+        $this->highlight = new _cssColorField('highlight_style','highlight','Highlight');
     }
     
     protected function reset(){
@@ -40,15 +41,15 @@ implements Ifieldset, Iecho, IcontentWriter{
 		$this->highlight->reset('none');
 		
     }
-    public function setEnv(string $env = 'POST'){
-        $this->id->setEnv($env);
-		$this->name->setEnv($env);
-		$this->description->setEnv($env);
-		$this->created->setEnv($env);
-		$this->updated->setEnv($env);
-		$this->highlight->setEnv($env);
+    public function setEnvironment(string $env = 'POST'){
+    $this->id->env->setEnvironment($env);
+	$this->name->env->setEnvironment($env);
+	$this->description->env->setEnvironment($env);
+	$this->created->env->setEnvironment($env);
+	$this->updated->env->setEnvironment($env);
+	$this->highlight->env->setEnvironment($env);
     }
-	public function setRow($row){
+	public function fetch($row){
 		$this->reset;
 		$this->id->fetch($row);
 		$this->name->fetch($row);
@@ -59,7 +60,7 @@ implements Ifieldset, Iecho, IcontentWriter{
 	}
 	
 	public function defaults(){
-		$this->reset;
+		$this->reset();
 	}
 	
 	public function format(){
@@ -71,44 +72,52 @@ implements Ifieldset, Iecho, IcontentWriter{
 		$this->highlight->format();
 	}
 	
-	public function display(){
-		$this->addContent($this->id->p(),true);
-		$this->addContent($this->name->p());
-		$this->addContent($this->description->p());
-		$this->addContent($this->created->p());
-		$this->addContent($this->updated->p());
-		$this->addContent($this->highlight->p());	
+	public function displayDetail(){
+		$this->addContent($this->id->displayDetail(),true);
+		$this->addContent($this->name->displayDetail());
+		$this->addContent($this->description->displayDetail());
+		$this->addContent($this->created->displayDetail());
+		$this->addContent($this->updated->displayDetail());
+		$this->addContent($this->highlight->displayDetail());	
 		return $this->getContent();
 	}
 	
-	public function listHeading(){
-		$this->addContent($this->id->th(),true);
-		$this->addContent($this->name->th());
-		$this->addContent($this->description->th());
-		$this->addContent($this->created->th());
-		$this->addContent($this->updated->th());
-		$this->addContent($this->highlight->th());		
+	public function listCaption(){
+		$this->addContent($this->id->listCaption(),true);
+		$this->addContent($this->name->listCaption());
+		$this->addContent($this->description->listCaption());
+		$this->addContent($this->created->listCaption());
+		$this->addContent($this->updated->listCaption());
+		$this->addContent($this->highlight->listCaption());		
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		$this->addContent($this->id->td(),true);
-		$this->addContent($this->name->td());
-		$this->addContent($this->description->td());
-		$this->addContent($this->created->td());
-		$this->addContent($this->updated->td());
-		$this->addContent($this->highlight->td());
+		$this->addContent($this->id->listDetail(),true);
+		$this->addContent($this->name->listDetail());
+		$this->addContent($this->description->listDetail());
+		$this->addContent($this->created->listDetail());
+		$this->addContent($this->updated->listDetail());
+		$this->addContent($this->highlight->listDetail());
 		return $this->getContent();
 	}
-
-	public function readPost(){
-		$this->setEnv('POST');
-		$this->id->readPost();
-		$this->name->readPost();
-		$this->description->readPost();
-		//$this->created->post();
-		//$this->updated->post();
-		$this->highlight->readPost();
+	public function read(){
+		
+		$this->id->read();
+		$this->name->read();
+		$this->description->read();
+		$this->created->read();
+		$this->updated->read();
+		$this->highlight->read();
+	}
+	public function write(){
+		
+		$this->id->write();
+		$this->name->write();
+		$this->description->write();
+		$this->created->write();
+		$this->updated->write();
+		$this->highlight->write();
 	}
 }
 

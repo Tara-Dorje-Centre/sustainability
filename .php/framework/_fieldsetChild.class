@@ -3,23 +3,28 @@
 
 abstract class _fieldsetChild extends _fieldset
 implements Ifieldset, Iecho, IcontentWriter{
-
+	/*
+	//from _fieldset
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	*/
 	public $parent;
 	public $type;
 		
     public function __construct(){
     	parent::__construct();
-    	$this->parent = new _idNameField('parent_id','idParent','parent_name',true);
-    	$this->type = new _idNameField('type_id','idType','type_name','Type',true);
-   //enable base entity fields
-		$this->id->enabled(true);
-		$this->name->enabled(true);
-		$this->description->enabled(true);
-		$this->created->setEnabled(true,true,true);
-        $this->updated->setEnabled(true,true,true);
-        $this->highlight->enabled(true);
-   
+    	$this->parent = new _fieldIdName('parent_id','id-parent','Parent','parent_name');
+    	$this->type = new _fieldIdName('type_id','id-type','Type','type_name');
     }
+    public function setEnvironment(string $env = 'POST'){
+		parent::setEnvironment($env);
+		$this->parent->setEnvironment($env);
+		$this->type->setEnvironment($env);
+	}
     
     protected function reset(){
     	parent::reset();
@@ -27,8 +32,8 @@ implements Ifieldset, Iecho, IcontentWriter{
     	$this->type->reset(0);
     }
     
-	public function setRow($row){
-		parent::setRow($row);
+	public function fetch($row){
+		parent::fetch($row);
 		$this->parent->fetch($row);
 		$this->type->fetch($row);
 	}
@@ -38,32 +43,38 @@ implements Ifieldset, Iecho, IcontentWriter{
 		$this->parent->format();
 		$this->type->format();
 	}
-	public function display(){;
-		$this->addContent(parent::display(),true);
-		$this->addContent($this->parent->p());		
-		$this->addContent($this->type->p());		
+	public function displayDetail(){;
+		$this->addContent(parent::displayDetail(),true);
+		$this->addContent($this->parent->displayDetail());		
+		$this->addContent($this->type->displayDetail());		
 		return $this->getContent();
 	}
 	
-	public function listHeading(){
-		$this->addContent(parent::listHeading(),true);
-		$this->addContent($this->parent->th());		
-		$this->addContent($this->type->th());		
+	public function listCaption(){
+		$this->addContent(parent::listCaption(),true);
+		$this->addContent($this->parent->listCaption());		
+		$this->addContent($this->type->listCaption());		
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
 		$this->addContent(parent::listDetail(),true);
-		$this->addContent($this->parent->td());
-		$this->addContent($this->type->td());
+		$this->addContent($this->parent->listDetail());
+		$this->addContent($this->type->listDetail());
 		return $this->getContent();
 	}
 
-	public function getPostVars(){
-		parent::getPostVars();
-		$this->parent->post();
-		$this->type->post();
+	public function read(){
+		parent::read();
+		$this->parent->read();
+		$this->type->read();
 	}
+	public function write(){
+		parent::write();
+		$this->parent->write();
+		$this->type->write();
+	}
+	
 }
 
 ?>

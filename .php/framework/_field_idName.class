@@ -1,110 +1,119 @@
 <?php 
 		//$fields = inputFieldUser($entity,$this->f->loginName->value(),'loginName','Login Name');
-class _idNameField implements Ifield{
+class _fieldIdName implements Ifield{
 	public  $id;
 	public  $name;
 	
-	public function __construct(string $dbColumnId = 'entity_id', string $postVariable = 'idEntity', string $dbColumnName = 'entity_name',string $caption = 'caption',bool $enable = false){
-		$this->id = new _numberField($dbColumnId, $postVariable,'not-used');
-		$this->name = new _textField($dbColumnName,'not-used',$caption);
+	public function __construct(
+		string $dbCol = 'entity_id', 
+		string $envVar = 'id-entity', 
+		string $caption = 'caption',
+		string $dbColName = 'entity_name')
+	{
+		$this->id = new _idField($dbCol, $envVar,'not-used');
+		$this->name = new _nameField($dbColName,'not-used',$caption);
 		
-		$this->enabled($enable);
+		$this->enabled(true);
 	}
-	public function enabled(bool $enable = false){
-		if ($enable == true){
- 	//public function setEnabled( $fetch = ,  $show = ,  $list = ,  $post = ){
-			$this->name->setEnabled(true,true,true,false);
-			$this->id->setEnabled(true,false,false,true);
+	public function enabled(bool $use = false){
+		if ($use == true){
+ 	//public function setEnabled( $fetch,  $show,  $list,  $post, $input ){
+			$this->name->setEnabled(true,true,true,false,false);
+			$this->id->setEnabled(true,false,false,true,true);
 		
 		} else {
-			$this->name->enabled();
-			$this->id->enabled();
+			$this->name->enabled($use);
+			$this->id->enabled($use);
 		}
 	}
-	public function disable(){
-		$this->enabled(false);
+ 	public function setEnabled(
+ 		bool $fetch = false, 
+ 		bool $show = false, 
+ 		bool $list = false, 
+ 		bool $post = false,
+ 		bool $input = false)
+ 	{
+		$this->id->setEnabled($fetch,false,false,$post,$input);
+		$this->name->setEnabled($fetch,$show,$list,false,false);
 	}
- 	public function setEnabled(bool $fetch = false, bool $show = false, bool $list = false, bool $post = false){
-	
-		$this->id->setEnabled($fetch,false,false,$post);
-	
-		$this->name->setEnabled($fetch,$show,$list,false);
-	
+ 	public function setCaption(string $caption = 'no caption'){
+ 		$this->name->setCaption($caption);
+ 	}
+	public function setEntity(string $entity){
+		$this->id->setEntity($entity);
 	}
-	public function set( $value){
+	public function setEnvironment(string $env= 'POST'){
+		$this->id->env->setEnvironment($env);
+	}
+ 	public function setEnvironmentVariable(string $var = 'not-used'){
+ 	 		$this->id->env->setEnvironmentVariable($var);
+ 	}
+ 	public function setFetchColumnName(string $dbCol = 'query_alias|column_name'){
+ 	 	 	$this->name->setFetchColumn($dbCol);
+ 	}
+ 	public function setFetchColumn(string $dbCol = 'query_alias|column_name'){
+ 	 	 	$this->id->setFetchColumn($dbCol);
+ 	}
+	public function set($value){
 	 	$this->id->set($value);
 	}
- 	public function reset( $default = 0){
+ 	public function reset($default = 0){
  		$this->id->reset($default);
  	 	$this->name->reset('');
  	}
  	public function get(){
  	   	return $this->id->get();
  	}
+	public function valueRaw(){
+ 		return $this->id->valueRaw();
+ 	}
    	public function value(){
    		return $this->id->value();
    	}
-   	public function sqlValue(){
-   	
-   		return $this->id->sqlValue();
+   	public function valueSQL(){
+   		return $this->id->valueSQL();
    	}
-	public function setShow(string $caption, bool $list = true){
-		$this->name->setShow($caption,$list);
-	}
-	public function setFetch(string $dbColumn){
-	//,$dbColumnName){
-		$this->id->setFetch($dbColumn);
-		//$this->name->setFetch($dbColumnName);
-	}
-	public function setPost(string $postVariable){
-		$this->id->setPost(postVariable);
-	}
-	public function setFetchName(string $dbColumnName){
-	//,$dbColumnName){
-		//$this->id->setFetch($dbColumn);
-		$this->name->setFetch($dbColumnName);
-	}
-	
 
 	public function fetch($row){
 		$this->id->fetch($row);
 		$this->name->fetch($row);
 	}
-	public function th(){
-		return $this->name->tH();
+	public function listCaption(){
+		return $this->name->listCaption();
 	}
 	
- 	public function td(){
- 		return $this->name->tD();
+ 	public function listDetail(){
+ 		return $this->name->listDetail();
  	}
- 	public function p(){
- 		return $this->name->p();
+ 	public function displayDetail(){
+ 		return $this->name->displayDetail();
  	}
- 	public function post(){
- 		$this->id->post();
+ 	
+ 	public function read(){
+ 	 	$this->id->env->read();
+ 	}
+ 	 	
+ 	public function write(){
+ 	 	$this->id->env->write();
+ 	}
+ 	public function remove(){
+ 	 	$this->id->env->remove();
  	}
  	public function format(){
- 	$this->name->format();
+ 		return $this->name->format();
  	}
-	public function input(string $entity){
-		//default usage is free text
-		return $this->id->input($entity);
-		//$this->value(),$this->postVariable,$this->caption);
-	}
-	
-	public function inputFree(string $entity){
-		return $this->id->inputFree($entity);
-		//$this->value()); password input should always be blank
-	}
-	public function inputCaptioned(string $entity, string $input){
-		return $this->id->inputCaptioned($entity,$input);
-	}
-	public function inputChoice(string $entity, string $options){
-		return $this->id->inputChoice($entity,$options);
-	}
-	public function inputHidden(string $entity){
+	public function inputHidden(){
 		return $this->id->inputHidden();
 	}
+	
+
+	public function inputCaptioned(string $input){
+		return $this->id->inputCaptioned($input);
+	}
+	public function inputChoice(string $options){
+		return $this->id->inputChoice($options);
+	}
+
 }
  
 ?>

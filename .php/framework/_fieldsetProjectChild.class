@@ -3,19 +3,32 @@
 
 abstract class _fieldsetProjectChild extends _fieldsetChild
 implements  Ifieldset, Iecho, IcontentWriter{
-
+	/*
+	//from _fieldset
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	//from _fieldsetChild
+	public $parent;
+	public $type;
+	*/
+//_fieldsetProjectChild
 	public $project;
 	public $location;
 	public $started;
 	public $approved;
 	public $approvedBy;
+	
     public function __construct(){
     	parent::__construct();
-    	$this->project = new _idNameField('project_id','idProject','project_name','Project',true);
-    	$this->location = new _idNameField('location_id','idLocation','location_name','Location',true);
-    	$this->started = new _dateField('started','started','Started',true);           
-    	$this->approved = new _dateField('approved','approved','Approved',true);
-    	$this->approvedBy = new _textField('approved_by','approvedBy','Approved By',true);
+    	$this->project = new _fieldIdName('project_id','id-project','Project','project_name');
+    	$this->location = new _fieldIdName('location_id','id-location','Location', 'location_name');
+    	$this->started = new _dateField('started','started','Started');           
+    	$this->approved = new _yesNoField('approved','approved','Approved');
+    	$this->approvedBy = new _userField('approved_by','approved-by','Approved By');
     }
     protected function reset(){
     	parent::reset();
@@ -26,8 +39,17 @@ implements  Ifieldset, Iecho, IcontentWriter{
     	$this->approvedBy->reset('n/a');
     	
     }
-	public function setRow($row){
-		parent::setRow($row);
+    public function setEnvironment(string $env = 'POST'){
+		parent::setEnvironment($env);
+		$this->project->setEnvironment($env);
+		$this->location->setEnvironment($env);
+		$this->started->setEnvironment($env);
+    	$this->approved->setEnvironment($env);
+    	$this->approvedBy->setEnvironment($env);
+	}
+    
+	public function fetch($row){
+		parent::fetch($row);
 		$this->project->fetch($row);
 		$this->location->fetch($row);
 		$this->started->fetch($row);
@@ -42,41 +64,51 @@ implements  Ifieldset, Iecho, IcontentWriter{
     	$this->approved->format();
     	$this->approvedBy->format();
 	}
-	public function display(){;
-		$this->addContent(parent::display(),true);
-		$this->addContent($this->location->p());		
-		$this->addContent($this->project->p());		
-		$this->addContent($this->started->p());		
-		$this->addContent($this->approved->p());		
-		$this->addContent($this->approvedBy->p());		
+	public function displayDetail(){;
+		$this->addContent(parent::displayDetail(),true);
+		$this->addContent($this->location->displayDetail());		
+		$this->addContent($this->project->displayDetail());		
+		$this->addContent($this->started->displayDetail());		
+		$this->addContent($this->approved->displayDetail());		
+		$this->addContent($this->approvedBy->displayDetail());		
 		return $this->getContent();
 	}
-	public function listHeading(){
-		$this->addContent(parent::listHeading(),true);
-		$this->addContent($this->location->th());		
-		$this->addContent($this->project->th());		
-		$this->addContent($this->started->th());		
-		$this->addContent($this->approved->th());		
-		$this->addContent($this->approvedBy->th());		
+	public function listCaption(){
+		$this->addContent(parent::listCaption(),true);
+		$this->addContent($this->location->listCaption());		
+		$this->addContent($this->project->listCaption());		
+		$this->addContent($this->started->listCaption());		
+		$this->addContent($this->approved->listCaption());		
+		$this->addContent($this->approvedBy->listCaption());		
 		return $this->getContent();
 	}
 	public function listDetail(){
 		$this->addContent(parent::listDetail(),true);
-		$this->addContent($this->location->td());
-		$this->addContent($this->project->td());
-		$this->addContent($this->started->td());		
-		$this->addContent($this->approved->td());		
-		$this->addContent($this->approvedBy->td());		
+		$this->addContent($this->location->listDetail());
+		$this->addContent($this->project->listDetail());
+		$this->addContent($this->started->listDetail());		
+		$this->addContent($this->approved->listDetail());		
+		$this->addContent($this->approvedBy->listDetail());		
 		return $this->getContent();
 	}
-	public function getPostVars(){
-		parent::getPostVars();
-		$this->project->post();
-		$this->location->post();
-		$this->started->post();
-    	$this->approved->post();
-    	$this->approvedBy->post();
+	public function read(){
+		parent::read();
+		$this->project->read();
+		$this->location->read();
+		$this->started->read();
+    	$this->approved->read();
+    	$this->approvedBy->read();
 	}
+	
+		public function write(){
+		parent::write();
+		$this->project->write();
+		$this->location->write();
+		$this->started->write();
+    	$this->approved->write();
+    	$this->approvedBy->write();
+	}
+	
 }
 
 

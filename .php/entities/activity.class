@@ -1,6 +1,28 @@
 ﻿<?php 
 
 class activityFields extends _fieldsetTaskChild{
+/*
+	//from _fieldset
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	//from _fieldsetChild
+	public $parent;
+	public $type;
+	//from _fieldsetProjectChild
+	public $project;
+	public $location;
+	public $started;
+	public $approved;
+	public $approvedBy;
+	//fom _fieldsetTaskChild
+	public $task;
+	public $reported;
+	public $doneBy;*/
+
 	public $hoursActual = 0;
  
 	public $linkUrl;
@@ -8,6 +30,7 @@ class activityFields extends _fieldsetTaskChild{
 	
 	
     public function __construct(){
+    $this->hoursActual = new _numberField('hours_actual','hours-actual','Effort Actual');
     	$this->hasType = true;
     	$this->hasComments = true;
     	$this->hasHighlight = true;
@@ -20,11 +43,11 @@ class activityFields extends _fieldsetTaskChild{
     	$this->listTask = true;
     	$this->listType = true;
     	$this->listDoneBy = true;
-    	
     }
 	
-	public function setRow($row){
-			$this->hoursActual = $row["hours_actual"];						
+	public function fetch($row){
+		parent::fetch(row);
+		$this->hoursActual->fetch($row);				
 	}
 	
 	public function format(){
@@ -36,32 +59,35 @@ class activityFields extends _fieldsetTaskChild{
 		$this->hoursActual = 0;
 	}
 	
-	public function display(){
+	public function displayDetail(){
 	
-		$this->addContent(parent::display(),true);
-		$this->detailPara('HoursActual',true);
+		$this->addContent(parent::displayDetail(),true);
 		
+		$this->addContent($this->hoursActual->displayDetail());
 		return $this->getContent();
 	}
 	
-	public function listHeading(){
-		$this->addContent(parent::listTh(),true);
+	public function listCaption(){
+		$this->addContent(parent::listCaption(),true);
+		$this->addContent($this->hoursActual->listCaption());
 		
-		$this->listTh('HoursActual',true);
 		return $this->getContent();
 	}
 	
 	public function listDetail(){
-		$this->addContent(parent::listTd(),true);
+		$this->addContent(parent::listDetail(),true);
 		
-		$this->listTd($this->hoursActual,true);
+		$this->addContent($this->hoursActual->listDetail());
 		return $this->getContent();
 	}
 	
-	public function getPostVars(){
-		parent::getPostVars();
-		$this->hoursActual = $this->postVar('hoursActual',0);
-	
+	public function read(){
+		parent::read();
+		$this->hoursActual->read();
+	}
+	public function write(){
+		parent::write();
+		$this->hoursActual->write();
 	}
 
 }
@@ -82,27 +108,21 @@ class activity extends _entity{
 		$this->links = new ActivityLinks();
 	}
 
-	protected function beforeSetDetails(){
-	}
-
-	protected function afterSetDetails(){
-		//$this->setParentTask();
-	}
-
+	
 	
 	
 	protected function listingRowLink(){
-		$link = $this->links->itemViewEdit($this->name,$this->id);
+		$link = $this->links->itemViewEdit($this->name->value,$this->id->value);
 		return $link;
 	}
 	
 	public function listingHeading($myActivity = 'NO'){
 	
-		$this->f->listProject = false;
-		$this->f->listTask = false;
+		$this->f->project->enabled(false);
+		$this->f->task->enabled(false);
 		$heading = '';
-		if ($this->myActivity != 'NO'){
-			if ($this->myActivity != 'PROJECT'){
+		if ($myActivity != 'NO'){
+			if ($myActivity != 'PROJECT'){
 			
 				$heading .= wrapTh('Project');
 			}
@@ -161,8 +181,8 @@ class activity extends _entity{
 	}
 		
 	protected function setPageTitle(){	
-		$title .= $this->task->project->name.br();
-		$title .= 'Task: '.$this->task->name;		
+		$title .= $this->f->project->name->value.br();
+		$title .= 'Task: '.$this->f->task->name->value;		
 		$this->_pageTitle = $title;
 	}	
 	
@@ -235,8 +255,6 @@ class activity extends _entity{
 		$this->hoursActual = $this->task->hoursEstimated;
 		$this->doneBy = $_SESSION['login-name'];
 		$this->typeId = '0';
-	}
-	protected function afterSetDefaults(){
 	}
 	
 	

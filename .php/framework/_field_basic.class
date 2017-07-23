@@ -2,45 +2,49 @@
 
 class _textField extends _field
  implements Ifield, Iecho, IcontentWriter {
-
-	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
-		parent::__construct($dbColumn, $postVariable,$caption,$enable);
-		$this->type = 'TEXT';
-		$this->inputAsType = 'TEXT';
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'TEXT';
 	}
-	/*
-	public function input($entity){
-		return inputFieldText($entity,$this->value(),$this->postVariable,$this->caption);
-	}*/
+	
 }
 class _numberField extends _field
  implements Ifield, Iecho, IcontentWriter {
-
-	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
-		parent::__construct($dbColumn, $postVariable,$caption,$enable);
-		$this->type = 'NUMBER';
-		$this->inputAsType = 'NUMBER';
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'NUMBER';
 	}
-	
-	public function input(string $entity){
-		return inputFieldNumber($entity,$this->value(),$this->postVariable,$this->caption);
+	public function input(){
+		return inputFieldNumber($this->_entity,$this->value(),$this->env->variable,$this->_caption);
 	}
 }
 
 class _dateField extends _field
  implements Ifield, Iecho, IcontentWriter {
 
-	public function __construct(string $dbColumn = 'not_used', string $postVariable = 'not-used', string $caption = 'no caption',bool $enable = false){
-		parent::__construct($dbColumn, $postVariable,$caption,$enable);
-		$this->type = 'DATE';
-		$this->inputAsType = 'DATE';
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'DATE';
 	}
 	
-	public function input(string $entity){
-		return inputFieldDate($entity,$this->value(),$this->postVariable,$this->caption);
+	public function input(){
+		return inputFieldDate($this->_entity,$this->value(),$this->env->variable,$this->_caption);
 	}
 
 }
- 
+
+class _submitField extends _field
+ implements Ifield, Iecho, IcontentWriter {
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'SUBMIT';
+	}
+	
+	public function submit(){
+		return getLoginLogoutButton($this->_caption,$this->env->variable);
+	}
+	
+}
  
 ?>

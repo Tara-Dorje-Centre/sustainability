@@ -10,8 +10,8 @@ interface IenvironmentVariable{
 	public function remove();
 	public function read();
 	public function write();
-	public function set($value = NULL, boolean $write = false);
-	public function get(boolean $read = false);
+	public function set($value = NULL, bool $write = false);
+	public function get(bool $read = false);
 }
 
 class _environmentVariable implements IenvironmentVariable{
@@ -20,7 +20,7 @@ class _environmentVariable implements IenvironmentVariable{
 	private $_raw = NULL;
 	private $_exists = false;
 
-	public function __construct(string $variable, string $environment = 'POST');
+	public function __construct(string $variable, string $environment = 'POST'){
 		$this->setVariable($variable);
 		$this->setEnvironment($environment);
 	}
@@ -37,14 +37,14 @@ class _environmentVariable implements IenvironmentVariable{
 	public function setEnvironment(string $environment = 'POST'){
 		$this->_env = $environment;
 	}
-	public function set($value = NULL, boolean $write = false){
+	public function set($value = NULL, bool $write = false){
 		$this->_raw = $value;
 		if ($write == true){
 			$this->write();
 		}
 	}
 
-	public function get(boolean $read = false){
+	public function get(bool $read = false){
 		if ($read == true){
 			$this->read();
 		}
@@ -123,7 +123,7 @@ class _environmentVariable implements IenvironmentVariable{
 	}
 	
 	private function error($msg){
-		$msg .= this->_env.'['.$this->_var.']';
+		$msg = $this->_env.'['.$this->_var.']';
 		die($msg);
 	}
 
