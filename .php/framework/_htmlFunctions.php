@@ -1,5 +1,16 @@
 <?php
 /*
+//move to fieldset class
+//use foreach iterator to set all registered fields
+protected $_fields = array();
+protected function _register(string $fieldName, $field){
+$this->_fields[$fieldName] = $field;
+
+}
+
+foreach ($fields as $f){
+	$f->action();
+}
 class _environmentVar{
 private $_varName = 'not-set';
 private $_valueRaw = NULL;
