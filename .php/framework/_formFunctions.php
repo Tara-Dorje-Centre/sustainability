@@ -182,11 +182,11 @@ function getPasswordInput($inputName, $size = 10, $maxLength = 50,$tooltip = 'En
 	$e->addAttribute('title',$tooltip);
 	$e->addAttribute('maxlength',$maxLength);
 	$e->addAttribute('size',$size);
-
+/*
 	if ($disabled != 'false'){
 		$e->addAttribute('disabled',$disabled);
 	}
-
+*/
 	$e->addAttribute('type','password');
 	
 	return $e->empty();
@@ -208,19 +208,19 @@ function getHiddenInput($inputName, $inputValue){
 
 
 
-function getButton($inputType,$inputValue,$inputName){
+function getButton($type,$caption,$name){
 
-	$e = new _element('input',$inputName, 'editing-button');
+	$e = new _element('input',$name, 'editing-button');
 
-
-	$e->addAttribute('type',$inputType);
-	$e->addAttribute('value',$inputValue);
+	//$e->addAttribute('name',$name);
+	$e->addAttribute('type',$type);
+	$e->addAttribute('value',$caption);
 
 	return $e->empty();
 }
 
-function getSubmitButton($submitCaption = 'Submit',$submitName = 'submit'){
-	$b = getButton('submit', $submitCaption, $submitName);
+function getSubmitButton($caption = 'Submit',$name = 'submit'){
+	$b = getButton('submit', $caption, $name);
 	return $b;	
 }
 
@@ -228,7 +228,22 @@ function getResetButton($resetCaption = 'Reset'){
 	$b = getButton('reset', $resetCaption, 'reset');
 	return $b;	
 }	
+function getSubmitResetButtons($submitCaption = 'Submit',$submitName = 'submit', $resetCaption = 'Reset'){
+	$b = getSubmitButton($submitCaption, $submitName);
+	$b .= getResetButton($resetCaption, 'reset');
+	return $b;	
+}
+ 
 
+function getLoginLogoutButton($submitCaption = 'Login',$submitName='submit-login'){
+	$b = getSubmitButton($submitCaption, $submitName);
+	return $b;
+}
+
+function getSaveChangesResetButtons($submitCaption = 'Save',$submitName = 'submit', $resetCaption = 'Reset'){
+	$buttons = getSubmitResetButtons($submitCaption,$submitName, $resetCaption);
+	return $buttons;
+}
 function inputFieldTimestamp($entity, $id, $value, $caption = '',$disabled = 'false'){
 	$input = getTimestampSelect($id,$value,$disabled);
 	$element = captionedInput($caption,$input);		
@@ -382,29 +397,14 @@ function inputFieldHighlightstyle($entity,$value,$id = 'highlightStyle',$caption
 		return $element;
 }
 
-function getSubmitResetButtons($submitCaption = 'Submit',$submitName = 'submit', $resetCaption = 'Reset'){
-	$b = getSubmitButton($submitCaption, $submitName);
-	$b .= getResetButton($resetCaption, 'reset');
-	return $b;	
-}
- 
 
-function getLoginLogoutButton($submitCaption = 'Login',$submitName='submit-login'){
-	$b = getSubmitButton($submitCaption, $submitName);
-	return $b;
-}
-
-function getSaveChangesResetButtons($submitCaption = 'Save',$submitName = 'submit', $resetCaption = 'Reset'){
-	$buttons = getSubmitResetButtons($submitCaption,$submitName, $resetCaption);
-	return $buttons;
-}
 
 function captionedInput($caption, $input){
-	$s = openDiv('captioned-input','captioned-input');
+	$s = openDiv('');
 	if ($caption != ''){
-		$s .= wrapDiv($caption,'captioned-input-label','input-label');
+		$s .= wrapDiv($caption,'caption');
 	}
-	$s .= wrapDiv($input,'captioned-input-value','input-value');
+	$s .= wrapDiv($input,'input');
 	$s .= closeDiv();
 	return $s;
 }

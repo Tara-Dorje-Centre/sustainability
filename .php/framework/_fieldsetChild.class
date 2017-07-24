@@ -1,7 +1,7 @@
 <?php 
 
 
-abstract class _fieldsetChild extends _fieldset
+abstract class _fieldsetChild extends _fieldsetEntity
 implements Ifieldset, Iecho, IcontentWriter{
 	/*
 	//from _fieldset
@@ -19,61 +19,15 @@ implements Ifieldset, Iecho, IcontentWriter{
     	parent::__construct();
     	$this->parent = new _fieldIdName('parent_id','id-parent','Parent','parent_name');
     	$this->type = new _fieldIdName('type_id','id-type','Type','type_name');
+  		$this->_register('parent', $this->parent);
+		$this->_register('type', $this->type);
     }
-    public function setEnvironment(string $env = 'POST'){
-		parent::setEnvironment($env);
-		$this->parent->setEnvironment($env);
-		$this->type->setEnvironment($env);
-	}
-    
-    protected function reset(){
+    public function reset(){
     	parent::reset();
     	$this->parent->reset(0);
     	$this->type->reset(0);
     }
     
-	public function fetch($row){
-		parent::fetch($row);
-		$this->parent->fetch($row);
-		$this->type->fetch($row);
-	}
-	
-	public function format(){
-		parent::format();
-		$this->parent->format();
-		$this->type->format();
-	}
-	public function displayDetail(){;
-		$this->addContent(parent::displayDetail(),true);
-		$this->addContent($this->parent->displayDetail());		
-		$this->addContent($this->type->displayDetail());		
-		return $this->getContent();
-	}
-	
-	public function listCaption(){
-		$this->addContent(parent::listCaption(),true);
-		$this->addContent($this->parent->listCaption());		
-		$this->addContent($this->type->listCaption());		
-		return $this->getContent();
-	}
-	
-	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
-		$this->addContent($this->parent->listDetail());
-		$this->addContent($this->type->listDetail());
-		return $this->getContent();
-	}
-
-	public function read(){
-		parent::read();
-		$this->parent->read();
-		$this->type->read();
-	}
-	public function write(){
-		parent::write();
-		$this->parent->write();
-		$this->type->write();
-	}
 	
 }
 

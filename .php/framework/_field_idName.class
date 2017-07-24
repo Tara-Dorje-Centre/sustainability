@@ -36,6 +36,26 @@ class _fieldIdName implements Ifield{
 		$this->id->setEnabled($fetch,false,false,$post,$input);
 		$this->name->setEnabled($fetch,$show,$list,false,false);
 	}
+	public function fetchEnabled(bool $use = false){
+ 		$this->id->fetchEnabled($use);
+ 		$this->name->fetchEnabled($use);
+ 	}
+	public function envEnabled(bool $use = false){
+	 	$this->id->envEnabled($use);
+	 	$this->name->envEnabled(false);
+ 	}
+	public function displayEnabled(bool $use = false){
+	 	$this->id->displayEnabled(false);
+ 		$this->name->displayEnabled($use);
+ 	}
+	public function listEnabled(bool $use = false){
+ 		$this->id->listEnabled(false);
+ 		$this->name->listEnabled($use);
+ 	}
+	public function inputEnabled(bool $use = false){
+ 		$this->id->inputEnabled($use);
+ 		$this->name->inputEnabled(false);
+ 	}
  	public function setCaption(string $caption = 'no caption'){
  		$this->name->setCaption($caption);
  	}
@@ -43,10 +63,10 @@ class _fieldIdName implements Ifield{
 		$this->id->setEntity($entity);
 	}
 	public function setEnvironment(string $env= 'POST'){
-		$this->id->env->setEnvironment($env);
+		$this->id->setEnvironment($env);
 	}
  	public function setEnvironmentVariable(string $var = 'not-used'){
- 	 		$this->id->env->setEnvironmentVariable($var);
+ 	 		$this->id->setEnvironmentVariable($var);
  	}
  	public function setFetchColumnName(string $dbCol = 'query_alias|column_name'){
  	 	 	$this->name->setFetchColumn($dbCol);
@@ -102,10 +122,12 @@ class _fieldIdName implements Ifield{
  	public function format(){
  		return $this->name->format();
  	}
+	public function input(){
+		return $this->id->input();
+	}
 	public function inputHidden(){
 		return $this->id->inputHidden();
 	}
-	
 
 	public function inputCaptioned(string $input){
 		return $this->id->inputCaptioned($input);

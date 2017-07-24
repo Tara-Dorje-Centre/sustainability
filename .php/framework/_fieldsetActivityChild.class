@@ -30,44 +30,14 @@ implements Ifieldset, Iecho, IcontentWriter{
 	
     public function __construct(){
     	parent::__construct();
-    	$this->activity = new _idNameField('activity_id','id-activity','activity_name','Activity', true);
+    	$this->activity = new _idNameField('activity_id','id-activity','Activity','activity_name' );
+  		$this->_register('activity', $this->activity);
     }
-    protected function reset(){
+    public function reset(){
     	parent::reset();
 		$this->activity->reset(0);
     }
-	public function fetch($row){
-		parent::fetch($row);
-		$this->activity->fetch($row);
-	}
-	public function format(){
-		parent::format();
-		$this->activity->format();
-	}
-	public function displayDetail(){;
-		$this->addContent(parent::displayDetail(),true);
-		$this->addContent($this->activity->displayDetail());		
-		return $this->getContent();
-	}
-	public function listCaption(){
-		$this->addContent(parent::listCaption(),true);
-		$this->addContent($this->activity->listCaption());		
-		return $this->getContent();
-	}
-	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
-		$this->addContent($this->activity->listDetail());
-		return $this->getContent();
-	}
-	public function read(){
-		parent::read();
-		$this->activity->read();
-	}
-	public function write(){
-		parent::write();
-		$this->activity->write();
-	}
-	
+    
 }
 
 

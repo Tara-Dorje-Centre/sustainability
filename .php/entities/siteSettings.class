@@ -26,11 +26,11 @@ class siteSettingsFields extends _fieldset{
 	 public $publicFontSizeText;
 	 
 	public function __construct(){
-		parent::__construct();
+		
 	    $this->echoPrint(true,'begin','__construct','siteSettingsFields');
 		$this->siteTitle = new _nameField('site_title','site-title','Site.Title');
 	 	$this->siteUrl = new _urlField('site_url','site-url','Site.URL');
-	 	$this->loginNotice = new _notesField('login_notice','login-notice', 'Login.Notice');
+	 	$this->loginNotice = new _notesField('login_notice','site-login-notice', 'Login.Notice');
 	 	$this->organizationUrl = new _urlField('organization_url','organization-url','Organization.URL');
 	 	$this->organization = new _nameField('organization','organization','Organization');
 	 	$this->organizationDescription = new _descriptionField('organization_description','organization-description','Organization.Description');
@@ -52,72 +52,37 @@ class siteSettingsFields extends _fieldset{
 	 	$this->publicFontSizeMenu = new _fontSizeField('public_font_size_menu','public-font-size-menu','public.FontSizeMenu');
 	 	$this->publicFontSizeText = new _fontSizeField('public_font_size_text','public-font-size-text','publicFontSizeText');
 		
-	}
 	
-	public function setEnvironment(string $env = 'POST'){
-		$this->echoPrint(true,'begin','setEnv','siteSettingsFields');
-		parent::setEnvironment($env);
-		
-	$this->siteTitle->env->setEnvironment($env);
-		 
-	$this->siteUrl->env->setEnvironment($env);
-	$this->loginNotice->env->setEnvironment($env);
-	$this->organization->env->setEnvironment($env);
-	$this->organizationUrl->env->setEnvironment($env);
-	$this->organizationDescription->env->setEnvironment($env);
-	$this->contactName->env->setEnvironment($env);
-	$this->contactEmail->env->setEnvironment($env);
-	$this->showPublicSite->env->setEnvironment($env);
-	$this->showCostReports->env->setEnvironment($env);
-	$this->showRevenueReports->env->setEnvironment($env);
-	$this->publicFillColor->env->setEnvironment($env);
-	$this->publicSiteColor->env->setEnvironment($env);
-	$this->publicPageColor->env->setEnvironment($env);
-	$this->publicMenuColor->env->setEnvironment($env);
-	$this->publicMenuColorHover->env->setEnvironment($env);
-	$this->publicTextColor->env->setEnvironment($env);
-	$this->publicTextColorHover->env->setEnvironment($env);
-	$this->publicFontFamily->env->setEnvironment($env);
-	$this->publicFontSizeTitle->env->setEnvironment($env);
-	$this->publicFontSizeHeading->env->setEnvironment($env);
-	$this->publicFontSizeMenu->env->setEnvironment($env);
-	$this->publicFontSizeText->env->setEnvironment($env);
+	
+
+	$this->_register('siteTitle', $this->siteTitle);
+	$this->_register('siteUrl', $this->siteUrl);
+	$this->_register('loginNotice', $this->loginNotice);
+	$this->_register('organization', $this->organization);
+	$this->_register('organizationUrl', $this->organizationUrl);
+	$this->_register('organizationDescription', $this->organizationDescription);
+	$this->_register('contactName', $this->contactName);
+	$this->_register('contactEmail', $this->contactEmail);
+	$this->_register('showPublicSite', $this->showPublicSite);
+	$this->_register('showCostReports', $this->showCostReports);
+	$this->_register('showRevenueReports', $this->showRevenueReports);
+	$this->_register('publicFillColor', $this->publicFillColor);
+	$this->_register('publicSiteColor', $this->publicSiteColor);
+	$this->_register('publicPageColor', $this->publicPageColor);
+	$this->_register('publicMenuColor', $this->publicMenuColor);
+	$this->_register('publicMenuColorHover', $this->publicMenuColorHover);
+	$this->_register('publicTextColor', $this->publicTextColor);
+	$this->_register('publicTextColorHover', $this->publicTextColorHover);
+	$this->_register('publicFontFamily', $this->publicFontFamily);
+	$this->_register('publicFontSizeTitle', $this->publicFontSizeTitle);
+	$this->_register('publicFontSizeHeading', $this->publicFontSizeHeading);
+	$this->_register('publicFontSizeMenu', $this->publicFontSizeMenu);
+	$this->_register('publicFontSizeText', $this->publicFontSizeText);
 		
 	}
 	
-	public function fetch($row){
-		$this->echoPrint(true,'begin','fetch','siteSettingsFields');
-		parent::fetch($row);
-		
-		 $this->siteTitle->fetch($row);
-		 
-		 $this->siteUrl->fetch($row);
-		 $this->loginNotice->fetch($row);
-		 $this->organization->fetch($row);
-		 $this->organizationUrl->fetch($row);
-		 $this->organizationDescription->fetch($row);
-		 $this->contactName->fetch($row);
-		 $this->contactEmail->fetch($row);
-		 $this->showPublicSite->fetch($row);
-		 $this->showCostReports->fetch($row);
-		 $this->showRevenueReports->fetch($row);
-		 $this->publicFillColor->fetch($row);
-		 $this->publicSiteColor->fetch($row);
-		 $this->publicPageColor->fetch($row);
-		 $this->publicMenuColor->fetch($row);
-		 $this->publicMenuColorHover->fetch($row);
-		 $this->publicTextColor->fetch($row);
-		 $this->publicTextColorHover->fetch($row);
-		 $this->publicFontFamily->fetch($row);
-		 $this->publicFontSizeTitle->fetch($row);
-		 $this->publicFontSizeHeading->fetch($row);
-		 $this->publicFontSizeMenu->fetch($row);
-		 $this->publicFontSizeText->fetch($row);
-		
-	}
-	
-	public function defaults(){
-		parent::defaults();
+	public function reset(){
+		parent::reset();
 		
 		$this->siteTitle->reset('default');
 		// $this->name->set($this->siteTitle->value);
@@ -146,182 +111,6 @@ class siteSettingsFields extends _fieldset{
 		
 	}
 	
-	public function format(){
-		parent::format();
-		
-		 $this->siteTitle->format();
-		
-		 $this->siteUrl->format();
-		 $this->loginNotice->format();
-		 $this->organization->format();
-		 $this->organizationUrl->format();
-		 $this->organizationDescription->format();
-		 $this->contactName->format();
-		 $this->contactEmail->format();
-		 $this->showPublicSite->format();
-		 $this->showCostReports->format();
-		 $this->showRevenueReports->format();
-		 $this->publicFillColor->format();
-		 $this->publicSiteColor->format();
-		 $this->publicPageColor->format();
-		 $this->publicMenuColor->format();
-		 $this->publicMenuColorHover->format();
-		 $this->publicTextColor->format();
-		 $this->publicTextColorHover->format();
-		 $this->publicFontFamily->format();
-		 $this->publicFontSizeTitle->format();
-		 $this->publicFontSizeHeading->format();
-		 $this->publicFontSizeMenu->format();
-		 $this->publicFontSizeText->format();
-	}
-	
-	public function listCaption(){
-		$this->echoPrint(true,'begin','listCaption','siteSettingsFields');
-		$this->addContent(parent::listCaption(),true);
-		 $this->addContent($this->siteTitle->listCaption(),true);
-		 $this->addContent($this->siteUrl->listCaption());
-		 $this->addContent($this->loginNotice->listCaption());
-		 $this->addContent($this->organization->listCaption());
-		 $this->addContent($this->organizationUrl->listCaption());
-		 $this->addContent($this->organizationDescription->listCaption());
-		 $this->addContent($this->contactName->listCaption());
-		 $this->addContent($this->contactEmail->listCaption());
-		 $this->addContent($this->showPublicSite->listCaption());
-		 $this->addContent($this->showCostReports->listCaption());
-		 $this->addContent($this->showRevenueReports->listCaption());
-		 $this->addContent($this->publicFillColor->listCaption());
-		 $this->addContent($this->publicSiteColor->listCaption());
-		 $this->addContent($this->publicPageColor->listCaption());
-		 $this->addContent($this->publicMenuColor->listCaption());
-		 $this->addContent($this->publicMenuColorHover->listCaption());
-		 $this->addContent($this->publicTextColor->listCaption());
-		 $this->addContent($this->publicTextColorHover->listCaption());
-		 $this->addContent($this->publicFontFamily->listCaption());
-		 $this->addContent($this->publicFontSizeTitle->listCaption());
-		 $this->addContent($this->publicFontSizeHeading->listCaption());
-		 $this->addContent($this->publicFontSizeMenu->listCaption());
-		 $this->addContent($this->publicFontSizeText->listCaption());
-		return $this->getContent();
-	}
-	
-	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
-		
-		 $this->addContent($this->siteTitle->listDetail(),true);
-		 $this->addContent($this->siteUrl->listDetail());
-		 $this->addContent($this->loginNotice->listDetail());
-		 $this->addContent($this->organization->listDetail());
-		 $this->addContent($this->organizationUrl->listDetail());
-		 $this->addContent($this->organizationDescription->listDetail());
-		 $this->addContent($this->contactName->listDetail());
-		 $this->addContent($this->contactEmail->listDetail());
-		 $this->addContent($this->showPublicSite->listDetail());
-		 $this->addContent($this->showCostReports->listDetail());
-		 $this->addContent($this->showRevenueReports->listDetail());
-		 $this->addContent($this->publicFillColor->listDetail());
-		 $this->addContent($this->publicSiteColor->listDetail());
-		 $this->addContent($this->publicPageColor->listDetail());
-		 $this->addContent($this->publicMenuColor->listDetail());
-		 $this->addContent($this->publicMenuColorHover->listDetail());
-		 $this->addContent($this->publicTextColor->listDetail());
-		 $this->addContent($this->publicTextColorHover->listDetail());
-		 $this->addContent($this->publicFontFamily->listDetail());
-		 $this->addContent($this->publicFontSizeTitle->listDetail());
-		 $this->addContent($this->publicFontSizeHeading->listDetail());
-		 $this->addContent($this->publicFontSizeMenu->listDetail());
-		 $this->addContent($this->publicFontSizeText->listDetail());
-
-		return $this->getContent();
-	}
-	
-	public function displayDetail(){
-		$this->echoPrint(true,'begin','display','siteSettingsFields');
-		$this->addContent(parent::displayDetail(),true);
-		
-		 $this->addContent($this->siteTitle->displayDetail(),true);
-		 $this->addContent($this->siteUrl->displayDetail());
-		 $this->addContent($this->loginNotice->displayDetail());
-		 $this->addContent($this->organization->displayDetail());
-		 $this->addContent($this->organizationUrl->displayDetail());
-		 $this->addContent($this->organizationDescription->displayDetail());
-		 $this->addContent($this->contactName->displayDetail());
-		 $this->addContent($this->contactEmail->displayDetail());
-		 $this->addContent($this->showPublicSite->displayDetail());
-		 $this->addContent($this->showCostReports->displayDetail());
-		 $this->addContent($this->showRevenueReports->displayDetail());
-		 $this->addContent($this->publicFillColor->displayDetail());
-		 $this->addContent($this->publicSiteColor->displayDetail());
-		 $this->addContent($this->publicPageColor->displayDetail());
-		 $this->addContent($this->publicMenuColor->displayDetail());
-		 $this->addContent($this->publicMenuColorHover->displayDetail());
-		 $this->addContent($this->publicTextColor->displayDetail());
-		 $this->addContent($this->publicTextColorHover->displayDetail());
-		 $this->addContent($this->publicFontFamily->displayDetail());
-		 $this->addContent($this->publicFontSizeTitle->displayDetail());
-		 $this->addContent($this->publicFontSizeHeading->displayDetail());
-		 $this->addContent($this->publicFontSizeMenu->displayDetail());
-		 $this->addContent($this->publicFontSizeText->displayDetail());
-		
-		return $this->getContent();
-	}
-	
-	public function read(){
-		 parent::read();
-		
-		 $this->siteTitle->read();
-		 //$this->name->set($this->siteTitle->value);
-		 $this->siteUrl->read();
-		 $this->loginNotice->read();
-		 $this->organization->read();
-		 $this->organizationUrl->read();
-		 $this->organizationDescription->read();
-		 $this->contactName->read();
-		 $this->contactEmail->read();
-		 $this->showPublicSite->read();
-		 $this->showCostReports->read();
-		 $this->showRevenueReports->read();
-		 $this->publicFillColor->read();
-		 $this->publicSiteColor->read();
-		 $this->publicPageColor->read();
-		 $this->publicMenuColor->read();
-		 $this->publicMenuColorHover->read();
-		 $this->publicTextColor->read();
-		 $this->publicTextColorHover->read();
-		 $this->publicFontFamily->read();
-		 $this->publicFontSizeTitle->read();
-		 $this->publicFontSizeHeading->read();
-		 $this->publicFontSizeMenu->read();
-		 $this->publicFontSizeText->read();
-	}
-	
-	public function write(){
-		parent::write();
-
-		$this->siteTitle->write();
-		//$this->name->set($this->siteTitle->value);
-		$this->siteUrl->write();
-		$this->loginNotice->write();
-		$this->organization->write();
-		$this->organizationUrl->write();
-		$this->organizationDescription->write();
-		$this->contactName->write();
-		$this->contactEmail->write();
-		$this->showPublicSite->write();
-		$this->showCostReports->write();
-		$this->showRevenueReports->write();
-		$this->publicFillColor->write();
-		$this->publicSiteColor->write();
-		$this->publicPageColor->write();
-		$this->publicMenuColor->write();
-		$this->publicMenuColorHover->write();
-		$this->publicTextColor->write();
-		$this->publicTextColorHover->write();
-		$this->publicFontFamily->write();
-		$this->publicFontSizeTitle->write();
-		$this->publicFontSizeHeading->write();
-		$this->publicFontSizeMenu->write();
-		$this->publicFontSizeText->write();
-	}
 }
 
 class siteSettings extends _entity{
@@ -372,7 +161,7 @@ class siteSettings extends _entity{
 		}
 		$this->echoPrint(true,$this->f->siteTitle->value(),'setSessionDetails','siteSettings');
 		$this->f->setEnvironment('SESSION');
-		 $this->f->siteTitle->write();	
+		 $this->f->write();	/*
 		 $this->f->siteUrl->write();	
 		 $this->f->loginNotice->write();
 		 $this->f->organization->write();	
@@ -381,12 +170,14 @@ class siteSettings extends _entity{
 		 $this->f->contactEmail->write();	
 		 $this->f->showPublicSite->write();	
 		 $this->f->showCostReports->write();
-		 $this->f->showRevenueReports->write();
+		 $this->f->showRevenueReports->write();*/
 	}
 	
 	protected function unsetSessionDetails(){
 		$this->f->setEnvironment('SESSION');
-				 $this->f->siteTitle->env->remove();	
+		
+		$this->f->remove();
+		/*		 //->env->remove();	
 		 $this->f->siteUrl->env->remove();	
 		 $this->f->loginNotice->env->remove();
 		 $this->f->organization->env->remove();	
@@ -395,7 +186,7 @@ class siteSettings extends _entity{
 		 $this->f->contactEmail->env->remove();	
 		 $this->f->showPublicSite->env->remove();	
 		 $this->f->showCostReports->env->remove();
-		 $this->f->showRevenueReports->env->remove();
+		 $this->f->showRevenueReports->env->remove();*/
 	}
 	
 	protected function setPageMenu(){

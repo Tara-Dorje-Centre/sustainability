@@ -1,6 +1,45 @@
 <?php 
 
-abstract class _fieldsetEntityType extends _fieldset{
+abstract class _fieldsetEntity extends _fieldset 
+implements Ifieldset, Iecho, IcontentWriter{
+	
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	
+	
+    public function __construct(){
+    	$this->id = new _numberField('id','id','Id');
+    	$this->name = new _nameField('name','name','Name');
+    	$this->description = new _descriptionField('description','description','Description');
+		$this->updated = new _dateField('updated','updated','Updated');
+    	$this->created = new _dateField('created','created','Created');
+        $this->highlight = new _cssColorField('highlight_style','highlight','Highlight');
+   
+		$this->_register('id', $this->id);
+		$this->_register('name', $this->name);
+		$this->_register('description', $this->description);
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+		$this->_register('highlight', $this->highlight);
+    }
+    public function reset(){
+    
+    	$this->id->reset(0);
+		$this->name->reset('');
+		$this->description->reset('');
+		$this->created->reset('');
+		$this->updated->reset('');
+		$this->highlight->reset('none');
+    }
+}
+ 
+
+abstract class _fieldsetEntityType extends _fieldsetEntity
+implements Ifieldset, Iecho, IcontentWriter{
 	/*
 	//from _fieldset
 	public $id;
@@ -18,63 +57,15 @@ abstract class _fieldsetEntityType extends _fieldset{
 		parent::__construct();
 		$this->notes = new _textField('notes','notes','Notes',true);
 		$this->displayOrder = new _numberField('display_order','display-order','Display Order',true);
+  
+  		$this->_register('notes', $this->notes);
+		$this->_register('displayOrder', $this->displayOrder);
     }
-    protected function reset(){
+    public function reset(){
     	parent::reset();
 		$this->displayOrder->reset(0);
 		$this->notes->reset('');
     }
-
-	public function fetch($row){
-		parent::setRow($row);
-		$this->displayOrder->fetch($row);
-		$this->notes->fetch($row);
-		
-	}
-	
-	public function format(){
-		parent::format();
-		$this->displayOrder->format($row);
-		$this->notes->format($row);
-	}
-	
-	public function listCaption(){
-		$this->addContent(parent::listCaption(),true);
-		$this->addContent($this->displayOrder->listCaption());
-		$this->addContent($this->notes->listCaption());
-		return $this->getContent();
-	}
-	
-	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
-		$this->addContent($this->displayOrder->listDetail());
-		$this->addContent($this->notes->listDetail());
-		return $this->getContent();
-	}
-	
-	public function displayDetail(){
-		$this->addContent(parent::displayDetail(),true);
-		$this->addContent($this->displayOrder->displayDetail());
-		$this->addContent($this->notes->displayDetail());
-		return $this->getContent();
-		
-	}
-	public function setEnvironment(string $env = 'POST'){
-		parent::setEnvironment($env);
-		$this->dispayOrder->setEnvironment($env);
-		$this->notes->setEnvironment($env);
-	}/*
-	public function write(){
-		parent::write();
-		$this->displayOrder->write();
-		$this->notes->write();
-	}*/
-	
-	public function read(){
-		parent::read();
-		$this->displayOrder->read();
-		$this->notes->read();
-	}
 
 }
 

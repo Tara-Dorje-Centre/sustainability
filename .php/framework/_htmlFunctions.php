@@ -1,104 +1,14 @@
 <?php
-/*
-//move to fieldset class
-//use foreach iterator to set all registered fields
-protected $_fields = array();
-protected function _register(string $fieldName, $field){
-$this->_fields[$fieldName] = $field;
 
-}
 
-foreach ($fields as $f){
-	$f->action();
-}
-class _environmentVar{
-private $_varName = 'not-set';
-private $_valueRaw = NULL;
-private $_valueDefault = NULL;
-private $_envType = 'GET';
-private $_dataType = 'TEXT';
-private $_allowNull = false;
-private $_exists = false;
-
-public function __construct(string $varName,string $dataType = 'TEXT,string $envType = 'GET' ){
-	$this->_envType = $envType;
-	$this->_varName = $varName;
-	$this->_dataType = $dataType;
-}
-public function exists(){
-	switch ($this->_envType){
-		case 'GET':
-			$this->_exists = isset($_GET[$this->_varName]);
-			break;
-		case 'POST':
-			$this->_exists = isset($_POST[$this->_varName]);
-			break;
-		case 'SESSION':
-			$this->_exists = isset($_SESSION[$this->_varName]);
-			break;
-		default:
-			die('invalid environment variable type '.$this->_envType)
-	}
-	return $this->_exists;
-}
-public function remove(){
-	if($this->exists() == true){
-		switch ($this->_envType){
-		case 'GET':
-			unset($_GET[$this->_varName]);
-			break;
-		case 'POST':
-			unset($_POST[$this->_varName]);
-			break;
-		case 'SESSION':
-			unset($_SESSION[$this->_varName]);
-			break;
-		default:
-			die('invalid environment variable type '.$this->_envType)
-		}
-		$this->_exists = false;
-		$this->_valueRaw = NULL;
-	}
-}
-public function read($default = null){
-	if ($this->exists() == true){
-		switch ($this->_envType){
-		case 'GET':
-			$this->_valueRaw = $_GET[$this->_varName];
-			break;
-		case 'POST':
-			$this->_valueRaw = $_POST[$this->_varName];
-			break;
-		case 'SESSION':
-			$this->_valueRaw = $_SESSION[$this->_varName];
-			break;
-		default:
-			die('invalid environment variable type '.$this->_envType)
-		}
+function sessionVariableGET($urlVariable,$defaultValue){
+	if (isset($_POST[$urlVariable])){
+		$returnValue = $_GET[$urlVariable];
 	} else {
-		$this->_valueRaw = $default;
+		$returnValue = $defaultValue;
 	}
-	return $this->_valueRaw;
+	return $returnValue;
 }
-public function write($value = NULL){
-	$this->_valueRaw = $value;
-
-	switch ($this->_envType){
-		case 'GET':
-			$_GET[$this->_varName] = $this->_valueRaw;
-			break;
-		case 'POST':
-			$_POST[$this->_varName] = $this->_valueRaw;
-			break;
-		case 'SESSION':
-			$_SESSION[$this->_varName] = $this->_valueRaw;
-			break;
-		default:
-			die('invalid environment variable type '.$this->_envType)
-	}
-
-}
-
 function sessionVariablePOST($urlVariable,$defaultValue){
 	if (isset($_POST[$urlVariable])){
 		$returnValue = $_POST[$urlVariable];
@@ -116,8 +26,7 @@ function sessionVariableSESSION($urlVariable,$defaultValue){
 	}
 	return $returnValue;
 }
-}
-*/
+
 
 class _element
 {
@@ -166,8 +75,8 @@ public function reset(){
 }
 
 public function formatAttribute($name = 'none', $value = null){
-	if ($name != 'none' && !is_null($name)){
-		if ($value != 'none' && !is_null($value)){
+	if ($name != 'none'){
+		if ( !is_null($value)){
 			$a = self::SP.$name.self::EQ.self::DQ.$value.self::DQ;
 		} else {
 			//no attribute value

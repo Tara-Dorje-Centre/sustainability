@@ -170,14 +170,14 @@ interface Ifield{
  	}
 	
 	public function fetch($row){
-		if ($this->_fetchEnabled == true){
+		if ($this->_fetchEnabled){
  			$this->set($row[$this->dbColumn]);
  		}
 	}
 
 	public function listCaption(){
 	 	$value = '';
-		if ($this->_listEnabled == true){
+		if ($this->_listEnabled){
  			$value = wrapTh($this->_caption);
 		}
 		return $value;
@@ -185,7 +185,7 @@ interface Ifield{
  	
  	public function listDetail(){
  	 	$value = '';
- 		if ($this->_listEnabled == true){
+ 		if ($this->_listEnabled){
   		    //$this->format();
  			$value = wrapTd($this->value());
   		}
@@ -194,7 +194,7 @@ interface Ifield{
 
  	public function displayDetail(){
  	 	$value = '';
- 		if ($this->_displayEnabled == true){
+ 		if ($this->_displayEnabled){
  			//$this->format();
  			$value = para($this->_caption,$this->value());
  		}
@@ -202,16 +202,21 @@ interface Ifield{
  	}
  	
  	public function write(){
- 	$this->env->set($this->value(),true);
+ 	  	if ($this->_envEnabled){
+ 			$this->env->set($this->value(),true);
+ 		}
  	}
- 	
+ 	public function exists(){
+ 		return $this->env->exists();
+ 	}
+
  	public function remove(){
- 	$this->env->remove();
+ 		$this->env->remove();
  	}
 
 	public function read(){
 
-  		if ($this->_envEnabled() == true){
+  		if ($this->_envEnabled){
   			
   			$this->_raw = $this->env->get(true);
 			switch ($this->_datatype) {
@@ -259,7 +264,9 @@ interface Ifield{
  	
 
 	public function input( ){
-		return $this->inputFreeText();
+		if ($this->_inputEnabled){
+			return $this->inputFreeText();
+		}
 	}
 	
 	protected function inputFreeText( ){

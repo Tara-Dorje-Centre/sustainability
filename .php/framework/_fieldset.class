@@ -3,121 +3,88 @@
  interface Ifieldset{
  	public function fetch($row);
  	public function format();
- 	public function defaults();
+ 	public function reset();
  	public function listCaption();
  	public function listDetail();
  	public function displayDetail();
 	public function read();
 	public function write();
+	public function remove();
 	public function setEnvironment(string $env = 'POST');
+	public function setEntity(string $entity);
  }
  
+
 abstract class _fieldset extends _contentWriter 
 implements Ifieldset, Iecho, IcontentWriter{
-//_fieldset
-	public $id;
-	public $name;		
-	public $created;
-    public $updated;
-	public $description;
-	public $highlight;
+	protected $_fields = array();
 	
+
+	protected function _register(string $fieldName, _field $field){
+		$this->_fields[$fieldName] = $field;
+	}
 	
-    public function __construct(){
-    	$this->id = new _numberField('id','id','Id');
-    	$this->name = new _nameField('name','name','Name');
-    	$this->description = new _descriptionField('description','description','Description');
-		$this->updated = new _dateField('updated','updated','Updated');
-    	$this->created = new _dateField('created','created','Created');
-        $this->highlight = new _cssColorField('highlight_style','highlight','Highlight');
+    public function reset(){
+    	//reset fields to default values
     }
-    
-    protected function reset(){
-    	$this->id->reset(0);
-		$this->name->reset('');
-		$this->description->reset('');
-		$this->created->reset('');
-		$this->updated->reset('');
-		$this->highlight->reset('none');
+    public function setEntity(string $entity){
+    	foreach ($this->_fields as &$f){
+			$f->setEntity($entity);
+		}
 		
     }
     public function setEnvironment(string $env = 'POST'){
-    $this->id->env->setEnvironment($env);
-	$this->name->env->setEnvironment($env);
-	$this->description->env->setEnvironment($env);
-	$this->created->env->setEnvironment($env);
-	$this->updated->env->setEnvironment($env);
-	$this->highlight->env->setEnvironment($env);
+    	foreach ($this->_fields as &$f){
+			$f->setEnvironment($env);
+		}
+		
     }
 	public function fetch($row){
 		$this->reset;
-		$this->id->fetch($row);
-		$this->name->fetch($row);
-		$this->description->fetch($row);
-		$this->created->fetch($row);
-		$this->updated->fetch($row);
-		$this->highlight->fetch($row);
-	}
-	
-	public function defaults(){
-		$this->reset();
+	    foreach ($this->_fields as &$f){
+			$f->fetch($row);
+		}
 	}
 	
 	public function format(){
-		$this->id->format();
-		$this->name->format();
-		$this->description->format();
-		$this->created->format();
-		$this->updated->format();
-		$this->highlight->format();
+		foreach ($this->_fields as &$f){
+			$f->format();
+		}
 	}
 	
 	public function displayDetail(){
-		$this->addContent($this->id->displayDetail(),true);
-		$this->addContent($this->name->displayDetail());
-		$this->addContent($this->description->displayDetail());
-		$this->addContent($this->created->displayDetail());
-		$this->addContent($this->updated->displayDetail());
-		$this->addContent($this->highlight->displayDetail());	
+		foreach ($this->_fields as &$f){
+			$this->addContent($f->displayDetail());
+		}
 		return $this->getContent();
 	}
 	
 	public function listCaption(){
-		$this->addContent($this->id->listCaption(),true);
-		$this->addContent($this->name->listCaption());
-		$this->addContent($this->description->listCaption());
-		$this->addContent($this->created->listCaption());
-		$this->addContent($this->updated->listCaption());
-		$this->addContent($this->highlight->listCaption());		
+		foreach ($this->_fields as &$f){
+			$this->addContent($f->listCaption());
+		}
 		return $this->getContent();
 	}
-	
 	public function listDetail(){
-		$this->addContent($this->id->listDetail(),true);
-		$this->addContent($this->name->listDetail());
-		$this->addContent($this->description->listDetail());
-		$this->addContent($this->created->listDetail());
-		$this->addContent($this->updated->listDetail());
-		$this->addContent($this->highlight->listDetail());
+		foreach ($this->_fields as &$f){
+			$this->addContent($f->listDetail());
+		}
 		return $this->getContent();
 	}
 	public function read(){
-		
-		$this->id->read();
-		$this->name->read();
-		$this->description->read();
-		$this->created->read();
-		$this->updated->read();
-		$this->highlight->read();
+		foreach ($this->_fields as &$f){
+			$f->read();
+		}
 	}
 	public function write(){
-		
-		$this->id->write();
-		$this->name->write();
-		$this->description->write();
-		$this->created->write();
-		$this->updated->write();
-		$this->highlight->write();
+		foreach ($this->_fields as &$f){
+			$f->write();
+		}
+	}
+	public function remove(){
+		foreach ($this->_fields as &$f){
+			$f->remove();
+		}
 	}
 }
 

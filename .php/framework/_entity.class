@@ -18,37 +18,28 @@ implements Iecho, IcontentWriter{
 		//$this->setEntityTitle();
 		$this->setHelperClasses();
 }
-	/* next review cycle
-	abstract protected function setPageSave();
-	abstract protected function setEntityTitle();
-	abstract protected function afterConstruct($);*/
+	
 	abstract protected function setHelperClasses();
-	/*abstract protected function beforeSetDetails();
-	abstract protected function afterSetDetails();
-	abstract protected function afterDisplay();*/
-	abstract protected function setPageMenu();/*
-	abstract protected function afterSetDefaults();*/
-	abstract protected function editForm();/*
-	abstract protected function afterCollectPostValues();*/
+	
+	abstract protected function setPageMenu();
+	abstract protected function editForm();
 		
 	
 	public function setDetails(){
-		
-
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
 			$result = dbGetResult($sql);
 			if($result){
 				while ($row = $result->fetch_assoc())
 				{	
-					$this->f->setRow($row);
+					$this->f->fetch($row);
 				}
 				$result->close();
 				$this->getFieldIds();
 			}
 			
 		}
-		/*$this->afterSetDetails();*/
+		
 	}	
 	
 	public function options(
@@ -77,9 +68,9 @@ implements Iecho, IcontentWriter{
 		return $links;
 	}
 	
-	protected function listHeading(){
+	public function listHeading(){
 		$heading = wrapTh($this->_titleEntity);
-		$heading .= $this->f->listHeading();
+		$heading .= $this->f->listCaption();
 		$list = wrapTr($heading);
 		return $list;
 	}
@@ -97,14 +88,14 @@ implements Iecho, IcontentWriter{
 	}
 	
 	public function listRow($row){
-		$this->f->setRow($row);
+		$this->f->fetch($row);
 		return $this->listRowFormat();
 	}
 
 	protected function display(){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
-		$detail .= $this->f->display();
-		$detail .= $this->afterDisplay();
+		$detail .= $this->f->displayDetail();
+		//$detail .= $this->afterDisplay();
 		$detail .= closeDisplayDetails();
 		return $detail;
 	}
@@ -115,9 +106,9 @@ implements Iecho, IcontentWriter{
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
-	 		$this->f->defaults();
+	 		$this->f->reset();
 	 	}
-	 	$this->afterSetDefaults();
+	 	//$this->afterSetDefaults();
 	}
 
 	public function addForm($idParent = 0){
@@ -132,7 +123,7 @@ implements Iecho, IcontentWriter{
 	public function collectPostValues(){
 		$this->pageMode = $_POST['mode'];	
 		$this->f->getPostVars();
-	//	$this->synchIds();
+		$this->synchIds();
 		$this->afterCollectPostValues();
 		$this->echoState(true,'collectPostValues');
 	}
@@ -146,7 +137,7 @@ implements Iecho, IcontentWriter{
 		$this->echoState(true, 'printPage');
 		$heading = $this->getPageHeading();
 		$details = $this->getPageDetails();
-		$site = new _SiteTemplate();
+		$site = new _siteTemplate();
 		$site->setSiteTemplateDetails($heading, $details);
 		$site->printSite();
 	}

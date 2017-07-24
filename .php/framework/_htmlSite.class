@@ -21,6 +21,7 @@ $this->echoPrint(true,'begin','set','htmlSite');
 	$this->_heading = $heading;
 
 	$this->getSiteSettings();
+	//$this->setContents();	
 	$this->setOnLoad();
 	$this->setStyles();
 	$this->setScripts();
@@ -110,12 +111,12 @@ protected function setLinks(){
 
 protected function setContents(){ 
 
-	if (!isset($_SESSION['logged-in']) || $_SESSION['logged-in'] == false){
-	$this->echoPrint(true,'not logged-in','setContents','htmlSite');
-		$user = new UserLogin('LOGIN-FORM');
-		$content = $user->loginForm();
+	if (!isset($_SESSION['logged-in']) || ($_SESSION['logged-in'] == false)){
+	$this->echoPrint(true,'not logged-in, setting contents to login form','setContents','htmlSite');
+		$l = new UserLogin('LOGIN-FORM');
+		$content = $l->loginForm();
 	} else {
-	$this->echoPrint(true,'logged-in,setting contents','setConents','htmlSite');
+	$this->echoPrint(true,'logged-in,setting contents','setContents','htmlSite');
 		//section-heading div commented out to allow section-links to float closer to section details
 		//  pageHeading contains section-title and section-links div containers
 		//  wrap title and links in section-heading div

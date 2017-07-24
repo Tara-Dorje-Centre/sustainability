@@ -28,60 +28,18 @@ implements Ifieldset, Iecho, IcontentWriter{
     public function __construct(){
     	parent::__construct();
     	$this->task = new _fieldIdName('task_id','id-task','Task','task_name');
-    	
-		 $this->reported = new _dateField('reported','date-reported','Reported');
-		 $this->doneBy = new _userField('done_by','done-by','DoneBy');
-/*
-		 $this->reviewed = new _dateField('reviewed','reviewed');
-		 $this->reviewedBy = new _textField('reviewed_by','reviewedBy');*/
-    	
+		$this->reported = new _dateField('reported','date-reported','Reported');
+		$this->doneBy = new _userField('done_by','done-by','DoneBy');
+		$this->_register('task', $this->task);
+		$this->_register('reported', $this->reported);
+		$this->_register('doneBy', $this->doneBy);
     }
-    protected function reset(){
+    public function reset(){
     	parent::reset();
 		$this->task->reset(0);
 		$this->reported->reset('');
 		$this->doneBy->reset('');
     }
-	public function fetch($row){
-		parent::fetch($row);
-		$this->task->fetch($row);
-		$this->reported->fetch($row);
-		$this->doneBy->fetch($row);
-	}
-	public function format(){
-		parent::format();
-		$this->task->format();
-		$this->reported->format();
-		$this->doneBy->format();
-	}
-	public function displayDetail(){;
-		$this->addContent(parent::displayDetail(),true);
-		$this->addContent($this->task->displayDetail());		
-		$this->addContent($this->reported->displayDetail());		
-		$this->addContent($this->doneBy->displayDetail());		
-		return $this->getContent();
-	}
-	public function listCaption(){
-		$this->addContent(parent::listCaption(),true);
-		$this->addContent($this->task->listCaption());		
-		$this->addContent($this->reported->listCaption());		
-		$this->addContent($this->doneBy->listCaption());		
-		
-		return $this->getContent();
-	}
-	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
-		$this->addContent($this->task->listDetail());
-		$this->addContent($this->reported->listDetail());		
-		$this->addContent($this->doneBy->listDetail());		
-		return $this->getContent();
-	}
-	public function read(){
-		parent::read();
-		$this->task->read();
-		$this->reported->read();
-		$this->doneBy->read();
-	}
 }
 
 

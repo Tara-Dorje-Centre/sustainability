@@ -15,7 +15,7 @@ class _numberField extends _field
 		$this->_datatype = 'NUMBER';
 	}
 	public function input(){
-		return inputFieldNumber($this->_entity,$this->value(),$this->env->variable,$this->_caption);
+		return inputFieldNumber($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 }
 
@@ -28,12 +28,12 @@ class _dateField extends _field
 	}
 	
 	public function input(){
-		return inputFieldDate($this->_entity,$this->value(),$this->env->variable,$this->_caption);
+		return inputFieldDate($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 
 }
 
-class _submitField extends _field
+class _submitButton extends _field
  implements Ifield, Iecho, IcontentWriter {
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
@@ -41,8 +41,17 @@ class _submitField extends _field
 		$this->_datatype = 'SUBMIT';
 	}
 	
-	public function submit(){
-		return getLoginLogoutButton($this->_caption,$this->env->variable);
+	public function input(){
+		$e = new _element('input',$this->env->variable(), 'editing-button');
+
+	//$e->addAttribute('name',$name);
+	$e->addAttribute('type','submit');
+	$e->addAttribute('value',$this->_caption);
+
+	return $e->empty();
+		//return getButton($this->env->variable, $this->_caption, $this->env->variable);
+		//return getButton('submit',$this->env->variable,$this->_caption);
+		//return getLoginLogoutButton($this->_caption,$this->env->variable);
 	}
 	
 }
