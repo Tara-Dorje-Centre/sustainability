@@ -3,7 +3,7 @@ class _userField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  
 	public function input( ){
-		return inputFieldUser($this->_entity,$this->value(),$this->env->variable,$this->_caption);
+		return inputFieldUser($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 
 }

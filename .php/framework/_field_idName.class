@@ -68,6 +68,10 @@ class _fieldIdName implements Ifield{
  	public function setEnvironmentVariable(string $var = 'not-used'){
  	 		$this->id->setEnvironmentVariable($var);
  	}
+ 	public function env(){
+ 	
+ 		return $this->id->env();
+ 	}
  	public function setFetchColumnName(string $dbCol = 'query_alias|column_name'){
  	 	 	$this->name->setFetchColumn($dbCol);
  	}
@@ -77,9 +81,13 @@ class _fieldIdName implements Ifield{
 	public function set($value){
 	 	$this->id->set($value);
 	}
- 	public function reset($default = 0){
- 		$this->id->reset($default);
- 	 	$this->name->reset('');
+	public function setDefault($value){
+	 	$this->id->setDefault($value);
+ 	 	$this->name->setDefault('');
+	}
+ 	public function reset(bool $useDefault = false){
+ 		$this->id->reset($useDefault);
+ 	 	$this->name->reset($useDefault);
  	}
  	public function get(){
  	   	return $this->id->get();

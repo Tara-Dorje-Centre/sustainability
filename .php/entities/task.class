@@ -34,152 +34,44 @@ class taskFields extends _fieldsetProjectChild{
 	
 public function __construct(){
 
-	$this->summary = new _textField('summary','summary','summary',true);
-	//$this->started = new _dateField('started','started','started',true);	
-	$this->pctDone = new _numberField('pct_done','pct_done','pct_done',true);	
-	$this->taskOrder = new _numberField('task_order','task_order','task_order',true);						
-	$this->hoursEstimated = new _numberField('hours_estimated','hours_estimated','hours_estimated',true);
-	$this->hoursActual = new _numberField('hours_actual','hours_actual','hours_actual',true);
-	$this->hoursNotes = new _notesField('hours_notes','hours_notes','hours_notes',true);			
-	$this->materialsAuthProject = new _yesNoField('materials_auth_project','materials_auth_project','materials_auth_project',true);
-	$this->materialsAuthBy = new _textField('materials_auth_by','envvar','caption',true);
-	$this->receiptsAuthProject = new _yesNoField('receipts_auth_project','envvar','caption',true);
-	$this->receiptsAuthBy = new _textField('receipts_auth_by','envvar','caption',true);
+	$this->summary = new _textField('summary','summary','summary',);
+	$this->pctDone = new _numberField('pct_done','pct-done','pct_done');	
+	$this->taskOrder = new _numberField('task_order','task-order','task_order');						
+	$this->hoursEstimated = new _numberField('hours_estimated','hours-estimated','hours_estimated');
+	$this->hoursActual = new _numberField('hours_actual','hours-actual','hours_actual');
+	$this->hoursNotes = new _notesField('hours_notes','hours-notes','hours_notes');			
+	$this->materialsAuthProject = new _yesNoField('materials_auth_project','materials-auth-project','materials_auth_project');
+	$this->materialsAuthBy = new _textField('materials_auth_by','materials-auth-by','materials_auth_by');
+	$this->receiptsAuthProject = new _yesNoField('receipts_auth_project','receipts-auth-project','receipts_auth_project');
+	$this->receiptsAuthBy = new _textField('receipts_auth_by','receipts-auth-by','receipts_auth_by');
 	
+ 		$this->_register('summary', $this->summary);
+		$this->_register('pctDone', $this->pctDone);
+		$this->_register('taskOrder', $this->taskOrder);
+		$this->_register('hoursEstimated', $this->hoursEstimated);
+		$this->_register('hoursActual', $this->hoursActual);
+		$this->_register('hoursNotes', $this->hoursNotes);
+		$this->_register('materialsAuthProject', $this->materialsAuthProject);
+		$this->_register('materialsAuthBy', $this->materialsAuthBy);
+		$this->_register('receiptsAuthProject', $this->receiptsAuthProject);
+		$this->_register('receiptsAuthBy', $this->receiptsAuthBy);
+		
+    }
+	public function setDefaults(){
+    	parent::setDefaults();
+    	$this->summary->setDefault('');
+    	$this->pctDone->setDefault(0);
+    	$this->taskOrder->setDefault(0);
+    	$this->hoursEstimated->setDefault(0);
+    	$this->hoursActual->setDefault(0);
+    	$this->hoursNotes->setDefault('');
+    	$this->materialsAuthProject->setDefault('no');
+    	$this->materialsAuthBy->setDefault('n/a');
+    	$this->receiptsAuthProject->setDefault('no');
+    	$this->receiptsAuthBy->setDefault('n/a');
+    	
     }
 
-	public function fetch($row){
-		parent::fetch($row);
-			
-			$this->summary->fetch($row);
-			//$this->started->fetch($row);
-			$this->pctDone->fetch($row);
-			$this->taskOrder->fetch($row);			
-			$this->hoursEstimated->fetch($row);
-			$this->hoursActual->fetch($row);
-			$this->hoursNotes->fetch($row);
-			$this->materialsAuthProject->fetch($row);
-			$this->materialsAuthBy->fetch($row);
-			$this->receiptsAuthProject->fetch($row);
-			$this->receiptsAuthBy->fetch($row);
-			
-	}
-		
-	public function setEnvironment(string $env = 'POST'){
-		parent::setEnvironment($env);
-
-		$this->summary->setEnvironment($env);
-	//	$this->started->setEnvironment($env);
-		$this->pctDone->setEnvironment($env);
-		$this->taskOrder->setEnvironment($env);			
-		$this->hoursEstimated->setEnvironment($env);
-		$this->hoursActual->setEnvironment($env);
-		$this->hoursNotes->setEnvironment($env);
-		$this->materialsAuthProject->setEnvironment($env);
-		$this->materialsAuthBy->setEnvironment($env);
-		$this->receiptsAuthProject->setEnvironment($env);
-		$this->receiptsAuthBy->setEnvironment($env);
-
-	}
-	public function format(){
-		parent::format();
-		
-		$this->summary->format($row);
-		//$this->started->format($row);
-		$this->pctDone->format($row);
-		$this->taskOrder->format($row);			
-		$this->hoursEstimated->format($row);
-		$this->hoursActual->format($row);
-		$this->hoursNotes->format($row);
-		$this->materialsAuthProject->format($row);
-		$this->materialsAuthBy->format($row);
-		$this->receiptsAuthProject->format($row);
-		$this->receiptsAuthBy->format($row);
-		
-	}
-
-	 public function listCaption(){
-		 $this->addContent(parent::listCaption(),true);
-		 $this->addContent($this->summary->listCaption());
-		// $this->addContent($this->started->listCaption());
-		 $this->addContent($this->pctDone->listCaption());
-		 $this->addContent($this->taskOrder->listCaption());			
-		 $this->addContent($this->hoursEstimated->listCaption());
-		 $this->addContent($this->hoursActual->listCaption());
-		 $this->addContent($this->hoursNotes->listCaption());
-		 $this->addContent($this->materialsAuthProject->listCaption());
-		 $this->addContent($this->materialsAuthBy->listCaption());
-		 $this->addContent($this->receiptsAuthProject->listCaption());
-		 $this->addContent($this->receiptsAuthBy->listCaption());
-	 	/*$heading .=  wrapTh('Task Order');
-		$heading .=  wrapTh('% Done');
-		$heading .=  wrapTh('Hours<br/>Estimated');
-		$heading .=  wrapTh('Hours<br/>Actual');*/
-		
-	 	return $this->getContent();
-	 }
-
-	 public function listDetail(){
-		 $this->addContent(parent::listDetail(),true);
-		 $this->addContent($this->summary->listDetail());
-		// $this->addContent($this->started->listDetail());
-		 $this->addContent($this->pctDone->listDetail());
-		 $this->addContent($this->taskOrder->listDetail());			
-		 $this->addContent($this->hoursEstimated->listDetail());
-		 $this->addContent($this->hoursActual->listDetail());
-		 $this->addContent($this->hoursNotes->listDetail());
-		 $this->addContent($this->materialsAuthProject->listDetail());
-		 $this->addContent($this->materialsAuthBy->listDetail());
-		 $this->addContent($this->receiptsAuthProject->listDetail());
-		 $this->addContent($this->receiptsAuthBy->listDetail());
-		 
-
-		 return $this->getContent();
-	 }
-
-	public function displayDetail(){
-		 $this->addContent(parent::displayDetail(),true);
-		$this->addContent($this->summary->displayDetail());
-		//$this->addContent($this->started->displayDetail());
-		$this->addContent($this->pctDone->displayDetail());
-		$this->addContent($this->taskOrder->displayDetail());			
-		$this->addContent($this->hoursEstimated->displayDetail());
-		$this->addContent($this->hoursActual->displayDetail());
-		$this->addContent($this->hoursNotes->displayDetail());
-		$this->addContent($this->materialsAuthProject->displayDetail());
-		$this->addContent($this->materialsAuthBy->displayDetail());
-		$this->addContent($this->receiptsAuthProject->displayDetail());
-		$this->addContent($this->receiptsAuthBy->displayDetail());
-		 
-
-	 	return $this->getContent();
-	 }
-	 
-	 public function read(){
-		parent::read();
-	
-		$this->taskOrder->read();
-		$this->started->read();
-		$this->summary->read();
-		$this->pctDone->read();
-		$this->hoursEstimated->read();
-		$this->hoursNotes->read();
-		//$this->hoursActual-read();
-		$this->materialsAuthProject->read();
-
-		if ($this->materialsAuthProject == 'yes'){
-			$this->materialsAuthBy->read();
-		} else {
-			$this->materialsAuthBy->set('Not Approved');			
-		}
-		$this->receiptsAuthProject->read();
-		if ($this->receiptsAuthProject == 'yes'){
-			$this->receiptsAuthBy->read();
-		} else {
-			$this->receiptsAuthBy->set('Not Approved');			
-		}
-
-	}
 	 
 
 }
@@ -274,10 +166,7 @@ class task extends _entity{
 		}
 		
 		parent::setDetails();
-		/*
-	}
-	
-	protected function afterSetDetails(){*/
+		
 		
 		$this->totals->setTaskTotals($this->f->id);
 		 //if activity records with hours exist
@@ -468,9 +357,7 @@ class task extends _entity{
 		return $select;
 	}	
 	
-	public function afterSetDefaults(){
 	
-	}
 	
 	public function editForm(){
 		if ($this->pageMode == 'ADD'){		

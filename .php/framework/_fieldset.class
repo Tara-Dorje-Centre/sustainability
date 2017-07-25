@@ -23,68 +23,74 @@ implements Ifieldset, Iecho, IcontentWriter{
 	protected function _register(string $fieldName, _field $field){
 		$this->_fields[$fieldName] = $field;
 	}
+	abstract public function setDefaults();
 	
-    public function reset(){
-    	//reset fields to default values
+    public function reset(bool $useDefault = false){
+    	foreach ($this->_fields as $f){
+			$f->$useDefault();
+		}
     }
     public function setEntity(string $entity){
-    	foreach ($this->_fields as &$f){
+    	foreach ($this->_fields as $f){
 			$f->setEntity($entity);
 		}
 		
     }
     public function setEnvironment(string $env = 'POST'){
-    	foreach ($this->_fields as &$f){
+    	foreach ($this->_fields as $f){
 			$f->setEnvironment($env);
 		}
 		
     }
 	public function fetch($row){
-		$this->reset;
-	    foreach ($this->_fields as &$f){
+	    foreach ($this->_fields as $f){
 			$f->fetch($row);
 		}
 	}
 	
 	public function format(){
-		foreach ($this->_fields as &$f){
+		foreach ($this->_fields as $f){
 			$f->format();
 		}
 	}
 	
 	public function displayDetail(){
-		foreach ($this->_fields as &$f){
+		foreach ($this->_fields as $f){
 			$this->addContent($f->displayDetail());
 		}
 		return $this->getContent();
 	}
 	
 	public function listCaption(){
-		foreach ($this->_fields as &$f){
+		foreach ($this->_fields as $f){
 			$this->addContent($f->listCaption());
 		}
 		return $this->getContent();
 	}
 	public function listDetail(){
-		foreach ($this->_fields as &$f){
+		foreach ($this->_fields as $f){
 			$this->addContent($f->listDetail());
 		}
 		return $this->getContent();
 	}
 	public function read(){
-		foreach ($this->_fields as &$f){
+		foreach ($this->_fields as $f){
 			$f->read();
 		}
 	}
 	public function write(){
-		foreach ($this->_fields as &$f){
+		foreach ($this->_fields as $f){
 			$f->write();
 		}
 	}
 	public function remove(){
-		foreach ($this->_fields as &$f){
+		foreach ($this->_fields as $f){
 			$f->remove();
 		}
+	}
+	public function echoFieldState(){
+	
+	
 	}
 }
 

@@ -17,7 +17,7 @@ implements Iecho, IcontentWriter{
 		//$this->setPageSave();
 		//$this->setEntityTitle();
 		$this->setHelperClasses();
-}
+	}
 	
 	abstract protected function setHelperClasses();
 	
@@ -95,7 +95,7 @@ implements Iecho, IcontentWriter{
 	protected function display(){
 		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
 		$detail .= $this->f->displayDetail();
-		//$detail .= $this->afterDisplay();
+		
 		$detail .= closeDisplayDetails();
 		return $detail;
 	}
@@ -106,9 +106,9 @@ implements Iecho, IcontentWriter{
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
-	 		$this->f->reset();
+	 		$this->f->setDefaults();
 	 	}
-	 	//$this->afterSetDefaults();
+	 	
 	}
 
 	public function addForm($idParent = 0){

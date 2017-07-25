@@ -37,13 +37,13 @@ implements  Ifieldset, Iecho, IcontentWriter{
 		$this->_register('approvedBy', $this->approvedBy);
 
     }
-    public function reset(){
-    	parent::reset();
-    	$this->project->reset(0);
-    	$this->location->reset(0);
-    	$this->started->reset('');
-    	$this->approved->reset('');
-    	$this->approvedBy->reset('n/a');
+	public function setDefaults(){
+    	parent::setDefaults();
+    	$this->project->setDefault(0);
+    	$this->location->setDefault(0);
+    	$this->started->setDefault('');
+    	$this->approved->setDefault('');
+    	$this->approvedBy->setDefault('n/a');
     	
     }
     

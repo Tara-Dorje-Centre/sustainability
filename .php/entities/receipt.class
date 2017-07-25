@@ -16,12 +16,7 @@ class receiptFields extends _fieldsetTaskChild{
     
 	public function __construct(){
 	
-		$this->hasType = true;
-		$this->listType = true;
-		$this->hasUpdated = true;
-		$this->hasProject = true;
-		$this->hasTask = true;
-		$this->hasActivity = true;
+	
 	}
 	
 	public function setRow($row){

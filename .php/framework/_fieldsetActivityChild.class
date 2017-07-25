@@ -33,9 +33,9 @@ implements Ifieldset, Iecho, IcontentWriter{
     	$this->activity = new _idNameField('activity_id','id-activity','Activity','activity_name' );
   		$this->_register('activity', $this->activity);
     }
-    public function reset(){
-    	parent::reset();
-		$this->activity->reset(0);
+	public function setDefaults(){
+    	parent::setDefaults();
+		$this->activity->setDefault(0);
     }
     
 }

@@ -17,13 +17,14 @@ implements Ifieldset, Iecho, IcontentWriter{
 		
     public function __construct(){
     	parent::__construct();
+    	
     	$this->parent = new _fieldIdName('parent_id','id-parent','Parent','parent_name');
     	$this->type = new _fieldIdName('type_id','id-type','Type','type_name');
   		$this->_register('parent', $this->parent);
 		$this->_register('type', $this->type);
     }
-    public function reset(){
-    	parent::reset();
+	public function setDefaults(){
+    	parent::setDefaults();
     	$this->parent->reset(0);
     	$this->type->reset(0);
     }

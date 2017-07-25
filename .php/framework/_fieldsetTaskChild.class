@@ -34,11 +34,11 @@ implements Ifieldset, Iecho, IcontentWriter{
 		$this->_register('reported', $this->reported);
 		$this->_register('doneBy', $this->doneBy);
     }
-    public function reset(){
-    	parent::reset();
-		$this->task->reset(0);
-		$this->reported->reset('');
-		$this->doneBy->reset('');
+	public function setDefaults(){
+    	parent::setDefaults();
+		$this->task->setDefault(0);
+		$this->reported->setDefault('');
+		$this->doneBy->setDefault('');
     }
 }
 

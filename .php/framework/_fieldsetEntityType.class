@@ -26,15 +26,16 @@ implements Ifieldset, Iecho, IcontentWriter{
 		$this->_register('updated', $this->updated);
 		$this->_register('highlight', $this->highlight);
     }
-    public function reset(){
-    
-    	$this->id->reset(0);
-		$this->name->reset('');
-		$this->description->reset('');
-		$this->created->reset('');
-		$this->updated->reset('');
-		$this->highlight->reset('none');
+	
+	public function setDefaults(){
+    	$this->id->setDefault(0);
+		$this->name->setDefault('');
+		$this->description->setDefault('');
+		$this->created->setDefault('');
+		$this->updated->setDefault('');
+		$this->highlight->setDefault('none');
     }
+
 }
  
 
@@ -61,10 +62,10 @@ implements Ifieldset, Iecho, IcontentWriter{
   		$this->_register('notes', $this->notes);
 		$this->_register('displayOrder', $this->displayOrder);
     }
-    public function reset(){
-    	parent::reset();
-		$this->displayOrder->reset(0);
-		$this->notes->reset('');
+	public function setDefaults(){
+    	parent::setDefaults();
+		$this->displayOrder->setDefault(0);
+		$this->notes->setDefault('');
     }
 
 }

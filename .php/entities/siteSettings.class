@@ -81,33 +81,33 @@ class siteSettingsFields extends _fieldset{
 		
 	}
 	
-	public function reset(){
-		parent::reset();
+	public function setDefaults(){
+		parent::setDefaults();
 		
-		$this->siteTitle->reset('default');
+		$this->siteTitle->setDefault('default');
 		// $this->name->set($this->siteTitle->value);
-		 $this->siteUrl->reset('default');
-		 $this->loginNotice->reset('default');
-		 $this->organization->reset('default');
-		 $this->organizationUrl->reset('default');
-		 $this->organizationDescription->reset('default');
-		 $this->contactName->reset('default');
-		 $this->contactEmail->reset('default');
-		 $this->showPublicSite->reset('yes');
-		 $this->showCostReports->reset('no');
-		 $this->showRevenueReports->reset('no');
-		 $this->publicFillColor->reset('none');
-		 $this->publicSiteColor->reset('none');
-		 $this->publicPageColor->reset('none');
-		 $this->publicMenuColor->reset('none');
-		 $this->publicMenuColorHover->reset('none');
-		 $this->publicTextColor->reset('black');
-		 $this->publicTextColorHover->reset('green');
-		 $this->publicFontFamily->reset('Arial');
-		 $this->publicFontSizeTitle->reset(20);
-		 $this->publicFontSizeHeading->reset(16);
-		 $this->publicFontSizeMenu->reset(14);
-		 $this->publicFontSizeText->reset(12);
+		 $this->siteUrl->setDefault('default');
+		 $this->loginNotice->setDefault('default');
+		 $this->organization->setDefault('default');
+		 $this->organizationUrl->setDefault('default');
+		 $this->organizationDescription->setDefault('default');
+		 $this->contactName->setDefault('default');
+		 $this->contactEmail->setDefault('default');
+		 $this->showPublicSite->setDefault('yes');
+		 $this->showCostReports->setDefault('no');
+		 $this->showRevenueReports->setDefault('no');
+		 $this->publicFillColor->setDefault('none');
+		 $this->publicSiteColor->setDefault('none');
+		 $this->publicPageColor->setDefault('none');
+		 $this->publicMenuColor->setDefault('none');
+		 $this->publicMenuColorHover->setDefault('none');
+		 $this->publicTextColor->setDefault('black');
+		 $this->publicTextColorHover->setDefault('green');
+		 $this->publicFontFamily->setDefault('Arial');
+		 $this->publicFontSizeTitle->setDefault(20);
+		 $this->publicFontSizeHeading->setDefault(16);
+		 $this->publicFontSizeMenu->setDefault(14);
+		 $this->publicFontSizeText->setDefault(12);
 		
 	}
 	
@@ -125,6 +125,7 @@ class siteSettings extends _entity{
 	
 	public function setDetails(){
 		$this->verifySettings();
+
 		parent::setDetails();/*
 		//if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
@@ -151,6 +152,7 @@ class siteSettings extends _entity{
 		if ($i == 0){
 			$this->createSettings();	
 		}
+		$this->id = 1;
 	}
 	
 

@@ -36,7 +36,8 @@ abstract class _entityType extends _entity{
 		$this->_pageMenu = $menu;
 	}
 	
-	protected function afterSetDefaults(){
+	protected function setDefaults(){
+		parent::setDefaults();
 		if ($this->pageMode == 'ADD'){
 		/*$this->f->defaults();*/
 		
@@ -64,9 +65,6 @@ abstract class _entityType extends _entity{
 		return $edit->close;
 	}
 	
-	protected function afterCollectPostValues(){
-	
-	}
 	protected function saveUpdate(){
 
 			$sql = " UPDATE ".$this->sql->getBaseTable()." AS base ";

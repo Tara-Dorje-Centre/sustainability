@@ -8,22 +8,16 @@ abstract class _entityList extends _entity{
 	public $found = 0;
 	public $base;
 	
-	protected function beforeSetDetails(){
 	
-	}
 	
 	//override _entity.setDetails for listing
 	public function setDetails(){
-		$this->beforeSetDetails();
+		
 		//check counts, dont fetch details
 		$this->setFoundCount();
-		
-		$this->afterSetDetails();
 	}
 	
-	protected function afterSetDetails(){
 
-	}
 	
 	
 	protected function setFoundCount(){
