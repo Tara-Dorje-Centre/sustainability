@@ -12,8 +12,9 @@ class materialList extends _entityList{
 	public $costEstimated = 0;
 	
 	public $sql;
-
-	public function setHelperClasses(){
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	//public function setHelperClasses(){
 	//$mode = 'VIEW', $id = 0, $idParent = 0){
 		//parent::__construct($mode, $id, $idParent);
 		$this->base = new material($this->pageMode, $this->id,$this->idParent);

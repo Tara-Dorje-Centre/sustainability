@@ -9,12 +9,10 @@ class taskList extends _entityList{
 	//public $project;
 	//public $sql;
 	//public $links;*/
+	 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 	
-	protected function setHelperClasses(){
 		$this->base = new task($this->pageMode, $this->id, $this->idParent);
-		//$this->project = new Project($this->pageMode, $this->idParent);
-		//$this->sql = new TaskSQL;	
-	//	$this->links = new TaskLinks;
 	}
 	
 	public function setPeriodic($periodic = 'NO'){

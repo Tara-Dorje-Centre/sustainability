@@ -2,16 +2,35 @@
 class receiptTypeFields extends _fieldsetEntityType{
 
 }
+class receiptTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'receipt_types';
+	}
+}
+class receiptTypeLinks extends _entityTypeLinks{
+	protected $context = 'receiptType';
+	protected $pageList = 'pr_ReceiptType_List.php';
+	protected $pageDetail = 'pr_ReceiptType_Detail.php';
+}
 class receiptType extends _entityType{
-	protected $__MyClassName = 'receiptType';
-  	protected $_titleEntity = 'Receipt Type';
-  	protected $pageSave = 'pr_ReceiptType_Save.php';
-	
-	protected function setHelperClasses(){
+
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'receiptType';
+  		$this->_titleEntity = 'Receipt Type';
+  		$this->pageSave = 'pr_ReceiptType_Save.php';
 		$this->f = new receiptTypeFields();
 		$this->sql = new receiptTypeSQL;
 		$this->links = new receiptTypeLinks();
 	}
-	
 } 
+class receiptTypeList extends _entityTypeList{
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'ReceiptTypeList';
+		$this->_titleEntity = 'Receipt Types';
+		$this->base = new receiptType($this->pageMode,$this->id,$this->idParent);
+	}
+}
+
 ?>

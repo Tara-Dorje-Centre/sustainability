@@ -26,7 +26,7 @@ class siteSettingsFields extends _fieldset{
 	 public $publicFontSizeText;
 	 
 	public function __construct(){
-		
+		parent::__construct();
 	    $this->echoPrint(true,'begin','__construct','siteSettingsFields');
 		$this->siteTitle = new _nameField('site_title','site-title','Site.Title');
 	 	$this->siteUrl = new _urlField('site_url','site-url','Site.URL');
@@ -114,10 +114,12 @@ class siteSettingsFields extends _fieldset{
 }
 
 class siteSettings extends _entity{
-	protected $__MyClassName = 'SiteSettings';
-	protected $_titleEntity = 'Site Settings';
 
-	protected function setHelperClasses(){
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'SiteSettings';
+     	$this->_titleEntity = 'Site Settings';
+   	 	$this->pageSave = 'sys_SiteSettings_Save.php';
 		$this->f = new siteSettingsFields();
 		$this->links = new siteSettingsLinks();
 		$this->sql = new siteSettingsSQL();
@@ -133,7 +135,7 @@ class siteSettings extends _entity{
 			if($result){
 				while ($row = $result->fetch_assoc())
 				{	
-					$this->f->setRow($row);
+					$this->f->fetch($row);
 				}
 				$result->close();
 				//$this->getFieldIds();
@@ -233,9 +235,7 @@ class siteSettings extends _entity{
 		$styles .= $this->f->publicFontFamily->input();
 	
 		//add the sample region after the first color select
-		//$styles .= wrapDiv($this->publicSiteSample(),'public-site-sample','site-sample');
-
-		//$styles .= closeDiv();
+		$styles .= wrapDiv($this->publicSiteSample(),'public-site-sample','site-sample');
 		$styles .= closeFieldset();
 		return $styles;
 	}
@@ -255,20 +255,24 @@ class siteSettings extends _entity{
 		$td->addAttribute('rowspan',11);
 		$x .= $td->open();
 		
-		$style = minHeightPixels(200).setPadding(10).setFontFamily($this->f->publicFontFamily->value);
-		$style .= setFont($this->f->publicFontSizeText->value,'normal','normal').colorBackground($this->f->publicFillColor->value);
+		$style = minHeightPixels(200).setPadding(10);
+		$style .= setFontFamily($this->f->publicFontFamily->value());
+		$style .= setFont($this->f->publicFontSizeText->value(),'normal','normal');
+		$style .= colorBackground($this->f->publicFillColor->value);
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
 
-		$style = setPadding(10).colorBackground($this->f->publicSiteColor->value);
+		$style = setPadding(10);
+		$style .= colorBackground($this->f->publicSiteColor->value());
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
 		
 
 		$style = setPadding(10).widthPixels(75).setFloat('left');
-		$style .= colorBackground($this->f->publicMenuColor->value).setFont($this->f->publicFontSizeMenu->value,'normal','normal');
+		$style .= colorBackground($this->f->publicMenuColor->value());
+		$style .= setFont($this->f->publicFontSizeMenu->value(),'normal','normal');
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
@@ -279,13 +283,15 @@ class siteSettings extends _entity{
 		$list->setStyle($style);
 		$x .= $list->open();
 		
-		$style = setDisplay('block').colorText($this->f->publicTextColor->value);
+		$style = setDisplay('block');
+		$style .= colorText($this->f->publicTextColor->value());
 		$li = new _li();
 		$li->setStyle($style);
 		$x .= $li->wrap('Menu Item');
 	
-		$style = setDisplay('block').colorText($this->f->publicTextColorHover->value);
-		$style .= colorBackground($this->f->publicMenuColorHover->value);
+		$style = setDisplay('block');
+		$style .= colorText($this->f->publicTextColorHover->value());
+		$style .= colorBackground($this->f->publicMenuColorHover->value());
 		$li = new _li();
 		$li->setStyle($style);
 		$x .= $li->wrap('Menu Item Hover');
@@ -294,14 +300,15 @@ class siteSettings extends _entity{
 		$x .= closeDiv();
 	
 		$style = setPadding(10).setMarginCustom('left',100);
-		$style .= colorBackground($this->f->publicPageColor->value).colorText($this->f->publicTextColor->value);
+		$style .= colorBackground($this->f->publicPageColor->value());
+		$style .= colorText($this->f->publicTextColor->value());
 		$div = new _div();
 		$div->setStyle($style);
 		$x .= $div->open();
 		
-		$x .= spanStyled('Titles',setFont($this->f->publicFontSizeTitle->value,'normal','bold')).br();
-		$x .= spanStyled('Headings',setFont($this->f->publicFontSizeHeading->value,'normal','bold')).br();
-		$x .= spanStyled('Content Text'.br().'...',setFont($this->f->publicFontSizeText->value,'normal','normal')).br();
+		$x .= spanStyled('Titles',setFont($this->f->publicFontSizeTitle->value(),'normal','bold')).br();
+		$x .= spanStyled('Headings',setFont($this->f->publicFontSizeHeading->value(),'normal','bold')).br();
+		$x .= spanStyled('Content Text'.br().'...',setFont($this->f->publicFontSizeText->value(),'normal','normal')).br();
 		$x .= closeDiv();		
 		$x .= closeDiv();		
 		$x .= closeDiv();

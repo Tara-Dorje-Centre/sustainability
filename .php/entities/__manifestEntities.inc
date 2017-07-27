@@ -16,12 +16,12 @@ include_once("userSQL.class");
 include_once("user.class");
 include_once("userList.class");
 
-//include_once("userTypeFields.class");
+/*include_once("userTypeFields.class");
 include_once("userTypeLinks.class");
-include_once("userTypeSQL.class");
-include_once("userType.class");
+include_once("userTypeSQL.class");*/
+include_once("userType.class");/*
 include_once("userTypeList.class");
-
+*/
 
 showProgress('user classes loaded');
 //
@@ -53,13 +53,7 @@ include_once("activityList.class");
 
 
 showProgress('activity classes loaded');
-//
-
-//include_once("activityTypeFields.class");
-include_once("activityTypeLinks.class");
-include_once("activityTypeSQL.class");
 include_once("activityType.class");
-include_once("activityTypeList.class");
 
 showProgress('activity type classes loaded');
 //
@@ -69,12 +63,7 @@ include_once("locationSQL.class");
 include_once("location.class");
 include_once("locationList.class");
 
-
-//include_once("locationTypeFields.class");
-include_once("locationTypeLinks.class");
-include_once("locationTypeSQL.class");
 include_once("locationType.class");
-include_once("locationTypeList.class");
 showProgress('location classes loaded');
 //
 //include_once("materialFields.class");
@@ -82,14 +71,7 @@ include_once("materialLinks.class");
 include_once("materialSQL.class");
 include_once("material.class");
 include_once("materialList.class");
-
-
-
-//include_once("materialTypeFields.class");
-include_once("materialTypeLinks.class");
-include_once("materialTypeSQL.class");
 include_once("materialType.class");
-include_once("materialTypeList.class");
 showProgress('material classes loaded');
 //
 
@@ -100,11 +82,9 @@ include_once("measure.class");
 include_once("measureList.class");
 
 
-//include_once("measureTypeFields.class");
-include_once("measureTypeLinks.class");
-include_once("measureTypeSQL.class");
+
 include_once("measureType.class");
-include_once("measureTypeList.class");
+
 
 
 
@@ -123,11 +103,9 @@ include_once("project.class");
 include_once("projectList.class");
 
 
-//include_once("projectTypeFields.class");
-include_once("projectTypeLinks.class");
-include_once("projectTypeSQL.class");
+
 include_once("projectType.class");
-include_once("projectTypeList.class");
+
 showProgress('project classes loaded');
 //
 //include_once("receiptFields.class");
@@ -137,11 +115,9 @@ include_once("receipt.class");
 include_once("receiptList.class");
 
 
-//include_once("receiptTypeFields.class");
-include_once("receiptTypeLinks.class");
-include_once("receiptTypeSQL.class");
+
 include_once("receiptType.class");
-include_once("receiptTypeList.class");
+
 showProgress('receipt classes loaded');
 //
 
@@ -152,11 +128,9 @@ include_once("task.class");
 include_once("taskList.class");
 
 
-//include_once("taskTypeFields.class");
-include_once("taskTypeLinks.class");
-include_once("taskTypeSQL.class");
+
 include_once("taskType.class");
-include_once("taskTypeList.class");
+
 
 showProgress('task classes loaded');
 //

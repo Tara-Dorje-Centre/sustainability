@@ -6,8 +6,9 @@ protected $__MyClassName = 'UserList';
 protected $_titleEntity = 'UserProfiles';
 
 	public $userTypeId = 0;
-
-	protected function setHelperClasses(){
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	
 	 	$this->base = new user($this-pageMode,$this->id,$this->idParent);
 	}
 	 
@@ -16,7 +17,7 @@ protected $_titleEntity = 'UserProfiles';
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
-	//	$userL = new UserLinks($menuType,$menuStyle);
+		$userL = new UserLinks($menuType,$menuStyle);
 		$menuL = new MenuLinks($menuType,$menuStyle);
 		
 		$menu = $userL->openMenu('section-heading-links');

@@ -1,7 +1,9 @@
 <?php 
 class _userField extends _textField
  implements Ifield, Iecho, IcontentWriter {
- 
+ public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input( ){
 		return inputFieldUser($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
@@ -9,6 +11,9 @@ class _userField extends _textField
 }
 class _passwordField extends _textField
  implements Ifield, Iecho, IcontentWriter {
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
  	private function _inputPassword(){
 		$input = getPasswordInput($this->env->variable());
 		//$input = getPasswordInput('login-pwd', 10, 50);
@@ -39,6 +44,9 @@ class _passwordField extends _textField
 }
 class _emailField extends _textField
  implements Ifield, Iecho, IcontentWriter {
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
  	public function input( ){
 		return inputFieldName($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
@@ -47,13 +55,15 @@ class _emailField extends _textField
 class _urlField extends _textField
  implements Ifield, Iecho, IcontentWriter {
 	public function input( ){
-		return inputFieldComments($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		return inputFieldText($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 }
 
 class _nameField extends _textField
  implements Ifield, Iecho, IcontentWriter {
-
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input(){
 		return inputFieldName($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
@@ -61,19 +71,25 @@ class _nameField extends _textField
 
 class _idField extends _numberField
  implements Ifield, Iecho, IcontentWriter {
-
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 }
 
 class _descriptionField extends _textField
  implements Ifield, Iecho, IcontentWriter {
- 
+ public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input( ){
 		return inputFieldDescription($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 }
 class _notesField extends _textField
  implements Ifield, Iecho, IcontentWriter {
- 
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input(){
 		return inputFieldNotes($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
@@ -81,6 +97,9 @@ class _notesField extends _textField
 	
 class _commentsField extends _textField
  implements Ifield, Iecho, IcontentWriter {
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input(){
 		return inputFieldComments($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
@@ -88,7 +107,9 @@ class _commentsField extends _textField
 	
 class _yesNoField extends _textField
  implements Ifield, Iecho, IcontentWriter {
- 
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input( ){
 		$input = getSelectYesNo($this->env->variable(), $this->value());
 		return $this->inputChoice($input);
@@ -98,7 +119,9 @@ class _yesNoField extends _textField
 
 class _cssColorField extends _textField
  implements Ifield, Iecho, IcontentWriter {
- 
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input(){
 		$input = getColorSelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);
@@ -107,7 +130,9 @@ class _cssColorField extends _textField
  
 class _fontsizeField extends _numberField
  implements Ifield, Iecho, IcontentWriter {
-	
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input(){
 		$input = getFontSizeSelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);
@@ -116,7 +141,9 @@ class _fontsizeField extends _numberField
  
 class _fontFamilyField extends _textField
  implements Ifield, Iecho, IcontentWriter {
- 
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
 	public function input(){
 		$input = getFontFamilySelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);

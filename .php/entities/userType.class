@@ -1,19 +1,36 @@
 ﻿<?php 
-
+/* reviewed 7/26  */
 class userTypeFields extends _fieldsetEntityType{
 
 }
-
+class userTypeSQL extends _entityTypeSQL{
+//missing display order from table
+	public function __construct(){
+		$this->baseTable = 'user_types';
+	}
+}
+class userTypeLinks extends _entityTypeLinks{
+	protected $context = 'userType';
+	protected $pageList = 'sys_UserType_List.php';
+	protected $pageDetail = 'sys_UserType_Detail.php';
+}
 class userType extends _entityType {
-	protected $__MyClassName = 'UserType';
-  	protected $_titleEntity = 'User Profile Type';
-	protected $pageSave = 'sys_UserType_Save.php';
-	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'UserType';
+  		$this->_titleEntity = 'User Profile Type';
+		$this->pageSave = 'sys_UserType_Save.php';
 		$this->f = new userTypeFields();
 		$this->sql = new userTypeSQL();
 		$this->links = new userTypeLinks();
 	}
-	
 } 
+class userTypeList extends _entityTypeList{
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'UserTypeList';
+  		$this->_titleEntity = 'User Profile Types';
+		$this->base = new userType($this->mode,$this->id,$this->idParent);
+	}
+}
 ?>

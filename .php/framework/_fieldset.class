@@ -19,8 +19,10 @@ abstract class _fieldset extends _contentWriter
 implements Ifieldset, Iecho, IcontentWriter{
 	protected $_fields = array();
 	
-
-	protected function _register(string $fieldName, _field $field){
+	public function __construct(){
+	
+	}
+	protected function _register(string $fieldName, Ifield $field){
 		$this->_fields[$fieldName] = $field;
 	}
 	abstract public function setDefaults();

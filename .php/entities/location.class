@@ -55,12 +55,14 @@ class locationFields extends _fieldsetChild{
 }
 
 class location extends _entity{
-	protected $__MyClassName = 'location';
-  	protected $_titleEntity = 'Location';
-	protected $pageSave = 'pr_Location_Save.php';
+	
 	public $childLocations = 0;
-
-	protected function setHelperClasses(){
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		
+		 $this->__MyClassName = 'location';
+  	 $this->_titleEntity = 'Location';
+	 $this->pageSave = 'pr_Location_Save.php';
 		$this->sql = new locationSQL();
 		$this->links = new locationLinks();
 		$this->f = new locationFields();

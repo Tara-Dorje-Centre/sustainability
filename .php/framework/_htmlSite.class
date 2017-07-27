@@ -183,8 +183,8 @@ protected function setContents(){
 		//$content = $this->buildInternalStyles();
 
 		//use external stylesheet
-		$content = LinkStylesheet('/css/styles.css');
-		$content .= Linkstylesheet('/css/override.css');
+		$content = LinkStylesheet('./css/styles.css');
+		$content .= Linkstylesheet('./css/override.css');
 		$this->_styles = $content;
 		//return $content;
 		

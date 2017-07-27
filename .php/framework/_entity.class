@@ -3,7 +3,7 @@
 abstract class _entity extends _entityBase
 implements Iecho, IcontentWriter{
 
-	protected $__MyClassName = '__Entity';
+	protected $__MyClassName = '_entity';
 	protected $_titleEntity = 'Entity';
 	protected $pageSave = 'save.php';
 	
@@ -14,12 +14,10 @@ implements Iecho, IcontentWriter{
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		//$this->setPageSave();
-		//$this->setEntityTitle();
-		$this->setHelperClasses();
+		
 	}
 	
-	abstract protected function setHelperClasses();
+	
 	
 	abstract protected function setPageMenu();
 	abstract protected function editForm();
@@ -76,14 +74,14 @@ implements Iecho, IcontentWriter{
 	}
 	
 	protected function listRowLink(){
-		$link = $this->links->itemViewEdit($this->f->name->value,$this->f->id->value);
+		$link = $this->links->itemViewEdit($this->f->name->value(),$this->f->id->value());
 		return $link;
 	}
 	
 	protected function listRowFormat(){
 		$detail = wrapTd($this->listRowLink());
 		$detail .= $this->f->listDetail();		
-		$listRow = wrapTr($detail,$this->f->highlight->value);
+		$listRow = wrapTr($detail,$this->f->highlight->value());
 		return $listRow;
 	}
 	
@@ -113,7 +111,7 @@ implements Iecho, IcontentWriter{
 
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
-		$this->setDefaults();
+		$this->f->setDefaults();
 		if (!is_null($this->f->parent)){
 		$this->f->parent->set($idParent);
 		}
@@ -122,24 +120,28 @@ implements Iecho, IcontentWriter{
 
 	public function collectPostValues(){
 		$this->pageMode = $_POST['mode'];	
-		$this->f->getPostVars();
-		$this->synchIds();
-		$this->afterCollectPostValues();
+		$this->f->read();
+		$this->getFieldIds();
+
 		$this->echoState(true,'collectPostValues');
 	}
 				
-	protected function synchIds(){
-		$this->id = $this->f->id->value;
-		$this->idParent = $this->f->parent->id->value;
+	protected function getFieldIds(){
+		if(!is_null($this->f->id)){
+			$this->id = $this->f->id->value();
+		}
+		if (!is_null($this->f->parent)){
+			$this->idParent = $this->f->parent->id->value();
+		}
 	}
 	
 	public function printPage(){
 		$this->echoState(true, 'printPage');
 		$heading = $this->getPageHeading();
 		$details = $this->getPageDetails();
-		$site = new _siteTemplate();
-		$site->setSiteTemplateDetails($heading, $details);
-		$site->printSite();
+		$site = new _htmlSite();
+		$site->set($heading, $details);
+		$site->print();
 	}
 	
 	protected function getPageHeading(){

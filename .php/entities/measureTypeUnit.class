@@ -1,7 +1,7 @@
 ﻿<?php 
 
 
- class measureTypeUnitFields extends _fieldset{
+ class measureTypeUnitFields extends _fieldsetEntity{
  //additional properties
  
 	/*
@@ -19,12 +19,7 @@
  public $numericField;
  //expose primary fields
  public function __construct(){
- $this->hasType = true;
- $this->hasProject = true;
- $this->hasTask = true;
- $this->hasActivity = false;
- $this->hasCreated = true;
- $this->hasUpdated = true;
+
  }
  //set additional fields
  public function setRow($row){
@@ -101,10 +96,9 @@
 class measureTypeUnit extends _entity{
 	protected $__MyClassName = 'MeasureTypeUnit';
 	
-
-	public function setHelperClasses(){
-	//$mode = 'VIEW', $id = 0, $idParent = 0){
-		//parent::__construct($mode, $id, $idParent);
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	
 		$this->f = new measureTypeUnitFields;
 		$this->l = new measureTypeUnitLinks;
 		$this->sql = new measureTypeUnitSQL;

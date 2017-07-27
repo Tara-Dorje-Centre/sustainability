@@ -4,19 +4,27 @@ class measureTypeFields extends _fieldsetEntityType{
 
 
 }
+class measureTypeSQL extends _entityTypeSQL{
+//table missing display order
+	public function __construct(){
+		$this->baseTable = 'measure_types';
+	}
+}
+class MeasureTypeLinks extends _entityTypeLinks{
+	protected $context = 'measureType';
+	protected $pageList = 'pr_MeasureType_List.php';
+	protected $pageDetail = 'pr_MeasureType_Detail.php';
 
+}
 class measureType extends _entityType{
-
-	protected $__MyClassName = 'MeasureType';
-	protected $_titleEntity = 'Measure Type';
-  	protected $pageSave = 'pr_MeasureType_Save.php';
-	
-		
-	protected function setHelperClasses(){
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'MeasureType';
+     	$this->_titleEntity = 'Measure Type';
+   	 	$this->pageSave = 'pr_MeasureType_Save.php';
 		$this->f = new measureTypeFields();
 		$this->sql = new measureTypeSQL();
 		$this->links = new measureTypeLinks();
-		
 	}
 
 	protected function setPageMenu(){
@@ -46,8 +54,8 @@ class measureType extends _entityType{
 	}
 	
 	
-	public function afterDisplay(){
-	//parent::display();
+	public function display(){
+		parent::display();
 	
 	
 	
@@ -96,4 +104,13 @@ class measureType extends _entityType{
 	}
 	
 } 
+
+class measureTypeList extends _entityTypeList{
+	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'measureTypeList';
+     	$this->_titleEntity = 'Measure Types';
+		$this->base = new measureType($this->pageMode,$this->id,$this->idParent);
+	}
+}
 ?>

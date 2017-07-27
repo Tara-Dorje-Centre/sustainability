@@ -1,60 +1,46 @@
 ﻿<?php 
-
+/* reviewed 7/26  editForm next */
 class taskTypeFields extends _fieldsetEntityType{
+	public $frequency;
+	public function __construct(){
+		parent::__construct();
+		$this->frequency = new _nameField('frequency','frequency','Frequency');
+		$this->_register('frequency',$this->frequency);
+	}
+	public function setDefaults(){
+		parent::setDefaults();
+		$this->frequency->setDefault('none');
+	}
+}
 
-
-	public $frequency = 'none';
-	
-	public function setRow($row){
-		parent::setRow($row);
-		$this->frequency = ($row["frequency"]);
-		
+class taskTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'task_types';
 	}
-	
-	public function format(){
-		parent::format();
-		$this->frequency = $this->formatText($this->frequency);
-		
+	protected function cols(){
+		$c = parent::cols();
+		$c .= ", et.frequency ";
+		return $c;	
 	}
-	
-	public function listHeading(){
-		$this->addContent(parent::listHeading(),true);
-		$this->listTh('Frequency',true);
-		return $this->getContent();
-	}
-	
-	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
-		$this->listTd($this->frequency,true);
-		return $this->getContent();
-	}
-	
-	public function display(){
-		$this->addContent(parent::display(),true);
-		$this->detailPara('Frequency', $this->frequency,true);
-		return $this->getContent();
-	}
-	
-	public function getPostVars(){
-		parent::getPostVars();
-		$this->frequency = $this->postString('frequency');
-	}
-	
+}
+class taskTypeLinks extends _entityTypeLinks{
+	protected $context = 'taskType';
+	protected $pageList = 'pr_TaskType_List.php';
+	protected $pageDetail = 'pr_TaskType_Detail.php';
 }
 
 class taskType extends _entityType{
-	protected $__MyClassName = 'TaskType';
-  	protected $_titleEntity = 'Task Type';
-    protected $pageSave = 'pr_TaskType_Save.php';
-	
-	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->__MyClassName = 'taskType';
+		parent::__construct($mode, $id, $idParent);
+
+  		$this->_titleEntity = 'Task Type';
+     	$this->pageSave = 'pr_TaskType_Save.php';
 		$this->f = new taskTypeFields();
 		$this->sql = new taskTypeSQL();
 		$this->links = new taskTypeLinks();
 	}
 	
-
 	public function optionsFrequency($selectedValue = 'none', $idName = 'frequency', $disabled = 'false'){
 		$sql = "SELECT f.frequency value, f.description caption ";
 		$sql .= "FROM task_type_frequencies f ";
@@ -73,44 +59,37 @@ class taskType extends _entityType{
 	
 	
 	protected function editForm(){
-		$this->setDefaults();
+		//$this->setDefaults();
 	
 	
 		$legend = $this->pageMode;
 		$legend .= $this->$_titleEntity;
-		$entity = 'entity-type';
-
-		$entity = 'task-type';
 		
+		$entity = 'task-type';
+		$this->f->setEntity($entity);
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		$form = openEditForm($entity,$legend,'pr_TaskType_Save.php',$contextMenu);
 		
 		//formRequired fields	
-		$fields = inputFieldName($entity,$this->f->name,'name','Task Type');
-
-		$fields .= inputFieldNumber($entity,$this->f->displayOrder,'displayOrder','Display Order');
-
-		$fields .= inputFieldHighlightStyle($entity,$this->f->highlightStyle,'highlightStyle');
-
-		
+		$fields = $this->f->name->input();
+		$fields .= $this->f->displayOrder->input();
+		$fields .= $this->f->highlight->input();
 
 		$formRequired = $fields;
 			
 		//formOptional fields
-		$fields = inputFieldDescription($entity,$this->f->description,'description');
-		
-		
-		$select = $this->optionsFrequency($this->f->frequency,'frequency');
-		$fields .=inputFieldSelect($entity, $select,'Frequency');
+		$fields = $this->f->description->input();
 
-		
-		$fields .= inputFieldNotes($entity,$this->f->notes,'notes');
+		$select = $this->optionsFrequency($this->f->frequency->value(),$this->f->frequency->env->variable());
+		$fields .=$this->f->frequency->inputChoice( $select);
+
+		$fields .= $this->f->notes->input();
 		//end formOptional
 		$formOptional = $fields;
 
 				
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('id', $this->id);
+		$hidden .= $this->f->id->inputHidden();
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 		
@@ -118,26 +97,18 @@ class taskType extends _entityType{
 		return $form;
 	}
 	
-	//public function afterCollectPostValues(){
-
-		//parent::collectPostValues();
-		
-		
-		
-	//}
-	
 	protected function saveUpdate(){
 	
 			$sql = " UPDATE task_types AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->f->name."', ";
-			$sql .= " p.frequency = '".$this->f->frequency."', ";
-			$sql .= " p.display_order = ".$this->f->displayOrder.", ";
-			$sql .= " p.description = '".$this->f->description."', ";
+			$sql .= " p.name = '".$this->f->name->value()."', ";
+			$sql .= " p.frequency = '".$this->f->frequency->value()."', ";
+			$sql .= " p.display_order = ".$this->f->displayOrder->value().", ";
+			$sql .= " p.description = '".$this->f->description->value()."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.highlight_style = '".$this->f->highlightStyle."', ";
-			$sql .= " p.notes = '".$this->f->notes."' ";
-			$sql .= " WHERE p.id = ".$this->f->id."  ";			
+			$sql .= " p.highlight_style = '".$this->f->highlight->value()."', ";
+			$sql .= " p.notes = '".$this->f->notes->value()."' ";
+			$sql .= " WHERE p.id = ".$this->f->id->value()."  ";			
 			$result = dbRunSQL($sql);
 	}
 	
@@ -153,20 +124,25 @@ class taskType extends _entityType{
 			$sql .= " highlight_style, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= " '".$this->f->name."', ";
-			$sql .= " '".$this->f->frequency."', ";
-			$sql .= " ".$this->f->displayOrder.", ";
+			$sql .= " '".$this->f->name->value()."', ";
+			$sql .= " '".$this->f->frequency->value()."', ";
+			$sql .= " ".$this->f->displayOrder->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " '".$this->f->description."', ";
-			$sql .= " '".$this->f->highlightStyle."', ";
-			$sql .= " '".$this->f->notes."') ";
+			$sql .= " '".$this->f->description->value()."', ";
+			$sql .= " '".$this->f->highlight->value()."', ";
+			$sql .= " '".$this->f->notes->value()."') ";
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
 	}
-
-
-	
 } 
+class taskTypeList extends _entityTypeList{
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->__MyClassName = 'TaskTypeList';
+		parent::__construct($mode, $id, $idParent);
+		$this->_titleEntity = 'Task Types';
+		$this->base = new taskType($this->pageMode,$this->id,$this->idParent);
+	}
+}
 ?>

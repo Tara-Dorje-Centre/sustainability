@@ -23,86 +23,34 @@ class activityFields extends _fieldsetTaskChild{
 	public $reported;
 	public $doneBy;*/
 
-	public $hoursActual = 0;
- 
+	public $hoursActual;
+ 	public $comments;
 	public $linkUrl;
 	public $linkText;
 	
 	
     public function __construct(){
-    $this->hoursActual = new _numberField('hours_actual','hours-actual','Effort Actual');
-    	$this->hasType = true;
-    	$this->hasComments = true;
-    	$this->hasHighlight = true;
-    	$this->hasDoneBy = true;
-		$this->hasStarted = true;
-    	$this->hasUpdated = true;
-    	$this->hasProject = true;
-    	$this->hasTask = true;
-    	$this->listProject = true;
-    	$this->listTask = true;
-    	$this->listType = true;
-    	$this->listDoneBy = true;
+    	$this->hoursActual = new _numberField('hours_actual','hours-actual','Effort Actual');
+    	$this->comments = new _commentsField('hours_actual','hours-actual','Effort Actual');
+    	
+    	$this->_register('hoursActual',$this->hoursActual);
+    	$this->_register('comments',$this->comments);
+    	
     }
 	
-	public function fetch($row){
-		parent::fetch(row);
-		$this->hoursActual->fetch($row);				
+	public function setDefaults(){
+		parent::setDefaults();
+		$this->hoursActual->setDefault(0);
 	}
 	
-	public function format(){
-		parent::format();
-	}
-	
-	public function defaults(){
-		parent::defaults();
-		$this->hoursActual = 0;
-	}
-	
-	public function displayDetail(){
-	
-		$this->addContent(parent::displayDetail(),true);
-		
-		$this->addContent($this->hoursActual->displayDetail());
-		return $this->getContent();
-	}
-	
-	public function listCaption(){
-		$this->addContent(parent::listCaption(),true);
-		$this->addContent($this->hoursActual->listCaption());
-		
-		return $this->getContent();
-	}
-	
-	public function listDetail(){
-		$this->addContent(parent::listDetail(),true);
-		
-		$this->addContent($this->hoursActual->listDetail());
-		return $this->getContent();
-	}
-	
-	public function read(){
-		parent::read();
-		$this->hoursActual->read();
-	}
-	public function write(){
-		parent::write();
-		$this->hoursActual->write();
-	}
-
 }
 
 class activity extends _entity{       
-	protected $__MyClassName = 'Activity';
-	protected $_titleEntity = 'Activity';
-
-	//public $task;	
-	
-	public $f;
-	public $sql;
-	public $links;
-	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'Activity';
+     	$this->_titleEntity = 'Activity';
+   	 	$this->pageSave = 'pr_Activity_Save.php';
 		$this->f = new activityFields();
 		$this->sql = new ActivitySQL();
 		$this->links = new ActivityLinks();
@@ -112,7 +60,7 @@ class activity extends _entity{
 	
 	
 	protected function listingRowLink(){
-		$link = $this->links->itemViewEdit($this->name->value,$this->id->value);
+		$link = $this->links->itemViewEdit($this->name->value(),$this->id->value());
 		return $link;
 	}
 	
@@ -177,7 +125,7 @@ class activity extends _entity{
 	
 	
 	public function setParentTask(){
-		$this->task->setDetails();
+		//$this->task->setDetails();
 	}
 		
 	protected function setPageTitle(){	
@@ -242,11 +190,7 @@ class activity extends _entity{
 		return $detail;
 	}	
 	
-	public function afterDisplay(){
-	
-	
-	}
-	
+
 	public function setDefaults(){
 		global $sessionTime;
 		$this->started = $sessionTime;	

@@ -133,8 +133,9 @@ protected $__MyClassName = 'Measure';
 	//public $sql;
 	
     
-	
-	public function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	//public function setHelperClasses(){
 		$this->f = new MeasureFields();
 		$this->links = new MeasureLinks();
 		$this->sql = new MeasureSQL();

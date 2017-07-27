@@ -4,10 +4,10 @@ class locationList extends _entityList{
 	protected $__MyClassName = 'LocationList';
 	protected $_titleEntity = 'Locations';
 	 
-
-	
-	protected function setHelperClasses($mode = 'VIEW', $id = 0, $idParent = -1){
-		//parent::__construct($mode, $id, $idParent);
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		
+		
 		$this->base = new location(0, $idParent);	
 		
 	}

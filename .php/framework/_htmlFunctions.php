@@ -2,7 +2,7 @@
 
 
 function sessionVariableGET($urlVariable,$defaultValue){
-	if (isset($_POST[$urlVariable])){
+	if (isset($_GET[$urlVariable])){
 		$returnValue = $_GET[$urlVariable];
 	} else {
 		$returnValue = $defaultValue;

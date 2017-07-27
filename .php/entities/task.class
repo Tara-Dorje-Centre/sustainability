@@ -22,7 +22,6 @@ class taskFields extends _fieldsetProjectChild{
 	
 	public $taskOrder;
     public $summary;
-    //public $started;
     public $pctDone ;	
     public $hoursEstimated ;
     public $hoursActual;
@@ -33,10 +32,10 @@ class taskFields extends _fieldsetProjectChild{
 	public $receiptsAuthBy;
 	
 public function __construct(){
-
-	$this->summary = new _textField('summary','summary','summary',);
-	$this->pctDone = new _numberField('pct_done','pct-done','pct_done');	
+	parent::__construct();
 	$this->taskOrder = new _numberField('task_order','task-order','task_order');						
+	$this->summary = new _textField('summary','summary','summary');
+	$this->pctDone = new _numberField('pct_done','pct-done','pct_done');	
 	$this->hoursEstimated = new _numberField('hours_estimated','hours-estimated','hours_estimated');
 	$this->hoursActual = new _numberField('hours_actual','hours-actual','hours_actual');
 	$this->hoursNotes = new _notesField('hours_notes','hours-notes','hours_notes');			
@@ -44,10 +43,9 @@ public function __construct(){
 	$this->materialsAuthBy = new _textField('materials_auth_by','materials-auth-by','materials_auth_by');
 	$this->receiptsAuthProject = new _yesNoField('receipts_auth_project','receipts-auth-project','receipts_auth_project');
 	$this->receiptsAuthBy = new _textField('receipts_auth_by','receipts-auth-by','receipts_auth_by');
-	
+		$this->_register('taskOrder', $this->taskOrder);
  		$this->_register('summary', $this->summary);
 		$this->_register('pctDone', $this->pctDone);
-		$this->_register('taskOrder', $this->taskOrder);
 		$this->_register('hoursEstimated', $this->hoursEstimated);
 		$this->_register('hoursActual', $this->hoursActual);
 		$this->_register('hoursNotes', $this->hoursNotes);
@@ -88,8 +86,9 @@ class task extends _entity{
 	public $resultsPageMaterial = 1;
 	public $resultsPageReceipt = 1;
 	
-	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	//protected function setHelperClasses(){
 		$this->f = new taskFields();
 		$this->sql = new TaskSQL();
 		$this->links = new TaskLinks();
@@ -98,7 +97,7 @@ class task extends _entity{
 	
 	public function listHeading($periodicTasks = 'NO'){
 		$heading = wrapTh($this->_titleEntity);
-		$heading .= $this->f->listHeading();
+		$heading .= $this->f->listCaption();
 		
 		$heading .= wrapTh('Hotlinks');
 		if ($periodicTasks != 'NO'){
@@ -117,17 +116,17 @@ class task extends _entity{
 		$receiptsL = new ReceiptLinks('DIV','button');
 		
 		$menu = $activitiesL->openMenu('hotlinks-list');
-		$menu .= $activitiesL->add('Activity',$this->f->id);
-		$menu .= $measuresL->add('Measures',$this->f->id);
-		$menu .= $materialsL->add('Materials',$this->f->id);
-		$menu .= $receiptsL->add('Receipts',$this->f->id);
+		$menu .= $activitiesL->add('Activity',$this->f->id->value());
+		$menu .= $measuresL->add('Measures',$this->f->id->value());
+		$menu .= $materialsL->add('Materials',$this->f->id->value());
+		$menu .= $receiptsL->add('Receipts',$this->f->id->value());
 		$menu .= $activitiesL->closemenu();
 		return $menu;
 	}
 	
 	protected function listRowProjectLink(){
 		$l = new ProjectLinks();
-		$link = $l->view($this->f->project->name->value,$this->f->project->id->value);
+		$link = $l->view($this->f->project->name->value(),$this->f->project->id->value());
 		return $link;
 	}
 	
@@ -145,7 +144,7 @@ class task extends _entity{
 			$cssItem = $this->f->highlightStyle->value();
 		} else {
 			//highlight based on reported activity
-			if ($this->f->hoursActual->value == 0){
+			if ($this->f->hoursActual->value() == 0){
 				$cssItem = 'highlight-yellow';
 			} else {
 				$cssItem = 'none';
@@ -168,12 +167,12 @@ class task extends _entity{
 		parent::setDetails();
 		
 		
-		$this->totals->setTaskTotals($this->f->id);
+		$this->totals->setTaskTotals($this->f->id->value());
 		 //if activity records with hours exist
 		 //update estimated effort to reflect current average of actual hours
 		 if ($this->totals->tasks->count > 0 && $this->totals->tasks->actual > 0){
-		 $this->f->hoursEstimated = round($this->totals->tasks->actual / $this->totals->tasks->count,2);
-		 $this->f->hoursActual = $this->totals->tasks->actual;
+		 $this->f->hoursEstimated->set(round($this->totals->tasks->actual / $this->totals->tasks->count,2));
+		 $this->f->hoursActual->set($this->totals->tasks->actual);
 		 }
 
 		$this->setMeasureCount();
@@ -231,20 +230,20 @@ class task extends _entity{
 		$menu .= $p->resetMenu();
 
 		if ($this->project->materialsCount > 0){
-			$menu .= $material->listingHref($this->f->id->value,'ProjectMaterials',$this->f->project->id->value,'PROJECT','yes');
+			$menu .= $material->listingHref($this->id,'ProjectMaterials',$this->f->project->id->value(),'PROJECT','yes');
 			$menu .= $p->resetMenu();
 		}
 		if ($this->project->receiptsCount > 0){
-			$menu .= $r->listingHref($this->f->id,'ProjectReceipts',$this->f->projectId,'PROJECT','yes');
+			$menu .= $r->listingHref($this->id,'ProjectReceipts',$this->f->project->id->value(),'PROJECT','yes');
 			$menu .= $r->resetMenu();
 		}
 		
 		if ($this->pageMode == 'VIEW'){
-			$menu .= $t->detailEditHref($this->f->id);
-			$menu .= $t->detailCopyHref($this->f->id);
+			$menu .= $t->detailEditHref($this->id);
+			$menu .= $t->detailCopyHref($this->id);
 		} elseif ($this->pageMode == 'EDIT') {
 			//$menu .= $tasks->formatOptionsLink();
-			$menu .= $t->detailViewHref($this->f->id);
+			$menu .= $t->detailViewHref($this->id);
 		}		
 		$menu .= $p->resetMenu();
 
@@ -324,9 +323,9 @@ class task extends _entity{
 	 }
 	 
 	 
-	 public function afterDisplay(){
-				
-		$detail = $this->totals->display();
+	 public function display(){
+		$detail = parent::display();
+		$detail .= $this->totals->display();
 		$detail .= $this->displayChildDetails();
 
 		return $detail;
@@ -367,67 +366,56 @@ class task extends _entity{
 			$legend = 'Edit Task';
 		}
 		$entity = 'task';
-		//$c = new TaskLinks;
+		$this->f->setEntity($entity);
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		$form = openEditForm($entity,$legend,'pr_Task_Save.php',$contextMenu);
 
-		$fields = inputFieldNumber($entity,$this->f->taskOrder,'taskOrder','Order');
-
-		$fields .= inputFieldName($entity,$this->f->name,'name','Task Name');
+		$fields = $this->f->taskOrder->input();
+		$fields .= $this->f->name->input();
 		
 		$l = new taskType();
-		$select = $l->options($this->f->idType,'typeId');
-		$fields .= captionedInput('Task Type', $select);
-
+		$select = $l->options($this->f->type->id->value(),$this->f->type->id->env->variable(),'false',false);
+		$fields .= $this->f->type->id->inputChoice($select);
 
 		$formRequired = $fields;
 		
 		$l = new project();
-		$input = $l->options($this->f->idproject,'projectId','false',false);
-		$fields = captionedInput('Task Project', $input);
-		
+		$input = $l->options($this->f->project->id->value(),$this->f->project->id->env->variable(),'false',false);
+		$fields .= $this->f->project->id->inputChoice($input);
 		
 		$l = new location('OPTIONS');
-		$select = $l->options($this->f->idLocation,'locationId','false',false);
-		$fields .= captionedInput('Location', $select);
-
-		$fields .= inputFieldDescription($entity,$this->f->description,'description');
-
-
-		$fields .= inputFieldComments($entity,$this->f->summary,'summary','Summary');
-		
-		$fields .= inputFieldTimestamp($entity, 'started', $this->f->started, 'Start Date'); 		
-				
-		$fields .= inputFieldNumber($entity,$this->f->hoursEstimated,'hoursEstimated','Estimated');
+		$select = $l->options($this->f->location->id->value(),$this->f->location->id->env->variable(),'false',false);
+		$fields .= $this->f->location->id->inputChoice($select);
+		$fields .= $this->f->description->input();
+		$fields .= $this->f->summary->input();
+		$fields .= $this->f->started->input(); 		
+		$fields .= $this->f->hoursEstimated->input();
 		
 		$tooltip = 'Add activity details to record hours';
-		$fields .= inputFieldNumber($entity,$this->f->hoursActual,'hoursActual','Actual');
+		$fields .= $this->f->hoursActual->input();
+		$fields .= $this->f->pctDone->input();
+		$fields .= $this->f->hoursNotes->input();
 		
-		$fields .= inputFieldNumber($entity,$this->f->pctDone,'pctDone','% Done');
-		
-		$fields .= inputFieldComments($entity,$this->f->hoursNotes,'hoursNotes','Effort Notes',4000);
-
-
 		if ($this->totals->materials->count > 0) {
 			if ($_SESSION['is-admin'] == 'yes'){
 				//current user is admin, allow editing approvals
-				$input = 'Costs Approved:'.getSelectYesNo('materialsAuthProject', $this->f->materialsAuthProject);
+				$input = $this->f->materialsAuthProject->input();
 				if ($this->f->materialsAuthProject == 'no'){
-					$this->f->materialsAuthBy = $_SESSION['login-name'];
+					$this->f->materialsAuthBy->set($_SESSION['login-name']);
 				}
-				$input .= spacer().'By:'.getTextInput('materialsAuthBy', $this->f->materialsAuthBy, 30, 50);
+				$input .= $this->f->materialsAuthBy->input();
 			} else {
 				//materials present but user cannot edit approvals
-				$input = 'Costs Approved:'.$this->f->materialsAuthProject;
-				$input .= getHiddenInput('materialsAuthProject', $this->f->materialsAuthProject);
-				$input .= spacer().'By:'.$this->f->materialsAuthBy;
-				$input .= getHiddenInput('materialsAuthBy', $this->f->materialsAuthBy);	
+				$input = 'Materials Approved:'.$this->f->materialsAuthProject->value();
+
+				$input .= $this->f->materialsAuthProject->inputHidden();
+				$input .= $this->f->materialsAuthBy->inputHidden();	
 			}
 		} else {
 			//no materials under task, dont show authorization fields
-			$input = getHiddenInput('materialsAuthProject', $this->f->materialsAuthProject);
-			$input .= getHiddenInput('materialsAuthBy', $this->f->materialsAuthBy);	
-			$input .= 'No Task Costs';
+			$input = $this->f->materialsAuthProject->inputHidden();
+			$input .= $this->f->materialsAuthBy->inputHidden();	
+			$input .= 'No Task Materials';
 		}
 		$fields .= captionedInput('Costs', $input);
 
@@ -435,30 +423,30 @@ class task extends _entity{
 		if ($this->receiptCount > 0) {
 			if ($_SESSION['is-admin'] == 'yes'){
 				//current user is admin, allow editing approvals
-				$input = 'Receipts Approved:'.getSelectYesNo('receiptsAuthProject', $this->f->receiptsAuthProject);
+				$input = $this->f->receiptsAuthProject->input();
 				if ($this->f->receiptsAuthProject == 'no'){
-					$this->f->receiptsAuthBy = $_SESSION['login-name'];
+					$this->f->receiptsAuthBy->set($_SESSION['login-name']);
 				}
-				$input .= spacer().'By:'.getTextInput('receiptsAuthBy', $this->f->receiptsAuthBy, 30, 50);
+				$input .= $this->f->receiptsAuthBy->input();
+				
 			} else {
 				//materials present but user cannot edit approvals
-				$input = 'Receipts Approved:'.$this->f->receiptsAuthProject;
-				$input .= getHiddenInput('receiptsAuthProject', $this->f->receiptsAuthProject);
-				$input .= spacer().'By:'.$this->f->receiptsAuthBy;
-				$input .= getHiddenInput('receiptsAuthBy', $this->f->receiptsAuthBy);	
+				$input = 'Receipts Approved:'.$this->f->materialsAuthProject->value();
+				$input = $this->f->receiptsAuthProject->inputHidden();
+				$input .= $this->f->receiptsAuthBy->inputHidden();
 			}
 		} else {
 			//no materials under task, dont show authorization fields
-			$input = getHiddenInput('receiptsAuthProject', $this->f->receiptsAuthProject);
-			$input .= getHiddenInput('receiptsAuthBy', $this->f->receiptsAuthBy);	
-			$input .= 'No Task Income';
+			$input = $this->f->receiptsAuthProject->inputHidden();
+			$input .= $this->f->receiptsAuthBy->inputHidden();	
+			$input .= 'No Task Receipts';
 		}
-		$fields .= captionedInput('Income',$input);		
+		$fields .= captionedInput('Receipts',$input);		
 		
 		$formOptional = $fields;
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('id', $this->f->id);
+		$hidden .= $this->f->id->inputHidden();
 
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;

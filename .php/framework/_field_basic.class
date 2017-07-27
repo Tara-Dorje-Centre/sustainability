@@ -21,7 +21,6 @@ class _numberField extends _field
 
 class _dateField extends _field
  implements Ifield, Iecho, IcontentWriter {
-
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
 		$this->_datatype = 'DATE';

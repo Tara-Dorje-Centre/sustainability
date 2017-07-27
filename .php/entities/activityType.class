@@ -2,19 +2,36 @@
 class activityTypeFields extends _fieldsetEntityType{
 
 }
+class activityTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'activity_types';
+	}
+}
+class activityTypeLinks extends _entityTypeLinks{
+	protected $context = 'activityType';
+	protected $pageList = 'pr_ActivityType_List.php';
+	protected $pageDetail = 'pr_ActivityType_Detail.php';
 
+}
 class activityType extends _entityType{
 	protected $__MyClassName = 'activityType';
   	protected $_titleEntity = 'Activity Type';
 	protected $pageSave = 'pr_ActivityType_Save.php';
-
-	
-	protected function setHelperClasses(){
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 		$this->f = new activityTypeFields();
 		$this->sql = New activityTypeSQL();
 		$this->links = new activityTypeLinks();
 	}
-	
+}
+class activityTypeList extends _entityTypeList{    
+
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'ActivityTypeList';
+		$this->_titleEntity = 'Activity Types';
+		$this->base = new activityType($this->pageMode,$this->id,$this->idParent);
+	}
 	
 }
 ?>

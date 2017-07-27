@@ -104,8 +104,9 @@ protected $__MyClassName = 'Receipt';
 
 	protected $_titleEntity = 'Receipt';
 	protected $pageSave = 'pr_Receipt_Save.php';
-
-	protected function setHelperClasses(){
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	//protected function setHelperClasses(){
 		$this->f = new receiptFields();
 		$this->sql = new receiptSQL;
 		$this->links = new receiptLinks();

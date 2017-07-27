@@ -1,6 +1,6 @@
 <?php 
 
-class __calendar{
+class _calendar{
 	private $title;
 	private $year;
 	private $month;

@@ -1,7 +1,7 @@
 ﻿<?php
 abstract class _entityTypeLinks extends _baseEntityLinks {
 
-	public function listingHref($caption = 'List'){
+	public function listingHref($caption = 's'){
 	return $this->list($this->context.$caption);
 	}	
 	public function listingPaged($found, $resultPage, $perPage){

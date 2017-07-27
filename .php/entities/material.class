@@ -145,7 +145,8 @@ protected $__MyClassName = 'Material';
 	protected $_titleEntity = 'Material';
   	protected $pageSave = 'pr_Material_Save.php';
   	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 	
 		
 		//$this->task = new Task($this->pageMode, $this->idParent);

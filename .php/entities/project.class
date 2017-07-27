@@ -46,12 +46,12 @@ class projectFields extends _fieldsetChild{
     }
 	public function setDefaults(){
 		parent::setDefaults();
-	/*	global $sessionTime;
-		 $this->started = $sessionTime;	
-
-
-		 $this->priority = 1;
-		 $this->pctDone = '0';*/
+		global $sessionTime;
+		$this->started->setDefault($sessionTime);	
+		$this->location->setDefault(0);
+		$this->showAlways->setDefault('yes');
+		$this->priority->seDefault(1);
+		$this->pctDone->seDefault(0);
 	}
 
 }
@@ -61,15 +61,16 @@ class project extends _entity{
 	protected $__MyClassName = 'Project';
 	protected $_titleEntity = 'Project';
 	public $totals;
+	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 	
-	public function setHelperClasses(){
 		$this->f = new projectFields();
 		$this->sql = new projectSQL();
 		$this->links = new projectLinks();
 		$this->totals = new summaryTotals();
 	}
 	
-	protected function setDetails(){
+	public function setDetails(){
 		if ($this->pageMode == 'COPY'){
 		$this->copyProject();
 		$_SESSION['currentProjectId'] = $this->id;
@@ -285,8 +286,8 @@ class project extends _entity{
 		
 		
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= $this->f->parent->->id->inputHidden());
-		$hidden .= $this->id->inputHidden();
+		$hidden .= $this->f->parent->id->inputHidden();
+		$hidden .= $this->f->id->inputHidden();
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 

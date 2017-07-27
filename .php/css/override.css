@@ -1,9 +1,10 @@
 
-/* Add Google Font Support for Amatic */
+/* Add Google Font Support for Amatic 
 @import url(http://fonts.googleapis.com/css?family=Amatic+SC);
+*/
 #site-heading-title {
 	color: #white;
-	font-family: 'Amatic SC', Myriad Pro, Helvetica;
+	font-family: 'Arial', Myriad Pro, Helvetica;
 	font-size: 50px;
 	font-style: normal;
 	width: 100%;
@@ -12,7 +13,7 @@
 	background-color: #86a600;
 }
 #site-organization {
-font-family: 'Amatic SC', Myriad Pro, Helvetica;	
+font-family: Arial, Myriad Pro, Helvetica;	
 }
 #site-heading-links {
 	background-color:darkOliveGreen;
@@ -29,7 +30,7 @@ body {
 }
 /* Site Headings */
 legend.display-caption {
-	font-family: 'Amatic SC', Myriad Pro, Helvetica;
+	font-family: Arial, Myriad Pro, Helvetica;
 	font-weight: normal;
 	font-variant: normal;
 	width: 100%;

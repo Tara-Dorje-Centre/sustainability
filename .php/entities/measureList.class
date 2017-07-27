@@ -5,9 +5,10 @@ class measureList extends _entityList{
 
 
 
-	//public $sql;
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
 	
-	public function setHelperClasses(){
+	//public function setHelperClasses(){
 	//($mode = 'VIEW', $id = 0, $idParent = 0){
 		//$this-> = new measure($this->pageMode, $this->f->id, $this->f-idParent);
 		$this->base = new measure($this->pageMode, $this->idParent);

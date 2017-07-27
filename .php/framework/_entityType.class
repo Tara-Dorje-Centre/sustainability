@@ -6,7 +6,9 @@ abstract class _entityType extends _entity{
 	protected $_titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';
 	
-
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	}
 	
 	public function setDetails(){
 		parent::setDetails();
@@ -26,7 +28,8 @@ abstract class _entityType extends _entity{
 		$menu .= $menuL->linkReference();
 		$menu .= $this->links->resetMenu();
 		
-		$menu .= $this->links->toggleEdit($this->pageMode,$this->f->id->value(),$this->f->parent->id->value());
+		$menu .= $this->links->toggleEdit($this->pageMode,$this->id,$this->idParent);
+		//f->parent->id->value());
 		
 		$menu .= $this->links->list();
 		$menu .= $this->links->closeMenu();
@@ -44,7 +47,7 @@ abstract class _entityType extends _entity{
 		$s = $this->sql->count();
 		$next = dbGetCount($this->sql->count(), 'count_details');
 		$next += 1;
-		$this->f->displayOrder->set($next);
+		$this->f->displayOrder->setDefault($next);
 		}
 		
 	}
@@ -52,7 +55,7 @@ abstract class _entityType extends _entity{
 		$entity = 'entity-type';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		
-		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
 		$edit->open($contextMenu,$this->_titleEntity);
 		$edit->required->addContent($this->f->name->input());
 		$edit->required->addContent($this->f->displayOrder->input());
@@ -62,7 +65,7 @@ abstract class _entityType extends _entity{
 		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		$edit->hidden->addContent($this->f->id->inputHidden());
 		$edit->submit->addContent(getSaveChangesResetButtons());
-		return $edit->close;
+		return $edit->close();
 	}
 	
 	protected function saveUpdate(){

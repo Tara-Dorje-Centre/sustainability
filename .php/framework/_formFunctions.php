@@ -294,7 +294,7 @@ function inputFieldName(
 	$disabled = 'false',
 	$css = 'editing-input-name'){
 
-	$element = inputFieldText($entity,$value,$id,$caption,100,100,$tooltip,$disabled,$css);
+	$element = inputFieldText($entity,$value,$id,$caption,30,100,$tooltip,$disabled,$css);
 	return $element;
 }
 function inputFieldDescription(
@@ -306,7 +306,7 @@ function inputFieldDescription(
 	$disabled = 'false',
 	$css = 'editing-input-description'){
 
-	$element = inputFieldTextArea($entity,$value,$id,$caption,4000,$tooltip,$disabled,$css);
+	$element = inputFieldTextArea($entity,$value,$id,$caption,1000,$tooltip,$disabled,$css);
 	return $element;
 }
 
@@ -344,7 +344,7 @@ function inputFieldComments(
 	$value, 
 	$id = 'comments', 
 	$caption = 'Comments',
-	$maxLength = 4000,
+	$maxLength = 1000,
 	$tooltip = NULL, 
 	$disabled = 'false',
 	$css = 'editing-input-comments'){
@@ -359,7 +359,7 @@ function inputFieldNotes(
 	$value, 
 	$id = 'notes', 
 	$caption = 'Notes',
-	$maxLength = 4000,
+	$maxLength = 1000,
 	$tooltip = NULL, 
 	$disabled = 'false',
 	$css = 'editing-input-notes'){
@@ -400,7 +400,7 @@ function inputFieldHighlightstyle($entity,$value,$id = 'highlightStyle',$caption
 
 
 function captionedInput($caption, $input){
-	$s = openDiv('');
+	$s = openDiv('captioned-input');
 	if ($caption != ''){
 		$s .= wrapDiv($caption,'caption');
 	}

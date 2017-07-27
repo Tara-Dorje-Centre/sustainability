@@ -7,8 +7,9 @@ protected $_titleEntity = 'Projects';
 	public $showMyProjects = 'NO';
 	public $status = 'OPEN';
 
-	
-	public function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	//public function setHelperClasses(){
 		$this->base = new project($this->pageMode, $this->id, $this->idParent);
 		
 	}

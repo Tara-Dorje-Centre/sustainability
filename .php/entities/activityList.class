@@ -1,13 +1,12 @@
 <?php 
 
 class activityList extends _entityList{
-	protected $__MyClassName = 'ActivityList';
-	protected $_titleEntity = 'Activities';
 	public $myActivity = 'NO';
-	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'ActivityList';
+     	$this->_titleEntity = 'Activities';
 		$this->base = new activity($this->pageMode, $this->id, $this->idParent);
-	
 	}
 	
 	public function setMyActivity($myActvity = 'NO'){

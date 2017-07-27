@@ -2,17 +2,37 @@
 class locationTypeFields extends _fieldsetEntityType{
 
 }
+class locationTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'location_types';
+	}
+}
+class locationTypeLinks extends _entityTypeLinks{
+	protected $context = 'locationType';
+	protected $pageList = 'pr_LocationType_List.php';
+	protected $pageDetail = 'pr_LocationType_Detail.php';
+
+}
 class locationType extends _entityType{
-	protected $__MyClassName = 'locationType';
-  	protected $_titleEntity = 'Location Type';
-	protected $pageSave = 'pr_LocationType_Save.php';
-	
-	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'locationType';
+  	 	$this->titleEntity = 'Location Type';
+	 	$this->pageSave = 'pr_LocationType_Save.php';
 		$this->f = new locationTypeFields();
 		$this->sql = new locationTypeSQL();
 		$this->links = new locationTypeLinks();
 	}
 	
 } 
+class locationTypeList extends _entityTypeList{
+
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+		$this->__MyClassName = 'Location';
+	 	$this->_titleEntity = 'Location Types';
+		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
+	}
+	
+}
 ?>

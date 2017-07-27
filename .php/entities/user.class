@@ -380,8 +380,9 @@ protected $__MyClassName = 'User';
 	private $loginPwdConfirm;
 	public $validationMessages;
 
-	
-	protected function setHelperClasses(){
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	//protected function setHelperClasses(){
 		$this->f = new UserFields();
 		$this->sql = new UserSQL();
 		$this->links = new UserLinks();
@@ -399,7 +400,7 @@ protected $__MyClassName = 'User';
 	}
 	
 
-	public function setTypeId($id){
+	public function setUserType($id){
 		$this->f->type->id->set($id);
 	}
 	

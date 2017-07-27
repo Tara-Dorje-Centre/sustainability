@@ -53,11 +53,11 @@ include_once("_htmlSite.class");
 showProgress('general classes loaded');
 //
 //classes - secure login
-/*
+
 include_once("_menuLinks.class");
 include_once("_menu.class");
 
-showProgress('menu classes loaded');*/
+showProgress('menu classes loaded');
 //
 
 showProgress('exit manifestFramework.inc');
