@@ -33,7 +33,6 @@ class taskType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->__MyClassName = 'taskType';
 		parent::__construct($mode, $id, $idParent);
-
   		$this->_titleEntity = 'Task Type';
      	$this->pageSave = 'pr_TaskType_Save.php';
 		$this->f = new taskTypeFields();
@@ -59,42 +58,25 @@ class taskType extends _entityType{
 	
 	
 	protected function editForm(){
-		//$this->setDefaults();
-	
-	
-		$legend = $this->pageMode;
-		$legend .= $this->$_titleEntity;
-		
 		$entity = 'task-type';
-		$this->f->setEntity($entity);
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
-		$form = openEditForm($entity,$legend,'pr_TaskType_Save.php',$contextMenu);
+
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->required->addContent($this->f->name->input());
 		
-		//formRequired fields	
-		$fields = $this->f->name->input();
-		$fields .= $this->f->displayOrder->input();
-		$fields .= $this->f->highlight->input();
-
-		$formRequired = $fields;
-			
-		//formOptional fields
-		$fields = $this->f->description->input();
-
 		$select = $this->optionsFrequency($this->f->frequency->value(),$this->f->frequency->env->variable());
-		$fields .=$this->f->frequency->inputChoice( $select);
-
-		$fields .= $this->f->notes->input();
-		//end formOptional
-		$formOptional = $fields;
-
-				
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= $this->f->id->inputHidden();
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
+		$edit->required->addContent($this->f->frequency->inputChoice( $select));
 		
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
-		return $form;
+		$edit->required->addContent($this->f->displayOrder->input());
+		$edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));
+		$edit->optional->addContent($this->f->description->input());
+		$edit->optional->addContent($this->f->notes->input());
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->addContent($this->f->id->inputHidden());
+		$edit->submit->addContent(getSaveChangesResetButtons());
+		return $edit->close();
+	
 	}
 	
 	protected function saveUpdate(){

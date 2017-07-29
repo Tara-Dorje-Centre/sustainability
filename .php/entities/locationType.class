@@ -11,13 +11,12 @@ class locationTypeLinks extends _entityTypeLinks{
 	protected $context = 'locationType';
 	protected $pageList = 'pr_LocationType_List.php';
 	protected $pageDetail = 'pr_LocationType_Detail.php';
-
 }
 class locationType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 		$this->__MyClassName = 'locationType';
-  	 	$this->titleEntity = 'Location Type';
+		parent::__construct($mode, $id, $idParent);
+  	 	$this->_titleEntity = 'Location Type';
 	 	$this->pageSave = 'pr_LocationType_Save.php';
 		$this->f = new locationTypeFields();
 		$this->sql = new locationTypeSQL();

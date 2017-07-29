@@ -37,7 +37,7 @@ class _inputForm extends _contentWriter{
 	}
 	public function close(){
 	
-		$this->submit->addContent($this->hidden->getContent());
+		$this->required->addContent($this->hidden->getContent());
 		
 		$optional = $this->optional->getContent();
 		$required = $this->required->getContent();
