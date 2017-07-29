@@ -26,6 +26,12 @@ abstract class _contentWriter extends _echo implements Iecho, IcontentWriter{
 	public function encloseString(string $value = '', $delimiter = "'"){
 		return $delimiter.$value.$delimiter;
 	}
+	public function qString(string $value = ''){
+		return encloseString($value."'");
+	}
+	public function qqString(string $value = ''){
+		return encloseString($value.'"');
+	}
 }
  
 ?>

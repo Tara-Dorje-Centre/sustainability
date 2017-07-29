@@ -100,24 +100,8 @@ function wrapDivSubmit($entity,$formSubmit){
 	return $div;
 }
 
-class _form extends _element{
-	public function __construct($action = 'none', $idName = 'none', $css = 'none'){
-		parent::__construct('form', $idName, $css);
-		$this->addAttribute('enctype', 'multipart/form-data');
-		$this->addAttribute('action', $action);
-		$this->addAttribute('method', 'post');
-	}
-}
 
-function openForm($idName, $action, $css = 'none'){
-	$e = new _form($action, $idName, $css);
-	return $e->open();
-}
 
-function closeForm(){
-	$e = new _form();
-	return $e->close();
-}
 
 function openFieldset($legend = 'none',$cssFieldset = 'none',$cssLegend = 'display-caption'){
 	$e = new _element('fieldset','none',$cssFieldset);

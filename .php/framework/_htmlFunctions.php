@@ -9,6 +9,9 @@ function sessionVariableGET($urlVariable,$defaultValue){
 	}
 	return $returnValue;
 }
+
+
+
 function sessionVariablePOST($urlVariable,$defaultValue){
 	if (isset($_POST[$urlVariable])){
 		$returnValue = $_POST[$urlVariable];
@@ -17,6 +20,8 @@ function sessionVariablePOST($urlVariable,$defaultValue){
 	}
 	return $returnValue;
 }
+
+
 
 function sessionVariableSESSION($urlVariable,$defaultValue){
 	if (isset($_SESSION[$urlVariable])){
@@ -32,6 +37,9 @@ class _element
 {
 protected const _NONE = 'none';
 protected const _EMPTY = '';
+/*using _empty returns empty attributes 
+foirmatted as name="" in html*/
+protected const _EMPTYATTRIBUTE = '""';
 protected const LT = '<';
 protected const GT = '>';
 protected const SL = '/';
@@ -41,7 +49,7 @@ protected const DQ = '"';
 protected const SP = ' ';
 protected const _htmlCommentOpen = '<!--';
 protected const _htmlCommentClose = '-->';
-
+protected $_content = '';
 protected $_markup = '';
 protected $_attribs = '';
 protected $_tag = '';
@@ -62,7 +70,18 @@ public function __construct($tag, $idName = 'none', $css = 'none') {
 public function __destruct() {
      $this->reset();
 }
-
+public function setContent($content = null){
+	if (!is_null($content)){
+		$this->_content .= $content;
+	} else {
+		$this->_content = self::_EMPTY;
+	}
+}
+public function addContent($content = null){
+	if (!is_null($content)){
+		$this->_content .= $content;
+	}
+}
 public function reset(){
 	$this->_tag = self::_NONE;
 	$this->_attribs = self::_EMPTY;
@@ -74,13 +93,14 @@ public function reset(){
 	$this->$_cData = false;
 }
 
-public function formatAttribute($name = 'none', $value = null){
+public function formatAttribute(string $name = 'none',  $value = null){
 	if ($name != 'none'){
 		if ( !is_null($value)){
-			$a = self::SP.$name.self::EQ.self::DQ.$value.self::DQ;
+			$a = self::SP.$name.self::EQ;
+			$a .= self::DQ.$value.self::DQ;
 		} else {
 			//no attribute value
-			$a = self::_EMPTY;
+			$a .= self::DQ.self::DQ;
 		}
 	} else {
 		//no attribute name
@@ -90,34 +110,34 @@ public function formatAttribute($name = 'none', $value = null){
 	return $a;
 }
 
-public function addAttribute($name = 'none', $value = 'none'){
+public function addAttribute(string $name = 'none', $value = 'none'){
 	$a = $this->formatAttribute($name, $value);
 	$this->_attribs .= $a;
 }
 
-protected function setTag($tag){
+protected function setTag(string $tag){
 	$this->_tag = $tag;
 }
 
-public function setIdName($idName){
+public function setIdName(string $idName){
 	$this->_id = $idName;
 	$this->_name = $idName;
 	$this->addAttribute('id', $this->_id);
 	$this->addAttribute('name', $this->_name);
 }
 
-public function setCSS($css){
+public function setCSS(string $css){
 		$this->_css = $css;
 		$this->addAttribute('class', $this->_css);
 }
 
-public function setStyle($style){
+public function setStyle(string $style){
 		$this->_style = $style;
 		$this->addAttribute('style', $this->_style);
 }
 
-public function setCData($isCData = false){
-		$this->$_cData = $css;
+public function setCData(bool $isCData = false){
+		$this->$_cData = $isCData;
 }
 
 protected function start(){
@@ -144,8 +164,17 @@ public function close(){
 	return $this->_markup;
 }
 
+public function print(){
+
+		$value = $this->open();
+		$value .= $this->_content;
+		$value .= $this->close();
+
+	return $value;
+}
+
 public function wrap($content = null){
-	if (is_null($content)){
+	if (is_null($this->_content)){
 		$value = $this->empty();
 	} else {
 		$value = $this->open();
@@ -207,12 +236,21 @@ function doctypeHtml(){
 	$declare = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">';
 	return $declare;	
 }
+class _meta extends _element{
+	public function __construct(string $equiv,string $content){
 
+		parent::__construct('meta');
+		$this->addAttribute('http-equiv',$equiv);
+		$this->addAttribute('content',$content);
+	}
+	public function meta(){
+		return $this->empty();
+	}
+
+}
 function meta($equiv, $content){
-	$e = new _element('meta');
-	$e->addAttribute('http-equiv',$equiv);
-	$e->addAttribute('content',$content);
-	return $e->empty();
+	$e = new _meta($equiv, $content);
+	return $e->meta();
 }
 
 function metaHttpEquivs(){
@@ -247,24 +285,37 @@ class _script extends _element{
 		return $element;
 	}
 }
-
+class _inlineStyle extends _element{
+	public function __construct(){
+		parent::__construct('script');
+	}
+}
 function openInlineStyle(){
-	$e = new _element('style');
+	$e = new _inlineStyle();
 	return $e->open();
 }
 
 function closeInlineStyle(){
-	$e = new _element('style');
+	$e = new _inlineStyle();
 	return $e->close();
 }
+class _linkExternalCSS extends _element{
+	public function __construct($cssFile){
+		parent::__construct('link');
+		
+		$this->addAttribute('rel','stylesheet');
+		$this->addAttribute('type','text/css');
+		$this->addAttribute('href',$cssFile);
+	}
+	public function cssLink(){
+		return $this->empty();
+	}
 
+}
 
 function LinkStylesheet($cssFile){
-	$e = new _element('link');
-	$e->addAttribute('rel','stylesheet');
-	$e->addAttribute('type','text/css');
-	$e->addAttribute('href',$cssFile);
-	return $e->empty();
+	$e = new _linkExternalCSS($cssFile);
+	return $e->cssLink();
 }
 
 function openScript($language = 'JavaScript', $useComment = true){
@@ -278,10 +329,7 @@ function closeScript($useComment = true){
 }
 
 
-/*
 
-
-*/
 
 function displayLines($value){
 	$value = nl2br($value);
@@ -301,14 +349,17 @@ function spanStyled($content, $style = 'none'){
 }
 
 class _div extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
+	public function __construct(string $idName = 'none', string $css = 'none',string $style = 'none'){
 		parent::__construct('div', $idName, $css);
+		$this->setStyle($style);
+	}
+	public function div(){
+		return $this->print();
 	}
 }
 
 function openDiv($nameId, $css = 'none',$style = 'none'){
-	$e = new _div($nameId, $css);
-	$e->setStyle($style);
+	$e = new _div($nameId, $css,$style);
 	return $e->open();
 }
 
@@ -318,9 +369,9 @@ function closeDiv(){
 }
 
 function wrapDiv($content, $nameId, $css = 'none',$style = 'none'){
-	$e = new _div($nameId, $css);
-	$e->setStyle($style);
-	return $e->wrap($content);
+	$e = new _div($nameId, $css,$style);
+	$e->setContent($content);
+	return $e->div();
 }
 
 
@@ -471,24 +522,35 @@ function linkSpacer($separator = '|'){
 	$spacer = spacer().$separator.spacer();
 	return $spacer;
 }
+class _href extends _element{
+	protected $displayText = '';
 
+	public function __construct($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
+		parent::__construct('a', 'none', $css);
+		$this->addAttribute('href',$url);
+		if ($target <> '_self'){
+			$this->addAttribute('target',$target);
+		}
+		if (!is_null($onClickJS)){
+			$this->addAttribute('onclick',$onClickJS);
+		}
+		
+		if (is_null($displayText) or ($displayText == '')){
+			$content = '[???]';
+		} else {
+			$content = $displayText;
+		}
+		$this->displayText = $content;
+	}
+
+	public function href(){
+		return $this->wrap($this->displayText);
+	}
+}
 function getHref($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
-	$e = new _element('a','none',$css);
 
-	$e->addAttribute('href',$url);
-	if ($target <> '_self'){
-		$e->addAttribute('target',$target);
-	}
-	if (!is_null($onClickJS)){
-		$e->addAttribute('onclick',$onClickJS);
-	}
-	if (is_null($displayText) or $displayText == ''){
-		$content = '[]';
-	} else {
-		$content = $displayText;
-	}
-
-	return $e->wrap($content);
+	$e = new _href($url, $displayText, $css,$target,$onClickJS);
+	return $e->href();
 }
 
 //use bold freely in code
@@ -531,7 +593,7 @@ function para( $caption, $content, $cssPara = 'none',$cssCaption = 'display-capt
 }
 
 
-class img extends _element{
+class _img extends _element{
 	public function __construct($idName = 'none', $css = 'none'){
 		parent::__construct('img', $idName, $css);
 	}
@@ -548,7 +610,7 @@ class img extends _element{
 }
 
 function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
-	$i = new img('none',$css);
+	$i = new _img('none',$css);
 	$i->setSource($src, $alt);
 	$i->setDim($width, $height, $border);
 	return $i->emptyTag();
@@ -557,9 +619,26 @@ function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
 
 
 
+class _form extends _element{
+	public function __construct($action = 'none', $idName = 'none', $css = 'none'){
+		parent::__construct('form', $idName, $css);
+		$this->addAttribute('enctype', 'multipart/form-data');
+		$this->addAttribute('action', $action);
+		$this->addAttribute('method', 'post');
+	}
+}
 
 
 
+function openForm($idName, $action, $css = 'none'){
+	$e = new _form($action, $idName, $css);
+	return $e->open();
+}
+
+function closeForm(){
+	$e = new _form();
+	return $e->close();
+}
 
 
 

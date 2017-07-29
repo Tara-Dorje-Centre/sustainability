@@ -46,7 +46,70 @@ class _inputForm extends _contentWriter{
 		$this->addContent(closeEditForm($entity,$required,$optional,$submit));
 		return $this->getContent();
 	}
+	function openEditForm($entityName, $legend, $formAction, $contextMenu = NULL){
+	$form = openDisplayDetails($entityName,$legend,NULL,'Edit',$contextMenu);
+	$form .= openForm($entityName.'-editForm',$formAction,'editForm');
+	//$form .= '<pre>';
+	$form .= openDiv($entityName.'-fields','editing-fields');
+	return $form;
+}
 
+
+function closeEditForm($entity = '', $required = NULL, $optional = NULL, $submit = NULL){
+
+	$form = wrapDivRequired($entity, $required);
+		
+	$form .= wrapDivOptional($entity,$optional);
+		
+	$form .= wrapDivSubmit($entity,$submit);
+
+	//close fields div
+	$form .= closeDiv();
+	
+	//close edit form
+	
+		//$form .= '</pre>';
+	$form .= closeForm();
+	
+	$form .= closeDisplayDetails();
+	return $form;
+}
+	
+
+function wrapDivRequired($entity,$formRequired){
+	$div = openDiv('formRequired','show');
+	$div .= $formRequired.closeDiv();
+	return $div;
+}
+
+function wrapDivOptional($entity,$formOptional){
+	$div = openDiv('formOptional','hide');
+	$div .= $formOptional.closeDiv();
+	return $div;
+}
+
+function wrapDivFieldGrouping($entity,$fields,$css = 'fieldGrouping'){
+	$div = openDiv($entity.'-'.$css,$css);
+	$div .= $fields.closeDiv();
+	return $div;
+}
+
+function wrapDivSubmit($entity,$formSubmit){
+	$div = openDiv('formSubmit','formSubmit');
+	$div .= $formSubmit.closeDiv();
+	return $div;
+}
+
+
+function openForm($idName, $action, $css = 'none'){
+	$e = new _form($action, $idName, $css);
+	return $e->open();
+}
+
+function closeForm(){
+	$e = new _form();
+	return $e->close();
+}
 
 }
 
