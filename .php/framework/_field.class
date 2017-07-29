@@ -134,12 +134,14 @@ interface Ifield{
 		}
 	}
 	public function setDefault($value){
-		if (!is_null($value)){
+		//if (!is_null($value)){
 			$this->_default = $value;
-		} else {
-			$this->_default = $this->getDataTypeDefault();
-		}
-		$this->reset(true);
+			$this->reset(true);
+		//} else {
+		//	$this->_default = $this->getDataTypeDefault();
+		//}
+			//$this->set(false);
+		//}
 	}
  	public function reset(bool $useDefault = false){
 		if ($useDefault == true){
@@ -229,6 +231,7 @@ interface Ifield{
 	
 	public function fetch($row){
 		if ($this->_fetchEnabled){
+			$this->reset(false);
  			$this->set($row[$this->_dbCol]);
  		}
 	}

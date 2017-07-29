@@ -31,6 +31,15 @@ return $c;
 		$f = " FROM ".$this->baseTable." as et ";
 		return $f;
 	}
+	
+	//override entity list sql to order by disdplkayorder
+	public function list($page = 1, $rows = 10){
+		$q = $this->cols();
+		$q .= $this->tables();
+		$q .= ' ORDER BY display_order ';
+		$q .= sqlLimitClause($page, $rows);
+		return $q;
+	}
 
 }
 ?>

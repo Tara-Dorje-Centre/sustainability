@@ -47,7 +47,8 @@ abstract class _entityType extends _entity{
 		$s = $this->sql->count();
 		$next = dbGetCount($this->sql->count(), 'count_details');
 		$next += 1;
-		$this->f->displayOrder->setDefault($next);
+		$this->echoValue(true,'next',$next,'setdefaults');
+		$this->f->displayOrder->set($next);
 		}
 		
 	}
@@ -99,12 +100,12 @@ abstract class _entityType extends _entity{
 			$sql .= "'".$this->f->description->value()."', ";
 			$sql .= $this->f->displayOrder->value().", ";
 			$sql .= "'".$this->f->highlight->value()."', ";
-			$sql .= "'".$this->f->notes.value()."') ";
+			$sql .= "'".$this->f->notes->value()."') ";
 			
 			$result = dbRunSQL($sql);
 			
-			$this->f->id = dbInsertedId();
-			$this->synchIds();
+			$this->f->id->set(dbInsertedId());
+			$this->id = $this->f->id->value();
 	}
 	
 		

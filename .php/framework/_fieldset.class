@@ -3,7 +3,7 @@
  interface Ifieldset{
  	public function fetch($row);
  	public function format();
- 	public function reset();
+    public function reset(bool $useDefault = false);
  	public function listCaption();
  	public function listDetail();
  	public function displayDetail();
@@ -25,11 +25,15 @@ implements Ifieldset, Iecho, IcontentWriter{
 	protected function _register(string $fieldName, Ifield $field){
 		$this->_fields[$fieldName] = $field;
 	}
-	abstract public function setDefaults();
+	/*public function setDefaults(){
+	    foreach ($this->_fields as $f){
+			$f->reset(true);
+		}
+	}*/
 	
     public function reset(bool $useDefault = false){
     	foreach ($this->_fields as $f){
-			$f->$useDefault();
+			$f->reset($useDefault);
 		}
     }
     public function setEntity(string $entity){

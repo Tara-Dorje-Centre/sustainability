@@ -104,14 +104,14 @@ implements Iecho, IcontentWriter{
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
-	 		$this->f->setDefaults();
+	 		$this->f->reset(true);
 	 	}
 	 	
 	}
 
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
-		$this->f->setDefaults();
+		$this->setDefaults();
 		if (!is_null($this->f->parent)){
 		$this->f->parent->set($idParent);
 		}
