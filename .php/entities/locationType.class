@@ -27,8 +27,9 @@ class locationType extends _entityType{
 class locationTypeList extends _entityTypeList{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+ 		$this->__MyClassName = 'Location';
 		parent::__construct($mode, $id, $idParent);
-		$this->__MyClassName = 'Location';
+
 	 	$this->_titleEntity = 'Location Types';
 		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
 	}

@@ -3,6 +3,7 @@
 class taskTypeFields extends _fieldsetEntityType{
 	public $frequency;
 	public function __construct(){
+	
 		parent::__construct();
 		$this->frequency = new _nameField('frequency','frequency','Frequency');
 		$this->_register('frequency',$this->frequency);
@@ -117,11 +118,13 @@ class taskType extends _entityType{
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
+			$this->f->id->set($this->id);
+			
 	}
 } 
 class taskTypeList extends _entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'TaskTypeList';
+		$this->__MyClassName = 'taskTypeList';
 		parent::__construct($mode, $id, $idParent);
 		$this->_titleEntity = 'Task Types';
 		$this->base = new taskType($this->pageMode,$this->id,$this->idParent);

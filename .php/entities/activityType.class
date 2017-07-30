@@ -18,6 +18,7 @@ class activityType extends _entityType{
   	protected $_titleEntity = 'Activity Type';
 	protected $pageSave = 'pr_ActivityType_Save.php';
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		
 		parent::__construct($mode, $id, $idParent);
 		$this->f = new activityTypeFields();
 		$this->sql = New activityTypeSQL();
@@ -27,8 +28,9 @@ class activityType extends _entityType{
 class activityTypeList extends _entityTypeList{    
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 		$this->__MyClassName = 'ActivityTypeList';
+		parent::__construct($mode, $id, $idParent);
+	
 		$this->_titleEntity = 'Activity Types';
 		$this->base = new activityType($this->pageMode,$this->id,$this->idParent);
 	}
