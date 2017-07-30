@@ -1,5 +1,5 @@
 <?php 
-
+/* reviewed 7/29    */
 
 abstract class _entityType extends _entity{
 	protected $__MyClassName = '_entityType';

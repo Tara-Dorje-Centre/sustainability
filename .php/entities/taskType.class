@@ -1,5 +1,5 @@
 ﻿<?php 
-/* reviewed 7/26  editForm next */
+]
 class taskTypeFields extends _fieldsetEntityType{
 	public $frequency;
 	public function __construct(){
