@@ -118,12 +118,14 @@ public function addAttribute(string $name = 'none', $value = 'none'){
 protected function setTag(string $tag){
 	$this->_tag = $tag;
 }
-
-public function setIdName(string $idName){
+//null being passed, typing to string raises error
+public function setIdName( $idName){
+if (!is_null($idName)){
 	$this->_id = $idName;
 	$this->_name = $idName;
 	$this->addAttribute('id', $this->_id);
 	$this->addAttribute('name', $this->_name);
+	}
 }
 
 public function setCSS(string $css){

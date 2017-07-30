@@ -2,25 +2,8 @@
 
 abstract class _fieldsetTaskChild extends _fieldsetProjectChild
 implements Ifieldset, Iecho, IcontentWriter{
-	/*
-	//from _fieldset
-	public $id;
-	public $name;		
-	public $created;
-    public $updated;
-	public $description;
-	public $highlight;
-	//from _fieldsetChild
-	public $parent;
-	public $type;
-	//from _fieldsetProjectChild
-	public $project;
-	public $location;
-	public $started;
-	public $approved;
-	public $approvedBy;
-	*/
-//_fieldsetTaskChild
+	
+
 	public $task;
 	public $reported;
 	public $doneBy;
@@ -38,6 +21,7 @@ implements Ifieldset, Iecho, IcontentWriter{
     	parent::setDefaults();
 		$this->task->setDefault(0);
 		$this->reported->setDefault('');
+		//current user
 		$this->doneBy->setDefault('');
     }
 }

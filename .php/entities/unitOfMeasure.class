@@ -1,57 +1,33 @@
 ﻿<?php 
 class unitOfMeasureFields extends _fieldsetEntityType{
-	/******
-_entityFields    id, name, description, 
-highlightStyle, created, updated
-idType, idParent,
-
-_entityTypeFields  notes, displayOrder
-****/
     public $symbol;	
-    public $type;
-	
-	public function setRowValues($row){
-		parent::setRowValues($row);
-		$this->type = ($row["type"]);
-		$this->symbol = ($row["symbol"]);	
+    public $unitType;
+    
+	public function __construct(){
+		parent::__construct();
+		$this->symbol = new _nameField('symbol','symbol','Symbol');
+		$this->unitType = new _nameField('type','unit-type','Unit Type');
+		$this->_register('symbol',$this->symbol);
+		$this->_register('unitType',$this->unitType);
+		
 	}
 	
-	protected function formatForDisplay(){
-		parent::formatForDisplay();
-		$this->type = displayLines($this->type);
-		$this->symbol = displayLines($this->symbol);
+	public function setDefaults(){
+		parent::setDefaults();
+		$this->unitType->setDefault('unit');
+		$this->symbol->setDefault('unit');
 	}
 	
-	public function listHeading(){
-		$heading = parent::listHeading();
-		$heading .= wrapTh('Type');
-		$heading .= wrapTh('Symbol');
-		return $heading;
-	}
-	
-	public function listDetail(){
-		$detail = parent::listDetail();
-		$detail .= wrapTd($this->type);
-		$detail .= wrapTd($this->symbol);
-		return $detail;
-	}
-
-	public function displayDetail(){
-		$detail = parent::displayDetail();
-		$detail .= captionedParagraph('type', 'Type', $this->f->type);
-		$detail .= captionedParagraph('symbol', 'Symbol', $this->f->symbol);
-		return $detail;
-	}
     
 }
 
 class unitOfMeasure extends _entityType{
-	protected $__MyClassName = 'UnitOfMeasure';
-	protected $_titleEntity = 'Unit of Measure';
-   
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->__MyClassName = 'unitOfMeasure';
 		parent::__construct($mode, $id, $idParent);
-	//protected function setHelperClasses(){
+		$this->_titleEntity = 'Unit of Measure';
+		$this->pageSave = 'pr_UnitOfMeasure_Save.php';
+	
 		$this->f = new unitOfMeasureFields();
 		$this->sql = new unitOfMeasureSQL();
 		$this->links = new unitOfMeasureLinks();
@@ -108,67 +84,49 @@ class unitOfMeasure extends _entityType{
 	
 	
 	protected function editForm(){
-		$this->setDefaults();
-		if ($this->pageMode == 'ADD'){		
-
-			$legend = 'Add Unit of Measure';
-		} else {
-			$legend = 'Edit Unit of Measure';	
-		}
-
+	
 		$entity = 'unit-of-measure';
-		$c = new ProjectLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Options');
-		$form = openEditForm($entity,$legend,'pr_UnitOfMeasure_Save.php',$contextMenu);
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
+
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->required->addContent($this->f->name->input());
 		
-		//begin required fields
-		$fields = inputFieldName($entity,$this->name,'name','Name',50);
-	
-		//end required fields
-		$formRequired = $fields;
-
-
-		//start optional fields
-		$fields = inputFieldName($entity,$this->type,'type','Type',50);
+		$edit->required->addContent($this->f->symbol->input());
+		$edit->required->addContent($this->f->unitType->input());
 		
-		$fields .= inputFieldName($entity,$this->symbol,'symbol','Symbol',10);
-
-
-		$fields .= inputFieldComments($entity,$this->notes,'notes','Notes',1000);
-
-		//end optional fields (hidden by default)
-		$formOptional = $fields;
-
+		$edit->required->addContent($this->f->displayOrder->input());
+		$edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));
+		$edit->optional->addContent($this->f->description->input());
+		$edit->optional->addContent($this->f->notes->input());
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->addContent($this->f->id->inputHidden());
+		$edit->submit->addContent(getSaveChangesResetButtons());
+		return $edit->close();
 		
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('unitOfMeasureId', $this->id);
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);		
-		return $form;
+		
 	}
-	
+	/*
 	public function collectPostValues(){
-		$this->f->id = $_POST['id'];
+		/*$this->f->id = $_POST['id'];
 		$this->id = $this->f->id;
-		$this->f->name = dbEscapeString($_POST['name']); 
+		/$this->f->name = dbEscapeString($_POST['name']); 
 		$this->f->type = dbEscapeString($_POST['type']); 
 		$this->f->symbol = dbEscapeString($_POST['symbol']); 
 		$this->f->notes = dbEscapeString($_POST['notes']); 		
 		$this->pageMode = $_POST['mode'];	
 	}
-
+*/
 	public function saveUpdate(){
 	
 			$sql = " UPDATE units_of_measure AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->f->name."', ";
-			$sql .= " p.type = '".$this->f->type."', ";
-			$sql .= " p.symbol = '".$this->f->symbol."', ";
+			$sql .= " p.name = '".$this->f->name->value()."', ";
+			$sql .= " p.type = '".$this->f->type->value()."', ";
+			$sql .= " p.symbol = '".$this->f->symbol->value()."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.notes = '".$this->f->notes."' ";
-			$sql .= " WHERE p.id = ".$this->f->id."  ";			
+			$sql .= " p.notes = '".$this->f->notes->value()."' ";
+			$sql .= " WHERE p.id = ".$this->f->id->value()."  ";			
 			$result = dbRunSQL($sql);
 
 	}
@@ -183,16 +141,17 @@ class unitOfMeasure extends _entityType{
 			$sql .= " symbol, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name."', ";
+			$sql .= "'".$this->f->name->value."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->f->type."', ";
-			$sql .= "'".$this->f->symbol."', ";
-			$sql .= "'".$this->f->notes."') ";
+			$sql .= "'".$this->f->type->value()."', ";
+			$sql .= "'".$this->f->symbol->value()."', ";
+			$sql .= "'".$this->f->notes->value()."') ";
 			
 			$result = dbRunSQL($sql);
 			
 			$this->id = dbInsertedId();
+			$this->f->id-set($this->id);
 	}
 } 
 ?>

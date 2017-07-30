@@ -3,19 +3,8 @@
 
 abstract class _fieldsetProjectChild extends _fieldsetChild
 implements  Ifieldset, Iecho, IcontentWriter{
-	/*
-	//from _fieldset
-	public $id;
-	public $name;		
-	public $created;
-    public $updated;
-	public $description;
-	public $highlight;
-	//from _fieldsetChild
-	public $parent;
-	public $type;
-	*/
-//_fieldsetProjectChild
+	
+
 	public $project;
 	public $location;
 	public $started;

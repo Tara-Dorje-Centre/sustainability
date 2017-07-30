@@ -1,16 +1,6 @@
 ﻿<?php 
 class locationFields extends _fieldsetChild{
-/*
-	//from _fieldset
-	public $id;
-	public $name;		
-	public $created;
-    public $updated;
-	public $description;
-	public $highlight;
-	
-	public $parent;
-	public $type;*/
+
 	public $sortKeyParent;
 	public $sortKey;
 	
@@ -19,38 +9,10 @@ class locationFields extends _fieldsetChild{
 
     	$this->sortKey = new _textField('sort_key','not-used','Sort Key'); 
 		$this->sortKeyParent = new _textField('parent_sort_key'); 
-		
+		$this->_register('sortKey',$this->sortKey();
+				$this->_register('sortKeyParent',$this->sortKeyParent();
     }
 	
-	public function fetch($row){
-		parent::fetch($row);
-		$this->sortKey->fetch($row);
-		$this->sortKeyParent->fetch($row);
-	}
-	
-	public function listCaption(){
-		$this->addContent(parent::listCaption(),true);
-		$this->addContent($this->sortKey->listCaption());
-		return $this->getContent();
-	}
-	
-	public function listDetail(){
-		$this->addContent(parent::listDetail(), true);
-		$this->addContent($this->sortKey->listDetail());
-		return $this->getContent;
-	}
-	
-	public function displayDetail(){
-		$this->addContent(parent::displayDetail(),true);
-		$this->addContent($this->sortKey->displayDetail());
-		$this->addContent($this->sortKeyParent->displayDetail());
-		return $this->getContent();
-	}
-	
-	public function read(){
-		parent::read();
-		
-	}
 	
 }
 
@@ -58,9 +20,10 @@ class location extends _entity{
 	
 	public $childLocations = 0;
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+				 $this->__MyClassName = 'location';
 		parent::__construct($mode, $id, $idParent);
 		
-		 $this->__MyClassName = 'location';
+
   	 $this->_titleEntity = 'Location';
 	 $this->pageSave = 'pr_Location_Save.php';
 		$this->sql = new locationSQL();
@@ -69,7 +32,7 @@ class location extends _entity{
 	}
 	
 	protected function listRowLink(){
-		$link = $this->links->itemViewEdit($this->f->sortKey->value,$this->f->id->value);
+		$link = $this->links->itemViewEdit($this->f->sortKey->value(),$this->f->id->value());
 		return $link;
 	}
 	
@@ -94,12 +57,12 @@ class location extends _entity{
 	
 	protected function setPageTitle(){
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->f->sortKey->value;
+			$heading = $this->f->sortKey->value();
 		} else {
 			if ($this->idParent == 0){
 				$heading = 'Add New Location';
 			} else {
-				$heading = $this->f->sortKeyParent->value.' Add Sub Location';	
+				$heading = $this->f->sortKeyParent->value().' Add Sub Location';	
 			}
 		}
 
@@ -201,14 +164,14 @@ class location extends _entity{
 		$edit->required->addContent($this->f->name->input());
 
 		$type = new locationType('OPTIONS');
-		$select = $type->options($this->f->type->value(),$this->f->type->env->variable,'false',true);
-		$edit->required->addContent($this->f->type->inputChoice($select));
+		$select = $type->options($this->f->typeEntity->value(),$this->f->typeEntity->env->variable(),'false',true);
+		$edit->required->addContent($this->f->typeEntity->inputChoice($select));
 		//captionedInput('Type',$select));
 					
 		$edit->optional->addContent($this->f->description->input());
 		
 		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->parent->inputHidden());
+		$edit->hidden->addContent($this->f->parentEntity->inputHidden());
 		$edit->hidden->addContent($this->f->id->inputHidden());
 		$edit->submit->addContent(getSaveChangesResetButtons());
 
@@ -247,10 +210,10 @@ class location extends _entity{
 
 			$sql = " UPDATE locations AS l ";
 			$sql .= " SET ";
-			$sql .= " l.name = '".$this->f->name->value."', ";
-			$sql .= " l.type_id = ".$this->f->type->id->value.", ";
+			$sql .= " l.name = '".$this->f->name->value()."', ";
+			$sql .= " l.type_id = ".$this->f->type->id->value().", ";
 			$sql .= " l.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " l.description = '".$this->f->description->value."' ";
+			$sql .= " l.description = '".$this->f->description->value()."' ";
 			$sql .= " WHERE l.id = ".$this->id."  ";			
 			
 			$result = dbRunSQL($sql);
