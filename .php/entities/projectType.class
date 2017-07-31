@@ -17,10 +17,10 @@ class projectTypeLinks extends _entityTypeLinks{
 }
 class projectType extends _entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'ProjectType';
+		$this->_MyClassName = 'ProjectType';
 		parent::__construct($mode, $id, $idParent);
 		
-     	$this->_titleEntity = 'Project Type';
+     	$this->titleEntity = 'Project Type';
    	 	$this->pageSave = 'pr_ProjectType_Save.php';
 		$this->f = new projectTypeFields();
 		$this->sql = new projectTypeSQL();
@@ -29,10 +29,10 @@ class projectType extends _entityType{
 } 
 class projectTypeList extends _entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'projectTypeList';
+		$this->_MyClassName = 'projectTypeList';
 		parent::__construct($mode, $id, $idParent);
 		
-		$this->_titleEntity = 'Project Types';
+		$this->titleEntity = 'Project Types';
 		$this->base = new projectType($this->pageMode,$this->id,$this->idParent);
 	}
 } 

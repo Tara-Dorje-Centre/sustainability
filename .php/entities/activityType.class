@@ -16,10 +16,10 @@ class activityTypeLinks extends _entityTypeLinks{
 }
 class activityType extends _entityType{
 
-  	protected $_titleEntity = 'Activity Type';
+  	protected $titleEntity = 'Activity Type';
 	protected $pageSave = 'pr_ActivityType_Save.php';
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'activityType';
+		$this->_MyClassName = 'activityType';
 		parent::__construct($mode, $id, $idParent);
 		$this->f = new activityTypeFields();
 		$this->sql = New activityTypeSQL();
@@ -29,10 +29,10 @@ class activityType extends _entityType{
 class activityTypeList extends _entityTypeList{    
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'activityTypeList';
+		$this->_MyClassName = 'activityTypeList';
 		parent::__construct($mode, $id, $idParent);
 	
-		$this->_titleEntity = 'Activity Types';
+		$this->titleEntity = 'Activity Types';
 		$this->base = new activityType($this->pageMode,$this->id,$this->idParent);
 	}
 	

@@ -2,8 +2,8 @@
 
 abstract class _entityBase extends _contentWriter 
 implements Iecho, IcontentWriter {
-	protected $__MyClassName = '__baseEntity.';
-	protected $_titleEntity = '__baseEntity';
+	protected $_MyClassName = '__baseEntity.';
+	protected $titleEntity = '__baseEntity';
 
     public $pageMode = 'VIEW';
 	public $id = 0;

@@ -1,8 +1,8 @@
 ﻿<?php 
 
 class taskList extends _entityList{
-	protected $__MyClassName = 'TaskList';
-	protected $__titleEntity = 'Tasks';
+	protected $_MyClassName = 'TaskList';
+	protected $titleEntity = 'Tasks';
 //protected $project;
 	public $periodicTasks = 'NO';
 	/*public $base;

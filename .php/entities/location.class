@@ -1,4 +1,34 @@
 ﻿<?php 
+/*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+
+ _fieldsetEntity
+ id, name, description
+ created°, updated°, highlight
+
+ _fieldsetEntityType 
+ extends _fieldsetEntity
+ displayOrder, notes
+
+ _fieldsetEntityChild
+ extends _fieldsetEntity
+ parentEntity, typeEntity
+
+ _fieldsetProjectChild
+ extends _fieldsetEntityChild
+ parentProject, location, started°
+ approved,approvedBy^
+
+ _fieldsetTaskChild
+ extends _fieldsetProjectChild
+ parentTask, reported°,doneBy^
+ notes, linkUrl, linkText
+
+ _fieldsetActivityChild
+ extends _fieldsetTaskChild
+ parentActivity
+ */
 class locationFields extends _fieldsetChild{
 
 	public $sortKeyParent;
@@ -10,7 +40,7 @@ class locationFields extends _fieldsetChild{
     	$this->sortKey = new _textField('sort_key','not-used','Sort Key'); 
 		$this->sortKeyParent = new _textField('parent_sort_key'); 
 		$this->_register('sortKey',$this->sortKey();
-				$this->_register('sortKeyParent',$this->sortKeyParent();
+		$this->_register('sortKeyParent',$this->sortKeyParent();
     }
 	
 	
@@ -20,12 +50,11 @@ class location extends _entity{
 	
 	public $childLocations = 0;
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-				 $this->__MyClassName = 'location';
+		$this->_MyClassName = 'location';
 		parent::__construct($mode, $id, $idParent);
 		
-
-  	 $this->_titleEntity = 'Location';
-	 $this->pageSave = 'pr_Location_Save.php';
+  	 	$this->titleEntity = 'Location';
+	 	$this->pageSave = 'pr_Location_Save.php';
 		$this->sql = new locationSQL();
 		$this->links = new locationLinks();
 		$this->f = new locationFields();
@@ -159,7 +188,7 @@ class location extends _entity{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->f->setEntity($entity);
 		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->open($contextMenu,$this->titleEntity);
 		
 		$edit->required->addContent($this->f->name->input());
 
@@ -171,7 +200,7 @@ class location extends _entity{
 		$edit->optional->addContent($this->f->description->input());
 		
 		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->parentEntity->inputHidden());
+		$edit->hidden->addContent($this->f->parentEntity->id->inputHidden());
 		$edit->hidden->addContent($this->f->id->inputHidden());
 		$edit->submit->addContent(getSaveChangesResetButtons());
 

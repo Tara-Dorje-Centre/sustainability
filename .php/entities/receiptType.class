@@ -17,8 +17,8 @@ class receiptType extends _entityType{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->__MyClassName = 'receiptType';
-  		$this->_titleEntity = 'Receipt Type';
+		$this->_MyClassName = 'receiptType';
+  		$this->titleEntity = 'Receipt Type';
   		$this->pageSave = 'pr_ReceiptType_Save.php';
 		$this->f = new receiptTypeFields();
 		$this->sql = new receiptTypeSQL;
@@ -28,8 +28,8 @@ class receiptType extends _entityType{
 class receiptTypeList extends _entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->__MyClassName = 'ReceiptTypeList';
-		$this->_titleEntity = 'Receipt Types';
+		$this->_MyClassName = 'ReceiptTypeList';
+		$this->titleEntity = 'Receipt Types';
 		$this->base = new receiptType($this->pageMode,$this->id,$this->idParent);
 	}
 }

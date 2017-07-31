@@ -12,18 +12,18 @@ class _echo implements Iecho{
 
 protected $echoEnabled = true;
 
-protected $__MyClassName = '__echo';
-protected $__MyFunctionName = '__construct';
+protected $_MyClassName = '__echo';
+protected $_MyFunctionName = '__construct';
 
 public function setEchoState(bool $enabled = false){
 	$this->echoEnabled = $enabled;
 }
 public function echoLocale(string $f = '-use-current-', string $c= '-use-current-'){
 	if ($c != '-use-current-'){
-		$this->__MyClassName = $c;
+		$this->_MyClassName = $c;
 	}// __classname__ should be a magic variable here
 	if ($f != '-use-current-'){
-		$this->__MyFunctionName = $f;
+		$this->_MyFunctionName = $f;
 	}
 }
 protected function echoVN($v, string $n = '-not-set-'){
@@ -34,7 +34,7 @@ protected function echoVN($v, string $n = '-not-set-'){
 	}
 }
 protected function echoCF(){
-		return $this->__MyClassName.'.'.$this->__MyFunctionName.':';
+		return $this->_MyClassName.'.'.$this->_MyFunctionName.':';
 }
 
 public function echoValue(bool $show = true, string $n, $v, string $f = '-use-current-', string $c= '-use-current-'){

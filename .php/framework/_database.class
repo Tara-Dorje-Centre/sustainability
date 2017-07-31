@@ -32,7 +32,7 @@ public function close(){
 
 public function query($sql){
 
-	$this->echo->echoValue(false, 'sql', $sql, 'query');
+	$this->echo->echoValue(true, 'sql', $sql, 'query');
 
 	return parent::query($sql);
 }

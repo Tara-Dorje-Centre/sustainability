@@ -1,7 +1,7 @@
 ﻿<?php 
 
 class measureTypeUnitList extends _entityList{
-	protected $__MyClassName = 'MeasureTypeUnitList';
+	protected $_MyClassName = 'MeasureTypeUnitList';
 
 	
 	public $measureType;

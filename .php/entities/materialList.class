@@ -1,7 +1,7 @@
 ﻿<?php 
 
 class materialList extends _entityList{
-	protected $__MyClassName = 'MaterialList';
+	protected $_MyClassName = 'MaterialList';
 
 	public $task;
 	

@@ -1,8 +1,8 @@
 ﻿<?php 
 
 class receiptList extends _entityList{
-	protected $__MyClassName = 'receiptList';
-	protected $_titleEntity = 'Receipts';
+	protected $_MyClassName = 'receiptList';
+	protected $titleEntity = 'Receipts';
 
 
 	public $task;

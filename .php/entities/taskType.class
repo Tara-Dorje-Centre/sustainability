@@ -32,9 +32,9 @@ class taskTypeLinks extends _entityTypeLinks{
 
 class taskType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'taskType';
+		$this->_MyClassName = 'taskType';
 		parent::__construct($mode, $id, $idParent);
-  		$this->_titleEntity = 'Task Type';
+  		$this->titleEntity = 'Task Type';
      	$this->pageSave = 'pr_TaskType_Save.php';
 		$this->f = new taskTypeFields();
 		$this->sql = new taskTypeSQL();

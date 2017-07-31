@@ -13,23 +13,74 @@
 	public function setEnvironment(string $env = 'POST');
 	public function setEntity(string $entity);
  }
- 
+ /*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+
+ _fieldsetEntity
+ ****
+ id, name, description
+ created°, updated°, highlight
+
+ _fieldsetEntityType 
+  id, name, description
+ created°, updated°, highlight
+ ****
+ displayOrder, notes
+
+ _fieldsetEntityChild
+  id, name, description
+ created°, updated°, highlight
+ *****
+ parentEntity, typeEntity
+
+ _fieldsetProjectChild
+   id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ ****
+ project, projectType, location
+ started°, approved,approvedBy^
+
+ _fieldsetTaskChild
+ id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ project, projectType, location
+ started°, approved,approvedBy^
+****
+ task, taskType, reported°,doneBy^
+ notes, linkUrl, linkText
+
+ _fieldsetActivityChild
+ id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ project, projectType, location
+ started°, approved,approvedBy^
+ task, taskType, reported°,doneBy^
+ notes, linkUrl, linkText
+ ****
+ activity, activityType
+ */
 
 abstract class _fieldset extends _contentWriter 
 implements Ifieldset, Iecho, IcontentWriter{
+	protected $_entity = 'fieldset';
+	protected $_currentTimestamp = '';
+	protected $_currentUser = '';
 	protected $_fields = array();
 	
 	public function __construct(){
-	
+		global $sessionTime;
+		$this->_currentTimestamp = $sessionTime;
+		$this->_currentUserName = $_SESSION['login-name'];
 	}
 	protected function _register(string $fieldName, Ifield $field){
 		$this->_fields[$fieldName] = $field;
 	}
-	/*public function setDefaults(){
-	    foreach ($this->_fields as $f){
-			$f->reset(true);
-		}
-	}*/
+	
+	abstract public function setDefaults();
 	
     public function reset(bool $useDefault = false){
     	foreach ($this->_fields as $f){

@@ -4,7 +4,7 @@ class _menu extends _echo{
 	public $displayMode;
 	public $year;
 	public $month;
-	protected $__MyClassName = '_menu';
+	protected $_MyClassName = '_menu';
 	
 	public function __construct(){
 		$this->displayMode = new _textField('not_used','displayMode','mode');

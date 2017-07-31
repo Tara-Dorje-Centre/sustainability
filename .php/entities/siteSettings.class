@@ -117,8 +117,8 @@ class siteSettings extends _entity{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->__MyClassName = 'SiteSettings';
-     	$this->_titleEntity = 'Site Settings';
+		$this->_MyClassName = 'SiteSettings';
+     	$this->titleEntity = 'Site Settings';
    	 	$this->pageSave = 'sys_SiteSettings_Save.php';
 		$this->f = new siteSettingsFields();
 		$this->links = new siteSettingsLinks();

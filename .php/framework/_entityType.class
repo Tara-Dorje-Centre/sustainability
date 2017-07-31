@@ -2,8 +2,8 @@
 /* reviewed 7/29    */
 
 abstract class _entityType extends _entity{
-	protected $__MyClassName = '_entityType';
-	protected $_titleEntity = '[entity] Type';
+	protected $_MyClassName = '_entityType';
+	protected $titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -12,7 +12,7 @@ abstract class _entityType extends _entity{
 	
 	public function setDetails(){
 		parent::setDetails();
-		$this->f->name->caption = $this->_titleEntity;
+		$this->f->name->caption = $this->titleEntity;
 	}
 	
 	protected function setPageMenu(){
@@ -57,7 +57,7 @@ abstract class _entityType extends _entity{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		
 		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->open($contextMenu,$this->titleEntity);
 		$edit->required->addContent($this->f->name->input());
 		$edit->required->addContent($this->f->displayOrder->input());
 		$edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));

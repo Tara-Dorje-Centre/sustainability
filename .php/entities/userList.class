@@ -2,8 +2,8 @@
 
 
 class userList extends _entityList{
-protected $__MyClassName = 'UserList';
-protected $_titleEntity = 'UserProfiles';
+protected $_MyClassName = 'UserList';
+protected $titleEntity = 'UserProfiles';
 
 	public $userTypeId = 0;
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){

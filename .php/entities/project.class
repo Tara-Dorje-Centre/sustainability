@@ -1,17 +1,14 @@
 ﻿<?php 
-class projectFields extends _fieldsetChild{
+class projectFields extends _fieldsetEntityChild{
   /*
-	//from _fieldset
-	public $id;
-	public $name;		
-	public $created;
-    public $updated;
-	public $description;
-	public $highlight;
-	//from _fieldsetChild
-	public $parent;
-	public $type;
-	*/
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+ 
+ _fieldsetEntityChild
+   id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+*/
   	public $summary;
 	public $started;
     public $pctDone;	
@@ -32,7 +29,7 @@ class projectFields extends _fieldsetChild{
 		$this->goals = new _notesField('goals','goals','Goals');
 		$this->purpose = new _notesField('purpose','purpose','Purpose');
 		$this->lessons = new _notesField('lessons_learned','lessons-learned','Lessons Learned');
-		$this->showAlways = new _yesNoField('showAlways','show-always','Show.Always');
+		$this->showAlways = new _yesNoField('show_always','show-always','Show.Always');
 		$this->location = new _fieldIdName('location_id','location-id','Location','location_name');
   		$this->_register('summary', $this->summary);
 		$this->_register('started', $this->started);
@@ -47,7 +44,7 @@ class projectFields extends _fieldsetChild{
 	public function setDefaults(){
 		parent::setDefaults();
 		global $sessionTime;
-		$this->started->setDefault($sessionTime);	
+		$this->started->setDefault($this->currentTimestamp);	
 		$this->location->setDefault(0);
 		$this->showAlways->setDefault('yes');
 		$this->priority->seDefault(1);
@@ -58,8 +55,8 @@ class projectFields extends _fieldsetChild{
 
 
 class project extends _entity{
-	protected $__MyClassName = 'Project';
-	protected $_titleEntity = 'Project';
+	protected $_MyClassName = 'Project';
+	protected $titleEntity = 'Project';
 	public $totals;
 	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
@@ -78,7 +75,7 @@ class project extends _entity{
 		
 		parent::setDetails();
 		
-		$this->totals->setProjectTotals($this->f->id);
+		$this->totals->setProjectTotals($this->id);
 		
 	}
 	private function setReceiptSummaryByType(){
@@ -122,7 +119,7 @@ class project extends _entity{
 	protected function setPageTitle(){
 
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->f->name;
+			$heading = $this->f->name->value();
 		} else {
 			$heading = 'Add New Project';
 		}
@@ -233,70 +230,39 @@ class project extends _entity{
 
 	public function editForm(){
 	
-	   		$this->echoState(true, 'editForm');
-	   		
-		if ($this->pageMode == 'ADD'){		
-			/*$this->setDefaults();*/
-			$legend = 'Add Project';
-		} else {
-			$legend = 'Edit Project';	
-		}
 		$entity = 'project';
+		
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->f->setEntity($entity);
-		$c = new ProjectLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Options');
-		$form = openEditForm($entity,$legend,'pr_Project_Save.php', $contextMenu);
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->titleEntity);
 		
+		$edit->required->addContent($this->f->name->input());
+		$edit->required->addContent($this->f->purpose->input());
 		
-		//start required fields
-		$fields = $this->f->name->input();
+		$base = new ProjectType('OPTIONS');
+		$select = $base->options($this->f->type->value,$this->f->type->env->variable,'false',true);
+		$edit->required->addContent($this->f->type->inputChoice($select));
 		
+		$base = new Location('OPTIONS');
+		$select = $base->options($this->f->location->id->value(),$this->f->location->id->env->variable(),'false',true);
+		$edit->required->addContent($this->f->location->id->inputChoice($select));
+
+		$edit->required->addContent($this->f->started->input());
+		$edit->required->addContent($this->f->priority->input());
+		$edit->required->addContent($this->f->pctDone->input());
+		$edit->optional->addContent($this->f->description->input());
+		$edit->optional->addContent($this->f->showAlways->input());
+		$edit->optional->addContent($this->f->summary->input());
+		$edit->optional->addContent($this->f->goals->input());
+		$edit->optional->addContent($this->f->lessons->input());
+		$edit->hidden->addContent( = getHiddenInput('mode', $this->pageMode);
+		$edit->hidden->addContent( .= $this->f->parentEntity->id->inputHidden());
+		$edit->hidden->addContent( .= $this->f->id->inputHidden());
 		
-		$pt = new ProjectType('OPTIONS');
-		$select = $pt->options($this->f->type->value,$this->f->type->env->variable,'false',true);
-		$fields .= $this->f->type->inputChoice($select);
+		$edit->submit->addContent(getSaveChangesResetButtons());
 
-		
-
-
-		//end required fields
-		$formRequired = $fields;
-
-		//start optional fields
-		$fields = $this->f->description->input();
-
-
-		$l = new Location('OPTIONS');
-		$select = $l->options($this->f->location->value(),$this->f->location->env->variable(),'false',true);
-		$fields .= $this->f->location->id->inputChoice($select);
-
-
-		$fields .= $this->f->started->input();
-		$fields .= $this->f->priority->input();
-		$fields .= $this->f->pctDone->input();
-
-		$fields .= $this->f->showAlways->input();
-		//captionedInput('Show in calendar', $input);
-		$fields .= $this->f->purpose->input();
-		$fields .= $this->f->summary->input();
-		$fields .= $this->f->goals->input();
-		$fields .= $this->f->lessons->input();
-		//end optional fields (hidden by default)
-		$formOptional = $fields;
-		
-		
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= $this->f->parent->id->inputHidden();
-		$hidden .= $this->f->id->inputHidden();
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);		
-		return $form;
-	}
-	
-	protected function afterCollectPostValues(){
-
+		return $edit->close();
 	}
 
     public function UpdateTaskSummary(){

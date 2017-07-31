@@ -15,9 +15,9 @@ class locationTypeLinks extends _entityTypeLinks{
 }
 class locationType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'locationType';
+		$this->_MyClassName = 'locationType';
 		parent::__construct($mode, $id, $idParent);
-  	 	$this->_titleEntity = 'Location Type';
+  	 	$this->titleEntity = 'Location Type';
 	 	$this->pageSave = 'pr_LocationType_Save.php';
 		$this->f = new locationTypeFields();
 		$this->sql = new locationTypeSQL();
@@ -28,10 +28,10 @@ class locationType extends _entityType{
 class locationTypeList extends _entityTypeList{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
- 		$this->__MyClassName = 'Location';
+ 		$this->_MyClassName = 'Location';
 		parent::__construct($mode, $id, $idParent);
 
-	 	$this->_titleEntity = 'Location Types';
+	 	$this->titleEntity = 'Location Types';
 		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
 	}
 	

@@ -1,6 +1,10 @@
 <?php 
 
 interface Ifield{
+	public const dtTEXT = 'TEXT';
+	public const dtNUMBER = 'NUMBER';
+	public const dtDATE = 'DATE';
+	public const dtBOOLEAN = 'BOOLEAN';
  	public function setCaption(string $caption = 'no caption');
 	public function setEntity(string $entity);
 	public function setEnvironment(string $env= 'POST');

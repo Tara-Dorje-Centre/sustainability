@@ -1,28 +1,55 @@
 <?php 
-
+/*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+ 
+ _fieldsetTaskChild
+ id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ project, projectType, location
+ started°, approved,approvedBy^
+****
+ task, taskType, reported°,doneBy^
+ notes, linkUrl, linkText
+*/
+ 
 abstract class _fieldsetTaskChild extends _fieldsetProjectChild
 implements Ifieldset, Iecho, IcontentWriter{
 	
 
 	public $task;
+	public $taskType;
 	public $reported;
 	public $doneBy;
+	public $linkUrl;
+ 	public $linkText;
+ 	public $notes;
 	
     public function __construct(){
     	parent::__construct();
-    	$this->task = new _fieldIdName('task_id','id-task','Task','task_name');
+    	$this->parentTask = new _fieldIdName('task_id','id-task','Task','task_name');
 		$this->reported = new _dateField('reported','date-reported','Reported');
 		$this->doneBy = new _userField('done_by','done-by','DoneBy');
-		$this->_register('task', $this->task);
+    	$this->linkUrl = new _textField('link_url','link-url','LinkUrl');
+		$this->linkText = new _textField('link_text','link-text','LinkText');
+		$this->notes = new _notesField('notes','notes','Notes');
+		
+		$this->_register('parentTask', $this->parentTask);
 		$this->_register('reported', $this->reported);
 		$this->_register('doneBy', $this->doneBy);
+		$this->_register('linkUrl', $this->linkUrl);
+		$this->_register('linkText', $this->linkText);
+		$this->_register('notes', $this->notes);
     }
 	public function setDefaults(){
-    	parent::setDefaults();
-		$this->task->setDefault(0);
-		$this->reported->setDefault('');
-		//current user
-		$this->doneBy->setDefault('');
+		parent::setDefaults();
+		//$this->parentTask->setDefault(0);
+		$this->reported->setDefault($this->_currentTimestamp);
+		$this->doneBy->setDefault($this->_currentUser);
+		$this->linkUrl->setDefault('');
+		$this->linkText->setDefault('');
+		$this->notes->setDefault('');
     }
 }
 

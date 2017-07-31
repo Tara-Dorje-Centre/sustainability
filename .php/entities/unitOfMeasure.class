@@ -23,9 +23,9 @@ class unitOfMeasureFields extends _fieldsetEntityType{
 
 class unitOfMeasure extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'unitOfMeasure';
+		$this->_MyClassName = 'unitOfMeasure';
 		parent::__construct($mode, $id, $idParent);
-		$this->_titleEntity = 'Unit of Measure';
+		$this->titleEntity = 'Unit of Measure';
 		$this->pageSave = 'pr_UnitOfMeasure_Save.php';
 	
 		$this->f = new unitOfMeasureFields();

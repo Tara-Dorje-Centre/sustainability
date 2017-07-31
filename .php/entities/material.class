@@ -1,180 +1,76 @@
 ﻿<?php 
-
+/*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+ 
+ _fieldsetTaskChild
+ id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ project, projectType, location
+ started°, approved,approvedBy^
+ task, taskType, reported°,doneBy^
+ notes, linkUrl, linkText
+*/
 
 class materialFields extends _fieldsetTaskChild{
 
- public $dateReported;
- public $doneBy;
+ 
  public $paidTo;
- public $updated;
- public $quantity = 1;	
- public $quantityUnitMeasureId = 0;
- public $quantityUnitMeasureName = '';
- public $costUnit = 0;	
- public $costEstimated = 0;
- public $costActual = 0;
- public $notes;
- public $linkUrl;
- public $linkText;
+ public $quantity;	
+ public $quantityUnits;
+ public $costUnit;	
+ public $costEstimated;
+ public $costActual;
+ 
 
 public function __construct(){
 
-	$this->hasProject = true;
-$this->hasTask = true;
-$this->hasType = false;
-$this->hasLocation = true;
-	$this->hasUpdated = true;
+	$this->paidTo = new _nameField('paid_to','paid-to','Paid To');
+	$this->quantity = new _numberField('quantity','quantity','Quantity');
+	$this->quantityUnits = new _fieldIdName('qty_unit_measure_id','qty-units','QtyUnits','qty_unit_measure_name');
+	$this->costEstimated = new _numberField('cost_estimated','cost-est','Cost Estimated');			
+	$this->costActual = new _numberField('cost_actual','cost-actual','Cost Actual');
+	$this->costUnit = new _numberField('cost_unit','cost-unit',Cost Per Unit');
+	$this->_register('paidTo',$this->paidTo);
+	$this->_register('quantity',$this->quantity);
+	$this->_register('quantityUnits',$this->quantityUnits);
+	$this->_register('costUnit',$this->costUnit);
+	$this->_register('costEstimated',$this->costEstimated);
+	$this->_register('costActual',$this->costActual);
 
 }
 
-
-public function setRow($row){
-	parent::setRow();
-
- $this->dateReported = $row["date_reported"];
- $this->doneBy = stripslashes($row["done_by"]);
- $this->paidTo = stripslashes($row["paid_to"]);
-
- $this->quantity = $row["quantity"];	
- $this->quantityUnitMeasureId = $row["qty_unit_measure_id"];
- $this->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
- $this->costEstimated = $row["cost_estimated"];						
- $this->costActual = $row["cost_actual"];
- $this->costUnit = $row["cost_unit"];
- $this->notes = ($row["notes"]);
- $this->linkText = ($row["link_text"]);
- $this->linkUrl = ($row["link_url"]);
-	
-}
-
-public function defaults(){
-	parent::defaults();
-	
- $this->quantity = 1;
- $this->quantityUnitMeasureId = 0;
- $this->costUnit = 0;
- $this->costEstimated = 0;
- $this->costActual = 0;		
- 
-}
-
-public function format(){
-	parent::format();
-
- $this->notes = formatText($this->notes);
- $this->dateReported = formatDate($this->dateReported);
-
-}
-
-public function display(){
-	$this->addContent(parent::display(),true);
-	$this->detailPara('Reported',$this->dateReported);
-	$this->detailPara('Done By', $this->doneBy);
-	$this->detailPara('Paid To', $this->paidTo);
-	$this->detailPara('Quantity Units',$this->quantityUnitMeasureName);	
-	$this->detailPara('Quantity',$this->quantity);
-	$this->detailPara('Cost Unit',$this->costUnit);
-	$this->detailPara('Cost Estimated',$this->costEstimated);
-	$this->detailPara('Cost Actual',$this->costActual);
-	$this->detailPara('Notes',$this->notes);
-	return $this->getContent();
-}
-
-public function listHeading(){
-	$this->addContent(parent::listHeading(),true);
-	$this->listTh('caption');
-	
-	/*
-		$heading .=  wrapTh('Material');
-		$heading .= wrapTh('Type');
-		$heading .=  wrapTh('Date Reported');
-		$heading .=  wrapTh('Done By');
-		$heading .= wrapTh('Qty Units');
-		$heading .=  wrapTh('Qty');
-		$heading .=  wrapTh('Unit Cost');
-		$heading .=  wrapTh('Cost Est');
-		$heading .= wrapTh('Paid To');
-		//$heading .=  wrapTh('Cost Actual');
-		$heading .=  wrapTh('Links');		*/
-	
-	return $this->getContent();
-}
-
-public function listDetail(){
-	$this->addContent(parent::listDetail(),true);
-	
-	$this->listTd($this->field);
-	
-	/*	$detail .= wrapTd($m->typeName);			
-			$detail .= wrapTd($m->dateReported);
-			$detail .= wrapTd($m->doneBy);
-			$detail .= wrapTd($m->quantityUnitMeasureName);
-			$detail .= wrapTd($m->quantity);
-			$detail .= wrapTd($m->costUnit);
-			$detail .= wrapTd($m->costEstimated);
-			$detail .= wrapTd($m->paidTo);
-			//$detail .= wrapTd($m->costActual);*/
-	
-	return $this->getContent();
-}
-
-public function getPostVars(){
-	parent::getPostVars();
-
- $this->notes = $this->postString('notes'); 
- $this->dateReported = $this->postDate('dateReported');
- $this->doneBy = $this->postString('doneBy');
- $this->paidTo = $this->postString('paidTo');
-
- $this->quantity = $this->postVar('quantity'); 
- $this->quantityUnitMeasureId = $this->postVar('quantityUnitMeasureId');
- $this->costUnit = $this->postVar('costUnit'); 
- //$this->costEstimated = $this->postVar('costEstimated'); 
- //$this->costActual = $this->postVar('costActual'); 
- $this->linkText = $this->postString('linkText');
- $this->linkUrl = $this->postString('linkUrl');
- 
-	
+public function setDefaults(){
+	$this->paidTo->setDefault(1);
+	$this->quantity->setDefault(1);
+	$this->quantityUnits->setDefault(0);
+	$this->costUnit->setDefault(0);
+	$this->costEstimated->setDefault(0);
+	$this->costActual->setDefault(0);		
 }
 
 }
 
 
 class material extends _entity{
-protected $__MyClassName = 'Material';
-	protected $_titleEntity = 'Material';
+protected $_MyClassName = 'Material';
+	protected $titleEntity = 'Material';
   	protected $pageSave = 'pr_Material_Save.php';
   	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-	
-		
-		//$this->task = new Task($this->pageMode, $this->idParent);
 		$this->f = new materialFields();
 		$this->links = new materialLinks();
 		$this->sql = new MaterialSQL();
 		
 	}
 
-	protected function afterSetDetails(){
-
-		$this->setParentTask();
-	}
-	protected function beforeSetDetails(){
-	
-	}
-	
-	protected function afterSetDefaults(){
-	
-	}
-	public function setParentTask(){
-		$this->task->setDetails();
-	}
 		
 	protected function setPageTitle(){	
 		$title = openDiv('section-heading-title','none');
-		$title .= $this->task->project->name.br();
-		$title .= 'Task: '.$this->task->name;		
+		$title .= $this->f->parentProject->name->value().br();
+		$title .= 'Task: '.$this->parentTask->name->value();		
 		$title .= closeDiv();
 		$this->_pageTitle = $title;
 	}
@@ -190,16 +86,16 @@ protected $__MyClassName = 'Material';
 					
 		$menu = $projects->openMenu('section-heading-links');
 
-		$menu .= $projects->detailViewHref($this->task->project->id);
+		$menu .= $projects->detailViewHref($this->f->parentProject->id->value());
 		if ($this->task->project->materialsCount > 0){
 //			$menu .= $projects->resetMenu();
-			$menu .= $materials->listingHref(0,'ProjectMaterials',$this->task->project->id,'PROJECT','YES');
+			$menu .= $materials->listingHref(0,'ProjectMaterials',$this->f->parentProject->id->value(),'PROJECT','YES');
 		}
 		
 		$menu .= $projects->resetMenu();
-		$menu .= $tasks->detailViewHref($this->task->id);
+		$menu .= $tasks->detailViewHref($this->f->parentTask->id->value);
 		if ($this->task->materialCount > 0){
-			$menu .= $materials->listingHref($this->task->id,'TaskMaterials',0,'TASK','NO');
+			$menu .= $materials->listingHref($this->f->parentTask->id->value,'TaskMaterials',0,'TASK','NO');
 		}
 		$menu .= $projects->resetMenu();
 		
@@ -214,12 +110,12 @@ protected $__MyClassName = 'Material';
 		$this->_pageMenu = $menu;
 	}
 
-	public function afterDisplay(){
-	
+	public function display(){
+		parent::display();
 		
-		if ($this->linkText != '' && $this->linkUrl != ''){
+		if (($this->f->linkText->value() != '') && ($this->f->linkUrl->value() != '')){
 			$l = new MaterialLinks('DIV','menu');
-			$link = $l->formatHref($this->linkText,$this->linkUrl,'_blank');
+			$link = $l->formatHref($this->f->linkText->value(),$this->linkUrl->value(),'_blank');
 			$detail .= captionedParagraph('a-weblink','Web Link',$link);
 		}		
 
@@ -228,120 +124,74 @@ protected $__MyClassName = 'Material';
 	}	
 	
 	protected function setDefaults(){
-	
+		parent::setDefaults();
 	
 		if ($this->pageMode == 'ADD'){		
-			
 	
 			if (isset($_SESSION['last-material-date'])){
-			 $this->dateReported = $_SESSION['last-material-date'];
-			} else {
-			global $sessionTime;
-			$this->dateReported = $sessionTime;				
+			 $this->dateReported->setDefault($_SESSION['last-material-date']);
 			}
-
+			
 			if (isset($_SESSION['last-material-paid-to'])){
-			 $this->paidTo = $_SESSION['last-material-paid-to'];
+			 $this->paidTo->setDefault($_SESSION['last-material-paid-to']);
 			}
 		
 			if (isset($_SESSION['last-material-done-by'])){
-			 $this->doneBy = $_SESSION['last-material-done-by'];
-			} else {
-			$this->doneBy = $_SESSION['login-name'];
-			}
+			 $this->doneBy->setDefault($_SESSION['last-material-done-by']);
+			} 
 		}
 	}
 	
 	public function editForm(){
-		$this->setAddDefaults();
-		
-		$this->echoState(true, 'editForm');
-		
-		if ($this->pageMode == 'ADD'){
-			$legendText = 'Add Material';
-		} else if ($this->pageMode == 'EDIT'){
-			$legendText =  'Edit Material';
-		} else {
-			$legendText = 'Material Details';
-		}
-		
+	
 		$entity = 'material';
-		$c = new MaterialLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Options');
-		$form = openEditForm($entity,$legendText,'pr_Material_Save.php',$contextMenu);
-
-		$fields = inputFieldName($entity,$this->f->name,'name','Material');
-
-		//done by user
-		$fields .= inputFieldUser($entity,$this->f->doneBy,'doneBy','Done By');
-
-		//paid to
-		$fields .= inputFieldUser($entity,$this->f->paidTo,'paidTo','Paid To');
-
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->f->setEntity($entity);
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
+		$edit->open($contextMenu,$this->titleEntity);
 		
-
+		$edit->required->addContent($this->f->name->input());
+		$edit->required->addContent($this->f->doneBy->input());
+		$edit->required->addContent($this->f->reported->input());
+		$edit->required->addContent($this->f->paidTo->input());
 		
-		//quantity
-		$fields .= inputFieldNumber($entity,$this->f->quantity,'quantity','Quantity');
+		$edit->required->addContent($this->f->quantity->input());
+		$edit->required->addContent($this->f->costUnit->input());
 		
-		//unit cost
-		$fields .= inputFieldNumber($entity,$this->f->costUnit,'costUnit','Unit Cost');
+		$base = new UnitOfMeasure;
+		$select = $base->options($this->f->quantityUnits,$this->f->quantityUnits->env->variable());
+		$edit->required->addContent($this->f->quantityUnits->inputChoice($select));
 
-		//quantity unit type
-		$u = new UnitOfMeasure;
-		$select = $u->options($this->f->quantityUnitMeasureId,'quantityUnitMeasureId','false',false);
-		$fields .= captionedInput('Quantity Units',$select);
-
-		$m = new MaterialType;
-		$select = $m->options($this->f->idType,'idType','false',false);
-		$fields .= captionedInput('Material Type',$select);
-
-
-		//date of materials purchase
-		$fields .= inputFieldTimestamp($entity, 'dateReported', $this->f->dateReported, 'Reported'); 		
+		$type = new materialType('OPTIONS');
+		$select = $type->options($this->f->typeEntity->value(),$this->f->typeEntity->env->variable(),'false',true);
+		$edit->required->addContent($this->f->typeEntity->inputChoice($select));
 		
+		$this->f->costEstimated->setCaption('Estimated Cost (Based on unit cost and quantity)');
+		$this->f->costActual->setCaption('Actual Cost (reset when task costs are approved)';
 		
-		$formRequired = $fields;
+		$edit->optional->addContent($this->f->costEstimated->input());
+		$edit->optional->addContent($this->f->costActual->input());
+		$edit->optional->addContent($this->f->linkText->input());
+		$edit->optional->addContent($this->f->linkUrl->input());
 		
-		//estimated cost
-		$tooltip = 'Based on unit cost and quantity';
-		$fields = inputFieldNumber($entity,$this->f->costEstimated,'costEstimated','Estimate',$tooltip,'true');
-
-		//estimated cost
-		$tooltip = 'Set when task costs are approved';
-		$fields .= inputFieldNumber($entity,$this->f->costActual,'costActual','Actual',$tooltip,'true');
-
-		$fields .= inputGroupWebLink($entity,$this->f->linkText,$this->linkUrl);
+		$edit->optional->addContent($this->f->description->input());
+		$edit->optional->addContent($this->f->notes->input());
 		
-		$fields .= inputFieldDescription($entity,$this->f->description,'description');
-		
-		$fields .= inputFieldNotes($entity,$this->f->notes,'notes');
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->addContent($this->f->task->id->inputHidden());
+		$edit->hidden->addContent($this->f->id->inputHidden());
+		$edit->submit->addContent(getSaveChangesResetButtons());
 
-		$formOptional = $fields;
-
-		//hidden fields and submit,reset buttons
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('idTask', $this->f->idTask);
-		$hidden .= getHiddenInput('id', $this->f->id);
-		$hidden .= getHiddenInput('idLocation', $this->f->idLocation);
-
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-			
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);	
-
-		return $form;
+		return $edit->close();
 	}
 	
-	private function setEstimatedCost(){
-			$this->costEstimated = $this->f->costUnit * $this->f->quantity;
-	}
-	
-	public function aftercollectPostValues(){
-		 $_SESSION['last-material-paid-to'] = $this->paidTo;
- $_SESSION['last-material-done-by'] = $this->doneBy;
- $_SESSION['last-material-date'] = $this->dateReported;
-		$this->setEstimatedCost();
+	public function collectPostValues(){
+		parent::collectPostValues();
+		$_SESSION['last-material-paid-to'] = $this->paidTo->value();
+ 		$_SESSION['last-material-done-by'] = $this->doneBy->value();
+ 		$_SESSION['last-material-date'] = $this->reported->value();
+		
+		$this->f->costEstimated->set($this->f->costUnit->value() * $this->f->quantity->value());
 
 		$this->setParentTask();
 	}
@@ -352,23 +202,23 @@ protected $__MyClassName = 'Material';
 			
 			$sql = " UPDATE materials m ";
 			$sql .= " SET ";
-			$sql .= " m.name = '".$this->f->name."', ";
-			$sql .= " m.description = '".$this->f->description."', ";
-			$sql .= " m.notes = '".$this->f->notes."', ";
+			$sql .= " m.name = '".$this->f->name->value()."', ";
+			$sql .= " m.description = '".$this->f->description->value()."', ";
+			$sql .= " m.notes = '".$this->f->notes->value()."', ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " m.date_reported = '".$this->f->dateReported."', ";
-			$sql .= " m.done_by = '".$this->f->doneBy."', ";
-			$sql .= " m.paid_to = '".$this->f->paidTo."', ";			
-			$sql .= " m.link_text = '".$this->f->linkText."', ";
-			$sql .= " m.link_url = '".$this->f->linkUrl."', ";
-			$sql .= " m.type_id = ".$this->f->idType.", ";
-			$sql .= " m.location_id = ".$this->f->idLocation.", ";
-			$sql .= " m.quantity = ".$this->f->quantity.", ";
-			$sql .= " m.qty_unit_measure_id = ".$this->f->quantityUnitMeasureId.", ";
-			$sql .= " m.cost_unit = ".$this->f->costUnit.", ";
-			$sql .= " m.cost_estimated = ".$this->f->costEstimated." ";
-			//$sql .= " m.cost_actual = ".$this->f->costActual." ";
-			$sql .= " WHERE m.id = ".$this->f-oid." ";
+			$sql .= " m.date_reported = '".$this->f->dateReported->value()."', ";
+			$sql .= " m.done_by = '".$this->f->doneBy->value()."', ";
+			$sql .= " m.paid_to = '".$this->f->paidTo->value()."', ";			
+			$sql .= " m.link_text = '".$this->f->linkText->value()."', ";
+			$sql .= " m.link_url = '".$this->f->linkUrl->value()."', ";
+			$sql .= " m.type_id = ".$this->f->typeEntity->id->value().", ";
+			$sql .= " m.location_id = ".$this->f->location->id->value().", ";
+			$sql .= " m.quantity = ".$this->f->quantity->value().", ";
+			$sql .= " m.qty_unit_measure_id = ".$this->f->quantityUnits->id->value().", ";
+			$sql .= " m.cost_unit = ".$this->f->costUnit->value().", ";
+			$sql .= " m.cost_estimated = ".$this->f->costEstimated->value()." ";
+			$sql .= " m.cost_actual = ".$this->f->costActual->value()." ";
+			$sql .= " WHERE m.id = ".$this->f-id." ";
 
 			$result = dbRunSQL($sql);
 			
@@ -392,28 +242,28 @@ protected $__MyClassName = 'Material';
 			$sql .= " quantity, ";
 			$sql .= " cost_unit, ";
 			$sql .= " cost_estimated, ";
-			//$sql .= " cost_actual, ";
+			$sql .= " cost_actual, ";
 			$sql .= " type_id, ";
 			$sql .= " qty_unit_measure_id, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name."', ";
-			$sql .= "'".$this->f->description."', ";
-			$sql .= "".$this->f->task->f->id.", ";
-			$sql .= "".$this->f->locationId.", ";
-			$sql .= " '".$this->f->dateReported."', ";
-			$sql .= " '".$this->f->doneBy."', ";
-			$sql .= " '".$this->f->paidTo."', ";
+			$sql .= "'".$this->f->name->value()."', ";
+			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= "".$this->f->taskEntity->id->value().", ";
+			$sql .= "".$this->f->location->id->value().", ";
+			$sql .= " '".$this->f->reported->value()."', ";
+			$sql .= " '".$this->f->doneBy->value()."', ";
+			$sql .= " '".$this->f->paidTo->value()."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " '".$this->f->linkUrl."', ";
-			$sql .= " '".$this->f->linkText."', ";						
-			$sql .= "".$this->f->quantity.", ";
-			$sql .= "".$this->f->costUnit.", ";
-			$sql .= "".$this->f->costEstimated.", ";
+			$sql .= " '".$this->f->linkUrl->value()."', ";
+			$sql .= " '".$this->f->linkText->value()."', ";						
+			$sql .= "".$this->f->quantity->value().", ";
+			$sql .= "".$this->f->costUnit->value().", ";
+			$sql .= "".$this->f->costEstimated->value().", ";
 			//$sql .= "".$this->f->costActual.", ";
-			$sql .= " ".$this->f->typeId.", ";
-			$sql .= " ".$this->f->quantityUnitMeasureId.", ";
-			$sql .= "'".$this->f->notes."') ";
+			$sql .= " ".$this->f->typeEntity->id->value().", ";
+			$sql .= " ".$this->f->quantityUnits->id->value().", ";
+			$sql .= "'".$this->f->notes->value()."') ";
 			
 			$result = dbRunSQL($sql);
 			

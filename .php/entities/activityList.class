@@ -4,8 +4,8 @@ class activityList extends _entityList{
 	public $myActivity = 'NO';
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->__MyClassName = 'ActivityList';
-     	$this->_titleEntity = 'Activities';
+		$this->_MyClassName = 'ActivityList';
+     	$this->titleEntity = 'Activities';
 		$this->base = new activity($this->pageMode, $this->id, $this->idParent);
 	}
 	

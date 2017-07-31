@@ -94,7 +94,7 @@
 
 
 class measureTypeUnit extends _entity{
-	protected $__MyClassName = 'MeasureTypeUnit';
+	protected $_MyClassName = 'MeasureTypeUnit';
 	
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

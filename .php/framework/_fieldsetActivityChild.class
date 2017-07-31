@@ -1,41 +1,33 @@
 <?php 
+/*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
 
+ _fieldsetActivityChild
+ id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ project, projectType, location
+ started°, approved,approvedBy^
+ task, taskType, reported°,doneBy^
+ notes, linkUrl, linkText
+ ****
+ activity, activityType
+ */
 abstract class _fieldsetActivityChild extends _fieldsetTaskChild
 implements Ifieldset, Iecho, IcontentWriter{
 
-/*
-	//from _fieldset
-	public $id;
-	public $name;		
-	public $created;
-    public $updated;
-	public $description;
-	public $highlight;
-	//from _fieldsetChild
-	public $parent;
-	public $type;
-	//from _fieldsetProjectChild
-	public $project;
-	public $location;
-	public $started;
-	public $approved;
-	public $approvedBy;
-	//fom _fieldsetTaskChild
-	public $task;
-	public $reported;
-	public $doneBy;*/
-//_fieldsetActivityChild
-	public $activity;
+	public $parentActivity;
 	
 	
     public function __construct(){
     	parent::__construct();
-    	$this->activity = new _idNameField('activity_id','id-activity','Activity','activity_name' );
-  		$this->_register('activity', $this->activity);
+    	$this->parentActivity = new _idNameField('activity_id','id-activity','Activity','activity_name' );
+  		$this->_register('parentActivity', $this->parentActivity);
     }
 	public function setDefaults(){
     	parent::setDefaults();
-		$this->activity->setDefault(0);
+		//$this->parentActivity->setDefault(0);
     }
     
 }

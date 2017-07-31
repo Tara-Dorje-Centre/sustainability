@@ -1,11 +1,22 @@
 <?php 
-
-
+/*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+ 
+ _fieldsetProjectChild
+   id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ ****
+ project, projectType, location
+ started°, approved,approvedBy^
+*/
 abstract class _fieldsetProjectChild extends _fieldsetChild
 implements  Ifieldset, Iecho, IcontentWriter{
 	
 
 	public $project;
+	public $projectType;
 	public $location;
 	public $started;
 	public $approved;
@@ -14,12 +25,13 @@ implements  Ifieldset, Iecho, IcontentWriter{
     public function __construct(){
     	parent::__construct();
     	$this->project = new _fieldIdName('project_id','id-project','Project','project_name');
+    	$this->projectType = new _fieldIdName('project_type','project-type','Project Type','project_type_name');
     	$this->location = new _fieldIdName('location_id','id-location','Location', 'location_name');
     	$this->started = new _dateField('started','started','Started');           
     	$this->approved = new _yesNoField('approved','approved','Approved');
     	$this->approvedBy = new _userField('approved_by','approved-by','Approved By');
- 
- 		$this->_register('project', $this->project);
+  		$this->_register('project', $this->project);
+ 		$this->_register('projectType', $this->projectType);
 		$this->_register('location', $this->location);
 		$this->_register('started', $this->started);
 		$this->_register('approved', $this->approved);
@@ -28,11 +40,11 @@ implements  Ifieldset, Iecho, IcontentWriter{
     }
 	public function setDefaults(){
     	parent::setDefaults();
-    	$this->project->setDefault(0);
+    	//$this->parentProject->setDefault(0);
     	$this->location->setDefault(0);
-    	$this->started->setDefault('');
-    	$this->approved->setDefault('');
-    	$this->approvedBy->setDefault('n/a');
+    	$this->started->setDefault($this->_currentTimestamp);
+    	$this->approved->setDefault('no');
+    	$this->approvedBy->setDefault($this->_currentUser);
     	
     }
     

@@ -1,8 +1,8 @@
 ﻿<?php 
 
 class projectList extends _entityList{
-protected $__MyClassName = 'ProjectList';
-protected $_titleEntity = 'Projects';
+protected $_MyClassName = 'ProjectList';
+protected $titleEntity = 'Projects';
 
 	public $showMyProjects = 'NO';
 	public $status = 'OPEN';

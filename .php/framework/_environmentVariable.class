@@ -1,7 +1,11 @@
 <?php 
 
 interface IenvironmentVariable{
-	//public function __construct(string $variable, string $environment = 'POST');
+	public const GET = 'GET';
+	public const POST = 'POST';
+	public const SESSION = 'SESSION';
+	public const ENV = 'ENV';
+	public const REQUEST = 'REQUEST';
 	public function environment();
 	public function variable();
  	public function setEnvironment(string $environment = 'POST');
@@ -14,7 +18,8 @@ interface IenvironmentVariable{
 	public function get(bool $read = false);
 }
 
-class _environmentVariable implements IenvironmentVariable{
+class _environmentVariable
+ implements IenvironmentVariable{
 	private $_env = 'POST';
 	private $_var = 'not-set';
 	private $_raw = NULL;
@@ -61,6 +66,12 @@ class _environmentVariable implements IenvironmentVariable{
 			case 'SESSION':
 				$this->_exists = isset($_SESSION[$this->_var]);
 				break;
+			case 'REQUEST':
+				$this->_exists = isset($_REQUEST[$this->_var]);
+				break;
+			case 'ENV':
+				$this->_exists = isset($_ENV[$this->_var]);
+				break;
 			default:
 				$this->error('invalid environment');
 		}
@@ -79,7 +90,13 @@ class _environmentVariable implements IenvironmentVariable{
 				case 'SESSION':
 					unset($_SESSION[$this->_var]);
 					break;
-			default:				
+				case 'ENV':
+					unset($_ENV[$this->_var]);
+					break;
+				case 'REQUEST':
+					unset($_REQUEST[$this->_var]);
+					break;
+				default:				
 				$this->error('invalid environment');
 			}
 			$this->_exists = false;
@@ -99,6 +116,12 @@ class _environmentVariable implements IenvironmentVariable{
 				case 'SESSION':
 					$this->_raw = $_SESSION[$this->_var];
 					break;
+				case 'ENV':
+					$this->_raw = $_ENV[$this->_var];
+					break;
+				case 'REQUEST':
+					$this->_raw = $_REQUEST[$this->_var];
+					break;
 				default:
 				$this->error('invalid environment');
 			}
@@ -116,8 +139,14 @@ class _environmentVariable implements IenvironmentVariable{
 			case 'SESSION':
 				$_SESSION[$this->_var] = $this->_raw;
 				break;
-		default:				
-			$this->error('invalid environment');
+			case 'ENV':
+				$_ENV[$this->_var] = $this->_raw;
+				break;
+			case 'REQUEST':
+				$_REQUEST[$this->_var] = $this->_raw;
+				break;
+			default:				
+				$this->error('invalid environment');
 		}
 
 	}

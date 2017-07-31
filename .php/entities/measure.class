@@ -1,24 +1,32 @@
 ﻿<?php 
 
-
+/*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+ 
+ _fieldsetTaskChild
+ id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+ project, projectType, location
+ started°, approved,approvedBy^
+ task, taskType, reported°,doneBy^
+ notes, linkUrl, linkText
+*/
 
 
 class measureFields extends _fieldsetTaskChild{
-	 public $dateReported;
+	// public $dateReported;
 	 public $value;	
-	 public $measureTypeUnitId = 0;	
+	 public $measureTypeUnit;	
 	 public $measureType;
 	 public $unitType;
 	 public $unitSymbol;
-	 public $notes;
+	// public $notes;
 
  public function __construct(){
 
- $this->hasProject = true;
- $this->hasTask = true;
- $this->hasActivity = false;
- $this->hasLocation = true;
- $this->hasUpdated = true;
+ 
 
  }
 
@@ -36,26 +44,14 @@ class measureFields extends _fieldsetTaskChild{
 	  $this->unitSymbol = ($row["unit_symbol"]);
 	  $this->unitType = ($row["unit_type"]);
 	  $this->notes = ($row["notes"]);
-/*	$m->id = $row["id"];
-			$m->name = ($row["name"]);
-			$m->measureType = ($row["measure_type"]);
-			$m->unitSymbol = ($row["unit_symbol"]);
-			$m->unitType = ($row["unit_type"]);
-			$m->value = $row["value"];
-			$m->dateReported = $row["date_reported"];
-			$m->description = ($row["description"]);
-			$m->formatForDisplay();*/
+
  }
 
  public function defaults(){
  parent::defaults();
 
-	 /*
-	  global $sessionTime;
-	  $this->dateReported = $sessionTime;	
-	  $this->measureTypeUnitId = 0;
-	  $this->locationId = $this->task->locationId;*/
- }
+	 
+ }/*
 
  public function format(){
  parent::format();
@@ -64,7 +60,7 @@ class measureFields extends _fieldsetTaskChild{
  $this->dateReported = formatDate($this->dateReported);
 
  }
-
+*
  public function display(){
  $this->addContent(parent::display(),true);
  $this->detailPara('Reported',$this->dateReported);
@@ -124,8 +120,8 @@ class measureFields extends _fieldsetTaskChild{
 
 class measure extends _entity {
 
-protected $__MyClassName = 'Measure';
-	protected $_titleEntity = 'Measurement';
+protected $_MyClassName = 'Measure';
+	protected $titleEntity = 'Measurement';
   	protected $pageSave = 'pr_Measure_Save.php';
 
 

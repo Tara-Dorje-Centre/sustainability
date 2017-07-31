@@ -66,7 +66,7 @@ class userFields extends _fieldsetEntity{
 }
 
 class user extends _entity{
-protected $__MyClassName = 'User';
+protected $_MyClassName = 'User';
 	   		
 
 	private $loginPwd;

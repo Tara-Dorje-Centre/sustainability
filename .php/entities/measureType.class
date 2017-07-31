@@ -19,8 +19,8 @@ class MeasureTypeLinks extends _entityTypeLinks{
 class measureType extends _entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->__MyClassName = 'MeasureType';
-     	$this->_titleEntity = 'Measure Type';
+		$this->_MyClassName = 'MeasureType';
+     	$this->titleEntity = 'Measure Type';
    	 	$this->pageSave = 'pr_MeasureType_Save.php';
 		$this->f = new measureTypeFields();
 		$this->sql = new measureTypeSQL();

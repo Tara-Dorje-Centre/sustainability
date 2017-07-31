@@ -3,8 +3,8 @@
 abstract class _entity extends _entityBase
 implements Iecho, IcontentWriter{
 
-	protected $__MyClassName = '_entity';
-	protected $_titleEntity = 'Entity';
+	protected $_MyClassName = '_entity';
+	protected $titleEntity = 'Entity';
 	protected $pageSave = 'save.php';
 	
   	public $f;
@@ -113,7 +113,7 @@ implements Iecho, IcontentWriter{
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
 		if (!is_null($this->f->parent)){
-		$this->f->parent->set($idParent);
+		$this->f->parentEntity->set($idParent);
 		}
 		return $this->editForm();
 	}

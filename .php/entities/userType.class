@@ -16,10 +16,10 @@ class userTypeLinks extends _entityTypeLinks{
 }
 class userType extends _entityType {
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'userType';
+		$this->_MyClassName = 'userType';
 		parent::__construct($mode, $id, $idParent);
 		
-  		$this->_titleEntity = 'User Profile Type';
+  		$this->titleEntity = 'User Profile Type';
 		$this->pageSave = 'sys_UserType_Save.php';
 		$this->f = new userTypeFields();
 		$this->sql = new userTypeSQL();
