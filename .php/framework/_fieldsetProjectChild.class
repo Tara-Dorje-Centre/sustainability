@@ -11,7 +11,7 @@
  project, projectType, location
  started°, approved,approvedBy^
 */
-abstract class _fieldsetProjectChild extends _fieldsetChild
+abstract class _fieldsetProjectChild extends _fieldsetChildEntity
 implements  Ifieldset, Iecho, IcontentWriter{
 	
 

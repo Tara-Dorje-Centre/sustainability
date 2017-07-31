@@ -359,9 +359,9 @@ class task extends _entity{
 		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
 		$edit->open($contextMenu,$this->titleEntity);
 		
-		$edit->required->addContent($this->f->taskOrder->input();
+		$edit->required->addContent($this->f->taskOrder->input());
 		$edit->required->addContent($this->f->name->input());
-		//$edit->required->addContent($this->f->description->input());
+		
 		$l = new taskType();
 		$select = $l->options($this->f->typeEntity->id->value(),$this->f->typeEntity->id->env->variable());
 		$edit->required->addContent($this->f->typeEntity->id->inputChoice($select));
@@ -396,8 +396,8 @@ class task extends _entity{
 				//materials present but user cannot edit approvals
 				$edit->optional->addContent('Materials Approved:'.$this->f->materialsAuthProject->value());
 
-				$edit->hidden->addContent($this->f->materialsAuthProject->inputHidden();
-				$edit->hidden->addContent($this->f->materialsAuthBy->inputHidden();	
+				$edit->hidden->addContent($this->f->materialsAuthProject->inputHidden());
+				$edit->hidden->addContent($this->f->materialsAuthBy->inputHidden());	
 			}
 		} else {
 			//no materials under task, dont show authorization fields

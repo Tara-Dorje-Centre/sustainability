@@ -18,8 +18,9 @@ class MeasureTypeLinks extends _entityTypeLinks{
 }
 class measureType extends _entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 		$this->_MyClassName = 'MeasureType';
+		parent::__construct($mode, $id, $idParent);
+		
      	$this->titleEntity = 'Measure Type';
    	 	$this->pageSave = 'pr_MeasureType_Save.php';
 		$this->f = new measureTypeFields();
@@ -107,9 +108,10 @@ class measureType extends _entityType{
 
 class measureTypeList extends _entityTypeList{
 	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'measureTypeList';
 		parent::__construct($mode, $id, $idParent);
-		$this->__MyClassName = 'measureTypeList';
-     	$this->_titleEntity = 'Measure Types';
+		
+     	$this->titleEntity = 'Measure Types';
 		$this->base = new measureType($this->pageMode,$this->id,$this->idParent);
 	}
 }

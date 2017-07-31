@@ -27,8 +27,9 @@ class receiptType extends _entityType{
 } 
 class receiptTypeList extends _entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 		$this->_MyClassName = 'ReceiptTypeList';
+		parent::__construct($mode, $id, $idParent);
+		
 		$this->titleEntity = 'Receipt Types';
 		$this->base = new receiptType($this->pageMode,$this->id,$this->idParent);
 	}

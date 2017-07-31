@@ -29,14 +29,15 @@ class activityFields extends _fieldsetTaskChild{
 	public function setDefaults(){
 		parent::setDefaults();
 		$this->hoursActual->setDefault(0);
+		$this->hoursEstimated->setDefault(1);
 	}
 	
 }
 
 class activity extends _entity{       
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'activity';
 		parent::__construct($mode, $id, $idParent);
-		$this->_MyClassName = 'Activity';
      	$this->titleEntity = 'Activity';
    	 	$this->pageSave = 'pr_Activity_Save.php';
 		$this->f = new activityFields();
@@ -209,7 +210,7 @@ class activity extends _entity{
 		
 		
 		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
-		$edit->required->addContent($this->hoursActual->input();
+		$edit->required->addContent($this->hoursActual->input());
 		$edit->required->addContent($this->started->input());
 		$edit->required->addContent($this->doneBy->input());
 		$edit->optional->addContent($this->linkUrl->input());		

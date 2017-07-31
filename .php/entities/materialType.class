@@ -15,8 +15,9 @@ class materialTypeLinks extends _entityTypeLinks{
 }
 class materialType extends _entityType {    
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 		$this->_MyClassName = 'MaterialType';
+		parent::__construct($mode, $id, $idParent);
+		
   		$this->titleEntity = 'Material Type';
   		$this->pageSave = 'pr_MaterialType_Save.php';
 		$this->f = new materialTypeFields();
@@ -26,8 +27,9 @@ class materialType extends _entityType {
 } 
 class materialTypeList extends _entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'materialTypeList';
 		parent::__construct($mode, $id, $idParent);
-	 	$this->_MyClassName = 'materialTypeList';
+	 	
 	 	$this->titleEntity = 'Material Types';
 		$this->base = new materialType($this->pageMode,$this->id,$this->idParent);
 	}

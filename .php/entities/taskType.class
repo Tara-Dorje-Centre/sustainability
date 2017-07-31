@@ -63,7 +63,7 @@ class taskType extends _entityType{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 
 		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->open($contextMenu,$this->titleEntity);
 		$edit->required->addContent($this->f->name->input());
 		
 		$select = $this->optionsFrequency($this->f->frequency->value(),$this->f->frequency->env->variable());
@@ -124,9 +124,9 @@ class taskType extends _entityType{
 } 
 class taskTypeList extends _entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'taskTypeList';
+		$this->_MyClassName = 'taskTypeList';
 		parent::__construct($mode, $id, $idParent);
-		$this->_titleEntity = 'Task Types';
+		$this->titleEntity = 'Task Types';
 		$this->base = new taskType($this->pageMode,$this->id,$this->idParent);
 	}
 }

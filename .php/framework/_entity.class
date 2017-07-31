@@ -91,7 +91,7 @@ implements Iecho, IcontentWriter{
 	}
 
 	protected function display(){
-		$detail = openDisplayDetails('entity', $this->_titleEntity.':  Details');
+		$detail = openDisplayDetails('entity', $this->titleEntity.':  Details');
 		$detail .= $this->f->displayDetail();
 		
 		$detail .= closeDisplayDetails();
@@ -99,7 +99,7 @@ implements Iecho, IcontentWriter{
 	}
 	
 	protected function setPageTitle(){
-		$this->_pageTitle = $this->pageMode.':  '.$this->_titleEntity;
+		$this->_pageTitle = $this->pageMode.':  '.$this->titleEntity;
 	}
 	
 	protected function setDefaults(){
@@ -112,7 +112,7 @@ implements Iecho, IcontentWriter{
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
-		if (!is_null($this->f->parent)){
+		if (!is_null($this->f->parentEntity)){
 		$this->f->parentEntity->set($idParent);
 		}
 		return $this->editForm();
@@ -130,8 +130,8 @@ implements Iecho, IcontentWriter{
 		if(!is_null($this->f->id)){
 			$this->id = $this->f->id->value();
 		}
-		if (!is_null($this->f->parent)){
-			$this->idParent = $this->f->parent->id->value();
+		if (!is_null($this->f->parentEntity)){
+			$this->idParent = $this->f->parentEntity->id->value();
 		}
 	}
 	

@@ -11,7 +11,7 @@
  extends _fieldsetEntity
  displayOrder, notes
 
- _fieldsetEntityChild
+ _fieldsetChildEntity
  extends _fieldsetEntity
  parentEntity, typeEntity
 
@@ -29,7 +29,7 @@
  extends _fieldsetTaskChild
  parentActivity
  */
-class locationFields extends _fieldsetChild{
+class locationFields extends _fieldsetChildEntity{
 
 	public $sortKeyParent;
 	public $sortKey;
@@ -39,8 +39,8 @@ class locationFields extends _fieldsetChild{
 
     	$this->sortKey = new _textField('sort_key','not-used','Sort Key'); 
 		$this->sortKeyParent = new _textField('parent_sort_key'); 
-		$this->_register('sortKey',$this->sortKey();
-		$this->_register('sortKeyParent',$this->sortKeyParent();
+		$this->_register('sortKey',$this->sortKey);
+		$this->_register('sortKeyParent',$this->sortKeyParent);
     }
 	
 	

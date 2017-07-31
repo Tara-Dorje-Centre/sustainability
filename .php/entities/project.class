@@ -1,5 +1,5 @@
 ﻿<?php 
-class projectFields extends _fieldsetEntityChild{
+class projectFields extends _fieldsetChildEntity{
   /*
  ^_currentUser set to $_SESSION['login-name']
  °_currentTimestamp set to $sessionTime
@@ -256,9 +256,9 @@ class project extends _entity{
 		$edit->optional->addContent($this->f->summary->input());
 		$edit->optional->addContent($this->f->goals->input());
 		$edit->optional->addContent($this->f->lessons->input());
-		$edit->hidden->addContent( = getHiddenInput('mode', $this->pageMode);
-		$edit->hidden->addContent( .= $this->f->parentEntity->id->inputHidden());
-		$edit->hidden->addContent( .= $this->f->id->inputHidden());
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->addContent($this->f->parentEntity->id->inputHidden());
+		$edit->hidden->addContent($this->f->id->inputHidden());
 		
 		$edit->submit->addContent(getSaveChangesResetButtons());
 

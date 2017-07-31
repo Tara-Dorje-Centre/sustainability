@@ -3,14 +3,14 @@
  ^_currentUser set to $_SESSION['login-name']
  °_currentTimestamp set to $sessionTime
 
- _fieldsetEntityChild
+ _fieldsetChildEntity
   id, name, description
  created°, updated°, highlight
  *****
  parentEntity, typeEntity
 
  */
-abstract class _fieldsetEntityChild extends _fieldsetEntity
+abstract class _fieldsetChildEntity extends _fieldsetEntity
 implements Ifieldset, Iecho, IcontentWriter{
 	
 	public $parentEntity;

@@ -2,22 +2,20 @@
 
 	
 abstract class _entityList extends _entity{
-	protected $__MyClassName = '_entityList';
-	protected $_titleEntity = '[entity] List';
-	
 	public $found = 0;
 	public $base;
-	
-	
+
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = '_entityList';
+		parent::__construct($mode, $id, $idParent);
+		$this->titleEntity = '[entity] List';
+	}
 	
 	//override _entity.setDetails for listing
 	public function setDetails(){
-		
 		//check counts, dont fetch details
 		$this->setFoundCount();
 	}
-	
-
 	
 	
 	protected function setFoundCount(){
@@ -26,7 +24,7 @@ abstract class _entityList extends _entity{
 	}
 	
 	protected function setPageTitle(){
-		$this->_pageTitle = $this->_titleEntity;
+		$this->_pageTitle = $this->titleEntity;
 	}
 	
 	//overrides _entity.getPageDetails for listing query
@@ -49,8 +47,8 @@ abstract class _entityList extends _entity{
 		$paging = $this->listingPagingLinks();
 		$add = $this->listingQuickEdit();
 		
-	$entity = $this->_titleEntity;
-	$legend = $this->_titleEntity;
+	$entity = $this->titleEntity;
+	$legend = $this->titleEntity;
 		$list = openDisplayList($entity,$legend,$paging,$add);
 		return $list;
 	}
@@ -84,15 +82,6 @@ abstract class _entityList extends _entity{
 		return $list;
 	}
 	
-	public function afterSetDefaults(){
-	
-	}
-	public function afterDisplay(){
-	
-	}
- 	protected function afterCollectPostValues(){
- 	
- 	}
 	protected function editForm(){
 		return 'editForm not available';
 	}

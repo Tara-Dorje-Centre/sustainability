@@ -31,7 +31,7 @@ public function __construct(){
 	$this->quantityUnits = new _fieldIdName('qty_unit_measure_id','qty-units','QtyUnits','qty_unit_measure_name');
 	$this->costEstimated = new _numberField('cost_estimated','cost-est','Cost Estimated');			
 	$this->costActual = new _numberField('cost_actual','cost-actual','Cost Actual');
-	$this->costUnit = new _numberField('cost_unit','cost-unit',Cost Per Unit');
+	$this->costUnit = new _numberField('cost_unit','cost-unit','Cost Per Unit');
 	$this->_register('paidTo',$this->paidTo);
 	$this->_register('quantity',$this->quantity);
 	$this->_register('quantityUnits',$this->quantityUnits);
@@ -167,7 +167,7 @@ protected $_MyClassName = 'Material';
 		$edit->required->addContent($this->f->typeEntity->inputChoice($select));
 		
 		$this->f->costEstimated->setCaption('Estimated Cost (Based on unit cost and quantity)');
-		$this->f->costActual->setCaption('Actual Cost (reset when task costs are approved)';
+		$this->f->costActual->setCaption('Actual Cost (reset when task costs are approved)');
 		
 		$edit->optional->addContent($this->f->costEstimated->input());
 		$edit->optional->addContent($this->f->costActual->input());

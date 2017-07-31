@@ -28,10 +28,10 @@ class userType extends _entityType {
 } 
 class userTypeList extends _entityTypeList{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->__MyClassName = 'userTypeList';
+		$this->_MyClassName = 'userTypeList';
 		parent::__construct($mode, $id, $idParent);
 		
-  		$this->_titleEntity = 'User Profile Types';
+  		$this->titleEntity = 'User Profile Types';
 		$this->base = new userType($this->mode,$this->id,$this->idParent);
 	}
 }

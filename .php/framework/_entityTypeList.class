@@ -1,8 +1,8 @@
 <?php 
 
 abstract class _entityTypeList extends _entityList{
-	protected $__MyClassName = '__entityTypeList';
-	protected $_titleEntity = 'Entity Types';
+	protected $_MyClassName = '__entityTypeList';
+	protected $titleEntity = 'Entity Types';
 	
 	protected function setPageMenu(){
 		$menuType = 'LIST';
