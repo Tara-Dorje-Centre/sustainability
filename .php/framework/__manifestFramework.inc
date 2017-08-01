@@ -10,7 +10,7 @@ showProgress('general functions loaded');
 include_once("_echo.class");
 include_once("_contentWriter.class");
 include_once("_sqlWriter.class");
-include_once("_editForm.class");
+include_once("_inputForm.class");
 include_once("_calendar.class");
 include_once("_database.class");
 include_once("_links.class");

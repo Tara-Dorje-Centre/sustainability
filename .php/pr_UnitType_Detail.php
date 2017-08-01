@@ -1,10 +1,10 @@
 ﻿<?php 
 include_once("_includes.php");
 
-$unitOfMeasureId = sessionVariableGET('id',0);
+$id = sessionVariableGET('id',0);
 $pageAction = sessionVariableGET('pageAction','VIEW');
 
-$u = new UnitOfMeasure($pageAction, $unitOfMeasureId);
+$u = new unitType($pageAction, $id);
 $u->setDetails();
 
 $u->printPage();

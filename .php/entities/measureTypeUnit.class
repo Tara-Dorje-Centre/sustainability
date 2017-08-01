@@ -38,57 +38,6 @@
 	  $this->unitSymbol = ($row["unit_symbol"]);
 	  $this->unitType = ($row["unit_type"]);*/
  }
- //defaults for additional fields
- public function defaults(){
- parent::defaults();
- $this->field = 1;
- }
- //format custom fields
- public function format(){
- parent::format();
- $this->textField = formatText($this->notes);
- $this->dateField = formatDate($this->dateReported);
- }
- //display custom fields for VIEW
- public function display(){
- $this->addContent(parent::display(),true);
- $this->detailPara('caption',$this->field);
- 
-	 /*	$detail .= captionedParagraph('measure-type','Measure Type',$this->getMeasureTypeAndUnitSymbol());
-	  $u = new UnitOfMeasure;
-	  $select = $u->options($this->unitOfMeasureId,'unitOfMeasureId','true');
-	  $detail .= captionedParagraph('units','Units',$select);		
-	  $detail .= captionedParagraph('unit-type','Unit Type',$this->unitType);
-	  $detail .= captionedParagraph('updated','Updated',$this->updated);		
-	  $detail .= captionedParagraph('created','Created',$this->created);
-	  */
- 
- return $this->getContent();
- }
- //add custom columns
- public function listHeading(){
- $this->addContent(parent::listHeading(),true);
- $this->listTh('caption');
- return $this->getContent();
- }
- public function listDetail(){
- $this->addContent(parent::listDetail(),true);
- $this->listTd($this->field);
- return $this->getContent();
- }
- //get edit form values
- public function getPostVars(){
- parent::getPostVars();
- $this->textField = $this->postString('notes'); 
- $this->dateField = $this->postDate('dateReported');
- $this->numericField = $this->postVar('quantity'); 
- 
-	 /*	$this->idParent = $_POST['measureTypeId'];
-	  $this->measureType->id = $this->idParent;
-	  $this->id = $_POST['measureTypeUnitId'];
-	  $this->unitOfMeasureId = $_POST['unitOfMeasureId']; 
-	  */
- }
 
  }
 

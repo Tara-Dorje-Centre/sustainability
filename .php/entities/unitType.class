@@ -1,39 +1,68 @@
 ﻿<?php 
-class unitOfMeasureFields extends _fieldsetEntityType{
+
+
+class unitTypeFields extends _fieldsetEntityType{
     public $symbol;	
-    public $unitType;
+    public $type;
     
 	public function __construct(){
 		parent::__construct();
 		$this->symbol = new _nameField('symbol','symbol','Symbol');
-		$this->unitType = new _nameField('type','unit-type','Unit Type');
+		$this->type = new _nameField('type','unit-type','Unit Type');
 		$this->_register('symbol',$this->symbol);
-		$this->_register('unitType',$this->unitType);
-		
+		$this->_register('type',$this->type);
 	}
 	
 	public function setDefaults(){
 		parent::setDefaults();
-		$this->unitType->setDefault('unit');
+		$this->type->setDefault('unit');
 		$this->symbol->setDefault('unit');
 	}
-	
-    
 }
 
-class unitOfMeasure extends _entityType{
+class unitTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'units_of_measure';
+	}
+	protected function cols(){
+		$c = parent::cols();
+		$c .= ", et.symbol ";
+		return $c;	
+	}
+
+	public function options($selectedId = 0, $disabled = 'false'){
+	$q = " SELECT ";
+	$q .= " um.type, ";
+	$q .= " um.id as value, ";
+	$q .= " concat(um.name,'(',um.symbol,')') as caption ";
+	$q .= " FROM units_of_measure um ";
+	if ($disabled == 'true'){
+		$q .= " WHERE um.id = ".$selectedId." ";	
+	}
+	$q .= " ORDER BY type, caption ";
+	return $q;	
+	}
+}
+
+class unitTypeLinks extends _entityTypeLinks {
+	protected $context = 'unitType';
+	protected $pageList = 'pr_UnitType_List.php';
+	protected $pageDetail = 'pr_UnitType_Detail.php';
+}
+
+class unitType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'unitOfMeasure';
+		$this->_MyClassName = 'unitType';
 		parent::__construct($mode, $id, $idParent);
-		$this->titleEntity = 'Unit of Measure';
-		$this->pageSave = 'pr_UnitOfMeasure_Save.php';
+		$this->titleEntity = 'Unit Type';
+		$this->pageSave = 'pr_UnitType_Save.php';
 	
-		$this->f = new unitOfMeasureFields();
-		$this->sql = new unitOfMeasureSQL();
-		$this->links = new unitOfMeasureLinks();
+		$this->f = new unitTypeFields();
+		$this->sql = new unitTypeSQL();
+		$this->links = new unitTypeLinks();
 	}
 	
-	
+	/*
 	protected function pageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
@@ -56,12 +85,12 @@ class unitOfMeasure extends _entityType{
 		$menu .= $units->closeMenu();
 		return $menu;
 	}
-	
+	*/
 	
 	
 	public function options(
 		$selectedValue = 0, 
-		$idName = 'unitOfMeasureId', 
+		$idName = 'unitTypeId', 
 		$disabled = 'false', 
 		$showLink = true,
 		$changeJS = NULL){
@@ -85,15 +114,15 @@ class unitOfMeasure extends _entityType{
 	
 	protected function editForm(){
 	
-		$entity = 'unit-of-measure';
+		$entity = 'unit-type';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 
 		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->open($contextMenu,$this->titleEntity);
 		$edit->required->addContent($this->f->name->input());
 		
 		$edit->required->addContent($this->f->symbol->input());
-		$edit->required->addContent($this->f->unitType->input());
+		$edit->required->addContent($this->f->type->input());
 		
 		$edit->required->addContent($this->f->displayOrder->input());
 		$edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));
@@ -106,23 +135,17 @@ class unitOfMeasure extends _entityType{
 		
 		
 	}
-	/*
-	public function collectPostValues(){
-		/*$this->f->id = $_POST['id'];
-		$this->id = $this->f->id;
-		/$this->f->name = dbEscapeString($_POST['name']); 
-		$this->f->type = dbEscapeString($_POST['type']); 
-		$this->f->symbol = dbEscapeString($_POST['symbol']); 
-		$this->f->notes = dbEscapeString($_POST['notes']); 		
-		$this->pageMode = $_POST['mode'];	
-	}
-*/
+	
 	public function saveUpdate(){
 	
 			$sql = " UPDATE units_of_measure AS p ";
 			$sql .= " SET ";
-			$sql .= " p.name = '".$this->f->name->value()."', ";
+			$sql .= " p.description = '".$this->f->description->value()."', ";
 			$sql .= " p.type = '".$this->f->type->value()."', ";
+			$sql .= " p.display_order = ".$this->f->displayOrder->value().", ";
+			$sql .= " p.highlight_style = '".$this->f->highlight->value()."', ";
+			$sql .= " p.name = '".$this->f->name->value()."', ";
+
 			$sql .= " p.symbol = '".$this->f->symbol->value()."', ";
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " p.notes = '".$this->f->notes->value()."' ";
@@ -135,13 +158,20 @@ class unitOfMeasure extends _entityType{
 	
 			$sql = " INSERT INTO units_of_measure ";
 			$sql .= " (name, ";
+			$sql .= " description, ";
+			$sql .= " display_order, ";
+			$sql .= " highlight_style, ";
+
 			$sql .= " created, ";
 			$sql .= " updated, ";
 			$sql .= " type, ";
 			$sql .= " symbol, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name->value."', ";
+			$sql .= "'".$this->f->name->value()."', ";
+			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= "'".$this->f->displayOrder->value()."', ";
+			$sql .= "'".$this->f->highlight->value()."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= "'".$this->f->type->value()."', ";
@@ -154,4 +184,15 @@ class unitOfMeasure extends _entityType{
 			$this->f->id-set($this->id);
 	}
 } 
+
+class unitTypeList extends _entityTypeList{
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'unitTypeList';
+		
+		parent::__construct($mode, $id, $idParent);
+		$this->titleEntity = 'Unit Types';
+		$this->base = new unitType($this->pageMode,$this->id,$this->idParent);
+	}
+}
+
 ?>

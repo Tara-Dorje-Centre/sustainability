@@ -10,3 +10,6 @@ CREATE TABLE IF NOT EXISTS measure_types (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci AUTO_INCREMENT=1 ;
 
 ALTER TABLE `measure_types`  ADD `display_order` INT(4) NULL DEFAULT '0'  AFTER `created`;
+
+ALTER TABLE `measure_types` ADD `highlight_style` VARCHAR(100) NOT NULL DEFAULT 'none' AFTER `display_order`;
+

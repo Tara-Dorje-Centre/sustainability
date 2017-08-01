@@ -27,7 +27,7 @@ class measureType extends _entityType{
 		$this->sql = new measureTypeSQL();
 		$this->links = new measureTypeLinks();
 	}
-
+/*
 	protected function setPageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
@@ -53,7 +53,7 @@ class measureType extends _entityType{
 		$menu .= $measureTypesL->closeMenu();
 		$this->_pageMenu = $menu;
 	}
-	
+	*/
 	
 	public function display(){
 		parent::display();
@@ -73,11 +73,13 @@ class measureType extends _entityType{
 
 			$sql = " UPDATE measure_types AS mt ";
 			$sql .= " SET ";
-			$sql .= " mt.name = '".$this->f->name."', ";
-			$sql .= " mt.description = '".$this->f->description."', ";
+			$sql .= " mt.highlight_style = '".$this->f->highlight->value()."', ";
+			$sql .= " mt.display_order = ".$this->f->displayOrder->value().", ";
+			$sql .= " mt.name = '".$this->f->name->value()."', ";
+			$sql .= " mt.description = '".$this->f->description->value()."', ";
 			$sql .= " mt.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " mt.notes = '".$this->f->notes."' ";
-			$sql .= " WHERE mt.id = ".$this->f->id."  ";		
+			$sql .= " mt.notes = '".$this->f->notes->value()."' ";
+			$sql .= " WHERE mt.id = ".$this->f->id->value()."  ";		
 				
 			$result = dbRunSQL($sql);
 		}
@@ -87,16 +89,20 @@ class measureType extends _entityType{
 		
 			$sql = " INSERT INTO measure_types ";
 			$sql .= " (name, ";
+			$sql .= " display_order, ";
+			$sql .= " highlight_style, ";
 			$sql .= " created, ";
 			$sql .= " updated, ";
 			$sql .= " description, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name."', ";
+			$sql .= "'".$this->f->name->value()."', ";
+			$sql .= "".$this->f->displayOrder->value().", ";
+			$sql .= "'".$this->f->highlight->value()."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->f->description."', ";
-			$sql .= "'".$this->f->notes."') ";
+			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= "'".$this->f->notes->value()."') ";
 			
 			$result = dbRunSQL($sql);
 			

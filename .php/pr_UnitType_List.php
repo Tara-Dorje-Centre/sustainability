@@ -4,7 +4,7 @@ $detailsPerPage = 10;
 
 $resultPage = sessionVariableGET('resultsPage', 1);
 
-$u = new UnitOfMeasureList;
+$u = new unitTypeList;
 $u->setPaging($resultPage, $detailsPerPage);
 $u->setDetails();
 $u->printPage();

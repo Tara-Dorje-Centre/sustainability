@@ -67,7 +67,7 @@ implements Iecho, IcontentWriter{
 	}
 	
 	public function listHeading(){
-		$heading = wrapTh($this->_titleEntity);
+		$heading = wrapTh($this->titleEntity);
 		$heading .= $this->f->listCaption();
 		$list = wrapTr($heading);
 		return $list;

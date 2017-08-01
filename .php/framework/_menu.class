@@ -93,23 +93,23 @@ class _menu extends _echo{
 	$this->echoPrint(true,'start','displayReference');
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
-		$menuL = new MenuLinks($menuType,$menuStyle);
+		$menuL = new menuLinks($menuType,$menuStyle);
 
-		$locationTypeL = new LocationTypeLinks($menuType,$menuStyle);
+		$locationTypeL = new locationTypeLinks($menuType,$menuStyle);
 
-		$locationL = new LocationLinks($menuType,$menuStyle);
-		$unitL = new UnitOfMeasureLinks($menuType,$menuStyle);
-		$measureTypeL = new MeasureTypeLinks($menuType,$menuStyle);
+		$locationL = new locationLinks($menuType,$menuStyle);
+		$unitL = new unitTypeLinks($menuType,$menuStyle);
+		$measureTypeL = new measureTypeLinks($menuType,$menuStyle);
 		$cropL = new CropLinks($menuType,$menuStyle);
-		$projectTypeL = new ProjectTypeLinks($menuType,$menuStyle);
-		$taskTypeL = new TaskTypeLinks($menuType,$menuStyle);
-		$activityTypeL = new ActivityTypeLinks($menuType,$menuStyle);
-		$materialTypeL = new MaterialTypeLinks($menuType,$menuStyle);
-		$receiptTypeL = new ReceiptTypeLinks($menuType,$menuStyle);
+		$projectTypeL = new projectTypeLinks($menuType,$menuStyle);
+		$taskTypeL = new taskTypeLinks($menuType,$menuStyle);
+		$activityTypeL = new activityTypeLinks($menuType,$menuStyle);
+		$materialTypeL = new materialTypeLinks($menuType,$menuStyle);
+		$receiptTypeL = new receiptTypeLinks($menuType,$menuStyle);
 		
-		$userL = new UserLinks($menuType, $menuStyle);
-		$userTypeL = new UserTypeLinks($menuType, $menuStyle);
-		$sitewideSettingsL = new SiteSettingsLinks($menuType, $menuStyle);
+		$userL = new userLinks($menuType, $menuStyle);
+		$userTypeL = new userTypeLinks($menuType, $menuStyle);
+		$sitewideSettingsL = new siteSettingsLinks($menuType, $menuStyle);
 				
 		$menu = $menuL->openMenu('section-content-links');
 
