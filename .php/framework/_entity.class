@@ -10,11 +10,14 @@ implements Iecho, IcontentWriter{
   	public $f;
     public $sql;
 	public $links;
- 
+	protected $entity;
+ 	protected $edit;
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		
+		$this->>entity = '[entity]';
+		$this->f->setEntity($entity);
+		$this->edit = new _inputForm($this->entity,$this->pageMode,$this->pageSave);
 	}
 	
 	
@@ -56,6 +59,12 @@ implements Iecho, IcontentWriter{
 		
 		return $select;
 	}	
+	
+	public function optionsField(_field &$f){
+		//$m = new receiptType('OPTIONS');
+		$select = $this->options($f->value(),$f->env->variable());
+		return $f->inputChoice($select);
+	}
 	
 	protected function optionsLink($showLink = true, $selectedId = 0){
 		if ($showLink == true){

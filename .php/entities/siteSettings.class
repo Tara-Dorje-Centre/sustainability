@@ -212,7 +212,8 @@ class siteSettings extends _entity{
 		$this->_pageMenu = $menu;
 	}
 	
-	protected function afterDisplay(){
+	protected function display(){
+		parent::display();
 		$detail = $this->getPublicSiteStylesFieldset('true');
 		return $detail;
 	}
@@ -323,7 +324,7 @@ class siteSettings extends _entity{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 
 		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->_titleEntity);
+		$edit->open($contextMenu,$this->titleEntity);
 		
 		$edit->required->addContent($this->f->siteTitle->input());
 		$edit->required->addContent($this->f->siteUrl->input());	

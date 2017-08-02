@@ -19,9 +19,9 @@ class measureFields extends _fieldsetTaskChild{
 	
 	 public $value;	
 	 public $measureTypeUnit;	
-	 public $measureType;
-	 public $unitType;
-	 public $unitSymbol;
+	// public $measureType;
+	// public $quantityType;
+	// public $unitSymbol;
 	
 
  public function __construct(){
@@ -29,14 +29,14 @@ class measureFields extends _fieldsetTaskChild{
  
 	 $this->value = new _numberField('value','value','Value');	
 	 $this->measureTypeUnit = new _fieldIdName('measure_type_unit_id','measure-type-unit-id','Measure Type Units','dbcolname');						
-	 $this->measureType = new _fieldIdName('measure_type_id','measure-type-id','Measure Type','dbcolname');
+	// $this->measureType = new _fieldIdName('measure_type_id','measure-type-id','Measure Type','dbcolname');
 	 $this->unitSymbol = new _nameField('unit_symbol','not-used','Symbol');
 	 $this->unitType = new _nameField('unit_type','not-used','Unit Type');
 	 $this->_register('value',$this->value);
 	 $this->_register('measureTypeUnit',$this->measureTypeUnit);
-	 $this->_register('measureType',$this->measureType);
-	 $this->_register('unitType',$this->unitType);
-	 $this->_register('unitSymbol',$this->unitSymbol);
+	// $this->_register('measureType',$this->measureType);
+	// $this->_register('unitType',$this->unitType);
+	// $this->_register('unitSymbol',$this->unitSymbol);
  }
 
 
@@ -50,36 +50,34 @@ class measureFields extends _fieldsetTaskChild{
  
 
 class measure extends _entity {
-
-protected $_MyClassName = 'Measure';
-	protected $titleEntity = 'Measurement';
-  	protected $pageSave = 'pr_Measure_Save.php';
-  	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-	
+		$this->MyClassName = 'measure';
+		$this->entity = 'measure';
+		$this->titleEntity = 'Measurement';
+	  	$this->pageSave = 'pr_Measure_Save.php';
+		
 		parent::__construct($mode, $id, $idParent);
-	
+		
 		$this->f = new MeasureFields();
 		$this->links = new MeasureLinks();
 		$this->sql = new MeasureSQL();
 	}
-		protected function beforeSetDetails(){
-		}
 		
-	protected function afterSetDetails(){
-	
+		
+	protected function setDetails(){
+		parent::setDetails();
 		$this->setParentTask();			
 		
 	}	
 	
 	public function setParentTask(){
-		$this->task->setDetails($this->pageMode, $this->task->id);
+		$this->task->setDetails($this->pageMode, $this->task->id->value());
 	}
 		
 	protected function setPageTitle(){	
 		
-		$title .= $this->task->project->name.br();
-		$title .= 'Task: '.$this->task->name;		
+		$title .= $this->task->project->name->value().br();
+		$title .= 'Task: '.$this->task->name->value();		
 
 		$this->_pageTitle = $title;
 	}
@@ -119,37 +117,39 @@ protected $_MyClassName = 'Measure';
 	
 	public function editForm(){
 		
-		$entity = 'measure';
+
 		
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($entity);
-		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
+	/*	$this->f->setEntity($entity);
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);*/
 		$edit->open($contextMenu,$this->titleEntity);
 		
+		$m = new measureType('OPTIONS');
+		$fields .= $m->optionsField($this->f->typeEntity->id);
+		 //->value(),$this->typeEntity->id->env->variable());
+		//$fields .=$this->f->typeEntity->id->inputChoice($select);
 		
-		$fields = inputFieldNumber($entity,$this->value,'value','Value');
+		
+		$fields .= $this->value->input();
 
 		$m = new MeasureTypeUnit;
-		$select = $m->options($this->measureTypeUnitId,'measureTypeUnitId','false',false);
-		$fields .= captionedInput('Measure Type',$select);
+		$fields .= $m->optionsField($this->measureTypeUnit->id);
+		//>value(),$this->measureTypeUnit->id->env->variable());
+		//$fields .= $this->measureTypeUnit->id->inputChoice($select);
 
-		$fields .= inputFieldTimestamp($entity, 'dateReported', $this->dateReported, 'Date Reported'); 		
-		
-	
-		$fields = inputFieldName($entity,$this->name,'name','Measure');
+		$fields .= $this->reported->input();
+		$fields = $this->name->input();
+		$fields .= $this->description->input();
+		$fields .= $this->notes->input();
 
-		$fields .= inputFieldDescription($entity,$this->description,'description');
 
-		$fields .= inputFieldNotes($entity,$this->notes,'notes');
-
-		$formOptional = $fields;
 
 		//hidden fields and submit,reset buttons
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('taskId', $this->task->id);
-		$hidden .= getHiddenInput('locationId', $this->locationId);
+		$hidden .= $this->task->id->inputHidden();
+		$hidden .= $this->location->id->inputHidden();
 
-		$hidden .= getHiddenInput('measureId', $this->id);
+		$hidden .= $this->id->inputHidden();
 		
 		
 		$edit->submit->addContent(getSaveChangesResetButtons());

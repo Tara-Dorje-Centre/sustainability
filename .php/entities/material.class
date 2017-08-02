@@ -17,8 +17,8 @@ class materialFields extends _fieldsetTaskChild{
 
  
  public $paidTo;
- public $quantity;	
- public $quantityUnits;
+ //public $quantity;	
+ //public $quantityType;
  public $costUnit;	
  public $costEstimated;
  public $costActual;
@@ -27,14 +27,10 @@ class materialFields extends _fieldsetTaskChild{
 public function __construct(){
 
 	$this->paidTo = new _nameField('paid_to','paid-to','Paid To');
-	$this->quantity = new _numberField('quantity','quantity','Quantity');
-	$this->quantityUnits = new _fieldIdName('qty_unit_measure_id','qty-units','QtyUnits','qty_unit_measure_name');
 	$this->costEstimated = new _numberField('cost_estimated','cost-est','Cost Estimated');			
 	$this->costActual = new _numberField('cost_actual','cost-actual','Cost Actual');
 	$this->costUnit = new _numberField('cost_unit','cost-unit','Cost Per Unit');
 	$this->_register('paidTo',$this->paidTo);
-	$this->_register('quantity',$this->quantity);
-	$this->_register('quantityUnits',$this->quantityUnits);
 	$this->_register('costUnit',$this->costUnit);
 	$this->_register('costEstimated',$this->costEstimated);
 	$this->_register('costActual',$this->costActual);
@@ -43,8 +39,6 @@ public function __construct(){
 
 public function setDefaults(){
 	$this->paidTo->setDefault(1);
-	$this->quantity->setDefault(1);
-	$this->quantityUnits->setDefault(0);
 	$this->costUnit->setDefault(0);
 	$this->costEstimated->setDefault(0);
 	$this->costActual->setDefault(0);		
@@ -54,11 +48,14 @@ public function setDefaults(){
 
 
 class material extends _entity{
-protected $_MyClassName = 'Material';
-	protected $titleEntity = 'Material';
-  	protected $pageSave = 'pr_Material_Save.php';
+
   	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'material';
+		$this->entity = 'material';
+	 	$this->titleEntity = 'Material';
+  	 	$this->pageSave = 'pr_Material_Save.php';
+  	 	
 		parent::__construct($mode, $id, $idParent);
 		$this->f = new materialFields();
 		$this->links = new materialLinks();
@@ -146,8 +143,8 @@ protected $_MyClassName = 'Material';
 	
 		$entity = 'material';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($entity);
-		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
+	/*	$this->f->setEntity($entity);
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);*/
 		$edit->open($contextMenu,$this->titleEntity);
 		
 		$edit->required->addContent($this->f->name->input());
@@ -158,13 +155,17 @@ protected $_MyClassName = 'Material';
 		$edit->required->addContent($this->f->quantity->input());
 		$edit->required->addContent($this->f->costUnit->input());
 		
-		$base = new UnitOfMeasure;
-		$select = $base->options($this->f->quantityUnits,$this->f->quantityUnits->env->variable());
-		$edit->required->addContent($this->f->quantityUnits->inputChoice($select));
+		$base = new quantityType('OPTIONS');
+		//$select = $base->optionsField($this->f->quantityType->id);
+		//,$this->f->quantityUnits->env->variable());
+		$edit->required->addContent($base->optionsField($this->f->quantityType->id));
+		//->f->quantityUnits->inputChoice($select));
 
-		$type = new materialType('OPTIONS');
-		$select = $type->options($this->f->typeEntity->value(),$this->f->typeEntity->env->variable(),'false',true);
-		$edit->required->addContent($this->f->typeEntity->inputChoice($select));
+		$t = new materialType('OPTIONS');
+		//$select = $type->optionsField($this->f->typeEntity->id);
+		//->value(),$this->f->typeEntity->env->variable());
+		$edit->required->addContent($t->optionsField($this->f->typeEntity->id));
+		//$this->f->typeEntity->inputChoice($select));
 		
 		$this->f->costEstimated->setCaption('Estimated Cost (Based on unit cost and quantity)');
 		$this->f->costActual->setCaption('Actual Cost (reset when task costs are approved)');

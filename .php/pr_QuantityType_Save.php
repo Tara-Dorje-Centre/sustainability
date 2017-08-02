@@ -1,12 +1,12 @@
 <?php 
 include_once("_includes.php");
 
-$um = new UnitOfMeasure;
+$um = new QuantityType();
 $um->collectPostValues();
 $um->saveChanges();
 
 $_GET['pageAction'] = 'VIEW';
 $_GET['unitOfMeasureId'] = $um->id;
 
-include_once("pr_UnitType_Detail.php");
+include_once("pr_QuantityType_Detail.php");
 ?>

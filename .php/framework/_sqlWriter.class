@@ -73,7 +73,7 @@ public function __construct(){
  }
  }
  public function editField(_field &$fld, $last = false){
- $this->editColumn($fld->dbColumn,$fld->sqlValue(),$last);
+ $this->editColumn($fld->dbColumn,$fld->valueSQL(),$last);
  }
  public function where($field,$value,$last = false){
  $this->useWhere = true;

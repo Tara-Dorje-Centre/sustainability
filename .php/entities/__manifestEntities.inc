@@ -82,7 +82,7 @@ include_once("task.class");
 include_once("taskList.class");
 include_once("taskType.class");
 showProgress('task classes loaded');
-include_once("unitType.class");
+include_once("quantityType.class");
 showProgress('unit of measure classes loaded');
 //
 //data classes - crop management

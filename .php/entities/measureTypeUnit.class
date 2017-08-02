@@ -51,22 +51,14 @@ class measureTypeUnit extends _entity{
 		$this->f = new measureTypeUnitFields;
 		$this->l = new measureTypeUnitLinks;
 		$this->sql = new measureTypeUnitSQL;
-		$this->measureType = new measureType($this->pageMode, $this->idParent);
-	}
-	public function beforeSetDetails(){
 		
 	}
-	public function afterSetDetails(){
-		$this->measureType->setDetails('VIEW');
-	}	
-	public function afterSetDefaults(){
-
-	}
+	
 	protected function setPageTitle(){	
 		$title = openDiv('section-heading-title','none');
 		
 		
-		$title .= 'Measure Type:&nbsp;'.$this->measureType->name.br();
+		//$title .= 'Measure Type:&nbsp;'.$this->measureType->name.br();
 		$title .= 'Units:'.$this->unitOfMeasure;		
 		$title .= closeDiv();
 		$this->_pageTitle = $title;
@@ -101,9 +93,7 @@ class measureTypeUnit extends _entity{
 	
 
 	
-	public function afterDisplay(){
 	
-	}
 
 	public function options(
 		$selectedValue = 0, 
@@ -128,41 +118,22 @@ class measureTypeUnit extends _entity{
 	}
 		
 	public function editForm(){
-		if ($this->pageMode == 'ADD'){
-			$legend = 'Add Measure Type Unit';
-		} else {
-			$legend = 'Edit Measure Type Unit';
-		}
-
 		$entity = 'measure-type-unit';
-		$c = new ProjectTypeLinks;
-		//$contextMenu = $c->formatToggleLink('formOptional','+Measure Type Unit Options');
-		$contextMenu = NULL;
-		$form = openEditForm($entity,$legend,'pr_MeasureTypeUnit_Save.php',$contextMenu);
-
-		$u = new UnitOfMeasure;
-		$select = $u->getUnitOfMeasureSelectList($this->unitOfMeasureId,'unitOfMeasureId','false');
-		$fields =inputFieldSelect($entity, $select,'Unit Type');
 		
-		$formRequired = $fields;
+		
+		
+		$u = new quantityType;
+		$select = $u->options($this->quantityType->id->value(),$this->quantityType->id->env->variable());
+		$fields =$this->quantityType->id->inputChoice($select);
+		
+		
 		
 		$formOptional = NULL;
 		
 		//hidden fields and submit,reset buttons
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('measureTypeId', $this->measureTypeId);
-		$hidden .= getHiddenInput('measureTypeUnitId', $this->id);
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-			
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
-		return $form;
-	}
-	
-	public function afterCollectPostValues(){
-		//called by save form prior to running adds/updates
-	//	$this->pageMode = $_POST['mode'];
-		
+		$hidden .= $this->measureType->id->inputHidden();
+		$hidden .= $this->id->inputHidden();
 	
 	}
 

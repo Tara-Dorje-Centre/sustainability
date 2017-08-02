@@ -1,7 +1,7 @@
 ﻿<?php 
 
 
-class unitTypeFields extends _fieldsetEntityType{
+class quantityTypeFields extends _fieldsetEntityType{
     public $symbol;	
     public $type;
     
@@ -20,7 +20,7 @@ class unitTypeFields extends _fieldsetEntityType{
 	}
 }
 
-class unitTypeSQL extends _entityTypeSQL{
+class quantityTypeSQL extends _entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'units_of_measure';
 	}
@@ -44,22 +44,22 @@ class unitTypeSQL extends _entityTypeSQL{
 	}
 }
 
-class unitTypeLinks extends _entityTypeLinks {
-	protected $context = 'unitType';
-	protected $pageList = 'pr_UnitType_List.php';
-	protected $pageDetail = 'pr_UnitType_Detail.php';
+class quantityTypeLinks extends _entityTypeLinks {
+	protected $context = 'quantityType';
+	protected $pageList = 'pr_QuantityType_List.php';
+	protected $pageDetail = 'pr_QuantityType_Detail.php';
 }
 
-class unitType extends _entityType{
+class quantityType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'unitType';
+		$this->_MyClassName = 'quantityType';
 		parent::__construct($mode, $id, $idParent);
-		$this->titleEntity = 'Unit Type';
-		$this->pageSave = 'pr_UnitType_Save.php';
+		$this->titleEntity = 'Quantity Type';
+		$this->pageSave = 'pr_QuantityType_Save.php';
 	
-		$this->f = new unitTypeFields();
-		$this->sql = new unitTypeSQL();
-		$this->links = new unitTypeLinks();
+		$this->f = new quantityTypeFields();
+		$this->sql = new quantityTypeSQL();
+		$this->links = new quantityTypeLinks();
 	}
 	
 	/*
@@ -185,13 +185,13 @@ class unitType extends _entityType{
 	}
 } 
 
-class unitTypeList extends _entityTypeList{
+class quantityTypeList extends _entityTypeList{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'unitTypeList';
+		$this->_MyClassName = 'quantityTypeList';
 		
 		parent::__construct($mode, $id, $idParent);
-		$this->titleEntity = 'Unit Types';
-		$this->base = new unitType($this->pageMode,$this->id,$this->idParent);
+		$this->titleEntity = 'Quantity Types';
+		$this->base = new quantityType($this->pageMode,$this->id,$this->idParent);
 	}
 }
 

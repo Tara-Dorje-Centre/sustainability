@@ -98,7 +98,7 @@ class _menu extends _echo{
 		$locationTypeL = new locationTypeLinks($menuType,$menuStyle);
 
 		$locationL = new locationLinks($menuType,$menuStyle);
-		$unitL = new unitTypeLinks($menuType,$menuStyle);
+		$unitL = new quantityTypeLinks($menuType,$menuStyle);
 		$measureTypeL = new measureTypeLinks($menuType,$menuStyle);
 		$cropL = new CropLinks($menuType,$menuStyle);
 		$projectTypeL = new projectTypeLinks($menuType,$menuStyle);

@@ -102,7 +102,7 @@ p{
 #site-footer-links{
 	max-width:200px;
 	float:right;
-	font-size:10px;
+	font-size:9px;
 	text-align:right;
 }
 
@@ -166,7 +166,7 @@ div.testing-frame{
 }
 .menu-links-item{
 	margin:2px;
-	padding:1px;
+	padding:2px;
 }
 .paged-links-list {
 	padding:1px;
@@ -200,13 +200,13 @@ div.testing-frame{
 }
 .button-links-item{
 	padding:2px;
-	margin:1px;
+	margin:2px;
 	background-color:transparent;
 	min-width:100px;
 }
 .paged-links-item-current{
 	font-family: Verdana, Arial, Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 18px;
 	font-style:normal;
 	font-weight:normal;
 	vertical-align:top;
@@ -216,7 +216,7 @@ div.testing-frame{
 }
 .menu-links-item, .paged-links-item, .button-links-item, .menu-links-list, .paged-links-list, .button-links-list{
 	font-family: Verdana, Arial, Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	font-size: 22px;
 	font-style:normal;
 	font-weight:normal;
 	vertical-align:top;
@@ -231,7 +231,7 @@ a.menu-links-item:hover, a.paged-links-item:hover, a.button-links-item:hover{
 .highlite-section{
 	color:red;
 	background-color:yellow;
-	font-size:10px;
+	font-size:18px;
 	font-weight:bold;
 	border:solid;
 	border-width:1px;
@@ -296,11 +296,11 @@ a.menu-links-item:hover, a.paged-links-item:hover, a.button-links-item:hover{
 }
 .display-details{
 	clear:both;
-	font-size:10px;
+	font-size:13px;
 	width:95%;
 }
 .display-caption{
-	font-size:10px;
+	font-size:22px;
 	font-weight:bold;
 	font-variant:small-caps;
 }
@@ -314,7 +314,7 @@ a.menu-links-item:hover, a.paged-links-item:hover, a.button-links-item:hover{
 }
 
 .editing-input{
-	font-size:11px;
+	font-size:15px;
 	font-weight:normal;
 }
 .editing-input-date{
@@ -325,14 +325,14 @@ a.menu-links-item:hover, a.paged-links-item:hover, a.button-links-item:hover{
 }
 
 .editing-button{
-	font-size:10px;
+	font-size:13px;
 	font-weight:bold;
 	font-variant:small-caps;
 	min-width:50px;
 	text-align:center;
 }
 .editing-caption{
-	font-size:10px;
+	font-size:15px;
 	font-weight:bold;
 	font-variant:small-caps;
 	min-width:50px;
@@ -383,7 +383,7 @@ td, th {
 	padding:2px;
 	margin:1px;
 	line-height:normal;
-	font-size:13px;
+	font-size:15px;
 	min-height:15px;
 }
 
@@ -407,7 +407,7 @@ form{
 	border-style:solid;
 }
 .calendar-title-day{
-	font-size:10px;
+	font-size:11px;
 	font-variant:small-caps;	
 	width:100px;
 	border-width:1px;
@@ -436,7 +436,7 @@ form{
 background-color:lightgray;	
 }
 .calendar-date{
-font-size:9px;	
+font-size:11px;	
 font-weight:bold;
 float:left;
 margin:0;
@@ -444,7 +444,7 @@ padding:0;
 padding-bottom:2px;
 }
 .calendar-details{
-font-size:9px;
+font-size:11px;
 clear:both;
 vertical-align:bottom;
 }

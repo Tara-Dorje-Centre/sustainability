@@ -17,8 +17,8 @@ class receiptFields extends _fieldsetTaskChild{
 
 	public $receivedBy;
 	public $receivedFrom;
-    public $quantity;
-	public $quantityUnits;
+ /*   public $quantity;
+	public $quantityType;*/
     public $costUnit;
 	public $costActual;
  
@@ -29,14 +29,14 @@ class receiptFields extends _fieldsetTaskChild{
 	
 		$this->f->receivedBy = new _userField('received_by','received-by','Received By');
 		$this->f->receivedFrom = new _userField('received_from','received-from','Received From');
-		$this->f->quantityUnits = new _fieldIdNumber('qty_unit_measure_id','quantity-units','Quantity Units','qty_unit_measure_name');	
-		$this->f->quantity = new _numberField('quantity','quantity','Quantity');
+
+
 		$this->f->costUnit = new _numberField('cost_unit','cost-unit','Unit Amount');
 		$this->f->costActual = new _numberField('cost_actual','cost-actual','Amount Actual');
 		$this->_register('receivedBy',$this->receivedBy);
 		$this->_register('receivedFrom',$this->receivedFrom);
-		$this->_register('quantityUnits',$this->quantityUnits);
-		$this->_register('quantity',$this->quantity);
+
+
 		$this->_register('costUnit',$this->costUnit);
 		$this->_register('costActual',$this->costActual);
 	}
@@ -44,8 +44,7 @@ class receiptFields extends _fieldsetTaskChild{
 	public function setDefaults(){
 		parent::setDefault();
 		
-		$this->quantity->setDefault(1);
-		$this->quantityUnits->setDefault(0);
+		
 		$this->costUnit->setDefault(0);
 		$this->costActual->setDefault(0);		
 		$this->receivedBy->setDefault($_SESSION['login-name']);
@@ -73,8 +72,8 @@ protected $_MyClassName = 'Receipt';
 	
 	protected function setPageTitle(){	
 
-		$title = $this->f->nameProject->name.br();
-		$title .= 'Task: '.$this->f->nameTask;		
+		$title = $this->f->project->name->value().br();
+		$title .= 'Task: '.$this->f->task->name->value();		
 
 		$this->_pageTitle = $title;
 		
@@ -121,46 +120,40 @@ protected $_MyClassName = 'Receipt';
 		$form = openEditForm($entity,$legend,'pr_Receipt_Save.php',$contextMenu);
 
 		//start required fields
-		$fields = inputFieldName($entity,$this->f->name,'name','Receipt');
-
-		$fields .= inputFieldUser($entity,$this->f->receivedBy,'receivedBy','Received By');
-
-		$fields .= inputFieldUser($entity,$this->f->receivedFrom,'receivedFrom','Received From');
-				
-		$fields .= inputFieldNumber($entity,$this->f->costUnit,'costUnit','Unit Amount');
-
-		$fields .= inputFieldTimestamp($entity, 'dateReported', $this->f->dateReported, 'Date Reported'); 		
-
-		$fields .= inputFieldDescription($entity,$this->f-description,'description');
-
-		//end required fields
-		$formRequired = $fields;
+		$fields = $this->f->name->input();
 		
-		//start optional fields
-		$fields = inputFieldNumber($entity,$this->f->quantity,'quantity','Quantity');
+
+		$fields .= $this->f->receivedBy->input();
+		$fields .= $this->f->receivedFrom->input();
+		$fields .= ,$this->f->costUnit->input();
+		$fields .= $this->f->reported->input();
+		$fields .= $this->f-description->input();
 		
-		$u = new UnitOfMeasure(OPTIONS);
-		$select = $u->options($this->f->quantityUnitMeasureId,'quantityUnitMeasureId','false');
-		$fields .= captionedInput('Quantity Units', $select);
+		
+		$fields = $this->f->quantity->input();
+		
+		$u = new quantityType(OPTIONS);
+		//$select = $u->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
+		//$fields .=$this->f->quantityType->id->inputChoice($select);
+		$fields = $u->optionsField($this->f->quantityType->id);
 
 		$tooltip = 'Set when task costs are approved';
-		$fields .= inputFieldNumber($entity,$this->f->costActual,'costActual','Amount Actual',$tooltip);
-
-		$m = new ReceiptType(OPTIONS);
-		$select = $m->options($this->f->idType,'idType','false');
-		$fields .= captionedInput('Receipt Type',$select);
+		$fields .= $this->f->costActual->input();
 		
 
-		$fields .= inputFieldNotes($entity,$this->f-notes,'notes');
-
-		//end optional fields (hidden by default)
+		$m = new receiptType('OPTIONS');
+		//$select = $m->options($this->f->typeEntity->id->value(),$this->typeEntity->id->env->variable());
+		$fields .= $m->optionsField($this->f->typeEntity->id);
+		//$fields .=$this->f->typeEntity->id->inputChoice($select);
+		
+		$fields .=$this->f-notes->input();
+		
 		$formOptional = $fields;
 
-		//hidden fields and submit,reset buttons
 		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= getHiddenInput('idTask', $this->f->idTask);
-		$hidden .= getHiddenInput('id', $this->f->id);
-		$hidden .= getHiddenInput('idActivity', $this->f->idActivity);
+		$hidden .= $this->f->task->id->inputHidden();
+		$hidden .= $this->f->id->inputHidden();
+		$hidden .= $this->f->activity->id->inputHidden();
 		$input = getSaveChangesResetButtons();
 		$formSubmit = $hidden.$input;
 			
@@ -170,7 +163,7 @@ protected $_MyClassName = 'Receipt';
 	}
 	
 	private function setActualCost(){
-			$this->costActual = $this->f->costUnit * $this->f->quantity;
+			$this->costActual->set($this->f->costUnit->value() * $this->f->quantity->value());
 	}
 	
 	public function collectPostValues(){

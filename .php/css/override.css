@@ -4,7 +4,7 @@
 */
 #site-heading-title {
 	color: #white;
-	font-family: 'Arial', Myriad Pro, Helvetica;
+	font-family: Arial, Myriad Pro, Helvetica;
 	font-size: 50px;
 	font-style: normal;
 	width: 100%;
@@ -21,7 +21,7 @@ font-family: Arial, Myriad Pro, Helvetica;
 }
 #site-heading-links a {
 	color:white;
-	font-size:13px;
+	font-size:22px;
 	line-height:150%;
 }
 
@@ -34,7 +34,7 @@ legend.display-caption {
 	font-weight: normal;
 	font-variant: normal;
 	width: 100%;
-	font-size: 30px;
+	font-size: 33px;
 	border-bottom: 1px solid #ccc;
 	color: #444;
 	padding-bottom: 10px;
@@ -60,7 +60,7 @@ legend.display-caption {
 }
 
 .input-label{
-	font-size:10px;
+	font-size:15px;
 	line-height:normal;
 	color:black;	
 }
@@ -71,10 +71,10 @@ legend.display-caption {
 	background-color: silver;
 	color: black;
 	padding: 9px;
-	font-size: 12px;
-	line-height: 12px;
+	font-size: 15px;
+	line-height: 25px;
 	border: none;
-	-webkit-appearance: none;
+	
 	line-height:1;
 }
 #formRequired .captioned-input .input-value input {
@@ -82,7 +82,7 @@ legend.display-caption {
 	background-color: silver;
 	color: black;
 	padding: 4px;
-	font-size: 12px;
+	font-size: 15px;
 	border: none;
 }
 #formRequired .captioned-input .input-value textarea {
@@ -90,7 +90,7 @@ legend.display-caption {
 	background-color: silver;
 	color: black;
 	padding: 4px;
-	font-size: 12px;
+	font-size: 15px;
 	border: none;
 }
 
@@ -100,10 +100,10 @@ legend.display-caption {
 	background-color: gray;
 	color: black;
 	padding: 9px;
-	font-size: 12px;
+	font-size: 15px;
 	line-height: 1;
 	border: none;
-	-webkit-appearance: none;
+	
 	line-height:12px;
 
 }
@@ -112,7 +112,7 @@ legend.display-caption {
 	background-color: gray;
 	color: black;
 	padding: 4px;
-	font-size: 12px;
+	font-size: 15px;
 	border: none;
 }
 #formOptional #captioned-input .input-value textarea {
@@ -120,7 +120,7 @@ legend.display-caption {
 	background-color: gray;
 	color: black;
 	padding: 4px;
-	font-size: 12px;
+	font-size: 15px;
 	border: none;
 }
 
@@ -133,7 +133,7 @@ legend.display-caption {
 	min-width: 70px;
 	max-width: 150px;
 	height: 40px;
-	font-size: 16px;
+	font-size: 18px;
 	background-color: #86a600;
 	border: 0px;
 }
@@ -155,11 +155,11 @@ legend.display-caption {
 	display: block;
 }
 #section-heading-title {
-	font-family: 'Amatic SC', Myriad Pro, Helvetica;
+	font-family: Tahoma, Myriad Pro, Helvetica;
 	font-weight: normal;
 	font-variant: normal;
 	width: 100%;
-	font-size: 30px;
+	font-size: 33px;
 	color: #444;
 	padding-bottom: 15px;
 	margin-bottom: 15px;
