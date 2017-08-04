@@ -34,9 +34,13 @@ class taskType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'taskType';
 		parent::__construct($mode, $id, $idParent);
+  		
+  		$this->entity = 'task-type';
   		$this->titleEntity = 'Task Type';
      	$this->pageSave = 'pr_TaskType_Save.php';
+		
 		$this->f = new taskTypeFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new taskTypeSQL();
 		$this->links = new taskTypeLinks();
 	}
@@ -59,9 +63,8 @@ class taskType extends _entityType{
 	
 	
 	protected function editForm(){
-		$this->entity = 'task-type';
+
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 		
@@ -128,6 +131,7 @@ class taskTypeList extends _entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'taskTypeList';
 		parent::__construct($mode, $id, $idParent);
+		
 		$this->titleEntity = 'Task Types';
 		$this->base = new taskType($this->pageMode,$this->id,$this->idParent);
 	}

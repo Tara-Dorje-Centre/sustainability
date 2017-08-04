@@ -55,13 +55,18 @@ class projectFields extends _fieldsetChildEntity{
 
 
 class project extends _entity{
-	protected $_MyClassName = 'Project';
-	protected $titleEntity = 'Project';
-	public $totals;
-	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 	
+	public $totals;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'project';
+		parent::__construct($mode, $id, $idParent);
+		
+		$this->titleEntity = 'Project';
+		$this->entity = 'project';
+		
 		$this->f = new projectFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new projectSQL();
 		$this->links = new projectLinks();
 		$this->totals = new summaryTotals();
@@ -229,18 +234,14 @@ class project extends _entity{
 	
 
 	public function editForm(){
-	
-		$this->entity = 'project';
-		
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
 		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->purpose);
 		
-		$base = new ProjectType('OPTIONS');
+		$base = new projectType('OPTIONS');
 		$select = $base->options($this->f->type->value,$this->f->type->env->variable,'false',true);
 		$this->edit->required->choice($this->f->type->id, $select);
 		

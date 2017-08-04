@@ -53,19 +53,23 @@ abstract class _entityType extends _entity{
 		
 	}
 	protected function editForm(){
-		$this->entity = 'entity-type';
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
-		$this->edit->required->addContent($this->f->name->input());
-		$this->edit->required->addContent($this->f->displayOrder->input());
-		$this->edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));
-		$this->edit->optional->addContent($this->f->description->input());
-		$this->edit->optional->addContent($this->f->notes->input());
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		
+		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->displayOrder);
+		$this->edit->required->input($this->f->highlight);
+		
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
+		
 		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$this->edit->hidden->addContent($this->f->id->inputHidden());
+		$this->edit->hidden->inputHidden($this->f->id);
+		
 		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		
 		return $this->edit->close();
 	}
 	

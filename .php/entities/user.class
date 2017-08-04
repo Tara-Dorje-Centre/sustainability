@@ -66,22 +66,22 @@ class userFields extends _fieldsetEntity{
 }
 
 class user extends _entity{
-protected $_MyClassName = 'User';
-	   		
-
 	private $loginPwd;
 	private $loginPwdConfirm;
+	
 	public $validationMessages;
 
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'user';
 		parent::__construct($mode, $id, $idParent);
-	//protected function setHelperClasses(){
+		$this->entity = 'user-profile';
+		$this->titleEntity = 'User Profile';
+		$this->pageSave = 'sys_User_Save.php';
 		$this->f = new UserFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new UserSQL();
 		$this->links = new UserLinks();
 	}
-		
-
 	
 	public function display(){
 		$detail = parent::display;
@@ -310,9 +310,9 @@ protected $_MyClassName = 'User';
 	
 	protected function secureEditForm(){
 		$this-> echoState(true,'secureEditForm');
-		$this->entity = 'user';
+
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
+
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
@@ -339,8 +339,8 @@ protected $_MyClassName = 'User';
 		$input = $this->f->email->input();
 		$messages = @$this->validationMessages['email'];
 		$edit->required->addContent(captionedInput('Email Address '.$messages,$input));
-		$edit->optional->addContent($this->f->nameFirst->input());
-		$edit->optional->addContent($this->f->nameLast->input());
+		$edit->optional->input($this->f->nameFirst->());
+		$edit->optional->input($this->f->nameLast->());
 
 
 		$m = new UserType;
@@ -348,8 +348,8 @@ protected $_MyClassName = 'User';
 		$edit->optional->addContent(captionedInput('User Type',$select));
 		
 
-		$edit->optional->addContent($this->f->focus->input());
-		$edit->optional->addContent($this->f->interests->input());
+		$edit->optional->input($this->f->focus->());
+		$edit->optional->input($this->f->interests->());
 	
 		
 		

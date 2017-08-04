@@ -26,7 +26,7 @@ implements Ifieldset, Iecho, IcontentWriter{
     	$this->description = new _descriptionField('description','description','Description');
 		$this->updated = new _dateField('updated','updated','Updated');
     	$this->created = new _dateField('created','created','Created');
-        $this->highlight = new _cssColorField('highlight_style','highlight','Highlight');
+        $this->highlight = new _cssHighlightField('highlight_style','highlight','Highlight');
    
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);

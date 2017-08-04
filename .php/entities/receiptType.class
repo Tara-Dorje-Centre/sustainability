@@ -16,11 +16,15 @@ class receiptTypeLinks extends _entityTypeLinks{
 class receiptType extends _entityType{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 		$this->_MyClassName = 'receiptType';
+		parent::__construct($mode, $id, $idParent);
+	
+		$this->entity = 'receipt-type';
   		$this->titleEntity = 'Receipt Type';
   		$this->pageSave = 'pr_ReceiptType_Save.php';
+		
 		$this->f = new receiptTypeFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new receiptTypeSQL;
 		$this->links = new receiptTypeLinks();
 	}

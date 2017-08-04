@@ -56,27 +56,24 @@ class receiptFields extends _fieldsetTaskChild{
 }
 
 class receipt extends _entity{
-protected $_MyClassName = 'Receipt';
-
-	protected $titleEntity = 'Receipt';
-	protected $pageSave = 'pr_Receipt_Save.php';
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'Receipt';
 		parent::__construct($mode, $id, $idParent);
+		
+		$this->entity = 'receipt';
+		$this->titleEntity = 'Receipt';
+		$this->pageSave = 'pr_Receipt_Save.php';
+		
 		$this->f = new receiptFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new receiptSQL;
 		$this->links = new receiptLinks();
 	}
 	
-	
-	
-	
 	protected function setPageTitle(){	
-
 		$title = $this->f->project->name->value().br();
 		$title .= 'Task: '.$this->f->task->name->value();		
-
 		$this->_pageTitle = $title;
-		
 	}
 	
 	
@@ -112,16 +109,11 @@ protected $_MyClassName = 'Receipt';
 	}
 	
 	protected function editForm(){
-			$legend = $this->pageMode.'Receipt';
-		
-		$entity = 'receipt';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
+		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
-
-		//start required fields
 		$this->edit->required->input($this->f->name);
 
 		$this->edit->optional->input($this->f->receivedBy);
@@ -135,7 +127,6 @@ protected $_MyClassName = 'Receipt';
 		
 		$u = new quantityType(OPTIONS);
 		$select = $u->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
-		//$fields .=$this->f->quantityType->id->inputChoice($select);
 		$this->edit->required->choice($this->f->quantityType->id,$select);
 
 		$tooltip = 'Set when task costs are approved';

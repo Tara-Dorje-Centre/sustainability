@@ -116,11 +116,15 @@ class siteSettingsFields extends _fieldset{
 class siteSettings extends _entity{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
 		$this->_MyClassName = 'SiteSettings';
+		parent::__construct($mode, $id, $idParent);
+     
+		$this->entity = 'entity-type';
      	$this->titleEntity = 'Site Settings';
    	 	$this->pageSave = 'sys_SiteSettings_Save.php';
+   	 	
 		$this->f = new siteSettingsFields();
+		$this->f->setEntity($this->entity);
 		$this->links = new siteSettingsLinks();
 		$this->sql = new siteSettingsSQL();
 	}

@@ -68,8 +68,8 @@ public function __construct(){
 }
 
 class task extends _entity{
-	protected $_MyClassName = 'Task';
-    protected $titleEntity = 'Task';
+	 
+
 	public $totals;
 	
 	public $measureCount = 0;
@@ -80,9 +80,15 @@ class task extends _entity{
 	public $resultsPageReceipt = 1;
 	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'task';
 		parent::__construct($mode, $id, $idParent);
-	//protected function setHelperClasses(){
+	
+		$this->entity = 'task';
+		$this->titleEntity = 'Task';
+		$this->pageSave = 'pr_task_save.pho';
+	
 		$this->f = new taskFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new TaskSQL();
 		$this->links = new TaskLinks();
 		$this->totals = new summaryTotals();
@@ -352,58 +358,55 @@ class task extends _entity{
 	
 	
 	public function editForm(){
-		
-		$this->entity = 'task';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
-		$edit->required->addContent($this->f->taskOrder->input());
-		$edit->required->addContent($this->f->name->input());
+		$this->edit->required->input($this->f->taskOrder);
+		$this->edit->required->input($this->f->name);
 		
 		$l = new taskType();
 		$select = $l->options($this->f->typeEntity->id->value(),$this->f->typeEntity->id->env->variable());
-		$edit->required->addContent($this->f->typeEntity->id->inputChoice($select));
+		$this->edit->required->choice($this->f->typeEntity, $select);
 		
 		$l = new project();
 		$input = $l->options($this->f->project->id->value(),$this->f->project->id->env->variable());
-		$edit->required->addContent($this->f->project->id->inputChoice($input));
+		$this->edit->required->choice($this->f->project->id, $input);
 		
 		$l = new location('OPTIONS');
 		$select = $l->options($this->f->location->id->value(),$this->f->location->id->env->variable());
-		$edit->required->addContent($this->f->location->id->inputChoice($select));
-		$edit->required->addContent($this->f->description->input());
-		$edit->required->addContent($this->f->started->input()); 		
-		$edit->required->addContent($this->f->hoursEstimated->input());
+		$this->edit->required->choice($this->f->location->id, $select);
+		$this->edit->required->input($this->f->description);
+		$this->edit->required->input($this->f->started); 		
+		$this->edit->required->input($this->f->hoursEstimated);
 		
-		$edit->optional->addContent($this->f->summary->input());
+		$this->edit->optional->input($this->f->summary);
 		
 		$tooltip = 'Add activity details to record hours';
-		$edit->optional->addContent($this->f->hoursActual->input());
-		$edit->optional->addContent($this->f->pctDone->input());
-		$edit->optional->addContent($this->f->hoursNotes->input());
+		$this->edit->optional->input($this->f->hoursActual);
+		$this->edit->optional->input($this->f->pctDone);
+		$this->edit->optional->input($this->f->hoursNotes);
 		
 		if ($this->totals->materials->count > 0) {
 			if ($_SESSION['is-admin'] == 'yes'){
 				//current user is admin, allow editing approvals
-				$edit->optional->addContent($this->f->materialsAuthProject->input());
+				$this->edit->optional->input($this->f->materialsAuthProject);
 				if ($this->f->materialsAuthProject == 'no'){
 					$this->f->materialsAuthBy->set($_SESSION['login-name']);
 				}
-				$edit->optional->addContent($this->f->materialsAuthBy->input());
+				$this->edit->optional->input($this->f->materialsAuthBy);
 			} else {
 				//materials present but user cannot edit approvals
-				$edit->optional->addContent('Materials Approved:'.$this->f->materialsAuthProject->value());
+				$this->edit->optional->addContent('Materials Approved:'.$this->f->materialsAuthProject->value());
 
-				$edit->hidden->addContent($this->f->materialsAuthProject->inputHidden());
-				$edit->hidden->addContent($this->f->materialsAuthBy->inputHidden());	
+				$this->edit->hidden->inputHidden($this->f->materialsAuthProject);
+				$this->edit->hidden->inputHidden($this->f->materialsAuthBy);	
 			}
 		} else {
 			//no materials under task, dont show authorization fields
-			$edit->hidden->addContent($this->f->materialsAuthProject->inputHidden());
-			$edit->hidden->addContent($this->f->materialsAuthBy->inputHidden());	
-			//$edit->oprtional->addContent('No Task Materials');
+			$this->edit->hidden->inputHidden($this->f->materialsAuthProject);
+			$this->edit->hidden->inputHidden($this->f->materialsAuthBy);	
+			//$this->edit->oprtional->addContent('No Task Materials');
 		}
 		//$fields .= captionedInput('Costs', $input);
 
@@ -411,34 +414,34 @@ class task extends _entity{
 		if ($this->receiptCount > 0) {
 			if ($_SESSION['is-admin'] == 'yes'){
 				//current user is admin, allow editing approvals
-				$edit->optional->addContent($this->f->receiptsAuthProject->input());
+				$this->edit->optional->input($this->f->receiptsAuthProject);
 				if ($this->f->receiptsAuthProject == 'no'){
 					$this->f->receiptsAuthBy->set($_SESSION['login-name']);
 				}
-				$edit->optional->addContent($this->f->receiptsAuthBy->input());
+				$this->edit->optional->input($this->f->receiptsAuthBy);
 				
 			} else {
 				//materials present but user cannot edit approvals
-				$edit->optional->addContent('Receipts Approved:'.$this->f->materialsAuthProject->value());
-				$edit->hidden->addContent($this->f->receiptsAuthProject->inputHidden());
-				$edit->hidden->addContent($this->f->receiptsAuthBy->inputHidden());
+				$this->edit->optional->addContent('Receipts Approved:'.$this->f->materialsAuthProject->value());
+				$this->edit->hidden->inputHidden($this->f->receiptsAuthProject);
+				$this->edit->hidden->inputHidden($this->f->receiptsAuthBy);
 			}
 		} else {
 			//no materials under task, dont show authorization fields
-			$edit->hidden->addContent($this->f->receiptsAuthProject->inputHidden());
-			$edit->hidden->addContent($this->f->receiptsAuthBy->inputHidden());	
+			$this->edit->hidden->inputHidden($this->f->receiptsAuthProject);
+			$this->edit->hidden->inputHidden($this->f->receiptsAuthBy);	
 			//$optional->addContent('No Task Receipts');
 		}
 		//$fields .= captionedInput('Receipts',$input);		
 		
 		
 		
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->id->inputHidden());
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->f->id);
 		
-		$edit->submit->addContent(getSaveChangesResetButtons());
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
 
-		return $edit->close();
+		return $this->edit->close();
 	}
 	
 		

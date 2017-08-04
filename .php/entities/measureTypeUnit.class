@@ -43,12 +43,14 @@
 
 
 class measureTypeUnit extends _entity{
-	protected $_MyClassName = 'MeasureTypeUnit';
+	protected $_MyClassName = 'measureTypeUnit';
 	
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-	
+		$this->entity = 'measure-type-unit';
+
 		$this->f = new measureTypeUnitFields;
+		$this->f->setEntity($this->entity);
 		$this->l = new measureTypeUnitLinks;
 		$this->sql = new measureTypeUnitSQL;
 		
@@ -118,17 +120,17 @@ class measureTypeUnit extends _entity{
 	}
 		
 	public function editForm(){
-		$entity = 'measure-type-unit';
+		//$entity = 'measure-type-unit';
 		
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
+		//$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
 		
 		$u = new quantityType;
 		$select = $u->options($this->quantityType->id->value(),$this->quantityType->id->env->variable());
-		$this->edit->->required->choice($this->quantityType->id, $select);
+		$this->edit->required->choice($this->quantityType->id, $select);
 		
 		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		$this->edit->hidden->inputHidden($this->measureType->id);

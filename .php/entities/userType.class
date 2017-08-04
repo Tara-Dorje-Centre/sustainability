@@ -1,10 +1,10 @@
 ﻿<?php 
-/* reviewed 7/29  */
+/* reviewed 8/4  */
 class userTypeFields extends _fieldsetEntityType{
 
 }
 class userTypeSQL extends _entityTypeSQL{
-//missing display order from table
+//missing display order from table?
 	public function __construct(){
 		$this->baseTable = 'user_types';
 	}
@@ -19,9 +19,12 @@ class userType extends _entityType {
 		$this->_MyClassName = 'userType';
 		parent::__construct($mode, $id, $idParent);
 		
+		$this->entity = 'user-type';
   		$this->titleEntity = 'User Profile Type';
 		$this->pageSave = 'sys_UserType_Save.php';
+		
 		$this->f = new userTypeFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new userTypeSQL();
 		$this->links = new userTypeLinks();
 	}

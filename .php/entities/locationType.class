@@ -17,11 +17,13 @@ class locationType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'locationType';
 		parent::__construct($mode, $id, $idParent);
+		$this->entity = 'location-type';
   	 	$this->titleEntity = 'Location Type';
 	 	$this->pageSave = 'pr_LocationType_Save.php';
 		$this->f = new locationTypeFields();
 		$this->sql = new locationTypeSQL();
 		$this->links = new locationTypeLinks();
+		$this->f->setEntity($this->entity);
 	}
 	
 } 

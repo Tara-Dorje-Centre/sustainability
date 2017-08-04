@@ -54,10 +54,13 @@ class quantityType extends _entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'quantityType';
 		parent::__construct($mode, $id, $idParent);
+		
+		$this->entity = 'quantity-type';
 		$this->titleEntity = 'Quantity Type';
 		$this->pageSave = 'pr_QuantityType_Save.php';
 	
 		$this->f = new quantityTypeFields();
+		$this->f->setEntity($this->entity);
 		$this->sql = new quantityTypeSQL();
 		$this->links = new quantityTypeLinks();
 	}
