@@ -230,39 +230,39 @@ class project extends _entity{
 
 	public function editForm(){
 	
-		$entity = 'project';
+		$this->entity = 'project';
 		
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($entity);
-		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->titleEntity);
-		
-		$edit->required->addContent($this->f->name->input());
-		$edit->required->addContent($this->f->purpose->input());
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+	
+		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->purpose);
 		
 		$base = new ProjectType('OPTIONS');
 		$select = $base->options($this->f->type->value,$this->f->type->env->variable,'false',true);
-		$edit->required->addContent($this->f->type->inputChoice($select));
+		$this->edit->required->choice($this->f->type->id, $select);
 		
 		$base = new Location('OPTIONS');
 		$select = $base->options($this->f->location->id->value(),$this->f->location->id->env->variable(),'false',true);
-		$edit->required->addContent($this->f->location->id->inputChoice($select));
+		$this->edit->required->choice($this->f->location->id, $select);
 
-		$edit->required->addContent($this->f->started->input());
-		$edit->required->addContent($this->f->priority->input());
-		$edit->required->addContent($this->f->pctDone->input());
-		$edit->optional->addContent($this->f->description->input());
-		$edit->optional->addContent($this->f->showAlways->input());
-		$edit->optional->addContent($this->f->summary->input());
-		$edit->optional->addContent($this->f->goals->input());
-		$edit->optional->addContent($this->f->lessons->input());
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->parentEntity->id->inputHidden());
-		$edit->hidden->addContent($this->f->id->inputHidden());
+		$this->edit->required->input($this->f->started);
+		$this->edit->required->input($this->f->priority);
+		$this->edit->optional->input($this->f->pctDone);
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->showAlways);
+		$this->edit->optional->input($this->f->summary);
+		$this->edit->optional->input($this->f->goals);
+		$this->edit->optional->input($this->f->lessons);
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->f->parentEntity->id);
+		$this->edit->hidden->inputHidden($this->f->id);
 		
-		$edit->submit->addContent(getSaveChangesResetButtons());
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
 
-		return $edit->close();
+		return $this->edit->close();
 	}
 
     public function UpdateTaskSummary(){

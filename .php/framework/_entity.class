@@ -15,9 +15,7 @@ implements Iecho, IcontentWriter{
  
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-		$this->>entity = '[entity]';
-		$this->f->setEntity($entity);
-		$this->edit = new _inputForm($this->entity,$this->pageMode,$this->pageSave);
+		
 	}
 	
 	

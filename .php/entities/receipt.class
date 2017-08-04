@@ -115,51 +115,49 @@ protected $_MyClassName = 'Receipt';
 			$legend = $this->pageMode.'Receipt';
 		
 		$entity = 'receipt';
-		$c = new ProjectTypeLinks;
-		$contextMenu = $c->formatToggleLink('formOptional','+Options');
-		$form = openEditForm($entity,$legend,'pr_Receipt_Save.php',$contextMenu);
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
+	
 
 		//start required fields
-		$fields = $this->f->name->input();
-		
+		$this->edit->required->input($this->f->name);
 
-		$fields .= $this->f->receivedBy->input();
-		$fields .= $this->f->receivedFrom->input();
-		$fields .= ,$this->f->costUnit->input();
-		$fields .= $this->f->reported->input();
-		$fields .= $this->f-description->input();
+		$this->edit->optional->input($this->f->receivedBy);
+		$this->edit->required->input($this->f->receivedFrom);
+		$this->edit->required->input($this->f->costUnit);
+		$this->edit->optional->input($this->f->reported);
+		$this->edit->optional->input($this->f->description);
 		
 		
-		$fields = $this->f->quantity->input();
+		$this->edit->required->input($this->f->quantity);
 		
 		$u = new quantityType(OPTIONS);
-		//$select = $u->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
+		$select = $u->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
 		//$fields .=$this->f->quantityType->id->inputChoice($select);
-		$fields = $u->optionsField($this->f->quantityType->id);
+		$this->edit->required->choice($this->f->quantityType->id,$select);
 
 		$tooltip = 'Set when task costs are approved';
-		$fields .= $this->f->costActual->input();
+		$this->edit->optional->input($this->f->costActual);
 		
 
 		$m = new receiptType('OPTIONS');
-		//$select = $m->options($this->f->typeEntity->id->value(),$this->typeEntity->id->env->variable());
-		$fields .= $m->optionsField($this->f->typeEntity->id);
-		//$fields .=$this->f->typeEntity->id->inputChoice($select);
+		$select = $m->options($this->f->typeEntity->id->value(),$this->typeEntity->id->env->variable());
+		$this->edit->required->choice($this->f->typeEntity->id,$select);
 		
-		$fields .=$this->f-notes->input();
 		
-		$formOptional = $fields;
+		$this->edit->optional->input($this->f-notes);
+		
 
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= $this->f->task->id->inputHidden();
-		$hidden .= $this->f->id->inputHidden();
-		$hidden .= $this->f->activity->id->inputHidden();
-		$input = getSaveChangesResetButtons();
-		$formSubmit = $hidden.$input;
-			
-		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);	
 
-		return $form;
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->f->task->id);
+		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->hidden->inputHidden($this->f->activity->id);
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
+
+		return $this->edit->close();
 	}
 	
 	private function setActualCost(){

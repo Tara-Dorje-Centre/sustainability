@@ -59,24 +59,26 @@ class taskType extends _entityType{
 	
 	
 	protected function editForm(){
-		$entity = 'task-type';
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
-
-		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->titleEntity);
-		$edit->required->addContent($this->f->name->input());
+		$this->entity = 'task-type';
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		
+		$this->edit->required->input($this->f->name);
 		
 		$select = $this->optionsFrequency($this->f->frequency->value(),$this->f->frequency->env->variable());
-		$edit->required->addContent($this->f->frequency->inputChoice( $select));
+		$this->edit->required->choice($this->f->frequency, $select);
 		
-		$edit->required->addContent($this->f->displayOrder->input());
-		$edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));
-		$edit->optional->addContent($this->f->description->input());
-		$edit->optional->addContent($this->f->notes->input());
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->id->inputHidden());
-		$edit->submit->addContent(getSaveChangesResetButtons());
-		return $edit->close();
+		$this->edit->required->input($this->f->displayOrder);
+		$this->edit->required->input($this->f->highlight);
+		
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		return $this->edit->close();
 	
 	}
 	

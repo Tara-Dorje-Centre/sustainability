@@ -76,6 +76,7 @@ function closeEditForm($entity = '', $required = NULL, $optional = NULL, $submit
 	$form .= closeDisplayDetails();
 	return $form;
 }
+/*
 function wrapDivRequired($entity,$formRequired){
 	$div = openDiv('formRequired','show');
 	$div .= $formRequired.closeDiv();
@@ -88,33 +89,48 @@ function wrapDivOptional($entity,$formOptional){
 	return $div;
 }
 
+*/
 function wrapDivFieldGrouping($entity,$fields,$css = 'fieldGrouping'){
 	$div = openDiv($entity.'-'.$css,$css);
 	$div .= $fields.closeDiv();
 	return $div;
-}
+}/*
 
 function wrapDivSubmit($entity,$formSubmit){
 	$div = openDiv('formSubmit','formSubmit');
 	$div .= $formSubmit.closeDiv();
 	return $div;
+}*/
+
+
+class _htmlFieldset extends _element{
+protected $_legend;
+public function __construct($legend = 'none',$css='none'){
+	parent::__construct('fieldset',$css);
+	$this->_legend = $legend;
+}
+
+public function open(){
+	$content = parent::open();
+	if ($this->_legend != 'none')
+		$l = new _element('legend','none','display-caption');
+		$content .= $l->wrap($this->_legend);
+	}
+	return $content;
 }
 
 
 
+}
 
 function openFieldset($legend = 'none',$cssFieldset = 'none',$cssLegend = 'display-caption'){
-	$e = new _element('fieldset','none',$cssFieldset);
-	$fields = $e->open();
-	if ($legend != 'none'){
-		$l = new _element('legend','none',$cssLegend);
-		$fields .= $l->wrap($legend);
-	}
-	return $fields;	
+	
+	$e = new _htmlFieldset($legend,$cssFieldset);
+	return $e->open();	
 }
 
 function closeFieldset(){
-	$e = new _element('fieldset');
+	$e = new _htmlFieldset();
 	return $e->close();
 }
 

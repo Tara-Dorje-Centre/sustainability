@@ -184,27 +184,27 @@ class location extends _entity{
 
 	protected function editForm(){
 		$this->echoState(true,'editForm');
-		$entity = 'location';
+		$this->entity = 'location';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($entity);
-		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->titleEntity);
-		
-		$edit->required->addContent($this->f->name->input());
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+	
+		$this->edit->required->input($this->f->name);
 
 		$type = new locationType('OPTIONS');
 		$select = $type->options($this->f->typeEntity->value(),$this->f->typeEntity->env->variable(),'false',true);
-		$edit->required->addContent($this->f->typeEntity->inputChoice($select));
-		//captionedInput('Type',$select));
-					
-		$edit->optional->addContent($this->f->description->input());
+		$this->edit->required->choice($this->f->typeEntity->id, $select);
 		
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->parentEntity->id->inputHidden());
-		$edit->hidden->addContent($this->f->id->inputHidden());
-		$edit->submit->addContent(getSaveChangesResetButtons());
+					
+		$this->edit->optional->input($this->f->description);
+		
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->addContent($this->f->parentEntity->id->inputHidden());
+		$this->edit->hidden->addContent($this->f->id->inputHidden());
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
 
-		return $edit->close();
+		return $this->edit->close();
 	}
 
 

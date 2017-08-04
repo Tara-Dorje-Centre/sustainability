@@ -319,13 +319,12 @@ class siteSettings extends _entity{
 	
 	protected function editForm(){
 		
-		$entity = 'site-settings';
-		$this->f->setEntity($entity);
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
-
-		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->titleEntity);
-		
+		$this->entity = 'site-settings';
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
+	
 		$edit->required->addContent($this->f->siteTitle->input());
 		$edit->required->addContent($this->f->siteUrl->input());	
 		$edit->required->addContent($this->f->contactName->input());

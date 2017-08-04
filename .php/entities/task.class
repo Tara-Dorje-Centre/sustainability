@@ -353,12 +353,12 @@ class task extends _entity{
 	
 	public function editForm(){
 		
-		$entity = 'task';
+		$this->entity = 'task';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($entity);
-		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->titleEntity);
-		
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
+	
 		$edit->required->addContent($this->f->taskOrder->input());
 		$edit->required->addContent($this->f->name->input());
 		

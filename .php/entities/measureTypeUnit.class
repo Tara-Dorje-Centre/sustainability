@@ -120,20 +120,24 @@ class measureTypeUnit extends _entity{
 	public function editForm(){
 		$entity = 'measure-type-unit';
 		
-		
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+	
 		
 		$u = new quantityType;
 		$select = $u->options($this->quantityType->id->value(),$this->quantityType->id->env->variable());
-		$fields =$this->quantityType->id->inputChoice($select);
+		$this->edit->->required->choice($this->quantityType->id, $select);
+		
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->measureType->id);
+		$this->edit->hidden->inputHidden($this->f->id);
+		
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
 		
 		
-		
-		$formOptional = NULL;
-		
-		//hidden fields and submit,reset buttons
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= $this->measureType->id->inputHidden();
-		$hidden .= $this->id->inputHidden();
+		return $this->edit->close();
 	
 	}
 

@@ -1,115 +1,106 @@
 <?php 
 
 class _inputSection extends _contentWriter{
-public $sectionName = '';
-public function __construct(string $sectionName){
-$this->sectionNae = $sectionName;
-}
+protected $name;
+protected $css;
+protected $_div;
+public function __construct(string $name,string $css){
+$this->name = $name;
+$this->css = $css;
 
+$this->_div = new _div($this->name,$this->css);
+$this->addContent($this->_div->open());
+}
+public function input(_field $f){
+$this->addContent($f->input());
+}
+public function inputHidden(_field $f){
+$this->addContent($f->inputHidden());
+}
+public function choice(_field $f,string $options){
+$this->addContent($f->inputChoice($options));
+}
+public function print(){
+$this->addContent($this->_div->close());
+return $this->getContent();
+}
 }
 
 class _inputForm extends _contentWriter{
-	public $entity;
-	public $mode;
-	public $url;
-
+	protected $_form;
+	protected $_fields;
+	protected $_display;
+	protected $_fieldset;
+	protected $_context;
+	protected $div;
+	protected $entity;
+	protected $mode;
+	protected $url;
+	protected $title;
+	protected $contextMenu;
 	public $required;
 	public $optional;
 	public $hidden;
 	public $submit;
 
-	public function __construct(string $entity,string $mode, string $url){
+	public function __construct(string $url,string $title){
+		$this->url = $url;
+		$this->title = $title;
+		$this->required = new _inputSection('form-required','show');
+		$this->optional = new _inputSection('form-optional','hide');
+		$this->hidden = new _inputSection('form-hidden','show');
+		$this->submit = new _inputSection('form-submit','show');
+	}
+
+	public function set(string $entity, string $mode, string $contextMenu = ''){
 		$this->entity = $entity;
 		$this->mode = $mode;
-		$this->url = $url;
-
-
-		$this->required = new _inputSection('required');
-		$this->optional = new _inputSection('optional');
-		$this->hidden = new _inputSection('hidden');
-		$this->submit = new _inputSection('submit');
+		$this->contextMenu = $contextMenu;
+		$this->_form = new _form($this->url, $this->entity.'-edit-form','edit-form');
+		$this->_fields = new _div($this->entity.'-fields','edit-fields');
 	}
+	public function open(string $entity, string $mode, string $contextMenu = ''){
+		$this->set($entity, $mode, $contextMenu);
 
-	public function open(string $contextMenu = '',string $titleEntity = ''){
-		$legend = $this->mode.':  '.$titleEntity;
-		$form = openEditForm($this->entity,$legend,$this->url, $contextMenu);
-		$this->addContent($form);
-	}
-	public function close(){
-	
-		$this->required->addContent($this->hidden->getContent());
+		$this->_display = new _div($this->entity.'-display-'.$this->mode,'display'.$this->mode);
+		$this->addContent($this->_display->open());
 		
-		$optional = $this->optional->getContent();
-		$required = $this->required->getContent();
-		$submit = $this->submit->getContent();
+		if (!is_null($this->contextMenu)){
+			$this->_context = new _div($this->entity.'-context-menu','context-menu');
+			$this->addContent($this->_context->wrap($this->contextMenu));
+		}
+		
+		$legend = $this->mode.':  '.$this->title;
+		$this->_fieldset = new _htmlFieldset($legend);
+		$this->addContent($this->_fieldset->open());
+		
+		$this->addContent($this->_form->open());
+		$this->addContent($this->_fields->open());
+
+	}
+	public function close(){ 
+
+		$this->addContent($this->required->print());
+		$this->addContent($this->optional->print());
+		$this->addContent($this->submit->print());
+		$this->addContent($this->hidden->print());
+		
 	
-		$this->addContent(closeEditForm($entity,$required,$optional,$submit));
+		$this->addContent($this->_fields->close());
+		$this->addContent($this->_form->close());
+		
+		$this->addContent($this->_fieldset->close());
+		$this->addContent($this->_display->close());
+		
 		return $this->getContent();
 	}
-	function openEditForm($entityName, $legend, $formAction, $contextMenu = NULL){
-	$form = openDisplayDetails($entityName,$legend,NULL,'Edit',$contextMenu);
-	$form .= openForm($entityName.'-editForm',$formAction,'editForm');
-	//$form .= '<pre>';
-	$form .= openDiv($entityName.'-fields','editing-fields');
-	return $form;
-}
-
-
-function closeEditForm($entity = '', $required = NULL, $optional = NULL, $submit = NULL){
-
-	$form = wrapDivRequired($entity, $required);
-		
-	$form .= wrapDivOptional($entity,$optional);
-		
-	$form .= wrapDivSubmit($entity,$submit);
-
-	//close fields div
-	$form .= closeDiv();
-	
-	//close edit form
-	
-		//$form .= '</pre>';
-	$form .= closeForm();
-	
-	$form .= closeDisplayDetails();
-	return $form;
-}
 	
 
-function wrapDivRequired($entity,$formRequired){
-	$div = openDiv('formRequired','show');
-	$div .= $formRequired.closeDiv();
-	return $div;
-}
-
-function wrapDivOptional($entity,$formOptional){
-	$div = openDiv('formOptional','hide');
-	$div .= $formOptional.closeDiv();
-	return $div;
-}
-
-function wrapDivFieldGrouping($entity,$fields,$css = 'fieldGrouping'){
-	$div = openDiv($entity.'-'.$css,$css);
-	$div .= $fields.closeDiv();
-	return $div;
-}
-
-function wrapDivSubmit($entity,$formSubmit){
-	$div = openDiv('formSubmit','formSubmit');
-	$div .= $formSubmit.closeDiv();
-	return $div;
-}
+	
 
 
-function openForm($idName, $action, $css = 'none'){
-	$e = new _form($action, $idName, $css);
-	return $e->open();
-}
 
-function closeForm(){
-	$e = new _form();
-	return $e->close();
-}
+
 
 }
 

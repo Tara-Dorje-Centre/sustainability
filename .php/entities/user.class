@@ -310,14 +310,12 @@ protected $_MyClassName = 'User';
 	
 	protected function secureEditForm(){
 		$this-> echoState(true,'secureEditForm');
-
-		$entity = 'user';
-		$this->f->setEntity($entity);
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');
-		
-		$edit = new _editForm($entity,$this->pageMode,$this->pageSave);
-		$edit->open($contextMenu,$this->_titleEntity);
-
+		$this->entity = 'user';
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+	
 		if ($this->pageMode == 'ADD'){
 			$input = $this->f->loginName->input($entity);
 			
