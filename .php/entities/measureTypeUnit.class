@@ -2,44 +2,23 @@
 
 
  class measureTypeUnitFields extends _fieldsetEntity{
- //additional properties
- 
-	/*
-
-	 public $unitOfMeasureId = 0;	
 	 public $measureType;
-	 public $measureTypeName;
 	 public $unitType;
-	 public $unitOfMeasure;
-	 public $unitSymbol;
-	 public $created;	
-	 public $updated;*/
- public $dateField;
- public $textField;
- public $numericField;
- //expose primary fields
- public function __construct(){
 
+ public function __construct(){
+	$this->measureType = new _fieldIdName('measure_type_id','measure-type-id','Measure Type','measure_type_name');
+	$this->unitType = new _fieldIdName('unit_type','unit-type-id','Unit Type','unit_type_name');
+	$this->_register('measureType',$this->measureType);
+	$this->_register('unit_type',$this->unitType);
  }
  //set additional fields
- public function setRow($row){
- parent::setRow();
- $this->dateField = $row["date_reported"];
- $this->textField= ($row["done_by"]);
- $this->numericField = $row["quantity"];	
- 
- 
-	 /*	$this->measureTypeId = $row["measure_type_id"];
-	  $this->unitOfMeasureId = $row["unit_measure_id"];
-	  $this->created = $row["created"];
-	  $this->updated = $row["updated"];	
-	  $this->measureTypeName = ($row["measure_type"]);
-	  $this->unitOfMeasure = ($row["unit_of_measure"]);
-	  $this->unitSymbol = ($row["unit_symbol"]);
-	  $this->unitType = ($row["unit_type"]);*/
+ public function setDefaults(){
+ 	parent::setDefaults();
+ 	
+ 	
  }
 
- }
+}
 
 
 class measureTypeUnit extends _entity{
@@ -87,13 +66,14 @@ class measureTypeUnit extends _entity{
 		$menu .= closeDiv();
 		return $menu;
 	}
+	/*
 		
 	public function getMeasureTypeAndUnitSymbol(){
 		$text = $this->measureTypeName.'('.$this->unitSymbol.')';
 		return $text;
 	}
 	
-
+*/
 	
 	
 
@@ -120,20 +100,22 @@ class measureTypeUnit extends _entity{
 	}
 		
 	public function editForm(){
-		//$entity = 'measure-type-unit';
 		
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		//$this->f->setEntity($this->entity);
+		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
+		$base = new measureType();;
+		$select = $base->options($this->measureType->id->value(),$this->measureType->id->env->variable());
+		$this->edit->required->choice($this->measureType->id, $select);
 		
-		$u = new quantityType;
-		$select = $u->options($this->quantityType->id->value(),$this->quantityType->id->env->variable());
+		$base = new quantityType();;
+		$select = $base->options($this->quantityType->id->value(),$this->quantityType->id->env->variable());
 		$this->edit->required->choice($this->quantityType->id, $select);
 		
 		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$this->edit->hidden->inputHidden($this->measureType->id);
+		//$this->edit->hidden->inputHidden($this->measureType->id);
 		$this->edit->hidden->inputHidden($this->f->id);
 		
 		$this->edit->submit->addContent(getSaveChangesResetButtons());
@@ -147,8 +129,8 @@ class measureTypeUnit extends _entity{
 	
 			$sql = " UPDATE measure_type_units m ";
 			$sql .= " SET ";
-			$sql .= " m.measure_type_id = ".$this->measureType->id.", ";
-			$sql .= " m.unit_measure_id = ".$this->unitOfMeasureId.", ";
+			$sql .= " m.measure_type_id = ".$this->f->measureType->id->value().", ";
+			$sql .= " m.unit_measure_id = ".$this->f->unitType->id->value().", ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
@@ -163,8 +145,8 @@ class measureTypeUnit extends _entity{
 			$sql .= " updated, ";
 			$sql .= " created) ";
 			$sql .= " VALUES (";
-			$sql .= " ".$this->measureType->id.", ";
-			$sql .= " ".$this->unitOfMeasureId.", ";
+			$sql .= " ".$this->measureType->id->value().", ";
+			$sql .= " ".$this->unitType-id->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP) ";
 			
