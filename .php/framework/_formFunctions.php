@@ -112,7 +112,7 @@ public function __construct($legend = 'none',$css='none'){
 
 public function open(){
 	$content = parent::open();
-	if ($this->_legend != 'none')
+	if ($this->_legend != 'none'){
 		$l = new _element('legend','none','display-caption');
 		$content .= $l->wrap($this->_legend);
 	}

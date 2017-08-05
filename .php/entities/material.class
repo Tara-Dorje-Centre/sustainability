@@ -58,6 +58,7 @@ class material extends _entity{
   	 	
 		parent::__construct($mode, $id, $idParent);
 		$this->f = new materialFields();
+		$this->f->setEntity($this->entity);
 		$this->links = new materialLinks();
 		$this->sql = new MaterialSQL();
 		
@@ -141,50 +142,47 @@ class material extends _entity{
 	
 	public function editForm(){
 	
-		$entity = 'material';
+		
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
+		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
 		
-		$edit->required->addContent($this->f->name->input());
-		$edit->required->addContent($this->f->doneBy->input());
-		$edit->required->addContent($this->f->reported->input());
-		$edit->required->addContent($this->f->paidTo->input());
+		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->doneBy);
+		$this->edit->required->input($this->f->reported);
+		$this->edit->required->input($this->f->paidTo);
 		
-		$edit->required->addContent($this->f->quantity->input());
-		$edit->required->addContent($this->f->costUnit->input());
+		$this->edit->required->input($this->f->quantity);
+		$this->edit->required->input($this->f->costUnit);
 		
 		$base = new quantityType('OPTIONS');
-		//$select = $base->optionsField($this->f->quantityType->id);
-		//,$this->f->quantityUnits->env->variable());
-		$edit->required->addContent($base->optionsField($this->f->quantityType->id));
-		//->f->quantityUnits->inputChoice($select));
+		$select = $base->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
+		$this->edit->required->choice($this->f->quantityType->id,$select);
+		
 
-		$t = new materialType('OPTIONS');
-		//$select = $type->optionsField($this->f->typeEntity->id);
-		//->value(),$this->f->typeEntity->env->variable());
-		$edit->required->addContent($t->optionsField($this->f->typeEntity->id));
-		//$this->f->typeEntity->inputChoice($select));
+		$base = new materialType('OPTIONS');
+		$select = $base->options($this->f->typeEntity->id->value(),$this->f->typeEntity->env->variable());
+		$this->edit->required->choice($this->f->typeEntity->id,$select);
 		
 		$this->f->costEstimated->setCaption('Estimated Cost (Based on unit cost and quantity)');
 		$this->f->costActual->setCaption('Actual Cost (reset when task costs are approved)');
 		
-		$edit->optional->addContent($this->f->costEstimated->input());
-		$edit->optional->addContent($this->f->costActual->input());
-		$edit->optional->addContent($this->f->linkText->input());
-		$edit->optional->addContent($this->f->linkUrl->input());
+		$this->edit->optional->input($this->f->costEstimated);
+		$this->edit->optional->input($this->f->costActual);
+		$this->edit->optional->input($this->f->linkText);
+		$this->edit->optional->input($this->f->linkUrl);
 		
-		$edit->optional->addContent($this->f->description->input());
-		$edit->optional->addContent($this->f->notes->input());
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
 		
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->addContent($this->f->task->id->inputHidden());
-		$edit->hidden->addContent($this->f->id->inputHidden());
-		$edit->submit->addContent(getSaveChangesResetButtons());
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->f->task->id);
+		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
 
-		return $edit->close();
+		return $this->edit->close();
 	}
 	
 	public function collectPostValues(){

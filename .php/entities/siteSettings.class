@@ -327,26 +327,26 @@ class siteSettings extends _entity{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu,);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 	
-		$edit->required->addContent($this->f->siteTitle->input());
-		$edit->required->addContent($this->f->siteUrl->input());	
-		$edit->required->addContent($this->f->contactName->input());
-		$edit->required->addContent($this->f->contactEmail->input());
-		$edit->optional->addContent($this->f->organization->input());
-		$edit->optional->addContent($this->f->organizationUrl->input());
-		$edit->optional->addContent($this->f->organizationDescription->input());
-		$edit->optional->addContent($this->f->loginNotice->input());
-		$edit->optional->addContent($this->f->showCostReports->input());
-		$edit->optional->addContent($this->f->showRevenueReports->input());
-		$edit->optional->addContent($this->f->showPublicSite->input());	
+		$this->edit->required->input($this->f->siteTitle);
+		$this->edit->required->input($this->f->siteUrl);	
+		$this->edit->required->input($this->f->contactName);
+		$this->edit->required->input($this->f->contactEmail);
+		$this->edit->optional->input($this->f->organization);
+		$this->edit->optional->input($this->f->organizationUrl);
+		$this->edit->optional->input($this->f->organizationDescription);
+		$this->edit->optional->input($this->f->loginNotice);
+		$this->edit->optional->input($this->f->showCostReports);
+		$this->edit->optional->input($this->f->showRevenueReports);
+		$this->edit->optional->input($this->f->showPublicSite);	
 		
-		$edit->optional->addContent($this->getPublicSiteStylesFieldset('false'));
+		$this->edit->optional->addContent($this->getPublicSiteStylesFieldset('false'));
 
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		
-		$edit->submit->addContent(getSaveChangesResetButtons());
-		return $edit->close();
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		return $this->edit->close();
 	}
 	
 

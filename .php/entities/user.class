@@ -339,17 +339,17 @@ class user extends _entity{
 		$input = $this->f->email->input();
 		$messages = @$this->validationMessages['email'];
 		$edit->required->addContent(captionedInput('Email Address '.$messages,$input));
-		$edit->optional->input($this->f->nameFirst->());
-		$edit->optional->input($this->f->nameLast->());
+		$edit->optional->input($this->f->nameFirst);
+		$edit->optional->input($this->f->nameLast);
 
 
 		$m = new UserType;
-		$select = $m->options($this->f->type->id->value,$this->f->type->id->_env->variable,'false');
-		$edit->optional->addContent(captionedInput('User Type',$select));
+		$select = $m->options($this->f->typeEntity->id->value(),$this->f->typeEntity->id->env->variable());
+		$edit->optional->choice($this->f->typeEntity->id,$select);
 		
 
-		$edit->optional->input($this->f->focus->());
-		$edit->optional->input($this->f->interests->());
+		$edit->optional->input($this->f->focus);
+		$edit->optional->input($this->f->interests);
 	
 		
 		
