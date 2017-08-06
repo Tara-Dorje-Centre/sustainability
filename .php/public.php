@@ -5,7 +5,7 @@ $viewMode = sessionVariableGET('viewMode', 'MAIN');
 $viewId = sessionVariableGET('viewId', 0);
 $paging = sessionVariableGET('paging', 0);
 
-$site = new PublicSite;
+$site = new _publicSite;
 $site->setDetails($viewMode,$viewId,$paging);
-$site->printSite();
+$site->print();
 ?>

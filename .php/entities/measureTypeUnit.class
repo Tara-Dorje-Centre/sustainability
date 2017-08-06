@@ -146,7 +146,7 @@ class measureTypeUnit extends _entity{
 			$sql .= " created) ";
 			$sql .= " VALUES (";
 			$sql .= " ".$this->measureType->id->value().", ";
-			$sql .= " ".$this->unitType-id->value().", ";
+			$sql .= " ".$this->unitType->id->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP) ";
 			

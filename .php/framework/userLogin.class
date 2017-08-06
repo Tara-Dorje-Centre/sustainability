@@ -270,8 +270,8 @@ class userLogin extends _contentWriter{
 $links = new _links();
 		$contextMenu = $links->formatToggleLink('formOptional','Lost Password');
 
-		$login = new _inputForm($entity,$message,'sys_Login.php');
-		$login->open($contextMenu,'Login');
+		$login = new _inputForm('sys_Login.php','Login');
+		$login->open($entity,$this->_form, $contextMenu);
 		$login->required->addContent($this->f->_loginName->input());
 		$login->required->addContent($this->f->_loginPassword->input());
 

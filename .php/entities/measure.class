@@ -64,7 +64,7 @@ class measure extends _entity {
 	}
 		
 		
-	protected function setDetails(){
+	public function setDetails(){
 		parent::setDetails();
 		$this->setParentTask();			
 		

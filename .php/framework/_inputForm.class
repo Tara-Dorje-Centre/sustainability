@@ -46,18 +46,18 @@ class _inputForm extends _contentWriter{
 	public function __construct(string $url,string $title){
 		$this->url = $url;
 		$this->title = $title;
-		$this->required = new _inputSection('form-required','show');
-		$this->optional = new _inputSection('form-optional','hide');
-		$this->hidden = new _inputSection('form-hidden','show');
-		$this->submit = new _inputSection('form-submit','show');
+		$this->required = new _inputSection('formRequired','show');
+		$this->optional = new _inputSection('formOptional','hide');
+		$this->hidden = new _inputSection('formHidden','show');
+		$this->submit = new _inputSection('formSubmit','show');
 	}
 
 	public function set(string $entity, string $mode, string $contextMenu = ''){
 		$this->entity = $entity;
 		$this->mode = $mode;
 		$this->contextMenu = $contextMenu;
-		$this->_form = new _form($this->url, $this->entity.'-edit-form','edit-form');
-		$this->_fields = new _div($this->entity.'-fields','edit-fields');
+		$this->_form = new _form($this->url, $this->entity.'-edit-form','editForm');
+		$this->_fields = new _div($this->entity.'-fields','editFields');
 	}
 	public function open(string $entity, string $mode, string $contextMenu = ''){
 		$this->set($entity, $mode, $contextMenu);
@@ -66,7 +66,7 @@ class _inputForm extends _contentWriter{
 		$this->addContent($this->_display->open());
 		
 		if (!is_null($this->contextMenu)){
-			$this->_context = new _div($this->entity.'-context-menu','context-menu');
+			$this->_context = new _div($this->entity.'-context-menu','contextMenu');
 			$this->addContent($this->_context->wrap($this->contextMenu));
 		}
 		
