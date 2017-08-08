@@ -4,7 +4,7 @@
 abstract class _entityList extends _entity{
 	public $found = 0;
 	public $base;
-
+	protected $_list;
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = '_entityList';
 		parent::__construct($mode, $id, $idParent);
@@ -47,10 +47,13 @@ abstract class _entityList extends _entity{
 		$paging = $this->listingPagingLinks();
 		$add = $this->listingQuickEdit();
 		
-	$entity = $this->titleEntity;
-	$legend = $this->titleEntity;
-		$list = openDisplayList($entity,$legend,$paging,$add);
-		return $list;
+		$entity = $this->base->entity;
+		$legend = $this->titleEntity.':  Details';
+		$contextMenu = 'none';
+		//$contextMenu = $this->base->links->
+		$this->_display = new _displayList($entity,$paging,$legend,$add,$contextMenu);
+
+		return $this->_display->open();
 	}
 	
 	protected function listingSQL(){

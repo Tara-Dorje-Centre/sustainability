@@ -236,7 +236,7 @@ class project extends _entity{
 	public function editForm(){
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->purpose);

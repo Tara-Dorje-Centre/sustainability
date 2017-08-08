@@ -12,7 +12,7 @@ implements Iecho, IcontentWriter{
 	public $links;
 	protected $entity;
  	protected $edit;
- 
+ 	protected $_display;
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		
@@ -74,10 +74,12 @@ implements Iecho, IcontentWriter{
 	}
 	
 	public function listHeading(){
-		$heading = wrapTh($this->titleEntity);
-		$heading .= $this->f->listCaption();
-		$list = wrapTr($heading);
-		return $list;
+		$tr = new html/_tr('table-headings');
+		$th = new html/_th();
+		$th->setContent($this->titleEntity);
+		$tr->setContent($th->print);
+		$tr->addContent($this->f->listCaption());
+		return $tr->print();
 	}
 	
 	protected function listRowLink(){
@@ -86,10 +88,12 @@ implements Iecho, IcontentWriter{
 	}
 	
 	protected function listRowFormat(){
-		$detail = wrapTd($this->listRowLink());
-		$detail .= $this->f->listDetail();		
-		$listRow = wrapTr($detail,$this->f->highlight->value());
-		return $listRow;
+		$tr = new html/_tr('data-row',$this->f->highlight->value());
+		$td = new html/_td();
+		$td->setContent($this->listRowLink());
+		$tr->setContent($td->print());
+		$tr->addContent($this->f->listDetail());		
+		return $tr->print();
 	}
 	
 	public function listRow($row){
@@ -98,10 +102,10 @@ implements Iecho, IcontentWriter{
 	}
 
 	protected function display(){
-		$detail = openDisplayDetails('entity', $this->titleEntity.':  Details');
+		$this->_display = new htmk/_displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
+		$detail = $this->_display->open();
 		$detail .= $this->f->displayDetail();
-		
-		$detail .= closeDisplayDetails();
+		$detail .= $this->_display->close();
 		return $detail;
 	}
 	
@@ -113,7 +117,6 @@ implements Iecho, IcontentWriter{
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);
 	 	}
-	 	
 	}
 
 	public function addForm($idParent = 0){
@@ -155,13 +158,12 @@ implements Iecho, IcontentWriter{
 		$this->setPageTitle();
 		$this->setPageMenu();
 		
-		$heading = openDiv('section-title');
-		$heading .= $this->_pageTitle;
-		$heading .= closeDiv();		
-		$heading = openDiv('section-menu');
-		$heading .= $this->_pageMenu;
-		$heading .= closeDiv();		
-		
+		$title = new html/_div('section-title');
+		$menu = new html/_div('section-menu');
+		$title->setContent($this->_pageTitle);
+		$menu->setContent($this->_pagwMenu);
+		$heading = $title->print();
+		$heading .= $menu->print();
 		return $heading;
 	}
 	

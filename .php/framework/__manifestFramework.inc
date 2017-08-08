@@ -1,5 +1,9 @@
 <?php
 
+
+include_once("_echo.class");
+include_once("_contentWriter.class");
+
 include_once("_htmlFunctions.php");
 include_once("_cssFunctions.php");
 include_once("_formFunctions.php");
@@ -7,8 +11,6 @@ include_once("_formFunctions.php");
 include_once("_sqlFunctions.php");
 showProgress('general functions loaded');
 //
-include_once("_echo.class");
-include_once("_contentWriter.class");
 include_once("_sqlWriter.class");
 include_once("_inputForm.class");
 include_once("_calendar.class");

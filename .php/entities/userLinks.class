@@ -1,10 +1,10 @@
 ﻿<?php 
 
-class userLinks extends _links {
+class userLinks extends _entityLinks {
 
 
-	protected $_pageList = 'pr_UnitOfMeasure_List.php';
-	protected $_pageDetail = 'pr_UnitOfMeasure_Detail.php';
+	protected $_pageList = 'sys_User_List.php';
+	protected $_pageDetail = 'sys_User_Detail.php';
 	
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
@@ -25,7 +25,7 @@ class userLinks extends _links {
 		$link .= '?userTypeId='.$userTypeId;
 		return $link;
 	}
-	
+	//$pagingLinks = $this->base->links->pagingLinks($this->found,$this->resultPage,$this->perPage);	
 	public function listingPaged($baseLink,$found, $resultPage, $perPage){
 		$l = $baseLink.'&resultPageUsers=';
 		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);

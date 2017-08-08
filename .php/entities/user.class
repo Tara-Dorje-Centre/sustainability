@@ -4,6 +4,8 @@
 class userFields extends _fieldsetEntity{
 	
     public $loginName;
+    public loginPwd;
+    public confirmPwd;
     public $nameFirst;
     public $nameLast;
 	public $email;
@@ -22,6 +24,8 @@ class userFields extends _fieldsetEntity{
 		$this->email = new _emailField('email','email','Email Address'); 
 		$this->focus = new _notesField('focus','focus','Focus Area');
 		$this->interests = new _notesField('interests','interests','Interests');
+		$this->loginPwd = new _passwordField('not_used','login-pwd','login-password');
+		$this->pwdConfirm = new _passwordField('not_used','pwd-confirm','confirm-password');
 		$this->loginName = new _userField('login_name','login-name','login-name');
 		$this->lastLogin = new _dateField('last_login','last-login','Last Login'); 
 		$this->isAdmin = new _yesNoField('is_admin','is-admin','Administrator');
@@ -34,6 +38,8 @@ class userFields extends _fieldsetEntity{
 		$this->_register('focus', $this->focus);
 		$this->_register('interests', $this->interests);
 		$this->_register('loginName', $this->loginName);
+		$this->_register('pwdConfirm', $this->pwdConfirm);
+		$this->_register('lastLogin', $this->lastLogin);
 		$this->_register('lastLogin', $this->lastLogin);
 		$this->_register('isAdmin', $this->isAdmin);
 		$this->_register('isActive', $this->isActive);
@@ -66,8 +72,6 @@ class userFields extends _fieldsetEntity{
 }
 
 class user extends _entity{
-	private $loginPwd;
-	private $loginPwdConfirm;
 	
 	public $validationMessages;
 
@@ -314,68 +318,53 @@ class user extends _entity{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		if ($this->pageMode == 'ADD'){
-			$input = $this->f->loginName->input($entity);
-			
-			$messages = @$this->validationMessages['login'];			
+			$this->f->loginName->setValidation(@$this->validationMessages['login']);			
+			$this->edit->required->input($this->f->loginName);
 		} else {
 			$input = $this->f->loginName->inputHidden();
-			$messages = '(cannot be changed)';
+			$this->edit->required->addContent('Login name ['.$this->f->loginName->value().'] cannot be changed');
 		}
-		$edit->required->addContent( captionedInput('Login Name '.$messages,$input));
-
-
-
-		$input = getPasswordInput('loginPwd', 10,20);
-		$passwordGroup = captionedInput('Password',$input);
+		$this->f->loginPwd->setValidation(@$this->validationMessages['password']);
+		$this->edit->required->inputPassword($this->f->loginPwd);
+		$this->edit->required->inputPassword($this->f->pwdConfirm);
 		
-		$input = getPasswordInput('loginPwdConfirm', 10,20,'Confirm Password');
-		$messages = @$this->validationMessages['password'];
-		$passwordGroup .= captionedInput('Password Confirm '.$messages,$input);
-		$edit->required->addContent(wrapDivFieldGrouping($entity,$passwordGroup));
 
-		$input = $this->f->email->input();
-		$messages = @$this->validationMessages['email'];
-		$edit->required->addContent(captionedInput('Email Address '.$messages,$input));
-		$edit->optional->input($this->f->nameFirst);
-		$edit->optional->input($this->f->nameLast);
+		$this->f->email->setvalidation(@$this->validationMessages['email']);
+		$this->edit->required->input($this->f->email);
+		$this->edit->optional->input($this->f->nameFirst);
+		$this->edit->optional->input($this->f->nameLast);
 
 
 		$m = new UserType;
 		$select = $m->options($this->f->typeEntity->id->value(),$this->f->typeEntity->id->env->variable());
-		$edit->optional->choice($this->f->typeEntity->id,$select);
+		$this->edit->optional->choice($this->f->type->id,$select);
 		
 
-		$edit->optional->input($this->f->focus);
-		$edit->optional->input($this->f->interests);
+		$this->edit->optional->input($this->f->focus);
+		$this->edit->optional->input($this->f->interests);
 	
 		
 		
 		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){
 			//if admin and not editing self allow setting admin
 			//prevents admins from disabling their own accounts
-			$input1 = $this->f->isAdmin->input();
-			//,'Is Administrator','false');
-			$input2 = $this->f->isActive->input();
-			$input3 = $this->f->mustUpdatePwd->input();
-			//,'Must Update Password','false');
+			$this->edit->optional->input($this->f->isAdmin);
+			$this->edit->optional->input($this->f->isActive);
+			$this->edit->optional->input($this->f->mustUpdatePwd);
 		} else {
-			$input1 = $this->f->isAdmin->inputHidden();
-			$input2 = $this->f->isActive->inputHidden();
-			$input3 = $this->f->mustUpdatePwd->inputHidden();
+			$this->edit->optional->inputHidden($this->f->isAdmin);
+			$this->edit->optional->inputHidden($this->f->isActive);
+			$this->edit->optional->inputHidden($this->f->mustUpdatePwd);
 		}				
-		$input = captionedInput('Administrator',$input1);
-		$input .= captionedInput('Active Profile',$input2);
-		$input .= captionedInput('Must Update Password', $input3);
-				$edit->optional->addContent(captionedInput('Profile Settings',$input));
 		
-				$edit->hidden->addContent(  getHiddenInput('mode', $this->pageMode));
-				$edit->hidden->addContent($this->f->id->inputHidden());
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->inputHidden($this->f->id);
 
-				$edit->submit->addContent(  getSaveChangesResetButtons());
-			return $edit->close();
+		$edit->submit->addContent( getSaveChangesResetButtons());
+		return $edit->close();
 	}
 	
 	
@@ -446,8 +435,8 @@ class user extends _entity{
 
 			$this->mailUser('Your User Profile Has Been Updated');
 			
-			if ($this->f->loginName == $_SESSION['login-name']){
-				$this->setSecurity($this->f->loginName->value);
+			if ($this->f->loginName->value() == $_SESSION['login-name']){
+				$this->setSecurity($this->f->loginName->value());
 			}
 	}
 	

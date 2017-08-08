@@ -95,12 +95,29 @@ abstract class _baseEntityLinks extends _links{
 	}	
 	
 	public function toggleEdit($pageAction = 'VIEW', $id){
+		switch ($pageAction){
+		
+			case 'VIEW':
+				$l = $this->edit('Edit',$id);
+				$l .= $this->copy('Copy',$id);
+				break;
+			case 'EDIT':
+				$l = $this->view('Cancel',$id);
+				
+				break;
+			case 'ADD':
+				$l = $this->list('Cancel',$id);
+				break;
+			default:
+				$l = $this->view('View',$id);
+		
+		}/*
 		if ($pageAction == 'VIEW'){
 			$l = $this->edit('Edit',$id);
 			$l .= $this->copy('Copy',$id);
 		} else {
 			$l = $this->view('View',$id);
-		}
+		}*/
 		return $l;
 	}
 	

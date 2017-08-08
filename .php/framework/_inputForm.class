@@ -8,7 +8,7 @@ public function __construct(string $name,string $css){
 $this->name = $name;
 $this->css = $css;
 
-$this->_div = new _div($this->name,$this->css);
+$this->_div = new html/_div($this->name,$this->css);
 $this->addContent($this->_div->open());
 }
 public function input(_field $f){
@@ -56,22 +56,22 @@ class _inputForm extends _contentWriter{
 		$this->entity = $entity;
 		$this->mode = $mode;
 		$this->contextMenu = $contextMenu;
-		$this->_form = new _form($this->url, $this->entity.'-edit-form','editForm');
-		$this->_fields = new _div($this->entity.'-fields','editFields');
+		$this->_form = new html/_form($this->url, $this->entity.'-edit-form','editForm');
+		$this->_fields = new html/_div($this->entity.'-fields','editFields');
 	}
 	public function open(string $entity, string $mode, string $contextMenu = ''){
 		$this->set($entity, $mode, $contextMenu);
 
-		$this->_display = new _div($this->entity.'-display-'.$this->mode,'display'.$this->mode);
+		$this->_display = new html/_div($this->entity.'-display-'.$this->mode,'display'.$this->mode);
 		$this->addContent($this->_display->open());
 		
 		if (!is_null($this->contextMenu)){
-			$this->_context = new _div($this->entity.'-context-menu','contextMenu');
+			$this->_context = new html/_div($this->entity.'-context-menu','contextMenu');
 			$this->addContent($this->_context->wrap($this->contextMenu));
 		}
 		
 		$legend = $this->mode.':  '.$this->title;
-		$this->_fieldset = new _htmlFieldset($legend);
+		$this->_fieldset = new html/_htmlFieldset($legend);
 		$this->addContent($this->_fieldset->open());
 		
 		$this->addContent($this->_form->open());

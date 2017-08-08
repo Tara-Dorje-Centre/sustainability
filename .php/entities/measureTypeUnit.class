@@ -104,7 +104,7 @@ class measureTypeUnit extends _entity{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		$base = new measureType();;
 		$select = $base->options($this->measureType->id->value(),$this->measureType->id->env->variable());

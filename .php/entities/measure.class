@@ -122,7 +122,7 @@ class measure extends _entity {
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		
 		$m = new measureType('OPTIONS');

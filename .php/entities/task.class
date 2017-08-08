@@ -95,15 +95,17 @@ class task extends _entity{
 	}
 	
 	public function listHeading($periodicTasks = 'NO'){
-		$heading = wrapTh($this->_titleEntity);
-		$heading .= $this->f->listCaption();
+		$tr = new html/_tr();
+		$th = new html/_th();
+		$th->addContent($this->_titleEntity);
+		$tr->addContent($th->print());
+		$tr->addContent($this->f->listCaption());
 		
-		$heading .= wrapTh('Hotlinks');
-		if ($periodicTasks != 'NO'){
-			$heading .= wrapTh('Project');			
-		}
-		$list = wrapTr($heading);
-		return $list;
+		$th = new html/_th();
+		$th->addContent('Hotlinks');
+		$tr->addContent($th->print());
+		
+		return $tr->print();
 	}
 	
 	
@@ -113,12 +115,12 @@ class task extends _entity{
 		$materialsL = new MaterialLinks('DIV','button');
 		$measuresL = new MeasureLinks('DIV','button');
 		$receiptsL = new ReceiptLinks('DIV','button');
-		
+		$id = $this->id->value();
 		$menu = $activitiesL->openMenu('hotlinks-list');
-		$menu .= $activitiesL->add('Activity',$this->f->id->value());
-		$menu .= $measuresL->add('Measures',$this->f->id->value());
-		$menu .= $materialsL->add('Materials',$this->f->id->value());
-		$menu .= $receiptsL->add('Receipts',$this->f->id->value());
+		$menu .= $activitiesL->add('Activity',$id);
+		$menu .= $measuresL->add('Measures',$id);
+		$menu .= $materialsL->add('Materials',$id);
+		$menu .= $receiptsL->add('Receipts',$id);
 		$menu .= $activitiesL->closemenu();
 		return $menu;
 	}
@@ -131,15 +133,8 @@ class task extends _entity{
 	
 	
 	public function listRowFormat(){
-		$detail = wrapTd($this->listRowLink());
-		$detail .= $this->f->listDetail();		
-		$detail .=  wrapTd($this->listRowHotLinks());
-
-		if ($periodicTasks != 'NO'){
-			$detail .= wrapTd($this->listRowProjectLink());
-		}
-		
-		if ($periodicTasks != 'NO'){
+	
+		if ($this->periodicTasks != 'NO'){
 			$cssItem = $this->f->highlightStyle->value();
 		} else {
 			//highlight based on reported activity
@@ -149,10 +144,24 @@ class task extends _entity{
 				$cssItem = 'none';
 			}
 		}
+	
+		$tr = new html/_tr('data-row',$cssItem);
 		
-		$listRow = wrapTr($detail,$cssItem);
-		//$listRow = wrapTr($detail,$this->f->highlightStyle);
-		return $listRow;
+		$td = new html/_td();
+		$td->addContent($this->listRowLink());
+		$tr->addContent($td->print());
+		
+		$tr->addContent($thus->f->listDetail());
+		
+		$td = new html/_td();
+		$td->addContent($this->listRowHotLinks());
+		$tr->addContent($td->print());
+		/*
+		if ($this->periodicTasks != 'NO'){
+			$detail .= wrapTd($this->listRowProjectLink());
+		}
+		*/
+		return $tr->print();
 	}
 	
 	
@@ -360,7 +369,7 @@ class task extends _entity{
 	public function editForm(){
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		$this->edit->required->input($this->f->taskOrder);
 		$this->edit->required->input($this->f->name);
@@ -455,9 +464,9 @@ class task extends _entity{
 		$sql = " UPDATE tasks as t ";
 		$sql .= " SET ";
 		$sql .= " t.updated = CURRENT_TIMESTAMP, ";		
-		$sql .= " t.hours_actual = 	".$this->f->hoursActual.", ";
-		$sql .= " t.hours_estimated = ".$this->f->hoursEstimated." ";
-		$sql .= " WHERE t.id = ".$this->f->id." ";
+		$sql .= " t.hours_actual = 	".$this->f->hoursActual->value().", ";
+		$sql .= " t.hours_estimated = ".$this->f->hoursEstimated->value()." ";
+		$sql .= " WHERE t.id = ".$this->f->id->value()." ";
 		
 		$result = dbRunSQL($sql);
 
@@ -466,12 +475,12 @@ class task extends _entity{
 	}
 
 	public function resetMaterialsAuthorization(){	
-		$this->f->materialsAuthProject = 'no';
-		$this->f->materialsAuthBy = 'Not Approved';
-		$project = $this->f->materialsAuthProject;
-		$by = $this->f->materialsAuthBy;
+		$this->f->materialsAuthProject->set('no');
+		$this->f->materialsAuthBy->set('Not Approved');
+		$project = $this->f->materialsAuthProject->value();
+		$by = $this->f->materialsAuthBy->value();
 		
-		$sql = $this->sql->updateMaterialsAuth($this->f->id, $project, $by);
+		$sql = $this->sql->updateMaterialsAuth($this->f->id->value, $project, $by);
 		
 		$result = dbRunSQL($sql);
 		
@@ -482,11 +491,11 @@ class task extends _entity{
 		if ($this->f->materialsAuthProject == 'yes'){
 			$sql = " UPDATE materials as m ";
 			$sql .= " SET m.cost_actual = m.cost_estimated ";
-			$sql .= " WHERE m.task_id = ".$this->f->id." ";
+			$sql .= " WHERE m.task_id = ".$this->f->id->value()." ";
 		} else {
 			$sql = " UPDATE materials as m ";
 			$sql .= " SET m.cost_actual = 0 ";
-			$sql .= " WHERE m.task_id = ".$this->f->id." ";			
+			$sql .= " WHERE m.task_id = ".$this->f->id->value()." ";			
 		}
 		$result = dbRunSQL($sql);
 	}
@@ -498,7 +507,7 @@ class task extends _entity{
 		$project = $this->f->receiptsAuthProject;
 		$by = $this->f->receiptsAuthBy;
 		
-		$sql = $this->sql->updateReceiptsAuth($this->f->id, $project, $by);
+		$sql = $this->sql->updateReceiptsAuth($this->f->id->value(), $project, $by);
 		$result = dbRunSQL($sql);
 	}
 	
@@ -523,24 +532,24 @@ class task extends _entity{
 	protected function saveUpdate(){
 			$sql = " UPDATE tasks AS t ";
 			$sql .= " SET ";
-			$sql .= " t.project_id = ".$this->f->idProject.", ";
-			$sql .= " t.task_order = ".$this->f->taskOrder.", ";
-			$sql .= " t.location_id = ".$this->f->idLocation.", ";
-			$sql .= " t.started = '".$this->f->started."', ";
-			$sql .= " t.name = '".$this->f->name."', ";
-			$sql .= " t.description = '".$this->f->description."', ";
-			$sql .= " t.summary = '".$this->f->summary."', ";
+			$sql .= " t.project_id = ".$this->f->project->id->value().", ";
+			$sql .= " t.task_order = ".$this->f->taskOrder->value().", ";
+			$sql .= " t.location_id = ".$this->f->location->id->value().", ";
+			$sql .= " t.started = '".$this->f->started->value()."', ";
+			$sql .= " t.name = '".$this->f->name->value()."', ";
+			$sql .= " t.description = '".$this->f->description->value()."', ";
+			$sql .= " t.summary = '".$this->f->summary->value()."', ";
 			$sql .= " t.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " t.type_id = ".$this->f->idType.", ";
-			$sql .= " t.hours_estimated = ".$this->f->hoursEstimated.", ";
-			$sql .= " t.pct_done = ".$this->f->pctDone.", ";
-			$sql .= " t.hours_notes = '".$this->f->hoursNotes."', ";
-			$sql .= " t.materials_auth_project = '".$this->f->materialsAuthProject."', ";
-			$sql .= " t.materials_auth_by = '".$this->f->materialsAuthBy."', ";
-			$sql .= " t.receipts_auth_project = '".$this->f->receiptsAuthProject."', ";
-			$sql .= " t.receipts_auth_by = '".$this->f->receiptsAuthBy."' ";
+			$sql .= " t.type_id = ".$this->f->type->id->value().", ";
+			$sql .= " t.hours_estimated = ".$this->f->hoursEstimated->value().", ";
+			$sql .= " t.pct_done = ".$this->f->pctDone->value().", ";
+			$sql .= " t.hours_notes = '".$this->f->hoursNotes->value()."', ";
+			$sql .= " t.materials_auth_project = '".$this->f->materialsAuthProject->value()."', ";
+			$sql .= " t.materials_auth_by = '".$this->f->materialsAuthBy->value()."', ";
+			$sql .= " t.receipts_auth_project = '".$this->f->receiptsAuthProject->value()."', ";
+			$sql .= " t.receipts_auth_by = '".$this->f->receiptsAuthBy->value()."' ";
 
-			$sql .= " WHERE t.id = ".$this->f->id." ";	
+			$sql .= " WHERE t.id = ".$this->f->id->value()." ";	
 		
 			$result = dbRunSQL($sql);
 			
@@ -568,22 +577,22 @@ class task extends _entity{
 			$sql .= " receipts_auth_by) ";
 
 			$sql .= " VALUES (";
-			$sql .= " '".$this->f->name."', ";
-			$sql .= " ".$this->f->idProject.", ";
-			$sql .= " ".$this->f->idLocation.", ";		
-			$sql .= " ".$this->f->idType.", ";			
-			$sql .= " ".$this->f->taskOrder.", ";
-			$sql .= " '".$this->f->description."', ";
-			$sql .= " '".$this->f->summary."', ";
-			$sql .= " '".$this->f->started."', ";
+			$sql .= " '".$this->f->name->value()."', ";
+			$sql .= " ".$this->f->project->id->value().", ";
+			$sql .= " ".$this->f->location->id->value().", ";		
+			$sql .= " ".$this->f->type->id->value().", ";			
+			$sql .= " ".$this->f->taskOrder->value().", ";
+			$sql .= " '".$this->f->description->value()."', ";
+			$sql .= " '".$this->f->summary->value()."', ";
+			$sql .= " '".$this->f->started->value()."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " ".$this->f->hoursEstimated.", ";
+			$sql .= " ".$this->f->hoursEstimated->value().", ";
 			$sql .= " 0, ";
-			$sql .= " '".$this->f->hoursNotes."', ";
-			$sql .= " '".$this->f->materialsAuthProject."', ";
-			$sql .= " '".$this->f->materialsAuthBy."', ";
-			$sql .= " '".$this->f->receiptsAuthProject."', ";
-			$sql .= " '".$this->f->receiptsAuthBy."') ";
+			$sql .= " '".$this->f->hoursNotes->value()."', ";
+			$sql .= " '".$this->f->materialsAuthProject->value()."', ";
+			$sql .= " '".$this->f->materialsAuthBy->value()."', ";
+			$sql .= " '".$this->f->receiptsAuthProject->value()."', ";
+			$sql .= " '".$this->f->receiptsAuthBy->value()."') ";
 			
 		$result = dbRunSQL($sql);
 			$this->id = dbInsertedId();

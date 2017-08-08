@@ -132,20 +132,7 @@ class siteSettings extends _entity{
 	public function setDetails(){
 		$this->verifySettings();
 
-		parent::setDetails();/*
-		//if ($this->id > 0){
-			$sql = $this->sql->info($this->id);
-			$result = dbGetResult($sql);
-			if($result){
-				while ($row = $result->fetch_assoc())
-				{	
-					$this->f->fetch($row);
-				}
-				$result->close();
-				//$this->getFieldIds();
-			}
-			
-		//}*/
+		parent::setDetails();
 		$this->setSessionDetails();	
 	}
     
@@ -169,32 +156,14 @@ class siteSettings extends _entity{
 		}
 		$this->echoPrint(true,$this->f->siteTitle->value(),'setSessionDetails','siteSettings');
 		$this->f->setEnvironment('SESSION');
-		 $this->f->write();	/*
-		 $this->f->siteUrl->write();	
-		 $this->f->loginNotice->write();
-		 $this->f->organization->write();	
-		$this->f->organizationUrl->write();
-		$this->f->contactName->write();	
-		 $this->f->contactEmail->write();	
-		 $this->f->showPublicSite->write();	
-		 $this->f->showCostReports->write();
-		 $this->f->showRevenueReports->write();*/
+		 $this->f->write();	
 	}
 	
 	protected function unsetSessionDetails(){
 		$this->f->setEnvironment('SESSION');
 		
 		$this->f->remove();
-		/*		 //->env->remove();	
-		 $this->f->siteUrl->env->remove();	
-		 $this->f->loginNotice->env->remove();
-		 $this->f->organization->env->remove();	
-		$this->f->organizationUrl->env->remove();
-		$this->f->contactName->env->remove();	
-		 $this->f->contactEmail->env->remove();	
-		 $this->f->showPublicSite->env->remove();	
-		 $this->f->showCostReports->env->remove();
-		 $this->f->showRevenueReports->env->remove();*/
+		
 	}
 	
 	protected function setPageMenu(){
@@ -217,8 +186,8 @@ class siteSettings extends _entity{
 	}
 	
 	protected function display(){
-		parent::display();
-		$detail = $this->getPublicSiteStylesFieldset('true');
+		$detail = parent::display();
+		$detail .= $this->getPublicSiteStylesFieldset('true');
 		return $detail;
 	}
 	
@@ -327,7 +296,7 @@ class siteSettings extends _entity{
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		$this->edit->required->input($this->f->siteTitle);
 		$this->edit->required->input($this->f->siteUrl);	

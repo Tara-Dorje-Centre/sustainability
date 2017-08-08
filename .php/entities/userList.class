@@ -43,7 +43,7 @@ protected $titleEntity = 'UserProfiles';
 	}
 	
 	protected function listingSQL(){
-		$s = $this->base->sql->listUsers($this->base->f->idType,$this->resultPage,$this->perPage);
+		$s = $this->base->sql->listUsers($this->base->f->typeEntity->id->value(),$this->resultPage,$this->perPage);
 		return $s;
 	}
 			
