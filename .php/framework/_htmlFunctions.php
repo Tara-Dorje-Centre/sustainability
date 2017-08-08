@@ -33,170 +33,7 @@ function sessionVariableSESSION($urlVariable,$defaultValue){
 }
 
 
-class _element
-{
-protected const _NONE = 'none';
-protected const _EMPTY = '';
-/*using _empty returns empty attributes 
-foirmatted as name="" in html*/
-protected const _EMPTYATTRIBUTE = '""';
-protected const LT = '<';
-protected const GT = '>';
-protected const SL = '/';
-protected const EQ = '=';
-protected const SQ = "'";
-protected const DQ = '"';
-protected const SP = ' ';
-protected const _htmlCommentOpen = '<!--';
-protected const _htmlCommentClose = '-->';
-protected $_content = '';
-protected $_markup = '';
-protected $_attribs = '';
-protected $_tag = '';
 
-protected $_id = '';
-protected $_name = '';
-protected $_css = '';
-protected $_style = '';
-protected $_cData = false;
-
-public function __construct($tag, $idName = 'none', $css = 'none') {
-	$this->reset();
-	$this->setTag($tag);
-	$this->setIdName($idName);
-	$this->setCSS($css);
-}
-
-public function __destruct() {
-     $this->reset();
-}
-public function setContent($content = null){
-	if (!is_null($content)){
-		$this->_content .= $content;
-	} else {
-		$this->_content = self::_EMPTY;
-	}
-}
-public function addContent($content = null){
-	if (!is_null($content)){
-		$this->_content .= $content;
-	}
-}
-public function reset(){
-	$this->_tag = self::_NONE;
-	$this->_attribs = self::_EMPTY;
-	$this->_markup = self::_EMPTY;
-	
-	$this->_id = self::_NONE;
-	$this->_name = self::_NONE;
-	$this->_css = self::_NONE;
-	$this->$_cData = false;
-}
-
-public function formatAttribute(string $name = 'none',  $value = null){
-	if ($name != 'none'){
-		if ( !is_null($value)){
-			$a = self::SP.$name.self::EQ;
-			$a .= self::DQ.$value.self::DQ;
-		} else {
-			//no attribute value
-			$a .= self::DQ.self::DQ;
-		}
-	} else {
-		//no attribute name
-		$a = self::_EMPTY;
-	}
-
-	return $a;
-}
-
-public function addAttribute(string $name = 'none', $value = 'none'){
-	$a = $this->formatAttribute($name, $value);
-	$this->_attribs .= $a;
-}
-
-protected function setTag(string $tag){
-	$this->_tag = $tag;
-}
-//null being passed, typing to string raises error
-public function setIdName( $idName){
-if (!is_null($idName)){
-	$this->_id = $idName;
-	$this->_name = $idName;
-	$this->addAttribute('id', $this->_id);
-	$this->addAttribute('name', $this->_name);
-	}
-}
-
-public function setCSS(string $css){
-		$this->_css = $css;
-		$this->addAttribute('class', $this->_css);
-}
-
-public function setStyle(string $style){
-		$this->_style = $style;
-		$this->addAttribute('style', $this->_style);
-}
-
-public function setCData(bool $isCData = false){
-		$this->$_cData = $isCData;
-}
-
-protected function start(){
-	$this->_markup = self::LT.$this->_tag;
-	if ($this->_attribs != 'none' && !is_null($this->_attribs)){
-		$this->_markup .= $this->_attribs;
-	}
-}
-
-function open(){
-	$this->start();
-	$this->_markup .= self::GT;
-	return $this->_markup;
-}
-
-function empty(){
-	$this->start();
-	$this->_markup .= self::SP.self::SL.self::GT;
-	return $this->_markup;
-}
-
-public function close(){
-	$this->_markup = self::LT.self::SL.$this->_tag.self::GT;
-	return $this->_markup;
-}
-
-public function print(){
-
-		$value = $this->open();
-		$value .= $this->_content;
-		$value .= $this->close();
-
-	return $value;
-}
-
-public function wrap($content = null){
-	if (is_null($this->_content)){
-		$value = $this->empty();
-	} else {
-		$value = $this->open();
-		$value .= $content;
-		$value .= $this->close();
-	}
-	return $value;
-}
-
-function commentOpen(){
-	return self::_htmlCommentOpen;
-}
-
-function commentClose(){
-	return self::_htmlCommentClose;
-}
-
-
-}
-//end class _element
 
 function openHTML(){
 	$e = new _element('html');
@@ -350,15 +187,7 @@ function spanStyled($content, $style = 'none'){
 	return $e->wrap($content);
 }
 
-class _div extends _element{
-	public function __construct(string $idName = 'none', string $css = 'none',string $style = 'none'){
-		parent::__construct('div', $idName, $css);
-		$this->setStyle($style);
-	}
-	public function div(){
-		return $this->print();
-	}
-}
+
 
 function openDiv($nameId, $css = 'none',$style = 'none'){
 	$e = new _div($nameId, $css,$style);
@@ -378,22 +207,7 @@ function wrapDiv($content, $nameId, $css = 'none',$style = 'none'){
 
 
 
-class _ul extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('ul', $idName, $css);
-	}
-}
 
-class _ol extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('ol', $idName, $css);
-	}
-}
-class _li extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('li', $idName, $css);
-	}
-}
 
 
 function openList($nameId, $css = 'none'){
@@ -421,57 +235,14 @@ function listItem($value,$css = 'none'){
 	return $e->wrap($value);
 }
 
-class _table extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('table', $idName, $css);
-	}
-}
 
 
-class _th extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('th', $idName, $css);
-	}
-	
-	public function setColspan($colspan = 0){
-		if ($colSpan != 0){
-			$e->addAttribute('colspan',$colSpan);
-		}
-	}
-	
-}
 
-class _tr extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('tr', $idName, $css);
-	}
-	public function setWidth($width = 0){
-		if ($width!=0){
-			$e->addAttribute('width', $width.'%');
-		}
-	}
-	public function setColspan($colspan = 0){
-		if ($colSpan != 0){
-			$e->addAttribute('colspan',$colSpan);
-		}
-	}
-}
 
-class _td extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('td', $idName, $css);
-	}
-	public function setWidth($width = 0){
-		if ($width!=0){
-			$this->addAttribute('width', $width.'%');
-		}
-	}
-	public function setColspan($colspan = 0){
-		if ($colSpan != 0){
-			$this->addAttribute('colspan',$colSpan);
-		}
-	}
-}
+
+
+
+
 
 function openTable($nameId, $css = 'none'){
 	$e = new _table($nameId, $css);
@@ -524,31 +295,7 @@ function linkSpacer($separator = '|'){
 	$spacer = spacer().$separator.spacer();
 	return $spacer;
 }
-class _href extends _element{
-	protected $displayText = '';
 
-	public function __construct($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
-		parent::__construct('a', 'none', $css);
-		$this->addAttribute('href',$url);
-		if ($target <> '_self'){
-			$this->addAttribute('target',$target);
-		}
-		if (!is_null($onClickJS)){
-			$this->addAttribute('onclick',$onClickJS);
-		}
-		
-		if (is_null($displayText) or ($displayText == '')){
-			$content = '[???]';
-		} else {
-			$content = $displayText;
-		}
-		$this->displayText = $content;
-	}
-
-	public function href(){
-		return $this->wrap($this->displayText);
-	}
-}
 function getHref($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
 
 	$e = new _href($url, $displayText, $css,$target,$onClickJS);
@@ -595,21 +342,7 @@ function para( $caption, $content, $cssPara = 'none',$cssCaption = 'display-capt
 }
 
 
-class _img extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('img', $idName, $css);
-	}
-	
-	public function setSource($src, $alt){
-		$e->addAttribute('src',$src);
-		$e->addAttribute('alt',$alt);
-	}
-	public function setDim($width = 0, $height = 0, $border = 0){
-		$e->addAttribute('width',$width);
-		$e->addAttribute('height',$height);
-		$e->addAttribute('border',$border);
-	}
-}
+
 
 function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
 	$i = new _img('none',$css);
@@ -621,14 +354,6 @@ function image($src, $alt, $width = 0, $height = 0, $border = 0, $css = 'none'){
 
 
 
-class _form extends _element{
-	public function __construct($action = 'none', $idName = 'none', $css = 'none'){
-		parent::__construct('form', $idName, $css);
-		$this->addAttribute('enctype', 'multipart/form-data');
-		$this->addAttribute('action', $action);
-		$this->addAttribute('method', 'post');
-	}
-}
 
 
 

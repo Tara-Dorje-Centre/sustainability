@@ -3,7 +3,8 @@
 
 include_once("_echo.class");
 include_once("_contentWriter.class");
-
+include_once("_htmlElements.class");
+include_once("_htmlForms.class");
 include_once("_htmlFunctions.php");
 include_once("_cssFunctions.php");
 include_once("_formFunctions.php");
