@@ -1,18 +1,7 @@
 <?php 
-/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
- 
- _fieldsetProjectChild
-   id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- ****
- project, projectType, location
- started°, approved,approvedBy^
-*/
-abstract class _fieldsetProjectChild extends _fieldsetChildEntity
-implements  Ifieldset, Iecho, IcontentWriter{
+
+abstract class _fieldsProjectChild extends _fieldsEntityChild
+implements  Ifields, Iecho, IcontentWriter{
 	
 
 	public $project;

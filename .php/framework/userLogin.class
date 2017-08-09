@@ -1,7 +1,7 @@
 <?php
 
 
-class userSecurityFields extends _fieldset{
+class userSecurityFields extends _fields{
 	public $_loginMessages;
 	public $_currentUser;
 	public $_currentUserId;
@@ -30,7 +30,7 @@ class userSecurityFields extends _fieldset{
     }
     
 }
-class userLoginFields extends _fieldset {
+class userLoginFields extends _fields {
     public $_loginName;
     public $_loginPassword;
 	public $_loginEmail;

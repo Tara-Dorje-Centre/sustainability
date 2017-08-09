@@ -3,13 +3,13 @@
 class _inputSection extends _contentWriter{
 protected $name;
 protected $css;
-protected $_div;
+protected $_section;
 public function __construct(string $name,string $css){
 $this->name = $name;
 $this->css = $css;
 
-$this->_div = new html/_div($this->name,$this->css);
-$this->addContent($this->_div->open());
+	$this->$_section = new html/_div($this->name,$this->css);
+	$this->addContent($this->_section->open());
 }
 public function input(_field $f){
 $this->addContent($f->input());
@@ -21,7 +21,7 @@ public function choice(_field $f,string $options){
 $this->addContent($f->inputChoice($options));
 }
 public function print(){
-$this->addContent($this->_div->close());
+	$this->addContent($this->_section->close());
 return $this->getContent();
 }
 }
@@ -94,16 +94,7 @@ class _inputForm extends _contentWriter{
 		
 		return $this->getContent();
 	}
-	
-
-	
-
-
-
-
 
 }
 
-
- 
 ?>

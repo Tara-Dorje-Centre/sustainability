@@ -1,6 +1,6 @@
 <?php 
 
- interface Ifieldset{
+ interface Ifields{
  	public function fetch($row);
  	public function format();
     public function reset(bool $useDefault = false);
@@ -13,59 +13,10 @@
 	public function setEnvironment(string $env = 'POST');
 	public function setEntity(string $entity);
  }
- /*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
+ 
 
- _fieldsetEntity
- ****
- id, name, description
- created°, updated°, highlight
-
- _fieldsetEntityType 
-  id, name, description
- created°, updated°, highlight
- ****
- displayOrder, notes
-
- _fieldsetEntityChild
-  id, name, description
- created°, updated°, highlight
- *****
- parentEntity, typeEntity
-
- _fieldsetProjectChild
-   id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- ****
- project, projectType, location
- started°, approved,approvedBy^
-
- _fieldsetTaskChild
- id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- project, projectType, location
- started°, approved,approvedBy^
-****
- task, taskType, reported°,doneBy^
- notes, linkUrl, linkText
-
- _fieldsetActivityChild
- id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- project, projectType, location
- started°, approved,approvedBy^
- task, taskType, reported°,doneBy^
- notes, linkUrl, linkText
- ****
- activity, activityType
- */
-
-abstract class _fieldset extends _contentWriter 
-implements Ifieldset, Iecho, IcontentWriter{
+abstract class _fields extends _contentWriter 
+implements Ifields, Iecho, IcontentWriter{
 	protected $_entity = 'fieldset';
 	protected $_currentTimestamp = '';
 	protected $_currentUser = '';

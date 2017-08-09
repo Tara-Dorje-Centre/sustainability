@@ -75,20 +75,9 @@ function doctypeHtml(){
 	$declare = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">';
 	return $declare;	
 }
-class _meta extends _element{
-	public function __construct(string $equiv,string $content){
 
-		parent::__construct('meta');
-		$this->addAttribute('http-equiv',$equiv);
-		$this->addAttribute('content',$content);
-	}
-	public function meta(){
-		return $this->empty();
-	}
-
-}
 function meta($equiv, $content){
-	$e = new _meta($equiv, $content);
+	$e = new html/_meta($equiv, $content);
 	return $e->meta();
 }
 
@@ -99,36 +88,8 @@ function metaHttpEquivs(){
 }
 
 
-class _script extends _element{
-	protected $useComment = true;
 
-	public function __construct($language = 'JavaScript', $useComment = true){
-		parent::__construct('script');
-		$this->useComment = $useComment;
-		$this->addAttribute('language', $language);
-	}
-	public function open(){
-		$element = parent::open();
-		if ($this->useComment == true){
-			$element .= $this->commentOpen();
-		}
-		return $element;
-	}
-	public function close(){
-		if ($this->useComment == true){
-			$element = $this->commentClose();
-		} else {
-			$element = parent::EMPTY;
-		}
-		$element .= parent::close();
-		return $element;
-	}
-}
-class _inlineStyle extends _element{
-	public function __construct(){
-		parent::__construct('script');
-	}
-}
+
 function openInlineStyle(){
 	$e = new _inlineStyle();
 	return $e->open();
@@ -138,19 +99,7 @@ function closeInlineStyle(){
 	$e = new _inlineStyle();
 	return $e->close();
 }
-class _linkExternalCSS extends _element{
-	public function __construct($cssFile){
-		parent::__construct('link');
-		
-		$this->addAttribute('rel','stylesheet');
-		$this->addAttribute('type','text/css');
-		$this->addAttribute('href',$cssFile);
-	}
-	public function cssLink(){
-		return $this->empty();
-	}
 
-}
 
 function LinkStylesheet($cssFile){
 	$e = new _linkExternalCSS($cssFile);

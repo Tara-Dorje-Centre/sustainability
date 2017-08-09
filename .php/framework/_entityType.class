@@ -22,7 +22,7 @@ abstract class _entityType extends _entity{
 		$this->links->setType($menuType);
 		$this->links->setStyle($menuStyle);
 		
-		$menuL = new MenuLinks($menuType,$menuStyle);
+		$menuL = new menuLinks($menuType,$menuStyle);
 		
 		$menu = $this->links->openMenu('section-heading-links');
 		$menu .= $menuL->linkReference();

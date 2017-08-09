@@ -1,21 +1,7 @@
 <?php 
-/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
- 
- _fieldsetTaskChild
- id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- project, projectType, location
- started°, approved,approvedBy^
-****
- task, taskType, reported°,doneBy^
- notes, linkUrl, linkText
-*/
- 
-abstract class _fieldsetTaskChild extends _fieldsetProjectChild
-implements Ifieldset, Iecho, IcontentWriter{
+
+abstract class _fieldsTaskChild extends _fieldsProjectChild
+implements Ifields, Iecho, IcontentWriter{
 	
 
 	public $task;
@@ -30,7 +16,8 @@ implements Ifieldset, Iecho, IcontentWriter{
 	
     public function __construct(){
     	parent::__construct();
-    	$this->parentTask = new _fieldIdName('task_id','id-task','Task','task_name');
+    	$this->task = new _fieldIdName('task_id','id-task','Task','task_name');
+		
 		$this->reported = new _dateField('reported','date-reported','Reported');
 		$this->doneBy = new _userField('done_by','done-by','DoneBy');
     	$this->linkUrl = new _textField('link_url','link-url','LinkUrl');
@@ -39,7 +26,7 @@ implements Ifieldset, Iecho, IcontentWriter{
 		$this->quantity = new _numberField('quantity','quantity','Quantity');
 		$this->quantityType = new _fieldIdName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
 		
-		$this->_register('parentTask', $this->parentTask);
+		$this->_register('task', $this->task);
 		$this->_register('reported', $this->reported);
 		$this->_register('doneBy', $this->doneBy);
 		$this->_register('linkUrl', $this->linkUrl);

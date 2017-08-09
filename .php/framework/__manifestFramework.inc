@@ -23,12 +23,12 @@ include_once("_field_basic.class");
 include_once("_field_specialized.class");
 include_once("_field_idName.class");
 
-include_once("_fieldset.class");
-include_once("_fieldsetEntityType.class");
-include_once("_fieldsetChild.class");
-include_once("_fieldsetProjectChild.class");
-include_once("_fieldsetTaskChild.class");
-include_once("_fieldsetActivityChild.class");
+include_once("_fields.class");
+include_once("_fieldsEntityType.class");
+include_once("_fieldsEntityChild.class");
+include_once("_fieldsProjectChild.class");
+include_once("_fieldsTaskChild.class");
+include_once("_fieldsActivityChild.class");
 include_once("_summary.class");
 
 include_once("userLogin.class");

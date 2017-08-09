@@ -1,15 +1,7 @@
 <?php 
-/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
 
- _fieldsetEntity
- ****
- id, name, description
- created°, updated°, highlight
- */
-abstract class _fieldsetEntity extends _fieldset 
-implements Ifieldset, Iecho, IcontentWriter{
+abstract class _fieldsEntity extends _fields
+implements Ifields, Iecho, IcontentWriter{
 	
 	public $id;
 	public $name;		
@@ -48,18 +40,9 @@ implements Ifieldset, Iecho, IcontentWriter{
 }
  
 
-abstract class _fieldsetEntityType extends _fieldsetEntity
-implements Ifieldset, Iecho, IcontentWriter{
-	/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
-
- _fieldsetEntityType 
-  id, name, description
- created°, updated°, highlight
- ****
- displayOrder, notes
- */
+abstract class _fieldsEntityType extends _fieldsEntity
+implements Ifields, Iecho, IcontentWriter{
+	
 	public $displayOrder;
 	public $notes;
 	
