@@ -1,0 +1,11 @@
+<?php
+namespace html/format;
+
+class _span extends _element{
+	public function __construct($css = 'none',$style = 'none'){
+		parent::__construct('span','none',$css);
+		$this->setStyle($style);
+	}
+}
+
+?>

@@ -1,0 +1,19 @@
+<?php
+namespace html/forms;
+
+function inputFieldComments(
+	$entity, 
+	$value, 
+	$id = 'comments', 
+	$caption = 'Comments',
+	$maxLength = 1000,
+	$tooltip = NULL, 
+	$disabled = 'false',
+	$css = 'editing-input-comments'){
+
+
+	$element = inputFieldTextArea($entity,$value,$id,$caption,$maxLength,$tooltip,$disabled,$css);
+	return $element;
+}
+
+?>

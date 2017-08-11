@@ -1,0 +1,21 @@
+<?php
+namespace html/format;
+
+class _ul extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('ul', $idName, $css);
+	}
+}
+
+class _ol extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('ol', $idName, $css);
+	}
+}
+class _li extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('li', $idName, $css);
+	}
+}
+
+?>

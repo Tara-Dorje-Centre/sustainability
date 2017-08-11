@@ -1,0 +1,10 @@
+<?php
+namespace html;
+
+class _emptyElement extends _element{
+	public function print(){
+		return $this->empty();
+	}
+}
+
+?>

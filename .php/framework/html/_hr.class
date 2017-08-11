@@ -1,0 +1,14 @@
+<?php
+namespace html/format;
+
+class _hr extends _element{
+	public function __construct(){
+		parent::__construct('hr');
+	}
+	public function print(){
+		return $this->empty();
+	}
+	
+}
+
+?>

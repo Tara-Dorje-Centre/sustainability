@@ -1,9 +1,10 @@
 ﻿<?php 
+namespace html;
 
 interface IhtmlPage{
 	public function print();
 }
-class _htmlPage extends _echo
+class _page extends _echo
 implements IhtmlPage,Iecho{
 	protected $_document;
 	protected $_container;

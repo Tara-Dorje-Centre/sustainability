@@ -1,6 +1,7 @@
 ﻿<?php 
+namespace html;
 
-class _htmlPagePublic extends _contentWriter 
+class _pagePublic extends _contentWriter 
 implements IhtmlPage,Iecho, IcontentWriter{
 	protected $_document;
 	public $mainTitle;

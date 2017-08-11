@@ -1,251 +1,222 @@
 <?php
-namespace html;
+namespace html/forms;
 
-/*
+
+function openDisplayList(
+	$entityName, 
+	$legend, 
+	$pagingLinks, 
+	$quickEdit = NULL,
+	$contextMenu = NULL){
+	
+	$list = openDisplayDetails($entityName, $legend,$quickEdit,'List',$contextMenu);
+	
+	$list .= $pagingLinks;
+	$list .= openTable($entityName.'-displayListTable','displayListTable');
+	return $list;
+}
+
+function closeDisplayList(){
+	$list = closeTable();
+	$list .= closeDisplayDetails();
+	return $list;
+}
+
+function openDisplayDetails(
+	$entityName, 
+	$legend = 'none',
+	$quickEdit = NULL,
+	$displayMode = 'Details',
+	$contextMenu = NULL){
+	
+	$detail = openDiv($entityName.'-display'.$displayMode,'display'.$displayMode);
+
+	if (!is_null($quickEdit)){
+		$detail .= wrapDiv($quickEdit,$entityName.'-quickEdit','quickEdit');
+	}
+	if (!is_null($contextMenu)){
+		$detail .= wrapDiv($contextMenu,$entityName.'-contextMenu','contextMenu');
+	}
+	$detail .= openFieldset($legend);
+
+	return $detail;
+}
+
+function closeDisplayDetails(){
+	$detail = closeFieldset();
+	$detail .= closeDiv();
+	return $detail;
+}
+
+function openEditForm($entityName, $legend, $formAction, $contextMenu = NULL){
+	$form = openDisplayDetails($entityName,$legend,NULL,'Edit',$contextMenu);
+	$form .= openForm($entityName.'-editForm',$formAction,'editForm');
+	//$form .= '<pre>';
+	$form .= openDiv($entityName.'-fields','editing-fields');
+	return $form;
+}
+
+
+function closeEditForm($entity = '', $required = NULL, $optional = NULL, $submit = NULL){
+
+	$form = wrapDivRequired($entity, $required);
+		
+	$form .= wrapDivOptional($entity,$optional);
+		
+	$form .= wrapDivSubmit($entity,$submit);
+
+	//close fields div
+	$form .= closeDiv();
+	
+	//close edit form
+	
+		//$form .= '</pre>';
+	$form .= closeForm();
+	
+	$form .= closeDisplayDetails();
+	return $form;
+}
+
+function wrapDivRequired($entity,$formRequired){
+	$div = openDiv('formRequired','show');
+	$div .= $formRequired.closeDiv();
+	return $div;
+}
+
+function wrapDivOptional($entity,$formOptional){
+	$div = openDiv('formOptional','hide');
+	$div .= $formOptional.closeDiv();
+	return $div;
+}
+
+
 function wrapDivFieldGrouping($entity,$fields,$css = 'fieldGrouping'){
 	$div = openDiv($entity.'-'.$css,$css);
 	$div .= $fields.closeDiv();
 	return $div;
 }
-*/
 
-class _form extends _element{
-	public function __construct($action = 'none', $idName = 'none', $css = 'none'){
-		parent::__construct('form', $idName, $css);
-		$this->addAttribute('enctype', 'multipart/form-data');
-		$this->addAttribute('action', $action);
-		$this->addAttribute('method', 'post');
-	}
+function wrapDivSubmit($entity,$formSubmit){
+	$div = openDiv('formSubmit','formSubmit');
+	$div .= $formSubmit.closeDiv();
+	return $div;
 }
 
-class _displayDetails extends _contentWriter{
-	protected $entity;
-	protected $mode;
-	protected $legend;
-	protected $_fields;
-	protected $_display;
-	public function __construct(string $entity = 'entity',string $mode = 'mode',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
-		$this->entity = $entity;
-		$this->mode = $mode;
-		$this->legend = $legend;
-		$this->quickEdit = $quickEdit;
-		$this->contextMenu = $contextMenu;
-		
-		$this->_display = new _div($this->entity.'-display','display'.$this->mode);
-		$this->_fields = new html/_fieldset($this->entity.'-fields', $this->legend,'fieldset');
-	}
-	public function open(){
 
-		$this->addContent($this->_display->open());
 
-		if ($this->quickEdit != 'none'){
-			$d = new _div($this->entity.'-quickEdit','quickEdit');
-			$this->addContent($d->wrap($this->quickEdit));
-		}
-		if ($this->contextMenu != 'none'){
-			$d = new _div($this->entity.'-contextMenu','contextMenu');
-			$this->addContent($d->wrap($this->contextMenu));
-		}
+
+function openFieldset($legend = 'none',$cssFieldset = 'none',$cssLegend = 'display-caption'){
 	
-
-		$this->addContent($this->_fields->open());
-		return $this->getContent();
-	
-	}
-	public function close(){
-		$this->addContent($this->_fields->close());
-		$this->addContent($this->_display->close());
-		return $this->getContent();
-	}
-}
-class _displayList extends _displayDetails{
-	protected $_list;
-	protected $links;
-	public function __construct(string $entity = 'entity',string $links = 'links',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
-		parent::__construct($entity,'list',$legend,$quickEdit,$contextMenu);
-		
-		$this->links = $links;
-		$this->_list = new _table($this->entity.'displayListTable', 'displayListTable');
-	
-	}
-
-	public function open(){
-		$this->addContent(parent::open());
-		$this->addContent($this->links);
-		$this->addContent($this->_list->open());
-		return $this->getContent();
-	}
-	public function close(){
-		$this->addContent($this->_list->close());
-		return parent::close();
-	}
+	$e = new _htmlFieldset($legend,$cssFieldset);
+	return $e->open();	
 }
 
-class _fieldset extends _element{
-protected $_legend = 'none';
-public function __construct(string $name,string $legend = 'none', string $css='none'){
-	parent::__construct('fieldset',$name,$css);
-	$this->_legend = $legend;
+function closeFieldset(){
+	$e = new _htmlFieldset();
+	return $e->close();
 }
 
-public function open(){
-	$content = parent::open();
-	if ($this->_legend != 'none'){
-		$l = new _element('legend','none','fieldset-legend');
-		$content .= $l->wrap($this->_legend);
-	}
-	return $content;
+function wrapFieldset($content, $legend = 'none', $cssFieldset = 'none',$cssLegend = 'display-caption'){
+	$fields = openFieldset($legend,$cssFieldset,$cssLegend);
+	$fields .= $content;
+	$fields .= closeFieldset();
+	return $fields;
 }
 
-}
 
-class _textarea extends _element{
-	public function __construct($inputName, $inputValue, $maxLength = 1000, $rows = 4, $cols = 60,$tooltip = 'none',$disabled = 'false',$css = 'editing-input-textarea'){
-		parent::__construct('textarea',$inputName, $css);
-		$this->addAttribute('title',$tooltipText);
-		$this->addAttribute('maxlength',$maxLength);
-		$this->addAttribute('rows',$rows);
-		$this->addAttribute('cols',$cols);
-		if ($disabled != 'false'){
-			$this>addAttribute('disabled',$disabled);
-		}
-		$this->addContent($inputValue);
-	}
-
-}
-/*
 function getTextArea($inputName, $inputValue, $maxLength = 1000, $rows = 4, $cols = 60,$tooltip = 'none',$disabled = 'false',$css = 'editing-input-textarea'){
 
-	$e = new _textArea($inputName,$inputValue,$maxLength,$rows,$cols,$tooltip,$disabled,$css){
-	return $e->print();
-
-}*/
-
-		
-class _input extends _element{
-	protected $caption = '';
-	public function __construct($inputType, $inputName, $caption, $tooltip = 'none', $css = 'editing-input'){
-		parent::__construct('input',$inputName, $css);
-		$this->addAttribute('type',$type);
-		$this->addAttribute('title',$tooltip);
-	}
-	public function setCaption($caption){
-		$this->caption = $caption;
-	}
-	public function setDisabled($disabled){
-		if ($disabled != 'false'){
-			$this->addAttribute('disabled',$disabled);
-		}
-	}
-	public function setValue($inputValue){
-		$this->addAttribute('value',$inputValue);
-	}
-	public function setSize($size = 100,$maxLength = 100){
-		$this->addAttribute('maxlength',$maxLength);
-		$this->addAttribute('size',$size);
-	}
-	public function print(){
-		return $this->empty();
-	}
-}
-class _inputText extends _input{
-	public function __construct($inputName, $inputValue, $size = 100, $maxLength = 100, $tooltip = 'none', $css = 'editing-input-text'){
-		parent::__construct('text',$inputName,$tooltip,$css);
-		$this->setSize($size,$maxLength);
-		$this->setValue($inputValue);
-	}
-}
-/*
-function getTextInput($inputName, $inputValue, $size = 100, $maxLength = 100, $tooltip = 'none',$css = 'editing-input-text'){
-	$e = new _inputText($inputName, $inputValue,$size,$maxLength,$tooltip,,$css);
-	return $e->print();
-}
-*/
-class _inputPassword extends _input{
-	public function __construct($inputName, $tooltip = 'Enter Password'){
-		parent::__construct('password',$inputName,$tooltip,'editing-input-password');
-		$this->setSize(10,50);
-	}
-}
-/*
-function getPasswordInput($inputName){
-	$e = new _inputPassword($inputName);
-	return $e->print();
-}
-*/
-class _inputHidden extends _input{
-	private $n;
-	private $v;
-	public function __construct($inputName, $inputValue){
-		parent::__construct('hidden',$inputName,'none','editing-input-hidden');
-
-		$this->setValue($inputValue);
-		$this->n = $inputName;
-		$this->v = $inputValue;
-	}
-	public function print(){
-		$input = parent::print();
-		//show values during development
-		$input .= $this->n.'['.$this->v.']';
-		return $input;
+	$e = new _element('textarea',$inputName, $css);
+	$e->addAttribute('title',$tooltipText);
+	$e->addAttribute('maxlength',$maxLength);
+	$e->addAttribute('rows',$rows);
+	$e->addAttribute('cols',$cols);
 	
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
 	}
-}
-/*
-function getHiddenInput($inputName, $inputValue){
-	$e = new _inputHidden($inputName, $inputValue);
-	return $e->print();
+	
+	$input = $e->open();
+	$input .= $inputValue;
+	$input .= $e->close();
+	return $input;
+
 }
 
+function getTextInput($inputName, $inputValue, $size = 100, $maxLength = 100, $tooltip = 'none', $disabled = 'false',$css = 'editing-input-text'){
+	$e = new _element('input',$inputName, $css);
+	$e->addAttribute('title',$tooltip);
+	$e->addAttribute('maxlength',$maxLength);
+	$e->addAttribute('size',$size);
+	
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
+	}
+
+	$e->addAttribute('type','text');
+	$e->addAttribute('value',$inputValue);
+
+	return $e->empty();
+}
+
+function getPasswordInput($inputName, $size = 10, $maxLength = 50,$tooltip = 'Enter Password'){
+	$e = new _element('input',$inputName, 'editing-input-password');
+	$e->addAttribute('title',$tooltip);
+	$e->addAttribute('maxlength',$maxLength);
+	$e->addAttribute('size',$size);
+/*
+	if ($disabled != 'false'){
+		$e->addAttribute('disabled',$disabled);
+	}
 */
-class _inputButton extends _input{
-	public function __construct($type, $inputName,$caption)){
-		parent::__construct($type,$inputName,'none','editing-button');
-		$this->setValue($caption);
-	}
+	$e->addAttribute('type','password');
+	
+	return $e->empty();
+
 }
-class _submitButton extends _inputButton{
-	public function __construct($inputName = 'submit',$caption = 'Submit')){
-		parent::__construct('submit',$inputName, $caption);
-	}
-}
-class _resetButton extends _inputButton{
-	public function __construct($caption = 'Reset')){
-		parent::__construct('reset','reset', $caption);
-	}
+
+function getHiddenInput($inputName, $inputValue){
+
+	$e = new _element('input',$inputName, 'editing-input-hidden');
+	$e->addAttribute('type','hidden');
+	$e->addAttribute('value',$inputValue);
+
+	$input = $e->empty();
+	$input .= $inputName.'['.$inputValue.']';
+	
+	return $input;
+
 }
 
 
 
-/*
+function getButton($type,$caption,$name){
+
+	$e = new _element('input',$name, 'editing-button');
+
+	//$e->addAttribute('name',$name);
+	$e->addAttribute('type',$type);
+	$e->addAttribute('value',$caption);
+
+	return $e->empty();
+}
 
 function getSubmitButton($caption = 'Submit',$name = 'submit'){
-	$b = new _submitButton(($caption, $name);
-	return $b->print();	
+	$b = getButton('submit', $caption, $name);
+	return $b;	
 }
 
 function getResetButton($resetCaption = 'Reset'){
-	$b = new _resetButton( $resetCaption);
-	return $b->print();	
+	$b = getButton('reset', $resetCaption, 'reset');
+	return $b;	
 }	
 function getSubmitResetButtons($submitCaption = 'Submit',$submitName = 'submit', $resetCaption = 'Reset'){
-	$b = new _submitButton($submitCaption, $submitName);
-	$r = new _resetButton($resetCaption);
-	return $b->print().$r->print();	
+	$b = getSubmitButton($submitCaption, $submitName);
+	$b .= getResetButton($resetCaption, 'reset');
+	return $b;	
 }
- */
-class _loginButton extends _submitButton{
+ 
 
-	public function __construct($caption = 'Login',$name = 'submit-login'){
-		parent::construct($caption,$name);
-	}
-}
-class _logoutButton extends _submitButton{
-
-	public function __construct($caption = 'Logout',$name = 'submit-logout'){
-		parent::construct($caption,$name);
-	}
-}
 function getLoginLogoutButton($submitCaption = 'Login',$submitName='submit-login'){
 	$b = getSubmitButton($submitCaption, $submitName);
 	return $b;
@@ -255,7 +226,6 @@ function getSaveChangesResetButtons($submitCaption = 'Save',$submitName = 'submi
 	$buttons = getSubmitResetButtons($submitCaption,$submitName, $resetCaption);
 	return $buttons;
 }
-
 function inputFieldTimestamp($entity, $id, $value, $caption = '',$disabled = 'false'){
 	$input = getTimestampSelect($id,$value,$disabled);
 	$element = captionedInput($caption,$input);		
@@ -411,13 +381,10 @@ function inputFieldHighlightstyle($entity,$value,$id = 'highlightStyle',$caption
 
 
 
-function captionedInput($caption, $input,$messages = ''){
+function captionedInput($caption, $input){
 	$s = openDiv('captioned-input');
 	if ($caption != ''){
 		$s .= wrapDiv($caption,'caption');
-	}
-	if ($messages != ''){
-		$s .= wrapDiv($messages,'validationMessages');
 	}
 	$s .= wrapDiv($input,'input');
 	$s .= closeDiv();

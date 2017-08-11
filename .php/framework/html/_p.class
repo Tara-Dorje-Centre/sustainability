@@ -1,0 +1,27 @@
+<?php
+namespace html/format;
+
+class _p extends _element{
+	protected $caption;
+
+	public function __construct(string $caption = 'none', string $id = 'none',string $css = 'none'){
+		parent::__construct('p', $id, $css);
+		$this->caption = $caption;
+	}
+	
+	public function open(){
+		$result = parent::open();
+		if ($this->caption != 'none'){
+		$result .= span($this->caption,'paragraph-caption');
+		}
+		return $result();
+	}
+	
+	public function p($content){
+		$this->setContent($content);
+		return $this->print();
+	}
+	
+}
+
+?>

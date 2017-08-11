@@ -1,0 +1,17 @@
+<?php
+namespace html/forms;
+
+function inputFieldUser(
+	$entity,
+	$value,
+	$id = 'user',
+	$caption = 'Done By',
+	$tooltip = NULL, 
+	$disabled = 'false',
+	$css = 'editing-input-user'){
+		
+	$element = inputFieldText($entity,$value,$id,$caption,8,50,$tooltip,$disabled,$css);
+	return $element;
+	
+}
+?>

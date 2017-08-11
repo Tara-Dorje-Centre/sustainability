@@ -1,0 +1,23 @@
+<?php
+namespace html/forms;
+
+class _input extends _emptyElement
+using inputValueAttribute, inputCaption, inputValidation, inputDisabled, inputSize{
+	
+	public function __construct(string $inputType,string $inputName,string $caption = 'none', $tooltip = 'none', $css = 'editing-input'){
+		parent::__construct('input',$inputName, $css);
+		$this->addAttribute('type',$type);
+		$this->addAttribute('title',$tooltip);
+		$this->setCaption($caption);
+	}
+	
+	public function print(){
+		$d= new html/div('ei','edit-input');
+		$d->addContent($this->getCaption());
+		$d->addContent($this->getValidation());
+		$d->addContent(parent::print());
+		return $d->print();
+	}
+	
+}
+?>

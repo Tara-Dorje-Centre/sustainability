@@ -1,0 +1,26 @@
+<?php
+namespace html/forms;
+
+class _displayList extends _displayDetails{
+	protected $_list;
+	protected $links;
+	public function __construct(string $entity = 'entity',string $links = 'links',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
+	parent::__construct($entity,'list',$legend,$quickEdit,$contextMenu);
+	$this->links = $links;
+	$this->_list = new _table($this->entity.'displayListTable', 'displayListTable');
+
+	}
+
+	public function open(){
+		$this->addContent(parent::open());
+		$this->addContent($this->links);
+		$this->addContent($this->_list->open());
+		return $this->getContent();
+	}
+	public function close(){
+		$this->addContent($this->_list->close());
+		return parent::close();
+	}
+}
+
+?>

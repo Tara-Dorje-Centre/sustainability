@@ -1,0 +1,10 @@
+<?php
+namespace html/forms;
+
+function getSelectYesNo($selectName,$value = 'no', $tooltip = 'none', $disabled = 'false',$onChangeJS = NULL){
+	$options = getSelectOption('no','no',$value);
+	$options .= getSelectOption('yes','yes',$value);
+	$select = getSelectList($selectName,$options,$tooltip,$disabled,$onChangeJS);
+	return $select;
+}
+?>

@@ -1,0 +1,16 @@
+<?php
+namespace html/format;
+
+class _meta extends html/_element{
+	public function __construct(string $equiv,string $content){
+		parent::__construct('meta');
+		$this->addAttribute('http-equiv',$equiv);
+		$this->addAttribute('content',$content);
+	}
+	public function meta(){
+		return $this->empty();
+	}
+
+}
+
+?>

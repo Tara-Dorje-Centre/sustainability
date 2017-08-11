@@ -1,8 +1,7 @@
 <?php 
 
-interface IhtmlPage{
-	public function print();
-}
+
+
 class _htmlPage extends _echo 
 implements IhtmlPage,Iecho{
 	private $_document;

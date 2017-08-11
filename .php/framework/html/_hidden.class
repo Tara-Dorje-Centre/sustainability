@@ -1,0 +1,28 @@
+<?php
+namespace html/forms;
+
+class _hidden extends _input{
+	private $n;
+	private $v;
+	public function __construct($inputName, $inputValue){
+		parent::__construct('hidden',$inputName,'none','editing-input-hidden');
+
+		$this->setValue($inputValue);
+		$this->n = $inputName;
+		$this->v = $inputValue;
+	}
+	public function print(){
+		$input = parent::print();
+		//show values during development
+		$input .= $this->n.'['.$this->v.']';
+		return $input;
+
+	}
+}
+
+function getHiddenInput($inputName, $inputValue){
+	 $e = new _inputHidden($inputName, $inputValue);
+	 return $e->print();
+}
+
+?>

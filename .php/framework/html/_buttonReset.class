@@ -1,0 +1,17 @@
+<?php
+namespace html/forms;
+
+class _buttonReset extends _button{
+	public function __construct(string $caption = 'Reset')){
+		parent::__construct('reset','reset', $caption);
+	}
+}
+class _buttonCancel extends _buttonReset{
+	public function __construct(string $caption = 'Cancel')){
+		parent::__construct($caption);
+	}
+}
+
+
+
+?>

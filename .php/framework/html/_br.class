@@ -1,0 +1,27 @@
+<?php
+namespace html/format;
+class _repeatingElement extends _emptyElement{
+	protected $lines = 1;
+	public function __construct(string $tag, $lines = 1){
+		parent::__construct($tag);
+			$this->lines = $lines;
+	}
+	public function print(){
+		$content = '';
+		$i = 0;
+		while ($i < $this->lines){
+			$i++;?
+			$content .= parent::print();
+		}
+		return $content;
+	}
+
+}
+
+class _br extends _repeatingElement{
+	public function __construct($lines = 1){
+		parent::__construct('br',$lines);
+	}
+}
+
+?>

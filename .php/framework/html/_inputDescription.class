@@ -1,0 +1,16 @@
+<?php
+namespace html/forms;
+
+function inputFieldDescription(
+	$entity, 
+	$value, 
+	$id = 'description', 
+	$caption = 'Description',
+	$tooltip = NULL, 
+	$disabled = 'false',
+	$css = 'editing-input-description'){
+
+	$element = inputFieldTextArea($entity,$value,$id,$caption,1000,$tooltip,$disabled,$css);
+	return $element;
+}
+?>

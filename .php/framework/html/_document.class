@@ -1,0 +1,66 @@
+<?php
+namespace html/forms;
+
+class _document {
+	$html;
+	$head;
+	$body;
+	$title;
+	$_styles;
+	$_scripts;
+	public function __construct($title, $onLoad = 'none'){
+	
+		$this->html= new _element('html');
+		$this->head = new _element('head');
+		$this->title = new _element('title');
+		$this->title->setContent($title);
+		$this->body = new _element('body');
+		$this->body->addAttribute('onload', $onLoad);
+	}
+	public function setStyles($styles = null){
+		$this->_styles = $styles;
+	
+	}
+	public function setScripts($scripts = null){
+		$this->_scripts = $scripts;
+	
+	}
+	protected function doctype(){
+		$declare = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">';
+		return $declare;	
+	}
+	
+	protected function equivs(){
+		$css = new _meta('Content-Style-Type','text/css');
+		$text = new _meta('content-type','text/html; charset=UTF-8');
+	
+		$m = $css->meta()
+		$m .= $text->meta();
+		return $m;
+	}
+	
+	public function open(){
+
+		$content = $this->doctype();
+		$content .= $this->html->open();
+		
+		$this->head->addContent($this->equivs());		
+		$this->head->addContent($this->_styles);
+		$this->head->addContent($this->title->print());
+		$this->head->addContent($this->_scripts);
+		$content .= $this->head->print());
+		
+		$content .= $this->body->open();
+
+		return $content;	
+	}
+	
+	public function close(){
+		$content = $this->body->close();
+		$content .= $this->html->close();
+		return $content;	
+	}
+	
+}
+
+?>

@@ -1,0 +1,30 @@
+<?php
+namespace html/format;
+
+class _script extends _element{
+	protected $useComment = true;
+
+	public function __construct($language = 'JavaScript', $useComment = true){
+		parent::__construct('script');
+		$this->useComment = $useComment;
+		$this->addAttribute('language', $language);
+	}
+	public function open(){
+		$element = parent::open();
+		if ($this->useComment == true){
+			$element .= $this->commentOpen();
+		}
+		return $element;
+	}
+	public function close(){
+		if ($this->useComment == true){
+			$element = $this->commentClose();
+		} else {
+			$element = parent::EMPTY;
+		}
+		$element .= parent::close();
+		return $element;
+	}
+}
+
+?>

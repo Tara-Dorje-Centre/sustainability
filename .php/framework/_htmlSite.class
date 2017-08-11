@@ -1,84 +1,89 @@
 ﻿<?php 
 
-interface IhtmlSite{
-public function set(string $heading = 'page heading', string $details = 'page details');
+interface IhtmlSite extends IhtmlPage{
+	public function set(string $heading = 'page heading', string $details = 'page details');
 }
 
 class _htmlSite extends _htmlPage
-implements IhtmlPage, Iecho{
-protected $settings;
+implements IhtmlSite,IhtmlPage, Iecho{
+	protected $settings;
+	public $validLogin = false;
+	protected $pageMode = 'VIEW';
 
-protected $pageMode = 'VIEW';
-public function __construct($mode = 'VIEW'){
-$this->echoPrint(true,'begin','__construct','htmlSite');
-$this->pageMode = $mode;
-$this->settings = new siteSettings($mode);
+	public function __construct($mode = 'VIEW'){
+		$this->echoPrint(true,'begin','__construct','htmlSite');
+		$this->pageMode = $mode;
+		$this->settings = new siteSettings($mode);
+		$this->verifyLoginState();
+	}
+	public function set(string $heading = 'page heading', string $details = 'page details'){
+		$this->echoPrint(true,'begin','set','htmlSite');
 
-}
-public function set(string $heading = 'page heading', string $details = 'page details'){
-$this->echoPrint(true,'begin','set','htmlSite');
-	$this->_details = $details;
-	$this->_heading = $heading;
-
-	$this->getSiteSettings();
-	//$this->setContents();	
-	$this->setOnLoad();
-	$this->setStyles();
-	$this->setScripts();
-	$this->setTitle();
-	$this->setLinks();
-	$this->setContents();	
-	$this->setFooterNotices();
-	$this->setFooterLinks();	
-	$this->echoPrint(true,'finished','set','htmlSite');
-}
-
-protected function getSiteSettings(){
-	$this->echoPrint(true,'begin','getSiteSettings','htmlSite');
-	$this->settings->setDetails();
-}
-
-protected function setOnLoad(){
-
-		if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)){	
+		$this->getSiteSettings();
+		$this->setOnLoad();
+		$this->setStyles();
+		$this->setScripts();
+		$this->setTitle();
+		$this->setLinks();
+		$this->setContents($heading,$details);	
+		$this->setFooterNotices();
+		$this->setFooterLinks();	
+	
+		$this->echoPrint(true,'finished','set','htmlSite');
+	}
+	protected function verifyLoginState(){
+		if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)){
+			$this->validLogin = true;
+		}
+	}
+	protected function getSiteSettings(){
+		$this->echoPrint(true,'begin','getSiteSettings','htmlSite');
+		$this->settings->setDetails();
+	}
+	
+	protected function setOnLoad(){
+		if ($this->validLogin == true){
 			$onLoad = 'none';
 		} else {
 			$onLoad='displayClientTime();';
 		}
-		$this->_onLoad = $onLoad;
-}
+		$this->setPageOnLoad($onLoad);
+	}
 
 
-protected function setTitle(){
-	//$title = $_SESSION['site-title'];
-	$this->_title = $this->settings->f->siteTitle->value();		
-}
-
-
-protected function setLinks(){
-
-	//login check goes here to show content or login screen
-	if (!isset($_SESSION['logged-in']) || ($_SESSION['logged-in'] == false)){
-		//user is not logged in, siteContent will display login form, display no links
-		$this->_links = '';
-	} else {
-		$menuType = 'LIST';
-		$menuStyle = 'button';
-		$m = new MenuLinks($menuType, $menuStyle);
-		$p = new ProjectLinks($menuType, $menuStyle);
-		$t = new TaskLinks($menuType, $menuStyle);
-		$a = new ActivityLinks($menuType, $menuStyle);
-		
-		$content = $m->openMenu('site');
-		if ($this->settings->f->showPublicSite->value == 'yes'){
-		//isset($_SESSION['show-public-site']) && $_SESSION['show-public-site'] == 'yes'){
-			$content .= $m->formatHref('Library','public.php');	
+	protected function setTitle(){
+		if ($this->validLogin == true){
+			$title = $this->settings->f->siteTitle->value();
+		} else {
+			$title = 'Login';
 		}
+		$this->setPageTitle($title);		
+	}
+
+
+	protected function setLinks(){
+
+		//login check goes here to show content or login screen
+		if ($this->validLogin == false){
+			//user is not logged in, siteContent will display login form, display no links
+			$this->setPageLinks('');
+		} else {
+			$menuType = 'LIST';
+			$menuStyle = 'button';
+			$m = new MenuLinks($menuType, $menuStyle);
+			$p = new ProjectLinks($menuType, $menuStyle);
+			$t = new TaskLinks($menuType, $menuStyle);
+			$a = new ActivityLinks($menuType, $menuStyle);
+		
+			$content = $m->openMenu('site');
+			if ($this->settings->f->showPublicSite->value == 'yes'){
+				$content .= $m->formatHref('Library','public.php');	
+			}
 		
 		if (isset($_SESSION['currentView'])){
 			if ($_SESSION['currentView'] == 'PERIODIC_TASKS'){
 				//user just viewed current open tasks;
-				//$content .= $t->linkPeriodicTasksOpen();
+				$content .= $t->linkPeriodicTasksOpen();
 			} elseif ($_SESSION['currentView'] == 'MY_CALENDAR'){
 				//user just viewed myCalendar;
 				$content .= $a->linkMyCalendar();
@@ -95,87 +100,91 @@ protected function setLinks(){
 		}
 
 		//always show current open tasks;
-		$content .= $t->linkPeriodicTasksOpen();		
+		//$content .= $t->linkPeriodicTasksOpen();		
 		//always show projects link
 		$content .= $p->listingAllProjects(false);
 		$content .= $m->detailHref();	
 		$content .= $m->logoutHref();
 		$content .= $m->closeMenu();
 		
-		$this->_links = $content;
+		$this->setPageLinks($content);
 		
 	}
 	
 }
 
 
-protected function setContents(){ 
+	protected function setContents($heading,$details){ 
 
-	if (!isset($_SESSION['logged-in']) || ($_SESSION['logged-in'] == false)){
-	$this->echoPrint(true,'not logged-in, setting contents to login form','setContents','htmlSite');
-		$l = new UserLogin('LOGIN-FORM');
-		$content = $l->loginForm();
-	} else {
-	$this->echoPrint(true,'logged-in,setting contents','setContents','htmlSite');
-		//section-heading div commented out to allow section-links to float closer to section details
-		//  pageHeading contains section-title and section-links div containers
-		//  wrap title and links in section-heading div
-		//	$s .= openDiv('section-heading');
-		$content = $this->_heading;
-		//	$s .= closeDiv(); //close section heading
-
-		$content .= openDiv('section-details');
-		$content .= $this->_details;
-		$content .= closeDiv(); //close section details
-	}
+		if ($this->validLogin == false){
+			$this->echoPrint(true,'not logged-in, setting contents to login form','setContents','htmlSite');
+			$l = new UserLogin('LOGIN-FORM');
+			$content = $l->loginForm();
+		} else {
+			$this->echoPrint(true,'logged-in,setting contents','setContents','htmlSite');
+			//section-heading div commented out to allow section-links to float closer to section details
+			//  pageHeading contains section-title and section-links div containers
+			//  wrap title and links in section-heading div
+			$h = new html/_div('section-heading');
+			$h->setContent($heading);
+			$d = new html/_div('section-details');
+			$d->setContent($details);
+		
+			$content = $h->print();
+			$content .= $d->print();
+		}
 	
-	$this->_contents = $content;
-}
+		$this->setPageContents($content);
+	}
 
-
-	protected function setFooterNotices(){
-
-		$content = openDiv('login-notices');
-
+	protected function setNoticeTiming(){
 		global $sessionTime, $sessionTimeZone;
 		$timing = 'Request Time: '.$sessionTime.'(UTC'.$sessionTimeZone.')';
-		$content .= wrapDiv($timing, 'display-request-time');
+		$t = new html/_div('display-request-time');
+		$t->setContent($timing);
 		
-		if (isset($_SESSION['login-name'])){
-			$loginName = $_SESSION['login-name'];
-		} else {
-			$loginName = 'Not logged in.';	
-		}
 		if (isset($_SESSION['client-time-zone'])){
 			$timeZone = '@UTC'.$_SESSION['client-time-zone'];	
 		} else {
 			$timeZone = ' Time Zone set to UTC';	
 		}
-		$loginName .= $timeZone;	
-		$content .= wrapDiv($loginName,'loginName','loginName');
-	
-		$content .= closeDiv();
-		
-
-		$content .= openDiv('site-organization');
-		$org = $this->settings->f->organization->value();
-		//$_SESSION['site-org'];
-		$orgUrl = $this->settings->f->organizationUrl->value();
-		//$_SESSION['site-org-url'];
-		if ($orgUrl == '' || is_null($orgUrl)){
-			$content .= $org;
+		$t->addContent($timezone);
+		return $t->print();
+	}
+	protected function setNoticeLoginName(){
+		if (isset($_SESSION['login-name'])){
+			$loginName = $_SESSION['login-name'];
 		} else {
-			$content .= getHref($orgUrl, $org, 'menu-links-item', '_blank');
+			$loginName = 'Not logged in.';	
 		}
-		$content .= closeDiv();
-
-		$this->_footerNotices = $content;
-	
+		$l = new html/_div('login-name');
+		$l->setContent($loginName);
+		return $l->print();
+	}
+	protected function setNoticeOrg(){
+		$o .= new html/_div('site-organization');
+		$org = $this->settings->f->organization->value();
+		$orgUrl = $this->settings->f->organizationUrl->value();
+		
+		if (($orgUrl) == '' || is_null($orgUrl)){
+			$content = $org;
+		} else {
+			$content = getHref($orgUrl, $org, 'menu-links-item', '_blank');
+		}
+		$o->setContent($content);
+		return $o->print();
+	}
+	protected function setFooterNotices(){
+		$n = new html/_div('login-notices');
+		$n->addContent($this->setNoticeTiming());
+		$n->addContent($this->setNoticeLoginName());
+		$n->addContent($this->setNoticeOrg());
+		$this->setPageFooterNotices($n->print());
 	}
 
 	protected function setFooterLinks(){
 		$content = getHref('https://sourceforge.net/projects/sustainability','Sustainability','menu-links-item','_blank');
-		$this->_footerLinks = $content;	
+		$this->setPageFooterLinks($content);	
 	}
 
 	protected function setStyles(){
@@ -185,7 +194,7 @@ protected function setContents(){
 		//use external stylesheet
 		$content = LinkStylesheet('./css/styles.css');
 		$content .= Linkstylesheet('./css/override.css');
-		$this->_styles = $content;
+		$this->setPageStyles($content);
 		//return $content;
 		
 	}
@@ -199,7 +208,7 @@ protected function setContents(){
 		//clear buffer to local variable
 		$scripts .= ob_get_clean();  
 		$scripts .= closeScript();
-		$this->_scripts = $scripts;
+		$this->setPageScripts($scripts);
 		//return $scripts;
 	}
 	

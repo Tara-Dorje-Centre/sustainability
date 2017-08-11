@@ -1,0 +1,24 @@
+<?php
+namespace html/forms;
+
+class _inputNumber extends _inputText{
+
+
+}
+
+function inputFieldNumber(
+	$entity,
+	$value,
+	$id = 'numberId',
+	$caption = '',
+	$tooltip = NULL, 
+	$disabled = 'false',
+	$css = 'editing-input-number'){
+		
+	$element = inputFieldText($entity,$value,$id,$caption,4,10,$tooltip,$disabled,$css);
+	return $element;
+
+}
+
+
+?>

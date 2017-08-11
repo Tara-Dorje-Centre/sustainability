@@ -1,0 +1,16 @@
+<?php
+namespace html/forms;
+
+class _buttonLogin extends _buttonSubmit{
+	public function __construct($caption = 'Login',$name = 'submit-login'){
+		parent::construct($caption,$name);
+	}
+}
+class _buttonLogout extends _buttonSubmit{
+	public function __construct($caption = 'Logout',$name = 'submit-logout'){
+		parent::construct($caption,$name);
+	}
+}
+
+
+?>

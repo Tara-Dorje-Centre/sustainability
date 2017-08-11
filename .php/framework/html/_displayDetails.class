@@ -1,0 +1,45 @@
+<?php
+namespace html/forms;
+
+class _displayDetails extends _contentWriter{
+	protected $entity;
+	protected $mode;
+	protected $legend;
+	protected $_fields;
+	protected $_display;
+	public function __construct(string $entity = 'entity',string $mode = 'mode',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
+		$this->entity = $entity;
+		$this->mode = $mode;
+		$this->legend = $legend;
+		$this->quickEdit = $quickEdit;
+		$this->contextMenu = $contextMenu;
+		
+		$this->_display = new _div($this->entity.'-display','display'.$this->mode);
+		$this->_fields = new html/_fieldset($this->entity.'-fields', $this->legend,'fieldset');
+	}
+	public function open(){
+
+		$this->addContent($this->_display->open());
+
+		if ($this->quickEdit != 'none'){
+			$d = new _div($this->entity.'-quickEdit','quickEdit');
+			$this->addContent($d->wrap($this->quickEdit));
+		}
+		if ($this->contextMenu != 'none'){
+			$d = new _div($this->entity.'-contextMenu','contextMenu');
+			$this->addContent($d->wrap($this->contextMenu));
+		}
+	
+
+		$this->addContent($this->_fields->open());
+		return $this->getContent();
+	
+	}
+	public function close(){
+		$this->addContent($this->_fields->close());
+		$this->addContent($this->_display->close());
+		return $this->getContent();
+	}
+}
+
+?>

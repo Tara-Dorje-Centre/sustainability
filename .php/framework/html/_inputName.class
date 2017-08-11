@@ -1,0 +1,15 @@
+<?php
+namespace html/forms;
+function inputFieldName(
+	$entity, 
+	$value, 
+	$id = 'name', 
+	$caption = 'Name',
+	$tooltip = NULL, 
+	$disabled = 'false',
+	$css = 'editing-input-name'){
+
+	$element = inputFieldText($entity,$value,$id,$caption,30,100,$tooltip,$disabled,$css);
+	return $element;
+}
+?>

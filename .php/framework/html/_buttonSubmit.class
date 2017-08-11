@@ -1,0 +1,14 @@
+<?php
+namespace html/forms;
+
+class _buttonSubmit extends _button{
+	public function __construct($name = 'submit',$caption = 'Submit')){
+		parent::__construct('submit',$name, $caption);
+	}
+}
+class _buttonSave extends _buttonSubmit{
+	public function __construct($name = 'submit',$caption = 'Save')){
+		parent::__construct($name, $caption);
+	}
+}
+?>

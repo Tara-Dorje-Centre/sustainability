@@ -280,7 +280,7 @@ class _resourceLink extends _element{
 		$this->addAttribute('type',$type);
 		$this->addAttribute('href',$href);
 	}
-	public function link(){
+	public function print(){
 		return $this->empty();
 	}
 }

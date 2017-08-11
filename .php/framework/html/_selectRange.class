@@ -1,0 +1,16 @@
+<?php
+namespace html/forms;
+
+function getSelectRange($max,$selectedValue,$padding = 0,$start=0){
+	$range = '';
+	$i = $start;
+	while ($i < $max){
+		$i++;
+		$value = str_pad($i,$padding,'0',STR_PAD_LEFT);
+		$option = getSelectOption($value,$value,$selectedValue);
+		$range .= $option;
+	}
+	return $range;
+}
+
+?>

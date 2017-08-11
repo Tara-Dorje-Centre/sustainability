@@ -1,0 +1,28 @@
+<?php
+namespace html/format;
+
+class _inlineStyle extends _element{
+	public function __construct(){
+		parent::__construct('script');
+	}
+}
+
+class _resourceLink extends _element{
+	public function __construct($rel,$type,$href){
+		parent::__construct('link');
+		$this->addAttribute('rel',$rel);
+		$this->addAttribute('type',$type);
+		$this->addAttribute('href',$href);
+	}
+	public function print(){
+		return $this->empty();
+	}
+}
+
+class _cssLink extends _resourceLink{
+	public function __construct($cssFile){
+		parent::__construct('stylesheet','text/css',$cssFile);
+	}
+}
+
+?>

@@ -1,0 +1,14 @@
+<?php
+namespace html/format;
+
+class _div extends _element{
+	public function __construct(string $idName = 'none', string $css = 'none',string $style = 'none'){
+		parent::__construct('div', $idName, $css);
+		$this->setStyle($style);
+	}
+	public function div(){
+		return $this->print();
+	}
+}
+
+?>
