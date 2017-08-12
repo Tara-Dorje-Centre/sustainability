@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _script extends _element{
 	protected $useComment = true;

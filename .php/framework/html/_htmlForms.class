@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 /*
 function wrapDivFieldGrouping($entity,$fields,$css = 'fieldGrouping'){
@@ -42,7 +42,7 @@ function inputFieldHighlightstyle($entity,$value,$id = 'highlightStyle',$caption
 }
 
 
-*/
+
 function captionedInput($caption, $input,$messages = ''){
 	$s = openDiv('captioned-input');
 	if ($caption != ''){
@@ -55,25 +55,6 @@ function captionedInput($caption, $input,$messages = ''){
 	$s .= closeDiv();
 	return $s;
 }
-/*
 
-function getSelectYesNo($selectName,$value = 'no', $tooltip = 'none', $disabled = 'false',$onChangeJS = NULL){
-	$options = getSelectOption('no','no',$value);
-	$options .= getSelectOption('yes','yes',$value);
-	$select = getSelectList($selectName,$options,$tooltip,$disabled,$onChangeJS);
-	return $select;
-}
-
-function getSelectRange($max,$selectedValue,$padding = 0,$start=0){
-	$range = '';
-	$i = $start;
-	while ($i < $max){
-		$i++;
-		$value = str_pad($i,$padding,'0',STR_PAD_LEFT);
-		$option = getSelectOption($value,$value,$selectedValue);
-		$range .= $option;
-	}
-	return $range;
-}*/
-
+*/
 ?>

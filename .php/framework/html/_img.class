@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _img extends _element{
 	public function __construct($src,$alt,$idName = 'none', $css = 'none'){

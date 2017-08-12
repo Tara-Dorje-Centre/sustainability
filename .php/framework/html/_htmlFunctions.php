@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 function sessionVariableGET($urlVariable,$defaultValue){
 	if (isset($_GET[$urlVariable])){

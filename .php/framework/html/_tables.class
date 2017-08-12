@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _table extends _element{
 	public function __construct($idName = 'none', $css = 'none'){

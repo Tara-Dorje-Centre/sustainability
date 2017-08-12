@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _p extends _element{
 	protected $caption;

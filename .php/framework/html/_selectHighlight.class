@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 function inputFieldHighlightstyle($entity,$value,$id = 'highlightStyle',$caption = 'Highlight Style',$tooltip = NULL, $disabled = 'false'){
 	

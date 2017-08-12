@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 class _displayDetails extends _contentWriter{
 	protected $entity;

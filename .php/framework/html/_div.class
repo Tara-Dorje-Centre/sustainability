@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _div extends _element{
 	public function __construct(string $idName = 'none', string $css = 'none',string $style = 'none'){

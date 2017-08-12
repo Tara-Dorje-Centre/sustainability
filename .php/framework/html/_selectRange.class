@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 function getSelectRange($max,$selectedValue,$padding = 0,$start=0){
 	$range = '';

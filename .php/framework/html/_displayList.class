@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 class _displayList extends _displayDetails{
 	protected $_list;

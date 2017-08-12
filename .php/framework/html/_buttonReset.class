@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 class _buttonReset extends _button{
 	public function __construct(string $caption = 'Reset')){

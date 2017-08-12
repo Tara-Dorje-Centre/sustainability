@@ -1,7 +1,7 @@
 <?php
-namespace html/forms;
+namespace html;
 
-function inputFieldDescription(
+function inputDescription(
 	$entity, 
 	$value, 
 	$id = 'description', 

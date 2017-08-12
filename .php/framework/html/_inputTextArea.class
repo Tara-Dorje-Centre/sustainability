@@ -1,19 +1,17 @@
 <?php
-namespace html/forms;
+namespace html;
 
-class _textarea extends _element
-using inputValueContent, inputCaption, inputValidation, inputDisabled{
+class _inputTextarea extends _element{
+use inputValueContent, inputCaption, inputValidation, inputDisabled, inputDimensionsRows;
 	public function __construct($inputName, $inputValue, $maxLength = 1000, $rows = 4, $cols = 60,$tooltip = 'none',$css = 'editing-input-textarea'){
 		parent::__construct('textarea',$inputName, $css);
 		$this->addAttribute('title',$tooltipText);
-		$this->addAttribute('maxlength',$maxLength);
-		$this->addAttribute('rows',$rows);
-		$this->addAttribute('cols',$cols);
+		$this->setDimensions($maxLength,$rows,$cols);
 		$this->setValue($inputValue);
 	}
 	
 	public function print(){
-		$d= new html/div('ei','edit-input');
+		$d= new _div('ei','edit-input');
 		$d->addContent($this->getCaption());
 		$d->addContent($this->getValidation());
 		$d->addContent(parent::print());

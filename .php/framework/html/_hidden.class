@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 class _hidden extends _input{
 	private $n;

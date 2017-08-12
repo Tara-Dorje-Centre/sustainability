@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _meta extends html/_element{
 	public function __construct(string $equiv,string $content){

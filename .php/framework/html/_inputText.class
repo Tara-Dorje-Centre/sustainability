@@ -1,10 +1,10 @@
 <?php
-namespace html/forms;
+namespace html;
 
 class _inputText extends _input{
 	public function __construct($inputName, $inputValue, $size = 100, $maxLength = 100, $tooltip = 'none', $css = 'editing-input-text'){
 		parent::__construct('text',$inputName,$tooltip,$css);
-		$this->setSize($size,$maxLength);
+		$this->setDimensions($maxLength, $size);
 		$this->setValue($inputValue);
 	}
 }

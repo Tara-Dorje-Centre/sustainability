@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 function getSelectYesNo($selectName,$value = 'no', $tooltip = 'none', $disabled = 'false',$onChangeJS = NULL){
 	$options = getSelectOption('no','no',$value);

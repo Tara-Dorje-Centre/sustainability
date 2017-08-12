@@ -1,7 +1,7 @@
 <?php
-namespace html/forms;
+namespace html;
 
-function inputFieldComments(
+function inputComments(
 	$entity, 
 	$value, 
 	$id = 'comments', 

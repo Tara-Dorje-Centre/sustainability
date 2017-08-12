@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _inlineStyle extends _element{
 	public function __construct(){

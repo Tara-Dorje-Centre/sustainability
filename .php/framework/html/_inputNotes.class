@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 function inputFieldNotes(
 	$entity, 

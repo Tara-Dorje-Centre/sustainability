@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 trait inputValueAttribute{
 	public function setValue($inputValue){
@@ -66,9 +66,37 @@ trait inputDisabled{
 	}
 }
 trait inputSize{
-	public function setSize($size = 100,$maxLength = 100){
-		$this->addAttribute('maxlength',$maxLength);
+	public function setSize($size = 100){
 		$this->addAttribute('size',$size);
+	}
+
+}
+trait inputRowsColumns{
+	public function setRowsCols($rows,$cols){
+		$this->addAttribute('rows',$rows);
+		$this->addAttribute('cols',$cols);
+	}
+}
+
+trait inputMaxLength{
+	public function setMaxlength($maxLength = 100){
+		$this->addAttribute('maxlength',$maxLength);
+	}
+
+}
+trait inputDimensionsSize{
+use inputSize, inputMaxLength;
+	public function setDimensions($maxLength, $size){
+		$this->setMaxLength($maxLength);
+		$this->setSize($size);
+	}
+
+}
+trait inputDimensionsRows{
+use inputRowsColumns, inputMaxLength;
+	public function setDimensions($maxLength,$rows, $columns){
+		$this->setMaxLength('maxlength',$maxLength);
+		$this->setRowsCols($rows,$columns);
 	}
 
 }

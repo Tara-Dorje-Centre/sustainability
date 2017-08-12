@@ -1,5 +1,5 @@
 <?php
-namespace html/format;
+namespace html;
 
 class _hr extends _element{
 	public function __construct(){

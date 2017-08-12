@@ -1,5 +1,5 @@
 <?php
-namespace html/forms;
+namespace html;
 
 class _buttonSubmit extends _button{
 	public function __construct($name = 'submit',$caption = 'Submit')){

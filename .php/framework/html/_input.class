@@ -1,11 +1,11 @@
 <?php
-namespace html/forms;
+namespace html;
 
-class _input extends _emptyElement
-using inputValueAttribute, inputCaption, inputValidation, inputDisabled, inputSize{
+class _input extends _emptyElement{
+use inputValueAttribute, inputCaption, inputValidation, inputDisabled, inputDimensionsSize;
 	
-	public function __construct(string $inputType,string $inputName,string $caption = 'none', $tooltip = 'none', $css = 'editing-input'){
-		parent::__construct('input',$inputName, $css);
+	public function __construct(string $type,string $name,string $caption = 'none', $tooltip = 'none', $css = 'editing-input'){
+		parent::__construct('input',$name, $css);
 		$this->addAttribute('type',$type);
 		$this->addAttribute('title',$tooltip);
 		$this->setCaption($caption);

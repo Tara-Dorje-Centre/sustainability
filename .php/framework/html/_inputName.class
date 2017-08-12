@@ -1,5 +1,7 @@
 <?php
-namespace html/forms;
+namespace html;
+
+
 function inputFieldName(
 	$entity, 
 	$value, 
