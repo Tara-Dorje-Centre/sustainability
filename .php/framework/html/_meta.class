@@ -1,7 +1,7 @@
 <?php
 namespace html;
 
-class _meta extends html/_element{
+class _meta extends _element{
 	public function __construct(string $equiv,string $content){
 		parent::__construct('meta');
 		$this->addAttribute('http-equiv',$equiv);

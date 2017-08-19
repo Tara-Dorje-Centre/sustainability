@@ -32,7 +32,7 @@ function inputFieldText(
 }
 
 
-
+/*
 function inputGroupWebLink(
 	$entity,
 	$textValue,
@@ -52,7 +52,7 @@ function inputGroupWebLink(
 		
 	return $linkInfo;
 }
-
+*/
 
 function captionedInput($caption, $input,$messages = ''){
 	$s = openDiv('captioned-input');

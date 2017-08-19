@@ -1,5 +1,6 @@
 ﻿<?php 
-
+use \html\_pagePublic as _htmlPagePublic;
+/*
 class _htmlPagePublic extends _contentWriter 
 implements IhtmlPage,Iecho, IcontentWriter{
 	protected $_document;
@@ -276,4 +277,6 @@ public function print(){
 	
 	
 }
+
+*/
 ?>

@@ -4,7 +4,7 @@ interface Isite {
 	public function set(string $heading = 'page heading', string $details = 'page details');
 }
 
-class _htmlSite extends html\_page
+class _htmlSite extends \html\_page
 implements Isite{
 	protected $settings;
 	public $validLogin = false;
@@ -25,24 +25,29 @@ implements Isite{
 
 	}
 	protected function verifyLoginState(){
-		if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)){
+		if 
+		(
+			isset($_SESSION['logged-in'])
+			 && 
+		 	($_SESSION['logged-in'] == true)
+		 ){
 			$this->validLogin = true;
 		}
 	}
 	
 	
-	public function setDocumentValues{
+	public function setDocumentValues(){
 		$title = $this->getTitle();
 		$styles = $this->getStyles();
 		$scripts = $this->getScripts();
 		$onLoad = $this->getOnLoadScripts();
 		parent::setDocument($title, $styles, $scripts, $onLoad);
 	}
-	protected setFooterValues(){
+	protected function setFooterValues(){
 		$links = getFooterLinks();
 		$notices = getFooterNotices();
 		$logo = 'none';
-		parent::setFooter($links,$notices,$logo){
+		parent::setFooter($links,$notices,$logo);
 	}
 
 	protected function getLinks(){
@@ -173,7 +178,7 @@ implements Isite{
 	}
 
 	protected function getFooterLinks(){
-		$l getHref('https://sourceforge.net/projects/sustainability','Sustainability','menu-links-item','_blank');
+		$l = getHref('https://sourceforge.net/projects/sustainability','Sustainability','menu-links-item','_blank');
 		return $l;
 	}
 	

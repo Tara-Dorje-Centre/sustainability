@@ -1,14 +1,6 @@
-﻿<?php 
+<?php
 namespace html;
-/*
-interface IPage{
-	public function print();
-	public function setDocument(string $title = 'Sustainability',string $styles = 'none',string $scripts = 'none',string $onLoad = 'none');
-	public function setMain($contents,$links);
-	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none');
-}
-*/
-class _pagePublic extends  
+class _pagePublic extends  _page
 implements IPage {
 	protected $_document;
 	public $mainTitle;
@@ -52,7 +44,7 @@ implements IPage {
 	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none'){
 	
 	}
-}
+
 	
 	
 	protected function build(){
@@ -84,7 +76,7 @@ implements IPage {
 	protected function pageContent(){
 		$c = new _div('public-page-container');
 		
-		$t = new _div(openDiv('public-page-title');
+		$t = new _div('public-page-title');
 		$t->setContent($this->pageTitle);
 		$c->addContent($t->print());
 		
@@ -110,7 +102,7 @@ implements IPage {
 		
 		$i = new _div('public-site-image');
 		$i->addContent($this->mainImage);
-		$h->addContent($i->print();
+		$h->addContent($i->print());
 		
 		$t = new _div('public-site-title');
 		$t->addContent($this->mainTitle);

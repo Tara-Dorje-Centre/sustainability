@@ -1,5 +1,6 @@
 ﻿<?php 
-
+use \html\_page as _htmlPage;
+/*
 interface IhtmlPage{
 	public function print();
 }
@@ -138,6 +139,6 @@ implements IhtmlPage,Iecho{
 	}
 
 }
-
+*/
 
 ?>

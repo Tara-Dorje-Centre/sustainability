@@ -10,7 +10,7 @@ class _repeatingElement extends _emptyElement{
 		$content = '';
 		$i = 0;
 		while ($i < $this->lines){
-			$i++;?
+			$i++;
 			$content .= parent::print();
 		}
 		return $content;

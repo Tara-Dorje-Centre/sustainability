@@ -1,13 +1,14 @@
 <?php
+
 namespace html;
 
 class _document {
-	$html;
-	$head;
-	$body;
-	$title;
-	$_styles;
-	$_scripts;
+	protected $html;
+	protected $head;
+	protected $body;
+	protected $title;
+	protected $_styles;
+	protected $_scripts;
 	public function __construct($title, $onLoad = 'none'){
 	
 		$this->html= new _element('html');
@@ -34,7 +35,7 @@ class _document {
 		$css = new _meta('Content-Style-Type','text/css');
 		$text = new _meta('content-type','text/html; charset=UTF-8');
 	
-		$m = $css->meta()
+		$m = $css->meta();
 		$m .= $text->meta();
 		return $m;
 	}
@@ -48,7 +49,7 @@ class _document {
 		$this->head->addContent($this->_styles);
 		$this->head->addContent($this->title->print());
 		$this->head->addContent($this->_scripts);
-		$content .= $this->head->print());
+		$content .= $this->head->print();
 		
 		$content .= $this->body->open();
 

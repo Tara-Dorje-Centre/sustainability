@@ -1,7 +1,7 @@
 <?php 
 
 
-
+/*
 class _htmlPage extends _echo 
 implements IhtmlPage,Iecho{
 	private $_document;
@@ -119,6 +119,7 @@ implements IhtmlPage,Iecho{
 
 }
 
+*/
 
 Interface IsummarySQL{
 

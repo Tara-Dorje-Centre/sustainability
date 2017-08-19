@@ -38,7 +38,7 @@ include_once('_p.class');
 include_once('page.class');
 include_once('pagePublic.class');
 
-include_once('resourceLink.class');
+include_once('_resourceLink.class');
 include_once('_script.class');
 include_once('_select.class');
 include_once('_selectHighlight.class');
