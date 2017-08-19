@@ -1,5 +1,5 @@
 <?php
-namespace html;
+//namespace html;
 
 class _displayList extends _displayDetails{
 	protected $_list;
@@ -7,7 +7,7 @@ class _displayList extends _displayDetails{
 	public function __construct(string $entity = 'entity',string $links = 'links',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
 	parent::__construct($entity,'list',$legend,$quickEdit,$contextMenu);
 	$this->links = $links;
-	$this->_list = new _table($this->entity.'displayListTable', 'displayListTable');
+	$this->_list = new html\_table($this->entity.'displayListTable', 'displayListTable');
 
 	}
 

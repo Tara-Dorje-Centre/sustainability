@@ -1,72 +1,54 @@
 ﻿<?php 
 
-interface IhtmlSite extends IhtmlPage{
+interface Isite {
 	public function set(string $heading = 'page heading', string $details = 'page details');
 }
 
-class _htmlSite extends _htmlPage
-implements IhtmlSite,IhtmlPage, Iecho{
+class _htmlSite extends html\_page
+implements Isite{
 	protected $settings;
 	public $validLogin = false;
 	protected $pageMode = 'VIEW';
 
 	public function __construct($mode = 'VIEW'){
-		$this->echoPrint(true,'begin','__construct','htmlSite');
+		
 		$this->pageMode = $mode;
 		$this->settings = new siteSettings($mode);
 		$this->verifyLoginState();
 	}
 	public function set(string $heading = 'page heading', string $details = 'page details'){
-		$this->echoPrint(true,'begin','set','htmlSite');
 
-		$this->getSiteSettings();
-		$this->setOnLoad();
-		$this->setStyles();
-		$this->setScripts();
-		$this->setTitle();
-		$this->setLinks();
+		$this->settings->setDetails();
+		$this->setDocumentValues();
 		$this->setContents($heading,$details);	
-		$this->setFooterNotices();
-		$this->setFooterLinks();	
-	
-		$this->echoPrint(true,'finished','set','htmlSite');
+		$this->setFooterValues();	
+
 	}
 	protected function verifyLoginState(){
 		if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)){
 			$this->validLogin = true;
 		}
 	}
-	protected function getSiteSettings(){
-		$this->echoPrint(true,'begin','getSiteSettings','htmlSite');
-		$this->settings->setDetails();
-	}
 	
-	protected function setOnLoad(){
-		if ($this->validLogin == true){
-			$onLoad = 'none';
-		} else {
-			$onLoad='displayClientTime();';
-		}
-		$this->setPageOnLoad($onLoad);
+	
+	public function setDocumentValues{
+		$title = $this->getTitle();
+		$styles = $this->getStyles();
+		$scripts = $this->getScripts();
+		$onLoad = $this->getOnLoadScripts();
+		parent::setDocument($title, $styles, $scripts, $onLoad);
+	}
+	protected setFooterValues(){
+		$links = getFooterLinks();
+		$notices = getFooterNotices();
+		$logo = 'none';
+		parent::setFooter($links,$notices,$logo){
 	}
 
-
-	protected function setTitle(){
-		if ($this->validLogin == true){
-			$title = $this->settings->f->siteTitle->value();
-		} else {
-			$title = 'Login';
-		}
-		$this->setPageTitle($title);		
-	}
-
-
-	protected function setLinks(){
-
-		//login check goes here to show content or login screen
+	protected function getLinks(){
 		if ($this->validLogin == false){
 			//user is not logged in, siteContent will display login form, display no links
-			$this->setPageLinks('');
+			$content = '';
 		} else {
 			$menuType = 'LIST';
 			$menuStyle = 'button';
@@ -107,7 +89,7 @@ implements IhtmlSite,IhtmlPage, Iecho{
 		$content .= $m->logoutHref();
 		$content .= $m->closeMenu();
 		
-		$this->setPageLinks($content);
+		return $content;
 		
 	}
 	
@@ -117,11 +99,11 @@ implements IhtmlSite,IhtmlPage, Iecho{
 	protected function setContents($heading,$details){ 
 
 		if ($this->validLogin == false){
-			$this->echoPrint(true,'not logged-in, setting contents to login form','setContents','htmlSite');
-			$l = new UserLogin('LOGIN-FORM');
+
+			$l = new userLogin('LOGIN-FORM');
 			$content = $l->loginForm();
 		} else {
-			$this->echoPrint(true,'logged-in,setting contents','setContents','htmlSite');
+
 			//section-heading div commented out to allow section-links to float closer to section details
 			//  pageHeading contains section-title and section-links div containers
 			//  wrap title and links in section-heading div
@@ -134,10 +116,18 @@ implements IhtmlSite,IhtmlPage, Iecho{
 			$content .= $d->print();
 		}
 	
-		$this->setPageContents($content);
-	}
 
-	protected function setNoticeTiming(){
+		$links = $this->getLinks();
+		parent:: setMain($content,$links);
+		
+	}
+	
+	
+	
+
+	
+
+	protected function getNoticeTiming(){
 		global $sessionTime, $sessionTimeZone;
 		$timing = 'Request Time: '.$sessionTime.'(UTC'.$sessionTimeZone.')';
 		$t = new html/_div('display-request-time');
@@ -151,7 +141,7 @@ implements IhtmlSite,IhtmlPage, Iecho{
 		$t->addContent($timezone);
 		return $t->print();
 	}
-	protected function setNoticeLoginName(){
+	protected function getNoticeLoginName(){
 		if (isset($_SESSION['login-name'])){
 			$loginName = $_SESSION['login-name'];
 		} else {
@@ -161,7 +151,7 @@ implements IhtmlSite,IhtmlPage, Iecho{
 		$l->setContent($loginName);
 		return $l->print();
 	}
-	protected function setNoticeOrg(){
+	protected function getNoticeOrg(){
 		$o .= new html/_div('site-organization');
 		$org = $this->settings->f->organization->value();
 		$orgUrl = $this->settings->f->organizationUrl->value();
@@ -174,32 +164,55 @@ implements IhtmlSite,IhtmlPage, Iecho{
 		$o->setContent($content);
 		return $o->print();
 	}
-	protected function setFooterNotices(){
+	protected function getFooterNotices(){
 		$n = new html/_div('login-notices');
-		$n->addContent($this->setNoticeTiming());
-		$n->addContent($this->setNoticeLoginName());
-		$n->addContent($this->setNoticeOrg());
-		$this->setPageFooterNotices($n->print());
+		$n->addContent($this->getNoticeTiming());
+		$n->addContent($this->getNoticeLoginName());
+		$n->addContent($this->getNoticeOrg());
+		return $n->print();
 	}
 
-	protected function setFooterLinks(){
-		$content = getHref('https://sourceforge.net/projects/sustainability','Sustainability','menu-links-item','_blank');
-		$this->setPageFooterLinks($content);	
+	protected function getFooterLinks(){
+		$l getHref('https://sourceforge.net/projects/sustainability','Sustainability','menu-links-item','_blank');
+		return $l;
+	}
+	
+	
+	
+	
+	protected function getOnLoadScripts(){
+		if ($this->validLogin == true){
+			$onLoad = 'none';
+		} else {
+			$onLoad='displayClientTime();';
+		}
+		parent::setOnLoad($onLoad);
 	}
 
-	protected function setStyles(){
+
+	protected function getTitle(){
+		if ($this->validLogin == true){
+			$title = $this->settings->f->siteTitle->value();
+		} else {
+			$title = 'Login';
+		}
+		return $title;
+	}
+	
+
+	protected function getStyles(){
 		//use internal stylesheet
 		//$content = $this->buildInternalStyles();
 
 		//use external stylesheet
 		$content = LinkStylesheet('./css/styles.css');
 		$content .= Linkstylesheet('./css/override.css');
-		$this->setPageStyles($content);
-		//return $content;
+		
+		return $content;
 		
 	}
 
-	protected function setScripts(){
+	protected function getScripts(){
 		$scripts = openScript();	
 		//start oputput buffering
 		ob_start();
@@ -208,8 +221,8 @@ implements IhtmlSite,IhtmlPage, Iecho{
 		//clear buffer to local variable
 		$scripts .= ob_get_clean();  
 		$scripts .= closeScript();
-		$this->setPageScripts($scripts);
-		//return $scripts;
+		
+		return $scripts;
 	}
 	
 }

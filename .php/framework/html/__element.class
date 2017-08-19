@@ -1,0 +1,148 @@
+<?php
+namespace html;
+
+class _attribute{
+	public $name;
+	public $value;
+	public function __construct(string $name,string $value){
+		$this->name = $name;
+		$this->value = $value;
+	}
+	
+	public function print(){
+		$a = ' '.$this->name.'='.'"'.$this->value.'"';
+		return $a;
+	}
+}
+
+class _element{
+	protected const _NONE = 'none';
+	protected const _EMPTY = '';
+	protected const _EMPTYATTRIBUTE = '""';
+	protected const LT = '<';
+	protected const GT = '>';
+	protected const SL = '/';
+	protected const EQ = '=';
+	protected const SQ = "'";
+	protected const DQ = '"';
+	protected const SP = ' ';
+	protected const _htmlCommentOpen = '<!--';
+	protected const _htmlCommentClose = '-->';
+	protected $_content = '';
+	protected $_markup = '';
+	protected $_attribs = '';
+	protected $_tag = '';
+	protected $_attributes = array();
+	protected $_id = '';
+	protected $_name = '';
+	protected $_css = '';
+	protected $_style = '';
+	protected $_cData = false;
+
+	public function __construct(string $tag, string $idName = 'none', string $css = 'none') {
+		$this->setTag($tag);
+		$this->setIdName($idName);
+		$this->setCSS($css);
+	}
+
+
+	public function setContent($content = null){
+	/* set contents to input, convert null to empty string*/
+		if (!is_null($content)){
+			$this->_content = $content;
+		} else {
+			$this->_content = self::_EMPTY;
+		}
+	}
+	
+	public function addContent($content = null){
+	/*append non null inputs to current contents*/
+		if (!is_null($content)){
+			$this->_content .= $content;
+		}
+	}
+
+	public function addAttribute(string $name = 'none', $value = 'none'){
+		$a = new _attribute($name,$value);
+		$this->attributes[$name] = $a;
+	}
+	
+	protected function buildAttributes(){
+		foreach ($this->attributes as $a){
+			$this->_attribs .= $a->print();
+		}
+	}
+
+	protected function setTag(string $tag){
+		$this->_tag = $tag;
+	}
+
+	public function setIdName(string $idName = 'none'){
+		if ($idName != 'none'){
+			$this->_id = $idName;
+			$this->_name = $idName;
+			$this->addAttribute('id', $this->_id);
+			$this->addAttribute('name', $this->_name);
+		}
+	}
+
+	public function setCSS(string $css){
+		$this->_css = $css;
+		$this->addAttribute('class', $this->_css);
+	}
+
+	public function setStyle(string $style){
+		$this->_style = $style;
+		$this->addAttribute('style', $this->_style);
+	}
+
+	public function setCData(bool $isCData = false){
+		$this->$_cData = $isCData;
+	}
+
+	protected function start(){
+		$this->_markup = self::LT.$this->_tag;
+		$this->buildAttributes();
+		if ($this->_attribs != 'none' && !is_null($this->_attribs)){
+			$this->_markup .= $this->_attribs;
+		}
+	}
+
+	public function open(){
+		$this->start();
+		$this->_markup .= self::GT;
+		return $this->_markup;
+	}
+
+	function empty(){
+		$this->start();
+		$this->_markup .= self::SP.self::SL.self::GT;
+		return $this->_markup;
+	}
+
+	public function close(){
+		$this->_markup = self::LT.self::SL.$this->_tag.self::GT;
+		return $this->_markup;
+	}
+
+	public function print(){
+		$value = $this->open();
+		$value .= $this->_content;
+		$value .= $this->close();
+		return $value;
+	}
+
+	public function wrap($content = null){
+		$this->setContent($content);
+		return $this->print();
+	}
+
+	public function commentOpen(){
+		return self::_htmlCommentOpen;
+	}
+
+	public function commentClose(){
+		return self::_htmlCommentClose;
+	}
+}
+?>

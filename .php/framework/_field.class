@@ -360,6 +360,7 @@ interface Ifield{
 	}
 	
 	protected function inputFreeText( ){
+		
 		return inputFieldText($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 	public function inputCaptioned(string $input){

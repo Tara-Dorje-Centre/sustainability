@@ -1,5 +1,5 @@
 <?php
-namespace html;
+//namespace html;
 
 class _displayDetails extends _contentWriter{
 	protected $entity;
@@ -14,19 +14,19 @@ class _displayDetails extends _contentWriter{
 		$this->quickEdit = $quickEdit;
 		$this->contextMenu = $contextMenu;
 		
-		$this->_display = new _div($this->entity.'-display','display'.$this->mode);
-		$this->_fields = new html/_fieldset($this->entity.'-fields', $this->legend,'fieldset');
+		$this->_display = new html\_div($this->entity.'-display','display'.$this->mode);
+		$this->_fields = new html\_fieldset($this->entity.'-fields', $this->legend,'fieldset');
 	}
 	public function open(){
 
 		$this->addContent($this->_display->open());
 
 		if ($this->quickEdit != 'none'){
-			$d = new _div($this->entity.'-quickEdit','quickEdit');
-			$this->addContent($d->wrap($this->quickEdit));
+			$d = new html\_div($this->entity.'-quickEdit','quickEdit');
+			$this->_display->addContent($d->wrap($this->quickEdit));
 		}
 		if ($this->contextMenu != 'none'){
-			$d = new _div($this->entity.'-contextMenu','contextMenu');
+			$d = new html\_div($this->entity.'-contextMenu','contextMenu');
 			$this->addContent($d->wrap($this->contextMenu));
 		}
 	

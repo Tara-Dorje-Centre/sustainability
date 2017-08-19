@@ -2,7 +2,7 @@
 namespace html;
 
 class _button extends _input{
-	public function __construct($type, $name, $caption)){
+	public function __construct($type, $name, $caption){
 		parent::__construct($type,$name,'none','editing-button');
 		$this->setValue($caption);
 	}

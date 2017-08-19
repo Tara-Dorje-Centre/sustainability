@@ -2,15 +2,16 @@
 namespace html;
 
 class _inputText extends _input{
-	public function __construct($inputName, $inputValue, $size = 100, $maxLength = 100, $tooltip = 'none', $css = 'editing-input-text'){
-		parent::__construct('text',$inputName,$tooltip,$css);
+	public function __construct($name, $value, $size = 50, $maxLength = 100, $tooltip = 'none', $css = 'editing-input-text'){
+		parent::__construct('text',$name,$tooltip,$css);
+		//setDefaultDimenions
 		$this->setDimensions($maxLength, $size);
-		$this->setValue($inputValue);
+		$this->setValue($value);
 	}
 }
 
-function getTextInput($inputName, $inputValue, $size = 100, $maxLength = 100, $tooltip = 'none',$css = 'editing-input-text'){
-	$e = new _inputText($inputName, $inputValue,$size,$maxLength,$tooltip,,$css);
+function getTextInput($name, $value, $size = 50, $maxLength = 100, $tooltip = 'none',$css = 'editing-input-text'){
+	$e = new _inputText($name, $value,$maxLength,$size,$tooltip,$css);
 	return $e->print();
 }
 
@@ -25,7 +26,7 @@ function inputFieldText(
 	$disabled = 'false',
 	$css = 'editing-input-text'){
 
-	$input = getTextInput($id, $value, $size,$maxLength,$tooltip,$disabled,$css);
+	$input = getTextInput($id, $value, $size,$maxLength,$tooltip,$css);
 	$element = captionedInput($caption,$input);
 	return $element;
 }

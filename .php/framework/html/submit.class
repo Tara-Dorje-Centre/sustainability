@@ -1,16 +1,27 @@
 <?php
 namespace html;
 
+class _buttonSubmit extends _button{
+	public function __construct($name = 'submit',$caption = 'Submit'){
+		parent::__construct('submit',$name, $caption);
+	}
+}
+class _buttonSave extends _buttonSubmit{
+	public function __construct($name = 'submit',$caption = 'Save'){
+		parent::__construct($name, $caption);
+	}
+}
+
 class _buttonLogin extends _buttonSubmit{
 	public function __construct($caption = 'Login',$name = 'submit-login'){
 		parent::construct($caption,$name);
 	}
 }
+
 class _buttonLogout extends _buttonSubmit{
 	public function __construct($caption = 'Logout',$name = 'submit-logout'){
 		parent::construct($caption,$name);
 	}
 }
-
 
 ?>

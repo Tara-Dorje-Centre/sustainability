@@ -1,19 +1,19 @@
 <?php
 namespace html;
 
-trait inputValueAttribute{
+trait valueAttribute{
 	public function setValue($inputValue){
 		$this->addAttribute('value',$inputValue);
 	}
 }
 
-trait inputValueContent{
+trait valueContent{
 	public function setValue($inputValue){
 		$this->setContent($inputValue);
 	}
 }
 
-trait inputCaption{
+trait caption{
 	protected $_caption = '';
 	protected $_showCaption = false;
 	public function setCaption(string $caption = 'none'){
@@ -35,7 +35,7 @@ trait inputCaption{
 
 }
 
-trait inputValidation{
+trait validation{
 	protected $_validation = '';
 	protected $_showValidation = false;
 
@@ -58,47 +58,84 @@ trait inputValidation{
 
 }
 
-trait inputDisabled{
+trait disabled{
+	protected $_disabled = 'false';
 	public function setDisabled($disabled){
-		if ($disabled != 'false'){
-			$this->addAttribute('disabled',$disabled);
+		$this->_disabled = $disabled;
+	}
+	public function printDisabled(){
+		if ($this->_disabled != 'false'){
+			$this->addAttribute('disabled',$this->_disabled);
 		}
 	}
 }
-trait inputSize{
+trait size{
+	protected $_size = 100;
+	protected $_showSize = false;
 	public function setSize($size = 100){
-		$this->addAttribute('size',$size);
+		$this->_showSize = true;
+		$this->_size = $size;
+	}
+	public function printSize(){
+		if ($this->_showSize == true){
+			$this->addAttribute('size',$this->_size);
+		}
 	}
 
 }
-trait inputRowsColumns{
-	public function setRowsCols($rows,$cols){
-		$this->addAttribute('rows',$rows);
-		$this->addAttribute('cols',$cols);
+trait rows{
+	protected $_rows = 40;
+	protected $_cols = 80;
+	protected $_showRows = false;
+	public function setRows($rows,$cols){
+		$this->_showRows = true;
+		$this->_rows = $rows;
+		$this->_cols = $cols;
+	}
+	public function printRows(){
+		if ($this->_showRows == true){
+			$this->addAttribute('rows',$this->_rows);
+			$this->addAttribute('cols',$this->_cols);
+		}
 	}
 }
 
-trait inputMaxLength{
+trait maxLength{
+	protected $_maxLength = 100;
+	protected $_showMaxLength = false;
 	public function setMaxlength($maxLength = 100){
-		$this->addAttribute('maxlength',$maxLength);
+		$this->_showMaxLength = true;
+		$this->_maxLength = $maxLength;
+	}
+	protected function printMaxlength(){
+		if ($this->_showMaxLength == true){
+			$this->addAttribute('maxlength',$this->_maxLength);
+		}
 	}
 
 }
-trait inputDimensionsSize{
-use inputSize, inputMaxLength;
+trait dimensionsSize{
+use size, maxLength;
 	public function setDimensions($maxLength, $size){
 		$this->setMaxLength($maxLength);
 		$this->setSize($size);
 	}
+	public function printDimensions(){
+		$this->printMaxLength();
+		$this->printSize();
+	}
 
 }
-trait inputDimensionsRows{
-use inputRowsColumns, inputMaxLength;
+trait dimensionsRows{
+use rows, maxLength;
 	public function setDimensions($maxLength,$rows, $columns){
 		$this->setMaxLength('maxlength',$maxLength);
 		$this->setRowsCols($rows,$columns);
 	}
-
+	public function printDimensions(){
+		$this->printMaxLength();
+		$this->printRows();
+	}
 }
 
 ?>

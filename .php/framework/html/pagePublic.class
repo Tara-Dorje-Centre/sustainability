@@ -1,8 +1,15 @@
 ﻿<?php 
 namespace html;
-
-class _pagePublic extends _contentWriter 
-implements IhtmlPage,Iecho, IcontentWriter{
+/*
+interface IPage{
+	public function print();
+	public function setDocument(string $title = 'Sustainability',string $styles = 'none',string $scripts = 'none',string $onLoad = 'none');
+	public function setMain($contents,$links);
+	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none');
+}
+*/
+class _pagePublic extends  
+implements IPage {
 	protected $_document;
 	public $mainTitle;
 	public $mainImage;
@@ -24,7 +31,7 @@ implements IhtmlPage,Iecho, IcontentWriter{
 	public $fontSizeMenu = 16;
 	public $fontSizeText = 14;
 	
-public function print(){
+	public function print(){
 		
 		$content = $this->build();
 		echo $content;	
@@ -35,66 +42,81 @@ public function print(){
 
 	}
 	
-	protected function build(){
+	public function setDocument(string $title = 'Sustainability',string $styles = 'none',string $scripts = 'none',string $onLoad = 'none'){
 	
-		$this->_document = new html/_document($this->mainTitle);
-		$this->_container = new html/_div('public-site-container');
+	}
+	public function setMain($contents,$links){
+	
+	
+	}
+	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none'){
+	
+	}
+}
+	
+	
+	protected function build(){
+		$this->_document = new _document($this->mainTitle);
 		$this->_document->setStyles($this->siteStyles());
-		$this->_document->addContent($this->siteHeading());
-		$this->_document->addContent($this->siteContent());
-		$this->_document->addContent($this->siteFooter());
-		$this->_document->addContent($this->_container->close());
+		
+		$c = new _div('public-site-container');
+		$c->addContent($this->siteHeading());
+		$c->addContent($this->siteContent());
+		$c->addContent($this->siteFooter());
+		$this->_document->addContent($c->print());
 		return $this->_document->print();
 		
 	}
 
 	protected function siteContent(){
-		$c = new html/_div('public-site-content');
+		$c = new _div('public-site-content');
 		$c->addContent($this->siteMenu());
 		$c->addContent($this->pageContent());
 		return $c->print();
 	}
 
 	protected function siteMenu(){
-		$m = new html/_div('public-site-menu');
+		$m = new _div('public-site-menu');
 		$m->addContent($this->menuItems);
 		return $m->print();
 	}
 
 	protected function pageContent(){
-		$container = new html/_div('public-page-container');
-		$title = new html/_div(openDiv('public-page-title');
-		$title->setContent($this->pageTitle);
-		$container->addContent($title->print());
+		$c = new _div('public-page-container');
 		
-		$page = new html/_div('public-page-content');
-		$page->setContent($this->pageContents);
-		$container->addContent($page->print());
-		$detail = new html/_div('public-page-details');
-		$detail->addContent($this->pageDetails);
-		$container->addContent($detail->print());
+		$t = new _div(openDiv('public-page-title');
+		$t->setContent($this->pageTitle);
+		$c->addContent($t->print());
+		
+		$p = new _div('public-page-content');
+		$p->setContent($this->pageContents);
+		$c->addContent($p->print());
+		
+		$d = new _div('public-page-details');
+		$d->addContent($this->pageDetails);
+		$c->addContent($d->print());
 	
-		return $container->print();
+		return $c->print();
 	}
 
 	protected function siteFooter(){
-		$d = new html/_div('public-site-footer');	
-		$d->addContent = $this->mainFooter;
-		return $d->print();
+		$f = new _div('public-site-footer');	
+		$f->addContent = $this->mainFooter;
+		return $f->print();
 	}
 
 	protected function siteHeading(){
-		$heading = new html/_div('public-site-heading');
+		$h = new _div('public-site-heading');
 		
-		$i = new html/_div('public-site-image');
+		$i = new _div('public-site-image');
 		$i->addContent($this->mainImage);
-		$heading->addContent($i->print();
+		$h->addContent($i->print();
 		
-		$t = new html/_div('public-site-title');
+		$t = new _div('public-site-title');
 		$t->addContent($this->mainTitle);
-		$heading->addContent($t->print());
+		$h->addContent($t->print());
 		
-		return $heading->print();
+		return $h->print();
 	}
 
 
@@ -259,22 +281,6 @@ public function print(){
 		return $content;
 		
 	}
-
-	protected function siteScripts(){
-		$scripts = openScript();	
-		//start oputput buffering
-		ob_start();
-		//include scripts to buffer
-		include('_siteJavascriptFunctions.php');		
-		//clear buffer to local variable
-		$scripts .= ob_get_clean();  
-		$scripts .= closeScript();
-		return $scripts;
-	}
-
-
-	
-	
 	
 }
 ?>

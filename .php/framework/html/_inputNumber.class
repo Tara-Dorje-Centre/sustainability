@@ -1,9 +1,17 @@
 <?php
 namespace html;
 
+
 class _inputNumber extends _inputText{
+	public function __construct($name, $value, $tooltip = 'none', $css = 'editing-input-number'){
+		parent::__construct($name,$value, 12, 4, $tooltip,$css);
+	}
+}
 
+function getNumberInput($inputName, $inputValue, $tooltip = 'none',$css = 'editing-input-number'){
+	$e = new _inputNumber($inputName, $inputValue,$tooltip,$css);
 
+	return $e->print();
 }
 
 function inputFieldNumber(
@@ -15,8 +23,11 @@ function inputFieldNumber(
 	$disabled = 'false',
 	$css = 'editing-input-number'){
 		
-	$element = inputFieldText($entity,$value,$id,$caption,4,10,$tooltip,$disabled,$css);
-	return $element;
+	$input = getNumberInput($id, $value,$tooltip,$css);
+	$element = captionedInput($caption,$input);
+	return $element;	
+		
+	
 
 }
 

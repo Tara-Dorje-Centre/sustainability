@@ -1,6 +1,12 @@
 <?php
 namespace html;
 
+class _inputName extends _inputText{
+	public function __construct($name, $value, $tooltip = 'none', $css = 'editing-input-name'){
+		parent::__construct($name,$value, 100, 30, $tooltip,$css);
+	}
+}
+
 
 function inputFieldName(
 	$entity, 
