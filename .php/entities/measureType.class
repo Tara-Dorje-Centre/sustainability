@@ -1,6 +1,6 @@
 ﻿<?php 
 /* reviewed 7/29    */
-class measureTypeFields extends _fieldsetEntityType{
+class measureTypeFields extends _fieldsEntityType{
 
 
 }

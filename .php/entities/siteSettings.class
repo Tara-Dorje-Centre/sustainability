@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class siteSettingsFields extends _fieldset{
+class siteSettingsFields extends _fields{
 	 public $siteTitle;
 	 public $siteUrl;
 	 public $loginNotice;

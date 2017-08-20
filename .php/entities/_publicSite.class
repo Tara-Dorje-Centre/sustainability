@@ -1,6 +1,6 @@
 <?php
 
-class _publicSite extends _htmlPagePublic{
+class _publicSite extends \html\_pagePublic{
 	private $links;
 	private $sql;
 	private $viewMode = 'MAIN';
@@ -9,8 +9,8 @@ class _publicSite extends _htmlPagePublic{
 	private $found = 0;
 	
 	public function __construct(){
-		$this->links = new PublicSiteLinks;
-		$this->sql = new PublicSiteSQL;	
+		$this->links = new publicSiteLinks;
+		$this->sql = new publicSiteSQL;	
 		
 	}
 

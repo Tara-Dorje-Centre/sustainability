@@ -1,18 +1,6 @@
 ﻿<?php 
-/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
- 
- _fieldsetTaskChild
- id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- project, projectType, location
- started°, approved,approvedBy^
- task, taskType, reported°,doneBy^
- notes, linkUrl, linkText
-*/
-class activityFields extends _fieldsetTaskChild{
+
+class activityFields extends _fieldsTaskChild{
 	public $hoursEstimated;
 	public $hoursActual;
  	public $comments;

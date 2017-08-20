@@ -1,6 +1,6 @@
 ﻿<?php 
 /* reviewed 7/29    */
-class locationTypeFields extends _fieldsetEntityType{
+class locationTypeFields extends _fieldsEntityType{
 
 }
 class locationTypeSQL extends _entityTypeSQL{

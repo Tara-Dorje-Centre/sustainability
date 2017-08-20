@@ -17,6 +17,8 @@ interface Ilinks{
 	public function formatCalendarHref($linkCaption, $baseUrl, $year, $month);
 }
 class _links implements Ilinks{
+	private $_menu;
+	private $_list;
 	private $cssStyleBase;
 	public $cssItem;
 	private $cssList;
@@ -30,6 +32,7 @@ class _links implements Ilinks{
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		$this->setStyle($styleBase);
 		$this->setType($menuType);
+		
 	}
 
 	public function setStyle($styleBase = 'menu'){
@@ -55,9 +58,10 @@ class _links implements Ilinks{
 		$item = $this->formatHref($linkText,'#!','_self','',"toggle('".$elementId."');");
 		return $item;
 	}
-	public function formatHref($caption,$link,$target = '_self',$cssSuffix = '',$onClickJS = NULL){
-		$href = getHref($link, $caption, $this->cssItem.$cssSuffix,$target,$onClickJS);
-		$item = $this->formatItem($href);
+	public function formatHref($caption,$link,$target = '_self',$css = 'display-link',$onClickJS = NULL){
+		$a = new \html\_href($link, $caption,$target,$onClickJS);
+		 
+		$item = $a->href();
 		return $item;
 	}
 
@@ -69,36 +73,43 @@ class _links implements Ilinks{
 	
 	public function openMenu($name = 'menu-listing'){
 		$this->menuName = $name;
+		$this->_menu = new \html\_div($this->menuName,$this->cssList);
+		$menu = $this->_menu->open();
 		
-		$menu = openDiv($this->menuName,$this->cssList);
 		if ($this->menuType == 'LIST'){
-			$menu .= openList($this->menuName.'-ul',$this->cssList.'-ul');
+			$this->_list = new \html\_ul($this->menuName.'-ul',$this->cssList.'-ul');
+			$menu .= $this->_list->open();
 		}
 		return $menu;
 	}
 
 	public function closeMenu(){
-	
+
 		if ($this->menuType == 'LIST'){
-			$menu = closeList().closeDiv();
-		} else {
-			$menu = closeDiv();
-		}
+			$menu = $this->_list->close();
+		} 
+		$menu .= $this->_menu->close();
+		
 		return $menu;
 	}
 
 	public function resetMenu($newLines = 0){
 		if ($this->menuType == 'LIST'){
-			$menu = closeList();
+		
+			$menu = $this->_list->close();
 			if ($newLines > 0){
-				$menu .= br($newLines);
+				$b = new \html\_br($newLines);
+				$menu .= $b->print();
 			}
-			$menu .= openList($this->menuName.'-ul',$this->cssList.'-ul');
+			
+			$menu .= $this->_list->open();
+			
 		} else {
 			if ($newLines == 0){
 				$newLines = 1;
 			}
-			$menu = br($newLines);
+			$b = new \html\_br($newLines);
+			$menu = $b->print();
 		}
 		return $menu;	
 	}

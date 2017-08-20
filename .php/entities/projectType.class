@@ -1,6 +1,6 @@
 ﻿<?php 
 /* reviewed 7/29    */
-class projectTypeFields extends _fieldsetEntityType{
+class projectTypeFields extends _fieldsEntityType{
 public function __construct(){
 parent::__construct();
 }

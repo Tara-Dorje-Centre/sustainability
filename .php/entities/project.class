@@ -1,5 +1,5 @@
 ﻿<?php 
-class projectFields extends _fieldsetChildEntity{
+class projectFields extends _fieldsEntityChild{
   /*
  ^_currentUser set to $_SESSION['login-name']
  °_currentTimestamp set to $sessionTime

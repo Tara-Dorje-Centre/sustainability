@@ -1,6 +1,6 @@
 ﻿<?php 
 /* reviewed 8/4  */
-class userTypeFields extends _fieldsetEntityType{
+class userTypeFields extends _fieldsEntityType{
 
 }
 class userTypeSQL extends _entityTypeSQL{

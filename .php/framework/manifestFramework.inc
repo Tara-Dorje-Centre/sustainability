@@ -6,7 +6,7 @@ include_once("_contentWriter.class");
 
 
 include_once("_cssFunctions.php");
-include_once("_formFunctions.php");
+
 
 include_once("_sqlFunctions.php");
 showProgress('general functions loaded');
@@ -51,8 +51,8 @@ include_once("_entityTypeLinks.class");
 include_once("_entityType.class");
 include_once("_entityTypeList.class");
 
-include_once("_htmlPage.class");
-include_once("_htmlPagePublic.class");
+
+
 include_once("_htmlSite.class");
 showProgress('general classes loaded');
 //

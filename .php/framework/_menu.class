@@ -30,28 +30,30 @@ class _menu extends _echo{
 	}
 	
 	public function PageTitle(){
-		$title = openDiv('section-heading-title','none');
+		$t = new \html\_div('section-heading-title');
 		switch($this->displayMode->value()){
 			case 'REFERENCE':
-			$title .= 'Reference';		
+			$title = 'Reference';		
 			break;	
 		case 'CALENDAR':
-			$title .= 'Calendar';
+			$title = 'Calendar';
 			break;
 		case 'SYSTEM-UPDATES':
-			$title .= 'System Updates';
+			$title = 'System Updates';
 			break;
 		case 'TESTING':
-			$title .= 'Testing';
+			$title = 'Testing';
 			break;
 		case 'MY_LINKS':
-			$title .= 'My Links';
+			$title = 'My Links';
 			break;
 		default:
-			$title .= 'Sustainable Planning Tools';						
+			$title = 'Sustainable Planning Tools';						
 		}
-		$title .= closeDiv();
-		return $title;	
+		
+		$t->setContent($title);
+	
+		return $t->print();	
 	}
 
 	public function PageMenu(){

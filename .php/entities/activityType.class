@@ -1,6 +1,6 @@
 ﻿<?php 
 /* reviewed 7/29    */
-class activityTypeFields extends _fieldsetEntityType{
+class activityTypeFields extends _fieldsEntityType{
 
 }
 class activityTypeSQL extends _entityTypeSQL{

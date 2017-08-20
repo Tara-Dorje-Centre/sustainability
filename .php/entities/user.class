@@ -1,11 +1,11 @@
 ﻿<?php 
 
 
-class userFields extends _fieldsetEntity{
+class userFields extends _fieldsEntity{
 	
     public $loginName;
-    public loginPwd;
-    public confirmPwd;
+    public $pwd;
+    public $pwdConfirm;
     public $nameFirst;
     public $nameLast;
 	public $email;
@@ -24,7 +24,7 @@ class userFields extends _fieldsetEntity{
 		$this->email = new _emailField('email','email','Email Address'); 
 		$this->focus = new _notesField('focus','focus','Focus Area');
 		$this->interests = new _notesField('interests','interests','Interests');
-		$this->loginPwd = new _passwordField('not_used','login-pwd','login-password');
+		$this->pwd = new _passwordField('not_used','login-pwd','login-password');
 		$this->pwdConfirm = new _passwordField('not_used','pwd-confirm','confirm-password');
 		$this->loginName = new _userField('login_name','login-name','login-name');
 		$this->lastLogin = new _dateField('last_login','last-login','Last Login'); 
@@ -38,6 +38,7 @@ class userFields extends _fieldsetEntity{
 		$this->_register('focus', $this->focus);
 		$this->_register('interests', $this->interests);
 		$this->_register('loginName', $this->loginName);
+		$this->_register('pwd', $this->pwd);
 		$this->_register('pwdConfirm', $this->pwdConfirm);
 		$this->_register('lastLogin', $this->lastLogin);
 		$this->_register('lastLogin', $this->lastLogin);
@@ -328,7 +329,7 @@ class user extends _entity{
 			$this->edit->required->addContent('Login name ['.$this->f->loginName->value().'] cannot be changed');
 		}
 		$this->f->loginPwd->setValidation(@$this->validationMessages['password']);
-		$this->edit->required->inputPassword($this->f->loginPwd);
+		$this->edit->required->inputPassword($this->f->pwd);
 		$this->edit->required->inputPassword($this->f->pwdConfirm);
 		
 

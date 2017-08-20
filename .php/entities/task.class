@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class taskFields extends _fieldsetProjectChild{
+class taskFields extends _fieldsProjectChild{
 	/*
  ^_currentUser set to $_SESSION['login-name']
  °_currentTimestamp set to $sessionTime

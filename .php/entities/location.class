@@ -1,35 +1,8 @@
 ﻿<?php 
-/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
+class _fieldsLocationChild extends _fieldsEntityChild{
 
- _fieldsetEntity
- id, name, description
- created°, updated°, highlight
-
- _fieldsetEntityType 
- extends _fieldsetEntity
- displayOrder, notes
-
- _fieldsetChildEntity
- extends _fieldsetEntity
- parentEntity, typeEntity
-
- _fieldsetProjectChild
- extends _fieldsetEntityChild
- parentProject, location, started°
- approved,approvedBy^
-
- _fieldsetTaskChild
- extends _fieldsetProjectChild
- parentTask, reported°,doneBy^
- notes, linkUrl, linkText
-
- _fieldsetActivityChild
- extends _fieldsetTaskChild
- parentActivity
- */
-class locationFields extends _fieldsetChildEntity{
+}
+class locationFields extends _fieldsLocationChild{
 
 	public $sortKeyParent;
 	public $sortKey;

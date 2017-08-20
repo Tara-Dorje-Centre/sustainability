@@ -1,7 +1,7 @@
 ﻿<?php 
 
 
- class measureTypeUnitFields extends _fieldsetEntity{
+ class measureTypeUnitFields extends _fieldsEntity{
 	 public $measureType;
 	 public $unitType;
 

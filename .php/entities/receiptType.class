@@ -1,6 +1,6 @@
 ﻿<?php 
 /* reviewed 7/29    */
-class receiptTypeFields extends _fieldsetEntityType{
+class receiptTypeFields extends _fieldsEntityType{
 
 }
 class receiptTypeSQL extends _entityTypeSQL{

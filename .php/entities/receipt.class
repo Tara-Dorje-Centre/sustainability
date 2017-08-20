@@ -1,19 +1,7 @@
 ﻿<?php 
-/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
- 
- _fieldsetTaskChild
- id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- project, projectType, location
- started°, approved,approvedBy^
- task, taskType, reported°,doneBy^
- notes, linkUrl, linkText
-*/
 
-class receiptFields extends _fieldsetTaskChild{
+
+class receiptFields extends _fieldsTaskChild{
 
 	public $receivedBy;
 	public $receivedFrom;

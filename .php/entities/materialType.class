@@ -1,6 +1,6 @@
 ﻿<?php 
 /* reviewed 7/29    */
-class materialTypeFields extends _fieldsetEntityType { 
+class materialTypeFields extends _fieldsEntityType { 
 
 }
 class materialTypeSQL extends _entityTypeSQL{

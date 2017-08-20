@@ -1,7 +1,7 @@
 ﻿<?php 
 
 
-class quantityTypeFields extends _fieldsetEntityType{
+class quantityTypeFields extends _fieldsEntityType{
     public $symbol;	
     public $type;
     

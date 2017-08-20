@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class taskTypeFields extends _fieldsetEntityType{
+class taskTypeFields extends _fieldsEntityType{
 	public $frequency;
 	public function __construct(){
 	
