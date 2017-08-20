@@ -1,15 +1,15 @@
 <?php
 namespace html;
 
-class _hidden extends _input{
+class hidden extends _input{
 	private $n;
 	private $v;
-	public function __construct($inputName, $inputValue){
-		parent::__construct('hidden',$inputName,'none','editing-input-hidden');
+	public function __construct($name, $value){
+		parent::__construct('hidden',$name,'none','editing-input-hidden');
 
-		$this->setValue($inputValue);
-		$this->n = $inputName;
-		$this->v = $inputValue;
+		$this->setValue($value);
+		$this->n = $name;
+		$this->v = $value;
 	}
 	public function print(){
 		$input = parent::print();
@@ -20,8 +20,8 @@ class _hidden extends _input{
 	}
 }
 
-function getHiddenInput($inputName, $inputValue){
-	 $e = new _inputHidden($inputName, $inputValue);
+function getHiddenInput($n, $v){
+	 $e = new hidden($n, $v);
 	 return $e->print();
 }
 

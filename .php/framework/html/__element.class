@@ -4,13 +4,23 @@ namespace html;
 class _attribute{
 	public $name;
 	public $value;
-	public function __construct( $name, $value){
+	public function __construct(string $name,string $value){
 		$this->name = $name;
 		$this->value = $value;
 	}
 	
 	public function print(){
-		$a = ' '.$this->name.'='.'"'.$this->value.'"';
+		if ($this->name != 'none'){
+			if (is_null($this->value)){
+			$v = '""';
+			} else {
+			$v = '"'.$this->value.'"';
+			}
+			$a = ' '.$this->name.'='.$v;
+			
+		} else {
+			$a = '';
+		}
 		return $a;
 	}
 }
@@ -62,7 +72,7 @@ class _element{
 		}
 	}
 
-	public function addAttribute(string $name = 'none', $value = 'none'){
+	public function addAttribute(string $name = 'none', string $value = 'none'){
 		$a = new _attribute($name,$value);
 		$this->attributes[$name] = $a;
 	}

@@ -48,16 +48,8 @@ class _submitButton extends _field
 	}
 	
 	public function input(){
-		$e = new _element('input',$this->env->variable(), 'editing-button');
-
-	//$e->addAttribute('name',$name);
-	$e->addAttribute('type','submit');
-	$e->addAttribute('value',$this->_caption);
-
-	return $e->empty();
-		//return getButton($this->env->variable, $this->_caption, $this->env->variable);
-		//return getButton('submit',$this->env->variable,$this->_caption);
-		//return getLoginLogoutButton($this->_caption,$this->env->variable);
+		$e = new \html\submit($this->env->variable(),$this->_caption);
+		return $e->print();
 	}
 	
 }

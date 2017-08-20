@@ -55,7 +55,7 @@ implements IPage{
 		$this->_container->addContent($this->formatContents());	
 		$this->_container->addContent($this->formatFooter());
 		
-		$this->_document->setContent($this->_container->print());
+		$this->_document->setBody($this->_container->print());
 		return $this->_document->print();		
 	}
 	

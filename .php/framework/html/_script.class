@@ -25,6 +25,14 @@ class _script extends _element{
 		$element .= parent::close();
 		return $element;
 	}
+	public function loadFile($file){
+		//start oputput buffering
+		ob_start();
+		//include scripts to buffer
+		include($file);
+		$buffer = ob_get_clean();
+		$this->setContent($buffer);
+	}
 }
 
 ?>

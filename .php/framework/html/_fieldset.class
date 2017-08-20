@@ -18,5 +18,21 @@ class _fieldset extends _element{
 	}
 
 }
+	function openFieldset($legend = 'none',$cssFieldset = 'none',$cssLegend = 'display-caption'){
 
+	$e = new _htmlFieldset($legend,$cssFieldset);
+	return $e->open();	
+	}
+
+	function closeFieldset(){
+		$e = new _htmlFieldset();
+		return $e->close();
+	}
+
+	function wrapFieldset($content, $legend = 'none', $cssFieldset = 'none',$cssLegend = 'display-caption'){
+	$fields = openFieldset($legend,$cssFieldset,$cssLegend);
+	$fields .= $content;
+	$fields .= closeFieldset();
+	return $fields;
+}
 ?>

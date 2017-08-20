@@ -184,10 +184,39 @@ interface Ifield{
 		return $val;
  	
  	}
+ 	protected function convertNull(){
+ 		switch ($this->_datatype) {
+    		case 'NUMBER':
+ 				if (is_null($this->_number)){
+ 					$this->_number = 0;
+ 				}
+        		break;
+    		case 'DATE':
+ 		 		if (is_null($this->_date)){
+ 					$this->_date = '';
+ 				}
+        		break;
+    		case 'TEXT':
+ 		 		 if (is_null($this->_text)){
+ 					$this->_text = '';
+ 				}
+        		break;
+        	case 'BOOLEAN':
+ 		 		$val = $this->_boolean;
+ 		 		 if (is_null($this->_boolean)){
+ 					$this->_boolean = false;
+ 				}
+        		break;
+    		default:
+    		 	if (is_null($this->_text)){
+ 					$this->_text = '';
+ 				}
+		}
+ 	}
 	public function get(){
+		$this->convertNull();
 		switch ($this->_datatype) {
     		case 'NUMBER':
-    			//$this->numberNonNull();
  				$val = $this->_number;
         		break;
     		case 'DATE':
@@ -253,7 +282,7 @@ interface Ifield{
 	public function listCaption(){
 	 	$value = '';
 		if ($this->_listEnabled){
-			$th = new html/_th();
+			$th = new \html\_th();
  			$value = $th->wrap($this->_caption);
 		}
 		return $value;
@@ -263,7 +292,7 @@ interface Ifield{
  	 	$value = '';
  		if ($this->_listEnabled){
   		    $this->format();
-  		    $td = new html/_td();
+  		    $td = new \html\_td();
  			$value = $td->wrap($this->value());
   		}
  		return $value;
@@ -273,7 +302,7 @@ interface Ifield{
  	 	$value = '';
  		if ($this->_displayEnabled){
  			$this->format();
- 			$p = new html/_p($this->caption);
+ 			$p = new \html\_p($this->caption);
  			$value = $p->wrap($this->value());
  		}
  		return $value;
@@ -321,10 +350,9 @@ interface Ifield{
  		
  		switch ($this->_datatype) {
     			case 'NUMBER':
-					$this->numberNonNull();
         			break;
     			case 'DATE':
-  		  			$this->_date = getTimestampDate($this->_raw);
+  		  			$this->_date = \html\getTimestampDate($this->_raw);
         			break;
     			/*
     			case 'TEXT':
@@ -335,9 +363,9 @@ interface Ifield{
         			$this->booleanSetText();
         			break;
     			default:
-  		  			$this->_text = displayLines($this->_raw);
+  		  			$this->_text = \html\displayLines($this->_raw);
 			}
-  
+  		$this->convertNull();
  		
  	}
  	private function numberNonNull(){
@@ -360,17 +388,20 @@ interface Ifield{
 	}
 	
 	protected function inputFreeText( ){
-		
-		return inputFieldText($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$i = new \html\_inputText($this->env->variable(),$this->value());
+		$i->setCaption($this->_caption);
+		return $u->print();
+		//return inputFieldText($this->_entity,$this->value(),$this->env->variable(), $this->value()););
 	}
 	public function inputCaptioned(string $input){
-		return captionedInput($this->_caption,$input,$this->_validation);
+		return \html\captionedInput($this->_caption,$input,$this->_validation);
 	}
 	public function inputChoice(string $options){
 		return $this->inputCaptioned($options);
 	}
 	public function inputHidden( ){
-		return getHiddenInput($this->env->variable(), $this->value());
+		$h = new \html\hidden($this->env->variable(), $this->value());
+		return $h->print();
 	}
 	
 	

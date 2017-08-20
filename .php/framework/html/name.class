@@ -1,23 +1,28 @@
 <?php
 namespace html;
 
-class _inputName extends _inputText{
-	public function __construct($name, $value, $tooltip = 'none', $css = 'editing-input-name'){
+class name extends _inputText{
+	public function __construct($name, $value, $caption = 'Name',$tooltip = 'Enter name value', $css = 'editing-input-name'){
 		parent::__construct($name,$value, 100, 30, $tooltip,$css);
+		$this->setCaption($caption);
 	}
 }
-
+class url extends _inputText{
+	public function __construct($name, $value, $caption = 'url',$tooltip = 'Enter url value', $css = 'editing-input-url'){
+		parent::__construct($name,$value, 500, 30, $tooltip,$css);
+		$this->setCaption($caption);
+	}
+}
 
 function inputFieldName(
 	$entity, 
 	$value, 
 	$id = 'name', 
-	$caption = 'Name',
-	$tooltip = NULL, 
-	$disabled = 'false',
-	$css = 'editing-input-name'){
+	$caption = 'Name'){
 
-	$element = inputFieldText($entity,$value,$id,$caption,30,100,$tooltip,$disabled,$css);
-	return $element;
+	$element = new name($id,$value,$caption);
+	return $element->print();
 }
+
+
 ?>

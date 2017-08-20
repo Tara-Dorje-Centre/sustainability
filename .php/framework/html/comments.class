@@ -1,19 +1,21 @@
 <?php
 namespace html;
+class comments extends _inputTextArea{
 
+	public function __construct($name, $value,$caption,$tooltip = 'Enter comments',$css = 'editing-input-comments'){
+		parent::__construct($name, $value,1000,4,60,$tooltip,$css);
+		$this->setCaption($caption);
+	}
+}
 function inputComments(
 	$entity, 
 	$value, 
 	$id = 'comments', 
-	$caption = 'Comments',
-	$maxLength = 1000,
-	$tooltip = NULL, 
-	$disabled = 'false',
-	$css = 'editing-input-comments'){
+	$caption = 'Comments'){
 
 
-	$element = inputFieldTextArea($entity,$value,$id,$caption,$maxLength,$tooltip,$disabled,$css);
-	return $element;
+	$element = new comments($id,$value,$caption);
+	return $element->print();
 }
 
 ?>

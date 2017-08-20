@@ -5,7 +5,9 @@ class _userField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input( ){
-		return inputFieldUser($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$u = new \html\user($this->env->variable(),$this->value(), $this->_caption);
+		//return inputFieldUser($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		return $u->print();
 	}
 
 }
@@ -15,13 +17,16 @@ class _passwordField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
  	private function _inputPassword(){
+ 	
 		$input = getPasswordInput($this->env->variable());
 		//$input = getPasswordInput('login-pwd', 10, 50);
 		return $this->inputCaptioned($input);
 		//$this->value()); password input should always be blank
 	}
 	public function input( ){
-		return $this->_inputPassword();
+		$p = new \html\password($this->env->variable(),$this->_caption);
+	//	return $this->_inputPassword();
+		return $p->print();
 	}
 	public function generate($length = 11) {
 		$chars = '.!%^&*#@';
@@ -48,14 +53,19 @@ class _emailField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
  	public function input( ){
-		return inputFieldName($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+ 		$n = new \html\name($this->env->variable(),$this->value(),$this->_caption);
+	//	return inputFieldName($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		return $n->print();
 	}
 
 }
 class _urlField extends _textField
  implements Ifield, Iecho, IcontentWriter {
 	public function input( ){
-		return inputFieldText($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$i = new \html\url($this->env->variable(),$this->value(),$this->_caption);
+	//	'url text','editing-input-url');
+		//return inputFieldText($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		return $i->print();
 	}
 }
 
@@ -65,7 +75,11 @@ class _nameField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		return inputFieldName($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+	
+	
+		$n = new \html\name($this->env->variable(),$this->value(),$this->_caption);
+		return $n->print();
+		//return inputFieldName($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 }
 
@@ -82,7 +96,9 @@ class _descriptionField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input( ){
-		return inputFieldDescription($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$d = new \html\description($this->env->variable(),$this->value(),$this->_caption);
+		//return inputFieldDescription($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		return $d->print();
 	}
 }
 class _notesField extends _textField
@@ -91,7 +107,9 @@ class _notesField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		return inputFieldNotes($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$n = new \html\notes($this->env->variable(),$this->value(),$this->_caption);
+	//	return inputFieldNotes($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		return $n->print();
 	}
 }
 	
@@ -101,8 +119,11 @@ class _commentsField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		return inputFieldComments($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$n = new \html\notes($this->env->variable(),$this->value(),$this->_caption);
+		//return inputFieldComments($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		return $n->print();
 	}
+	
 }
 	
 class _yesNoField extends _textField
@@ -111,7 +132,7 @@ class _yesNoField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input( ){
-		$input = getSelectYesNo($this->env->variable(), $this->value());
+		$input = \html\getSelectYesNo($this->env->variable(), $this->value());
 		return $this->inputChoice($input);
 	}
 	
@@ -135,7 +156,7 @@ class _cssColorField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		$input = getHighlightStyleSelectList($this->value(), $this->env->variable(),'false');
+		$input = \html\getHighlightStyleSelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);
 	}
 }

@@ -46,5 +46,7 @@ include_once('_selectRange.class');
 include_once('_selectYesNo.class');
 include_once('_span.class');
 include_once('_tables.class');
+include_once('_htmlFunctions.php');
+include_once('_formFunctions.php');
 
 ?>

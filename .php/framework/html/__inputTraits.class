@@ -13,7 +13,7 @@ trait valueContent{
 	}
 }
 
-trait caption{
+trait inputCaption{
 	protected $_caption = '';
 	protected $_showCaption = false;
 	public function setCaption(string $caption = 'none'){
@@ -24,13 +24,13 @@ trait caption{
 	}
 	public function printCaption(){
 		if ($this->_showCaption == true){
-			$d = new html/div('ic','input-caption');
-			$d->addContent($this->_caption);
-			$value = $d->print();
+			$c = new _div('ic','input-caption');
+			$c->setContent($this->_caption);
+			$value = $c->print();
 		} else {
 			$value = '';
 		}
-		return $value();
+		return $value;
 	}
 
 }
@@ -47,13 +47,13 @@ trait validation{
 	}
 	public function printValidation(){
 		if ($this->_showValidation == true){
-			$d = new html/div('iv','input-validation');
+			$d = new _div('iv','input-validation');
 			$d->addContent($this->_validation);
 			$value = $d->print();
 		} else {
 			$value = '';
 		}
-		return $value();
+		return $value;
 	}
 
 }

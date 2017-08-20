@@ -1,12 +1,12 @@
 <?php
 namespace html;
 
-class _buttonReset extends _button{
+class reset extends _button{
 	public function __construct(string $caption = 'Reset'){
 		parent::__construct('reset','reset', $caption);
 	}
 }
-class _buttonCancel extends _buttonReset{
+class cancel extends reset{
 	public function __construct(string $caption = 'Cancel'){
 		parent::__construct($caption);
 	}

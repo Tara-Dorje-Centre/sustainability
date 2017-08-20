@@ -40,26 +40,29 @@ class _document {
 		return $m;
 	}
 	
-	public function open(){
+	public function print(){
 
 		$content = $this->doctype();
-		$content .= $this->html->open();
+		//$content .= $this->html->open();
 		
 		$this->head->addContent($this->equivs());		
 		$this->head->addContent($this->_styles);
 		$this->head->addContent($this->title->print());
 		$this->head->addContent($this->_scripts);
-		$content .= $this->head->print();
-		
-		$content .= $this->body->open();
+		$this->html->setContent($this->head->print());
+		$this->html->addContent($this->body->print());
+		$content .= $this->html->print();
 
 		return $content;	
 	}
-	
+	/*
 	public function close(){
 		$content = $this->body->close();
 		$content .= $this->html->close();
 		return $content;	
+	}*/
+	public function setBody($content){
+		$this->body->setContent($content);
 	}
 	
 }

@@ -1,11 +1,10 @@
 <?php
 namespace html;
 
-class _inputUser extends _inputName{
-	public function __construct($name, $value, $tooltip = 'none', $css = 'editing-input-user'){
-		parent::__construct($name,$value, $tooltip,$css);
-		//setDefaultDimenions
-		$this->setDimensions(50, 8);
+class user extends name{
+	public function __construct($name, $value, $caption,$tooltip = 'Enter User', $css = 'editing-input-user'){
+		parent::__construct($name,$value, $caption,$tooltip,$css);
+		
 	}
 }
 
@@ -13,13 +12,10 @@ function inputFieldUser(
 	$entity,
 	$value,
 	$id = 'user',
-	$caption = 'User',
-	$tooltip = NULL, 
-	
-	$css = 'editing-input-user'){
+	$caption = 'User'){
 		
-	$element = inputFieldText($entity,$value,$id,$caption,8,50,$tooltip,$disabled,$css);
-	return $element;
+	$element = new user($id,$value,$caption);
+	return $element->print();
 	
 }
 ?>

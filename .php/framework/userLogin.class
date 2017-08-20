@@ -272,19 +272,19 @@ $links = new _links();
 
 		$login = new _inputForm('sys_Login.php','Login');
 		$login->open($entity,$this->_form, $contextMenu);
-		$login->required->addContent($this->f->_loginName->input());
-		$login->required->addContent($this->f->_loginPassword->input());
+		$login->required->input($this->f->_loginName);
+		$login->required->input($this->f->_loginPassword);
 
-		$login->optional->addContent($this->f->_loginEmail->input());
-		$login->optional->addContent($this->f->_resetPasswordSubmit->input());
+		$login->optional->input($this->f->_loginEmail);
+		$login->optional->input($this->f->_resetPasswordSubmit);
 
-		$msg = 'To reset password, enter your login name and profile email.'.br();
+		$msg = 'To reset password, enter your login name and profile email.'.\html\br();
 		$msg .= 'To register, please contact an administrator.';
-		$login->optional->addContent(captionedInput('Lost Password:',$msg));
+		$login->optional->addContent('Lost Password:'.$msg);
 		$this->f->_clientTimeZone->set('0');
 		$login->hidden->addContent($this->f->_clientTimeZone->inputHidden());
 		//= getHiddenInput('client-time-zone','');
-		$login->submit->addContent($this->f->_loginSubmit->input());
+		$login->submit->input($this->f->_loginSubmit);
 
 		
 		$login->submit->addContent('+'.$_SESSION['site-login-notice']);

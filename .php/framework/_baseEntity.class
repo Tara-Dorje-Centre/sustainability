@@ -102,8 +102,8 @@ implements Iecho, IcontentWriter {
 		 } else {
 		 //dates not set, use current month and year
 		 	global $sessionTime;
-		 	$this->year = getTimestampYear($sessionTime);
-		 	$this->month = getTimestampMonth($sessionTime);
+		 	$this->year = \html\getTimestampYear($sessionTime);
+		 	$this->month = \html\getTimestampMonth($sessionTime);
 		 }
 		 
 		$this->isCalendarSet = true;

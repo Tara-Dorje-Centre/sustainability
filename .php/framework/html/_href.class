@@ -7,7 +7,7 @@ class _href extends _element{
 	public function __construct($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
 		parent::__construct('a', 'none', $css);
 		$this->addAttribute('href',$url);
-		if ($target <> '_self'){
+		if (($target <> '_self') && (!is_null($target))){
 			$this->addAttribute('target',$target);
 		}
 		if (!is_null($onClickJS)){

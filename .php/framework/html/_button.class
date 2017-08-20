@@ -7,4 +7,7 @@ class _button extends _input{
 		$this->setValue($caption);
 	}
 }
+
+
+
 ?>

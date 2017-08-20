@@ -2,7 +2,7 @@
 namespace html;
 
 class _input extends _emptyElement{
-use valueAttribute, caption, validation, disabled, dimensionsSize;
+use valueAttribute, inputCaption, validation, disabled, dimensionsSize;
 	
 	public function __construct(string $type,string $name,string $caption = 'none', $tooltip = 'none', $css = 'editing-input'){
 		parent::__construct('input',$name, $css);
@@ -15,11 +15,11 @@ use valueAttribute, caption, validation, disabled, dimensionsSize;
 		$this->printDisabled();
 		$this->printDimensions();
 		
-		$d= new html/div('ei','edit-input');
-		$d->addContent($this->printCaption());
-		$d->addContent($this->printValidation());
-		$d->addContent(parent::print());
-		return $d->print();
+		$i = new _div('ei','edit-input');
+		$i->addContent($this->printCaption());
+		$i->addContent($this->printValidation());
+		$i->addContent(parent::print());
+		return $i->print();
 	}
 	
 }

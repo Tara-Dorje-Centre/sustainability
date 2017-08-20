@@ -33,7 +33,7 @@ function sessionVariableSESSION($urlVariable,$defaultValue){
 }
 
 
-
+/*
 
 function openHTML(){
 	$e = new _element('html');
@@ -88,7 +88,7 @@ function metaHttpEquivs(){
 }
 
 
-
+*/
 
 function openInlineStyle(){
 	$e = new _inlineStyle();
