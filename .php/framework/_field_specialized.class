@@ -144,7 +144,7 @@ class _cssColorField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		$input = getColorSelectList($this->value(), $this->env->variable(),'false');
+		$input = \css\getColorSelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);
 	}
 }
@@ -156,7 +156,7 @@ class _cssColorField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		$input = \html\getHighlightStyleSelectList($this->value(), $this->env->variable(),'false');
+		$input = \css\getHighlightStyleSelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);
 	}
 }
@@ -167,7 +167,7 @@ class _fontsizeField extends _numberField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		$input = getFontSizeSelectList($this->value(), $this->env->variable(),'false');
+		$input = \css\getFontSizeSelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);
 	}
 }
@@ -178,7 +178,7 @@ class _fontFamilyField extends _textField
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input(){
-		$input = getFontFamilySelectList($this->value(), $this->env->variable(),'false');
+		$input = \css\getFontFamilySelectList($this->value(), $this->env->variable(),'false');
 		return $this->inputChoice($input);
 	}
 }

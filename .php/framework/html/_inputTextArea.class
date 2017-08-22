@@ -5,7 +5,7 @@ class _inputTextarea extends _element{
 use valueContent, inputCaption, validation, disabled, dimensionsRows;
 	public function __construct($name, $value, $maxLength = 1000, $rows = 4, $cols = 60,$tooltip = 'none',$css = 'editing-input-textarea'){
 		parent::__construct('textarea',$name, $css);
-		$this->addAttribute('title',$tooltipText);
+		$this->addAttribute('title',$tooltip);
 		$this->setDimensions($maxLength,$rows,$cols);
 		$this->setValue($value);
 	}

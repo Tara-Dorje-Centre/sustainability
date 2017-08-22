@@ -185,14 +185,6 @@ function listItem($value,$css = 'none'){
 }
 
 
-
-
-
-
-
-
-
-
 function openTable($nameId, $css = 'none'){
 	$e = new _table($nameId, $css);
 	return $e->open();

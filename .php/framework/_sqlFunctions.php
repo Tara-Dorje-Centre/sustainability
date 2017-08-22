@@ -121,7 +121,7 @@ function getSelectOptionsSQL($sql,$selectedValue = 0, $disabled = false, $defaul
 		//omit default value
 		$allOptions = '';
 	} else {
-	    $allOptions = getSelectOption($defaultValue,$defaultCaption,$selectedValue);
+	    $allOptions = \html\getSelectOption($defaultValue,$defaultCaption,$selectedValue);
 	}
 
 		$locale = 'getSelectOptionsSQL:';
@@ -133,7 +133,7 @@ function getSelectOptionsSQL($sql,$selectedValue = 0, $disabled = false, $defaul
 			{	
 				$optionValue = $row["value"];
 				$optionCaption = $row["caption"];
-				$option = getSelectOption($optionValue,$optionCaption,$selectedValue);
+				$option = \html\getSelectOption($optionValue,$optionCaption,$selectedValue);
 				$allOptions .= $option;
 			}
 

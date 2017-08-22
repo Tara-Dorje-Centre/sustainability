@@ -3,19 +3,11 @@ namespace html;
 
 function inputFieldHighlightstyle($entity,$value,$id = 'highlightStyle',$caption = 'Highlight Style',$tooltip = NULL, $disabled = 'false'){
 	
-		$select = getHighlightStyleSelectList($value,$id);
+		$select = \css\getHighlightStyleSelectList($value,$id);
 		$element =inputFieldSelect($entity, $select,$caption);
 		return $element;
 }
 
-/*
-function inputFieldHighlightstyle($entity,$value,$id = 'highlightStyle',$caption = 'Highlight Style',$tooltip = NULL, $disabled = 'false'){
-	
-		$select = getHighlightStyleSelectList($value,$id);
-		$element =inputFieldSelect($entity, $select,$caption);
-		return $element;
-}
 
-*/
 
 ?>

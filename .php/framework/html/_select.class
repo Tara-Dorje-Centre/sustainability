@@ -35,8 +35,9 @@ function getSelectList($selectName, $selectOptions, $tooltip = 'none', $disabled
 	if ($disabled != 'false'){
 		$e->addAttribute('disabled',$disabled);
 	}
-
+if (!is_null($onChangeJS)){
 	$e->addAttribute('onChange',$onChangeJS);	
+	}
 	
 	$select = $e->open();
 	$select .= $selectOptions;

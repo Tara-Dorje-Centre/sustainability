@@ -136,7 +136,7 @@ trait dimensionsRows{
 use rows, maxLength;
 	public function setDimensions($maxLength,$rows, $columns){
 		$this->setMaxLength('maxlength',$maxLength);
-		$this->setRowsCols($rows,$columns);
+		$this->setRows($rows,$columns);
 	}
 	public function printDimensions(){
 		$this->printMaxLength();

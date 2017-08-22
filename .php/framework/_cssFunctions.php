@@ -1,5 +1,6 @@
 <?php
-include_once("_includes.php");
+namespace css;
+
 //css style format
 //.public-detail-item{
 //	font-size:14px;
@@ -162,7 +163,7 @@ function getHighlightStyleSelectList($selectedValue = 'none', $idName = 'highlig
 	$defaultCaption = '-no highlighting';
 	$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		
-	$select = getSelectList($idName,$allOptions,'none',$disabled );
+	$select = \html\getSelectList($idName,$allOptions,'none',$disabled );
 	return $select;
 }	
 
