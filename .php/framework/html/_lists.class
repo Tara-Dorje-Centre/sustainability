@@ -13,8 +13,11 @@ class _ol extends _element{
 	}
 }
 class _li extends _element{
-	public function __construct($idName = 'none', $css = 'none'){
-		parent::__construct('li', $idName, $css);
+	public function __construct($content = 'none', $css = 'none'){
+		parent::__construct('li', 'none', $css);
+		if ($content != 'none'){
+			$this->setContent($content);
+		}
 	}
 }
 

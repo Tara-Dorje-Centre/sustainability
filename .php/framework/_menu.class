@@ -253,31 +253,31 @@ class _menu extends _echo{
 	}
 
 	private function displayCalendar(){
-		if ($this->month->value == 0 || $this->year->value == 0){
+		if ($this->month->value() == 0 || $this->year->value() == 0){
 			global $sessionTime;
-			$this->year->set(getTimestampYear($sessionTime));
-			$this->month->set(getTimestampMonth($sessionTime,'YES'));
+			$this->year->set(\html\getTimestampYear($sessionTime));
+			$this->month->set(\html\getTimestampMonth($sessionTime,'YES'));
 		}
-		if ($this->month->value == 12){
+		if ($this->month->value() == 12){
 			$nextMonth = 1;
-			$nextYear = $this->year->value + 1;
+			$nextYear = $this->year->value() + 1;
 		} else {
-			$nextMonth = $this->month->value + 1;
-			$nextYear = $this->year->value;
+			$nextMonth = $this->month->value() + 1;
+			$nextYear = $this->year->value();
 		}
-		if ($this->month->value == 1){
+		if ($this->month->value() == 1){
 			$prevMonth = 12;
-			$prevYear = $this->year->value - 1;
+			$prevYear = $this->year->value() - 1;
 		} else {
-			$prevMonth = $this->month->value - 1;
-			$prevYear = $this->year->value;
+			$prevMonth = $this->month->value() - 1;
+			$prevYear = $this->year->value();
 		}
 
 		$menuL = new MenuLinks('LIST','menu');
 		$prevMonthLink = $menuL->detailHref('CALENDAR', 'Previous', $prevYear, $prevMonth);
 		$nextMonthLink = $menuL->detailHref('CALENDAR', 'Next', $nextYear, $nextMonth);
 
-		$c = new _calendar($this->year->value,$this->month->value,'Calendar');	
+		$c = new _calendar($this->year->value(),$this->month->value(),'Calendar');	
 		$c->setLinks($nextMonthLink, $prevMonthLink);
 		return $c->buildCalendar();
 	}

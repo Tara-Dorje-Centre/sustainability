@@ -1,4 +1,4 @@
-﻿<?php 
+﻿<?php
 
 class taskList extends _entityList{
 	protected $_MyClassName = 'TaskList';

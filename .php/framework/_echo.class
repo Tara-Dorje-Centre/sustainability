@@ -53,7 +53,7 @@ public function echoPrint(bool $show = true,string $msg, string $f = '-use-curre
 public function echoPrintline(string$msg){
 	
 	if ($this->echoEnabled == true){
-	echo $msg.'<br />';
+	echo $msg.'<br />'.PHP_EOL;
 	}
 }
 	

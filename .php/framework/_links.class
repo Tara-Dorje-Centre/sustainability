@@ -48,14 +48,21 @@ class _links implements Ilinks{
 	private function formatItem($content){
 		if ($this->menuType == 'LIST'){
 			//add list item tag and same style
-			$item = listItem($content,$this->cssItem.'-li');
+			$li = new \html\_li($content,$this->cssItem.'-li');
+			$item = $li->print();
+			//listItem($content,$this->cssItem.'-li');
 		} else {
 			$item = $content;
 		}
 		return $item;		
 	}
 	public function formatToggleLink($elementId = 'formOptional', $linkText = '+Options'){
-		$item = $this->formatHref($linkText,'#!','_self','',"toggle('".$elementId."');");
+		$url = '#!';
+		$css = 'toggle-link';
+		$js = "toggle('".$elementId."');";
+		$target = '_self';
+		
+		$item = $this->formatHref($linkText,$url,$target,$css,$js);
 		return $item;
 	}
 	public function formatHref($caption,$link,$target = '_self',$css = 'display-link',$onClickJS = NULL){
@@ -63,6 +70,11 @@ class _links implements Ilinks{
 		 
 		$item = $a->href();
 		return $item;
+	}
+	
+	protected function spacer($n){
+	
+	return \html\spacer($n);
 	}
 
 	public function formatTextItem($text){
@@ -170,11 +182,11 @@ class _links implements Ilinks{
 			//highlight current page with square brackets and skip hyperlink
 			if ($i == $currentPage){
 				//$linkCaption = ' ['.$recordRange.'] ';
-				$linkCaption = '['.spacer(2).$i.spacer(2).']';
-				$link = span($linkCaption,$this->cssItem.'-current');	
+				$linkCaption = '['.$this->spacer(2).$i.$this->spacer(2).']';
+				$link = \html\span($linkCaption,$this->cssItem.'-current');	
 			} else {
 				//$linkCaption = '('.$recordRange.')';	
-				$linkCaption = spacer(2).$i.spacer(2);
+				$linkCaption = $this->spacer(2).$i.$this->spacer(2);
 				$link = $this->formatHref($linkCaption,$baseUrl.$i);
 			}
 			if ($i == 1 || ($i >= ($currentPage - 4) && $i <= ($currentPage + 4)) || $i == $pages){ 

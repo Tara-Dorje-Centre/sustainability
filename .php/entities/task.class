@@ -1,4 +1,4 @@
-﻿<?php 
+﻿<?php
 
 class taskFields extends _fieldsProjectChild{
 	/*
@@ -601,5 +601,5 @@ class task extends _entity{
 			
 	}
 	
-} 
+}
 ?>

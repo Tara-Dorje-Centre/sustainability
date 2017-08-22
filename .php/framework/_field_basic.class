@@ -15,7 +15,10 @@ class _numberField extends _field
 		$this->_datatype = 'NUMBER';
 	}
 	public function input(){
-		return inputFieldNumber($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$i = new \html\_inputNumber($this->env->variable(),$this->value);
+		$i->setCaption($this->_caption);
+		return $i->print();
+		//return inputFieldNumber($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 }
 
@@ -53,5 +56,18 @@ class _submitButton extends _field
 	}
 	
 }
- 
+class _resetButton extends _field
+ implements Ifield, Iecho, IcontentWriter {
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'SUBMIT';
+	}
+	
+	public function input(){
+		$e = new \html\reset($this->env->variable(),$this->_caption);
+		return $e->print();
+	}
+	
+}
 ?>

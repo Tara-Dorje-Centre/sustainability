@@ -1,6 +1,6 @@
 <?php
 // Set Database connection variables
-//printLine('in dbconnect, opening connection');
+echo 'in dbconnect, opening connection';
 global   $conn;
 $conn = new _Database();
 //$conn is referencable in stand alone functions

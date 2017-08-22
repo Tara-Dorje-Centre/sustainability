@@ -3,7 +3,7 @@ namespace html;
 
 class name extends _inputText{
 	public function __construct($name, $value, $caption = 'Name',$tooltip = 'Enter name value', $css = 'editing-input-name'){
-		parent::__construct($name,$value, 100, 30, $tooltip,$css);
+		parent::__construct($name,$value, 100, 20, $tooltip,$css);
 		$this->setCaption($caption);
 	}
 }

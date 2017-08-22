@@ -97,6 +97,9 @@ function setSessionTimeZone(){
 	if ($utcOffset == ''){
 		$utcOffset = '-0:00';
 	}
+	if ($utcOffset == 0){
+			$utcOffset = '-0:00';
+	}
 	$sql = "set @@session.TIME_ZONE='".$utcOffset."'";
 
 	$locale = 'setSessionTimeZone:';

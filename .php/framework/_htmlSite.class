@@ -112,9 +112,9 @@ implements Isite{
 			//section-heading div commented out to allow section-links to float closer to section details
 			//  pageHeading contains section-title and section-links div containers
 			//  wrap title and links in section-heading div
-			$h = new html/_div('section-heading');
+			$h = new \html\_div('section-heading');
 			$h->setContent($heading);
-			$d = new html/_div('section-details');
+			$d = new \html\_div('section-details');
 			$d->setContent($details);
 		
 			$content = $h->print();
@@ -127,11 +127,6 @@ implements Isite{
 		
 	}
 	
-	
-	
-
-	
-
 	protected function getNoticeTiming(){
 		global $sessionTime, $sessionTimeZone;
 		$timing = 'Request Time: '.$sessionTime.'(UTC'.$sessionTimeZone.')';
@@ -166,7 +161,7 @@ implements Isite{
 		} else {
 			$l = new \html\_href($orgUrl,$org, 'menu-links-item', '_blank');
 			//$content = getHref($orgUrl, $org, 'menu-links-item', '_blank');
-			$cpntent = $l->print();
+			$content = $l->print();
 		}
 		$o->setContent($content);
 		return $o->print();
@@ -182,7 +177,7 @@ implements Isite{
 	protected function getFooterLinks(){
 		$url = 'https://sourceforge.net/projects/sustainability';
 		$text = 'Sustainability OpenSource';
-		$l = new \html\_href($url,$text);
+		$l = new \html\_href($url,$text,'menu-links-item','_blank');
 		//$l = getHref(,'Sustainability','menu-links-item','_blank');
 		return $l->print();
 	}

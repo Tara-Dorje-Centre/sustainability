@@ -6,6 +6,7 @@ class _document {
 	protected $html;
 	protected $head;
 	protected $body;
+	protected $bodyIsSet = false;
 	protected $title;
 	protected $_styles;
 	protected $_scripts;
@@ -39,16 +40,21 @@ class _document {
 		$m .= $text->meta();
 		return $m;
 	}
-	
-	public function print(){
-
-		$content = $this->doctype();
-		//$content .= $this->html->open();
-		
+	private function buildDocumentHead(){
 		$this->head->addContent($this->equivs());		
 		$this->head->addContent($this->_styles);
 		$this->head->addContent($this->title->print());
 		$this->head->addContent($this->_scripts);
+	
+	}
+	public function print(){
+		if ($this->bodyIsSet == false){
+			die('html document body not set');
+		}
+		$content = $this->doctype();
+		//$content .= $this->html->open();
+		$this->buildDocumentHead();
+		
 		$this->html->setContent($this->head->print());
 		$this->html->addContent($this->body->print());
 		$content .= $this->html->print();
@@ -62,6 +68,7 @@ class _document {
 		return $content;	
 	}*/
 	public function setBody($content){
+		$this->bodyIsSet = true;
 		$this->body->setContent($content);
 	}
 	

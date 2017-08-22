@@ -2,14 +2,20 @@
 namespace html;
 
 trait valueAttribute{
-	public function setValue($inputValue){
-		$this->addAttribute('value',$inputValue);
+	public function setValue($value){
+		if (!is_null($value)){
+			$this->addAttribute('value',$value);
+		} else {
+			$this->addAttribute('value','');
+		}
 	}
 }
 
 trait valueContent{
 	public function setValue($inputValue){
+	
 		$this->setContent($inputValue);
+		
 	}
 }
 

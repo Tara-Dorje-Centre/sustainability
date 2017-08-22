@@ -10,7 +10,7 @@ class _attribute{
 	}
 	
 	public function print(){
-		if ($this->name != 'none'){
+		if (($this->name != 'none') && ($this->value != 'none')){
 			if (is_null($this->value)){
 			$v = '""';
 			} else {
@@ -64,6 +64,10 @@ class _element{
 			$this->_content = self::_EMPTY;
 		}
 	}
+	public function clearContent(){
+		$this->_content = self::_EMPTY;
+	}
+	
 	
 	public function addContent($content = null){
 	/*append non null inputs to current contents*/
@@ -73,11 +77,18 @@ class _element{
 	}
 
 	public function addAttribute(string $name = 'none', string $value = 'none'){
+		if ($name != 'none'){
 		$a = new _attribute($name,$value);
 		$this->attributes[$name] = $a;
+		}
 	}
+	public function renoveAttribute($name){
+		//remove $name element from $this->attributes[] array
 	
+	
+	}
 	protected function buildAttributes(){
+		$this->_attribs = '';
 		foreach ($this->attributes as $a){
 			$this->_attribs .= $a->print();
 		}
@@ -110,29 +121,30 @@ class _element{
 		$this->$_cData = $isCData;
 	}
 
-	protected function start(){
+	private function start(){
+		$this->_markup = '';
 		$this->_markup = self::LT.$this->_tag;
 		$this->buildAttributes();
-		if ($this->_attribs != 'none' && !is_null($this->_attribs)){
-			$this->_markup .= $this->_attribs;
-		}
+		$this->_markup .= $this->_attribs;
 	}
 
 	public function open(){
 		$this->start();
-		$this->_markup .= self::GT;
+		$this->_markup .= self::GT.PHP_EOL;
+		//if cdata add after opening markup
 		return $this->_markup;
 	}
 
-	function empty(){
+	public function empty(){
 		$this->start();
 		$this->_markup .= self::SP.self::SL.self::GT;
-		return $this->_markup;
+		return $this->_markup.PHP_EOL;
 	}
 
 	public function close(){
+		//if cdata add before closing markup
 		$this->_markup = self::LT.self::SL.$this->_tag.self::GT;
-		return $this->_markup;
+		return $this->_markup.PHP_EOL;
 	}
 
 	public function print(){
@@ -141,7 +153,10 @@ class _element{
 		$value .= $this->close();
 		return $value;
 	}
-
+	public function printContent($content = null){
+		$this->setContent($content);
+		return $this->print();
+	}
 	public function wrap($content = null){
 		$this->setContent($content);
 		return $this->print();

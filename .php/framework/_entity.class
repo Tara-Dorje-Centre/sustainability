@@ -158,8 +158,8 @@ implements Iecho, IcontentWriter{
 		$this->setPageTitle();
 		$this->setPageMenu();
 		
-		$title = new html/_div('section-title');
-		$menu = new html/_div('section-menu');
+		$title = new \html\_div('section-title');
+		$menu = new \html\_div('section-menu');
 		$title->setContent($this->_pageTitle);
 		$menu->setContent($this->_pagwMenu);
 		$heading = $title->print();

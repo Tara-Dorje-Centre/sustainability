@@ -9,6 +9,8 @@ class userLinks extends _entityLinks {
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
 	}
+	
+	/*
 	public function listingHref($userTypeId = 0, $caption = 'AllUsers'){
 		$link = $this->listing($userTypeId);
 		$href = $this->formatHref($caption,$link);
@@ -26,12 +28,24 @@ class userLinks extends _entityLinks {
 		return $link;
 	}
 	//$pagingLinks = $this->base->links->pagingLinks($this->found,$this->resultPage,$this->perPage);	
-	public function listingPaged($baseLink,$found, $resultPage, $perPage){
+	/*public function listingPaged($baseLink,$found, $resultPage, $perPage){
 		$l = $baseLink.'&resultPageUsers=';
 		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
 		return $ls;
+	}*/
+	/*public function pagingLinksChildren($idParent, $found, $resultPage=1, $perPage=10){
+		$l = $this->urlList($idParent).'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
 	}
-		
+	
+	
+	public function pagingLinks($found, $resultPage, $perPage){
+		$l = $this->urlList(0).'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		returmn $ls;
+	}*/
+		/*
 	public function detail($pageAction = 'VIEW', $userId = 0, $userTypeId = 0){
 		$link = 'sys_User_Detail.php?pageAction='.$pageAction;
 		if ($userId != 0){
@@ -64,6 +78,6 @@ class userLinks extends _entityLinks {
 			$links = $this->listingHref();
 		}
 		return $links;
-	}	
+	}	*/
 }
 ?>
