@@ -1,11 +1,11 @@
 <?php 
 
 interface Ilinks{
-	public function __construct($menuType = 'DIV',$styleBase = 'menu');
+	//public function __construct($menuType = 'DIV',$styleBase = 'menu');
 	public function setStyle($styleBase = 'menu');
 	public function setType($menuType = 'DIV');
 	public function formatToggleLink($elementId = 'formOptional', $linkText = '+Options');
-	public function formatHref($caption,$link,$target = '_self',$cssSuffix = '',$onClickJS = NULL);
+	public function formatLink(string $url,string $caption,$onClickJs = null);
 	public function formatTextItem($text);
 	public function openMenu($name = 'menu-listing');
 	public function closeMenu();
@@ -13,7 +13,7 @@ interface Ilinks{
 	public function saveMenuSettings();
 	public function restoreMenuSettings();
 	public function getPagedLinks($baseUrl, $recordCount, $recordsPerPage, $currentPage);
-	public function formatCalendarLink($baseUrl, $year, $month);
+	public function formatCalendarUrl($baseUrl, $year, $month);
 	public function formatCalendarHref($linkCaption, $baseUrl, $year, $month);
 }
 class _links implements Ilinks{
@@ -60,21 +60,18 @@ class _links implements Ilinks{
 		$url = '#!';
 		$css = 'toggle-link';
 		$js = "toggle('".$elementId."');";
-		$target = '_self';
-		
-		$item = $this->formatHref($linkText,$url,$target,$css,$js);
-		return $item;
+	
+		$l = new \html\link($url,$linkText,$js,$css);
+	
+		return $l->print();
 	}
-	public function formatHref($caption,$link,$target = '_self',$css = 'display-link',$onClickJS = NULL){
-		$a = new \html\_href($link, $caption,$target,$onClickJS);
-		 
-		$item = $a->href();
-		return $this->formatItem($item);
+	public function formatLink(string $url,string $caption,$onClickJS = NULL){
+		$l = new \html\link($url,$caption,$onClickJS);
+		return $l->print();
 	}
 	
 	protected function spacer($n){
-	
-	return \html\spacer($n);
+		return \html\spacer($n);
 	}
 
 	public function formatTextItem($text){
@@ -163,8 +160,9 @@ class _links implements Ilinks{
 		if ($currentPage > 1){
 			$linkCaption = spacer().'Prev'.spacer();
 			$prevIndex = $currentPage - 1;
-			$link = $this->formatHref($linkCaption,$baseUrl.$prevIndex);
-			$linksAllPages .= $link;
+			//$link = $this->formatHref($linkCaption,$baseUrl.$prevIndex);
+			$l = new \html\link($baseUrl.$prevIndex,$linkCaption);
+			$linksAllPages .= $l->print();
 		}
 
 		while ($i < $pages){
@@ -187,7 +185,9 @@ class _links implements Ilinks{
 			} else {
 				//$linkCaption = '('.$recordRange.')';	
 				$linkCaption = $this->spacer(2).$i.$this->spacer(2);
-				$link = $this->formatHref($linkCaption,$baseUrl.$i);
+				//$link = $this->formatHref($linkCaption,$baseUrl.$i);
+				$l = new \html\link($baseUrl.$i,$linkCaption);
+				$link = $l->print();
 			}
 			if ($i == 1 || ($i >= ($currentPage - 4) && $i <= ($currentPage + 4)) || $i == $pages){ 
 		
@@ -204,8 +204,9 @@ class _links implements Ilinks{
 		if ($currentPage < $pages){
 			$linkCaption = spacer().'Next'.spacer();
 			$prevIndex = $currentPage + 1;
-			$link = $this->formatHref($linkCaption,$baseUrl.$prevIndex);
-			$linksAllPages .= $link;
+			//$link = $this->formatHref($linkCaption,$baseUrl.$prevIndex);
+			$l = new \html\link($baseUrl.$prevIndex);
+			$linksAllPages .= $l->print();
 		}
 			
 		if ($pages > 1){
@@ -222,14 +223,15 @@ class _links implements Ilinks{
 		return $linkset;
 	}
 
-	public function formatCalendarLink($baseUrl, $year, $month){
+	public function formatCalendarUrl($baseUrl, $year, $month){
 		$url = $baseUrl.'&year='.$year.'&month='.$month;
 		return $url;
 	}
 	public function formatCalendarHref($linkCaption, $baseUrl, $year, $month){
-		$url = $this->formatCalendarLink($baseUrl,$year,$month);	
-		$link = $this->formatHref($linkCaption, $url);
-		return $link;	
+		$url = $this->formatCalendarUrl($baseUrl,$year,$month);	
+		$l = new \html\link($url,$linkCaption);
+		//$link = $this->formatHref($linkCaption, $url);
+		return $l->print();	
 	}
 }
 ?>

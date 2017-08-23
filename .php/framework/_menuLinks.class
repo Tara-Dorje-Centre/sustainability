@@ -5,19 +5,19 @@ class MenuLinks extends _links {
 		parent::__construct($menuType,$styleBase);
 	}
 	public function detailHref($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
-		$link = $this->detail($displayMode, $year, $month);
-		$href = $this->formatHref($caption,$link);
-		return $href;	
+		$url = $this->detailUrl($displayMode, $year, $month);
+		return $this->formatLink($url,$caption);
+		//return $href;	
 	}
 	public function logoutHref(){
-		$link = 'sys_Logout.php';
-		$href = $this->formatHref('Logout',$link);	
-		return $href;
+		$url = 'sys_Logout.php';
+		return $this->formatLink($url,'Logout');	
+		//return $href;
 	}
-	public function detail($displayMode = 'MODULES', $year = 0, $month = 0){
+	public function detailUrl($displayMode = 'MODULES', $year = 0, $month = 0){
 		$baseUrl = 'sys_Menu.php?displayMode='.$displayMode;
 		if ($year != 0 && $month != 0){
-			$link = $this->formatCalendarLink($baseUrl, $year, $month);
+			$link = $this->formatCalendarUrl($baseUrl, $year, $month);
 		} else {
 			$link = $baseUrl;
 		}

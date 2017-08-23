@@ -2,29 +2,39 @@
 namespace html;
 
 class _href extends _element{
-	protected $displayText = '';
 
-	public function __construct($url, $displayText, $css = 'none',$target = '_self',$onClickJS = NULL){
+	public function __construct(string $url, string $display, string $css = 'none'){
 		parent::__construct('a', 'none', $css);
 		$this->addAttribute('href',$url);
+		if (is_null($display) or ($display == '')){
+			$display = $url;
+		}
+		$this->setContent($display);
+	}
+
+	public function setTarget(string  $target = '_self'){
 		if (($target <> '_self') && (!is_null($target))){
 			$this->addAttribute('target',$target);
 		}
+	}
+	
+	public function setOnClickScript($onClickJS){
 		if (!is_null($onClickJS)){
 			$this->addAttribute('onclick',$onClickJS);
 		}
-		
-		if (is_null($displayText) or ($displayText == '')){
-			$content = '[???]';
-		} else {
-			$content = $displayText;
-		}
-		$this->displayText = $content;
+
+	}
+	
+}
+
+class link extends _href{
+
+	public function __construct(string $url, string $display, $onClickJs = null, string $css = 'display-link'){
+		parent::__construct($url, $display, $css);
+		$this->setOnClickScript($onClickJS);
 	}
 
-	public function href(){
-		return $this->wrap($this->displayText);
-	}
 }
+
 
 ?>
