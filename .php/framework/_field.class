@@ -37,7 +37,6 @@ interface Ifield{
  	public function listDetail();
  	public function displayDetail();
  	public function input();
- 	public function inputChoice(string $options);
  }
 
  abstract class _field extends _contentWriter
@@ -398,20 +397,14 @@ interface Ifield{
 	}
 	
 	protected function inputFreeText( ){
-		$i = new \html\_inputText($this->env->variable(),$this->value());
-		$i->setCaption($this->_caption);
-		return $u->print();
-		//return inputFieldText($this->_entity,$this->value(),$this->env->variable(), $this->value()););
+		$i = new \html\_inputText($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print();
+		
 	}
-	public function inputCaptioned(string $input){
-		return \html\captionedInput($this->_caption,$input,$this->_validation);
-	}
-	public function inputChoice(string $options){
-		return $this->inputCaptioned($options);
-	}
+	
 	public function inputHidden( ){
-		$h = new \html\hidden($this->env->variable(), $this->value());
-		return $h->print();
+		$i = new \html\inputs\hidden($this->env->variable(), $this->value());
+		return $i->print();
 	}
 	
 	

@@ -1,5 +1,5 @@
 <?php
-namespace html/inputs;
+namespace html\inputs;
 
 abstract class _select extends \html\_element{
 use caption, validation, tooltip, disabled;

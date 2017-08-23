@@ -12,7 +12,7 @@ use caption, validation;
 	protected $minute;
 	public function __construct($name,$value,$caption){
 		$css = 'editing-input-timestamp';
-		parent::__construct($name,$css)
+		parent::__construct($name,$css);
 		$this->setCaption($caption);
 		$this->setParts($value);
 		$this->makeSelectParts($name);

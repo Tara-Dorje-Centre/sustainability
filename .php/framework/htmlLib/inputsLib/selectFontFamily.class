@@ -7,7 +7,7 @@ class selectFontFamily extends _select{
 		$this->defaultOption('none','- no font family');
 		$this->makeOptions();
 	}
-	protected makeOptions(){
+	protected function makeOptions(){
 		$sql = " SELECT c.name as value, c.name as caption ";
 		$sql .= " FROM css_fonts AS c ";
 		$sql .= " ORDER BY value ";

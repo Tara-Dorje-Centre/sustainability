@@ -48,14 +48,18 @@ implements Iecho, IcontentWriter{
 		$showLink = true){
 
 		$sql = $this->sql->options($selectedId, $disabled);
+		
+			$s = new \html\inputs\selectQuery($idName,$selectedId,$sql);
+			$s->makeDefault(0,'-select '.$this->_titleEntity);
+			/*
 		$defaultValue = 0;
 		$defaultCaption = '-select '.$this->_titleEntity;
 		$allOptions = getSelectOptionsSQL($sql,$selectedId,$disabled,$defaultValue,$defaultCaption);		
 
 		$select = getSelectList($idName,$allOptions,'none',$disabled );
 		$select.= $this->optionsLink($showLink, $selectedId);
-		
-		return $select;
+		*/
+		return $s;
 	}	
 	
 	public function optionsField(_field &$f){

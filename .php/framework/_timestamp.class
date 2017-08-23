@@ -10,7 +10,7 @@ class _timestamp{
 	public $hour;
 	public $minute;
 	public function __construct($value){
-		if(!isnull($value)){
+		if(!is_null($value)){
 			$this->set($value);
 		}
 	}
@@ -43,25 +43,25 @@ class _timestamp{
 		}
 		return $value;
 	}
-	public function getYear(bool trim = false){
+	public function getYear(bool $trim = false){
 		$value = $this->year;
-		return $this->trimValue($value);	
+		return $this->trimValue($value,$trim);	
 	}
-	public function getMonth(bool trim = false){
+	public function getMonth(bool $trim = false){
 		$value = $this->month;
-		return $this->trimValue($value);	
+		return $this->trimValue($value,$trim);	
 	}
-	public function getDate(bool trim = false){
+	public function getDate(bool $trim = false){
 		$value = $this->date;
-		return $this->trimValue($value);	
+		return $this->trimValue($value,$trim);	
 	}
-	public function getHour(bool trim = false){
+	public function getHour(bool $trim = false){
 		$value = $this->hour;
-		return $this->trimValue($value);	
+		return $this->trimValue($value,$trim);	
 	}
-	public function getMinute(bool trim = false){
+	public function getMinute(bool $trim = false){
 		$value = $this->minute;
-		return $this->trimValue($value);	
+		return $this->trimValue($value,$trim);	
 	}
 }
 

@@ -10,7 +10,7 @@ trait colspan{
 }
 
 trait rowspan{
-	public function setColspan($rowspan = 0){
+	public function setRowspan($rowspan = 0){
 		if ($rowspan != 0){
 			$this->addAttribute('rowspan',$rowspan);
 		}

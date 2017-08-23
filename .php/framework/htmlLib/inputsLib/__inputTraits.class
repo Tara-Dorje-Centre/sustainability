@@ -4,20 +4,21 @@ namespace html\inputs;
 trait valueAttribute{
 	public function setValue($value){
 		if (!is_null($value)){
-			$this->addAttribute('value',$this->value);
+			$this->addAttribute('value',$value);
 		}
 	}
 }
 
 trait valueContent{
 	public function setValue($value){
+		
 		if (!is_null($value)){
-			$this->setContent($this->value);
+			$this->setContent($value);
 		}
 	}
 }
 
-trait inputCaption{
+trait caption{
 	protected $_caption = '';
 	protected $_showCaption = false;
 	public function setCaption(string $caption = 'none'){

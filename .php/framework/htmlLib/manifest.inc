@@ -24,5 +24,5 @@ include_once('_htmlFunctions.php');
 include_once('_formFunctions.php');
 include_once('page.class');
 include_once('pagePublic.class');
-include_once('./inputs/manifest.inc');
+
 ?>

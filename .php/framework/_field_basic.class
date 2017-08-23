@@ -29,7 +29,7 @@ class _dateField extends _field
 	
 	public function input(){
 		$i = new \html\inputs\_inputTimestamp($this->env->variable(),$this->value(),$this->_caption);
-		return $i->print()
+		return $i->print();
 	}
 	
 
@@ -51,8 +51,8 @@ class _submitButton extends _field
 	}
 	
 	public function input(){
-		$e = new \html\inputs\submit($this->env->variable(),$this->_caption);
-		return $e->print();
+		$i = new \html\inputs\submit($this->env->variable(),$this->_caption);
+		return $i->print();
 	}
 	
 }
@@ -65,8 +65,8 @@ class _resetButton extends _field
 	}
 	
 	public function input(){
-		$e = new \html\inputs\reset($this->_caption);
-		return $e->print();
+		$i = new \html\inputs\reset($this->_caption);
+		return $i->print();
 	}
 	
 }
