@@ -1,7 +1,9 @@
 <?php
 $pathFramework = './framework/';
-$pathHtml = $pathFramework.'html/';
-$pathEntities = './entities/';
+$pathHtml = $pathFramework.'htmlLib/';
+$pathHtmlInputs = $pathHtml.'inputsLib/';
+$pathCss = $pathHtml.'cssLib/';
+$pathEntities = $pathFramework.'./entitiesLib/';
 //echo 'preloading echo framework class'.PHP_EOL;
 include_once($pathFramework."_echo.class");
 function showProgress($msg, $show = false){
@@ -9,11 +11,10 @@ function showProgress($msg, $show = false){
 	$e->echoPrint($show,$msg,'class libraries','Sustainability 2.0');
 }
 showProgress('libraries loading....');
-showProgress('html formatting objects....');
-include_once($pathHtml."manifestHtml.inc");
-showProgress('framework objects....');
-include_once($pathFramework."manifestFramework.inc");
-showProgress('entity objects');
-include_once($pathEntities."manifestEntities.inc");
+include_once($pathHtml."manifest.inc");
+include_once($pathHtmlInputs."manifest.inc");
+include_once($pathCss."manifest.inc");
+include_once($pathFramework."manifest.inc");
+include_once($pathEntities."manifest.inc");
 showProgress('finished loading libraries.');
 ?>

@@ -1,0 +1,85 @@
+<?php
+namespace html;
+
+trait colspan{
+	public function setColspan($colspan = 0){
+		if ($colspan != 0){
+			$this->addAttribute('colspan',$colspan);
+		}
+	}
+}
+
+trait rowspan{
+	public function setColspan($rowspan = 0){
+		if ($rowspan != 0){
+			$this->addAttribute('rowspan',$rowspan);
+		}
+	}
+}
+trait width{
+	public function setWidth($width = 0){
+		if ($width!=0){
+			$this->addAttribute('width', $width.'%');
+		}
+	}
+	
+}
+
+class _table extends _element{
+	public function __construct($idName = 'none', $css = 'none'){
+		parent::__construct('table', $idName, $css);
+	}
+	public function addRow(_tr $tr){
+		$this->addContent($tr->print());
+	}
+	public function makeRow($content,$css = 'none'){
+		$tr = new _tr($css);
+		$tr->setContent($content);
+		$this->addRow($tr);
+	}
+}
+
+
+
+class _tr extends _element{
+	public function __construct($css = 'none'){
+		parent::__construct('tr', 'none', $css);
+	}
+	
+	public function addHeading(_th $th){
+		$this->addContent($th->print());
+	}
+	public function makeHeading($content,$css = 'none',$colspan = 0){
+		$th = new _th($css,$colspan);
+		$th->setContent($content);
+		$this->addHeading($th);
+	}
+	public function addData(_td $td){
+		$this->addContent($td->print());
+	}
+	public function makeData($content,$css = 'none',$colspan = 0){
+		$td = new _td($css,$colspan);
+		$td->setContent($content);
+		$this->addRow($td);
+	}
+}
+
+
+class _th extends _element{
+use width, colspan, rowspan;
+	public function __construct($css = 'none',$colspan = 0){
+		parent::__construct('th', 'none', $css);
+		$this->setColspan($colspan);
+	}
+}
+
+class _td extends _element{
+use width, colspan, rowspan;
+	public function __construct($css = 'none',$colspan = 0){
+		parent::__construct('td', 'none', $css);
+		$this->setColspan($colspan);
+	}
+	
+}
+
+?>

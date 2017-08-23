@@ -424,16 +424,16 @@ form{
 	border-style:solid;
 }
 .calendar-td-today{
-	padding:2px;
+	padding:5px;
 	margin:0;
 	vertical-align:top;
-	border-width:3px;
-	border-color:blue;
-	border-style:solid;
+	border-width:5px;
+	border-color:lightgreen;
+	border-style:double;
 	border-collapse:separate;
 }
 .calendar-td-blanks{
-background-color:lightgray;	
+background-color:lightblue;	
 }
 .calendar-date{
 font-size:11px;	

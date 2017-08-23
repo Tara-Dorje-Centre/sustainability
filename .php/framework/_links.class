@@ -69,7 +69,7 @@ class _links implements Ilinks{
 		$a = new \html\_href($link, $caption,$target,$onClickJS);
 		 
 		$item = $a->href();
-		return $item;
+		return $this->formatItem($item);
 	}
 	
 	protected function spacer($n){

@@ -320,7 +320,17 @@ interface Ifield{
  	public function remove(){
  		$this->env->remove();
  	}
+	private function getTimestampPostValues($name){
+		$year = $_POST[$name.'_YYYY'];
+		$month = $_POST[$name.'_MM'];
+		$date = $_POST[$name.'_DD'];
+		$hour = $_POST[$name.'_HH'];
+		$minute = $_POST[$name.'_mm'];
+		$time = new _timestamp();
+		$time->setParts($year,$month,$date,$hour,$minute);
+		return $time->getTimestamp();
 
+	} 
 	public function read(){
 
   		if ($this->_envEnabled){
@@ -330,7 +340,7 @@ interface Ifield{
  					$this->_number = $this->_raw;
         			break;
     			case 'DATE':
- 		 			$this->_raw = getTimestampPostValues($this->env->variable);
+ 		 			$this->_raw = $this->getTimestampPostValues($this->env->variable);
         			$this->_date = $this->_raw;
         			break;
         		case 'BOOLEAN':

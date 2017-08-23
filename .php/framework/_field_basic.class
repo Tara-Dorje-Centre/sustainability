@@ -15,10 +15,8 @@ class _numberField extends _field
 		$this->_datatype = 'NUMBER';
 	}
 	public function input(){
-		$i = new \html\_inputNumber($this->env->variable(),$this->value);
-		$i->setCaption($this->_caption);
+		$i = new \html\inputs\_inputNumber($this->env->variable(),$this->value(),$this->_caption);
 		return $i->print();
-		//return inputFieldNumber($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
 	}
 }
 
@@ -30,8 +28,10 @@ class _dateField extends _field
 	}
 	
 	public function input(){
-		return inputFieldDate($this->_entity,$this->value(),$this->env->variable(),$this->_caption);
+		$i = new \html\inputs\_inputTimestamp($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print()
 	}
+	
 
 }
 class _booleanField extends _field
@@ -51,7 +51,7 @@ class _submitButton extends _field
 	}
 	
 	public function input(){
-		$e = new \html\submit($this->env->variable(),$this->_caption);
+		$e = new \html\inputs\submit($this->env->variable(),$this->_caption);
 		return $e->print();
 	}
 	
@@ -65,9 +65,12 @@ class _resetButton extends _field
 	}
 	
 	public function input(){
-		$e = new \html\reset($this->env->variable(),$this->_caption);
+		$e = new \html\inputs\reset($this->_caption);
 		return $e->print();
 	}
 	
 }
+
+
+
 ?>

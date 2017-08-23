@@ -53,7 +53,7 @@ abstract class _entityList extends _entity{
 		//$contextMenu = $this->base->links->
 		$this->_display = new _displayList($entity,$paging,$legend,$add,$contextMenu);
 
-		return $this->_display->open();
+		//return $this->_display->open();
 	}
 	
 	protected function listingSQL(){
@@ -65,24 +65,28 @@ abstract class _entityList extends _entity{
 		$sql = $this->listingSQL();
 		$result = dbGetResult($sql);
 		if($result){
-			$list = $this->base->listHeading();
+			//$list = $this->base->listHeading();
+			$this->_display->addRowContent($this->base->listHeading());
 		  	while ($row = $result->fetch_assoc())
 			{	
-				$list .= $this->base->listRow($row);
+				$this->_display->addRowContent($this->base->listRow($row));
 			}
 			$result->close();
 		} else {
-			$list =  wrapTr('no results found');
+			$this->_display->makeRow('No results found');
+			//$list =  wrapTr('no results found');
 		}
-		return $list;
+		//return $list;
 	}
 	
 	public function getListing(){
 
-		$list = $this->listingStart();
-		$list .= $this->listingRows();
-		$list .= closeDisplayList();
-		return $list;
+		//$list = 
+		$this->listingStart();
+		//$list .= 
+		$this->listingRows();
+		//$list .= closeDisplayList();
+		return $this->_display->print();
 	}
 	
 	protected function editForm(){

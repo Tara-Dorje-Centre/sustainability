@@ -102,11 +102,11 @@ implements Iecho, IcontentWriter{
 	}
 
 	protected function display(){
-		$this->_display = new htmk/_displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
-		$detail = $this->_display->open();
-		$detail .= $this->f->displayDetail();
-		$detail .= $this->_display->close();
-		return $detail;
+		$this->_display = new html/_displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
+		//$detail = $this->_display->open();
+		$this->_display->setContent($this->f->displayDetail());
+		//$detail .= $this->_display->close();
+		return $this->_display->print();
 	}
 	
 	protected function setPageTitle(){

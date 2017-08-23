@@ -1,12 +1,15 @@
 <?php
 //namespace html;
 
-class _displayDetails extends _contentWriter{
+class _displayDetails {
 	protected $entity;
 	protected $mode;
 	protected $legend;
 	protected $_fields;
 	protected $_display;
+	protected $quickEdit;
+	protected $contextMenu;
+	protected $details;
 	public function __construct(string $entity = 'entity',string $mode = 'mode',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
 		$this->entity = $entity;
 		$this->mode = $mode;
@@ -14,31 +17,48 @@ class _displayDetails extends _contentWriter{
 		$this->quickEdit = $quickEdit;
 		$this->contextMenu = $contextMenu;
 		
-		$this->_display = new html\_div($this->entity.'-display','display'.$this->mode);
-		$this->_fields = new html\_fieldset($this->entity.'-fields', $this->legend,'fieldset');
+		$this->_display = new \html\_div($this->entity.'-display','display'.$this->mode);
+		$this->_fields = new \html\_fieldset($this->entity.'-fields', $this->legend,'fieldset');
 	}
-	public function open(){
+	protected function open(){
 
-		$this->addContent($this->_display->open());
+		//$this->addContent($this->_display->open());
 
 		if ($this->quickEdit != 'none'){
-			$d = new html\_div($this->entity.'-quickEdit','quickEdit');
-			$this->_display->addContent($d->wrap($this->quickEdit));
+			$d = new \html\_div($this->entity.'-quickEdit','quickEdit');
+			$this->_display->addContent($d->printContent($this->quickEdit));
 		}
 		if ($this->contextMenu != 'none'){
-			$d = new html\_div($this->entity.'-contextMenu','contextMenu');
-			$this->addContent($d->wrap($this->contextMenu));
+			$d = new \html\_div($this->entity.'-contextMenu','contextMenu');
+			$this->_display->addContent($d->printContent($this->contextMenu));
 		}
 	
 
-		$this->addContent($this->_fields->open());
-		return $this->getContent();
+		$this->_display->addContent($this->_fields->open());
+		//return $this->getContent();
 	
 	}
-	public function close(){
-		$this->addContent($this->_fields->close());
-		$this->addContent($this->_display->close());
-		return $this->getContent();
+	
+	protected function close(){
+		$this->_display->addContent($this->_fields->close());
+		//$this->addContent($this->_display->close());
+		//return $this->_display->getContent();
+	}
+	public function setContent($content){
+	
+		$this->details = $content;
+	
+	}
+	public function addContent($content){
+	
+		$this->details .= $content;
+	
+	}
+	public function print(){
+		$this->open();
+		$this->_display->addContent($this->details);
+		$this->close();
+		return $this->_display->print();
 	}
 }
 
