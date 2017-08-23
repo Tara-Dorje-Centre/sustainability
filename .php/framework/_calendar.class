@@ -32,9 +32,11 @@ class _calendar{
 	
 	private function setCurrentDay(){
 		global $sessionTime;
-		$this->currentYear = \html\getTimestampYear($sessionTime);
-		$this->currentMonth = \html\getTimestampMonth($sessionTime,'YES');
-		$this->currentDay = \html\getTimestampDay($sessionTime,'YES');
+		$t = new _timestamp($sessionTime);
+		$this->currentYear = $t->getYear(true);
+		$this->currentMonth = $t->getMonth(true);
+		$this->currentDay = $t->getDate(true);
+		
 		if (($this->currentYear == $this->year) && ($this->currentMonth == ltrim($this->month,'0'))){
 			$this->isCurrent = true;
 		} else {
