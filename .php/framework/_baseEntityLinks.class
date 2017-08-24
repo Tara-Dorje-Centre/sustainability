@@ -1,4 +1,6 @@
 ﻿<?php
+
+
 abstract class _baseEntityLinks extends _links{
 	protected $context = 'baseEntity';
 	protected $pageList = 'list.php';
