@@ -12,11 +12,11 @@ class _document {
 	protected $_scripts;
 	public function __construct($title, $onLoad = 'none'){
 	
-		$this->html= new _element('html');
-		$this->head = new _element('head');
-		$this->title = new _element('title');
+	$this->html= new _anyElement('html');
+	$this->head = new _anyElement('head');
+	$this->title = new _anyElement('title');
 		$this->title->setContent($title);
-		$this->body = new _element('body');
+	$this->body = new _anyElement('body');
 		$this->body->addAttribute('onload', $onLoad);
 	}
 	public function setStyles($styles = null){
@@ -52,7 +52,7 @@ class _document {
 			die('html document body not set');
 		}
 		$content = $this->doctype();
-		//$content .= $this->html->open();
+		
 		$this->buildDocumentHead();
 		
 		$this->html->setContent($this->head->print());
@@ -61,12 +61,7 @@ class _document {
 
 		return $content;	
 	}
-	/*
-	public function close(){
-		$content = $this->body->close();
-		$content .= $this->html->close();
-		return $content;	
-	}*/
+	
 	public function setBody($content){
 		$this->bodyIsSet = true;
 		$this->body->setContent($content);

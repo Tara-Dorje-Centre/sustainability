@@ -12,9 +12,9 @@ class _ol extends _element{
 		parent::__construct('ol', $idName, $css);
 	}
 }
-class _li extends _element{
+class _li extends _anyElement{
 	public function __construct($content = 'none', $css = 'none'){
-		parent::__construct('li', 'none', $css);
+		parent::__construct('li', $css);
 		if ($content != 'none'){
 			$this->setContent($content);
 		}

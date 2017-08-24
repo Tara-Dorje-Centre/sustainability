@@ -11,28 +11,12 @@ class _fieldset extends _element{
 	public function open(){
 		$content = parent::open();
 		if ($this->_legend != 'none'){
-		$l = new _element('legend','none','fieldset-legend');
-		$content .= $l->wrap($this->_legend);
+		$l = new _anyElement('legend','fieldset-legend');
+		$content .= $l->printContent($this->_legend);
 	}
 	return $content;
 	}
 
 }
-	function openFieldset($legend = 'none',$cssFieldset = 'none',$cssLegend = 'display-caption'){
 
-	$e = new _htmlFieldset($legend,$cssFieldset);
-	return $e->open();	
-	}
-
-	function closeFieldset(){
-		$e = new _htmlFieldset();
-		return $e->close();
-	}
-
-	function wrapFieldset($content, $legend = 'none', $cssFieldset = 'none',$cssLegend = 'display-caption'){
-	$fields = openFieldset($legend,$cssFieldset,$cssLegend);
-	$fields .= $content;
-	$fields .= closeFieldset();
-	return $fields;
-}
 ?>

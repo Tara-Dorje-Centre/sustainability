@@ -7,7 +7,7 @@ class _script extends _element{
 	public function __construct($language = 'JavaScript', $useComment = true){
 		parent::__construct('script');
 		$this->useComment = $useComment;
-		$this->addAttribute('language', $language);
+		$this->makeAttribute('language', $language);
 	}
 	public function open(){
 		$element = parent::open();

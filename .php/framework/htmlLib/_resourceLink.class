@@ -1,22 +1,20 @@
 <?php
 namespace html;
 
-class _inlineStyle extends _element{
+class _inlineStyle extends _anyElement{
 	public function __construct(){
 		parent::__construct('script');
 	}
 }
 
-class _resourceLink extends _element{
+class _resourceLink extends _anyEmptyElement{
 	public function __construct($rel,$type,$href){
 		parent::__construct('link');
-		$this->addAttribute('rel',$rel);
-		$this->addAttribute('type',$type);
-		$this->addAttribute('href',$href);
+		$this->makeAttribute('rel',$rel);
+		$this->makeAttribute('type',$type);
+		$this->makeAttribute('href',$href);
 	}
-	public function print(){
-		return $this->empty();
-	}
+	
 }
 
 class _cssLink extends _resourceLink{

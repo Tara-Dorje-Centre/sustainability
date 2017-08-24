@@ -1,26 +1,25 @@
 <?php
 namespace html;
 
-class _p extends _element{
+class _p extends _anyElement{
 	protected $caption;
 
-	public function __construct(string $caption = 'none', string $id = 'none',string $css = 'none'){
-		parent::__construct('p', $id, $css);
+	public function __construct(string $caption = 'none', string $css = 'none'){
+		parent::__construct('p', $css);
 		$this->caption = $caption;
 	}
 	
 	public function open(){
 		$result = parent::open();
 		if ($this->caption != 'none'){
-		$result .= span($this->caption,'paragraph-caption');
+		$s = new _span($this->caption,'paragraph-caption');
+		$result .= $s->print();
+		
 		}
 		return $result();
 	}
 	
-	public function p($content){
-		$this->setContent($content);
-		return $this->print();
-	}
+	
 	
 }
 

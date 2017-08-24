@@ -14,7 +14,7 @@ class _attribute{
 		$this->name = $name;
 		$this->value = $value;
 	}
-	protected function isValid(){
+	public function isValid(){
 		$valid = true;
 		//dont allow attributes named none
 		if ($name = 'none'){
@@ -27,7 +27,7 @@ class _attribute{
 		return $valid;
 	}
 	public function print(){
-		a = '';
+		$a = '';
 		if ($this->isValid() == true){
 			$a = self::SP.$this->name.self::EQ;
 			$a .= self::DQ.$this->value.self::DQ;

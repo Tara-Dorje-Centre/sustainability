@@ -4,7 +4,7 @@ namespace html;
 trait colspan{
 	public function setColspan($colspan = 0){
 		if ($colspan != 0){
-			$this->addAttribute('colspan',$colspan);
+			$this->makeAttribute('colspan',$colspan);
 		}
 	}
 }
@@ -12,14 +12,14 @@ trait colspan{
 trait rowspan{
 	public function setRowspan($rowspan = 0){
 		if ($rowspan != 0){
-			$this->addAttribute('rowspan',$rowspan);
+			$this->makeAttribute('rowspan',$rowspan);
 		}
 	}
 }
 trait width{
 	public function setWidth($width = 0){
 		if ($width!=0){
-			$this->addAttribute('width', $width.'%');
+			$this->makeAttribute('width', $width.'%');
 		}
 	}
 	
@@ -41,9 +41,9 @@ class _table extends _element{
 
 
 
-class _tr extends _element{
+class _tr extends _anyElement{
 	public function __construct($css = 'none'){
-		parent::__construct('tr', 'none', $css);
+		parent::__construct('tr', $css);
 	}
 	
 	public function addHeading(_th $th){
@@ -65,18 +65,18 @@ class _tr extends _element{
 }
 
 
-class _th extends _element{
+class _th extends _anyElement{
 use width, colspan, rowspan;
 	public function __construct($css = 'none',$colspan = 0){
-		parent::__construct('th', 'none', $css);
+		parent::__construct('th', $css);
 		$this->setColspan($colspan);
 	}
 }
 
-class _td extends _element{
+class _td extends _anyElement{
 use width, colspan, rowspan;
 	public function __construct($css = 'none',$colspan = 0){
-		parent::__construct('td', 'none', $css);
+		parent::__construct('td', $css);
 		$this->setColspan($colspan);
 	}
 	

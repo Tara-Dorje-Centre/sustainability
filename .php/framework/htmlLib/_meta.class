@@ -1,15 +1,13 @@
 <?php
 namespace html;
 
-class _meta extends _element{
+class _meta extends _anyEmptyElement{
 	public function __construct(string $equiv,string $content){
 		parent::__construct('meta');
-		$this->addAttribute('http-equiv',$equiv);
-		$this->addAttribute('content',$content);
+		$this->makeAttribute('http-equiv',$equiv);
+		$this->makeAttribute('content',$content);
 	}
-	public function meta(){
-		return $this->empty();
-	}
+	
 
 }
 

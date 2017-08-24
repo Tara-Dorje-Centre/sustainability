@@ -8,13 +8,13 @@ class _img extends _element{
 	}
 	
 	public function setSource($src, $alt){
-		$e->addAttribute('src',$src);
-		$e->addAttribute('alt',$alt);
+		$e->makeAttribute('src',$src);
+		$e->makeAttribute('alt',$alt);
 	}
 	public function setDim($width = 0, $height = 0, $border = 0){
-		$e->addAttribute('width',$width);
-		$e->addAttribute('height',$height);
-		$e->addAttribute('border',$border);
+		$e->makeAttribute('width',$width);
+		$e->makeAttribute('height',$height);
+		$e->makeAttribute('border',$border);
 	}
 }
 

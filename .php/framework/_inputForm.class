@@ -67,7 +67,7 @@ class _inputForm extends _contentWriter{
 		
 		if (!is_null($this->contextMenu)){
 			$this->_context = new \html\_div($this->entity.'-context-menu','contextMenu');
-			$this->addContent($this->_context->wrap($this->contextMenu));
+			$this->addContent($this->_context->printContent($this->contextMenu));
 		}
 		
 		$legend = $this->mode.':  '.$this->title;

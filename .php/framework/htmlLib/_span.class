@@ -1,9 +1,9 @@
 <?php
 namespace html;
 
-class _span extends _element{
+class _span extends _anyElement{
 	public function __construct($css = 'none',$style = 'none'){
-		parent::__construct('span','none',$css);
+		parent::__construct('span',$css);
 		$this->setStyle($style);
 	}
 }

@@ -1,8 +1,12 @@
 <?php
 include_once('__inputTraits.class');
 
-
+include_once('__input.class');
+include_once('__button.class');
 include_once('_select.class');
+
+
+
 include_once('_selectOption.class');
 include_once('selectRange.class');
 include_once('selectQuery.class');
@@ -14,8 +18,7 @@ include_once('selectHighlight.class');
 include_once('selectYesNo.class');
 
 
-include_once('__input.class');
-include_once('__button.class');
+
 include_once('__inputCaptioned.class');
 
 include_once('_inputText.class');

@@ -6,7 +6,7 @@ use valueAttribute;
 	
 	public function __construct(string $type, string $name, $css = 'editing-input'){
 		parent::__construct('input',$name, $css);
-		$this->addAttribute('type',$type);
+		$this->makeAttribute('type',$type);
 	}
 	
 }

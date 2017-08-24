@@ -4,7 +4,7 @@ namespace html\inputs;
 trait valueAttribute{
 	public function setValue($value){
 		if (!is_null($value)){
-			$this->addAttribute('value',$value);
+			$this->makeAttribute('value',$value);
 		}
 	}
 }
@@ -64,30 +64,30 @@ trait validation{
 }
 trait tooltip{
 	public function setTooltip(string $tooltip = 'none'){
-		$this->addAttribute('title',$tooltip);
+		$this->makeAttribute('title',$tooltip);
 	}
 }
 trait disabled{
 	public function setDisabled($disabled = 'false'){
 		if ($disabled != 'false'){
-			$this->addAttribute('disabled',$disabled);
+			$this->makeAttribute('disabled',$disabled);
 		}
 	}
 }
 trait size{
 	public function setSize($size = 0){
-		$this->addAttribute('size',$size);
+		$this->makeAttribute('size',$size);
 	}
 }
 trait rows{
 	public function setRowsCols($rows = 0,$cols = 0){
-		$this->addAttribute('rows',$rows);
-		$this->addAttribute('cols',$cols);
+		$this->makeAttribute('rows',$rows);
+		$this->makeAttribute('cols',$cols);
 	}
 }
 trait maxLength{
 	public function setMaxlength($maxLength = 0){
-		$this->addAttribute('maxlength',$maxLength);
+		$this->makeAttribute('maxlength',$maxLength);
 	}
 }
 trait dimensionsSize{

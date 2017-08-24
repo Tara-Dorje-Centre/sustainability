@@ -53,11 +53,17 @@ abstract class _element{
 	}
 	public function makeAttribute(string $name, string $value){
 		$a = new _attribute($name,$value);
-		$this->addAttribute($a);
+		$this->_addAttribute($a);
 	}
-	public function addAttribute(_attribute $a){
-		if ($a->isValid() = true){
-			$this->attributes[$name] = $a;
+	/*
+	public function addAttribute(string $name, string $value){
+		
+		$this->makeAttribute($name,$value);
+	}
+	*/
+	public function addattribute(_attribute $a){
+		if ($a->isValid() == true){
+			$this->_attributes[$name] = $a;
 		}
 	}
 	public function removeAttribute(string $name){
@@ -67,7 +73,7 @@ abstract class _element{
 	}
 	protected function buildAttributes(){
 		$this->_attribs = self::_EMPTY;
-		foreach ($this->attributes as $a){
+		foreach ($this->_attributes as $a){
 			$this->_attribs .= $a->print();
 		}
 	}
@@ -80,19 +86,19 @@ abstract class _element{
 		if ($idName != 'none'){
 			$this->_id = $idName;
 			$this->_name = $idName;
-			$this->addAttribute('id', $this->_id);
-			$this->addAttribute('name', $this->_name);
+			$this->makeAttribute('id', $this->_id);
+			$this->makeAttribute('name', $this->_name);
 		}
 	}
 
 	public function setCSS(string $css){
 		$this->_css = $css;
-		$this->addAttribute('class', $this->_css);
+		$this->makeAttribute('class', $this->_css);
 	}
 
 	public function setStyle(string $style){
 		$this->_style = $style;
-		$this->addAttribute('style', $this->_style);
+		$this->makeAttribute('style', $this->_style);
 	}
 
 	public function setCData(bool $isCData = false){
@@ -133,13 +139,7 @@ abstract class _element{
 		$this->setContent($content);
 		return $this->print();
 	}
-	/*
-	public function wrap($content = null){
-		//wrap maintained for backward compatibility
-		//upgrade with printContent
-		return $this->printContent($content);
-	}
-	*/
+	
 	public function commentOpen(){
 		return self::COMMENTOPEN;
 	}
