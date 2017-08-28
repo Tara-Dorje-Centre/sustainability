@@ -6,20 +6,7 @@ abstract class _entityTypeLinks extends _baseEntityLinks {
 	}	
 	public function listingPaged($found, $resultPage, $perPage){
 			return $this->pagingLinks($found,$resultPage,$perPage);
-	}/*
-	public function detailAddHref($caption = '[+]'){
-	return $this->add($caption);
-		return $l;	
 	}
-	public function detailViewHref($id = 0,$caption = 'View'){
-		return $this->view($caption,$id);
-	}
-	public function detailEditHref($id = 0,$caption = 'Edit'){
-		return $this->edit($caption,$id);
-	}
-	public function detailViewEditHref($id = 0, $caption = 'View'){
-			return $this->itemViewEdit($caption,$id);
-	}	*/
 	
 }
 ?>

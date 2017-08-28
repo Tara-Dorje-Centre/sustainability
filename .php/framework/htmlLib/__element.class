@@ -53,7 +53,7 @@ abstract class _element{
 	}
 	public function makeAttribute(string $name, string $value){
 		$a = new _attribute($name,$value);
-		$this->_addAttribute($a);
+		$this->addAttribute($a);
 	}
 	/*
 	public function addAttribute(string $name, string $value){
@@ -61,9 +61,9 @@ abstract class _element{
 		$this->makeAttribute($name,$value);
 	}
 	*/
-	public function addattribute(_attribute $a){
+	public function addAttribute(_attribute $a){
 		if ($a->isValid() == true){
-			$this->_attributes[$name] = $a;
+			$this->_attributes[$a->name] = $a;
 		}
 	}
 	public function removeAttribute(string $name){

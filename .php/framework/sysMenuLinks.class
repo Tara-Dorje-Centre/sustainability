@@ -1,0 +1,77 @@
+<?php
+
+class sysMenuLinks extends _links {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function detailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
+		$url = $this->makeUrl($displayMode, $year, $month);
+		return $this->formatLink($url,$caption);
+		//return $href;	
+	}
+	public function logout(){
+		$url = 'sys_Logout.php';
+		$l = new _link($url,Logout);
+		return $l->print();
+		//$this->formatLink($url,'Logout');	
+		//return $href;
+	}
+	public function makeUrl(string $displayMode, $year = 0, $month = 0){
+		$baseUrl = 'sys_Menu.php';
+		$u = new _url($baseUrl);
+		$u->makeParameter('displayMode', $displayMode);
+		//$baseUrl = 'sys_Menu.php?displayMode='.$displayMode;
+		if ($year != 0 && $month != 0){
+			$u->makeParameter('year',$year);
+			$u->makeParameter('month',$month);
+		//	$link = $this->formatCalendarUrl($baseUrl, $year, $month);
+		//	$link = $u->print;
+		//} else {
+		//	$link = $baseUrl;
+		}
+		return $u->print;;
+	}
+	
+	public function reference(){	
+			return $this->detailLink('REFERENCE', 'Reference');		
+	}
+	public function modules(){	
+			return $this->detailLink('MODULES', 'Main');		
+	}
+	public function myLinks(){	
+			return $this->detailLink('MY_LINKS', 'My Links');		
+	}
+	
+	//public function pageMenu(){
+	public function PageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+
+		$this->altMenu($menuType,$menuStyle);
+		
+		$menu = $this->openMenu('section-heading-links');
+		
+		$menu .= $this->modules();
+		$menu .= $this->resetMenu();
+//		$menu .= $l->linkMyLinks();
+//		$menu .= $l->resetMenu();		
+		$menu .= $this->reference();
+		
+		if ($_SESSION['is-admin'] == 'yes'){
+			//only show testing to admins
+		
+		$menu .= $this->resetMenu();		
+		$menu .= $this->detailLink('SYSTEM-UPDATES', 'System Updates');
+		$menu .= $this->resetMenu();				
+		$menu .= $l->detailLink('TESTING', 'Testing');
+		}
+		
+		$menu .= $this->closeMenu();
+		
+		return $menu;			
+	}
+	
+	
+	}
+}
+?>

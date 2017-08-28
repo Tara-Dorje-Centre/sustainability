@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class ProjectLinks extends _Links {
+class projectLinks extends _entityLinks {
 
 
 
@@ -8,7 +8,7 @@ class ProjectLinks extends _Links {
 		parent::__construct($menuType,$styleBase);
 	}
 	
-	public function listingAllProjects($showClosed = false){
+	public function listAll($showClosed = false){
 //		$menu = $this->formatTextItem('AllProjects:');		
 		$menu = $this->listingHref('OPEN','Projects');
 		if ($showClosed == true){
@@ -17,7 +17,7 @@ class ProjectLinks extends _Links {
 		return $menu;
 	}
 	
-	public function listingMyProjects($showClosed = false){
+	public function listMyProjects($showClosed = false){
 		//$menu = $this->formatTextItem('MyProjects:');		
 		$menu = $this->listingHref('OPEN','MyProjects','YES');
 		if ($showClosed == true){
@@ -27,7 +27,7 @@ class ProjectLinks extends _Links {
 	}
 	public function listingHref($projectStatus = 'OPEN',$caption = 'Projects',$showMyProjects = 'NO'){
 		$link = $this->listing($projectStatus,$showMyProjects);
-		$href = $this->formatHref($caption,$link);
+		$href = $this->formatLink($link,$caption);
 		return $href;	
 	}	
 	private function detailHref($pageAction = 'VIEW', $id = 0, $caption = 'Project'){

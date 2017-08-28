@@ -14,6 +14,9 @@ $this->css = $css;
 public function input(_field $f){
 $this->addContent($f->input());
 }
+public function button(_field $f){
+	$this->addContent($f->button());
+}
 public function inputHidden(_field $f){
 $this->addContent($f->inputHidden());
 }
@@ -52,10 +55,22 @@ class _inputForm extends _contentWriter{
 		$this->submit = new _inputSection('formSubmit','show');
 	}
 
-	public function set(string $entity, string $mode, string $contextMenu = ''){
+	public function set(string $entity, string $mode, bool $toggleOptions = false){
 		$this->entity = $entity;
 		$this->mode = $mode;
-		$this->contextMenu = $contextMenu;
+		if ($toggleOptions == true){
+	
+			$elementId = 'formOptional',
+	 		$toggleCaption = '+Options'){
+			$url = '#!';
+			$css = 'toggle-link';
+			$js = "toggle('".$elementId."');";
+
+			$l = new \html\link($url,$toggleCaption,$js,$css);
+			$this->contextMenu =  $l->print();
+		} else {
+			$this->contextMenu = 'none';
+		}
 		$this->_form = new \html\_form($this->url, $this->entity.'-edit-form','editForm');
 		$this->_fields = new \html\_div($this->entity.'-fields','editFields');
 	}

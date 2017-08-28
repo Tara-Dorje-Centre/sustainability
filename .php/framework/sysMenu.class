@@ -1,6 +1,6 @@
 <?php
 
-class _menu extends _echo{
+class sysMenu extends _echo{
 	public $displayMode;
 	public $year;
 	public $month;

@@ -45,12 +45,12 @@ class _booleanField extends _field
 class _submitButton extends _field
  implements Ifield, Iecho, IcontentWriter {
 
-	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
-		parent::__construct($dbCol, $envVar, $caption);
+	public function __construct(string $envVar = 'submit', string $caption = 'no caption'){
+		parent::__construct('not_used', $envVar, $caption);
 		$this->_datatype = 'SUBMIT';
 	}
 	
-	public function input(){
+	public function button(){
 		$i = new \html\inputs\submit($this->env->variable(),$this->_caption);
 		return $i->print();
 	}
@@ -59,12 +59,12 @@ class _submitButton extends _field
 class _resetButton extends _field
  implements Ifield, Iecho, IcontentWriter {
 
-	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
-		parent::__construct($dbCol, $envVar, $caption);
+	public function __construct(string $envVar = 'reset', string $caption = 'no caption'){
+		parent::__construct('not_used', $envVar, $caption);
 		$this->_datatype = 'SUBMIT';
 	}
 	
-	public function input(){
+	public function button(){
 		$i = new \html\inputs\reset($this->_caption);
 		return $i->print();
 	}

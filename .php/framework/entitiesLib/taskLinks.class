@@ -1,6 +1,6 @@
 ﻿<?php
 
-class taskLinks extends _Links {
+class taskLinks extends _entityLinks {
 /*
 
 Warning: Declaration of

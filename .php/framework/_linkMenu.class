@@ -1,7 +1,7 @@
 <?php 
 
 
-class _links extends _contentWriter{
+class _linkMenu extends _contentWriter{
 	private $_menu;
 	private $_list;
 	private $_links = array();
@@ -9,14 +9,72 @@ class _links extends _contentWriter{
 	public $cssItem;
 	private $cssList;
 	private $type = 'DIV';
-	private $name;  
+	.
+	private $name = 'menu';  
+	private $nameList = 'menu-list';
 
-	private $saveType;
-	private	$saveStyle;
-	private	$saveName;
+	private $typeSaved;
+	private $cssSaved;
+	private	$nameSaved;
 
+	public function __construct(string $name = 'menu-listing', string $type = 'DIV', string $css = 'menu'){
+		$this->setName($name);
+		$this->setCss($css);
+		$this->setType($type);
+		$this->initialize();
+	}
+
+	protected function setCss(string $css){
+		$this->css = $css;
+		$this->cssItem = $css.'-links-item';
+		$this->cssList = $css.'-links-list';
+	}
+
+	protected function setType(string $type){
+		$this->type = $type;
+		
+	}
+	protected function setName(string $name){
+		$this->name = $name;
+		
+	}
+	protected function initialize(){
+		$this->_menu = new \html\_div($this->name,$this->css);
+		if ($this->type == 'LIST'){
+			$this->_list = new \html\_ul($this->nameList, $this->cssList);
+		}
+	
+	}
 	
 	
+	public function makeLink(_url $u,$caption){
+		$l = new \html\_link($u->print, $caption);
+		$this->addLink($l);
+	}
+	
+	public function addLink(\html\_link $l){
+	
+	
+	}
+	
+	protected function printLinks(){
+		foreach ($this->_links as $l){
+			$this->_menu->addContent($this->formatItem($l->print());
+		
+		}
+	
+	}
+	private function formatItem($content){
+		if ($this->type == 'LIST'){
+			//add list item tag and same style
+			$li = new \html\_li($content,$this->cssItem.'-li');
+			$item = $li->print();
+			//listItem($content,$this->cssItem.'-li');
+		} else {
+			$item = $content;
+		}
+		return $item;		
+	}
 	public function formatToggleLink($elementId = 'formOptional', $linkText = '+Options'){
 		$url = '#!';
 		$css = 'toggle-link';
@@ -35,13 +93,76 @@ class _links extends _contentWriter{
 		return \html\spacer($n);
 	}
 
+	public function formatTextItem($text){
+		$content = span($text,$this->cssItem);
+		$item = $this->formatItem($content);
+		return $item;
+	}
 	
+	protected function openMenu(){
+		if ($this->type == 'LIST'){
+			$this->_menu->addContent($this->_list->open());
+		}
+		//return $menu;
+	}
 
-	
+	public function closeMenu(){
 
-	
-	
-	
+		if ($this->type == 'LIST'){
+			$this-<_menu->addContent($this->_list->close());
+		} 
+		//$menu .= $this->_menu->close();
+		
+		return $menu;
+	}
+
+	public function resetMenu($newLines = 0){
+		if ($this->menuType == 'LIST'){
+		
+			$menu = $this->_list->close();
+			if ($newLines > 0){
+				$b = new \html\_br($newLines);
+				$menu .= $b->print();
+			}
+			
+			$menu .= $this->_list->open();
+			
+		} else {
+			if ($newLines == 0){
+				$newLines = 1;
+			}
+			$b = new \html\_br($newLines);
+			$menu = $b->print();
+		}
+		return $menu;	
+	}
+
+	public function saveSettings(){
+		$this->typeSaved =$this->type;
+		$this->cssSaved = $this->css;
+		$this->nameSaved = $this->name;		
+		$this->initialize();
+	}
+
+	public function restoreSettings(){
+		$this->setType($this->typeSaved);
+		$this->setCss($this->cssSaved);	
+		$this->setName = $this->nameSaved;
+		$this->initialize();
+	}
+	public function altSetting(string $name = 'menu-listing', string $type = 'DIV', string $css = 'menu'){
+		$this->saveSettings();
+		$this->setType = $type;
+		$this->setCss($css);
+		$this->setName($name);
+	}
+	public function altList($name = 'menu-listing',$css = 'menu'){
+		$this->altSettings($name, 'DIV',$css);
+	}
+	public function altPaged($name = 'menu',$css = 'paged'){
+		$this->altSettings($name, 'DIV',$css);
+	}
+		
 
 	public function getPagedLinks($url, $recordCount, $recordsPerPage, $currentPage){
 		$this->saveMenuSettings();
@@ -131,18 +252,7 @@ class _links extends _contentWriter{
 		return $linkset;
 	}
 
-	public function calendarUrl(_url $u, $year, $month){
-		//$u = new _url($baseUrl);
-		$u->makeParameter('year',$year);
-		$u->makeParameter('month',$month);
-		//$url = $baseUrl.'&year='.$year.'&month='.$month;
-		return $u->print();
-	}
-	public function makeCalendarLink($caption, $baseUrl, $year, $month){
-		$url = $this->makeCalendarUrl($baseUrl,$year,$month);	
-		$l = new \html\link($url->print(),$caption);
-		//$link = $this->formatHref($linkCaption, $url);
-		return $l->print();	
-	}
+	
+	
 }
 ?>

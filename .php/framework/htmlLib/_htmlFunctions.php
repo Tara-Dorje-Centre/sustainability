@@ -33,6 +33,10 @@ function displayLines($value){
 	return $value;
 }
 
+function br($lines =1){
+$b = new _br($lines);
+return $b->print();
+}
 
 function spacer($spaces = 1){
 	$content = '';

@@ -17,11 +17,11 @@ class _attribute{
 	public function isValid(){
 		$valid = true;
 		//dont allow attributes named none
-		if ($name = 'none'){
+		if ($this->name == 'none'){
 			$valid = false;
 		}
 		//dont allow css class attribute named none
-		if (($this->name = 'class') and ($this->value = 'none')){
+		if (($this->name == 'class') and ($this->value == 'none')){
 			$valid = false;
 		}
 		return $valid;

@@ -9,19 +9,7 @@ abstract class _entityLinks extends _baseEntityLinks {
 	public function listingHref($idParent = -1, $caption = 'List'){
 	return $this->list($this->context.$caption,$idParent);
 	}	
-/*
-	public function detailAddHref($idParent = 0,$caption = '+'){
-		return $this->add($caption,$idParent);
-	}
-	public function detailViewHref($id, $caption = 'View'){
-		return $this->view($caption,$id);
-	}
-	public function detailEditHref($id, $caption = 'Edit'){
-		return $this->edit($caption,$id);
-	}
-	public function detailViewEditHref($id, $caption = 'View'){
-		return itemViewEdit($caption,$id);
-	}	*/
+
 	
 }
 

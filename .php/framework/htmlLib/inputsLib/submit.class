@@ -13,14 +13,14 @@ class save extends submit{
 }
 
 class login extends submit{
-	public function __construct($caption = 'Login',$name = 'submit-login'){
-		parent::construct($caption,$name);
+	public function __construct($name = 'submit-login', $caption = 'Login'){
+		parent::construct($name,$caption);
 	}
 }
 
 class logout extends submit{
-	public function __construct($caption = 'Logout',$name = 'submit-logout'){
-		parent::construct($caption,$name);
+	public function __construct($name = 'submit-logout',$caption = 'Logout'){
+		parent::construct($name,$caption);
 	}
 }
 

@@ -27,9 +27,9 @@ class _href extends _anyElement{
 	
 }
 
-class link extends _href{
+class _link extends _href{
 
-	public function __construct(string $url, string $display, $onClickJs = null, string $css = 'display-link'){
+	public function __construct(string $url, string $display,string $css = 'display-link', $onClickJs = null){
 		parent::__construct($url, $display, $css);
 		$this->setOnClickScript($onClickJS);
 	}

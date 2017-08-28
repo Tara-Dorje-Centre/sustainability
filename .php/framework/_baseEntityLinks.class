@@ -6,11 +6,12 @@ abstract class _baseEntityLinks extends _links{
 	protected $pageList = 'list.php';
 	protected $pageDetail = 'detail.php';
 	
-	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
-		parent::__construct($menuType,$styleBase);
+	public function __construct($type = 'DIV',$css = 'menu'){
+		parent::__construct($type,$css);
 	}
 	
 	protected function parameter($name, $value, $first = false){
+		$p = new _urlParameter($name,$value);
 		if ($first == true){
 			$p = '?';
 		} else {
@@ -29,17 +30,20 @@ abstract class _baseEntityLinks extends _links{
 		return $p;
 	}
 	
-	protected function urlBase($page = 'index.php', $scope = 'detail'){
-		$link = $page;
-		$link .= $this->parameter('context',$this->context,true);
-		$link .= $this->parameter('scope', $scope);
-		return $link;
+	protected function getBaseUrl($page = 'index.php', $scope = 'detail'){
+		$url = new _url($page);
+		$url->makeParameter('scope',$scope);
+		$url->makeParameter('context',$this->context);
+		return $url;
+		
 	}
 	
 	public function urlList($idParent = 0){
-		$link = $this->urlBase($this->pageList,'list');
-		$link .= $this->nonZeroParameter('idParent',$idParent);
-		return $link;
+		$url = $this->getBaseUrl($this->pageList,'list');
+		if ($idParent != 0){
+			$url->makeParameter('idParent',$idParent);
+		}
+		return $url;
 	}
 	
 	public function urlListByParent($idParent = 0){
@@ -48,42 +52,41 @@ abstract class _baseEntityLinks extends _links{
 	}
 	
 	public function urlDetail($pageAction = 'VIEW', $id = 0, $idParent = 0){
-		$link = $this->urlBase($this->pageDetail,'detail');
+		$url = $this->urlBase($this->pageDetail,'detail');
 		
-		$link .= $this->parameter('pageAction',$pageAction);
-		$link .= $this->nonzeroParameter('id',$id);
-		$link .= $this->nonzeroParameter('idParent',$idParent);
-		
+		$url->makeParameter('pageAction',$pageAction);
+		if ($id != 0){
+		$url->makeParameter('id',$id);
+		}
+		if ($idParent != 0){
+		$url->makeParameter('idParent',$idParent);
+		}
 		return $link;
 	}	
 	
 	public function list($caption = 'List', $idParent = 0){
-		$link = $this->urlList($idParent);
-		$href = $this->formatHref($caption,$link);
+		$url = $this->urlList($idParent);
+		$href = $this->formatLink($url->print,$caption);
 		return $href;	
 	}	
 	
 	protected function detail($caption = 'View', $pageAction = 'VIEW', $id = 0,$idParent = 0){
-		$link = $this->urlDetail($pageAction,$id,$idParent);
-		$href = $this->formatHref($caption,$link);
+		$url = $this->urlDetail($pageAction,$id,$idParent);
+		$href = $this->formatLink($url->print,$caption);
 		return $href;	
 	}	
 
 	public function add($caption = 'New', $idParent = 0){
-		$l = $this->detail($caption,'ADD',0,$idParent);
-		return $l;	
+		return $this->detail($caption,'ADD',0,$idParent);
 	}
 	public function view($caption = 'View', $id = 0){
-		$l = $this->detail($caption,'VIEW',$id);
-		return $l;	
+		return $this->detail($caption,'VIEW',$id);
 	}
 	public function edit($caption = 'Edit', $id = 0){
-		$l = $this->detail($caption,'EDIT',$id);
-		return $l;	
+		return $this->detail($caption,'EDIT',$id);
 	}
 	public function copy($caption = 'Copy', $id = 0){
-		$l = $this->detail($caption,'COPY',$id);
-		return $l;	
+		return $this->detail($caption,'COPY',$id);
 	}
 	public function itemViewEdit($caption = 'View', $id = 0){
 		
@@ -113,13 +116,7 @@ abstract class _baseEntityLinks extends _links{
 			default:
 				$l = $this->view('View',$id);
 		
-		}/*
-		if ($pageAction == 'VIEW'){
-			$l = $this->edit('Edit',$id);
-			$l .= $this->copy('Copy',$id);
-		} else {
-			$l = $this->view('View',$id);
-		}*/
+		}
 		return $l;
 	}
 	
@@ -137,6 +134,14 @@ abstract class _baseEntityLinks extends _links{
 		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
 		return $ls;
 	}
+	
+	public function makeCalendarLink(_url $u, $caption, $year, $month){
+		$u->makeParameter('year',$year);
+		$u->makeParameter('month',$month);
+		$l = new \html\link($u->print,$caption);
+		return $l;	
+	}
+	
 	
 }
 ?>

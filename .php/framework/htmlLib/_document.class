@@ -17,7 +17,7 @@ class _document {
 	$this->title = new _anyElement('title');
 		$this->title->setContent($title);
 	$this->body = new _anyElement('body');
-		$this->body->addAttribute('onload', $onLoad);
+		$this->body->makeAttribute('onload', $onLoad);
 	}
 	public function setStyles($styles = null){
 		$this->_styles = $styles;
@@ -36,8 +36,8 @@ class _document {
 		$css = new _meta('Content-Style-Type','text/css');
 		$text = new _meta('content-type','text/html; charset=UTF-8');
 	
-		$m = $css->meta();
-		$m .= $text->meta();
+		$m = $css->print();
+		$m .= $text->print();
 		return $m;
 	}
 	private function buildDocumentHead(){
