@@ -12,7 +12,7 @@ class _calendar{
 	private $lastDate;
 	private $lastDay = 0;
 	private $closingBlanks = 0;
-	private $days = array();
+	private $_days = array();
 	private $nextLink;
 	private $prevLink;
 	private $content;
@@ -20,7 +20,7 @@ class _calendar{
 	private $currentMonth;
 	private $currentDay;
 	private $isCurrent = false;
-	
+	private $_calendar;
 	public function __construct($year, $month, $title = null){
 		$this->year = $year;
 		$this->month = $month;
@@ -28,6 +28,7 @@ class _calendar{
 		$this->setLayout();
 		$this->setLinks();
 		$this->setCurrentDay();		
+
 	}
 	
 	private function setCurrentDay(){
@@ -75,27 +76,24 @@ class _calendar{
 		//determine blank spaces after last day based on weekstartingday
 		$this->closingBlanks = 6 - $this->lastDay;
 		
-		//populate array of days
+		//populate array of days with list objects
 		for ($i = 0; $i <= $this->daysInMonth; $i++){
-			$this->days[$i] = \html\spacer();	
+			$list = new \html\_ul('day-items-list', 'day-list');	
+			$list->addContent(\html\spacer());
+			$this->_days[$i] = $list;
+			//new \html\spacer();	
 		}
 	}
 	
-	public function addItem($dayIndex, $text, $itemStyle = 'calendar-item'){
+	public function addItem($dayIndex, $text, $css = 'calendar-item'){
 		//add an item to internal array of day contents
-		//2013-01-24
-		//$date = substr($timestamp,8,2);	
-		$i = new \html\_div('dayItem',$itemStyle);
-		$i->setContent($text);		
-		$this->days[$dayIndex] .= $i->print();
-
+		$li = new \html\_li($text,$css);
+		$this->days[$dayIndex]->addListItem($li);
 	}
 
 	public function addItemByTimestamp($timestamp, $text, $itemStyle = 'calendar-item'){
-		//add an item to internal array of day contents
-		//2013-01-24
-		//$date = substr($timestamp,8,2);		
-		$dayIndex = ltrim(\html\getTimestampDay($timestamp),'0');
+		$ts = new _timestamp($timestamp);
+		$dayIndex = $ts->getDate(true);
 		$this->addItem($dayIndex,$text, $itemStyle);	
 	}
 
@@ -109,11 +107,11 @@ class _calendar{
 
 	private function getDayContent($dayIndex){
 		$entry = new \html\_div('entry','calendar-entry');
-		$n = new \html\_div('dayNumber','calendar-date');
+		$n = new \html\_div('day-number','calendar-date');
 		$n->setContent($dayIndex);
 		$entry->setContent($n->print());
 		$c = new \html\_div('dayContent','calendar-details');
-		$c->setContent($this->days[$dayIndex]);
+		$c->setContent($this->days[$dayIndex]->print());
 		$entry->addContent($c->print());
 		return $entry->print();
 	}
@@ -121,8 +119,8 @@ class _calendar{
 	private function getLinkPrev(){
 	
 		if ($this->prevLink != 'none'){
-			$l = new \html\_div('CalendarPrev','calendar-link-prev');
-			$l->setContent($this->prevLink);
+			$l = new \html\_anyDiv($this->prevLink, 'calendar-link-prev');
+			//$l->setContent($this->prevLink);
 			$content = $l->print();	
 		} else {
 			$content = '';
@@ -131,54 +129,60 @@ class _calendar{
 	}
 	private function getLinkNext(){
 		if ($this->nextLink != 'none'){
-			$l = new \html\_div('CalendarNext','calendar-link-next');
-			$l->setContent($this->nextLink);
+			$l = new \html\_anyDiv($this->nextLink,'calendar-link-next');
+			//$l->setContent($this->nextLink);
 			$content = $l->print();	
 		} else {
 			$content = '';
 		}
 		return $content;
 	}
+	private function getTitleText(){
+		$text = $this->getLinkPrev();
+		$text .= $this->monthName.\html\spacer(4);
+		$text .= $this->year.$this->spacer(4);
+		$text .= $this->title;
+		$text .= $this->getLinkNext();
+		return $text;
+	}
+	private function getTitleRow(){
+		$tr = new \html\_tr('calendar-title-row');
+		$tr->makeHeading($this->getTitleText(),'calendar-title',7);
+		return $tr;
+	}
+	private function getDaysOfWeekRow(){
+		$tr = new \html\_tr('calendar-row','calendar-title-days');
+		$daysOfWeek = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+		
+		for($i = 0; $i <= 6; $i++){
+			$tr->makeHeading($daysOfWeek[$i],'calendar-title-day');
+		}
+		return $tr;
+	
+	}
 	private function spacer($n = 0){
 	return \html\spacer($n);
 	}
+	private function getBlank($cells){
+		$blank = new \html\_td(\html\spacer(),'calendar-td-blanks');
+		$blank->setColspan($cells);
+		return $blank;
+	
+	}
 	public function buildCalendar(){
 		//loop through internal array of days, printing table rows/data and content
-		$daysOfWeek = array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
-		
-		$c = new \html\_div('calendarContainer','calendar-container');
+
+		$this->_calendar = new \html\_div('calendarContainer','calendar-container');
 		$month = new \html\_table('calendar','calendar-table');
-		$blank = new \html\_td('calendar-td-blanks');
-		$blank->setContent($this->spacer());
-		
-		$titleRow = new \html\_tr('calendar-row');
-		$title = new \html\_th('calendar-title',7);
-		//$title->setColspan(7);
-		
-		$text = $this->getLinkPrev();
-		$text .= $this->monthName.$this->spacer(4).$this->year.$this->spacer(4).$this->title;
-		$text .= $this->getLinkNext();
-		$title->setContent($text);
-		
-		$titleRow->addHeading($title);
-		$month->addRow($titleRow);
-		$titleDays = new \html\_tr('calendar-row','calendar-row');
-		
-		$daysHeader = new \html\_th('calendar-title-day','calendar-title-day');
-		
-		for($i = 0; $i <= 6; $i++){
-			$daysHeader->setContent($daysOfWeek[$i]);
-			$titleDays->addHeading($daysHeader);
-		}
-		$month->addRow($titleDays);
+		$month->addRow($this->getTitleRow);
+		$month->addRow($this->getDaysOfWeekRow());
 		
 		$week = new \html\_tr('calendar-row');
 		
 		//add padding cells to table
 		$dayCount = 1;
 		if ($this->startingBlanks != 0){
-			$blank->setColspan($this->startingBlanks);
-			$week->addData($blank);
+			$week->addData($this->getBlank($startingBlanks));
 			$dayCount += $this->startingBlanks;
 		}
 		//add days of month, break rows every seven
@@ -186,13 +190,11 @@ class _calendar{
 		$dayNumber = 1;
 
 		//loop through the days in the month
-		$day = new \html\_td('calendar-day');
 		while ($dayNumber <= $this->daysInMonth) 
 		{ 
+			$day = new \html\_td(null,'calendar-day','calendar-td');
 			if ($this->isDayToday($dayNumber) == true){
 				$day->setCss('calendar-td-today');
-			} else {
-				$day->setCss('calendar-td');
 			}
 			$day->setContent($this->getDayContent($dayNumber));
 			$week->addData($day);
@@ -202,7 +204,8 @@ class _calendar{
 			//add week to month and reset week content every 7 days
 			if ($dayCount > 7){
 				$month->addRow($week);
-				$week->setContent('');
+				unset($week);
+				$week = new \html\_tr('calendar-row');
 				$dayCount = 1;
 			}
 
@@ -210,11 +213,13 @@ class _calendar{
 		//add closing cells to table
 		if ($this->closingBlanks != 0){
 			$blank->setColspan($this->closingBlanks);
-			$week->addData($blank);
+			$week->addData($this->getBlank($this->closingBlanks));
 		}	
 		$month->addRow($week);
-		$c->setContent($month->print());
-		return $c->print();
+		
+		$this->_calendar->setContent($month->print());
+		return $this->_calendar->print();
+		
 	}
 		
 }

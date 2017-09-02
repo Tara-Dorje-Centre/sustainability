@@ -9,7 +9,7 @@ class _urlParameter{
 		$this->set($name,$value);
 	}
 	public function set(string $name, string $value){
-		$this>name = $name;
+		$this->name = $name;
 		$this->value = $value;
 	}
 	public function print(bool $first = false){
@@ -42,6 +42,9 @@ class _url {
 	}
 	public function addParameter(_urlParameter $p){
 		$this->parameters[$p->name] = $p;
+	}
+	public function removeParameter(string $name){
+		unset($this->parameters[$name]);
 	}
 	public function makeParameter(string $name, string $value){
 		$p = new _urlParameter($name,$value);

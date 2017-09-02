@@ -32,7 +32,9 @@ implements Ifields, Iecho, IcontentWriter{
 	}
 	
 	abstract public function setDefaults();
-	
+	public function removeField(string $name){
+		unset($this->_fields[$name]);
+	}
     public function reset(bool $useDefault = false){
     	foreach ($this->_fields as $f){
 			$f->reset($useDefault);

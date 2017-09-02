@@ -1,7 +1,7 @@
 <?php
 namespace html;
 
-class _anyEmptyElement extends _emptyElement{
+abstract class _anyEmptyElement extends _emptyElement{
 	public function __construct(string $tag, string $css = 'none') {
 		parent::__construct($tag,'none',$css);
 		

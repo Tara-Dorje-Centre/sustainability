@@ -11,6 +11,12 @@ class sysMenu extends _echo{
 		$this->year = new _numberField('not_used','year','mode');;
 		$this->month = new _numberField('not_used','month','mode');
 	}
+	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function readRequest(){
 		$this->displayMode->setEnvironment('GET');
 		$this->year->setEnvironment('GET');
@@ -60,28 +66,8 @@ class sysMenu extends _echo{
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 
-		$l = new MenuLinks($menuType,$menuStyle);
-		
-		$menu = $l->openMenu('section-heading-links');
-		
-		$menu .= $l->linkMain();
-		$menu .= $l->resetMenu();
-//		$menu .= $l->linkMyLinks();
-//		$menu .= $l->resetMenu();		
-		$menu .= $l->linkReference();
-		
-		if ($_SESSION['is-admin'] == 'yes'){
-			//only show testing to admins
-		
-		$menu .= $l->resetMenu();		
-		$menu .= $l->detailHref('SYSTEM-UPDATES', 'System Updates');
-		$menu .= $l->resetMenu();				
-		$menu .= $l->detailHref('TESTING', 'Testing');
-		}
-		
-		$menu .= $l->closeMenu();
-		
-		return $menu;			
+		$m = new sysMenuLinks('section-heading-links');
+		return $m->getPageMenu();	
 	}
 	
 	public function getPageHeading(){
@@ -93,117 +79,84 @@ class sysMenu extends _echo{
 	
 	private function displayReference(){
 	$this->echoPrint(true,'start','displayReference');
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		$menuL = new menuLinks($menuType,$menuStyle);
-
-		$locationTypeL = new locationTypeLinks($menuType,$menuStyle);
-
-		$locationL = new locationLinks($menuType,$menuStyle);
-		$unitL = new quantityTypeLinks($menuType,$menuStyle);
-		$measureTypeL = new measureTypeLinks($menuType,$menuStyle);
-		$cropL = new CropLinks($menuType,$menuStyle);
-		$projectTypeL = new projectTypeLinks($menuType,$menuStyle);
-		$taskTypeL = new taskTypeLinks($menuType,$menuStyle);
-		$activityTypeL = new activityTypeLinks($menuType,$menuStyle);
-		$materialTypeL = new materialTypeLinks($menuType,$menuStyle);
-		$receiptTypeL = new receiptTypeLinks($menuType,$menuStyle);
 		
-		$userL = new userLinks($menuType, $menuStyle);
-		$userTypeL = new userTypeLinks($menuType, $menuStyle);
-		$sitewideSettingsL = new siteSettingsLinks($menuType, $menuStyle);
-				
-		$menu = $menuL->openMenu('section-content-links');
+		$m = new sysMenuLinks('section-content-links');
 
-		$menu .= $locationL->listingHref();
-		$menu .= $locationTypeL->listingHref();
-		$menu .= $menuL->resetMenu();
-		$menu .= $projectTypeL->listingHref();
-		$menu .= $taskTypeL->listingHref();
-		$menu .= $activityTypeL->listingHref();
-		$menu .= $menuL->resetMenu();		
-		$menu .= $materialTypeL->listingHref();
-		$menu .= $receiptTypeL->listingHref();
+		$locationTypeL = new locationTypeLinks();
+		$locationL = new locationLinks();
+		$unitL = new quantityTypeLinks();
+		$measureTypeL = new measureTypeLinks();
+		$cropL = new CropLinks();
+		$projectTypeL = new projectTypeLinks();
+		$taskTypeL = new taskTypeLinks();
+		$activityTypeL = new activityTypeLinks();
+		$materialTypeL = new materialTypeLinks();
+		$receiptTypeL = new receiptTypeLinks();
 		
-		$menu .= $menuL->resetMenu();
-		$menu .= $unitL->listingHref();
-		$menu .= $measureTypeL->listingHref();
-		$menu .= $menuL->resetMenu();
-		$menu .= $cropL->listingHref();
+		$userL = new userLinks();
+		$userTypeL = new userTypeLinks();
+		$sitewideSettingsL = new siteSettingsLinks();
+
+		$m->addLink($locationL->list());
+		$m->addLink($locationTypeL->list());
+		$m->addLink($projectTypeL->list());
+		$m->addLink($taskTypeL->list());
+		$m->addLink($activityTypeL->list());
+		$m->addLink($materialTypeL->list());
+		$m->addLink($receiptTypeL->list());
+		$m->addLink($unitL->list());
+		$m->addLink($measureTypeL->list());
+		//$m->addLink($cropL->list());
 		if ($_SESSION['is-admin'] == 'yes'){
 			//only show userlist to admins
-			$menu .= $menuL->resetMenu();
-			$menu .= $userL->listingHref();
-			$menu .= $userTypeL->listingHref();
-			$menu .= $menuL->resetMenu();
-			$menu .= $sitewideSettingsL->detailViewHref();
+			$m->addLink($userL->list());
+			$m->addLink($userTypeL->list());
+			$m->addLink($sitewideSettingsL->view());
 		}
-		$menu .= $menuL->resetMenu();
-		$menu .= $menuL->detailHref('CALENDAR', 'Calendars');
+		$m->addLink($m->calendar());
 		
-		$menu .= $menuL->closeMenu();
-		return $menu;			
+		return $m->print();			
 		
 	}
 		
 	private function displayMyLinks(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
-		$projectL = new ProjectLinks($menuType,$menuStyle);
-		$activityL = new ActivityLinks($menuType,$menuStyle);
-		$taskL = new TaskLinks($menuType, $menuStyle);
-		$userL = new UserLinks($menuType, $menuStyle);
+		$projectL = new ProjectLinks();
+		$activityL = new ActivityLinks();
+		$taskL = new TaskLinks();
+		$userL = new UserLinks();
 				
-		$menu = $projectL->openMenu('section-content-links');
+		$m = new sysMenuLinks('section-content-links');
 		
-		$menu .= $taskL->linksPeriodicTasks();
-		$menu .= $projectL->resetMenu();		
-		$menu .= $projectL->listingMyProjects();
-		$menu .= $projectL->resetMenu();
-		$menu .= $projectL->listingAllProjects();
-		$menu .= $projectL->resetMenu();
-//		$menu .= $taskL->formatTextItem('Calendars:');
-		$menu .= $activityL->linkMyCalendar();
-		$menu .= $projectL->resetMenu();
-//		$menu .= $taskL->formatTextItem('History:');
-		$menu .= $activityL->linkMyActivities();
-		$menu .= $projectL->resetMenu();
+		$m->addLink($taskL->linksPeriodicTasks());
+		$m->addLink($projectL->listingMyProjects());
+		$m->addLink($projectL->listingAllProjects());
+		$m->addLink($activityL->linkMyCalendar());
+		$m->addLink($activityL->linkMyActivities());
+		
 		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
 			if ($_SESSION['must-update-pwd'] == 'yes'){
-				$menu .= $userL->formatTextItem('Please update your profile password.');
+				$m->makeSpan('Please update your profile password.');
 			}
-			$menu .= $userL->detailViewHref($_SESSION['user-id'], 'My Profile');
+			$m->addLink($userL->view('My Profile', $_SESSION['user-id']));
 		}
-		$menu .= $projectL->closeMenu();
-		
-		return $menu;
+		return $m->print();
 		
 	}
 	private function displayModules(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
+		$m = new sysMenuLinks('section-content-links');
+
 		$projectL = new ProjectLinks($menuType,$menuStyle);
 		$taskL = new TaskLinks($menuType,$menuStyle);
 		$activityL = new ActivityLinks($menuType,$menuStyle);
-		$cropPlanL = new CropPlanLinks($menuType,$menuStyle);
+		//$cropPlanL = new CropPlanLinks($menuType,$menuStyle);
 		
-		$menu = $projectL->openMenu('section-content-links');
-		$menu .= $taskL->linksPeriodicTasks(true);
-		$menu .= $projectL->resetMenu();
-		$menu .= $projectL->listingAllProjects(true);		
-		$menu .= $projectL->resetMenu();
-//		$menu .= $taskL->formatTextItem('Calendars:');
-		$menu .= $activityL->linkGroupCalendar();
-		$menu .= $projectL->resetMenu();		
-//		$menu .= $taskL->formatTextItem('History:');
-		$menu .= $activityL->linkGroupActivities();
-		$menu .= $projectL->resetMenu();
-		//$menu .= $taskL->formatTextItem('Crop Planning:');
-		$menu .= $cropPlanL->listingHref();
+		$m->addLink($taskL->linksPeriodicTasks(true));
+		$m->addLink($projectL->listingAllProjects(true));		
+		$m->addLink($activityL->linkGroupCalendar());
+		$m->addLink($activityL->linkGroupActivities());
+		//$m->addLink($cropPlanL->list());
 
-		$menu .= $projectL->closeMenu();
-		return $menu;					
+		return $m->print();					
 	}
 	
 	public function printPage(){

@@ -50,7 +50,11 @@ class measure extends _entity {
 		$this->links = new MeasureLinks();
 		$this->sql = new MeasureSQL();
 	}
-		
+	public function getRequestArguments(){
+
+
+
+	}
 		
 	public function setDetails(){
 		parent::setDetails();

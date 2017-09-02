@@ -1,143 +1,169 @@
 ﻿<?php
 
 
-abstract class _baseEntityLinks extends _links{
-	protected $context = 'baseEntity';
+abstract class _baseEntityLinks extends _linkMenu{
+	protected $context = 'entity';
 	protected $pageList = 'list.php';
 	protected $pageDetail = 'detail.php';
-	
-	public function __construct($type = 'DIV',$css = 'menu'){
+	//protected $_menu;
+	//protected $_pagingLinks;
+	public function __construct(string $context = 'entity',string $type = 'DIV',string $css = 'menu'){
 		parent::__construct($type,$css);
 	}
-	
-	protected function parameter($name, $value, $first = false){
+	public function getParameter(string $name,$value){
 		$p = new _urlParameter($name,$value);
-		if ($first == true){
-			$p = '?';
-		} else {
-			$p = '&';
-		}
-		$p .= $name.'='.$value;
 		return $p;
 	}
-	
-	protected function nonZeroParameter($name, $value = 0, $first = false){
-		if ($value != 0){
-			$p  = $this->parameter($name, $value, $first);
-		} else {
-			$p = '';
-		}
-		return $p;
+	protected function pPageAction(string $action){
+		return $this->getParameter('page-action',$action);
 	}
-	
-	protected function getBaseUrl($page = 'index.php', $scope = 'detail'){
-		$url = new _url($page);
-		$url->makeParameter('scope',$scope);
-		$url->makeParameter('context',$this->context);
-		return $url;
+	protected function pScope(string $scope){
+		return $this->getParameter('scope',$scope);
+	}
+	protected function pContext(string $context){
+		return $this->getParameter('context',$context);
+	}
+	protected function pId( $id){
+		return $this->getParameter('id',$id);
+	}
+	protected function pIdParent( $idParent){
+		return $this->getParameter('id-parent',$idParent);
+	}
+	protected function pIdType( $idType){
+		return $this->getParameter('id-type',$idType);
+	}
+	protected function pYear( $year){
+		return $this->getParameter('year',$year);
+	}
+	protected function pMonth( $month){
+		return $this->getParameter('month',$month);
+	}
+	public function makeCalendarUrl(_url $u, $year, $month){
+		$u->addParameter($this->pYear($year));
+		$u->addParameter($this->pMonth($month));
+		return $u;
+	}
+	public function makeCalendarLink(_url $u, $caption, $year, $month){
+		$u = $this->makeCalendarUrl($u,$year,$month);	
+		$l = new \html\_link($url->print(),$caption);
 		
+		return $l;	
+	}
+	protected function getBaseUrl(string $page = 'index.php',string $scope = 'detail'){
+		$url = new _url($page);
+		$url->addParameter($this->pScope($scope));
+		$url->addParameter($this->pContext($this->context));
+		return $url;
 	}
 	
-	public function urlList($idParent = 0){
+	public function urlList( $idParent = 0, $idType = 0){
 		$url = $this->getBaseUrl($this->pageList,'list');
 		if ($idParent != 0){
-			$url->makeParameter('idParent',$idParent);
+			$url->addParameter($this->pIdParent($idParent));
+		}
+		if ($idType != 0){
+			$url->addParameter($this->pIdType($idType));
 		}
 		return $url;
 	}
 	
-	public function urlListByParent($idParent = 0){
-		$link = $this->urlList($idParent);
-		return $link;
-	}
+	
 	
 	public function urlDetail($pageAction = 'VIEW', $id = 0, $idParent = 0){
-		$url = $this->urlBase($this->pageDetail,'detail');
+		$url = $this->getBaseUrl($this->pageDetail,'detail');
 		
-		$url->makeParameter('pageAction',$pageAction);
+		$url->addParameter($this->paramPageAction($pageAction));
 		if ($id != 0){
-		$url->makeParameter('id',$id);
+			$url->addParameter($this->pId($id));
 		}
 		if ($idParent != 0){
-		$url->makeParameter('idParent',$idParent);
+			$url->addParameter($this->pIdParent($idParent));
 		}
-		return $link;
+		
+		return $url;
 	}	
 	
-	public function list($caption = 'List', $idParent = 0){
-		$url = $this->urlList($idParent);
-		$href = $this->formatLink($url->print,$caption);
-		return $href;	
+	public function getListingLink(string $caption = 'Listing', $idParent = 0, $idType = 0){
+		$url = $this->urlList($idParent,$idType);
+		$l = new \html\_link($url->print,$caption);
+		return $l;	
 	}	
 	
-	protected function detail($caption = 'View', $pageAction = 'VIEW', $id = 0,$idParent = 0){
+	protected function linkDetail(string $caption = 'View', $pageAction = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		$url = $this->urlDetail($pageAction,$id,$idParent);
-		$href = $this->formatLink($url->print,$caption);
-		return $href;	
+		$l = new \html\_link($url->print,$caption);
+		return $l;	
 	}	
+	public function list($caption,$idParent,$idType){
+		return $this->getListingLink($caption,$idParent,$idType);
+	}
 
-	public function add($caption = 'New', $idParent = 0){
-		return $this->detail($caption,'ADD',0,$idParent);
+	public function add($caption = 'New', $idParent = 0,$idType = 0){
+		return $this->linkDetail($caption,'ADD',0,$idParent);
 	}
 	public function view($caption = 'View', $id = 0){
-		return $this->detail($caption,'VIEW',$id);
+		return $this->linkDetail($caption,'VIEW',$id);
 	}
 	public function edit($caption = 'Edit', $id = 0){
-		return $this->detail($caption,'EDIT',$id);
+		return $this->linkDetail($caption,'EDIT',$id);
 	}
 	public function copy($caption = 'Copy', $id = 0){
-		return $this->detail($caption,'COPY',$id);
+		return $this->linkDetail($caption,'COPY',$id);
 	}
-	public function itemViewEdit($caption = 'View', $id = 0){
-		
-		if ($id != 0){
-			$l = $this->view($caption,$id);
-			$l .= $this->edit('[#]',$id);
-		} else {
+	public function getListDetailLink($caption = 'View', $id = 0){
+		$d = new \html\_div('list-link','list-item-link');
+		/*if ($id != 0){*/
+			$lView = $this->view($caption,$id);
+			$lEdit = $this->edit('[#]',$id);
+			$d->addContent($lView->print());
+			$d->addContent($lEdit->print());
+		/*} else {
 			$l = '';
-		}
-		return $l;
+		}*/
+
+		return $d->print();
 	}	
-	
-	public function toggleEdit($pageAction = 'VIEW', $id){
-		switch ($pageAction){
+	public function setListingLinks($mode = 'LIST',$id,$idParent,$idType){
+			$this->addLink($this->add('AddChild',$id));
+			$this->addLink($this->add('AddSibling',$idParent));
+				
+			$this->addLink($this->list('List',$idParent));
+			$this->addLink($this->list('ListChildren',$id));
+			$this->addLink($this->list('listType',0,$idType));
+	}
+	public function setEditingLinks($mode = 'VIEW', $id,$idParent,$idType){
+		switch ($mode){
 		
 			case 'VIEW':
-				$l = $this->edit('Edit',$id);
-				$l .= $this->copy('Copy',$id);
+				$this->addLink($this->edit('Edit',$id));
+				$this->addLink($this->add('AddChild',$id));
+				$this->addLink($this->add('AddSibling',$idParent));
+				$this->addLink($this->copy('Copy',$id));
 				break;
 			case 'EDIT':
-				$l = $this->view('Cancel',$id);
+				$this->addLink($this->view('View',$id));
 				
 				break;
 			case 'ADD':
-				$l = $this->list('Cancel',$id);
+				$this->addLink($this->list('List',$idParent));
 				break;
 			default:
-				$l = $this->view('View',$id);
+				$this->addLink($this->view('View',$id));
 		
 		}
-		return $l;
+		
 	}
 	
-	
-	
-	public function pagingLinksChildren($idParent, $found, $resultPage=1, $perPage=10){
-		$l = $this->urlList($idParent).'&resultsPage=';
-		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
-		return $ls;
+	public function getPagingLinks($recordCount, $resultPage = 1, $perPage = 10, $idParent = 0, $idType = 0){
+		$p = new _linkMenuPaged($perPage,'results-page');
+		$u = $this->urlList($idParent,$idType);
+		$p->makePagedLinks($u, $recordCount,$resultPage);
+		return $p->print();
 	}
 	
-	
-	public function pagingLinks($found, $resultPage, $perPage){
-		$l = $this->urlList(0).'&resultsPage=';
-		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
-		return $ls;
-	}
-	
-	public function makeCalendarLink(_url $u, $caption, $year, $month){
-		$u->makeParameter('year',$year);
-		$u->makeParameter('month',$month);
+	public function getCalendarLink(_url $u, $caption, $year, $month){
+		$u->addParameter($this->pYear($year));
+		$u->addParameter($this->pMonth($month));
 		$l = new \html\link($u->print,$caption);
 		return $l;	
 	}

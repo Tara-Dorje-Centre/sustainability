@@ -32,7 +32,11 @@ class location extends _entity{
 		$this->links = new locationLinks();
 		$this->f = new locationFields();
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	protected function listRowLink(){
 		$link = $this->links->itemViewEdit($this->f->sortKey->value(),$this->f->id->value());
 		return $link;

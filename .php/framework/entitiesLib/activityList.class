@@ -8,6 +8,11 @@ class activityList extends _entityList{
      	$this->titleEntity = 'Activities';
 		$this->base = new activity($this->pageMode, $this->id, $this->idParent);
 	}
+	public function getRequestArguments(){
+
+
+
+	}
 	
 	public function setMyActivity($myActvity = 'NO'){
 		$this->myActivity = $myActivity;

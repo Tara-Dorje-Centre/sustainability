@@ -9,32 +9,36 @@ abstract class _entityType extends _entity{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function setDetails(){
 		parent::setDetails();
 		$this->f->name->caption = $this->titleEntity;
 	}
 	
 	protected function setPageMenu(){
+	
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
-		$this->links->saveMenuSettings();
 		$this->links->setType($menuType);
 		$this->links->setStyle($menuStyle);
 		
-		$menuL = new menuLinks($menuType,$menuStyle);
+		$menuL = new sysMenuLinks($menuType,$menuStyle);
 		
-		$menu = $this->links->openMenu('section-heading-links');
+		//$menu = $this->links->openMenu('section-heading-links');
 		$menu .= $menuL->linkReference();
-		$menu .= $this->links->resetMenu();
 		
-		$menu .= $this->links->toggleEdit($this->pageMode,$this->id,$this->idParent);
-		//f->parent->id->value());
 		
-		$menu .= $this->links->list();
-		$menu .= $this->links->closeMenu();
+		$this->links->makeEditingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-		$this->links->restoreMenuSettings();
+		$this->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+	
+		$menu .= $this->links->print();
+		
+		
 		
 		$this->_pageMenu = $menu;
 	}

@@ -11,7 +11,11 @@ class locationList extends _entityList{
 		$this->base = new location(0, $idParent);	
 		
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	protected function setPageTitle(){
 
 		if ($this->idParent <= 0){	

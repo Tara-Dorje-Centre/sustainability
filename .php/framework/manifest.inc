@@ -15,7 +15,9 @@ include_once("_sqlWriter.class");
 include_once("_inputForm.class");
 include_once("_calendar.class");
 include_once("_database.class");
-include_once("_links.class");
+include_once("_url.class");
+include_once("_linkMenu.class");
+include_once("_linkMenuPaged.class");
 include_once("_environmentVariable.class");
 include_once("_field.class");
 include_once("_field_basic.class");
@@ -56,10 +58,10 @@ include_once("_entityTypeList.class");
 include_once("_htmlSite.class");
 showProgress('general classes loaded');
 //
-//classes - secure login
+//classes - secure login=
 
-include_once("_menuLinks.class");
-include_once("_menu.class");
+include_once("sysMenuLinks.class");
+include_once("sysMenu.class");
 
 showProgress('menu classes loaded');
 //

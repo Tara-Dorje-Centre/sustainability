@@ -1,77 +1,64 @@
 <?php
 
-class sysMenuLinks extends _links {
-	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
-		parent::__construct($menuType,$styleBase);
+class sysMenuLinks extends _linkMenu {
+	public function __construct($name = 'menu'){
+		parent::__construct($name,'LIST','menu');
 	}
-	public function detailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
+	public function getDetailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
 		$url = $this->makeUrl($displayMode, $year, $month);
-		return $this->formatLink($url,$caption);
-		//return $href;	
+		$l = new \html\_link($url,$caption);
+		return $l;	
 	}
 	public function logout(){
 		$url = 'sys_Logout.php';
-		$l = new _link($url,Logout);
-		return $l->print();
-		//$this->formatLink($url,'Logout');	
-		//return $href;
+		$l = new \html\_link($url,'Logout');
+		return $l;
+		
 	}
 	public function makeUrl(string $displayMode, $year = 0, $month = 0){
 		$baseUrl = 'sys_Menu.php';
 		$u = new _url($baseUrl);
-		$u->makeParameter('displayMode', $displayMode);
-		//$baseUrl = 'sys_Menu.php?displayMode='.$displayMode;
+		$u->makeParameter('context', 'system-menu');
+		$u->makeParameter('scope', 'view');
+		$u->makeParameter('display-mode', $displayMode);
 		if ($year != 0 && $month != 0){
 			$u->makeParameter('year',$year);
 			$u->makeParameter('month',$month);
-		//	$link = $this->formatCalendarUrl($baseUrl, $year, $month);
-		//	$link = $u->print;
-		//} else {
-		//	$link = $baseUrl;
 		}
-		return $u->print;;
+		return $u;
 	}
 	
 	public function reference(){	
-			return $this->detailLink('REFERENCE', 'Reference');		
+		return $this->detailLink('REFERENCE', 'Reference');		
 	}
 	public function modules(){	
-			return $this->detailLink('MODULES', 'Main');		
+		return $this->detailLink('MODULES', 'Main');		
 	}
 	public function myLinks(){	
-			return $this->detailLink('MY_LINKS', 'My Links');		
+		return $this->detailLink('MY_LINKS', 'My Links');		
 	}
-	
-	//public function pageMenu(){
-	public function PageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-
-		$this->altMenu($menuType,$menuStyle);
+	public function updates(){
+		return $this->detailLink('SYSTEM-UPDATES', 'System Updates');
+	}
+	public function testing(){
+		return $this->detailLink('TESTING', 'Testing');
+	}
+	public function calendar(){
+		return $this->detailLink('CALENDAR', 'Calendars');
+	}
+	public function getPageMenu(){
+		//$this->initialize('section-heading-links','LIST','menu');
 		
-		$menu = $this->openMenu('section-heading-links');
-		
-		$menu .= $this->modules();
-		$menu .= $this->resetMenu();
-//		$menu .= $l->linkMyLinks();
-//		$menu .= $l->resetMenu();		
-		$menu .= $this->reference();
+		$this->addLink($this->modules());
+		$this->addLink($this->reference());
+		$this->addLink($this->myLinks());
+		$this->addLink($this->calendar());
 		
 		if ($_SESSION['is-admin'] == 'yes'){
-			//only show testing to admins
-		
-		$menu .= $this->resetMenu();		
-		$menu .= $this->detailLink('SYSTEM-UPDATES', 'System Updates');
-		$menu .= $this->resetMenu();				
-		$menu .= $l->detailLink('TESTING', 'Testing');
+			$this->addLink($this->updates());
+			$this->addLink($this->testing());
 		}
-		
-		$menu .= $this->closeMenu();
-		
-		return $menu;			
-	}
-	
-	
+		return $this->print();			
 	}
 }
 ?>

@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class siteSettingsLinks extends _links {
+class siteSettingsLinks extends _entityLinks {
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
 		parent::__construct($menuType,$styleBase);
 	}

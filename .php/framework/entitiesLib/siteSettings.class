@@ -80,7 +80,11 @@ class siteSettingsFields extends _fields{
 	$this->_register('publicFontSizeText', $this->publicFontSizeText);
 		
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function setDefaults(){
 		parent::setDefaults();
 		
@@ -128,7 +132,10 @@ class siteSettings extends _entity{
 		$this->links = new siteSettingsLinks();
 		$this->sql = new siteSettingsSQL();
 	}
+	public function getRequestArguments(){
 	
+	
+	}
 	public function setDetails(){
 		$this->verifySettings();
 

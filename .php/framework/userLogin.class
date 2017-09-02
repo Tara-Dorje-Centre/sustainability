@@ -83,7 +83,11 @@ class userLogin extends _contentWriter{
 
 	
 	
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function resetPassword(){
 		$this->f->_loginEmail->read();
 		$this->f->_loginName->read();

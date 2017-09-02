@@ -1,17 +1,7 @@
 ﻿<?php
 
 class taskFields extends _fieldsProjectChild{
-	/*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
- 
- _fieldsetProjectChild
-   id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
- project, projectType, location
- started°, approved,approvedBy^
-*/
+	
 	
 	public $taskOrder;
     public $summary;
@@ -93,7 +83,11 @@ class task extends _entity{
 		$this->links = new TaskLinks();
 		$this->totals = new summaryTotals();
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function listHeading($periodicTasks = 'NO'){
 		$tr = new html/_tr();
 		$th = new html/_th();

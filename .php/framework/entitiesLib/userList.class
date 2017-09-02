@@ -11,7 +11,11 @@ protected $titleEntity = 'UserProfiles';
 	
 	 	$this->base = new user($this-pageMode,$this->id,$this->idParent);
 	}
-	 
+	public function getRequestArguments(){
+
+
+
+	}
 
 	protected function setPageMenu(){
 		$menuType = 'LIST';

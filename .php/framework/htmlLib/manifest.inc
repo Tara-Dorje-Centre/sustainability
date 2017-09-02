@@ -1,7 +1,9 @@
 <?php
 include_once('__weblink.class');
-include_once('__attribute.class');
 include_once('__element.class');
+include_once('__collection.class');
+include_once('__attribute.class');
+
 include_once('__anyElement.class');
 include_once('__emptyElement.class');
 include_once('__anyEmptyElement.class');

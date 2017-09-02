@@ -14,7 +14,11 @@ class measureList extends _entityList{
 		$this->base = new measure($this->pageMode, $this->idParent);
 		//$this->sql = new MeasureSQL;
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function afterSetDetails(){
 		//$this->task->setDetails();
 		//$this->setFoundCount();

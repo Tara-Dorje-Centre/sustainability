@@ -25,61 +25,96 @@ trait width{
 	
 }
 
+trait dimensions{
+	use colspan, rowspan, width;
+	
+	public function setDimensions($colspan = 0, $rowspan = 0, $width = 0){
+		$this->setColspan($colspan);
+		$this->setRowspan($rowspan);
+		$this->setWidth($width);
+	}
+
+}
+
 class _table extends _element{
+	protected $_tableRows = array();
+	
 	public function __construct($idName = 'none', $css = 'none'){
 		parent::__construct('table', $idName, $css);
 	}
 	public function addRow(_tr $tr){
-		$this->addContent($tr->print());
+		$this->_tableRows[] = $tr;
 	}
 	public function makeRow($content,$css = 'none'){
 		$tr = new _tr($css);
 		$tr->setContent($content);
 		$this->addRow($tr);
 	}
+	protected function printRows(){
+		foreach ($this->tableRows as $r){
+			$this->addContent($r->print());
+		}
+		unset($this->tableRows);
+	}
+	public function print(){
+		$this->printRows();
+		parent::print();
+	}
 }
 
 
 
 class _tr extends _anyElement{
+	protected $rowData = array();
 	public function __construct($css = 'none'){
 		parent::__construct('tr', $css);
 	}
 	
-	public function addHeading(_th $th){
-		$this->addContent($th->print());
+	public function makeHeading($content,$css = 'none', $colspan = 0){
+		$th = new _th($content, $css);
+		$th->setColspan($colspan);
+		$this->addCell($th);
 	}
-	public function makeHeading($content,$css = 'none',$colspan = 0){
-		$th = new _th($css,$colspan);
-		$th->setContent($content);
-		$this->addHeading($th);
-	}
-	public function addData(_td $td){
-		$this->addContent($td->print());
-	}
-	public function makeData($content,$css = 'none',$colspan = 0){
-		$td = new _td($css,$colspan);
-		$td->setContent($content);
-		$this->addRow($td);
-	}
-}
-
-
-class _th extends _anyElement{
-use width, colspan, rowspan;
-	public function __construct($css = 'none',$colspan = 0){
-		parent::__construct('th', $css);
-		$this->setColspan($colspan);
-	}
-}
-
-class _td extends _anyElement{
-use width, colspan, rowspan;
-	public function __construct($css = 'none',$colspan = 0){
-		parent::__construct('td', $css);
-		$this->setColspan($colspan);
+	public function addCell(_tableCell $tc){
+		$this->rowData[] = $tc;
 	}
 	
+	public function makeData($content,$css = 'none',$colspan = 0){
+		$td = new _td($content, $css);
+		$td->setColspan($colspan);
+		$this->addCell($td);
+	}
+	
+	protected function printData(){
+		foreach ($this->rowData as $c){
+			$this->addContent($c->print());
+		}
+		unset($this->rowData);
+	}
+	public function print(){
+		$this->printData();
+		parent::print();
+	}
+}
+
+abstract class _tableCell extends _anyElement{
+use dimensions;
+	public function __construct(string $tag, $content, string $css = 'none'){
+		parent::__construct($tag, $css);
+		$this->setContent($content);
+	}
+}
+
+class _th extends _tableCell{
+	public function __construct($content, string $css = 'none'){
+		parent::__construct('th', $content, $css);
+	}
+}
+
+class _td extends _tableCell{
+	public function __construct($content, string $css = 'none'){
+		parent::__construct('td', $content, $css);
+	}
 }
 
 ?>

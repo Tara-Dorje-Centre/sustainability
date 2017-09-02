@@ -11,7 +11,11 @@ class measureTypeUnitList extends _entityList{
 		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
 	}
 	
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	
 	public function setDetails(){
 	

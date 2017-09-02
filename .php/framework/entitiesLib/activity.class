@@ -32,7 +32,11 @@ class activity extends _entity{
 		$this->sql = new ActivitySQL();
 		$this->links = new ActivityLinks();
 	}
+	public function getRequestArguments(){
 
+
+
+	}
 	protected function listingRowLink(){
 		$link = $this->links->itemViewEdit($this->name->value(),$this->id->value());
 		return $link;

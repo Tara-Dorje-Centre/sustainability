@@ -1,12 +1,24 @@
 ﻿<?php
-abstract class _entityTypeLinks extends _baseEntityLinks {
 
-	public function listingHref($caption = 's'){
-	return $this->list($this->context.$caption);
+
+abstract class _entityTypeLinks extends _baseEntityLinks {
+	public function makeEditingMenu($mode, $id = 0, $idParent = 0,$idType = 0){
+		$this->setEditingLinks($mode,$id,$idParent,$idType);
+		
+		//return $this->print();
+	}
+	public function makeListingMenu($mode,$id,$idParent,$idType){
+		$this->setListingLinks($mode,$id,$idParent,$idType);
+
+	}
+	public function listing($caption = 's'){
+		return $this->list($this->context.$caption);
 	}	
 	public function listingPaged($found, $resultPage, $perPage){
 			return $this->pagingLinks($found,$resultPage,$perPage);
 	}
 	
 }
+
+
 ?>

@@ -20,7 +20,11 @@ class materialList extends _entityList{
 		$this->base = new material($this->pageMode, $this->id,$this->idParent);
 		//$this->sql = new MaterialSQL;
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function afterSetDetails(){
 	
 		//$this->task->setDetails();

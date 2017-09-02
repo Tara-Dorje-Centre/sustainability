@@ -1,5 +1,5 @@
 <?php 
-class PublicSiteLinks extends _Links{
+class publicSiteLinks extends _entityLinks{
 	public function __construct($menuType = 'LIST',$styleBase = 'site'){
 		parent::__construct($menuType,$styleBase);
 	}

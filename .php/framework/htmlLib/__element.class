@@ -55,27 +55,21 @@ abstract class _element{
 		$a = new _attribute($name,$value);
 		$this->addAttribute($a);
 	}
-	/*
-	public function addAttribute(string $name, string $value){
-		
-		$this->makeAttribute($name,$value);
-	}
-	*/
+	
 	public function addAttribute(_attribute $a){
 		if ($a->isValid() == true){
 			$this->_attributes[$a->name] = $a;
 		}
 	}
 	public function removeAttribute(string $name){
-		//remove $name element from $this->attributes[] array
-		//$this->attributes[$name] = NULL;
-	
+		unset($this->attributes[$name]);
 	}
 	protected function buildAttributes(){
 		$this->_attribs = self::_EMPTY;
 		foreach ($this->_attributes as $a){
 			$this->_attribs .= $a->print();
 		}
+		unset($this->_attributes);
 	}
 
 	protected function setTag(string $tag){
@@ -105,25 +99,25 @@ abstract class _element{
 		$this->$_cData = $isCData;
 	}
 
-	private function start(){
+	protected function start(){
 		$this->buildAttributes();
 		$this->_markup = self::LT.$this->_tag.$this->_attribs;
 	}
 
-	public function open(){
+	protected function open(){
 		$this->start();
 		$this->_markup .= self::GT;
 		//if cdata add after opening markup
 		return $this->_markup.PHP_EOL;
 	}
 
-	public function empty(){
+	protected function emptyElement(){
 		$this->start();
 		$this->_markup .= self::SP.self::SL.self::GT;
 		return $this->_markup.PHP_EOL;
 	}
 
-	public function close(){
+	protected function close(){
 		//if cdata add before closing markup
 		$this->_markup = self::LT.self::SL.$this->_tag.self::GT;
 		return $this->_markup.PHP_EOL;

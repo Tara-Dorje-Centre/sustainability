@@ -2,26 +2,28 @@
 
 
 class _linkMenu extends _contentWriter{
-	private $_menu;
-	private $_list;
-	private $_links = array();
-	private $cssBase;
-	public $cssItem;
-	private $cssList;
-	private $type = 'DIV';
-	.
-	private $name = 'menu';  
-	private $nameList = 'menu-list';
-
-	private $typeSaved;
-	private $cssSaved;
-	private	$nameSaved;
+	protected $_menu;
+	protected $_list;
+	protected $_links = array();
+	protected $cssBase;
+	protected $cssItem;
+	protected $cssList;
+	protected $type = 'DIV';
+	protected $name = 'menu';  
+	protected $nameList = 'menu-list';
 
 	public function __construct(string $name = 'menu-listing', string $type = 'DIV', string $css = 'menu'){
+		$this->initialize($name,$type,$css);
+	}
+	protected function initialize(string $name, string $type, string $css){
 		$this->setName($name);
 		$this->setCss($css);
 		$this->setType($type);
-		$this->initialize();
+		
+		$this->_menu = new \html\_div($this->name,$this->css);
+		if ($this->type == 'LIST'){
+			$this->_list = new \html\_ul($this->nameList, $this->cssList);
+		}
 	}
 
 	protected function setCss(string $css){
@@ -34,225 +36,70 @@ class _linkMenu extends _contentWriter{
 		$this->type = $type;
 		
 	}
+	
 	protected function setName(string $name){
 		$this->name = $name;
-		
+		$this->nameList = $name.'-list';
 	}
-	protected function initialize(){
-		$this->_menu = new \html\_div($this->name,$this->css);
-		if ($this->type == 'LIST'){
-			$this->_list = new \html\_ul($this->nameList, $this->cssList);
-		}
-	
-	}
-	
 	
 	public function makeLink(_url $u,$caption){
-		$l = new \html\_link($u->print, $caption);
+		$l = new \html\_link($u->print, $caption,$this->cssItem);
 		$this->addLink($l);
 	}
 	
 	public function addLink(\html\_link $l){
+		$this->_links[] = $l;
+	}
 	
+	public function addSpan(\html\_span $s){
+		$this->_links[] = $s;
+	}
 	
+	public function makeTextItem(string $text){
+		$s = new \html\_span($text,$this->cssItem);
+		$this->addSpan($s);
 	}
 	
 	protected function printLinks(){
 		foreach ($this->_links as $l){
-			$this->_menu->addContent($this->formatItem($l->print());
+			$this->_menu->addContent($this->formatItem($l->print()));
 		
 		}
 	
 	}
-	private function formatItem($content){
+	
+	protected function formatItem($content){
 		if ($this->type == 'LIST'){
 			//add list item tag and same style
 			$li = new \html\_li($content,$this->cssItem.'-li');
 			$item = $li->print();
-			//listItem($content,$this->cssItem.'-li');
+			
 		} else {
 			$item = $content;
 		}
 		return $item;		
 	}
-	public function formatToggleLink($elementId = 'formOptional', $linkText = '+Options'){
-		$url = '#!';
-		$css = 'toggle-link';
-		$js = "toggle('".$elementId."');";
 	
-		$l = new \html\link($url,$linkText,$js,$css);
-	
-		return $l->print();
-	}
-	public function formatLink(string $url,string $caption,$onClickJS = NULL){
-		$l = new \html\link($url,$caption,$onClickJS);
-		return $l->print();
-	}
-	
-	protected function spacer($n){
-		return \html\spacer($n);
-	}
-
-	public function formatTextItem($text){
-		$content = span($text,$this->cssItem);
-		$item = $this->formatItem($content);
-		return $item;
-	}
-	
-	protected function openMenu(){
+	protected function open(){
 		if ($this->type == 'LIST'){
 			$this->_menu->addContent($this->_list->open());
 		}
-		//return $menu;
+		
 	}
 
-	public function closeMenu(){
-
+	public function close(){
 		if ($this->type == 'LIST'){
-			$this-<_menu->addContent($this->_list->close());
+			$this->_menu->addContent($this->_list->close());
 		} 
-		//$menu .= $this->_menu->close();
-		
-		return $menu;
 	}
-
-	public function resetMenu($newLines = 0){
-		if ($this->menuType == 'LIST'){
-		
-			$menu = $this->_list->close();
-			if ($newLines > 0){
-				$b = new \html\_br($newLines);
-				$menu .= $b->print();
-			}
-			
-			$menu .= $this->_list->open();
-			
-		} else {
-			if ($newLines == 0){
-				$newLines = 1;
-			}
-			$b = new \html\_br($newLines);
-			$menu = $b->print();
-		}
-		return $menu;	
-	}
-
-	public function saveSettings(){
-		$this->typeSaved =$this->type;
-		$this->cssSaved = $this->css;
-		$this->nameSaved = $this->name;		
-		$this->initialize();
-	}
-
-	public function restoreSettings(){
-		$this->setType($this->typeSaved);
-		$this->setCss($this->cssSaved);	
-		$this->setName = $this->nameSaved;
-		$this->initialize();
-	}
-	public function altSetting(string $name = 'menu-listing', string $type = 'DIV', string $css = 'menu'){
-		$this->saveSettings();
-		$this->setType = $type;
-		$this->setCss($css);
-		$this->setName($name);
-	}
-	public function altList($name = 'menu-listing',$css = 'menu'){
-		$this->altSettings($name, 'DIV',$css);
-	}
-	public function altPaged($name = 'menu',$css = 'paged'){
-		$this->altSettings($name, 'DIV',$css);
-	}
-		
-
-	public function getPagedLinks($url, $recordCount, $recordsPerPage, $currentPage){
-		$this->saveMenuSettings();
-		$this->alt('DIV','paged');
-		//$this->setStyle('paged');
-		$i = 0;
-		$pages = 1;
-		$linkset;
-		$linkCaption;
-		$link;
-		$linksAllPages = '';
-		$minRecord = 1;
-		$maxRecord = 1;
-		$recordRange;
-		//calculate how many pages results will display in
-		if (floor($recordCount/$recordsPerPage)==$recordCount/$recordsPerPage){
-			$pages = floor($recordCount/$recordsPerPage);
-		} else {
-			$pages = floor($recordCount/$recordsPerPage) + 1;
-		}
-		$linkset = $this->openMenu('paged-linkset');
-
-		//build linksAllPages
-		if ($currentPage > 1){
-			$linkCaption = spacer().'Prev'.spacer();
-			$prevIndex = $currentPage - 1;
-			//$link = $this->formatHref($linkCaption,$baseUrl.$prevIndex);
-			$l = new \html\link($baseUrl.$prevIndex,$linkCaption);
-			$linksAllPages .= $l->print();
-		}
-
-		while ($i < $pages){
-			$i++;
-			$minRecord = (($i - 1)* $recordsPerPage) + 1;
-			$maxRecord = $i * $recordsPerPage;
-			if ($maxRecord > $recordCount){
-				$maxRecord = $recordCount;
-			}
-			if ($minRecord==$maxRecord){
-				$recordRange = $minRecord;
-			} else {
-				$recordRange = $minRecord.'-'.$maxRecord;
-			}
-			//highlight current page with square brackets and skip hyperlink
-			if ($i == $currentPage){
-				//$linkCaption = ' ['.$recordRange.'] ';
-				$linkCaption = '['.$this->spacer(2).$i.$this->spacer(2).']';
-				$link = \html\span($linkCaption,$this->cssItem.'-current');	
-			} else {
-				//$linkCaption = '('.$recordRange.')';	
-				$linkCaption = $this->spacer(2).$i.$this->spacer(2);
-				//$link = $this->formatHref($linkCaption,$baseUrl.$i);
-				$l = new \html\link($baseUrl.$i,$linkCaption);
-				$link = $l->print();
-			}
-			if ($i == 1 || ($i >= ($currentPage - 4) && $i <= ($currentPage + 4)) || $i == $pages){ 
-		
-				if ($i == $pages && ($currentPage + 5) < $pages){
-					$linksAllPages .= span('...',$this->cssItem);
-				}
-				$linksAllPages .= $link;
-				if ($i == 1 && ($currentPage - 5) > 1){
-					$linksAllPages .= span('...',$this->cssItem);
-				}
-			}
-		}
-		
-		if ($currentPage < $pages){
-			$linkCaption = spacer().'Next'.spacer();
-			$prevIndex = $currentPage + 1;
-			//$link = $this->formatHref($linkCaption,$baseUrl.$prevIndex);
-			$l = new \html\link($baseUrl.$prevIndex,$linkCaption);
-			$linksAllPages .= $l->print();
-		}
-			
-		if ($pages > 1){
-			$linkset .= 'Found '.$recordCount.' results. ';
-			$linkset .= 'Page '.$currentPage.' of '.$pages.': ';
-			$linkset .= $linksAllPages;
-		} else {
-			$linkset .= 'Displaying '.$recordCount.' results. ';
-		}
 	
-		$linkset .= $this->closeMenu();
-	
-		$this->restoreMenuSettings();
-		return $linkset;
+	public function print(){
+		$this->open();
+		$this->printLinks();
+		$this->close();
+		return $this->_menu->print();
 	}
-
-	
-	
+		
 }
+
 ?>

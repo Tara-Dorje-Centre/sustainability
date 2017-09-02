@@ -88,6 +88,12 @@ class user extends _entity{
 		$this->links = new UserLinks();
 	}
 	
+	public function getRequestArguments(){
+	
+	
+	
+	}
+	
 	public function display(){
 		$detail = parent::display;
 		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		

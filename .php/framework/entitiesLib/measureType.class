@@ -29,6 +29,11 @@ class measureType extends _entityType{
 		$this->sql = new measureTypeSQL();
 		$this->links = new measureTypeLinks();
 	}
+	
+	public function getRequestArguments(){
+	
+	
+	}
 /*
 	protected function setPageMenu(){
 		$menuType = 'LIST';

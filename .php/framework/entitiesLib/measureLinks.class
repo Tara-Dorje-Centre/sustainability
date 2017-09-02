@@ -1,6 +1,6 @@
 ﻿<?php 
 
-class MeasureLinks extends _Links {
+class measureLinks extends _entityLinks {
 	protected $_pageList = 'pr_Measure_List.php';
 	protected $_pageDetail = 'pr_Measure_Detail.php';
 	

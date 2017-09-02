@@ -57,7 +57,11 @@ class receipt extends _entity{
 		$this->sql = new receiptSQL;
 		$this->links = new receiptLinks();
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	protected function setPageTitle(){	
 		$title = $this->f->project->name->value().br();
 		$title .= 'Task: '.$this->f->task->name->value();		

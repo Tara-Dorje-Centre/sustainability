@@ -71,7 +71,11 @@ class project extends _entity{
 		$this->links = new projectLinks();
 		$this->totals = new summaryTotals();
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function setDetails(){
 		if ($this->pageMode == 'COPY'){
 		$this->copyProject();

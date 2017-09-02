@@ -133,8 +133,41 @@ class _cssColorField extends _textField
 		return $i->print();
 	}
 }
- 
- 
+ class _selectQueryTextField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 	protected $sql;
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
+	public function setSql($sql){
+		$this->sql = $sql;
+	}
+	public function input(){
+		$i = new \html\inputs\selectQuery($this->env->variable(),$this->value(),$this->sql, $this->_caption);
+		return $i->print();
+	}
+	
+}
+ class _selectQueryNumberField extends _textField
+ implements Ifield, Iecho, IcontentWriter {
+ 	protected $sql;
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
+	public function setSql($sql){
+		$this->sql = $sql;
+	}
+	public function input(){
+		$i = new \html\inputs\selectSql($this->env->variable(),$this->value(),$this->sql, $this->_caption);
+		return $i->print();
+	}
+}
+class idSelectQueryField extends _selectQueryNumberField{
+
+
+
+
+}
  class _cssHighlightField extends _textField
  implements Ifield, Iecho, IcontentWriter {
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){

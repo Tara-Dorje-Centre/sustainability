@@ -13,11 +13,13 @@ class receiptList extends _entityList{
 	//public $sql;
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
-	
 		$this->base = new receipt($this->pageMode, $this->id,$this->idParent);
-		//$this->sql = new ReceiptSQL;
 	}
-	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function setDisplay($display = 'TASK'){
 		$this->displayProject = $display;
 	}

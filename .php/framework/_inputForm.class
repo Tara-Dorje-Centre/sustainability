@@ -60,8 +60,8 @@ class _inputForm extends _contentWriter{
 		$this->mode = $mode;
 		if ($toggleOptions == true){
 	
-			$elementId = 'formOptional',
-	 		$toggleCaption = '+Options'){
+			$elementId = 'formOptional';
+	 		$toggleCaption = '+Options';
 			$url = '#!';
 			$css = 'toggle-link';
 			$js = "toggle('".$elementId."');";

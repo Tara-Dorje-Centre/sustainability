@@ -13,6 +13,12 @@ protected $titleEntity = 'Projects';
 		$this->base = new project($this->pageMode, $this->id, $this->idParent);
 		
 	}
+	
+	public function getRequestArguments(){
+
+
+
+	}
 	public function setMyProjects($showMyProjects = 'NO'){
 		$this->showMyProjects = $showMyProjects;
 	}

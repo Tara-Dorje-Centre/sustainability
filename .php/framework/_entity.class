@@ -22,7 +22,7 @@ implements Iecho, IcontentWriter{
 	
 	abstract protected function setPageMenu();
 	abstract protected function editForm();
-		
+	abstract public function getRequestArguments();
 	
 	public function setDetails(){
 		if ($this->id > 0){
@@ -43,7 +43,7 @@ implements Iecho, IcontentWriter{
 	
 	public function options(
 		$selectedId = 0, 
-		$idName = 'entityTypeId', 
+		$idName = 'id-type', 
 		$disabled = 'false', 
 		$showLink = true){
 
@@ -67,8 +67,8 @@ implements Iecho, IcontentWriter{
 		$select = $this->options($f->value(),$f->env->variable());
 		return $f->inputChoice($select);
 	}
-	
-	protected function optionsLink($showLink = true, $selectedId = 0){
+	/*
+	protected function optionsLink($selectedId = 0){
 		if ($showLink == true){
 			$links =$this->links->view('View',$selectedId);
 		} else {
@@ -76,7 +76,7 @@ implements Iecho, IcontentWriter{
 		}
 		return $links;
 	}
-	
+	*/
 	public function listHeading(){
 		$tr = new html/_tr('table-headings');
 		$th = new html/_th();
@@ -87,7 +87,7 @@ implements Iecho, IcontentWriter{
 	}
 	
 	protected function listRowLink(){
-		$link = $this->links->itemViewEdit($this->f->name->value(),$this->f->id->value());
+		$link = $this->links->getListItemLink($this->f->name->value(),$this->f->id->value());
 		return $link;
 	}
 	

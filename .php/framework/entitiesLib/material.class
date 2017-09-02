@@ -24,7 +24,11 @@ public function __construct(){
 	$this->_register('costActual',$this->costActual);
 
 }
+	public function getRequestArguments(){
 
+
+
+	}
 public function setDefaults(){
 	$this->paidTo->setDefault(1);
 	$this->costUnit->setDefault(0);
@@ -52,7 +56,11 @@ class material extends _entity{
 		
 	}
 
-		
+	public function getRequestArguments(){
+
+
+
+	}
 	protected function setPageTitle(){	
 		$title = openDiv('section-heading-title','none');
 		$title .= $this->f->parentProject->name->value().br();
