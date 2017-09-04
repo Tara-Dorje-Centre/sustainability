@@ -1,0 +1,109 @@
+<?php 
+/* reviewed 7/29    */
+
+abstract class _entityType extends _entity{
+	protected $_MyClassName = '_entityType';
+	protected $titleEntity = '[entity] Type';
+	protected $pageSave = '[entity]TypeSave.php';
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		parent::__construct($mode, $id, $idParent);
+	}
+	public function getRequestArguments(){
+
+
+
+	}
+	public function setDetails(){
+		parent::setDetails();
+		$this->f->name->caption = $this->titleEntity;
+	}
+	
+	protected function setPageMenu(){
+		$this->links->setName('section-heading-links');
+		$this->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->links->makeEditingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->_pageMenu = $this->links->print();
+	}
+	
+	protected function setDefaults(){
+		parent::setDefaults();
+		if ($this->pageMode == 'ADD'){
+		/*$this->f->defaults();*/
+		
+		$s = $this->sql->count();
+		$next = dbGetCount($this->sql->count(), 'count_details');
+		$next += 1;
+		$this->echoValue(true,'next',$next,'setdefaults');
+		$this->f->displayOrder->set($next);
+		}
+		
+	}
+	protected function editForm(){
+		
+
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode);//,$contextMenu);
+		
+		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->displayOrder);
+		$this->edit->required->input($this->f->highlight);
+		
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
+		
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->f->id);
+		
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		
+		return $this->edit->close();
+	}
+	
+	protected function saveUpdate(){
+
+			$sql = " UPDATE ".$this->sql->getBaseTable()." AS base ";
+			$sql .= " SET ";
+			$sql .= " base.name = '".$this->f->name->value()."', ";
+			$sql .= " base.description = '".$this->f->description->value()."', ";
+			$sql .= " base.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " base.highlight_style = '".$this->f->highlight->value()."', ";
+			$sql .= " base.display_order = ".$this->f->displayOrder->value().", ";
+			$sql .= " base.notes = '".$this->f->notes->value()."' ";
+			$sql .= " WHERE base.id = ".$this->f->id->value()."  ";		
+				
+			$result = dbRunSQL($sql);
+	}
+	
+	protected function saveInsert(){
+			$sql = " INSERT INTO ".$this->sql->getBaseTable();
+			$sql .= " (name, ";
+			$sql .= " created, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " display_order, ";
+			$sql .= " highlight_style, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->f->name->value()."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= $this->f->displayOrder->value().", ";
+			$sql .= "'".$this->f->highlight->value()."', ";
+			$sql .= "'".$this->f->notes->value()."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->f->id->set(dbInsertedId());
+			$this->id = $this->f->id->value();
+	}
+	
+		
+}
+
+
+
+
+
+?>

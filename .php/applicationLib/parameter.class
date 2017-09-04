@@ -1,0 +1,32 @@
+<?php
+
+namespace application;
+
+
+class parameter{
+	protected const EQUALS = '=';
+	protected const QUESTION = '?';
+	protected const AMPERSAND = '&';
+	public $name;
+	private $value;
+	public function __construct(string $name, string $value){
+		$this->set($name,$value);
+	}
+	public function set(string $name, string $value){
+		$this->name = $name;
+		$this->value = $value;
+	}
+	public function print(bool $first = false){
+		if ($first == true){
+			$connect = self::QUESTION;
+			//'?';
+		} else {
+			$connect = self::AMPERSAND;
+			//'&';
+		}
+		$p = $connect.$name.self::EQUALS.$value;
+		return $p;
+	}
+}
+
+?>

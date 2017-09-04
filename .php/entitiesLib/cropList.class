@@ -1,0 +1,148 @@
+﻿<?php 
+
+class cropList extends _entityList
+	public $found = 0;
+	public $resultPage = 1;
+	public $perPage = 10;
+	public $parentCropId = 0;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new CropSQL;	
+	}
+	
+	public function setDetails($parentCropId = 0, $resultPage = 1, $resultsPerPage = 10){
+		$this->resultPage = $resultPage;
+		$this->perPage = $resultsPerPage;
+		$this->parentCropId = $parentCropId;
+		$this->setFoundCount();
+	}
+	
+	private function pageTitle(){
+		$title = openDiv('section-heading-title','none');
+		$title .= 'Crops';
+		$title .= closeDiv();
+		return $title;	
+	}
+
+	private function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$crops = new CropLinks($menuType,$menuStyle);
+		$plans = new CropPlanLinks($menuType,$menuStyle);
+		
+		$menu = $crops->openMenu('section-heading-links');
+
+		$menu .= $crops->detailAddHref();
+		$menu .= $crops->listingHref();
+		
+		$menu .= $crops->resetMenu();
+
+		if (!isset($_SESSION['currentCropPlanId'])){
+			$menu .= $plans->listingHref();
+		} else {
+			$menu .= $plans->detailViewHref($_SESSION['currentCropPlanId']);
+		}
+
+		$menu .= $crops->closeMenu();
+		return $menu;			
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}	
+	
+	private function setFoundCount(){
+		$sql = $this->sql->countCrops($this->parentCropId);
+		$this->found = dbGetCount($sql, 'total_crops');
+	}
+	
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+
+	public function getPageDetails(){
+	
+		$details = $this->getListing();
+		return $details;
+		
+	}
+	
+	
+	public function getListing($pagingBaseLink = 'USE_LISTING'){
+		$sql = $this->sql->listCrops($this->parentCropId,$this->resultPage,$this->perPage);
+
+
+		$cl = new CropLinks;		
+		if ($pagingBaseLink == 'USE_LISTING'){
+			$base = $cl->listing($this->parentCropId);
+		} else { 
+			$base = $pagingBaseLink;
+		}		
+		$pagingLinks = $cl->listingPaged($base, $this->found,$this->resultPage,$this->perPage);
+		
+		$list = openDisplayList('crops','Crops',$pagingLinks);
+
+		$heading = wrapTh('Common Name[Variety]');
+		$heading .= wrapTh('Botanical Name[Family]');
+		$heading .= wrapTh('Days Mature');
+		$heading .= wrapTh('Days Germinate');
+		$heading .= wrapTh('Days Transplant');
+		$heading .= wrapTh('Seeds On Hand');
+		$list .= wrapTr($heading);
+
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+		{	
+			$c = new Crop;
+			
+			$c->id = $row["id"]; 
+			$c->parentId = $row["parent_id"]; 
+			$c->commonName = stripslashes($row["common_name"]); 
+			$c->varietyName = stripslashes($row["variety_name"]); 
+			$c->botanicalName = stripslashes($row["botanical_name"]); 
+			$c->familyName = stripslashes($row["family_name"]); 
+			$c->daysMature = $row["days_mature"];
+			$c->daysMatureMax = $row["days_mature_max"];
+			$c->daysGerminate = $row["days_germinate"];
+			$c->daysGerminateMax = $row["days_germinate_max"];
+			$c->daysTransplant = $row["days_transplant"];
+			$c->daysTransplantMax = $row["days_transplant_max"];
+			$c->seedsOnHand = $row["seeds_on_hand"];
+			
+			$c->formatForDisplay();
+			
+			$link = $cl->detailViewEditHref($c->id,$c->getCommonNameAndVarietyName());
+			$detail = wrapTd($link);
+			$detail .=  wrapTd($c->getBotanicalNameAndFamilyName());			
+			$detail .=  wrapTd($c->daysMatureMinMax);		
+			$detail .=  wrapTd($c->daysGerminateMinMax);		
+			$detail .=  wrapTd($c->daysTransplantMinMax);		
+			$detail .=  wrapTd($c->seedsOnHand);		
+			
+			if ($c->seedsOnHand == 'yes'){
+				$cssRow = 'highlight-green';
+			} else {
+				$cssRow = 'none';
+			}
+			$list .=  wrapTr($detail,$cssRow);
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();
+		return $list;
+	}
+}
+?>

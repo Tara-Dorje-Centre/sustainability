@@ -1,0 +1,324 @@
+﻿<?php 
+
+class cropPlanting extends _entity{
+	public $cropPlan;
+	public $crop;
+	public $id = 0;
+	public $cropId = 0;
+	public $method;
+	public $cropPlanId = 0;
+	public $locationId = 0;
+	public $locationName;	
+	public $commonName;
+	public $varietyName;
+	public $planted;
+	public $daysMature = 0;
+	public $daysGerminate = 0;
+	public $germinated;
+	public $weekPlant = 0;
+	public $weekTransplant = 0;
+	public $weekMature = 0;
+	public $estimatedGermination;
+	public $estimatedTransplant;
+	public $estimatedMaturity;
+	public $updated;
+	public $plantedCount = 0;
+	public $germinatedCount = 0;
+	public $thinnedCount = 0;			
+	public $rowsPlanted = 0;
+	public $perRowPlanted = 0;
+	public $notes;			
+	// property to support edit/view/add mode of calling page
+    public $pageMode;
+	private $sql;
+	
+	public function __construct(){
+		$this->sql = new CropPlantingSQL;	
+		$this->cropPlan = new CropPlan;
+	}
+	
+    // set class properties with record values from database
+	public function setDetails($detailCropPlantingId, $cropPlanId, $inputMode){
+		$this->pageMode = $inputMode;
+		$this->id = $detailCropPlantingId;
+		$this->cropPlanId = $cropPlanId;
+
+		$sql = $this->sql->infoCropPlanting($this->id);
+		$result = dbGetResult($sql);
+		if ($result){
+		while($row = $result->fetch_assoc())
+			{	
+			$this->id = $row["id"]; 
+			$this->cropId = $row["crop_id"]; 
+			$this->commonName = ($row["common_name"]); 
+			$this->varietyName = ($row["variety_name"]); 
+			$this->method = ($row["method"]); 
+			$this->cropPlanId = ($row["crop_plan_id"]); 
+			$this->locationId = $row["location_id"];
+			$this->locationName = ($row["location_name"]);
+			$this->planted = $row["planted"];
+			$this->germinated = $row["germinated"];
+			$this->daysMature = $row["days_mature"];
+			$this->daysGerminate = $row["days_germinate"];
+			$this->estimatedGermination = $row["estimated_germination"];
+			$this->estimatedTransplant = $row["estimated_transplant"];
+			$this->estimatedMaturity = $row["estimated_maturity"];
+			$this->updated = $row["updated"];
+			$this->plantedCount = $row["planted_count"];
+			$this->germinatedCount = $row["germinated_count"];
+			$this->thinnedCount = $row["thinned_count"];
+			$this->rowsPlanted = $row["rows_planted"];
+			$this->perRowPlanted = $row["per_row_planted"];
+			$this->notes = ($row["notes"]);
+		}
+		$result->close();
+		}
+				
+		$this->cropPlan->setDetails($this->cropPlanId,"VIEW");				
+	}	
+		
+	function pageTitle(){
+		$heading = openDiv('section-heading-title');
+		$heading .= 'Crop Plan: '.$this->cropPlan->planName.br();
+		if ($this->pageMode != 'ADD'){
+			$heading .= 'Planting: '.$this->commonName;
+		} else {
+			$heading .= 'Add New Crop Planting';
+		}
+		$heading .= closeDiv();		
+		return $heading;
+	}
+	
+	function pageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$plantings = new CropPlantingLinks($menuType,$menuStyle);		
+		$plans = new cropPlanLinks($menuType,$menuStyle);
+		
+		$menu = $plantings->openMenu('section-heading-links');
+		
+		if ($this->pageMode != 'ADD'){
+			$menu .= $plantings->detailAddHref($this->cropPlanId);
+		}
+		
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $plantings->detailEditHref($this->id);
+		}
+		if ($this->pageMode == 'EDIT'){
+			$menu .= $plantings->detailViewHref($this->id);
+		}
+		$menu .= $plantings->resetMenu();
+		$menu .= $plans->detailViewHref($this->cropPlanId);
+		$menu .= $plans->listingHref();
+		
+		$menu .= $plantings->closeMenu();
+		return $menu;
+	}
+	
+	public function getPageHeading(){
+		$heading = $this->pageTitle();
+		$heading .= $this->pageMenu();
+		return $heading;
+	}
+	
+	public function formatForDisplay(){
+		$this->notes = displayLines($this->notes); 
+		$this->planted = getTimestampDate($this->planted);
+		$this->estimatedGermination = getTimestampDate($this->estimatedGermination);
+		$this->estimatedMaturity = getTimestampDate($this->estimatedMaturity);
+		$this->estimatedTransplant = getTimestampDate($this->estimatedTransplant);
+	}
+
+	public function printPage(){
+		
+		$heading = $this->getPageHeading();
+		$details = $this->getPageDetails();
+
+		$site = new _SiteTemplate;
+		$site->setSiteTemplateDetails($heading, $details);
+		$site->printSite();
+		
+	}
+
+	
+	public function getPageDetails(){			
+
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+			$details = $this->editForm();
+		} else {
+			$details = $this->display();
+		}
+		return $details;
+		
+	}
+		
+	public function display(){
+		$this->formatForDisplay();
+		
+		$detail = openDisplayDetails('crop-planting','Crop Planting Details');		
+	 	
+		$c = new Crop;
+		$select = $c->getCropSelectList($this->cropId,'cropId','true');
+		$detail .= captionedParagraph('crop', 'Crop', $select);
+		
+		$l = new Location;
+		$select = $l->getLocationSelectList($this->locationId,'locationId','true');
+		$detail .= captionedParagraph('location', 'Location', $select);
+
+		$detail .= captionedParagraph('method', 'method', $this->method);
+		
+		$detail .= captionedParagraph('planted', 'planted', $this->planted);
+		$detail .= captionedParagraph('plantedCount', 'plantedCount', $this->plantedCount);
+		$detail .= captionedParagraph('rowsPlanted', 'rowsPlanted', $this->rowsPlanted);
+		$detail .= captionedParagraph('perRowPlanted', 'perRowPlanted', $this->perRowPlanted);
+		$detail .= captionedParagraph('germinated', 'germinated', $this->germinated);
+		$detail .= captionedParagraph('estimated-germination', 'estimated germination', $this->estimatedGermination);		
+		$detail .= captionedParagraph('germinatedCount', 'germinatedCount', $this->germinatedCount);
+		$detail .= captionedParagraph('thinnedCount', 'thinnedCount', $this->thinnedCount);
+		$detail .= captionedParagraph('estimated-transplant', 'estimated transplant', $this->estimatedTransplant);
+		$detail .= captionedParagraph('estimated-maturity', 'estimated maturity', $this->estimatedMaturity);
+		$detail .= captionedParagraph('notes', 'notes', $this->notes);
+				
+		$detail .= closeDisplayDetails();
+		return $detail;
+	}
+		
+	private function setAddRecordDefaults(){	
+		$this->planted = $this->cropPlan->started;
+		$this->cropId = 0;
+		$this->locationId = 0;
+	}
+	
+	public function editForm(){
+		if ($this->pageMode == 'ADD'){		
+			$this->setAddRecordDefaults();
+			$legend = 'Add Crop Planting';
+		} else {
+			$legend = 'Edit Crop Planting';
+		}
+		$entity = 'crop-planting';
+		$c = new cropPlantingLinks;
+		$contextMenu = $c->formatToggleLink('formOptional','+Options');
+		$form = openEditForm($entity,$legend,'cp_CropPlanting_Save.php',$contextMenu);
+		//echo 'in cropplanting.editform, getting crop select list';
+		$c = new Crop;
+		$select = $c->getCropSelectList($this->cropId,'cropId');
+		$fields = captionedInput('Crop',$select);
+		//echo 'in cropplanting.editform, getting location select list';
+		$l = new Location;
+		$select = $l->getLocationSelectList($this->locationId,'locationId','false',false);
+		$fields .= inputFieldSelect($entity,$select,'Location');
+
+
+		$fields .= inputFieldNumber($entity,$this->plantedCount,'plantedCount','Planted Count');
+		//end formRequired
+		$formRequired = $fields;
+		//formOptional
+		$fields = inputFieldTimestamp($entity, 'planted', $this->planted, 'Date Planted'); 		
+		
+		$fields .= inputFieldNumber($entity,$this->perRowPlanted,'perRowPlanted','Per Row Planted');
+		$fields .= inputFieldNumber($entity,$this->rowsPlanted,'rowsPlanted','Rows Planted');
+
+		$fields .= inputFieldText($entity,$this->method,'method','Planting Method',50);
+
+//		if ($this->pageMode != 'ADD'){
+			$fields .= inputFieldTimestamp($entity, 'germinated', $this->germinated, 'Date Germinated'); 		
+			$fields .= inputFieldNumber($entity,$this->germinatedCount,'germinatedCount','Germinated Count');
+			$fields .= inputFieldNumber($entity,$this->thinnedCount,'thinnedCount','Thinned Count');
+//		}
+
+		$fields .= inputFieldComments($entity,$this->notes,'notes','Notes',1000);
+
+		//end formOptional
+		$formOptional = $fields;
+
+				
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= getHiddenInput('cropPlantingId', $this->id);
+		$hidden .= getHiddenInput('cropPlanId', $this->cropPlanId);
+		
+		$input = getSaveChangesResetButtons();
+		$formSubmit = $hidden.$input;
+		
+		$form .= closeEditForm($entity,$formRequired,$formOptional,$formSubmit);
+		return $form;
+	}
+	
+	public function collectPostValues(){
+	
+		$this->pageMode = $_POST['mode'];	
+		$this->id = $_POST['cropPlantingId'];
+		$this->cropPlanId = $_POST['cropPlanId'];
+		$this->cropId = $_POST['cropId'];
+		$this->locationId = $_POST['locationId'];
+		$this->method = dbEscapeString($_POST['method']); 
+		$this->notes = dbEscapeString($_POST['notes']); 
+		$this->planted = getTimestampPostValues('planted');
+		
+		$this->plantedCount = $_POST['plantedCount'];
+		$this->rowsPlanted = $_POST['rowsPlanted'];
+		$this->perRowPlanted = $_POST['perRowPlanted'];
+		if ($this->pageMode == 'EDIT'){
+		$this->germinated = getTimestampPostValues('germinated');		
+		$this->germinatedCount = $_POST['germinatedCount'];
+		$this->thinnedCount = $_POST['thinnedCount'];
+		} else {
+			$this->germinatedCount = 0;
+			$this->thinnedCount = 0;
+		}
+	}
+
+	public function saveChanges(){
+		
+		if ($this->pageMode == 'EDIT'){
+			$sql = " UPDATE crop_plantings AS c ";
+			$sql .= " SET ";
+			$sql .= " c.method = '".$this->method."', ";
+			$sql .= " c.crop_id = ".$this->cropId.", ";
+			$sql .= " c.location_id = ".$this->locationId.", ";
+			$sql .= " c.planted_count = ".$this->plantedCount.", ";
+			$sql .= " c.germinated = '".$this->germinated."', ";
+			$sql .= " c.germinated_count = ".$this->germinatedCount.", ";
+			$sql .= " c.planted = '".$this->planted."', ";
+			$sql .= " c.thinned_count = ".$this->thinnedCount.", ";
+			$sql .= " c.rows_planted =  ".$this->rowsPlanted.", ";
+			$sql .= " c.per_row_planted = ".$this->perRowPlanted.", ";
+			$sql .= " c.updated = CURRENT_TIMESTAMP, ";			
+			$sql .= " c.notes = '".$this->notes."' ";
+			$sql .= " WHERE c.id = ".$this->id."  ";			
+			$result = dbRunSQL($sql);
+			
+		} else {
+
+			$sql = " INSERT INTO crop_plantings ";
+			$sql .= " (crop_id, ";
+			$sql .= " method, ";
+			$sql .= " location_id, ";
+			$sql .= " crop_plan_id, ";
+			$sql .= " updated, ";
+			$sql .= " planted, ";
+			$sql .= " planted_count, ";
+			$sql .= " rows_planted, ";
+			$sql .= " per_row_planted, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= " ".$this->cropId.", ";			
+			$sql .= " '".$this->method."', ";
+			$sql .= " ".$this->locationId.", ";
+			$sql .= " ".$this->cropPlanId.", ";			
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= " '".$this->planted."', ";
+			$sql .= " ".$this->plantedCount.", ";
+			$sql .= " ".$this->rowsPlanted.", ";
+			$sql .= " ".$this->perRowPlanted.", ";
+			$sql .= " '".$this->notes."') ";
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+		}
+	
+	}
+	
+} 
+?>

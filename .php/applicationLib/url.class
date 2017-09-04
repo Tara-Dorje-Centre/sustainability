@@ -1,0 +1,45 @@
+<?php
+
+namespace application;
+
+class url {
+	protected $basePage = 'index.php'; 
+	protected $arguments = '';
+	protected $parameters = array();
+	public function __construct(string $basePage){
+		$this->basePage = $basePage;
+
+	}
+	public function getBasePage(){
+		return $this->basePage;
+	}
+	public function print(){
+		$this->makeParameters();
+		$url = $this->basePage.$this->arguments;
+		return $url;
+	}
+	public function link($caption,$css){
+		$l = new link($this->print(),$caption,$css);
+	}
+	public function addParameter(parameter $p){
+		$this->parameters[$p->name] = $p;
+	}
+	public function removeParameter(string $name){
+		unset($this->parameters[$name]);
+	}
+	public function makeParameter(string $name, string $value){
+		$p = new parameter($name,$value);
+		$this->addParameter($p);
+	}
+	public function makeParameters(){
+		$this->arguments = '';
+		$first = true;
+		foreach ($this->parameters as $p){
+			$this->arguments .= $p->print($first);
+			if ($first == true){
+				$first = false;
+			}
+		}
+	}
+}
+?>

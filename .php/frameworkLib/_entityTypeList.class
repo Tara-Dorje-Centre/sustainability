@@ -1,0 +1,23 @@
+<?php 
+
+abstract class _entityTypeList extends _entityList{
+	protected $_MyClassName = '__entityTypeList';
+	protected $titleEntity = 'Entity Types';
+	public function getRequestArguments(){
+
+
+
+	}
+	protected function setPageMenu(){
+		
+		$this->base->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->_pageMenu = $this->base->links->print();
+		
+	}
+	
+	
+}
+
+
+
+?>

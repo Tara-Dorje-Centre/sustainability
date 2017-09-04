@@ -1,0 +1,54 @@
+﻿<?php
+namespace application;
+
+baseParameters{
+	public function getParameter(string $name,$value){
+		$p = new parameter($name,$value);
+		return $p;
+	}
+	public function getUrl(string $page = 'index.php'){
+		$u = new url($page);
+		return $u;
+	}
+	public function getLink(url $u,string $caption){
+		return $u->link($caption);
+	}
+}
+trait baseEntityParameters extends baseParameters{
+	protected function baseUrl(string $page = 'index.php',string $scope,string $context){
+		$u = $this->getUrl($page);
+		$this->setBaseParameters($u,$scope,$context);
+		return $u;
+	}
+	protected function setBaseParameters(url &$u,$scope,$context){
+		$u->addParameter($this->pScope($scope));
+		$u->addParameter($this->pContext($context));
+	} 
+	protected function pScope(string $scope){
+		return $this->getParameter('scope',$scope);
+	}
+	protected function pContext(string $context){
+		return $this->getParameter('context',$context);
+	}
+}
+trait calendarParameters extends baseParameters{
+	public function getCalendarLink(url $u, $caption, $year, $month){
+		$this->setCalendarParameters($u,$year,$month);	
+		return $u->link($caption);
+		//return $l;	
+	}
+	protected function setCalendarParameters(url &$u,$year,$month){
+		$u->addParameter($this->pYear($year));
+		$u->addParameter($this->pMonth($month));
+	} 
+	protected function pYear( $year){
+		return $this->getParameter('year',$year);
+	}
+	protected function pMonth( $month){
+		return $this->getParameter('month',$month);
+	}
+}
+
+
+
+?>
