@@ -1,5 +1,5 @@
 <?php 
-
+namespace framework;
 abstract class _fieldsActivityChild extends _fieldsTaskChild
 implements Ifields, Iecho, IcontentWriter{
 

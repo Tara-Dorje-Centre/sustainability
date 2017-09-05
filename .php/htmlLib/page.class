@@ -8,7 +8,7 @@ interface IPage{
 	public function setMain($contents,$links);
 	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none');
 }
-class _page extends \_echo
+class _page extends \framework\_echo
 implements IPage{
 	protected $_document;
 	protected $_container;

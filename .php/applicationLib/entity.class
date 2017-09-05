@@ -1,7 +1,8 @@
 <?php 
+namespace application;
 
-abstract class _entity extends \application\baseEntity
-implements Iecho, IcontentWriter{
+abstract class entity extends baseEntity
+{
 
 	protected $_MyClassName = '_entity';
 	protected $titleEntity = 'Entity';

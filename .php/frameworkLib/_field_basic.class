@@ -1,5 +1,7 @@
 <?php 
 
+namespace framework;
+
 class _textField extends _field
  implements Ifield, Iecho, IcontentWriter {
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){

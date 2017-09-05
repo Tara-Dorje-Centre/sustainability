@@ -1,5 +1,5 @@
 <?php 
-
+namespace framework;
 abstract class _fieldsTaskChild extends _fieldsProjectChild
 implements Ifields, Iecho, IcontentWriter{
 	

@@ -1,7 +1,7 @@
 <?php 
-/* reviewed 7/29    */
+namespace application;
 
-abstract class _entityType extends _entity{
+abstract class entityType extends entity{
 	protected $_MyClassName = '_entityType';
 	protected $titleEntity = '[entity] Type';
 	protected $pageSave = '[entity]TypeSave.php';

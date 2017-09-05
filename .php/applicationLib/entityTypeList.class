@@ -1,5 +1,5 @@
 <?php 
-
+namespace framework;
 abstract class _entityTypeList extends _entityList{
 	protected $_MyClassName = '__entityTypeList';
 	protected $titleEntity = 'Entity Types';

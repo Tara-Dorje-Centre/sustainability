@@ -1,5 +1,7 @@
 <?php 
 
+namespace framework;
+
 interface Ifield{
 	public const dtTEXT = 'TEXT';
 	public const dtNUMBER = 'NUMBER';

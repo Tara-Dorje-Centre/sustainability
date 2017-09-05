@@ -11,11 +11,12 @@ class systemManifest{
 		include_once($path.$file);
 	}
 	public function includeLibraries(){
+		$this->includeFile($this->frameworkLib);
 		$this->includeFile($this->htmlLib);
 		$this->includeFile($this->htmlLibInputsLib);
 		$this->includeFile($this->htmlLibCssLib);
 		$this->includeFile($this->applicationLib);
-		$this->includeFile($this->frameworkLib);
+
 		$this->includeFile($this->entitiesLib);
 
 	}

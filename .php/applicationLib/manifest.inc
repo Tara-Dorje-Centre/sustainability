@@ -17,4 +17,8 @@ include_once("entityTypeLinks.class");
 
 include_once("calendar.class");
 include_once("baseEntity.class");
+include_once("entity.class");
+include_once("entityType.class");
+include_once("entityList.class");
+include_once("entityTypeList.class");
 ?>

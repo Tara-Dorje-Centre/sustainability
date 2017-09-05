@@ -1,7 +1,7 @@
 <?php 
-namespace framework;
+namespace framework\sql;
 
-class _database extends mysqli{
+class _database extends \mysqli{
 	
 protected const _server = "127.0.0.1";
 protected const _database  = "projects";

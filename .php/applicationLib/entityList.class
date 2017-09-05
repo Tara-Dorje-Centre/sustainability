@@ -1,5 +1,5 @@
 <?php 
-
+namespace framework;
 	
 abstract class _entityList extends _entity{
 	public $found = 0;
