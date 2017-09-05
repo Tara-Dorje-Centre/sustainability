@@ -1,5 +1,5 @@
 <?php
-//namespace html;
+namespace html;
 
 class _displayDetails {
 	protected $entity;

@@ -1,125 +1,7 @@
 <?php 
 
 
-/*
-class _htmlPage extends _echo 
-implements IhtmlPage,Iecho{
-	private $_document;
-	private $_pageContainer;
-	private $_pageHeading;
-	
-	private $_pageTitle;
-	private $_pageLinks;
-	
-	private $_pageDetails;
-	private $_pageFooter;
-	
-	private $_onLoad = 'none';
-	private $title;
-	
-	private $useFooterLogo = false;
-	private $useFooterNotices = false;
-	private $useFooterLinks = false;
-	private $_pageFooterLinks;
-	private $_pageFfooterNotices;
-	private $_pageFooterLogo;
 
-	public function __construct(){
-	
-		$this->_document = new html\_document($this->_title,$this->_onLoad);
-		$this->_pageContainer = new html\_div('site-container');
-		$this->_pageHeading = new html\_div('site-heading');
-		$this->_pageLinks = new html\_div('site-heading-links');
-		$this->_pageContents = new html\_div('site-content');
-	}
-
-	
-	public function print(){	
-		$this->build();	
-		$content = $this->_document->print();
-		echo $content;		
-		//close db connection
-		global $conn;
-		$conn->close;
-	}
-	protected function setStyles(string $styles){
-		$this->_document->setStyles($styles);
-	}
-	protected function setScripts(string $scripts){
-		$this->_document->setScripts($scripts);
-	}
-	protected function setTitle(string $title){
-		$this->title = $title;
-	}
-	protected function build(){		
-		$this->echoPrint(true,'begin','build','htmlPage');
-		
-		$this->_document->addContent($this->_container->open());
-		$this->addPageHeading();
-		
-		
-		$this->_document->addContent($this->_contents->print());	
-		$this->_document->addContent($this->_footer->print());
-		
-		$this->_document->addContent($this->_container->close());
-	}
-	
-	
-	
-	protected function addPageHeading(){
-		//$this->echoPrint(true,'begin','siteHeading','htmlPage');
-		$this->_pageHeading->addContent($this->_pageTitle->print());
-		$this->_pageHeading->addContent($this->_pageLinks->print());
-		$this->_document->addContent($this->_pageHeading->print());
-	}
-
-	
-	protected function setPageLinks(string $links){
-		$this->_pageLinks->setContent($links);
-	}
-	protected function setPageContents(string $contents){
-		$this->_pageContents->setContent($contents);
-	}
-	
-	protected function setPageFooter($notices,$links,$logo){
-		$this->setPageFooterNotices($notices);
-		$this->setPageFooterLinks($links);
-		$this->setPageFooterLogo($logo);
-	
-	}
-	protected function addPageFooter(){
-		$this->_pageFooter = new html\_div('site-footer');
-		if ($this->useFooterLogo == true){
-			$this->_pageFooter->addContent($this->_pageFooterLogo->print());
-		}
-		if ($this->useFooterLogo == true){
-			$this->_pageFooter->addContent($this->_pageFooterNotices->print());
-		}
-		if ($this->useFooterLogo == true){
-			$this->_pageFooter->addContent($this->_pageFooterLinks->print());
-		}
-		$this->_document->addContent($this->pageFooter->print();
-	}
-
-	protected function setPageFooterLogo(string $logo){
-		$this->useFooterLogo = true;
-		$this->_pageFooterLogo = new html\_div('site-footer-logos');
-		$this->_pageFooterLogo->addContent($logos);
-	}
-	protected function setPageFooterNotices(string $notices){
-		$this->useFooterNotices = true
-		$this->_pageFooterNotices = new html\_div('site-footer-notices');
-		$this->_pageFooterNotices->addContent($notices);
-	}
-	protected function setPageFooterLinks(string $links){
-		$this->useFooterLinks = true
-		$this->_footerLinks = new html\_div('site-footer-links');
-		$this->_footerLinks ->addContent($links);
-	}
-
-}
-
-*/
 
 Interface IsummarySQL{
 
@@ -132,7 +14,6 @@ Interface IdoneBySQL{
 public function countDoneBy( $doneBy = 'EVERYONE', $year= 0, $month = 0);
 public function listDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
 public function summaryDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
-
 public function summaryDoneByGroupType($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year = 0, $month = 0);
 }
 

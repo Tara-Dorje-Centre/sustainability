@@ -1,6 +1,7 @@
 <?php 
+namespace framework;
 
-class _inputSection extends _contentWriter{
+class _inputSection extends \framework\_contentWriter{
 protected $name;
 protected $css;
 protected $_section;

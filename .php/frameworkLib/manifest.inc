@@ -1,23 +1,22 @@
 <?php
 
 
-include_once("_echo.class");
-include_once("_contentWriter.class");
+include_once("__echo.class");
+include_once("__contentWriter.class");
 
-include_once("_timestamp.class");
+include_once("__timestamp.class");
 
 
 
 include_once("_sqlFunctions.php");
-showProgress('general functions loaded');
-//
-include_once("_sqlWriter.class");
+
+include_once("__sqlWriter.class");
 include_once("_inputForm.class");
-include_once("_calendar.class");
-include_once("_database.class");
-include_once("_url.class");
-include_once("_linkMenu.class");
-include_once("_linkMenuPaged.class");
+
+include_once("__database.class");
+
+
+
 include_once("_environmentVariable.class");
 include_once("_field.class");
 include_once("_field_basic.class");
@@ -32,7 +31,7 @@ include_once("_fieldsTaskChild.class");
 include_once("_fieldsActivityChild.class");
 include_once("_summary.class");
 
-include_once("userLogin.class");
+
 include_once("_entityInterfaces.class");
 
 include_once("_entitySQL.class");
@@ -40,31 +39,16 @@ include_once("_entityTypeSQL.class");
 include_once("_projectChildSQL.class");
 include_once("_taskChildSQL.class");
 
-include_once("_baseEntityLinks.class");
-include_once("_baseEntity.class");
-
-
-include_once("_entityLinks.class");
 include_once("_entity.class");
 include_once("_entityList.class");
 
-
-include_once("_entityTypeLinks.class");
 include_once("_entityType.class");
 include_once("_entityTypeList.class");
 
-
-
 include_once("_htmlSite.class");
-showProgress('general classes loaded');
-//
-//classes - secure login=
 
 include_once("sysMenuLinks.class");
 include_once("sysMenu.class");
+include_once("userLogin.class");
 
-showProgress('menu classes loaded');
-//
-
-showProgress('exit manifestFramework.inc');
 ?>

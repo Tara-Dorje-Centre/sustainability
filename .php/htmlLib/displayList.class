@@ -1,7 +1,7 @@
 <?php
-//namespace html;
+namespace html;
 
-class _displayList extends _displayDetails{
+class displayList extends _displayDetails{
 	public $_list;
 	protected $links;
 	public function __construct(string $entity = 'entity',string $links = 'links',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){

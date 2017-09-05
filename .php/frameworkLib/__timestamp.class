@@ -1,7 +1,6 @@
 <?php
+namespace framework;
 
-
-	
 class _timestamp{
 	public $timestamp;
 	public $year;

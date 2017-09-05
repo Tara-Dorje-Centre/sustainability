@@ -1,8 +1,7 @@
 <?php 
-
 namespace application;
 
-class linkMenu extends \_contentWriter{
+class linkMenu extends \framework\_contentWriter{
 	protected $_menu;
 	protected $_list;
 	protected $_links = array();
@@ -42,7 +41,7 @@ class linkMenu extends \_contentWriter{
 		$this->nameList = $name.'-list';
 	}
 	
-	public function makeLink(url $u,string $caption){
+	public function makeLink(url &$u,string $caption){
 		//$l = new link($u->print, $caption,$this->cssItem);
 		$this->addLink($u->link($caption));
 	}

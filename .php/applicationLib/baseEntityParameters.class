@@ -1,0 +1,22 @@
+﻿<?php
+namespace application;
+
+trait baseEntityParameters extends baseParameters{
+	protected function baseUrl(string $page = 'index.php',string $scope,string $context){
+		$u = $this->getUrl($page);
+		$this->setBaseParameters($u,$scope,$context);
+		return $u;
+	}
+	protected function setBaseParameters(url &$u,$scope,$context){
+		$u->addParameter($this->pScope($scope));
+		$u->addParameter($this->pContext($context));
+	} 
+	protected function pScope(string $scope){
+		return $this->getParameter('scope',$scope);
+	}
+	protected function pContext(string $context){
+		return $this->getParameter('context',$context);
+	}
+}
+
+?>

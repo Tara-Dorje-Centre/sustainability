@@ -1,6 +1,7 @@
 <?php 
+namespace application;
 
-class _calendar{
+class calendar{
 	private $title;
 	private $year;
 	private $month;

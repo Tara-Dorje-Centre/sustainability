@@ -1,5 +1,4 @@
 ﻿<?php
-
 namespace application;
 
 interface IentityLinks{
@@ -13,39 +12,12 @@ interface IentityLinks{
 	public function printListLink($idParent, $idType);
 	public function printDetailLink($caption, $id);
 	public function printPagingLinks($recordCount, $resultPage, $perPage, $idParent, $idType);
-	public function printCalendarLink(_url $u, $caption, $year, $month);
+	public function printCalendarLink(url $u, $caption, $year, $month);
 
 }
 
-trait entityParameters {
-	protected function setEntityParametersList(url &$u,$idParent,$idType){
-		$u->addParameter($this->pPageAction('LIST'));
-		$u->addParameter($this->pIdParent($idParent));
-		$u->addParameter($this->pIdType($idType));
-	} 
-	protected function setEntityParametersDetail(_url &$u,$action,$id,$idParent){
-		$u->addParameter($this->pPageAction($action));
-		$u->addParameter($this->pId($id));
-		$u->addParameter($this->pIdParent($idParent));
-		$u->addParameter($this->pIdType($idType));
-	} 
-	protected function pPageAction(string $action){
-		return $this->getParameter('page-action',$action);
-	}
-	
-	protected function pId( $id){
-		return $this->getParameter('id',$id);
-	}
-	protected function pIdParent( $idParent){
-		return $this->getParameter('id-parent',$idParent);
-	}
-	protected function pIdType( $idType){
-		return $this->getParameter('id-type',$idType);
-	}
-
-}
-
-abstract class entityLinks extends baseEntityLinks {
+abstract class entityLinks extends baseEntityLinks 
+implements IentityLinks{
 use entityParameters;
 	
 	protected function setListingLinks($mode = 'LIST',$id,$idParent,$idType){
@@ -139,7 +111,7 @@ use entityParameters;
 		return $d->print();
 	}	
 	protected function getPagingLinks($recordCount, $resultPage, $perPage, $idParent, $idType){
-		$p = new _linkMenuPaged($perPage,'results-page');
+		$p = new linkMenuPaged($perPage,'results-page');
 		$u = $this->urlList($idParent,$idType);
 		$p->makePagedLinks($u, $recordCount,$resultPage);
 		return $p;
@@ -149,8 +121,7 @@ use entityParameters;
 		$p = $this->getPagingLinks($recordCount,$resultPage, $perPage,$idParent,$idType);
 		return $p->print();
 	}
-	
-	public function printCalendarLink(_url $u, $caption, $year, $month){
+	public function printCalendarLink(url $u, $caption, $year, $month){
 		$l = $this->setCalendarLink($u,$caption,$year,$month);
 		return $l->print();
 	}

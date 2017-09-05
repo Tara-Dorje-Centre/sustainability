@@ -1,4 +1,6 @@
 <?php 
+namespace framework;
+
 class _database extends mysqli{
 	
 protected const _server = "127.0.0.1";

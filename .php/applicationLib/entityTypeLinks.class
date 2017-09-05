@@ -1,7 +1,7 @@
 ﻿<?php
+namespace application;
 
-
-abstract class _entityTypeLinks extends _entityLinks {
+abstract class entityTypeLinks extends entityLinks {
 
 	public function __construct(){
 		$context = 'entity';

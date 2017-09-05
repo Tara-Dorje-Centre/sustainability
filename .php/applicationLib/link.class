@@ -1,5 +1,4 @@
 <?php
-
 namespace application;
 
 class link extends \html\_href{

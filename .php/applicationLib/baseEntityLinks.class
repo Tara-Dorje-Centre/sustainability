@@ -1,10 +1,8 @@
 ﻿<?php
-
 namespace application;
 
-
 abstract class baseEntityLinks extends linkMenu{
-use \application\baseEntityParameters, TcalendarParameters;
+use baseEntityParameters, calendarParameters;
 	protected $context = 'entity';
 	protected $pageList = 'list.php';
 	protected $pageDetail = 'detail.php';
@@ -18,17 +16,14 @@ use \application\baseEntityParameters, TcalendarParameters;
 		$this->pageList = $pageList;
 		$this->pageDetail = $pageDetails;
 	}
-	
 	public function baseUrlList(){
 		$url = $this->baseUrl($this->pageList,'list',$this->context);
 		return $url;
 	}
-	
 	public function baseUrlDetail(){
 		$url = $this->baseUrl($this->pageDetail,'detail',$this->context);
 		return $url;
-	}	
-
+	}
 }
 
 

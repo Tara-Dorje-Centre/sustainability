@@ -1,4 +1,5 @@
 <?php 
+namespace framework;
 
 interface Iecho{
 public function setEchoState(bool $enabled = false);

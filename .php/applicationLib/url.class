@@ -1,5 +1,4 @@
 <?php
-
 namespace application;
 
 class url {

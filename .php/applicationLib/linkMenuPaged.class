@@ -1,7 +1,7 @@
 <?php 
+namespace application;
 
-
-class _linkMenuPaged extends _linkMenu{
+class linkMenuPaged extends linkMenu{
 	protected $pageCount = 1;
 	protected $perPage = 10;
 	protected $currentPage = 1;
@@ -85,7 +85,7 @@ class _linkMenuPaged extends _linkMenu{
 			return $recordRange;
 	
 	}
-	public function makePagedLinks(_url $u, $recordCount = 1, $currentPage = 1){
+	public function makePagedLinks(url $u, $recordCount = 1, $currentPage = 1){
 		$this->recordCount = $recordCount;
 		$this->currentPage = $currentPage;
 		$this->setPageCount();
@@ -126,11 +126,7 @@ class _linkMenuPaged extends _linkMenu{
 		}
 		$this->makeNextLink();
 		$this->makeLastLink($maxDisplayPage);
-		
-		
 	}
-
-	
 	
 }
 

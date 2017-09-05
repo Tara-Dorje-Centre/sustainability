@@ -1,9 +1,10 @@
 <?php 
+namespace application;
 
-abstract class _entityBase extends _contentWriter 
+abstract class baseEntity extends \framework\_contentWriter 
 implements Iecho, IcontentWriter {
-	protected $_MyClassName = '__baseEntity.';
-	protected $titleEntity = '__baseEntity';
+	protected $_MyClassName = 'baseEntity.';
+	protected $titleEntity = 'baseEntity';
 
     public $pageMode = 'VIEW';
 	public $id = 0;
@@ -125,8 +126,6 @@ implements Iecho, IcontentWriter {
 		$this->idParent = $idParent;
 		$this->echoState_ids(true, 'setIdentifiers');
 	}
-
-
 	
 }
 
