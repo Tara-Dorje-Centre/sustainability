@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-abstract class _fieldsEntity extends _fields{
+abstract class fieldsEntity extends _fields{
 	
 	public $id;
 	public $name;		
@@ -40,26 +40,5 @@ abstract class _fieldsEntity extends _fields{
 }
  
 
-abstract class _fieldsEntityType extends _fieldsEntity{
-	
-	public $displayOrder;
-	public $notes;
-	
-	
-	public function __construct(){
-		parent::__construct();
-		$this->notes = new _notesField('notes','notes','Notes',true);
-		$this->displayOrder = new _numberField('display_order','display-order','Display Order');
-  
-  		$this->_register('notes', $this->notes);
-		$this->_register('displayOrder', $this->displayOrder);
-    }
-	public function setDefaults(){
-    	parent::setDefaults();
-		$this->displayOrder->setDefault(0);
-		$this->notes->setDefault('');
-    }
-
-}
 
 ?>

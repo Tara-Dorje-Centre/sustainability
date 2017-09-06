@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-abstract class _fieldsEntityChild extends _fieldsEntity{
+abstract class fieldsEntityChild extends fieldsEntity{
 	
 	public $parentEntity;
 	public $type;

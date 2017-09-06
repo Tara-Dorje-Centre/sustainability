@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-abstract class _fieldsTaskChild extends _fieldsProjectChild{
+abstract class fieldsTaskChild extends fieldsProjectChild{
 
 	public $task;
 	public $taskType;

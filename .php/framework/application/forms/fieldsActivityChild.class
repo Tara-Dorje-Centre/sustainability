@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-abstract class _fieldsActivityChild extends _fieldsTaskChild{
+abstract class fieldsActivityChild extends fieldsTaskChild{
 
 	public $activity;
 	
