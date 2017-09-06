@@ -1,0 +1,51 @@
+<?php 
+namespace application\forms;
+
+abstract class _fieldsTaskChild extends _fieldsProjectChild{
+
+	public $task;
+	public $taskType;
+	public $reported;
+	public $doneBy;
+	public $linkUrl;
+ 	public $linkText;
+ 	public $notes;
+ 	public $quantity;
+ 	public $quantityType;
+	
+    public function __construct(){
+    	parent::__construct();
+    	$this->task = new _fieldIdName('task_id','id-task','Task','task_name');
+		
+		$this->reported = new _dateField('reported','date-reported','Reported');
+		$this->doneBy = new _userField('done_by','done-by','DoneBy');
+    	$this->linkUrl = new _textField('link_url','link-url','LinkUrl');
+		$this->linkText = new _textField('link_text','link-text','LinkText');
+		$this->notes = new _notesField('notes','notes','Notes');
+		$this->quantity = new _numberField('quantity','quantity','Quantity');
+		$this->quantityType = new _fieldIdName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
+		
+		$this->_register('task', $this->task);
+		$this->_register('reported', $this->reported);
+		$this->_register('doneBy', $this->doneBy);
+		$this->_register('linkUrl', $this->linkUrl);
+		$this->_register('linkText', $this->linkText);
+		$this->_register('notes', $this->notes);
+		$this->_register('quantity',$this->quantity);
+		$this->_register('quantityType',$this->quantityType);
+    }
+	public function setDefaults(){
+		parent::setDefaults();
+		//$this->parentTask->setDefault(0);
+		$this->reported->setDefault($this->_currentTimestamp);
+		$this->doneBy->setDefault($this->_currentUser);
+		$this->linkUrl->setDefault('');
+		$this->linkText->setDefault('');
+		$this->notes->setDefault('');
+		$this->quantity->setDefault(1);
+		$this->quantityType->setDefault(0);
+    }
+}
+
+
+?>

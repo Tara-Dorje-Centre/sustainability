@@ -1,0 +1,113 @@
+<?php 
+namespace application\forms;
+
+class _inputSection extends \html\_div(){
+
+	public function __construct(string $name,string $css){
+		parent::__construct($name,$css);
+	}
+	public function input(_field $f){
+		$this->addContent($f->input());
+	}
+	public function button(_field $f){
+		$this->addContent($f->button());
+	}
+	public function hidden(_field $f){
+		$this->addContent($f->inputHidden());
+	}
+	public function choice(_field $f,string $options){
+		$this->addContent($f->inputChoice($options));
+	}
+
+}
+
+class _inputForm {
+	protected $_form;
+	protected $_fields;
+	protected $_display;
+	protected $_fieldset;
+	protected $_context;
+	//protected $div;
+	protected $entity;
+	protected $mode;
+	protected $url;
+	protected $title;
+	protected $useContextMenu = false;
+	public $required;
+	public $optional;
+	public $hidden;
+	public $submit;
+
+	public function __construct(string $url,string $title,string $mode, string $entity, bool $useContextMenu = false){ ){
+		$this->url = $url;
+		$this->title = $title;
+		$this->entity = $entity;
+		$this->mode = $mode;
+		$this->useContextMenu = $useContextMenu;
+
+		$this->setDisplayObjects()
+		$this->required = new _inputSection('form-required','show');
+		$this->optional = new _inputSection('form-optional','hide');
+		$this->hidden = new _inputSection('form-hidden','hide');
+		$this->submit = new _inputSection('form-submit','show');
+	}
+	protected function setContextMenu(){
+
+		if ($this->useContextMenu == true){
+			$elementId = 'form-optional';
+			$u = new \application url('#!');
+			$js = "toggle('".$elementId."');";
+
+			$l = new \application\link($u, '+Options','toggle-link',$js,);
+			$l->setOnClickScript($js);
+			$name = $this->entity.'-context-menu';
+			$this->_context = new \html\_div($name,'contextMenu');
+			$this->_context->setContent($l->print());
+		}	
+	}
+	protected function setDisplayObjects(){
+	
+		$name = $this->entity.'-display-'.$this->mode;
+		$css = 'display-'.$this->mode;
+		$this->_display = new \html\_div($name,$css);
+		
+		$legend = $this->mode.':  '.$this->title;
+		$this->_fieldset = new \html\_fieldset($legend);
+		
+		$name = $this->entity.'-edit-form';
+		$this->_form = new \html\_form($this->url, $name,'editForm');
+		
+		$name = $this->entity.'-fields';
+		$this->_fields = new \html\_div($name,'editFields');
+		
+		
+	}
+	
+	protected function printSections(){ 
+		$this->_fields->addContent($this->required->print());
+		$this->_fields->addContent($this->optional->print());
+		$this->_fields->addContent($this->submit->print());
+		$this->_fields->addContent($this->hidden->print());
+	}
+	protected function printDisplayObjects(){
+	
+		if ($this->useContextMenu == true){
+			$this->setContextMenu(){
+			$this->_display->setContent($this->_context->print());
+		}
+		
+		$this->_form->setContent($this->_fields->print());
+		$this->_fieldset->setContent($this->_form->print());
+		$this->_display->addContent($this->_fieldset->print());
+		
+	}
+	
+	public function print(){ 
+		$this->printSections();
+		$this->printDisplayObjects();
+		return $this->_display->print();
+	}
+
+}
+
+?>

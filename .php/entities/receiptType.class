@@ -1,0 +1,43 @@
+<?php
+namespace application\entities;
+/* reviewed 7/29    */
+class receiptTypeFields extends _fieldsEntityType{
+
+}
+class receiptTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'receipt_types';
+	}
+}
+class receiptTypeLinks extends _entityTypeLinks{
+	protected $context = 'receiptType';
+	protected $pageList = 'pr_ReceiptType_List.php';
+	protected $pageDetail = 'pr_ReceiptType_Detail.php';
+}
+class receiptType extends _entityType{
+
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'receiptType';
+		parent::__construct($mode, $id, $idParent);
+	
+		$this->entity = 'receipt-type';
+  		$this->titleEntity = 'Receipt Type';
+  		$this->pageSave = 'pr_ReceiptType_Save.php';
+		
+		$this->f = new receiptTypeFields();
+		$this->f->setEntity($this->entity);
+		$this->sql = new receiptTypeSQL;
+		$this->links = new receiptTypeLinks();
+	}
+} 
+class receiptTypeList extends _entityTypeList{
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'ReceiptTypeList';
+		parent::__construct($mode, $id, $idParent);
+		
+		$this->titleEntity = 'Receipt Types';
+		$this->base = new receiptType($this->pageMode,$this->id,$this->idParent);
+	}
+}
+
+?>

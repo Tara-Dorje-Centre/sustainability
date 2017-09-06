@@ -1,0 +1,295 @@
+<?php
+namespace application\entities;
+
+class activityFields extends _fieldsTaskChild{
+	public $hoursEstimated;
+	public $hoursActual;
+ 	public $comments;
+	
+    public function __construct(){
+    	$this->hoursActual = new _numberField('hours_actual','hours-actual','Effort Actual');
+    	$this->hoursEstimated = new _numberField('hours_actual','hours-actual','Effort Actual');
+    	$this->comments = new _commentsField('hours_actual','hours-actual','Effort Actual');
+    	$this->_register('hoursActual',$this->hoursActual);
+    	$this->_register('hoursEstimated',$this->hoursEstimated);
+    	$this->_register('comments',$this->comments);
+    }
+	
+	public function setDefaults(){
+		parent::setDefaults();
+		$this->hoursActual->setDefault(0);
+		$this->hoursEstimated->setDefault(1);
+	}
+	
+}
+
+class activity extends _entity{       
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'activity';
+		parent::__construct($mode, $id, $idParent);
+     	$this->titleEntity = 'Activity';
+   	 	$this->pageSave = 'pr_Activity_Save.php';
+		$this->f = new activityFields();
+		$this->sql = new ActivitySQL();
+		$this->links = new ActivityLinks();
+	}
+	public function getRequestArguments(){
+
+
+
+	}
+	protected function listingRowLink(){
+		$link = $this->links->itemViewEdit($this->name->value(),$this->id->value());
+		return $link;
+	}
+	
+	public function listingCaption($myActivity = 'NO'){
+	
+		$this->f->project->enabled(false);
+		$this->f->task->enabled(false);
+		$heading = '';
+		if ($myActivity != 'NO'){
+				if ($myActivity != 'PROJECT'){
+			$this->f->project->enabled(true);
+			}
+			$this->f->task->enabled(true);
+		}
+		
+		return $this->f->listCaption();
+	}
+	
+	public function listingRowFormat($myActivity){
+		$this->formatForDisplay();
+		$detail = '';
+		if ($this->myActivity != 'NO'){
+			$taskLink = $this->task->links->detailViewHref($this->task->id,$this->task->name);
+			$detail .=  wrapTd($taskLink);
+				
+			if ($this->myActivity != 'PROJECT'){
+				$projectLink = $this->task->project->detailViewHref($this->task->project->id,$this->task->project->name);				
+				$detail .=  wrapTd($projectLink);
+			}
+			$cssRow = $this->highlightStyle;
+		} else {
+				$cssRow = 'none';
+		}
+		if ($a->hoursActual == 0){
+			$cssRow = 'highlight-yellow';
+		} 	
+			$link = $this->links->detailViewEditHref($this->id,$this->doneBy);
+			$detail .=  wrapTd($link);
+			$detail .=  wrapTd($a->doneBy);
+			$detail .=  wrapTd($a->started);
+			$detail .=  wrapTd($a->hoursActual);
+			$detail .=  wrapTd($a->comments);
+			
+			if ($a->linkText != '' && $a->linkUrl != ''){
+				$link = $this->links->formatHref($a->linkText,$a->linkUrl,'_blank');
+				$detail .= wrapTd($link);
+			} else {
+				$detail .= wrapTd(spacer());
+			}
+
+			$list .=  wrapTr($detail,$cssRow);
+			return $listRow;
+			}
+		
+	
+	
+	public function setParentTask(){
+		//$this->task->setDetails();
+	}
+		
+	protected function setPageTitle(){	
+		$title .= $this->f->project->name->value.br();
+		$title .= 'Task: '.$this->f->task->name->value;		
+		$this->_pageTitle = $title;
+	}	
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		//$projects = new ProjectLinks($menuType,$menuStyle);
+		//$tasks = new TaskLinks($menuType,$menuStyle);
+	//	$activities = new ActivityLinks($menuType,$menuStyle);
+					
+		$menu = $this->links>openMenu('section-heading-links');
+
+		$menu .= $this->task->links->detailViewHref($this->task->id);
+		$menu .= $this->task->project->links->detailViewHref($this->task->project->id);
+		
+		$menu .= $this->links>resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $this->links->detailEditHref($this->id);
+		}		
+		
+		if ($this->pageMode == 'EDIT'){
+			$menu .= $this->links->detailViewHref($this->id);
+		}
+		//$menu .= $activities->listingHref($this->task->id);
+
+		$menu .= $this->links->closeMenu();
+		
+		$this->_pageMenu = $menu;
+
+	}
+		
+		
+		
+	public function display(){
+		$this->formatForDisplay();
+		
+		$detail = openDisplayDetails('activity','Activity Details');
+		
+		//$detail .= captionedParagraph('a-order','Order',$this->order);
+		$detail .= captionedParagraph('a-started','Started',$this->started);
+		$detail .= captionedParagraph('a-updated','Updated',$this->updated);		
+		$detail .= captionedParagraph('a-done-by','Done By',$this->doneBy);
+		//$detail .= captionedParagraph('a-h-est','Estimated',$this->hoursEstimated);
+		$detail .= captionedParagraph('a-h-actual','Actual',$this->hoursActual);
+ 		$detail .= captionedParagraph('a-comments','Comments',$this->comments);
+		if ($this->linkText != '' && $this->linkUrl != ''){
+			$l = new ActivityLinks('DIV','menu');
+			$link = $l->formatHref($this->linkText,$this->linkUrl,'_blank');
+			$detail .= captionedParagraph('a-weblink','Web Link',$link);
+		}
+		//$activityType = new ActivityType;
+		//$input = $activityType->getActivityTypeSelectList($this->typeId,'typeId','true');
+	
+		$detail .= closeDisplayDetails();	
+		
+		return $detail;
+	}	
+	
+
+	public function setDefaults(){
+		parent::setDefaults();
+		
+		//$this->order->set($this->task->activityCount + 1);
+		//$this->hoursEstimated = $this->task->hoursEstimated;
+		//$this->hoursActual->set($this->task->hoursEstimated);
+	}
+	
+	
+	
+	protected function editForm($editContext = 'ActivityDetail'){
+		
+		$this->echoState(true,'editForm');
+		
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+	/*	$entity = 'activity';
+		$this->f->setEntity($entity);
+		$edit = new _inputForm($entity,$this->pageMode,$this->pageSave);
+	*/	$edit->open($contextMenu,$this->titleEntity);
+		
+		$base = new ProjectType('OPTIONS');
+		$changeJs = "ajaxRefresh('PROJECTS_BY_TYPE_SELECT',this,'projectId');";
+		$input = $base->options($this->f->parentProjectType->id->value(),$this->f->parentProjectType->id->env->variable(),'false',false,$changeJs);
+		$edit->required->addContent($this->f->parentProjectType->inputChoice($input));
+		
+		$base = new project('OPTIONS');
+		$changeJs = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'taskId');";
+		$input = $base->options($this->f->parentProject->id->value(),$this->f->parentProject->id->variable(),'false',false,$changeJs);
+		$edit->required->addContent($this->f->parentProject->inputChoice($input));
+		
+		$base = new task('OPTIONS');
+		$changeJs = "ajaxRefresh('TASK_EST_EFFORT',this,'activityHoursActual');";		
+		$input = $base->options($this->f->parentTask->id->value(),$this->f->parentTask->id->variable(),'false',false,$changeJs);
+		$edit->required->addContent($this->f->parentTask->inputChoice($input));
+		
+		$base = new activityType('OPTIONS');
+		$select = $base->options($this->f->typeEntity->value(),$this->f->typeEntity->env->variable(),'false',true);
+		$edit->required->addContent($this->f->typeEntity->inputChoice($select));
+		
+		
+		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
+		$edit->required->addContent($this->hoursActual->input());
+		$edit->required->addContent($this->started->input());
+		$edit->required->addContent($this->doneBy->input());
+		$edit->optional->addContent($this->linkUrl->input());		
+		$edit->optional->addContent($this->linkText->input());
+		$edit->optional->addContent($this->comments->input());
+		
+		//	$edit->required->addContent($this->f->name->input());
+		//	$edit->optional->addContent($this->f->description->input());
+		
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		
+		$edit->hidden->addContent($this->f->id->inputHidden());
+		$edit->hidden->addContent(getHiddenInput('editContext',$editContext));
+		$edit->submit->addContent(getSaveChangesResetButtons());
+
+		return $edit->close();
+		
+	}
+	
+	public function collectPostValues(){
+		parent::collectPostValues();
+		$this->echoState(true, 'collectPostValues');
+	
+		$this->idParent = $this->f->task->id->value();
+		
+		//$this->setParentTask();
+		//$this->hoursEstimated = $this->task->hoursEstimated;
+	}
+	
+	
+	protected function saveUpdate(){
+			$sql = " UPDATE activities a ";
+			$sql .= " SET ";
+			$sql .= " a.done_by = '".$this->doneBy."', ";
+			$sql .= " a.comments = '".$this->comments."', ";
+			$sql .= " a.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " a.started = '".$this->started."', ";
+			$sql .= " a.link_text = '".$this->linkText."', ";
+			$sql .= " a.link_url = '".$this->linkUrl."', ";
+			$sql .= " a.hours_actual = ".$this->hoursActual.", ";			
+			//$sql .= " a.activity_order = ".$this->order.", ";
+			$sql .= " a.type_id = ".$this->typeId.", ";
+			$sql .= " a.task_id = ".$this->task->id." ";
+			$sql .= " WHERE a.id = ".$this->id." ";
+
+			$result = dbRunSql($sql);
+			
+			$this->task->updateActivitySummary();
+	}
+	
+	protected function saveInsert(){
+			$sql = " INSERT INTO activities ";
+			$sql .= " ( ";
+			//$sql .= " activity_order, ";
+			$sql .= " task_id, ";
+			$sql .= " type_id, ";
+			$sql .= " done_by, ";
+			$sql .= " started, ";
+			$sql .= " updated, ";
+			//$sql .= " hours_estimated, ";
+			$sql .= " hours_actual, ";
+			$sql .= " link_url, ";
+			$sql .= " link_text, ";
+			$sql .= " comments) ";
+			$sql .= " VALUES (";
+			//$sql .= " ".$this->order.", ";
+			$sql .= " ".$this->task->id.", ";
+			$sql .= " ".$this->typeId.", ";
+			$sql .= " '".$this->doneBy."', ";
+			$sql .= " '".$this->started."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			//$sql .= " ".$this->hoursEstimated.", ";
+			$sql .= " ".$this->hoursActual.", ";
+			$sql .= " '".$this->linkUrl."', ";
+			$sql .= " '".$this->linkText."', ";			
+			$sql .= " '".$this->comments."') ";
+			
+			$result = dbRunSql($sql);
+			
+			$this->id = dbInsertedId();
+
+			$this->task->updateActivitySummary();
+	}
+	
+	
+	
+} 
+?>

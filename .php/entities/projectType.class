@@ -1,0 +1,44 @@
+<?php
+namespace application\entities;
+/* reviewed 7/29    */
+class projectTypeFields extends _fieldsEntityType{
+public function __construct(){
+parent::__construct();
+}
+}
+class projectTypeSQL extends _entityTypeSQL{
+	public function __construct(){
+		$this->baseTable = 'project_types';
+	}
+}
+class projectTypeLinks extends _entityTypeLinks{
+	protected $context = 'projectType';
+	protected $pageList = 'pr_ProjectType_List.php';
+	protected $pageDetail = 'pr_ProjectType_Detail.php';
+}
+class projectType extends _entityType{
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'ProjectType';
+		parent::__construct($mode, $id, $idParent);
+		
+		$this->entity = 'project-type';
+     	$this->titleEntity = 'Project Type';
+   	 	$this->pageSave = 'pr_ProjectType_Save.php';
+		
+		$this->f = new projectTypeFields();
+		$this->f->setEntity($this->entity);
+		$this->sql = new projectTypeSQL();
+		$this->links = new projectTypeLinks();
+	}
+} 
+class projectTypeList extends _entityTypeList{
+ 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'projectTypeList';
+		parent::__construct($mode, $id, $idParent);
+		
+		$this->titleEntity = 'Project Types';
+		$this->base = new projectType($this->pageMode,$this->id,$this->idParent);
+	}
+} 
+
+?>

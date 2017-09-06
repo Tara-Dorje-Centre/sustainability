@@ -1,0 +1,18 @@
+<?php
+namespace application\entities;
+
+class taskLinks extends _entityLinks {
+	
+	public function linkPeriodicTasks(bool $closed = false){
+		if ($closed == true){
+			$status = 'COMPLETE';
+			$caption = 'Done';
+		} else {
+			$status = 'INCOMPLETE';
+			$caption = 'To Do';
+		}
+		return $this->list($caption,-1,0,$status);
+	}
+	
+}
+?>

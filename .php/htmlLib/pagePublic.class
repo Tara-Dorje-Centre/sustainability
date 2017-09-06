@@ -1,6 +1,6 @@
 <?php
 namespace html;
-class _pagePublic extends  _page
+class pagePublic extends  page
 implements IPage {
 	protected $_document;
 	public $mainTitle;

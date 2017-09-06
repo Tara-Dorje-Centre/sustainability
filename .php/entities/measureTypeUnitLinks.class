@@ -1,0 +1,69 @@
+<?php
+namespace application\entities;
+
+class measureTypeUnitLinks extends _entityLinks {
+
+	protected $_pageList = 'pr_UnitOfMeasure_List.php';
+	protected $_pageDetail = 'pr_UnitOfMeasure_Detail.php';
+	
+/*
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($idParent = 0, $caption = 'AllMeasureTypeUnits'){
+		$link = $this->listing($idParent);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}	
+	private function detailHref($pageAction = 'VIEW', $id = 0, $idParent = 0, $caption = 'MeasureTypeUnit'){
+		$link = $this->detail($pageAction,$id,$idParent);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	
+	public function listing($idParent = 0){
+		$link = 'pr_MeasureTypeUnit_List.php?measureTypeId='.$idParent;
+		return $link;
+	}
+	
+	public function listingPaged($idParent, $found, $resultPage, $perPage){
+		$l = $this->listing($idParent).'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+
+	public function detail($pageAction, $id, $idParent = 0){
+		$link = 'pr_MeasureTypeUnit_Detail.php?pageAction='.$pageAction;
+		if($idParent != 0){
+			$link .= '&measureTypeId='.$idParent;			
+		}
+		if ($id != 0){
+			$link .= '&measureTypeUnitId='.$id;
+		}
+		return $link;
+	}	
+	public function detailAddHref($idParent, $caption = '+MeasureTypeUnit'){
+		$l = $this->detailHref('ADD',0,$idParent,$caption);
+		return $l;	
+	}
+	public function detailViewHref($id,$caption = 'ViewMeasureTypeUnit'){
+		$l = $this->detailHref('VIEW',$id,0,$caption);
+		return $l;	
+	}
+	public function detailEditHref($id,$caption = 'EditMeasureTypeUnit'){
+		$l = $this->detailHref('EDIT',$id,0,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($id = 0, $viewCaption = 'MeasureTypeUnit'){
+		
+		if ($id != 0){
+			$links = $this->detailViewHref($id,$viewCaption);
+			$links .= $this->detailEditHref($id,'#');
+		} else {
+			$links = $this->listingHref();
+		}
+		return $links;
+	}	
+*/
+}
+?>

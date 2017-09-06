@@ -1,0 +1,175 @@
+<?php
+namespace application\entities;
+
+trait projectChildParameters{
+	use parameterProjectId;
+	protected function setParameterIdProject(_url &$url, $idProject){
+		$url->addParameter($this->pIdTask($idProject));
+	}
+}
+trait parameterProjectId{
+	protected function pProjectId($idProject){
+		return $this->getParameter('project-id',$idProject);
+	}
+}
+trait parameterTaskId{
+	protected function pTaskId($idTask){
+		return $this->getParameter('task-id',$idTask);
+	}
+}
+trait taskChildParameters {
+use parameterTaskId,projectChildParameters;
+	protected function setParameterIdTask(_url &$url, $idTask){
+		$url->addParameter($this->pIdTask($idTask));
+	}
+}
+
+
+trait parameterActivityId{
+	protected function pActivityId($idActivity){
+		return $this->getParameter('activity-id',$idTask);
+	}
+
+}
+trait activityChildParameters{
+use parameterActivityId,taskChildParameters,projectChildParameters;
+	protected function setParameterIdActivity(_url &$url, $idActivity){
+		$url->addParameter($this->pIdTask($idTask));
+	}
+}
+
+trait activityParameters{
+use  taskChildParameters;
+
+	protected function setActivityParametersList(_url &$url, $showCalendar, $myActivity, $idTask,$idProject){
+		$url->addParameter($this->pIdTask($idTask));
+		$url->addParameter($this->pIdProject($idProject));
+		$url->addParameter($this->pShowCalendar($showCalendar));
+		$url->addParameter($this->pMyActivity($myActivity));
+	}
+	protected function setActivityParametersDetail(_url &$url, $showCalendar,$myActivity,$idTask,$idProject){
+		$url->addParameter($this->pIdTask($idTask));
+		$url->addParameter($this->pIdProject($idProject));
+		$url->addParameter($this->pShowCalendar($showCalendar));
+		$url->addParameter($this->pMyActivity($myActivity));
+	}
+	protected function pMyActivity($myActivity){
+		return $this->getParameter('my-activity',$myActivity);
+	}
+	protected function pShowCalendar($showCalendar){
+		return $this->getParameter('show-calendar',$showCalendar);
+	}
+	
+}
+
+class activityLinks extends _entityLinks {
+	use activityParameters;
+	public function __construct(){
+		$context = 'user';
+		$pageDetail = 'sys_User_Detail.php';
+		$pageList = 'sys_User_List.php';
+		parent::__construct( $context,$pageDetail, $pageList);
+	}
+	public function urlActivityList($idParent, $idType, $showCalendar, $myActivity, $idTask,$idProject){
+		$this->pageList = 'pr_Activity_List.php';
+		$url = $this->urlList($idParent,$idType);
+		$this->setActivityParametersList($url, $showCalendar, $myActivity, $idTask,$idProject);
+		return $url;
+	}
+	
+	public function urlActivityDetail($action = 'VIEW', $id, $idParent,$showCalendar,$myActivity,$idTask,$idProject){
+		$this->pageDetail = 'pr_Activity_Detail.php';
+		$url = parent::urlDetail($action,$id,$idParent);
+		$this->setActivityParametersDetail($url, $showCalendar, $myActivity, $idTask,$idProject);
+		return $url;
+	}	
+	protected function getUrlMyActivity(){
+		$showCalendar = 'NO';
+		$myActivity = 'YES';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+	}
+	protected function getUrlGroupActivity(){
+		$showCalendar = 'NO';
+		$myActivity = 'GROUP';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+	}
+	protected function getUrlMyCalendar(){
+		$showCalendar = 'YES';
+		$myActivity = 'YES';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+	}
+	protected function getUrlGroupCalendar(){
+		$showCalendar = 'YES';
+		$myActivity = 'GROUP';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+	}
+	protected function getUrlProjectActivity($idProject){
+		$showCalendar = 'NO';
+		$myActivity = 'PROJECT';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
+	}
+	protected function getUrlProjectCalendar($idProject){
+		$showCalendar = 'YES';
+		$myActivity = 'PROJECT';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
+	}
+	protected function getUrlTaskActivity($idTask){
+		$showCalendar = 'NO';
+		$myActivity = 'TASK';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask, 0);
+	}
+	protected function getUrlTaskCalendar($idTask){
+		$showCalendar = 'YES';
+		$myActivity = 'TASK';
+		return $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask,0);
+	}
+	
+	public function getLinkMyActivity(){
+		$u = getUrlMyActivity();
+		$caption = 'My History';
+		return $this->getLink($u,$caption);
+	}
+	public function getLinkGroupActivity(){
+		$u = getUrlGroupActivity();
+		$caption = 'Group History';
+		return $this->getLink($u,$caption);
+	}
+	public function getLinkMyCalendar(){
+		$u = getUrlMyCalendar();
+		$caption = 'My Calendar';
+		return $this->getLink($u,$caption);
+	}
+	public function getLinkGroupCalendar(){
+		$u = getUrlGroupActivityCalendar();
+		$caption = 'Group Calendar';
+		return $this->getLink($u,$caption);
+	}
+	
+	public function getLinkProjectActivity($projectId){
+		$u = getUrlProjectActivity($projectId);
+		$caption = 'Project History';
+		return $this->getLink($u,$caption);
+	}
+	
+	public function getLinkProjectCalendar($projectId){
+		$u = getUrlProjectCalendar($projectId);
+		$caption = 'Project Calendar';
+		return $this->getLink($u,$caption);
+	}
+	
+	
+	public function getLinkTaskActivity($taskId){
+		$u = getUrlTaskActivity($taskId);
+		$caption = 'Task History';
+		return $this->getLink($u,$caption);
+	}
+	public function getLinkTaskCalendar($taskId){
+		$u = getUrlProjectCalendar($taskId);
+		$caption = 'Task Calendar';
+		return $this->getLink($u,$caption);
+	}
+	
+	
+	
+}
+?>
