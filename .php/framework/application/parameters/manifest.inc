@@ -1,0 +1,15 @@
+<?php
+include_once("link.class");
+include_once("__parameter.class");
+include_once("__url.class");
+include_once("_baseParameters.class");
+include_once("_calendarParameters.class");
+
+include_once("baseEntityParameters.class");
+include_once("entityParameters.class");
+include_once("entityTypeParameters.class");
+
+
+
+
+?>

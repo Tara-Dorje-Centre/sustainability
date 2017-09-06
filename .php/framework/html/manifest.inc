@@ -32,4 +32,7 @@ include_once('_document.class');
 include_once('page.class');
 include_once('pagePublic.class');
 
+
+include_once('./css/manifest.inc);
+include_once('./inputs/manifest.inc);
 ?>

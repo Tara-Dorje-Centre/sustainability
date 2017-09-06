@@ -1,5 +1,5 @@
 <?php
-namespace application;
+namespace application\parameters;
 
 class url {
 	protected $basePage = 'index.php'; 

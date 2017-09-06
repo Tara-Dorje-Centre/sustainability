@@ -26,4 +26,9 @@ include_once("entityList.class");
 include_once("entityTypeList.class");
 include_once("entitySQL.class");
 include_once("entityTypeSQL.class");
+
+include_once('./entities/manifest.inc);
+include_once('./forms/manifest.inc);
+include_once('./parameters/manifest.inc);
+include_once('./sql/manifest.inc);
 ?>

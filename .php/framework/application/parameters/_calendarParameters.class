@@ -1,5 +1,5 @@
 <?php
-namespace application;
+namespace application\parameters;
 
 trait calendarParameters{
 	public function getCalendarLink(url $u, $caption, $year, $month){
