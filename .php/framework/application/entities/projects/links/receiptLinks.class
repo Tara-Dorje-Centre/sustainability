@@ -1,5 +1,6 @@
 <?php
-namespace application\entities\parameters;
+namespace application\entities\projects\links;
+
 trait parameterApprovedReceipts{
 
 

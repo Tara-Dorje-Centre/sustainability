@@ -23,10 +23,7 @@ include_once("entityTypeList.class");
 include_once('system/manifest.inc');
 include_once('public/manifest.inc');
 
-include_once('entities/reference/manifest.inc');
-include_once('entities/projects/manifest.inc');
+include_once('entities/manifest.inc');
 
-//include_once('entities/crops/manifest.inc');
-//include_once('entities/courses/manifest.inc');
 
 ?>

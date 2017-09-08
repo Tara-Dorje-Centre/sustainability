@@ -1,5 +1,5 @@
 <?php
-namespace application\entities;
+namespace application\entities\projects;
 
 class activityFields extends _fieldsTaskChild{
 	public $hoursEstimated;

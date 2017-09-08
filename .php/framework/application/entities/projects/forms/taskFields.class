@@ -1,0 +1,62 @@
+<?php
+namespace application\entities\projects\forms;
+
+class taskFields extends _fieldsProjectChild{
+	
+	
+	public $taskOrder;
+    public $summary;
+    public $pctDone ;	
+    public $hoursEstimated ;
+    public $hoursActual;
+    public $hoursNotes;	
+	public $materialsAuthProject;
+	public $materialsAuthBy;
+	public $receiptsAuthProject;
+	public $receiptsAuthBy;
+	
+public function __construct(){
+	parent::__construct();
+	$this->taskOrder = new _numberField('task_order','task-order','task_order');						
+	$this->summary = new _textField('summary','summary','summary');
+	$this->pctDone = new _numberField('pct_done','pct-done','pct_done');	
+	$this->hoursEstimated = new _numberField('hours_estimated','hours-estimated','hours_estimated');
+	$this->hoursActual = new _numberField('hours_actual','hours-actual','hours_actual');
+	$this->hoursNotes = new _notesField('hours_notes','hours-notes','hours_notes');			
+	$this->materialsAuthProject = new _yesNoField('materials_auth_project','materials-auth-project','materials_auth_project');
+	$this->materialsAuthBy = new _textField('materials_auth_by','materials-auth-by','materials_auth_by');
+	$this->receiptsAuthProject = new _yesNoField('receipts_auth_project','receipts-auth-project','receipts_auth_project');
+	$this->receiptsAuthBy = new _textField('receipts_auth_by','receipts-auth-by','receipts_auth_by');
+		$this->_register('taskOrder', $this->taskOrder);
+ 		$this->_register('summary', $this->summary);
+		$this->_register('pctDone', $this->pctDone);
+		$this->_register('hoursEstimated', $this->hoursEstimated);
+		$this->_register('hoursActual', $this->hoursActual);
+		$this->_register('hoursNotes', $this->hoursNotes);
+		$this->_register('materialsAuthProject', $this->materialsAuthProject);
+		$this->_register('materialsAuthBy', $this->materialsAuthBy);
+		$this->_register('receiptsAuthProject', $this->receiptsAuthProject);
+		$this->_register('receiptsAuthBy', $this->receiptsAuthBy);
+		
+    }
+	public function setDefaults(){
+    	parent::setDefaults();
+    	$this->summary->setDefault('');
+    	$this->pctDone->setDefault(0);
+    	$this->taskOrder->setDefault(0);
+    	$this->hoursEstimated->setDefault(0);
+    	$this->hoursActual->setDefault(0);
+    	$this->hoursNotes->setDefault('');
+    	$this->materialsAuthProject->setDefault('no');
+    	$this->materialsAuthBy->setDefault('n/a');
+    	$this->receiptsAuthProject->setDefault('no');
+    	$this->receiptsAuthBy->setDefault('n/a');
+    	
+    }
+
+	 
+
+}
+
+
+?>
