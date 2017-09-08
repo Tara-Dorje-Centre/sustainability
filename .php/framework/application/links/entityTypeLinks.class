@@ -1,0 +1,30 @@
+<?php
+namespace application\links;
+
+abstract class entityTypeLinks extends entityLinks{
+use entityTypeParameters
+	public function __construct(){
+		$context = 'entity';
+		$pageDetail = 'index.php';
+		$pageList = 'index.php';
+		parent::__construct( $context,$pageDetail, $pageList);
+	}
+	public function makeEditingMenu($mode, $id = 0, $idParent = 0,$idType = 0){
+		$this->makeSysMenu();
+		$this->setEditingLinks($mode,$id,$idParent,$idType);
+	}
+	public function makeSysMenu(){
+		$sysLinks = new sysMenuLinks('LIST','menu');
+		$this->addLink($sysLinks->reference());
+		
+	}
+	public function makeListingMenu($mode,$id,$idParent,$idType){
+		$this->makeSysMenu();
+		$this->setListingLinks($mode,$id,$idParent,$idType);
+
+	}
+		
+}
+
+
+?>

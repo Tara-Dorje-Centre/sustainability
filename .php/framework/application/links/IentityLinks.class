@@ -1,0 +1,21 @@
+<?php
+namespace application\links;
+
+interface IentityLinks{
+
+	public function makeEditingMenu($mode, $id, $idParent,$idType);
+	public function makeListingMenu($mode,$id,$idParent,$idType);
+	public function urlList( $idParent, $idType);
+	public function urlDetail($action, $id, $idParent);
+	public function linkDetail(string $caption, $action, $id,$idParent);
+	public function linkList(string $caption = 'list',$idParent,$idType);
+	public function printListLink($idParent, $idType);
+	public function printDetailLink($caption, $id);
+	public function printPagingLinks($recordCount, $resultPage, $perPage, $idParent, $idType);
+	public function printCalendarLink(url $u, $caption, $year, $month);
+
+}
+
+
+
+?>

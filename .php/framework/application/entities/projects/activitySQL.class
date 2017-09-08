@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\sql;
 
-class activitySQL extends _taskChildSQL{
+class activitySQL extends taskChildSQL{
 
 	public function __construct(){
 		$this->baseTable = 'activities';

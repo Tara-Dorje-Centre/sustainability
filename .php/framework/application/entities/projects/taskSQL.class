@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\sql;
 
-class taskSQL extends _projectChildSQL{
+class taskSQL extends projectChildSQL{
 	public function __construct(){
 		$this->baseTable = 'tasks';
 		$this->fieldId = 't.id';

@@ -1,7 +1,7 @@
 <?php
 namespace html;
 
-class displayList extends _displayDetails{
+class displayList extends displayDetails{
 	public $_list;
 	protected $links;
 	public function __construct(string $entity = 'entity',string $links = 'links',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
@@ -26,15 +26,11 @@ class displayList extends _displayDetails{
 	protected function open(){
 		parent::open();
 		$this->_display->addContent($this->links);
-		$this->_display->addContent($this->_list->open());
-		//$this->addContent(parent::open());
-		//$this->addContent($this->links);
-		//$this->addContent($this->_list->open());
-		//return $this->getContent();
+		
+		
 	}
 	protected function close(){
 		$this->_display->addContent($this->_list->print());
-		//return 
 		parent::close();
 	}
 }

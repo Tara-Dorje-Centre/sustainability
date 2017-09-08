@@ -4,7 +4,7 @@ namespace application\entities;
 class userTypeFields extends _fieldsEntityType{
 
 }
-class userTypeSQL extends _entityTypeSQL{
+class userTypeSQL extends sql\entityTypeSQL{
 //missing display order from table?
 	public function __construct(){
 		$this->baseTable = 'user_types';
@@ -12,17 +12,17 @@ class userTypeSQL extends _entityTypeSQL{
 }
 class userTypeLinks extends _entityTypeLinks{
 	protected $context = 'userType';
-	protected $pageList = 'sys_UserType_List.php';
-	protected $pageDetail = 'sys_UserType_Detail.php';
+	protected $pageList = 'userType.php';
+	protected $pageDetail = 'userType.php';
 }
-class userType extends _entityType {
+class userType extends \application\entities\entityType {
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'userType';
 		parent::__construct($mode, $id, $idParent);
 		
 		$this->entity = 'user-type';
   		$this->titleEntity = 'User Profile Type';
-		$this->pageSave = 'sys_UserType_Save.php';
+		$this->pageSave = 'userTypeSave.php';
 		
 		$this->f = new userTypeFields();
 		$this->f->setEntity($this->entity);
@@ -31,7 +31,7 @@ class userType extends _entityType {
 	}
 } 
 class userTypeList extends \application\entityTypeList{
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+	public function __construct($mode = 'LIST', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'userTypeList';
 		parent::__construct($mode, $id, $idParent);
 		

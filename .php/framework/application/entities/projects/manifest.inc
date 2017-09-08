@@ -3,6 +3,7 @@
 include_once("_projectChildSQL.class");
 include_once("_taskChildSQL.class");
 include_once("_activityChildSQL.class");
+include_once("_summary.class");
 
 include_once("activityLinks.class");
 include_once("activitySQL.class");

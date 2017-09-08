@@ -7,7 +7,7 @@ include_once("__sqlWriter.class");
 
 include_once("_sqlFunctions.php");
 
-include_once('./html/manifest.inc);
-include_once('./application/manifest.inc);
+include_once('html/manifest.inc');
+include_once('application/manifest.inc');
 
 ?>

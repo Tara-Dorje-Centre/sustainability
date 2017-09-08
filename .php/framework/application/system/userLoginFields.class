@@ -1,0 +1,42 @@
+<?php
+
+namespace application;
+
+class userLoginFields extends forms\fields {
+    public $_loginName;
+    public $_loginPassword;
+	public $_loginEmail;
+	public $_clientTimeZone;
+	public $_loginSubmit;
+	public $_resetPasswordSubmit;
+	
+	
+
+	public function __construct(){
+		$this->_loginName = new _userField('not-used','login-name','LoginName'); 
+		$this->_loginEmail = new _emailField('not-used','login-email','Email'); 
+		$this->_loginPassword = new _passwordField('not-used','login-pwd','Password'); 
+		$this->_clientTimeZone = new _textField('not-used','client-time-zone','Login'); 
+    	$this->_loginSubmit = new _submitButton('submit-login','Login'); 
+    	$this->_resetPasswordSubmit = new _submitButton('submit-pwd-reset','Reset Password'); 
+
+  		$this->_register('_loginName',$this->_loginName);
+		$this->_register('_loginEmail',$this->_loginEmail);
+		$this->_register('_loginPassword',$this->_loginPassword);
+		$this->_register('_clientTimeZone',$this->_clientTimeZone);
+    	$this->_register('_loginSubmit',$this->_loginSubmit);
+    	$this->_register('_resetPasswordSubmit',$this->_resetPasswordSubmit);
+    	
+
+    }
+    
+    public function setDefaults(){
+    }
+
+    
+
+}
+
+
+
+?>

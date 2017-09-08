@@ -135,36 +135,48 @@ class _cssColorField extends _textField{
 		return $i->print();
 	}
 }
- class _selectQueryTextField extends _textField{
-
+trait selectQueryField{
+	protected $_select;
  	protected $sql;
+	protected $useSelect = false;
+	public function setSql($sql){
+		$this->sql = $sql;
+		$this->_select = new \html\inputs\selectSql($this->env->variable(),$this->value(),$this->sql, $this->_caption);
+		$this->useSelect = true;
+	}
+	public function setSelect(\html\inputs\selectSql $s){
+		$this->_select = $s;
+		$this->useSelect = true;
+	}
+	public function input(){
+		if ($this->useSelect == true){
+			$input = $this->_select->print();
+		} else {
+			$input = parent::input;
+		}
+	}
+}
+
+
+
+ class _selectDbTextField extends _textField{
+	use selectQueryField;
+	
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
 	}
-	public function setSql($sql){
-		$this->sql = $sql;
-	}
-	public function input(){
-		$i = new \html\inputs\selectQuery($this->env->variable(),$this->value(),$this->sql, $this->_caption);
-		return $i->print();
+	
+	
+}
+ class _selectDbNumberField extends _numberField{
+	use selectQueryField;
+
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
 	}
 	
 }
- class _selectQueryNumberField extends _textField{
-
- 	protected $sql;
- 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
-		parent::__construct($dbCol, $envVar, $caption);
-	}
-	public function setSql($sql){
-		$this->sql = $sql;
-	}
-	public function input(){
-		$i = new \html\inputs\selectSql($this->env->variable(),$this->value(),$this->sql, $this->_caption);
-		return $i->print();
-	}
-}
-class idSelectQueryField extends _selectQueryNumberField{
+class idSelectDbField extends _selectDbNumberField{
 
 
 

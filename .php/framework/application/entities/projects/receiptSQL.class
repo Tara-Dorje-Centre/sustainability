@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\sql;
 
-class receiptSQL extends _taskChildSQL{
+class receiptSQL extends taskChildSQL{
 	public function __construct(){
 		$this->baseTable = 'receipts';
 		$this->typeTable = 'receipt_types';

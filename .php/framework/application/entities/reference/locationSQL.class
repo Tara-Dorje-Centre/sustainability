@@ -1,7 +1,7 @@
 <?php
 namespace application\entities;
 
-class locationSQL extends _entitySQL{
+class locationSQL extends \sql\entitySQL{
 public function __construct(){
 		$this->baseTable = 'locations';
 		$this->typeTable = 'location_types';

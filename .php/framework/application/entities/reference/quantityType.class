@@ -21,7 +21,7 @@ class quantityTypeFields extends _fieldsEntityType{
 	}
 }
 
-class quantityTypeSQL extends _entityTypeSQL{
+class quantityTypeSQL extends sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'units_of_measure';
 	}
@@ -45,13 +45,13 @@ class quantityTypeSQL extends _entityTypeSQL{
 	}
 }
 
-class quantityTypeLinks extends _entityTypeLinks {
+class quantityTypeLinks extends entityTypeLinks {
 	protected $context = 'quantityType';
 	protected $pageList = 'pr_QuantityType_List.php';
 	protected $pageDetail = 'pr_QuantityType_Detail.php';
 }
 
-class quantityType extends _entityType{
+class quantityType extends entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'quantityType';
 		parent::__construct($mode, $id, $idParent);
@@ -190,7 +190,7 @@ class quantityType extends _entityType{
 	}
 } 
 
-class quantityTypeList extends _entityTypeList{
+class quantityTypeList extends entityTypeList{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'quantityTypeList';
 		

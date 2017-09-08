@@ -23,15 +23,15 @@ class activityFields extends _fieldsTaskChild{
 	
 }
 
-class activity extends _entity{       
+class activity extends entity{       
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'activity';
 		parent::__construct($mode, $id, $idParent);
      	$this->titleEntity = 'Activity';
-   	 	$this->pageSave = 'pr_Activity_Save.php';
+   	 	$this->pageSave = 'activitySave.php';
 		$this->f = new activityFields();
-		$this->sql = new ActivitySQL();
-		$this->links = new ActivityLinks();
+		$this->sql = new sql\activitySQL();
+		$this->links = new parameters\activityLinks();
 	}
 	public function getRequestArguments(){
 

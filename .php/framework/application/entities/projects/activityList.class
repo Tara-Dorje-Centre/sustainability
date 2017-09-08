@@ -1,7 +1,7 @@
 <?php
 namespace application\entities;
 
-class activityList extends _entityList{
+class activityList extends entityList{
 	public $myActivity = 'NO';
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

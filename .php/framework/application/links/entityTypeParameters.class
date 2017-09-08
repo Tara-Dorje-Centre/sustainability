@@ -1,0 +1,29 @@
+<?php
+namespace application\links;
+
+trait entityTypeParameters{
+	protected function setEntityTypeParametersList(url &$u,$idParent,$idType){
+		$u->addParameter($this->pPageAction('LIST'));
+		$u->addParameter($this->pIdParent($idParent));
+		$u->addParameter($this->pIdType($idType));
+	} 
+	protected function setEntityTypeParametersDetail(url &$u,$action,$id,$idParent){
+		$u->addParameter($this->pPageAction($action));
+		$u->addParameter($this->pId($id));
+		$u->addParameter($this->pIdParent($idParent));
+	} 
+	protected function pPageAction(string $action){
+		return $this->getParameter('page-action',$action);
+	}
+	protected function pId( $id){
+		return $this->getParameter('id',$id);
+	}
+	protected function pIdParent( $idParent){
+		return $this->getParameter('id-parent',$idParent);
+	}
+	protected function pIdType( $idType){
+		return $this->getParameter('id-type',$idType);
+	}
+}
+
+?>

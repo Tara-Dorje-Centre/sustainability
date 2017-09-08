@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\parameters;
 
-class materialLinks extends _entityLinks {
+class materialLinks extends entityLinks {
 use 
 	protected $pageList = 'pr_Material_List.php';
 	protected $pageDetail = 'pr_Material_Detail.php';

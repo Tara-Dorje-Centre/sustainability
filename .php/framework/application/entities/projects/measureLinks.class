@@ -1,9 +1,9 @@
 <?php
-namespace application\entities;
+namespace application\entities\parameters;
 trait measureParameters{
 
 }
-class measureLinks extends _entityLinks {
+class measureLinks extends entityLinks {
 use measureParameters;
 	protected $pageList = 'pr_Measure_List.php';
 	protected $pageDetail = 'pr_Measure_Detail.php';

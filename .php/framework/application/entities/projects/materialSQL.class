@@ -1,6 +1,6 @@
 <?php
-namespace application\entities;
-class materialSQL extends _taskChildSQL{
+namespace application\entities\sql;
+class materialSQL extends taskChildSQL{
 	public function __construct(){
 		$this->baseTable = 'materials';
 

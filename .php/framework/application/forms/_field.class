@@ -281,20 +281,24 @@ interface Ifield{
 	}
 
 	public function listCaption(){
-	 	$value = '';
-		if ($this->_listEnabled){
-			$th = new \html\_th();
- 			$value = $th->wrap($this->_caption);
+
+		if ($this->_listEnabled == true){
+			$th = new \html\_th($this->_caption);
+ 			$value = $th->print();
+		} else {
+			$value = '';
 		}
 		return $value;
  	}
  	
  	public function listDetail(){
- 	 	$value = '';
+ 	 	
  		if ($this->_listEnabled){
   		    $this->format();
-  		    $td = new \html\_td();
- 			$value = $td->wrap($this->value());
+  		    $td = new \html\_td($this->value());
+  		    $value = $td->print();
+  		} else {
+  			$value = '';
   		}
  		return $value;
  	}
@@ -303,8 +307,10 @@ interface Ifield{
  	 	$value = '';
  		if ($this->_displayEnabled){
  			$this->format();
- 			$p = new \html\_p($this->caption);
- 			$value = $p->wrap($this->value());
+ 			$p = new \html\_p($this->value(),$this->caption);
+ 			$value = $p->print();
+ 		} else {
+ 			$value = '';
  		}
  		return $value;
  	}
@@ -384,13 +390,13 @@ interface Ifield{
   			$this->_number = 0;
   		}
  	}
-	private function booleanSetText(){
+	private function booleanSetToText(){
 		if ($this->_boolean == true){
 			$this->_text = 'yes';
 		} else {
-			$this->_text = 'yes';
+			$this->_text = 'no';
 		}
-		//$this->_datatype = 'TEXT;
+		$this->_datatype = 'TEXT';
 	}
 	public function input( ){
 		if ($this->_inputEnabled){

@@ -1,5 +1,5 @@
 <?php
-namespace application\entities;
+namespace application\entities\parameters;
 trait parameterApprovedReceipts{
 
 
@@ -17,7 +17,7 @@ trait receiptParameters{
 			return $this->getParameter('display-project',$display);
 	}
 }
-class receiptLinks extends _entityLinks {
+class receiptLinks extends entityLinks {
 	use receiptParameters;
 	public function __construct(){
 		$context = 'user';

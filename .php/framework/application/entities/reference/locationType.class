@@ -14,7 +14,7 @@ class locationTypeLinks extends _entityTypeLinks{
 	protected $pageList = 'pr_LocationType_List.php';
 	protected $pageDetail = 'pr_LocationType_Detail.php';
 }
-class locationType extends _entityType{
+class locationType extends entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'locationType';
 		parent::__construct($mode, $id, $idParent);
@@ -28,7 +28,7 @@ class locationType extends _entityType{
 	}
 	
 } 
-class locationTypeList extends _entityTypeList{
+class locationTypeList extends entityTypeList{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
  		$this->_MyClassName = 'locationTypeList';

@@ -1,7 +1,7 @@
 <?php
 namespace application\entities;
 
-class materialList extends _entityList{
+class materialList extends entityList{
 	protected $_MyClassName = 'MaterialList';
 
 	public $task;

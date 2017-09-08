@@ -38,7 +38,7 @@ class measureFields extends _fieldsTaskChild{
  }
  
 
-class measure extends _entity {
+class measure extends entity {
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->MyClassName = 'measure';
 		$this->entity = 'measure';
@@ -48,8 +48,8 @@ class measure extends _entity {
 		parent::__construct($mode, $id, $idParent);
 		
 		$this->f = new MeasureFields();
-		$this->links = new MeasureLinks();
-		$this->sql = new MeasureSQL();
+		$this->links = new parameters\measureLinks();
+		$this->sql = new sql\measureSQL();
 	}
 	public function getRequestArguments(){
 

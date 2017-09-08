@@ -1,0 +1,18 @@
+<?php
+namespace application\parameters;
+
+trait parametersBase{
+	public function getParameter(string $name,$value){
+		$p = new parameter($name,$value);
+		return $p;
+	}
+	public function getUrl(string $page = 'index.php'){
+		$u = new url($page);
+		return $u;
+	}
+	public function getLink(url $u,string $caption){
+		return $u->link($caption);
+	}
+}
+
+?>

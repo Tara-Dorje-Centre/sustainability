@@ -1,0 +1,28 @@
+<?php 
+namespace application;
+
+class publicSiteLinks extends entityLinks{
+	public function __construct($menuType = 'LIST',$styleBase = 'site'){
+		parent::__construct($menuType,$styleBase);
+	}
+	
+	public function menuHref($caption, $viewMode = 'MAIN', $viewId = 0,$cssSuffix = ''){
+		$link = $this->menu($viewMode, $viewId);
+		$href = $this->formatHref($caption,$link,'_self',$cssSuffix);
+		return $href;	
+	}
+	public function menu($viewMode = 'MAIN', $viewId = 0){
+		$link = 'public.php';
+		$link .= '?viewMode='.$viewMode;
+		$link .= '&viewId='.$viewId;
+		return $link;
+	}
+	public function menuPaged($baseLink,$found, $resultPage, $perPage){
+		$l = $baseLink.'&paging=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+	
+	
+}
+?>

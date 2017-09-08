@@ -1,0 +1,14 @@
+<?php
+namespace application\parameters;
+
+class link extends \html\_href{
+	public function __construct(url $u, string $display,string $css = 'display-link', $onClickJs = null){
+		parent::__construct($u->print(), $display, $css);
+		$this->setOnClickScript($onClickJS);
+	}
+	
+
+}
+
+
+?>

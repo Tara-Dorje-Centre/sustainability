@@ -1,5 +1,5 @@
 <?php
-namespace application\entities;
+namespace application\entities\parameters;
 
 trait projectParameters{
 
@@ -21,7 +21,7 @@ trait projectParameters{
 		return $this->getParameter('project-status',$show);
 	}
 }
-class projectLinks extends _entityLinks {
+class projectLinks extends entityLinks {
 	use projectParameters;
 	public function __construct(){
 		$context = 'user';

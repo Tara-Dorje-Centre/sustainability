@@ -6,7 +6,7 @@ public function __construct(){
 parent::__construct();
 }
 }
-class projectTypeSQL extends _entityTypeSQL{
+class projectTypeSQL extends sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'project_types';
 	}
@@ -16,7 +16,7 @@ class projectTypeLinks extends _entityTypeLinks{
 	protected $pageList = 'pr_ProjectType_List.php';
 	protected $pageDetail = 'pr_ProjectType_Detail.php';
 }
-class projectType extends _entityType{
+class projectType extends entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'ProjectType';
 		parent::__construct($mode, $id, $idParent);
@@ -31,7 +31,7 @@ class projectType extends _entityType{
 		$this->links = new projectTypeLinks();
 	}
 } 
-class projectTypeList extends _entityTypeList{
+class projectTypeList extends entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'projectTypeList';
 		parent::__construct($mode, $id, $idParent);

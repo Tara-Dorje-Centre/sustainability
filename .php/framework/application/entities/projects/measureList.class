@@ -1,7 +1,7 @@
 <?php
 namespace application\entities;
 
-class measureList extends _entityList{
+class measureList extends entityList{
 	protected $_MyClassName = 'MeasureList';
 
 

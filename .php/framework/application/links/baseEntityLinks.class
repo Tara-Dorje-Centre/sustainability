@@ -1,0 +1,38 @@
+<?php
+namespace application\links;
+
+abstract class baseEntityLinks extends linkMenu{
+use baseEntityParameters;
+	protected $context = 'entity';
+	protected $scope = 'list';
+	protected $pageList = 'list.php';
+	protected $pageDetail = 'detail.php';
+	protected $pageSave = 'save.php';
+	public function __construct(string $context = 'entity',string $pageDetail = 'index.php',string $pageList = 'index.php'){
+		parent::__construct('LIST','menu');
+		$this->setLinkContext($context,$pageList,$pageDetail);
+	}
+	public function setLinkContext($context,$pageList,$pageDetail){
+		$this->context = $context;
+		$this->pageList = $pageList;
+		$this->pageDetail = $pageDetails;
+	}
+	public function baseUrlList(){
+		$this->scope = 'list';
+		$url = $this->baseUrl($this->pageList,$this->scope,$this->context);
+		return $url;
+	}
+	public function baseUrlDetail(){
+		$this->scope = 'detail';
+		$url = $this->baseUrl($this->pageDetail,$this->scope,$this->context);
+		return $url;
+	}
+	public function baseUrlSave(){
+		$this->scope = 'save';
+		$url = $this->baseUrl($this->pageSave,$this->scope,$this->context);
+		return $url;
+	}
+}
+
+
+?>

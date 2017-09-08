@@ -1,7 +1,7 @@
 <?php
 namespace application\entities;
 
-class projectList extends _entityList{
+class projectList extends entityList{
 protected $_MyClassName = 'ProjectList';
 protected $titleEntity = 'Projects';
 

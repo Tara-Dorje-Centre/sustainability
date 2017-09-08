@@ -15,7 +15,7 @@ class activityTypeLinks extends _entityTypeLinks{
 	protected $pageDetail = 'pr_ActivityType_Detail.php';
 
 }
-class activityType extends _entityType{
+class activityType extends entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'activityType';
 		parent::__construct($mode, $id, $idParent);
@@ -30,7 +30,7 @@ class activityType extends _entityType{
 		$this->links = new activityTypeLinks();
 	}
 }
-class activityTypeList extends _entityTypeList{    
+class activityTypeList extends entityTypeList{    
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'activityTypeList';
 		parent::__construct($mode, $id, $idParent);

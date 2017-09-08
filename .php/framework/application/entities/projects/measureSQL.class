@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\sql;
 
-class measureSQL extends _taskChildSQL{
+class measureSQL extends taskChildSQL{
 	public function __construct(){
 		$this->baseTable = 'measures';
 

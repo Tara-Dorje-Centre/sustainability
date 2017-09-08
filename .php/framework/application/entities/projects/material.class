@@ -40,7 +40,7 @@ public function setDefaults(){
 }
 
 
-class material extends _entity{
+class material extends entity{
 
   	
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -52,8 +52,8 @@ class material extends _entity{
 		parent::__construct($mode, $id, $idParent);
 		$this->f = new materialFields();
 		$this->f->setEntity($this->entity);
-		$this->links = new materialLinks();
-		$this->sql = new MaterialSQL();
+		$this->links = new parameters\materialLinks();
+		$this->sql = new sql\materialSQL();
 		
 	}
 

@@ -1,7 +1,7 @@
 <?php
 namespace html;
 
-class _displayDetails {
+class displayDetails {
 	protected $entity;
 	protected $mode;
 	protected $legend;
@@ -22,7 +22,7 @@ class _displayDetails {
 	}
 	protected function open(){
 
-		//$this->addContent($this->_display->open());
+		
 
 		if ($this->quickEdit != 'none'){
 			$d = new \html\_div($this->entity.'-quickEdit','quickEdit');
@@ -35,14 +35,13 @@ class _displayDetails {
 	
 
 		$this->_display->addContent($this->_fields->open());
-		//return $this->getContent();
+		
 	
 	}
 	
 	protected function close(){
 		$this->_display->addContent($this->_fields->close());
-		//$this->addContent($this->_display->close());
-		//return $this->_display->getContent();
+		
 	}
 	public function setContent($content){
 	

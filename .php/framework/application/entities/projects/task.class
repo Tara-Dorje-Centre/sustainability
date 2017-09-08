@@ -58,7 +58,7 @@ public function __construct(){
 
 }
 
-class task extends _entity{
+class task extends entity{
 	 
 
 	public $totals;
@@ -80,8 +80,8 @@ class task extends _entity{
 	
 		$this->f = new taskFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new TaskSQL();
-		$this->links = new TaskLinks();
+		$this->sql = new sql\taskSQL();
+		$this->links = new parameters\taskLinks();
 		$this->totals = new summaryTotals();
 	}
 	public function getRequestArguments(){

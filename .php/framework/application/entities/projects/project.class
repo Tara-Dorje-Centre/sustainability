@@ -55,7 +55,7 @@ class projectFields extends _fieldsEntityChild{
 }
 
 
-class project extends _entity{
+class project extends entity{
 	
 	public $totals;
 	
@@ -68,8 +68,8 @@ class project extends _entity{
 		
 		$this->f = new projectFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new projectSQL();
-		$this->links = new projectLinks();
+		$this->sql = new sql\projectSQL();
+		$this->links = new parameters\projectLinks();
 		$this->totals = new summaryTotals();
 	}
 	public function getRequestArguments(){

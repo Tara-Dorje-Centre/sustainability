@@ -5,7 +5,7 @@ class measureTypeFields extends _fieldsEntityType{
 
 
 }
-class measureTypeSQL extends _entityTypeSQL{
+class measureTypeSQL extends sql\entityTypeSQL{
 //table missing display order
 	public function __construct(){
 		$this->baseTable = 'measure_types';
@@ -17,7 +17,7 @@ class MeasureTypeLinks extends _entityTypeLinks{
 	protected $pageDetail = 'pr_MeasureType_Detail.php';
 
 }
-class measureType extends _entityType{
+class measureType extends entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'MeasureType';
 		parent::__construct($mode, $id, $idParent);
@@ -120,7 +120,7 @@ class measureType extends _entityType{
 	
 } 
 
-class measureTypeList extends _entityTypeList{
+class measureTypeList extends entityTypeList{
 	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'measureTypeList';
 		parent::__construct($mode, $id, $idParent);

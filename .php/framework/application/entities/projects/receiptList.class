@@ -1,7 +1,7 @@
 <?php
 namespace application\entities;
 
-class receiptList extends _entityList{
+class receiptList extends entityList{
 	protected $_MyClassName = 'receiptList';
 	protected $titleEntity = 'Receipts';
 

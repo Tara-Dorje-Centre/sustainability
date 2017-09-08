@@ -15,7 +15,7 @@ class taskTypeFields extends _fieldsEntityType{
 	}
 }
 
-class taskTypeSQL extends _entityTypeSQL{
+class taskTypeSQL extends sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'task_types';
 	}
@@ -31,7 +31,7 @@ class taskTypeLinks extends _entityTypeLinks{
 	protected $pageDetail = 'pr_TaskType_Detail.php';
 }
 
-class taskType extends _entityType{
+class taskType extends entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'taskType';
 		parent::__construct($mode, $id, $idParent);
@@ -128,7 +128,7 @@ class taskType extends _entityType{
 			
 	}
 } 
-class taskTypeList extends _entityTypeList{
+class taskTypeList extends entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'taskTypeList';
 		parent::__construct($mode, $id, $idParent);

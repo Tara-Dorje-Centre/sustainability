@@ -44,7 +44,7 @@ class receiptFields extends _fieldsTaskChild{
 	
 }
 
-class receipt extends _entity{
+class receipt extends entity{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'Receipt';
 		parent::__construct($mode, $id, $idParent);
@@ -55,8 +55,8 @@ class receipt extends _entity{
 		
 		$this->f = new receiptFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new receiptSQL;
-		$this->links = new receiptLinks();
+		$this->sql = new sql\receiptSQL;
+		$this->links = new parameters\receiptLinks();
 	}
 	public function getRequestArguments(){
 

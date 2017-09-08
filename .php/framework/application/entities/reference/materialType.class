@@ -1,20 +1,20 @@
 <?php
 namespace application\entities;
 /* reviewed 7/29    */
-class materialTypeFields extends _fieldsEntityType { 
+class materialTypeFields extends fieldsEntityType { 
 
 }
-class materialTypeSQL extends _entityTypeSQL{
+class materialTypeSQL extends sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'material_types';
 	}
 }
-class materialTypeLinks extends _entityTypeLinks{
+class materialTypeLinks extends entityTypeLinks{
 	protected $context = 'materialType';
 	protected $pageList = 'pr_MaterialType_List.php';
 	protected $pageDetail = 'pr_MaterialType_Detail.php';
 }
-class materialType extends _entityType {    
+class materialType extends entityType {    
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'materialType';
 		parent::__construct($mode, $id, $idParent);
@@ -28,7 +28,7 @@ class materialType extends _entityType {
 		$this->links = new materialTypeLinks();
 	}
 } 
-class materialTypeList extends _entityTypeList{
+class materialTypeList extends entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'materialTypeList';
 		parent::__construct($mode, $id, $idParent);
