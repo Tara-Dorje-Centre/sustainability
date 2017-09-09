@@ -1,0 +1,18 @@
+<?php
+namespace application\entities\projects\links;
+
+trait activityChildParameters{
+use activityParameters;
+	protected function setActivityChild(_url &$url, $id){
+		$url->addParameter($this->activityId($id));
+	}
+	protected function activityId($id){
+		return $this->getParameter('activity-id',$id);
+	}
+	protected function approved($approved){
+		return $this->getParameter('approved',$approved);
+	}
+}
+
+
+?>

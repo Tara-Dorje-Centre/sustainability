@@ -1,26 +1,7 @@
 <?php
 namespace application\entities\projects\links;
 
-trait projectParameters{
 
-	protected function setProjectParametersList(_url &$u,$status,$myProjects){
-		$u->addParameter($this->pProjectStatus($status));
-		$u->addParameter($this->pMyProjects($myProjects));
-	} 
-	protected function setProjectParametersDetail(_url &$u){
-		/*$u->addParameter($this->pPageAction($action));
-		$u->addParameter($this->pId($id));
-		$u->addParameter($this->pIdParent($idParent));
-		$u->addParameter($this->pIdType($idType));*/
-	} 
-	
-	protected function pMyProjects($show){
-		return $this->getParameter('my-projects',$show);
-	}
-	protected function pProjectStatus($status){
-		return $this->getParameter('project-status',$show);
-	}
-}
 class projectLinks extends \application\links\entityLinks {
 	use projectParameters;
 	public function __construct(){

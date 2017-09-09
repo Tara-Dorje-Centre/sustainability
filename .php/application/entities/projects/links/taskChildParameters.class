@@ -1,0 +1,19 @@
+<?php
+namespace application\entities\projects\links;
+
+trait taskChildParameters {
+use taskParameters;
+	protected function setTaskChild(_url &$url, $id){
+		$url->addParameter($this->taskId($id));
+	}
+	protected function taskId($idTask){
+		return $this->getParameter('task-id',$idTask);
+	}
+	protected function approvedTask($approved){
+		return $this->getParameter('approved-task',$approved);
+	}
+}
+
+
+
+?>

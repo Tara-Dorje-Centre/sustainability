@@ -1,7 +1,7 @@
 <?php
 namespace framework;
 
-class _timestamp{
+class timestamp{
 	public $timestamp;
 	public $year;
 	public $month;

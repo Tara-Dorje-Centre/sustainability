@@ -1,8 +1,12 @@
 <?php
 namespace application\entities\projects\links;
 
-class taskLinks extends \application\links\entityLinks {
-	
+
+
+class taskLinks 
+extends \application\links\entityLinks {
+use taskParameters;
+
 	public function linkPeriodicTasks(bool $closed = false){
 		if ($closed == true){
 			$status = 'COMPLETE';

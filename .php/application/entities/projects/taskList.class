@@ -24,7 +24,7 @@ class taskList extends \application\entityList{
 		$this->periodicTasks = $periodic;
 	}
 	
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		if ($this->periodicTasks == 'NO'){
 			$title = $this->base->f->nameProject.br();
@@ -36,7 +36,7 @@ class taskList extends \application\entityList{
 		$this->_pageTitle = $title.'[task list]';
 	}
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

@@ -1,0 +1,16 @@
+<?php
+namespace application\entities\projects\links;
+
+trait taskParameters{
+use projectChildParameters;
+	protected function taskStatus($status){
+		return $this->getParameter('task-status',$status);
+	}
+
+	protected function periodicTasks($idTask){
+		return $this->getParameter('periodic-tasks',$idTask);
+	}
+}
+
+
+?>

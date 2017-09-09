@@ -1,0 +1,14 @@
+<?php
+namespace application\entities\projects\links;
+
+trait receiptParameters{
+	use taskChildParameters;
+	//use activityChildParameters;
+	
+	protected function approvedReceipts($approved){
+		return $this->getParameter('approved-receipts',$approved);
+	}
+	
+}
+
+?>

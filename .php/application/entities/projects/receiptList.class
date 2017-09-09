@@ -1,5 +1,5 @@
 <?php
-namespace application\entities;
+namespace application\entities\projects;
 
 class receiptList extends \application\entityList{
 	protected $_MyClassName = 'receiptList';
@@ -35,7 +35,7 @@ class receiptList extends \application\entityList{
 		$this->setSummary();
 	}
 		
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		if ($this->displayProject == 'TASK'){
 			$title = $this->task->project->name.br();
@@ -53,7 +53,7 @@ class receiptList extends \application\entityList{
 		$this->_pageTitle = $title;	
 	}	
 
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

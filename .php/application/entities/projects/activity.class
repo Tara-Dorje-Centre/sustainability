@@ -79,13 +79,13 @@ class activity extends \application\entity{
 		//$this->task->setDetails();
 	}
 		
-	protected function setPageTitle(){	
+	protected function makePageTitle(){	
 		$title .= $this->f->project->name->value.br();
 		$title .= 'Task: '.$this->f->task->name->value;		
 		$this->_pageTitle = $title;
 	}	
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

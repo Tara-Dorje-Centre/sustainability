@@ -1,0 +1,19 @@
+<?php
+namespace application\entities\projects\links;
+
+trait projectChildParameters{
+use projectParameters;
+	protected function setProjectChild(_url &$url, $id){
+		$url->addParameter($this->projectId($id));
+	}
+	protected function projectId($id){
+		return $this->getParameter('project-id',$id);
+	}
+	
+}
+
+
+
+
+
+?>

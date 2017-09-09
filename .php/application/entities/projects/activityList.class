@@ -19,7 +19,7 @@ class activityList extends \application\entityList{
 		$this->myActivity = $myActivity;
 	}
 	
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 		
 		$title = '';
 		if ($this->myActivity == 'NO'){
@@ -36,7 +36,7 @@ class activityList extends \application\entityList{
 		$this->_pageTitle = $title;	
 	}	
 
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

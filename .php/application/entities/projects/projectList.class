@@ -29,7 +29,7 @@ protected $titleEntity = 'Projects';
 	}
 	
 	
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		if ($this->showMyProjects == 'YES'){
 			$title .= 'My ';
@@ -39,7 +39,7 @@ protected $titleEntity = 'Projects';
 		$this->_pageTitle = $title;	
 	}
 
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

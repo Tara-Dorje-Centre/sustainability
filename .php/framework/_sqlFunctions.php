@@ -1,5 +1,6 @@
 <?php
 namespace framework\sql;
+
 function printLine($msg, $show = true){
 	$e = new _echo();
 	$e->echoLocale(' ', '_sqlFunctions');
@@ -19,10 +20,10 @@ function dbInsertedId ($callingFunction = 'dbInsertedId'){
 	return $id;
 }
 
- function sqlLimitClause($resultPage, $rowsPerPage){
+ function sqlLimitClause($page, $perPage){
 	$limitSQL = " LIMIT ";
-	$limitOffset = ($resultPage - 1) * $rowsPerPage;
-	$limitSQL .= $limitOffset.", ".$rowsPerPage;
+	$limitOffset = ($page - 1) * $perPage;
+	$limitSQL .= $limitOffset.", ".$perPage;
 	return $limitSQL;	
 }
 

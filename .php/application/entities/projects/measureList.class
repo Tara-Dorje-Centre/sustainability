@@ -25,7 +25,7 @@ class measureList extends \application\entityList{
 		//$this->setFoundCount();
 	}
 		
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		$title = $this->task->project->name.br();
 		$title .= 'Task: '.$this->task->name;
@@ -33,7 +33,7 @@ class measureList extends \application\entityList{
 		$this->_pageTitle = $title;	
 	}	
 
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

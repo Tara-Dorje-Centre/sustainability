@@ -146,7 +146,7 @@ class task extends \application\entity{
 		$this->measureCount = dbGetCount($sql, 'total_measures', 0);
 	}
 	
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		$title = $this->f->projectName.br();
 		if ($this->pageMode != 'ADD'){
@@ -160,7 +160,7 @@ class task extends \application\entity{
 	
 	
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

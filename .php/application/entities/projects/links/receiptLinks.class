@@ -1,23 +1,7 @@
 <?php
 namespace application\entities\projects\links;
 
-trait parameterApprovedReceipts{
 
-
-}
-
-trait receiptParameters{
-	
-	protected function pApproved($approved){
-		return $this->getParameter('approved',$approved);
-	}
-	protected function pApprovedReceipts($approved){
-		return $this->getParameter('approved-receipts',$approved);
-	}
-	protected function pDisplayProject($display){
-			return $this->getParameter('display-project',$display);
-	}
-}
 class receiptLinks extends \application\links\entityLinks {
 	use receiptParameters;
 	public function __construct(){

@@ -1,8 +1,10 @@
 <?php
 namespace application\entities\projects\links;
 
+
+
 class materialLinks extends \application\links\entityLinks {
-use 
+use materialParameters;
 	protected $pageList = 'pr_Material_List.php';
 	protected $pageDetail = 'pr_Material_Detail.php';
 	/*

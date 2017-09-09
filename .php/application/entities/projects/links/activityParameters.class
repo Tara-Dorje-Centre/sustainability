@@ -1,0 +1,28 @@
+<?php
+namespace application\entities\projects\links;
+
+trait activityParameters{
+use  taskChildParameters;
+
+	protected function setActivityParametersList(_url &$url, $showCalendar, $myActivity, $idTask,$idProject){
+		$url->addParameter($this->taskId($idTask));
+		$url->addParameter($this->projectId($idProject));
+		$url->addParameter($this->showCalendar($showCalendar));
+		$url->addParameter($this->myActivity($myActivity));
+	}
+	protected function setActivityParametersDetail(_url &$url, $showCalendar,$myActivity,$idTask,$idProject){
+		$url->addParameter($this->taskId($idTask));
+		$url->addParameter($this->projectId($idProject));
+		$url->addParameter($this->showCalendar($showCalendar));
+		$url->addParameter($this->myActivity($myActivity));
+	}
+	protected function myActivity($myActivity){
+		return $this->getParameter('my-activity',$myActivity);
+	}
+	protected function showCalendar($showCalendar){
+		return $this->getParameter('show-calendar',$showCalendar);
+	}
+	
+}
+
+?>

@@ -1,0 +1,28 @@
+<?php
+namespace application\entities\projects\links;
+
+trait projectParameters{
+
+	protected function setProjectParametersList(_url &$u,$status,$myProjects){
+		$u->addParameter($this->projectStatus($status));
+		$u->addParameter($this->myProjects($myProjects));
+	} 
+	protected function setProjectParametersDetail(_url &$u){
+		
+	} 
+
+	protected function displayProject($display){
+		return $this->getParameter('display-project',$display);
+	}
+	protected function approved($approved){
+		return $this->getParameter('approved',$approved);
+	}
+	protected function myProjects($show){
+		return $this->getParameter('my-projects',$show);
+	}
+	protected function projectStatus($status){
+		return $this->getParameter('project-status',$show);
+	}
+}
+
+?>

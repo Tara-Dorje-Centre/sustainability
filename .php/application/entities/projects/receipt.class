@@ -1,5 +1,5 @@
 <?php
-namespace application\entities;
+namespace application\entities\projects;
 
 class receipt extends \application\entity{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -20,14 +20,14 @@ class receipt extends \application\entity{
 
 
 	}
-	protected function setPageTitle(){	
+	protected function makePageTitle(){	
 		$title = $this->f->project->name->value().br();
 		$title .= 'Task: '.$this->f->task->name->value();		
 		$this->_pageTitle = $title;
 	}
 	
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

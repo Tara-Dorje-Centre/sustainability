@@ -72,7 +72,7 @@ class project extends \application\entity{
 
 
 	
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		if ($this->pageMode != 'ADD'){
 			$heading = $this->f->name->value();
@@ -84,7 +84,7 @@ class project extends \application\entity{
 	}
 	
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

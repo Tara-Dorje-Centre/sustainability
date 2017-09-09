@@ -30,7 +30,7 @@ class measure extends \application\entity {
 		$this->task->setDetails($this->pageMode, $this->task->id->value());
 	}
 		
-	protected function setPageTitle(){	
+	protected function makePageTitle(){	
 		
 		$title .= $this->task->project->name->value().br();
 		$title .= 'Task: '.$this->task->name->value();		
@@ -39,7 +39,7 @@ class measure extends \application\entity {
 	}
 	
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

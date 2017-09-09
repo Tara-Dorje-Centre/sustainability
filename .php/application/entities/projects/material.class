@@ -23,7 +23,7 @@ class material extends \application\entity{
 
 
 	}
-	protected function setPageTitle(){	
+	protected function makePageTitle(){	
 		$title = openDiv('section-heading-title','none');
 		$title .= $this->f->parentProject->name->value().br();
 		$title .= 'Task: '.$this->parentTask->name->value();		
@@ -32,7 +32,7 @@ class material extends \application\entity{
 	}
 	
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

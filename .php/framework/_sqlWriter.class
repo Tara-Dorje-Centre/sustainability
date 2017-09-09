@@ -1,15 +1,21 @@
 <?php 
-namespace framework;
+namespace framework\sql;
 
-class _sqlClause extends _contentWriter{
-public function __construct(){
-
-	$this->resetContent(true);
+class sqlClause extends _contentWriter{
+	public $type = 'SELECT';
+	public function __construct($type){
+		$this->type = $type;
+		$this->resetContent(true);
+	}
+	function limit($page, $perPage){
+	$limitSQL = " LIMIT ";
+	$limitOffset = ($page - 1) * $perPage;
+	$limitSQL .= $limitOffset.", ".$perPage;
+	return $limitSQL;	
+	}
 }
 
-}
-
- class _sqlWriter extends _contentWriter{
+ class sqlWriter extends contentWriter{
  protected $sqlType = 'SELECT';
  protected $_cols;
  protected $_tables;

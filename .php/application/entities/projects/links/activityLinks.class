@@ -1,66 +1,7 @@
 <?php
 namespace application\entities\projects\links;
 
-trait projectChildParameters{
-	use parameterProjectId;
-	protected function setParameterIdProject(_url &$url, $idProject){
-		$url->addParameter($this->pIdTask($idProject));
-	}
-}
-trait parameterProjectId{
-	protected function pProjectId($idProject){
-		return $this->getParameter('project-id',$idProject);
-	}
-}
-trait parameterTaskId{
-	protected function pTaskId($idTask){
-		return $this->getParameter('task-id',$idTask);
-	}
-}
-trait taskChildParameters {
-use parameterTaskId,projectChildParameters;
-	protected function setParameterIdTask(_url &$url, $idTask){
-		$url->addParameter($this->pIdTask($idTask));
-	}
-}
 
-
-trait parameterActivityId{
-	protected function pActivityId($idActivity){
-		return $this->getParameter('activity-id',$idTask);
-	}
-
-}
-trait activityChildParameters{
-use parameterActivityId,taskChildParameters,projectChildParameters;
-	protected function setParameterIdActivity(_url &$url, $idActivity){
-		$url->addParameter($this->pIdTask($idTask));
-	}
-}
-
-trait activityParameters{
-use  taskChildParameters;
-
-	protected function setActivityParametersList(_url &$url, $showCalendar, $myActivity, $idTask,$idProject){
-		$url->addParameter($this->pIdTask($idTask));
-		$url->addParameter($this->pIdProject($idProject));
-		$url->addParameter($this->pShowCalendar($showCalendar));
-		$url->addParameter($this->pMyActivity($myActivity));
-	}
-	protected function setActivityParametersDetail(_url &$url, $showCalendar,$myActivity,$idTask,$idProject){
-		$url->addParameter($this->pIdTask($idTask));
-		$url->addParameter($this->pIdProject($idProject));
-		$url->addParameter($this->pShowCalendar($showCalendar));
-		$url->addParameter($this->pMyActivity($myActivity));
-	}
-	protected function pMyActivity($myActivity){
-		return $this->getParameter('my-activity',$myActivity);
-	}
-	protected function pShowCalendar($showCalendar){
-		return $this->getParameter('show-calendar',$showCalendar);
-	}
-	
-}
 
 class activityLinks extends \application\links\entityLinks {
 	use activityParameters;

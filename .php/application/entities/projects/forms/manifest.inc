@@ -16,8 +16,8 @@ include_once("baseSummary.class");
 include_once("baseSummaryCost.class");
 include_once("baseSummaryEffort.class");
 
-include_once("receiptsSummary.class");
-include_once("materialsSummary.class");
+include_once("receiptSummary.class");
+include_once("materialSummary.class");
 include_once("projectSummary.class");
 include_once("taskSummary.class");
 

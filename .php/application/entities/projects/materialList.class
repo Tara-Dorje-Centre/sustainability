@@ -40,7 +40,7 @@ class materialList extends \application\entityList{
 		$this->displayProject = $display;
 	}
 
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 		$title .= $this->task->project->name.br();
 
 		if ($this->displayProject == 'TASK'){
@@ -64,7 +64,7 @@ class materialList extends \application\entityList{
 		$this->_pageTitle = $title;
 	}	
 
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
