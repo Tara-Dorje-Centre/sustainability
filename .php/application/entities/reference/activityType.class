@@ -1,6 +1,7 @@
 <?php
 namespace application\entities\reference;
-/* reviewed 7/29    */
+
+
 class activityTypeFields extends \application\forms\entityTypeFields{
 
 }

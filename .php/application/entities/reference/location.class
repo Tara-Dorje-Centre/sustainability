@@ -1,9 +1,10 @@
 <?php
-namespace application\entities;
-class _fieldsLocationChild extends _fieldsEntityChild{
+namespace application\entities\reference;
+
+class locationChildFields extends \application\forms\entityChildFields{
 
 }
-class locationFields extends _fieldsLocationChild{
+class locationFields extends locationChildFields{
 
 	public $sortKeyParent;
 	public $sortKey;
@@ -11,8 +12,8 @@ class locationFields extends _fieldsLocationChild{
 	public function __construct(){
 		parent::__construct();
 
-    	$this->sortKey = new _textField('sort_key','not-used','Sort Key'); 
-		$this->sortKeyParent = new _textField('parent_sort_key'); 
+    	$this->sortKey = new f\_textField('sort_key','not-used','Sort Key'); 
+		$this->sortKeyParent = new f\_textField('parent_sort_key'); 
 		$this->_register('sortKey',$this->sortKey);
 		$this->_register('sortKeyParent',$this->sortKeyParent);
     }
@@ -20,7 +21,7 @@ class locationFields extends _fieldsLocationChild{
 	
 }
 
-class location extends entity{
+class location extends \application\entity{
 	
 	public $childLocations = 0;
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -62,7 +63,7 @@ class location extends entity{
 	
 	
 	
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 		if ($this->pageMode != 'ADD'){
 			$heading = $this->f->sortKey->value();
 		} else {
@@ -76,7 +77,7 @@ class location extends entity{
 		$this->_pageTitle = $heading;
 	}
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

@@ -2,7 +2,7 @@
 namespace application\links;
 
 abstract class entityTypeLinks extends entityLinks{
-use entityTypeParameters
+use entityTypeParameters;
 	public function __construct(){
 		$context = 'entity';
 		$pageDetail = 'index.php';

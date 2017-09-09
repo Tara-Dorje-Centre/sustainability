@@ -1,12 +1,12 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
-class taskTypeFields extends _fieldsEntityType{
+class taskTypeFields extends \application\forms\entityTypeFields{
 	public $frequency;
 	public function __construct(){
 	
 		parent::__construct();
-		$this->frequency = new _nameField('frequency','frequency','Frequency');
+		$this->frequency = new \application\forms\_nameField('frequency','frequency','Frequency');
 		$this->_register('frequency',$this->frequency);
 	}
 	public function setDefaults(){
@@ -15,7 +15,7 @@ class taskTypeFields extends _fieldsEntityType{
 	}
 }
 
-class taskTypeSQL extends sql\entityTypeSQL{
+class taskTypeSQL extends \application\sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'task_types';
 	}
@@ -25,13 +25,13 @@ class taskTypeSQL extends sql\entityTypeSQL{
 		return $c;	
 	}
 }
-class taskTypeLinks extends _entityTypeLinks{
+class taskTypeLinks extends \application\links\entityTypeLinks{
 	protected $context = 'taskType';
 	protected $pageList = 'pr_TaskType_List.php';
 	protected $pageDetail = 'pr_TaskType_Detail.php';
 }
 
-class taskType extends entityType{
+class taskType extends \application\entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'taskType';
 		parent::__construct($mode, $id, $idParent);
@@ -128,7 +128,7 @@ class taskType extends entityType{
 			
 	}
 } 
-class taskTypeList extends entityTypeList{
+class taskTypeList extends \application\entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'taskTypeList';
 		parent::__construct($mode, $id, $idParent);

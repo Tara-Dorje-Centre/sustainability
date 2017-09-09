@@ -1,20 +1,20 @@
 <?php
-namespace application\entities;
-/* reviewed 7/29    */
-class locationTypeFields extends _fieldsEntityType{
+namespace application\entities\reference;
+
+class locationTypeFields extends \application\forms\entityTypeFields{
 
 }
-class locationTypeSQL extends _entityTypeSQL{
+class locationTypeSQL extends \application\sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'location_types';
 	}
 }
-class locationTypeLinks extends _entityTypeLinks{
+class locationTypeLinks extends \application\links\entityTypeLinks{
 	protected $context = 'locationType';
 	protected $pageList = 'pr_LocationType_List.php';
 	protected $pageDetail = 'pr_LocationType_Detail.php';
 }
-class locationType extends entityType{
+class locationType extends \application\entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'locationType';
 		parent::__construct($mode, $id, $idParent);
@@ -28,7 +28,7 @@ class locationType extends entityType{
 	}
 	
 } 
-class locationTypeList extends entityTypeList{
+class locationTypeList extends \application\entityTypeList{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
  		$this->_MyClassName = 'locationTypeList';

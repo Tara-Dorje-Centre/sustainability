@@ -18,7 +18,7 @@ trait receiptParameters{
 			return $this->getParameter('display-project',$display);
 	}
 }
-class receiptLinks extends entityLinks {
+class receiptLinks extends \application\links\entityLinks {
 	use receiptParameters;
 	public function __construct(){
 		$context = 'user';

@@ -41,7 +41,7 @@ interface Ifield{
  	public function input();
  }
 
- abstract class _field extends \framework\_contentWriter
+ abstract class field extends \framework\_contentWriter
  implements Ifield{
  	public $env;
  	protected $_default = NULL;

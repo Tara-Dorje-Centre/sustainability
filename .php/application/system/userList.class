@@ -2,7 +2,7 @@
 namespace application\system;
 
 
-class userList extends application\entityList{
+class userList extends \application\entityList{
 protected $_MyClassName = 'UserList';
 protected $titleEntity = 'UserProfiles';
 
@@ -17,8 +17,13 @@ protected $titleEntity = 'UserProfiles';
 
 
 	}
+	
+	protected function makePageTitle(){
+	
+	
+	}
 
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

@@ -1,0 +1,77 @@
+<?php
+namespace application\system\forms;
+
+
+class userFields extends \application\forms\entityFields{
+	
+    public $loginName;
+    public $pwd;
+    public $pwdConfirm;
+    public $nameFirst;
+    public $nameLast;
+	public $email;
+	public $interests;
+	public $focus;
+	public $lastLogin;
+	public $isAdmin;
+	public $isActive;
+	public $mustUpdatePwd;
+	public $type;
+
+	public function __construct(){
+		parent::__construct();
+    	$this->nameFirst = new _nameField('name_first','name-first','First Name'); 
+		$this->nameLast = new _nameField('name_last','name-last','Last Name'); 
+		$this->email = new _emailField('email','email','Email Address'); 
+		$this->focus = new _notesField('focus','focus','Focus Area');
+		$this->interests = new _notesField('interests','interests','Interests');
+		$this->pwd = new _passwordField('not_used','login-pwd','login-password');
+		$this->pwdConfirm = new _passwordField('not_used','pwd-confirm','confirm-password');
+		$this->loginName = new _userField('login_name','login-name','login-name');
+		$this->lastLogin = new _dateField('last_login','last-login','Last Login'); 
+		$this->isAdmin = new _yesNoField('is_admin','is-admin','Administrator');
+		$this->isActive = new _yesNoField('is_active','is-active','Active Profile');
+		$this->mustUpdatePwd = new _yesNoField('must_update_pwd', 'must-update-pwd','Must Update Password');
+		$this->type = new _fieldIdName('type_id','id-type','Type', 'type_name');
+   		$this->_register('nameFirst', $this->nameFirst);
+		$this->_register('nameLast', $this->nameLast);
+		$this->_register('email', $this->email);
+		$this->_register('focus', $this->focus);
+		$this->_register('interests', $this->interests);
+		$this->_register('loginName', $this->loginName);
+		$this->_register('pwd', $this->pwd);
+		$this->_register('pwdConfirm', $this->pwdConfirm);
+		$this->_register('lastLogin', $this->lastLogin);
+		$this->_register('lastLogin', $this->lastLogin);
+		$this->_register('isAdmin', $this->isAdmin);
+		$this->_register('isActive', $this->isActive);
+		$this->_register('mustUpdatePwd', $this->mustUpdatePwd);
+		$this->_register('type', $this->type);
+	}
+   
+    
+	protected function formatUserName($last,$first = 'not-given'){
+		$name = $this->nameLast->value();
+		if($this->nameFirst != ''){
+			$name .= ', '.$this->nameFirst->value();
+		}
+		return $name;
+	}
+	public function fetch($row){
+		parent::fetch($row);
+		$this->name->set($this->formatUserName($this->nameLast.value,$this->namFirst->value));
+		
+	}
+	public function setDefaults(){
+		parent::setDefaults();
+		$this->isAdmin->setDefault('no');
+		$this->mustUpdatePwd->setDefault('yes');
+		$this->isActive->setDefault('yes');
+		
+	}
+	
+
+}
+
+
+?>

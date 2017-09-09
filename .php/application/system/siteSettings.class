@@ -11,7 +11,7 @@ class siteSettings extends \application\entity{
      	$this->entityTitle = 'Site Settings';
    	 	$this->pageSave = 'sys_SiteSettings_Save.php';
    	 	
-		$this->f = new siteSettingsFields();
+		$this->f = new \application\forms\siteSettingsFields();
 		$this->f->setEntity($this->entity);
 		$this->links = new siteSettingsLinks();
 		$this->sql = new siteSettingsSQL();
@@ -56,8 +56,11 @@ class siteSettings extends \application\entity{
 		$this->f->remove();
 		
 	}
+	protected function makePageTitle(){
 	
-	protected function setPageMenu(){
+	
+	}
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';		
 		$settingsL = new SiteSettingsLinks($menuType,$menuStyle);

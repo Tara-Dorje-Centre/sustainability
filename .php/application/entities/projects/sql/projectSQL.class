@@ -1,7 +1,8 @@
 <?php
 namespace application\entities\projects\sql;
 
-class projectSQL extends entitySQL{
+class projectSQL 
+extends \application\sql\entitySQL{
 
 public function __construct(){
 	$this->baseTable = 'projects';

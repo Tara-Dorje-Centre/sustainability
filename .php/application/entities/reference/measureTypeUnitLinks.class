@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
-class measureTypeUnitLinks extends _entityLinks {
+class measureTypeUnitLinks extends \application\links\entityLinks {
 
 	protected $_pageList = 'pr_UnitOfMeasure_List.php';
 	protected $_pageDetail = 'pr_UnitOfMeasure_Detail.php';

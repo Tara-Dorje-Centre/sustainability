@@ -3,7 +3,7 @@ namespace application\entities\projects\links;
 trait measureParameters{
 
 }
-class measureLinks extends entityLinks {
+class measureLinks extends \application\links\entityLinks {
 use measureParameters;
 	protected $pageList = 'pr_Measure_List.php';
 	protected $pageDetail = 'pr_Measure_Detail.php';

@@ -1,7 +1,7 @@
 <?php
 namespace application\system\sql;
 
-class userSQL extends application\sql\entitySQL{
+class userSQL extends \application\sql\entitySQL{
 	public function __construct(){
 		$this->baseTable = 'users';
 	}

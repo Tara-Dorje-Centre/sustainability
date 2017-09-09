@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
-class measureTypeUnitSQL extends _entitySQL{
+class measureTypeUnitSQL extends \application\sql\entitySQL{
 	public function __construct(){
 		$this->baseTable = 'measure_type_units_v';
 

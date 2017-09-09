@@ -9,7 +9,12 @@ abstract class entityTypeList extends entityList{
 
 
 	}
-	protected function setPageMenu(){
+	
+	protected function makePageTitle(){
+	
+	
+	}
+	protected function makePageMenu(){
 		
 		$this->base->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->_pageMenu = $this->base->links->print();

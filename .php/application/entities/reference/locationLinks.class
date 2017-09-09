@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
-class LocationLinks extends _entityLinks{
+class LocationLinks extends \application\links\entityLinks{
 protected $context = 'location';
 	protected $pageList = 'pr_Location_List.php';
 	protected $pageDetail = 'pr_Location_Detail.php';

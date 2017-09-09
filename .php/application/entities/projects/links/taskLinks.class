@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\projects\links;
 
-class taskLinks extends entityLinks {
+class taskLinks extends \application\links\entityLinks {
 	
 	public function linkPeriodicTasks(bool $closed = false){
 		if ($closed == true){

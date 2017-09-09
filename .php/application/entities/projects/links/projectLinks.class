@@ -21,7 +21,7 @@ trait projectParameters{
 		return $this->getParameter('project-status',$show);
 	}
 }
-class projectLinks extends entityLinks {
+class projectLinks extends \application\links\entityLinks {
 	use projectParameters;
 	public function __construct(){
 		$context = 'user';

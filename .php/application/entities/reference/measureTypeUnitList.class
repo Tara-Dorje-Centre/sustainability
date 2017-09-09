@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
-class measureTypeUnitList extends _entityList{
+class measureTypeUnitList extends \application\entityList{
 	protected $_MyClassName = 'MeasureTypeUnitList';
 
 	
@@ -26,7 +26,7 @@ class measureTypeUnitList extends _entityList{
 	}
 	
 	
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		if ($this->measureType->id > 0){
 			$title = $this->measureType->name.br();
@@ -38,7 +38,7 @@ class measureTypeUnitList extends _entityList{
 		$this->_pageTitle = $title;	
 	}	
 
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

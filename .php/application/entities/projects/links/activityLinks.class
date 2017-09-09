@@ -62,7 +62,7 @@ use  taskChildParameters;
 	
 }
 
-class activityLinks extends entityLinks {
+class activityLinks extends \application\links\entityLinks {
 	use activityParameters;
 	public function __construct(){
 		$context = 'user';

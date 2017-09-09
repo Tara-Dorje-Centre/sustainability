@@ -1,7 +1,7 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
-class locationList extends entityList{
+class locationList extends \application\entityList{
 	protected $_MyClassName = 'LocationList';
 	protected $titleEntity = 'Locations';
 	 
@@ -17,7 +17,7 @@ class locationList extends entityList{
 
 
 	}
-	protected function setPageTitle(){
+	protected function makePageTitle(){
 
 		if ($this->idParent <= 0){	
 			$title = 'All Locations';
@@ -29,7 +29,7 @@ class locationList extends entityList{
 		$this->_pageTitle = $title;	
 	}
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		

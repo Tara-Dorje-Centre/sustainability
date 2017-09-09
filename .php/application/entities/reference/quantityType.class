@@ -1,15 +1,15 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
 
-class quantityTypeFields extends _fieldsEntityType{
+class quantityTypeFields extends \application\forms\entityTypeFields{
     public $symbol;	
     public $type;
     
 	public function __construct(){
 		parent::__construct();
-		$this->symbol = new _nameField('symbol','symbol','Symbol');
-		$this->type = new _nameField('type','unit-type','Unit Type');
+		$this->symbol = new f\_nameField('symbol','symbol','Symbol');
+		$this->type = new f\_nameField('type','unit-type','Unit Type');
 		$this->_register('symbol',$this->symbol);
 		$this->_register('type',$this->type);
 	}
@@ -21,7 +21,7 @@ class quantityTypeFields extends _fieldsEntityType{
 	}
 }
 
-class quantityTypeSQL extends sql\entityTypeSQL{
+class quantityTypeSQL extends \application\sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'units_of_measure';
 	}
@@ -45,13 +45,13 @@ class quantityTypeSQL extends sql\entityTypeSQL{
 	}
 }
 
-class quantityTypeLinks extends entityTypeLinks {
+class quantityTypeLinks extends \application\links\entityTypeLinks {
 	protected $context = 'quantityType';
 	protected $pageList = 'pr_QuantityType_List.php';
 	protected $pageDetail = 'pr_QuantityType_Detail.php';
 }
 
-class quantityType extends entityType{
+class quantityType extends \application\entityType{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'quantityType';
 		parent::__construct($mode, $id, $idParent);
@@ -190,7 +190,7 @@ class quantityType extends entityType{
 	}
 } 
 
-class quantityTypeList extends entityTypeList{
+class quantityTypeList extends \application\entityTypeList{
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'quantityTypeList';
 		

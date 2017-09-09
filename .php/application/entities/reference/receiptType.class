@@ -1,20 +1,20 @@
 <?php
-namespace application\entities;
-/* reviewed 7/29    */
-class receiptTypeFields extends _fieldsEntityType{
+namespace application\entities\reference;
+
+class receiptTypeFields extends \application\forms\entityTypeFields{
 
 }
-class receiptTypeSQL extends sql\entityTypeSQL{
+class receiptTypeSQL extends \application\sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'receipt_types';
 	}
 }
-class receiptTypeLinks extends _entityTypeLinks{
+class receiptTypeLinks extends \application\links\entityTypeLinks{
 	protected $context = 'receiptType';
 	protected $pageList = 'pr_ReceiptType_List.php';
 	protected $pageDetail = 'pr_ReceiptType_Detail.php';
 }
-class receiptType extends entityType{
+class receiptType extends \application\entityType{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'receiptType';
@@ -30,7 +30,7 @@ class receiptType extends entityType{
 		$this->links = new receiptTypeLinks();
 	}
 } 
-class receiptTypeList extends entityTypeList{
+class receiptTypeList extends \application\entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'ReceiptTypeList';
 		parent::__construct($mode, $id, $idParent);

@@ -1,22 +1,22 @@
 <?php
-namespace application\entities;
-/* reviewed 7/29    */
-class projectTypeFields extends _fieldsEntityType{
+namespace application\entities\reference;
+
+class projectTypeFields extends \application\forms\entityTypeFields{
 public function __construct(){
 parent::__construct();
 }
 }
-class projectTypeSQL extends sql\entityTypeSQL{
+class projectTypeSQL extends \application\sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'project_types';
 	}
 }
-class projectTypeLinks extends _entityTypeLinks{
+class projectTypeLinks extends \application\links\entityTypeLinks{
 	protected $context = 'projectType';
 	protected $pageList = 'pr_ProjectType_List.php';
 	protected $pageDetail = 'pr_ProjectType_Detail.php';
 }
-class projectType extends entityType{
+class projectType extends \application\entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'ProjectType';
 		parent::__construct($mode, $id, $idParent);
@@ -31,7 +31,7 @@ class projectType extends entityType{
 		$this->links = new projectTypeLinks();
 	}
 } 
-class projectTypeList extends entityTypeList{
+class projectTypeList extends \application\entityTypeList{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'projectTypeList';
 		parent::__construct($mode, $id, $idParent);

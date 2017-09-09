@@ -1,7 +1,7 @@
 <?php 
 namespace application;
 
-class publicSiteLinks extends application\links\entityLinks{
+class publicSiteLinks extends \application\links\entityLinks{
 	public function __construct($menuType = 'LIST',$styleBase = 'site'){
 		parent::__construct($menuType,$styleBase);
 	}

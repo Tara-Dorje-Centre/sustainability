@@ -1,23 +1,23 @@
 <?php
-namespace application\entities;
-/* reviewed 7/29    */
-class measureTypeFields extends _fieldsEntityType{
+namespace application\entities\reference;
+
+class measureTypeFields extends \application\forms\entityTypeFields{
 
 
 }
-class measureTypeSQL extends sql\entityTypeSQL{
+class measureTypeSQL extends \application\sql\entityTypeSQL{
 //table missing display order
 	public function __construct(){
 		$this->baseTable = 'measure_types';
 	}
 }
-class MeasureTypeLinks extends _entityTypeLinks{
+class measureTypeLinks extends \application\links\entityTypeLinks{
 	protected $context = 'measureType';
 	protected $pageList = 'pr_MeasureType_List.php';
 	protected $pageDetail = 'pr_MeasureType_Detail.php';
 
 }
-class measureType extends entityType{
+class measureType extends \application\entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'MeasureType';
 		parent::__construct($mode, $id, $idParent);
@@ -120,7 +120,7 @@ class measureType extends entityType{
 	
 } 
 
-class measureTypeList extends entityTypeList{
+class measureTypeList extends \application\entityTypeList{
 	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'measureTypeList';
 		parent::__construct($mode, $id, $idParent);

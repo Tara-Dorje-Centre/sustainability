@@ -1,6 +1,7 @@
 <?php
 namespace application\entities\projects\forms;
-class projectFields extends \application\forms\entityChildFields{
+class projectFields extends 
+\application\forms\entityChildFields{
   /*
  ^_currentUser set to $_SESSION['login-name']
  °_currentTimestamp set to $sessionTime

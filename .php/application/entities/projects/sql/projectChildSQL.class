@@ -11,7 +11,9 @@ interface IprojectChildSQL{
 	public function optionsProject($id = 0);
 }
 
-class projectChildSQL extends entitySQL implements IprojectChildSQL{
+class projectChildSQL 
+extends \application\sql\entitySQL 
+implements IprojectChildSQL{
 
 protected $fieldProjectId = 'project_id';
 

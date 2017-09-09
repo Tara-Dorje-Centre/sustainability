@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\projects\links;
 
-class materialLinks extends entityLinks {
+class materialLinks extends \application\links\entityLinks {
 use 
 	protected $pageList = 'pr_Material_List.php';
 	protected $pageDetail = 'pr_Material_Detail.php';

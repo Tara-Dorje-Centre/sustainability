@@ -1,14 +1,14 @@
 <?php
-namespace application\entities;
+namespace application\entities\reference;
 
 
- class measureTypeUnitFields extends _fieldsEntity{
+ class measureTypeUnitFields extends \application\forms\entityFields{
 	 public $measureType;
 	 public $unitType;
 
  public function __construct(){
-	$this->measureType = new _fieldIdName('measure_type_id','measure-type-id','Measure Type','measure_type_name');
-	$this->unitType = new _fieldIdName('unit_type','unit-type-id','Unit Type','unit_type_name');
+	$this->measureType = new \application\forms\_fieldIdName('measure_type_id','measure-type-id','Measure Type','measure_type_name');
+	$this->unitType = new \application\forms\_fieldIdName('unit_type','unit-type-id','Unit Type','unit_type_name');
 	$this->_register('measureType',$this->measureType);
 	$this->_register('unit_type',$this->unitType);
  }
@@ -22,7 +22,7 @@ namespace application\entities;
 }
 
 
-class measureTypeUnit extends _entity{
+class measureTypeUnit extends \application\entity{
 	protected $_MyClassName = 'measureTypeUnit';
 	
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
@@ -39,7 +39,7 @@ class measureTypeUnit extends _entity{
 	
 	
 	}
-	protected function setPageTitle(){	
+	protected function makePageTitle(){	
 		$title = openDiv('section-heading-title','none');
 		
 		
@@ -50,7 +50,7 @@ class measureTypeUnit extends _entity{
 	}
 	
 	
-	protected function setPageMenu(){
+	protected function makePageMenu(){
 		
 		$mtul = new MeasureTypeUnitLinks;
 		

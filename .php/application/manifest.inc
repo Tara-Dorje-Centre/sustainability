@@ -1,5 +1,5 @@
 <?php
-
+include_once('parameters/manifest.inc');
 include_once('links/manifest.inc');
 include_once('sql/manifest.inc');
 include_once('forms/manifest.inc');

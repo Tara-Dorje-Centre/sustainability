@@ -1,21 +1,21 @@
 <?php
-namespace application\entities;
-/* reviewed 8/4  */
-class userTypeFields extends _fieldsEntityType{
+namespace application\entities\reference;
+
+class userTypeFields extends \application\forms\entityTypeFields{
 
 }
-class userTypeSQL extends sql\entityTypeSQL{
+class userTypeSQL extends \application\sql\entityTypeSQL{
 //missing display order from table?
 	public function __construct(){
 		$this->baseTable = 'user_types';
 	}
 }
-class userTypeLinks extends _entityTypeLinks{
+class userTypeLinks extends \application\links\entityTypeLinks{
 	protected $context = 'userType';
 	protected $pageList = 'userType.php';
 	protected $pageDetail = 'userType.php';
 }
-class userType extends \application\entities\entityType {
+class userType extends \application\entityType {
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'userType';
 		parent::__construct($mode, $id, $idParent);
