@@ -1,0 +1,59 @@
+<?php
+namespace application\entities\projects\forms;
+class projectFields extends \application\forms\entityChildFields{
+  /*
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
+ 
+ _fieldsetEntityChild
+   id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
+*/
+  	public $summary;
+	public $started;
+    public $pctDone;	
+    public $priority;	
+    public $goals;
+	public $purpose;	
+    public $lessons;	 
+	public $showAlways;
+	public $location;
+	
+	public function __construct(){
+		parent::__construct();
+		$this->created->enabled(false);
+		$this->summary = new _notesField('summary','summary','Summary');
+		$this->started = new _dateField('started','started','Started');
+    	$this->pctDone = new _numberField('pct_done','pct-done','Percent.Done');
+    	$this->priority = new _numberField('priority','priority','Priority');
+		$this->goals = new _notesField('goals','goals','Goals');
+		$this->purpose = new _notesField('purpose','purpose','Purpose');
+		$this->lessons = new _notesField('lessons_learned','lessons-learned','Lessons Learned');
+		$this->showAlways = new _yesNoField('show_always','show-always','Show.Always');
+		$this->location = new _fieldIdName('location_id','location-id','Location','location_name');
+  		$this->_register('summary', $this->summary);
+		$this->_register('started', $this->started);
+    	$this->_register('pctDone', $this->pctDone);	
+    	$this->_register('priority', $this->priority);	
+    	$this->_register('goals', $this->goals);
+		$this->_register('purpose', $this->purpose);	
+    	$this->_register('lessons', $this->lessons);	 
+		$this->_register('showAlways', $this->showAlways);
+		$this->_register('location', $this->location);
+    }
+	public function setDefaults(){
+		parent::setDefaults();
+		global $sessionTime;
+		$this->started->setDefault($this->currentTimestamp);	
+		$this->location->setDefault(0);
+		$this->showAlways->setDefault('yes');
+		$this->priority->seDefault(1);
+		$this->pctDone->seDefault(0);
+	}
+
+}
+
+
+
+?>

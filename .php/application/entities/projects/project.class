@@ -1,0 +1,315 @@
+<?php
+namespace application\entities\projects;
+
+class project extends \application\entity{
+	
+	public $totals;
+	
+	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'project';
+		parent::__construct($mode, $id, $idParent);
+		
+		$this->titleEntity = 'Project';
+		$this->entity = 'project';
+		
+		$this->f = new forms\projectFields();
+		$this->f->setEntity($this->entity);
+		$this->sql = new sql\projectSQL();
+		$this->links = new links\projectLinks();
+		$this->totals = new forms\summaryTotals();
+	}
+	public function getRequestArguments(){
+
+
+
+	}
+	public function setDetails(){
+		if ($this->pageMode == 'COPY'){
+		$this->copyProject();
+		$_SESSION['currentProjectId'] = $this->id;
+		}
+		
+		parent::setDetails();
+		
+		$this->totals->setProjectTotals($this->id);
+		
+	}
+	private function setReceiptSummaryByType(){
+
+		$costs = openTable('receipt-info','displayListTable');
+		
+		if ($this->totals->receipts->count > 0){
+			$heading = wrapTh('Receipt Type');
+			$heading .= wrapTh('Received');
+			$costs .= wrapTr($heading);
+		
+			$s = new ReceiptSQL;
+			$sql = $s->summaryProjectReceiptype($this->id, 'yes');
+			
+			$result = dbGetResult($sql);
+			if($result){
+		  	while ($row = $result->fetch_assoc())
+			{	
+				$type = ($row["receipt_type"]);
+				$costActual = $row["sum_cost_actual"];
+				$item = wrapTd($type);
+				$item .= wrapTd($costActual);
+				$costs .= wrapTr($item);
+			}
+			$result->close();
+			}
+			
+			$item = wrapTh('Totals');
+			$item .= wrapTd($this->receiptsCost);
+			$costs .= wrapTr($item);
+		} else {
+			$costs .= wrapTr(wrapTh('No Income Received'));
+		}
+		$costs .= closeTable();
+		$this->receiptsSummary = $costs;
+		
+	}
+
+
+	
+	protected function setPageTitle(){
+
+		if ($this->pageMode != 'ADD'){
+			$heading = $this->f->name->value();
+		} else {
+			$heading = 'Add New Project';
+		}
+
+		$this->_pageTitle = $heading;
+	}
+	
+	
+	protected function setPageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		//$this->links = new ProjectLinks($menuType,$menuStyle);
+		$taskL = new TaskLinks($menuType,$menuStyle);		
+		$activityL = new ActivityLinks($menuType, $menuStyle);
+		$materialL = new MaterialLinks($menuType, $menuStyle);
+		$receiptL = new ReceiptLinks($menuType, $menuStyle);
+		
+		$menu = $this->links->openMenu('section-heading-links');
+		$menu .= $this->links->listingHref();
+		$menu .= $this->links->resetMenu();
+
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $this->links->detailEditHref($this->id);
+			$menu .= $this->links->detailCopyHref($this->id);
+
+		} elseif ($this->pageMode == 'EDIT'){
+			$menu .= $this->links->detailViewHref($this->id);
+		}
+
+		if ($this->pageMode != 'ADD'){	
+			$menu .= $this->links->resetMenu();
+			$menu .= $activityL->linkProjectCalendar($this->id);
+			$menu .= $activityL->linkProjectActivities($this->id);		
+			if ($this->totals->materials->count > 0){
+				$menu .= $this->links->resetMenu();		
+				$menu .= $materialL->listingHref(-1,'ProjectMaterials',$this->id,'PROJECT','yes');
+			}				
+			if ($this->totals->receiptsCount > 0){
+				$menu .= $this->links->resetMenu();		
+				$menu .= $receiptL->listingHref(-1,'ProjectReceipts',$this->id,'PROJECT','yes');
+			}				
+
+			$menu .= $this->links->resetMenu();
+			$menu .= $taskL->detailAddHref($this->id);
+		}
+		$menu .= $this->links->closeMenu();
+		$this->_pageMenu = $menu;
+	}
+	
+	
+	
+	protected function display(){
+		$detail = parent::display();
+		$detail .= openDisplayDetails();
+		$detail .= $this->totals->display();
+
+
+		 $tasks = new TaskList('VIEW', 0, $this->id);
+		 $tasks->setPaging($this->resultPage,10);
+		 $link = $this->links->detail('VIEW',$this->id);
+		 $detail .= $tasks->getListing($link);
+
+		 $detail .= closeDisplayDetails();
+		 return $detail;
+	}
+	public function options(
+		$selectedValue = 0, 
+		$idName = 'projectId', 
+		$disabled = 'false',
+		$showLink = true,
+		$onChangeJS = NULL){
+	
+		$sql = $this->sql->options($selectedValue, $disabled);	
+		$defaultValue = 0;
+		$defaultCaption = '-select Project';
+		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);
+		if ($showLink === true){
+			//$l = new ProjectLinks;	
+			$links =$ths->links->detailViewEditHref($selectedValue);
+			$select .= $links;
+		}
+		return $select;
+	}	
+	
+	public function optionsByType(
+		$projectTypeId = '0',
+		$selectedValue = '0', 
+		$idName = 'projectId', 
+		$disabled = 'false',
+		$showLink = true,
+		$onChangeJS = NULL){
+	
+		$sql = $this->sql->optionsByType($projectTypeId);
+		$defaultValue = '0';
+		$defaultCaption = '-select Project';
+		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);			
+		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);
+		if ($showLink === true){
+			//$l = new ProjectLinks;	
+			$links =$this->links->detailViewEditHref($selectedValue);
+			$select .= $links;
+		}
+		return $select;
+	}	
+	
+
+	public function editForm(){
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
+	
+		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->purpose);
+		
+		$base = new projectType('OPTIONS');
+		$select = $base->options($this->f->type->value,$this->f->type->env->variable,'false',true);
+		$this->edit->required->choice($this->f->type->id, $select);
+		
+		$base = new Location('OPTIONS');
+		$select = $base->options($this->f->location->id->value(),$this->f->location->id->env->variable(),'false',true);
+		$this->edit->required->choice($this->f->location->id, $select);
+
+		$this->edit->required->input($this->f->started);
+		$this->edit->required->input($this->f->priority);
+		$this->edit->optional->input($this->f->pctDone);
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->showAlways);
+		$this->edit->optional->input($this->f->summary);
+		$this->edit->optional->input($this->f->goals);
+		$this->edit->optional->input($this->f->lessons);
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$this->edit->hidden->inputHidden($this->f->parentEntity->id);
+		$this->edit->hidden->inputHidden($this->f->id);
+		
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
+
+		return $this->edit->close();
+	}
+
+    public function UpdateTaskSummary(){
+		
+		//refresh current project task summary values
+		$this->setTaskSummary();
+		if ($this->totals->tasks->count > 0){
+		
+			$sql = " update projects p ";
+			$sql .= " set p.pct_done = ".$this->totals->tasks->pctDone.", ";
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.hours_estimated = ".$this->totals->tasks->estimated.",  ";
+			$sql .= " p.hours_actual = ".$this->totals->tasks->actual." ";
+			$sql .= " where p.id = ".$this->id." ";
+			
+			$result = dbRunSQL($sql);
+	
+		}
+	}
+
+
+	protected function copyProject(){
+		$sourceId = $this->id;
+		$copyId = 0;
+		
+			$sql = $this->sql->copy($sourceId);
+			
+			$result = dbRunSQL($sql);
+			$copyId = dbInsertedId();
+			
+			$sql = copyTasks($sourceId, $copyId);
+			$result = dbRunSQL($sql);
+		
+			//reset page mode from COPY to EDIT
+			//continue in setdetails using the copied id
+			$this->setId($copyProjectId);
+			$this->setPageMode('EDIT');
+	}
+
+
+	protected function saveUpdate(){
+	
+			$sql = " UPDATE projects AS p ";
+			$sql .= " SET ";
+			$sql .= " p.name = '".$this->f->name->value()."', ";
+			$sql .= " p.location_id = ".$this->f->location->value().", ";
+			$sql .= " p.priority = ".$this->f->priority->value().", ";
+			$sql .= " p.pct_done = ".$this->f->pctDone->value().", ";
+			$sql .= " p.started = '".$this->f->started->value()."', ";			
+			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " p.description = '".$this->f->description->value()."', ";
+			$sql .= " p.show_always = '".$this->f->showAlways->value()."', ";
+			$sql .= " p.type_id = ".$this->f->type->value().", ";
+			$sql .= " p.purpose = '".$this->f->purpose->value()."', ";
+			$sql .= " p.goals = '".$this->f->goals->value()."', ";
+			$sql .= " p.lessons_learned = '".$this->f->lessons->value()."', ";
+			$sql .= " p.summary = '".$this->f->summary->value()."' ";
+			$sql .= " WHERE p.id = ".$this->id."  ";			
+			
+			$result = dbRunSQL($sql);
+			
+	}
+			
+	protected function saveInsert(){
+	
+			$sql = " INSERT INTO projects ";
+			$sql .= " (name, ";
+			$sql .= " parent_id, ";
+			$sql .= " location_id, ";
+			$sql .= " started, ";
+			$sql .= " updated, ";
+			$sql .= " description, ";
+			$sql .= " summary, ";
+			$sql .= " lessons_learned, ";
+			$sql .= " show_always, ";
+			$sql .= " type_id, ";
+			$sql .= " purpose) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->f->name->value()."', ";
+			$sql .= " ".$this->idParent.", ";
+			$sql .= " ".$this->f->location->value().", ";
+			$sql .= " '".$this->f->started->value()."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
+			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= "'".$this->f->summary->value()."', ";
+			$sql .= "'".$this->f->lessons->value()."', ";
+			$sql .= "'".$this->f->showAlways->value()."', ";
+			$sql .= " ".$this->f->idType->value().", ";
+			$sql .= "'".$this->f->purpose->value()."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	
+	}
+	
+} 
+?>

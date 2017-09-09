@@ -1,0 +1,38 @@
+<?php
+
+namespace application\system\forms;
+
+class userSecurityFields extends \application\forms\fields{
+	public $_loginMessages;
+	public $_currentUser;
+	public $_currentUserId;
+	public $_isAdmin;
+	public $_mustUpdatePwd;
+	public $_clientTimeZone;
+	public $_isLoggedIn;
+		public function __construct(){
+	    $this->_loginMessages = new _textField('not-used','login-messages','Login'); 
+    	$this->_currentUser = new _userField('login_name','login-name','no.caption'); 
+		$this->_currentUserId = new _idField('id','user-id','no.caption'); 
+		$this->_isAdmin = new _yesNoField('is_admin','is-admin','no.caption');
+  		$this->_mustUpdatePwd = new _yesNoField('must_update_pwd','must-update-pwd','no.caption');
+    	$this->_clientTimeZone = new _textField('not_used','client-time-zone','Login'); 
+    	$this->_isLoggedIn = new _booleanField('not_used','logged-in','no.caption'); 
+    	$this->_register('_loginMessages',$this->_loginMessages);
+    	$this->_register('_currentUser',$this->_currentUser);
+    	$this->_register('_currentUserId',$this->_currentUserId);
+    	$this->_register('_isAdmin',$this->_isAdmin);
+    	$this->_register('_mustUpdatePwd',$this->_mustUpdatePwd);
+    	$this->_register('_clientTimeZone',$this->_clientTimeZone);
+    }
+    
+    
+    public function setDefaults(){
+    }
+    
+}
+
+
+
+
+?>

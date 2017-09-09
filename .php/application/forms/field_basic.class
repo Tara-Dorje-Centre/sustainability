@@ -1,0 +1,77 @@
+<?php 
+
+namespace application\forms;
+
+class _textField extends field {
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'TEXT';
+	}
+	
+}
+
+class _numberField extends field{
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'NUMBER';
+	}
+	public function input(){
+		$i = new \html\inputs\_inputNumber($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print();
+	}
+}
+
+class _dateField extends field{
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'DATE';
+	}
+	
+	public function input(){
+		$i = new \html\inputs\_inputTimestamp($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print();
+	}
+	
+
+}
+class _booleanField extends field{
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'BOOLEAN';
+	}
+	
+}
+
+class _submitButton extends field{
+
+	public function __construct(string $envVar = 'submit', string $caption = 'no caption'){
+		parent::__construct('not_used', $envVar, $caption);
+		$this->_datatype = 'SUBMIT';
+	}
+	
+	public function button(){
+		$i = new \html\inputs\submit($this->env->variable(),$this->_caption);
+		return $i->print();
+	}
+	
+}
+
+class _resetButton extends field{
+
+	public function __construct(string $envVar = 'reset', string $caption = 'no caption'){
+		parent::__construct('not_used', $envVar, $caption);
+		$this->_datatype = 'SUBMIT';
+	}
+	
+	public function button(){
+		$i = new \html\inputs\reset($this->_caption);
+		return $i->print();
+	}
+	
+}
+
+?>

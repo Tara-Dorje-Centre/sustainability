@@ -1,0 +1,43 @@
+<?php 
+namespace application\entities\projects\forms;
+
+abstract class projectChildFields extends \application\forms\entityChildFields{
+
+	public $project;
+	public $projectType;
+	public $location;
+	public $started;
+	public $approved;
+	public $approvedBy;
+	
+    public function __construct(){
+    	parent::__construct();
+    	$this->project = new _fieldIdName('project_id','id-project','Project','project_name');
+    	$this->projectType = new _fieldIdName('project_type','project-type','Project Type','project_type_name');
+    	$this->location = new _fieldIdName('location_id','id-location','Location', 'location_name');
+    	$this->started = new _dateField('started','started','Started');           
+    	$this->approved = new _yesNoField('approved','approved','Approved');
+    	$this->approvedBy = new _userField('approved_by','approved-by','Approved By');
+  		$this->_register('project', $this->project);
+ 		$this->_register('projectType', $this->projectType);
+		$this->_register('location', $this->location);
+		$this->_register('started', $this->started);
+		$this->_register('approved', $this->approved);
+		$this->_register('approvedBy', $this->approvedBy);
+
+    }
+	public function setDefaults(){
+    	parent::setDefaults();
+    	//$this->parentProject->setDefault(0);
+    	$this->location->setDefault(0);
+    	$this->started->setDefault($this->_currentTimestamp);
+    	$this->approved->setDefault('no');
+    	$this->approvedBy->setDefault($this->_currentUser);
+    	
+    }
+    
+	
+}
+
+
+?>
