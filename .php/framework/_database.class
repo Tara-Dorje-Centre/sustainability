@@ -13,7 +13,7 @@ private $echo;
 
 public function __construct(){
 
-	$this->echo = new _echo();
+	$this->echo = new \framework\_echo();
 	$this->echo->echoPrint(false, 'creating connection', '__construct', '_Database', '');
 
 	parent::__construct($this::_server, $this::_user, $this::_pwd, $this::_database, $this::_port);
@@ -26,18 +26,94 @@ public function __construct(){
 }
 
 //overload close method
-public function close(){
+	public function close(){
+		$this->echo->echoPrint(true, ' --releasing connection', 'close');
+		parent::close();
+	}
 
-	$this->echo->echoPrint(true, ' --releasing connection', 'close');
-	parent::close();
-}
+	public function getEscapeString($value){
+		return $this->real_escape_string($value);
+	}
 
-public function query($sql){
-
-	$this->echo->echoValue(true, 'sql', $sql, 'query');
-
-	return parent::query($sql);
-}
-
+	public function getInsertedId (){
+		return  $this->insert_id;
+	}
+	
+	public function query($sql){
+		$this->echo->echoValue(true, 'sql', $sql, 'query');
+		return parent::query($sql);
+	}
+	
+	public function runStatement($sql){
+		$success = $this->query($sql);
+		if ($success != true){
+			exit($this->error);
+		}
+		return true;
+	}
+	
+	public function getResult($sql){
+		$result = $this->query($sql) or exit($this->error);
+		return $result;
+	}
+	
+	public function getScalar($sql, $field, $default = 0){
+		$result = $this->getResult($sql);
+		if($result){
+	  		while ($row = $result->fetch_assoc()){
+	  			
+				$value = $row[$field];
+			}
+			$result->close();
+		} else {
+			$value = $default;
+		}
+	
+		return $value;
+	}
+	
+	public function getCount($sql, $field){
+		return $this->getScalar($sql, $field, 0);
+	}
+	
+	public function getSessionTime(){
+		$sql = "select CURRENT_TIMESTAMP as db_time from DUAL";
+		$field = 'db_time';
+		return $this->getScalar($sql, $field,'');
+	}
+	
+	public function getSessionYear(){
+		$sql = "select year(CURRENT_TIMESTAMP) as db_year from DUAL";
+		$field = 'db_year';
+		return $this->getScalar($sql, $field,0);
+	}
+	
+	public function getSessionTimeZone(){
+		$sql = "select @@session.TIME_ZONE as db_time_zone from DUAL";
+		$field = 'db_time_zone';
+		return $this->getScalar($sql, $field);
+	}
+	
+	public function setSessionTimeZone(){
+		if (isset($_SESSION['logged-in']) && isset($_SESSION['client-time-zone'])){
+			$utcOffset = $_SESSION['client-time-zone'];
+		} else {
+			$utcOffset = '-0:00';
+		}
+		if ($utcOffset == ''){
+			$utcOffset = '-0:00';
+		}
+		if ($utcOffset == 0){
+			$utcOffset = '-0:00';
+		}
+		$sql = "set @@session.TIME_ZONE='".$utcOffset."'";
+		$result = $this->runStatement($sql);
+	}
+	
+	public function addDays($time, $days = 0){
+		$sql = "SELECT timestampadd(DAY, ".$days.", '".$time."') as new_time from DUAL";
+		$field = 'new_time';
+		return $this->getScalar($sql, $field);
+	}
 }
 ?>

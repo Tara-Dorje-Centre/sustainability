@@ -3,8 +3,14 @@ namespace application\entities\projects\links;
 
 class measureLinks extends \application\links\entityLinks {
 use measureParameters;
-	protected $pageList = 'pr_Measure_List.php';
-	protected $pageDetail = 'pr_Measure_Detail.php';
+	
+	public function __construct(){
+		$context = 'measure';
+		$pageDetail = 'pr_Measure_Detail.php';
+		$pageList = 'pr_Measure_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
 	/*
 
 	public function __construct($menuType = 'DIV',$styleBase = 'menu'){

@@ -22,7 +22,7 @@ class parameter{
 			$connect = self::AMPERSAND;
 			//'&';
 		}
-		$p = $connect.$name.self::EQUALS.$value;
+		$p = $connect.$this->name.self::EQUALS.$this->value;
 		return $p;
 	}
 }

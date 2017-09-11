@@ -10,6 +10,6 @@ include_once("entityLinks.class");
 include_once("entityTypeParameters.class");
 include_once("entityTypeLinks.class");
 
-include_once("systemMenu.class");
+
 include_once("systemMenuLinks.class");
 ?>

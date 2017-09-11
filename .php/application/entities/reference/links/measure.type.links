@@ -1,0 +1,16 @@
+<?php
+namespace application\entities\reference\links;
+
+class measureTypeLinks extends \application\links\entityTypeLinks{
+	
+	public function __construct(){
+		$context = 'measureType';
+		$pageDetail = 'pr_MeasureType_Detail.php';
+		$pageList = 'pr_MeasureType_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
+
+}
+
+?>

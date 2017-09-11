@@ -7,35 +7,12 @@ class userLinks extends \application\links\entityLinks {
 		$context = 'user';
 		$pageDetail = 'sys_User_Detail.php';
 		$pageList = 'sys_User_List.php';
-		parent::__construct( $context,$pageDetail, $pageList);
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
 	}
 	
 	
-	/*
-	public 
-	
-	public function listing($userTypeId = 0){
-		$link = 'sys_User_List.php';
-		$link .= '?userTypeId='.$userTypeId;
-		return $link;
-	}
-	//$pagingLinks = $this->base->links->pagingLinks($this->found,$this->resultPage,$this->perPage);	
-	/*public function listingPaged($baseLink,$found, $resultPage, $perPage){
-		$l = $baseLink.'&resultPageUsers=';
-		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
-		return $ls;
-	}*/
-	/*public function pagingLinksChildren($idParent, $found, $resultPage=1, $perPage=10){
-		$l = $this->urlList($idParent).'&resultsPage=';
-		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
-		return $ls;
-	}
 	
 	
-	public function pagingLinks($found, $resultPage, $perPage){
-		$l = $this->urlList(0).'&resultsPage=';
-		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
-		returmn $ls;
-	}*/
 }
 ?>

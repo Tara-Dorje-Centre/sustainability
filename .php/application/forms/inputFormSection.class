@@ -6,16 +6,16 @@ class inputFormSection extends \html\_div{
 	public function __construct(string $name,string $css){
 		parent::__construct($name,$css);
 	}
-	public function input(_field $f){
+	public function input(Ifield $f){
 		$this->addContent($f->input());
 	}
-	public function button(_field $f){
+	public function button(Ifield $f){
 		$this->addContent($f->button());
 	}
-	public function hidden(_field $f){
+	public function inputHidden(Ifield $f){
 		$this->addContent($f->inputHidden());
 	}
-	public function choice(_field $f,string $options){
+	public function inputChoice(Ifield $f,string $options){
 		$this->addContent($f->inputChoice($options));
 	}
 }

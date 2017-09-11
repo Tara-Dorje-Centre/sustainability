@@ -18,13 +18,13 @@ namespace application\forms;
 
 abstract class fields extends \framework\_contentWriter{
 
-	protected $entity = 'fieldset';
+	public $entity = 'fieldset';
 	protected $currentTimestamp = '';
 	protected $currentUser = '';
 	protected $fields = array();
 	
-	public function __construct($entity){
-		$this->setEntity($entity);
+	public function __construct(){
+		//$this->setEntity($entity);
 		global $sessionTime;
 		$this->currentTimestamp = $sessionTime;
 		$this->currentUserName = $_SESSION['login-name'];

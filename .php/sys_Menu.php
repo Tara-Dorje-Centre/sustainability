@@ -1,7 +1,7 @@
 <?php 
 include_once("_includes.php");
 
-$m = new sysMenu();
+$m = new application\systemMenu();
 $m->getRequestArguments();
 $m->printPage();
 ?>

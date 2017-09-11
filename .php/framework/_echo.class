@@ -23,7 +23,7 @@ public function echoLocale(string $f = '-use-current-'){
 // string $c= '-use-currenppppp{
 	//if ($c != '-use-current-'){
 	$this->_myClassName = get_class($this);
-	}// __classname__ should be a magic variable here
+	// __classname__ should be a magic variable here
 	if ($f != '-use-current-'){
 		$this->_myFunctionName = $f;
 	}

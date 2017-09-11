@@ -1,28 +1,29 @@
 <?php
 namespace application\links;
 
-abstract class entityTypeLinks extends entityLinks{
+ class entityTypeLinks extends entityLinks
+implements IentityLinks{
 use entityTypeParameters;
 	public function __construct(){
-		$context = 'entity';
+		
+		parent::__construct();
+		$context = 'entityType';
 		$pageDetail = 'index.php';
 		$pageList = 'index.php';
-		parent::__construct( $context,$pageDetail, $pageList);
-	}
-	public function makeEditingMenu($mode, $id = 0, $idParent = 0,$idType = 0){
-		$this->makeSysMenu();
-		$this->setEditingLinks($mode,$id,$idParent,$idType);
-	}
-	public function makeSysMenu(){
-		$sysLinks = new sysMenuLinks('LIST','menu');
-		$this->addLink($sysLinks->reference());
+		$this->setLinkContext($context,$pageList,$pageDetail);
 		
 	}
-	public function makeListingMenu($mode,$id,$idParent,$idType){
-		$this->makeSysMenu();
-		$this->setListingLinks($mode,$id,$idParent,$idType);
-
+	
+	public function listingLinks($mode = 'LIST',$id,$idParent,$idType){
+		//$this->reference();
+		parent::listingLinks($mode,$id,$idParent,$idType);
 	}
+	public function editingLinks($mode = 'VIEW', $id,$idParent,$idType){
+		//$this->reference();
+		parent::editingLinks($mode,$id,$idParent,$idType);
+		
+	}
+	
 		
 }
 

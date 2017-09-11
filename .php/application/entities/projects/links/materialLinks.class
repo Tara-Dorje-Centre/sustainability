@@ -5,8 +5,15 @@ namespace application\entities\projects\links;
 
 class materialLinks extends \application\links\entityLinks {
 use materialParameters;
-	protected $pageList = 'pr_Material_List.php';
-	protected $pageDetail = 'pr_Material_Detail.php';
+	
+	public function __construct(){
+		$context = 'material';
+		$pageDetail = 'pr_Material_Detail.php';
+		$pageList = 'pr_Material_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
+	
 	/*
 	
 	public function listingHref($taskId,$caption = 'Materials', $projectId = 0, $display = 'TASK', $approved = 'no'){

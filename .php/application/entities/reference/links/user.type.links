@@ -1,0 +1,16 @@
+<?php
+namespace application\entities\reference\links;
+
+class userTypeLinks extends \application\links\entityTypeLinks{
+
+	
+	public function __construct(){
+		$context = 'userType';
+		$pageDetail = 'userType.php';
+		$pageList = 'userType.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
+}
+
+?>

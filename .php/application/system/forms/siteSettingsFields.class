@@ -1,5 +1,5 @@
 <?php
-namespace application\system\forms;
+namespace application\forms;
 
 class siteSettingsFields extends \application\forms\fields{
 	 public $siteTitle;
@@ -29,29 +29,29 @@ class siteSettingsFields extends \application\forms\fields{
 	public function __construct(){
 		parent::__construct();
 	    $this->echoPrint(true,'begin','__construct','siteSettingsFields');
-		$this->siteTitle = new _nameField('site_title','site-title','Site.Title');
-	 	$this->siteUrl = new _urlField('site_url','site-url','Site.URL');
-	 	$this->loginNotice = new _notesField('login_notice','site-login-notice', 'Login.Notice');
-	 	$this->organizationUrl = new _urlField('organization_url','organization-url','Organization.URL');
-	 	$this->organization = new _nameField('organization','organization','Organization');
-	 	$this->organizationDescription = new _descriptionField('organization_description','organization-description','Organization.Description');
-	 	$this->contactName = new _nameField('contact_name','contact-name','Contact Name');
-	 	$this->contactEmail = new _emailField('contact_email','contact-email','Contact Email');
-		$this->showPublicSite = new _yesNoField('show_public_site','show-public-site','show.Public.Site');
-		$this->showCostReports = new _yesNoField('show_cost_reports','show-cost-reports','show.Cost.Reports');
-		$this->showRevenueReports = new _yesNoField('show_revenue_reports','show-revenue-reports','show.Revenue.Reports');
-		$this->publicFillColor = new _cssColorField('public_fill_color','public-fill-color','public.Fill.Color');
-		$this->publicSiteColor = new _cssColorField('public_site_color','public-site-color','public.Site.Color');
-		$this->publicPageColor = new _cssColorField('public_page_color','public-page-color','public.Page.Color');
-		$this->publicMenuColor = new _cssColorField('public_menu_color','public-menu-color','public.Menu.Color');
-		$this->publicMenuColorHover = new _cssColorField('public_menu_color_hover','public-menu-color-hover','public.Menu.Color.Hover');
-	 	$this->publicTextColor = new _cssColorField('public_text_color','public-text-color','public.Text.Color');
-	 	$this->publicTextColorHover = new _cssColorField('public_text_color_hover','public-text-color-hover','public.Text.Color.Hover');
-	 	$this->publicFontFamily = new _fontFamilyField('public_font_family','public-font-family','public.Font.Family');
-	 	$this->publicFontSizeTitle = new _fontSizeField('public_font_size_title','public-font-size-title','public.Font.Size.Title');
-	 	$this->publicFontSizeHeading = new _fontSizeField('public_font_size_heading','public-font-size-heading','public.Font.Size.Heading');
-	 	$this->publicFontSizeMenu = new _fontSizeField('public_font_size_menu','public-font-size-menu','public.FontSizeMenu');
-	 	$this->publicFontSizeText = new _fontSizeField('public_font_size_text','public-font-size-text','publicFontSizeText');
+		$this->siteTitle = new \application\forms\nameField('site_title','site-title','Site.Title');
+	 	$this->siteUrl = new \application\forms\urlField('site_url','site-url','Site.URL');
+	 	$this->loginNotice = new \application\forms\notesField('login_notice','site-login-notice', 'Login.Notice');
+	 	$this->organizationUrl = new \application\forms\urlField('organization_url','organization-url','Organization.URL');
+	 	$this->organization = new \application\forms\nameField('organization','organization','Organization');
+	 	$this->organizationDescription = new \application\forms\descriptionField('organization_description','organization-description','Organization.Description');
+	 	$this->contactName = new \application\forms\nameField('contact_name','contact-name','Contact Name');
+	 	$this->contactEmail = new \application\forms\emailField('contact_email','contact-email','Contact Email');
+		$this->showPublicSite = new \application\forms\yesNoField('show_public_site','show-public-site','show.Public.Site');
+		$this->showCostReports = new \application\forms\yesNoField('show_cost_reports','show-cost-reports','show.Cost.Reports');
+		$this->showRevenueReports = new \application\forms\yesNoField('show_revenue_reports','show-revenue-reports','show.Revenue.Reports');
+		$this->publicFillColor = new cssColorField('public_fill_color','public-fill-color','public.Fill.Color');
+		$this->publicSiteColor = new \application\forms\cssColorField('public_site_color','public-site-color','public.Site.Color');
+		$this->publicPageColor = new \application\forms\cssColorField('public_page_color','public-page-color','public.Page.Color');
+		$this->publicMenuColor = new \application\forms\cssColorField('public_menu_color','public-menu-color','public.Menu.Color');
+		$this->publicMenuColorHover = new \application\forms\cssColorField('public_menu_color_hover','public-menu-color-hover','public.Menu.Color.Hover');
+	 	$this->publicTextColor = new \application\forms\cssColorField('public_text_color','public-text-color','public.Text.Color');
+	 	$this->publicTextColorHover = new \application\forms\cssColorField('public_text_color_hover','public-text-color-hover','public.Text.Color.Hover');
+	 	$this->publicFontFamily = new \application\forms\fontFamilyField('public_font_family','public-font-family','public.Font.Family');
+	 	$this->publicFontSizeTitle = new \application\forms\fontSizeField('public_font_size_title','public-font-size-title','public.Font.Size.Title');
+	 	$this->publicFontSizeHeading = new \application\forms\fontSizeField('public_font_size_heading','public-font-size-heading','public.Font.Size.Heading');
+	 	$this->publicFontSizeMenu = new \application\forms\fontSizeField('public_font_size_menu','public-font-size-menu','public.FontSizeMenu');
+	 	$this->publicFontSizeText = new \application\forms\fontSizeField('public_font_size_text','public-font-size-text','publicFontSizeText');
 		
 	
 	

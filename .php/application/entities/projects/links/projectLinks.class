@@ -5,59 +5,55 @@ namespace application\entities\projects\links;
 class projectLinks extends \application\links\entityLinks {
 	use projectParameters;
 	public function __construct(){
-		$context = 'user';
-		$pageDetail = 'sys_User_Detail.php';
-		$pageList = 'sys_User_List.php';
-		parent::__construct( $context,$pageDetail, $pageList);
+		$context = 'project';
+		$pageDetail = 'pr_Project_Detail.php';
+		$pageList = 'pr_Project_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
 	}
 	
-	public function urlProjectList($idParent, $idType, $projectStatus, $myProjects){
-		$this->pageList = 'pr_Project_List.php';
+	public function urlProjectList($idParent, $idType, $status, $myProjects){
+		//$this->pageList = 'pr_Project_List.php';
 		$url = $this->urlList($idParent,$idType);
-		$this->setProjectParametersList($url, $projectStatus, $myProjects);
+		$this->setProjectParametersList($url, $status, $myProjects);
 		return $url;
 	}
 	
 	public function urlProjectDetail($action = 'VIEW', $id, $idParent){
-		$this->pageDetail = 'pr_Project_Detail.php';
+	//	$this->pageDetail = 'pr_Project_Detail.php';
 		$url = $this->urlDetail($action,$id,$idParent);
 		$this->setProjectParametersDetail($url);
 		return $url;
 	}	
 	
 	
-	public function listAll($showClosed = false){
-//		$menu = $this->formatTextItem('AllProjects:');		
-		$menu = $this->listingHref('OPEN','Projects');
+	public function allProjects($showClosed = false){
+
 		if ($showClosed == true){
-			$menu .= $this->listingHref('CLOSED','ClosedProjects');	
+			$status = 'CLOSED';
+			$caption = 'Archive';
+		} else {
+			$status = 'OPEN';
+			$caption = 'Projects';
 		}
-		return $menu;
+	
+		$u = $this->urlProjectList(0,0,$status,'NO');
+		return $u->link($caption);
 	}
 	
-	public function listMyProjects($showClosed = false){
-		//$menu = $this->formatTextItem('MyProjects:');		
-		$menu = $this->listingHref('OPEN','MyProjects','YES');
+	public function myProjects($showClosed = false){
 		if ($showClosed == true){
-			$menu .= $this->listingHref('CLOSED','MyClosedProjects','YES');
+			$status = 'CLOSED';
+			$caption = 'Archive';
+		} else {
+			$status = 'OPEN';
+			$caption = 'Projects';
 		}
-		return $menu;
-	}/*
 	
-	public function listing($projectStatus = 'OPEN',$showMyProjects = 'NO'){
-		$link = 'pr_Project_List.php'.'?projectStatus='.$projectStatus;
-		if ($showMyProjects == 'YES'){
-			$link .= '&showMyProjects=YES';
-		}
-		return $link;
+		$u = $this->urlProjectList(0,0,$status,'YES');
+		return $u->link($caption);
+	
+		
 	}
-	public function listingPaged($status, $showMyProjects,$found, $resultPage, $perPage){
-		$l = $this->listing($status,$showMyProjects).'&resultsPage=';
-		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
-		return $ls;
-	}
-	public 
-	}
-	*/
 }
 ?>

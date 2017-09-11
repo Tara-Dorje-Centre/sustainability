@@ -37,9 +37,12 @@ implements IPage {
 	public function setDocument(string $title = 'Sustainability',string $styles = 'none',string $scripts = 'none',string $onLoad = 'none'){
 	
 	}
-	public function setMain($contents,$links){
-	
-	
+	public function setMainLinks($links){
+		$this->linksHeader = $links;
+	}
+	public function setMain($contents){
+		$this->mainContents = $contents;
+		$this->linksHeader = $links;
 	}
 	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none'){
 	

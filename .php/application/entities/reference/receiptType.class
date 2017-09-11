@@ -1,19 +1,7 @@
 <?php
 namespace application\entities\reference;
 
-class receiptTypeFields extends \application\forms\entityTypeFields{
 
-}
-class receiptTypeSQL extends \application\sql\entityTypeSQL{
-	public function __construct(){
-		$this->baseTable = 'receipt_types';
-	}
-}
-class receiptTypeLinks extends \application\links\entityTypeLinks{
-	protected $context = 'receiptType';
-	protected $pageList = 'pr_ReceiptType_List.php';
-	protected $pageDetail = 'pr_ReceiptType_Detail.php';
-}
 class receiptType extends \application\entityType{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){

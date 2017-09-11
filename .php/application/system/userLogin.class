@@ -14,7 +14,7 @@ class userLogin extends \framework\_contentWriter{
 		$this->_form = $mode;
 		$this->f = new forms\userLoginFields();
 		$this->s = new forms\userSecurityFields();
-		$this->sql = new entities\system\UserSQL();
+		$this->sql = new sql\UserSQL();
 		//$this->links = new UserLinks();
 	}
 
@@ -40,8 +40,8 @@ class userLogin extends \framework\_contentWriter{
 		
 		
 			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
-		
-			$result = dbRunSQL($sql);
+			global $conn;
+			$result = $conn->runStatement($sql);
 			
 			$links = new UserLinks;	
 			$message = $_SESSION['site-title'].br();
@@ -78,7 +78,9 @@ class userLogin extends \framework\_contentWriter{
 	public function validateLoginAndEmail($loginName, $loginEmail){
 		$valid = false;
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
-		$found = dbGetCount($sql,'user_count');
+		global $conn;
+		
+		$found = $conn->getCount($sql,'user_count');
 		
 
 		if ($found == 1){
@@ -119,7 +121,8 @@ class userLogin extends \framework\_contentWriter{
 		$loginPwdCrypt = $this->obfuscate($pass,$login);
 		$validUser = false;
 		$sql = $this->sql->validateUser($login, $loginPwdCrypt);
-		$found = dbGetCount($sql,'user_count');
+		global $conn;
+		$found = $conn->getCount($sql,'user_count');
 	
 		
 		$this->echoValue(true, 'foundUser?', $found, 'validateLogin');
@@ -162,8 +165,8 @@ class userLogin extends \framework\_contentWriter{
 	private function setSecurity($loginName){
 		$this->echoPrint(true, 'begin','setSecurity');
 		$sql = $this->sql->securityUser($loginName);
-
-		$result = dbGetResult($sql);
+		global $conn;
+		$result = $conn->getResult($sql);
 		if($result){
 			$this->echoPrint(true, 'found user profile','setSecurity');
 	  		while ($row = $result->fetch_assoc())
@@ -197,8 +200,8 @@ class userLogin extends \framework\_contentWriter{
 	private function updateLastLogin(string $loginName = 'unknkownId'){
 		
 		$sql = $this->sql->updateLastLogin($loginName);
-		
-		$result = dbRunSQL($sql);
+		global $conn;
+		$result = $conn->runStatement($sql);
 		
 	}
 	
@@ -208,11 +211,12 @@ class userLogin extends \framework\_contentWriter{
 		$message .= $this->getLoginMessages();
 		$entity = 'site-login';
 		$this->f->setEntity($entity);
-$links = new _links();
-		$contextMenu = $links->formatToggleLink('formOptional','Lost Password');
 
-		$login = new _inputForm('sys_Login.php','Login');
-		$login->open($entity,$this->_form, $contextMenu);
+
+
+		$login = new \application\forms\inputForm('sys_Login.php','Login','LOGIN',$entity,true);
+		
+		
 		$login->required->input($this->f->_loginName);
 		$login->required->input($this->f->_loginPassword);
 
@@ -231,7 +235,7 @@ $links = new _links();
 		$login->submit->addContent('+'.$_SESSION['site-login-notice']);
 
 		$this->echoPrint(true, 'returning login form','loginForm');
-		return $login->close();;			
+		return $login->print();		
 	}
 	
 	private function getLoginMessages(){

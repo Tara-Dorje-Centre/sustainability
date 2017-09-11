@@ -21,7 +21,12 @@ abstract class entityList extends entity{
 		$sql = $this->base->sql->count();
 		$this->found = dbGetCount($sql, 'count_details');
 	}
-	
+	protected function makePageMenu(){
+		//$this->links->reference);
+		$this->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->links->makeEditingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->_pageMenu = $this->links->print();
+	}
 	protected function setPageTitle(){
 		$this->_pageTitle = $this->titleEntity;
 	}
@@ -54,10 +59,10 @@ abstract class entityList extends entity{
 		$result = dbGetResult($sql);
 		if($result){
 			
-			$this->_display->addRowContent($this->base->listHeading());
+			$this->_display->addRow($this->base->listHeading());
 		  	while ($row = $result->fetch_assoc())
 			{	
-				$this->_display->addRowContent($this->base->listRow($row));
+				$this->_display->addRow($this->base->listRow($row));
 			}
 			$result->close();
 		} else {

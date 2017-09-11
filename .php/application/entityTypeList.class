@@ -11,14 +11,15 @@ abstract class entityTypeList extends entityList{
 	}
 	
 	protected function makePageTitle(){
-	
-	
+		$this->_pageTitle = $this->titleEntity;
 	}
 	protected function makePageMenu(){
-		
-		$this->base->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		//$this->links->reference);
+		$s = new \application\links\systemMenuLinks();
+		$this->base->links->addLink($s->reference);
+		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
+		//$this->base->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->_pageMenu = $this->base->links->print();
-		
 	}
 	
 	

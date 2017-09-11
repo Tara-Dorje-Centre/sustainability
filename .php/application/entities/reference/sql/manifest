@@ -1,0 +1,15 @@
+<?php
+
+include_once("activity.type.sql");
+include_once("location.type.sql");
+include_once("material.type.sql");
+include_once("measure.type.sql");
+include_once("project.type.sql");
+include_once("quantity.type.sql");
+include_once("receipt.type.sql");
+include_once("task.type.sql");
+include_once("user.type.sql");
+include_once("location.sql");
+include_once("measure.type.unit.sql");
+
+?>

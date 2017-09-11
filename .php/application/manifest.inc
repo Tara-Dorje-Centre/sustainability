@@ -11,6 +11,7 @@ include_once("entity.class");
 include_once("entityList.class");
 include_once("entityType.class");
 include_once("entityTypeList.class");
+include_once("systemMenu.class");
 
 include_once('system/manifest.inc');
 include_once('public/manifest.inc');

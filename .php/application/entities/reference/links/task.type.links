@@ -1,0 +1,18 @@
+<?php
+namespace application\entities\reference\links;
+
+
+class taskTypeLinks extends \application\links\entityTypeLinks{
+	
+	
+		public function __construct(){
+		$context = 'taskType';
+		$pageDetail = 'pr_TaskType_Detail.php';
+		$pageList = 'pr_TaskType_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
+}
+
+
+?>

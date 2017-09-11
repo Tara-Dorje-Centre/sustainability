@@ -1,0 +1,15 @@
+<?php
+namespace application\entities\reference\links;
+
+class receiptTypeLinks extends \application\links\entityTypeLinks{
+	
+	public function __construct(){
+		$context = 'receiptType';
+		$pageDetail = 'pr_ReceiptType_Detail.php';
+		$pageList = 'pr_ReceiptType_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
+}
+
+?>

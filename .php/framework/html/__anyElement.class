@@ -1,7 +1,7 @@
 <?php
 namespace html;
 
-abstract class _anyElement extends _element{
+ class _anyElement extends _element{
 	public function __construct(string $tag, string $css = 'none') {
 		parent::__construct($tag,'none',$css);
 		

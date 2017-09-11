@@ -1,19 +1,8 @@
 <?php
 namespace application\entities\reference;
 
-class materialTypeFields extends \application\forms\entityTypeFields { 
 
-}
-class materialTypeSQL extends \application\sql\entityTypeSQL{
-	public function __construct(){
-		$this->baseTable = 'material_types';
-	}
-}
-class materialTypeLinks extends \application\links\entityTypeLinks{
-	protected $context = 'materialType';
-	protected $pageList = 'pr_MaterialType_List.php';
-	protected $pageDetail = 'pr_MaterialType_Detail.php';
-}
+
 class materialType extends \application\entityType {    
 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'materialType';

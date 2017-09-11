@@ -2,20 +2,7 @@
 namespace application\entities\reference;
 
 
-class activityTypeFields extends \application\forms\entityTypeFields{
 
-}
-class activityTypeSQL extends \application\sql\entityTypeSQL{
-	public function __construct(){
-		$this->baseTable = 'activity_types';
-	}
-}
-class activityTypeLinks extends \application\links\entityTypeLinks{
-	protected $context = 'activityType';
-	protected $pageList = 'pr_ActivityType_List.php';
-	protected $pageDetail = 'pr_ActivityType_Detail.php';
-
-}
 class activityType extends \application\entityType{
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'activityType';

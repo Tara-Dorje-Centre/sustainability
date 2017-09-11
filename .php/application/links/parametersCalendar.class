@@ -2,11 +2,11 @@
 namespace application\links;
 
 trait parametersCalendar{
-	public function getCalendarLink(url $u, $caption, $year, $month){
+	public function calendar(url $u, $caption, $year, $month){
 		$this->setCalendarParameters($u,$year,$month);	
 		return $u->link($caption);
-		//return $l;	
 	}
+	
 	protected function setCalendarParameters(url &$u,$year,$month){
 		$u->addParameter($this->pYear($year));
 		$u->addParameter($this->pMonth($month));

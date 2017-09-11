@@ -356,7 +356,8 @@ interface Ifield{
         			break;
     			default:
   		 			$this->_raw = $this->env->get(true);
- 		 			$this->_text = dbEscapeString($this->_raw);
+  		 			global $conn;
+ 		 			$this->_text = $conn->getEscapeString($this->_raw);
 			}
  		}
 	} 

@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-class _userField extends _textField{
+class userField extends textField{
 
  public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -12,7 +12,7 @@ class _userField extends _textField{
 	}
 
 }
-class _passwordField extends _textField{
+class passwordField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -39,7 +39,7 @@ class _passwordField extends _textField{
 		return $password;
 	}
 }
-class _emailField extends _textField{
+class emailField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -50,7 +50,7 @@ class _emailField extends _textField{
 	}
 }
 
-class _urlField extends _textField{
+class urlField extends textField{
 
 	public function input( ){
 		$i = new \html\inputs\url($this->env->variable(),$this->value(),$this->_caption);
@@ -58,7 +58,7 @@ class _urlField extends _textField{
 	}
 }
 
-class _nameField extends _textField{
+class nameField extends textField{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -69,7 +69,7 @@ class _nameField extends _textField{
 	}
 }
 
-class _idField extends _numberField{
+class idField extends numberField{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -80,7 +80,7 @@ class _idField extends _numberField{
 	}
 }
 
-class _descriptionField extends _textField{
+class descriptionField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -90,7 +90,7 @@ class _descriptionField extends _textField{
 		return $i->print();
 	}
 }
-class _notesField extends _textField{
+class notesField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -101,7 +101,7 @@ class _notesField extends _textField{
 	}
 }
 	
-class _commentsField extends _textField{
+class commentsField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -113,7 +113,7 @@ class _commentsField extends _textField{
 	
 }
 	
-class _yesNoField extends _textField{
+class yesNoField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -125,7 +125,7 @@ class _yesNoField extends _textField{
 	
 }
 
-class _cssColorField extends _textField{
+class cssColorField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -159,7 +159,7 @@ trait selectQueryField{
 
 
 
- class _selectDbTextField extends _textField{
+ class selectTextField extends textField{
 	use selectQueryField;
 	
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
@@ -168,7 +168,7 @@ trait selectQueryField{
 	
 	
 }
- class _selectDbNumberField extends _numberField{
+ class selectNumberField extends numberField{
 	use selectQueryField;
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
@@ -176,13 +176,13 @@ trait selectQueryField{
 	}
 	
 }
-class idSelectDbField extends _selectDbNumberField{
+class selectIdField extends selectNumberField{
 
 
 
 
 }
- class _cssHighlightField extends _textField{
+ class cssHighlightField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -193,7 +193,7 @@ class idSelectDbField extends _selectDbNumberField{
 	}
 }
  
-class _fontsizeField extends _numberField{
+class fontsizeField extends numberField{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -204,7 +204,7 @@ class _fontsizeField extends _numberField{
 	}
 }
  
-class _fontFamilyField extends _textField{
+class fontFamilyField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);

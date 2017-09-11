@@ -1,5 +1,5 @@
 <?php
-namespace application\entities\reference;
+namespace application\entities\reference\sql;
 
 class locationSQL extends \application\sql\entitySQL{
 public function __construct(){

@@ -17,8 +17,9 @@ class url {
 		$url = $this->basePage.$this->arguments;
 		return $url;
 	}
-	public function link($caption,$css){
-		$l = new link($this->print(),$caption,$css);
+	public function link($caption,$css='link'){
+		$l = new link($this,$caption,$css);
+		return $l;
 	}
 	public function addParameter(parameter $p){
 		$this->parameters[$p->name] = $p;

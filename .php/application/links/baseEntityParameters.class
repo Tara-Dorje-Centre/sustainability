@@ -2,7 +2,7 @@
 namespace application\links;
 
 trait baseEntityParameters{
-use parametersCalendar, parametersBase;
+use parametersCalendar;
 
 	protected function baseUrl(string $page = 'index.php',string $scope,string $context){
 		$u = $this->getUrl($page);

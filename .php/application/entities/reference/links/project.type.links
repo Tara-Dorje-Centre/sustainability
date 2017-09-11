@@ -1,0 +1,19 @@
+<?php
+namespace application\entities\reference\links;
+
+
+class projectTypeLinks extends \application\links\entityTypeLinks{
+	
+	
+	public function __construct(){
+		$context = 'projectType';
+		$pageDetail = 'pr_ProjectType_Detail.php';
+		$pageList = 'pr_ProjectType_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
+	
+}
+
+
+?>

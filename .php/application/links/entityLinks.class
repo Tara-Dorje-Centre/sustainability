@@ -2,18 +2,26 @@
 namespace application\links;
 
 
-abstract class entityLinks extends baseEntityLinks
+ class entityLinks extends baseEntityLinks
 implements IentityLinks{
 use entityParameters;
-	
-	protected function setListingLinks($mode = 'LIST',$id,$idParent,$idType){
+	public function __construct(){
+		parent::__construct();
+		$context = 'entity';
+		$pageDetail = 'index.php';
+		$pageList = 'index.php';
+		$this->setLinkContext($context,$pageList,$pageDetail);
+		
+	}
+	public function listingLinks($mode = 'LIST',$id,$idParent,$idType){
 		$this->addLink($this->add('AddChild',$id));
 		$this->addLink($this->add('AddSibling',$idParent));
 		$this->addLink($this->list('List',$idParent));
 		$this->addLink($this->list('ListChildren',$id));
 		$this->addLink($this->list('listType',0,$idType));
+		
 	}
-	protected function setEditingLinks($mode = 'VIEW', $id,$idParent,$idType){
+	public function editingLinks($mode = 'VIEW', $id,$idParent,$idType){
 		switch ($mode){
 			case 'VIEW':
 				$this->addLink($this->edit('Edit',$id));
@@ -34,12 +42,7 @@ use entityParameters;
 		}
 		
 	}
-	public function makeEditingMenu($mode, $id, $idParent,$idType){
-		$this->setEditingLinks($mode,$id,$idParent,$idType);
-	}
-	public function makeListingMenu($mode,$id,$idParent,$idType){
-		$this->setListingLinks($mode,$id,$idParent,$idType);
-	}
+	
 	
 	public function urlList( $idParent, $idType){
 		$u = $this->baseUrlList();
@@ -53,66 +56,55 @@ use entityParameters;
 		return $u;
 	}	
 	
-	public function linkDetail(string $caption, $action, $id,$idParent){
+	public function detail(string $caption, $action, $id=0,$idParent=0){
 		$url = $this->urlDetail($action,$id,$idParent);
 		$l = $this->getLink($url,$caption);
 		return $l;	
 	}	
-	public function linkList(string $caption,$idParent,$idType){
+	public function list(string $caption,$idParent=0,$idType=0){
 		$url = $this->urlList($idParent,$idType);
 		$l = $this->getLink($url,$caption);
 		return $l;	
 	}
 	
-	protected function add($caption = 'New', $idParent){
-		return $this->linkDetail($caption,'ADD',0,$idParent);
+	public function add($caption = 'New', $idParent){
+		return $this->detail($caption,'ADD',0,$idParent);
 	}
-	protected function view($caption = 'View', $id){
-		return $this->linkDetail($caption,'VIEW',$id);
+	public function view($caption = 'View', $id){
+		return $this->detail($caption,'VIEW',$id);
 	}
-	protected function edit($caption = 'Edit', $id){
-		return $this->linkDetail($caption,'EDIT',$id);
+	public function edit($caption = 'Edit', $id){
+		return $this->detail($caption,'EDIT',$id);
 	}
-	protected function copy($caption = 'Copy', $id){
-		return $this->linkDetail($caption,'COPY',$id);
+	public function copy($caption = 'Copy', $id){
+		return $this->detail($caption,'COPY',$id);
 	}
 	
-	protected function getListLink($idParent, $idType){
-		return $this->list($this->context,$idParent,$idType);
+	
+	public function contextList(){
+		return $this->list($this->context,0,0);
 	}
-	public function printListLink($idParent, $idType){
-		$l = $this->getListLink($idParent, $idType);
-		return $l->print();
-	}
-	protected function getDetailLink($caption, $id){
+	
+	public function viewEdit($caption, $id,$editCaption='[#]'){
 		$d = new \html\_div('list-link','list-item-link');
 		$lView = $this->view($caption,$id);
-		$lEdit = $this->edit('[#]',$id);
+		$lEdit = $this->edit($editCaption,$id);
 		$d->addContent($lView->print());
 		$d->addContent($lEdit->print());
-		return $d;
-	}	
-	public function printDetailLink($caption, $id){
-		$d = $this->getDetailLink($caption,$id);
 		return $d->print();
 	}	
-	protected function getPagingLinks($recordCount, $resultPage, $perPage, $idParent, $idType){
-		$p = new linkMenuPaged($perPage,'results-page');
-		$u = $this->urlList($idParent,$idType);
-		$p->makePagedLinks($u, $recordCount,$resultPage);
-		return $p;
-	}
 	
-	public function printPagingLinks($recordCount, $resultPage, $perPage, $idParent, $idType){
-		$p = $this->getPagingLinks($recordCount,$resultPage, $perPage,$idParent,$idType);
+	public function pagedListing($count, $page, $rows, $idParent, $idType){
+		$p = new linkMenuPaged($rows,'results-page');
+		$u = $this->urlList($idParent,$idType);
+		$p->makePagedLinks($u, $count,$page);
 		return $p->print();
 	}
-	public function printCalendarLink(url $u, $caption, $year, $month){
-		$l = $this->setCalendarLink($u,$caption,$year,$month);
-		return $l->print();
-	}
+	
+	
+	
 		
+	
 }
-
 
 ?>

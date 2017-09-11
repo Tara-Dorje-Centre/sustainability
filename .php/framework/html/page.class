@@ -5,7 +5,8 @@ namespace html;
 interface IPage{
 	public function print();
 	public function setDocument(string $title = 'Sustainability',string $styles = 'none',string $scripts = 'none',string $onLoad = 'none');
-	public function setMain($contents,$links);
+	public function setMain($contents);
+		public function setMainLinks($links);
 	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none');
 }
 class page extends \framework\_echo
@@ -27,8 +28,10 @@ implements IPage{
 		$this->_document->setScripts($scripts);
 		
 	}
-	
-	public function setMain($contents,$links){
+	public function setMainLinks($links){
+		$this->linksHeader = $links;
+	}
+	public function setMain($contents){
 		$this->mainContents = $contents;
 		$this->linksHeader = $links;
 	}

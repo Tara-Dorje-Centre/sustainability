@@ -5,13 +5,13 @@ namespace application\entities\projects\links;
 class receiptLinks extends \application\links\entityLinks {
 	use receiptParameters;
 	public function __construct(){
-		$context = 'user';
-		$pageDetail = 'sys_User_Detail.php';
-		$pageList = 'sys_User_List.php';
-		parent::__construct( $context,$pageDetail, $pageList);
+		$context = 'receipt';
+		$pageDetail = 'pr_Receipt_Detail.php';
+		$pageList = 'pr_Receipt_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
 	}
-	protected $pageList = 'pr_Receipt_List.php';
-	protected $pageDetail = 'pr_Receipt_Detail.php';
+	
 
 /*
 	 

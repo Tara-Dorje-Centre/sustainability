@@ -18,7 +18,9 @@ abstract class entity extends baseEntity{
 	}
 	
 	abstract protected function makePageMenu();
-	abstract protected function makePageTitle();
+	protected function makePageTitle(){
+		$this->_pageTitle = $this->entityTitle;
+	}
 	abstract protected function editForm();
 	abstract public function getRequestArguments();
 	
@@ -29,7 +31,8 @@ abstract class entity extends baseEntity{
 	public function setDetails(){
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
-			$result = dbGetResult($sql);
+			global $conn;
+			$result = $conn->getResult($sql);
 			if($result){
 				while ($row = $result->fetch_assoc())
 				{	
@@ -58,15 +61,15 @@ abstract class entity extends baseEntity{
 	
 	public function listHeading(){
 		$tr = new html/_tr('table-headings');
-		$th = new html/_th();
+		//$th = new html/_th();
 		$tr->makeHeading($this->entityTitle);
 		//$tr->setContent($th->print);
 		$tr->addContent($this->f->listCaption());
-		return $tr->print();
+		return $tr;
 	}
 	
 	protected function listRowLink(){
-		return $this->links->printListDetailLink($this->f->name->value(),$this->f->id->value());
+		return $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
 	}
 	
 	protected function listRowFormat(){
@@ -74,7 +77,7 @@ abstract class entity extends baseEntity{
 
 		$tr->makeData($this->listRowLink());
 		$tr->addContent($this->f->listDetail());		
-		return $tr->print();
+		return $tr;
 	}
 	
 	public function listRow($row){
@@ -128,8 +131,6 @@ abstract class entity extends baseEntity{
 	}
 	
 	final public function printPage(){
-	
-	
 		$this->echoState(true, 'printPage');
 		
 		$this->site = new \application\site($this->pageMode);
@@ -138,7 +139,9 @@ abstract class entity extends baseEntity{
 			$details = $this->getPageDetails();
 		} else {
 		//invalid login state, site will display login form
-		//dont run page wueries or build objects
+		//dont run page queries or build objects
+			$heading = 'invalid login state';
+			$details = 'invalid login state';
 		}
 		$this->site->set($heading, $details);
 		$this->site->print();

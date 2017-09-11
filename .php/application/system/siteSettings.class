@@ -13,8 +13,8 @@ class siteSettings extends \application\entity{
    	 	
 		$this->f = new \application\forms\siteSettingsFields();
 		$this->f->setEntity($this->entity);
-		$this->links = new siteSettingsLinks();
-		$this->sql = new siteSettingsSQL();
+		$this->links = new links\siteSettingsLinks();
+		$this->sql = new sql\siteSettingsSQL();
 	}
 	public function getRequestArguments(){
 	
@@ -31,8 +31,8 @@ class siteSettings extends \application\entity{
 	
 	protected function verifySettings(){
 		$sql = $this->sql->count();
-		
-		$i = dbGetCount($sql, 'count_settings', 0, 'verifySettings');
+		global $conn;
+		$i = $conn->getCount($sql, 'count_settings', 0, 'verifySettings');
 		if ($i == 0){
 			$this->createSettings();	
 		}

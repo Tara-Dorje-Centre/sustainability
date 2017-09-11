@@ -1,0 +1,16 @@
+<?php
+namespace application\entities\reference\links;
+
+class locationTypeLinks extends \application\links\entityTypeLinks{
+	
+	
+	public function __construct(){
+		$context = 'locationType';
+		$pageDetail = 'pr_LocationType_Detail.php';
+		$pageList = 'pr_LocationType_List.php';
+		parent::__construct();
+		$this->setLinkContext($context,$pageDetail, $pageList);
+	}
+}
+
+?>

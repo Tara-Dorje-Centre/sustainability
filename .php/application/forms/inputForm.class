@@ -35,10 +35,10 @@ class inputForm {
 
 		if ($this->useContextMenu == true){
 			$elementId = 'form-optional';
-			$u = new \application\url('#!');
+			$u = new \application\links\url('#!');
 			$js = "toggle('".$elementId."');";
 
-			$l = new \application\link($u, '+Options','toggle-link',$js);
+			$l = new \application\links\link($u, '+Options','toggle-link',$js);
 			$l->setOnClickScript($js);
 			$name = $this->entity.'-context-menu';
 			$this->_context = new \html\_div($name,'contextMenu');

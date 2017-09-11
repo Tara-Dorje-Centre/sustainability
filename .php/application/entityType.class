@@ -20,14 +20,15 @@ abstract class entityType extends entity{
 		$this->f->name->caption = $this->titleEntity;
 	}
 	protected function makePageTitle(){
-	
-	
+		$this->_pageTitle = $this->entityTitle;
 	}
 	
 	protected function makePageMenu(){
-		$this->links->setName('section-heading-links');
-		$this->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->links->makeEditingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		//$this->links->reference);
+		$s = new \application\links\systemMenuLinks();
+		$this->links->addLink($s->reference);
+		$this->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->_pageMenu = $this->links->print();
 	}
 	

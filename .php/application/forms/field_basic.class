@@ -2,7 +2,7 @@
 
 namespace application\forms;
 
-class _textField extends field {
+class textField extends field {
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -11,7 +11,7 @@ class _textField extends field {
 	
 }
 
-class _numberField extends field{
+class numberField extends field{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -23,7 +23,7 @@ class _numberField extends field{
 	}
 }
 
-class _dateField extends field{
+class dateField extends field{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -37,7 +37,7 @@ class _dateField extends field{
 	
 
 }
-class _booleanField extends field{
+class booleanField extends field{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -46,7 +46,7 @@ class _booleanField extends field{
 	
 }
 
-class _submitButton extends field{
+class submitButton extends field{
 
 	public function __construct(string $envVar = 'submit', string $caption = 'no caption'){
 		parent::__construct('not_used', $envVar, $caption);
@@ -60,7 +60,7 @@ class _submitButton extends field{
 	
 }
 
-class _resetButton extends field{
+class resetButton extends field{
 
 	public function __construct(string $envVar = 'reset', string $caption = 'no caption'){
 		parent::__construct('not_used', $envVar, $caption);

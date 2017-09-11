@@ -3,13 +3,13 @@ namespace application\entities\projects\links;
 
 trait taskChildParameters {
 use taskParameters;
-	protected function setTaskChild(_url &$url, $id){
-		$url->addParameter($this->taskId($id));
+	protected function setTaskChild(\application\links\url &$url, $id){
+		$url->addParameter($this->pTaskId($id));
 	}
-	protected function taskId($idTask){
+	protected function pTaskId($idTask){
 		return $this->getParameter('task-id',$idTask);
 	}
-	protected function approvedTask($approved){
+	protected function pApprovedTask($approved){
 		return $this->getParameter('approved-task',$approved);
 	}
 }

@@ -2,30 +2,32 @@
 namespace application\links;
 
 class systemMenuLinks extends linkMenu {
+use baseEntityParameters;
 	public function __construct($name = 'system-menu'){
 		parent::__construct($name,'LIST','menu');
 	}
 	protected function detailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
-		$url = $this->makeUrl($displayMode, $year, $month);
-		$l = new \applicwtion\parameters\link($url->print(),$caption);
-		return $l;	
+		$url = $this->menuUrl($displayMode, $year, $month);
+		return $url->link($caption);
+
+	}
+	public function library(){
+		$url = $this->getUrl('public.php');
+		return $url->link('Library');
 	}
 	public function logout(){
-		$url = 'sys_Logout.php';
-		$l = new \html\_link($url,'Logout');
-		return $l;
-		
+		$url = $this->getUrl('sys_Logout.php');
+		return $url->link('Logout');
 	}
-	public function makeUrl(string $displayMode, $year = 0, $month = 0){
-		$baseUrl = 'sys_Menu.php';
-		$u = new \application\parameters\url($baseUrl);
-		$u->makeParameter('context', 'system-menu');
-		$u->makeParameter('scope', 'view');
-		$u->makeParameter('display-mode', $displayMode);
-		if ($year != 0 && $month != 0){
-			$u->makeParameter('year',$year);
-			$u->makeParameter('month',$month);
-		}
+	public function menuUrl(string $displayMode, $year = 0, $month = 0){
+		$u = $this->getUrl('sys_Menu.php');
+		$context = 'system-menu';
+		$scope = 'view';
+		$this->setBaseParameters($u,$scope,$context);
+		$this->setCalendarParameters($u,$year,$month);	
+		
+		$u->makeParameter('displayMode', $displayMode);
+
 		return $u;
 	}
 	
@@ -44,16 +46,16 @@ class systemMenuLinks extends linkMenu {
 	public function testing(){
 		return $this->detailLink('TESTING', 'Testing');
 	}
-	public function calendar(){
-		return $this->detailLink('CALENDAR', 'Calendars');
+	public function calendars($caption = 'Calendars', $year = 0, $month = 0){
+		return $this->detailLink('CALENDAR', $caption,$year,$month);
 	}
 	public function getPageMenu(){
-		//$this->initialize('section-heading-links','LIST','menu');
+		
 		
 		$this->addLink($this->modules());
 		$this->addLink($this->reference());
 		$this->addLink($this->myLinks());
-		$this->addLink($this->calendar());
+		$this->addLink($this->calendars());
 		
 		if ($_SESSION['is-admin'] == 'yes'){
 			$this->addLink($this->updates());

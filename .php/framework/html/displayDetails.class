@@ -9,7 +9,7 @@ class displayDetails {
 	protected $_display;
 	protected $quickEdit;
 	protected $contextMenu;
-	protected $details;
+	
 	public function __construct(string $entity = 'entity',string $mode = 'mode',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
 		$this->entity = $entity;
 		$this->mode = $mode;
@@ -21,9 +21,6 @@ class displayDetails {
 		$this->_fields = new \html\_fieldset($this->entity.'-fields', $this->legend,'fieldset');
 	}
 	protected function open(){
-
-		
-
 		if ($this->quickEdit != 'none'){
 			$d = new \html\_div($this->entity.'-quickEdit','quickEdit');
 			$this->_display->addContent($d->printContent($this->quickEdit));
@@ -32,30 +29,24 @@ class displayDetails {
 			$d = new \html\_div($this->entity.'-contextMenu','contextMenu');
 			$this->_display->addContent($d->printContent($this->contextMenu));
 		}
-	
-
-		$this->_display->addContent($this->_fields->open());
+		
 		
 	
 	}
 	
 	protected function close(){
-		$this->_display->addContent($this->_fields->close());
+		$this->_display->addContent($this->_fields->print());
 		
 	}
-	public function setContent($content){
 	
-		$this->details = $content;
-	
-	}
 	public function addContent($content){
 	
-		$this->details .= $content;
+		$this->_fields->addContent($content);
 	
 	}
 	public function print(){
 		$this->open();
-		$this->_display->addContent($this->details);
+		
 		$this->close();
 		return $this->_display->print();
 	}

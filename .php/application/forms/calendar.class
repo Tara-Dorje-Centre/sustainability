@@ -13,7 +13,7 @@ class calendar{
 	private $lastDate;
 	private $lastDay = 0;
 	private $closingBlanks = 0;
-	private $_days = array();
+	private $days = array();
 	private $nextLink;
 	private $prevLink;
 	private $content;
@@ -34,7 +34,7 @@ class calendar{
 	
 	private function setCurrentDay(){
 		global $sessionTime;
-		$t = new _timestamp($sessionTime);
+		$t = new \framework\timestamp($sessionTime);
 		$this->currentYear = $t->getYear(true);
 		$this->currentMonth = $t->getMonth(true);
 		$this->currentDay = $t->getDate(true);
@@ -81,7 +81,7 @@ class calendar{
 		for ($i = 0; $i <= $this->daysInMonth; $i++){
 			$list = new \html\_ul('day-items-list', 'day-list');	
 			$list->addContent(\html\spacer());
-			$this->_days[$i] = $list;
+			$this->days[$i] = $list;
 			//new \html\spacer();	
 		}
 	}
@@ -175,7 +175,7 @@ class calendar{
 
 		$this->_calendar = new \html\_div('calendarContainer','calendar-container');
 		$month = new \html\_table('calendar','calendar-table');
-		$month->addRow($this->getTitleRow);
+		$month->addRow($this->getTitleRow());
 		$month->addRow($this->getDaysOfWeekRow());
 		
 		$week = new \html\_tr('calendar-row');
@@ -183,7 +183,7 @@ class calendar{
 		//add padding cells to table
 		$dayCount = 1;
 		if ($this->startingBlanks != 0){
-			$week->addData($this->getBlank($startingBlanks));
+			$week->addCell($this->getBlank($startingBlanks));
 			$dayCount += $this->startingBlanks;
 		}
 		//add days of month, break rows every seven
@@ -198,7 +198,7 @@ class calendar{
 				$day->setCss('calendar-td-today');
 			}
 			$day->setContent($this->getDayContent($dayNumber));
-			$week->addData($day);
+			$week->addCell($day);
  
 			$dayNumber++; 
 			$dayCount++;
@@ -213,8 +213,8 @@ class calendar{
  		} 
 		//add closing cells to table
 		if ($this->closingBlanks != 0){
-			$blank->setColspan($this->closingBlanks);
-			$week->addData($this->getBlank($this->closingBlanks));
+			//$blank->setColspan($this->closingBlanks);
+			$week->addCell($this->getBlank($this->closingBlanks));
 		}	
 		$month->addRow($week);
 		

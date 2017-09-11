@@ -40,10 +40,19 @@ class linkMenu extends \framework\_contentWriter{
 		$this->name = $name;
 		$this->nameList = $name.'-list';
 	}
-	
+	public function getParameter(string $name,$value){
+		$p = new parameter($name,$value);
+		return $p;
+	}
+	public function getUrl(string $page = 'index.php'){
+		$u = new url($page);
+		return $u;
+	}
+	public function getLink(url &$u,string $caption){
+		return $u->link($caption,$this->cssItem);
+	}
 	public function makeLink(url &$u,string $caption){
-		//$l = new link($u->print, $caption,$this->cssItem);
-		$this->addLink($u->link($caption));
+		$this->addLink($u->link($caption,$this->cssItem));
 	}
 	
 	public function addLink(link $l){
@@ -61,41 +70,41 @@ class linkMenu extends \framework\_contentWriter{
 	
 	protected function printLinks(){
 		foreach ($this->_links as $l){
-			$item = $this->formatItem($l->print());
-			$this->_menu->addContent($item);
+			$item = $l->print();
+			$this->printItem($item);
+			//$this->_menu->addContent($item);
 		}
 	
 	}
 	
-	protected function formatItem($content){
+	protected function printItem($content){
 		if ($this->type == 'LIST'){
 			$i = new \html\_li($content,$this->cssItem.'-li');
+			$this->_list->addListItem($i);
 		} else {
 			$i = new \html\_anyDiv($content,$this->cssItem);
+			$this->_menu->addContent($i->print());
 		}
-		return $i->print();		
+		//return $i->print();		
 	}
 	
-	protected function open(){
-		if ($this->type == 'LIST'){
-			$this->_menu->addContent($this->_list->open());
-		}
-		
-	}
+	
 
 	protected function close(){
-		if ($this->type == 'LIST'){
-			$this->_menu->addContent($this->_list->close());
-		} 
+
 	}
 	
 	public function print(){
-		$this->open();
 		$this->printLinks();
-		$this->close();
+		if ($this->type == 'LIST'){
+			$this->_menu->addContent($this->_list->print());
+		} 
+		//$this->close();
 		return $this->_menu->print();
 	}
-		
+	
+	
+	
 }
 
 ?>

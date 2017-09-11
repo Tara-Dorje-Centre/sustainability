@@ -3,13 +3,13 @@ namespace application\entities\projects\links;
 
 trait activityChildParameters{
 use activityParameters;
-	protected function setActivityChild(_url &$url, $id){
-		$url->addParameter($this->activityId($id));
+	protected function setActivityChild(\application\links\url &$url, $id){
+		$url->addParameter($this->pActivityId($id));
 	}
-	protected function activityId($id){
+	protected function pActivityId($id){
 		return $this->getParameter('activity-id',$id);
 	}
-	protected function approved($approved){
+	protected function pApproved($approved){
 		return $this->getParameter('approved',$approved);
 	}
 }

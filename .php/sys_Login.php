@@ -3,7 +3,7 @@
 include_once("_includes.php");
 
 
-$u = new userLogin('VALIDATE');
+$u = new \application\system\userLogin('VALIDATE');
 $u->validate();
 
 if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)){

@@ -37,13 +37,13 @@ trait dimensions{
 }
 
 class _table extends _element{
-	protected $_tableRows = array();
+	protected $tableRows = array();
 	
 	public function __construct($idName = 'none', $css = 'none'){
 		parent::__construct('table', $idName, $css);
 	}
 	public function addRow(_tr $tr){
-		$this->_tableRows[] = $tr;
+		$this->tableRows[] = $tr;
 	}
 	public function makeRow($content,$css = 'none'){
 		$tr = new _tr($css);
