@@ -5,9 +5,11 @@ class linkMenu extends \framework\_contentWriter{
 	protected $_menu;
 	protected $_list;
 	protected $_links = array();
-	protected $cssBase;
+	protected $css;
+	protected $cssLinks;
 	protected $cssItem;
 	protected $cssList;
+	protected $cssListItem;
 	protected $type = 'DIV';
 	protected $name = 'menu';  
 	protected $nameList = 'menu-list';
@@ -20,7 +22,7 @@ class linkMenu extends \framework\_contentWriter{
 		$this->setCss($css);
 		$this->setType($type);
 		
-		$this->_menu = new \html\_div($this->name,$this->css);
+		$this->_menu = new \html\_div($this->name,$this->cssLinks);
 		if ($this->type == 'LIST'){
 			$this->_list = new \html\_ul($this->nameList, $this->cssList);
 		}
@@ -28,8 +30,10 @@ class linkMenu extends \framework\_contentWriter{
 
 	protected function setCss(string $css){
 		$this->css = $css;
+		$this->cssLinks = $css.'-links';
 		$this->cssItem = $css.'-links-item';
 		$this->cssList = $css.'-links-list';
+		$this->cssListItem = $css.'-links-list-item';
 	}
 
 	protected function setType(string $type){
@@ -78,14 +82,15 @@ class linkMenu extends \framework\_contentWriter{
 	}
 	
 	protected function printItem($content){
+		$i = new \html\_anyDiv($content,$this->cssItem);
+
 		if ($this->type == 'LIST'){
-			$i = new \html\_li($content,$this->cssItem.'-li');
-			$this->_list->addListItem($i);
+			$li = new \html\_li($i->print(),$this->cssListItem);
+			$this->_list->addListItem($li);
 		} else {
-			$i = new \html\_anyDiv($content,$this->cssItem);
 			$this->_menu->addContent($i->print());
 		}
-		//return $i->print();		
+		
 	}
 	
 	

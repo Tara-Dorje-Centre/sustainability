@@ -34,7 +34,7 @@ class projectLinks extends \application\links\entityLinks {
 			$caption = 'Archive';
 		} else {
 			$status = 'OPEN';
-			$caption = 'Projects';
+			$caption = 'Active Projects';
 		}
 	
 		$u = $this->urlProjectList(0,0,$status,'NO');
@@ -44,10 +44,10 @@ class projectLinks extends \application\links\entityLinks {
 	public function myProjects($showClosed = false){
 		if ($showClosed == true){
 			$status = 'CLOSED';
-			$caption = 'Archive';
+			$caption = 'My Archive';
 		} else {
 			$status = 'OPEN';
-			$caption = 'Projects';
+			$caption = 'My Projects';
 		}
 	
 		$u = $this->urlProjectList(0,0,$status,'YES');

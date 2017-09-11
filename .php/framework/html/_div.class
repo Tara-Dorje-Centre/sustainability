@@ -10,7 +10,7 @@ class _div extends _element{
 
 class _anyDiv extends _anyElement{
 public function __construct($content, string $css = 'none'){
-		parent::__construct('div', 'none', $css);
+		parent::__construct('div', $css);
 		$this->setContent($content);
 	}
 

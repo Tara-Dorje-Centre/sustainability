@@ -59,9 +59,10 @@ implements Isite{
 			$content = 'not logged in';
 			
 		} else {*/
-			$menuType = 'LIST';
-			$menuStyle = 'button';
-			$m = new links\systemMenuLinks('site');
+			
+			
+			$m = new links\systemMenuLinks('site-menu','LIST','button');
+			
 			$p = new \application\entities\projects\links\projectLinks();
 			
 			$t = new \application\entities\projects\links\taskLinks();

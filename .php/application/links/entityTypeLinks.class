@@ -4,9 +4,9 @@ namespace application\links;
  class entityTypeLinks extends entityLinks
 implements IentityLinks{
 use entityTypeParameters;
-	public function __construct(){
+	public function __construct($name='menu',$type='LIST',$css='menu'){
 		
-		parent::__construct();
+		parent::__construct($name,$type,$css);
 		$context = 'entityType';
 		$pageDetail = 'index.php';
 		$pageList = 'index.php';

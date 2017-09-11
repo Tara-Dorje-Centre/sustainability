@@ -152,33 +152,33 @@ div.testing-frame{
 	border-width:1px;
 	border-color:red;
 }
-.menu-links-list {
+.menu-links {
 	padding:1px;
 	line-height:160%;
 }
-.menu-links-list-ul{
+.menu-links-list{
 	margin:0;
 	padding:0;	
 	list-style-type:none;
 }
-.menu-links-item-li{
+.menu-links-list-item {
 	display:inline;
 }
 .menu-links-item{
 	margin:2px;
 	padding:2px;
 }
-.paged-links-list {
+.paged-links {
 	padding:1px;
 	line-height:160%;
 	max-width:90%;
 }
-.paged-links-list-ul{
+.paged-links-list{
 	margin:0;
 	padding:0;	
 	list-style-type:none;
 }
-.paged-links-item-li{
+.paged-links-list-item{
 	display:inline;
 }
 .paged-links-item{
@@ -186,17 +186,8 @@ div.testing-frame{
 	background-color:white;
 	margin:1px;
 }
-.button-links-list {
+.button-links {
 	line-height:200%;
-}
-.button-links-list-ul{
-	margin:0;
-	padding:0;	
-	list-style-type:none;
-	background-color:transparent;
-}
-.button-links-item-li{
-	display:inline;
 }
 .button-links-item{
 	padding:2px;
@@ -204,6 +195,16 @@ div.testing-frame{
 	background-color:transparent;
 	min-width:100px;
 }
+.button-links-list{
+	margin:0;
+	padding:0;	
+	list-style-type:none;
+	background-color:transparent;
+}
+.button-links-list-item{
+	display:inline;
+}
+
 .paged-links-item-current{
 	font-family: Verdana, Arial, Arial, Helvetica, sans-serif;
 	font-size: 18px;
