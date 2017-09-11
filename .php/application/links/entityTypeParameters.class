@@ -2,6 +2,8 @@
 namespace application\links;
 
 trait entityTypeParameters{
+use entityParameters;
+/*
 	protected function setEntityTypeParametersList(url &$u,$idParent,$idType){
 		$u->addParameter($this->pPageAction('LIST'));
 		$u->addParameter($this->pIdParent($idParent));
@@ -19,11 +21,12 @@ trait entityTypeParameters{
 		return $this->getParameter('id',$id);
 	}
 	protected function pIdParent( $idParent){
-		return $this->getParameter('id-parent',$idParent);
+		return $this->getParameter('idParent',$idParent);
 	}
 	protected function pIdType( $idType){
-		return $this->getParameter('id-type',$idType);
+		return $this->getParameter('idType',$idType);
 	}
+	*/
 }
 
 ?>

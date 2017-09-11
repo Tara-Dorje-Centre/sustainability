@@ -46,7 +46,7 @@ use baseEntityParameters;
 	public function testing(){
 		return $this->detailLink('TESTING', 'Testing');
 	}
-	public function calendars($caption = 'Calendars', $year = 0, $month = 0){
+	public function calendars($caption = 'Calendar', $year = 0, $month = 0){
 		return $this->detailLink('CALENDAR', $caption,$year,$month);
 	}
 	public function getPageMenu(){

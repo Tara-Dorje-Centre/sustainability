@@ -154,7 +154,7 @@ abstract class entity extends baseEntity{
 		$title = new \html\_div('section-title');
 		$menu = new \html\_div('section-menu');
 		$title->setContent($this->_pageTitle);
-		$menu->setContent($this->_pagwMenu);
+		$menu->setContent($this->_pageMenu);
 		$heading = $title->print();
 		$heading .= $menu->print();
 		return $heading;

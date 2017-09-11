@@ -255,8 +255,8 @@ class systemMenu extends \framework\_echo{
 		}
 
 		//$menuL = new \application\links\linkMenu('LIST','menu');
-		$p = $this->links->calendars('CALENDAR', 'Previous', $prevYear, $prevMonth);
-		$n = $this->links->calendars('CALENDAR', 'Next', $nextYear, $nextMonth);
+		$p = $this->links->calendars('Previous', $prevYear, $prevMonth);
+		$n = $this->links->calendars('Next', $nextYear, $nextMonth);
 
 		$c = new forms\calendar($this->year->value(),$this->month->value(),'Calendar');	
 		$c->setLinks($n->print(), $p->print());

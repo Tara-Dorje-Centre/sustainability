@@ -51,14 +51,18 @@ class _table extends _element{
 		$this->addRow($tr);
 	}
 	protected function printRows(){
+	//echo 'printing table rows';
+	//$i = 0;
 		foreach ($this->tableRows as $r){
 			$this->addContent($r->print());
+			//$i++;
 		}
+		//echo $i.'rows printed';
 		unset($this->tableRows);
 	}
 	public function print(){
 		$this->printRows();
-		parent::print();
+		return parent::print();
 	}
 }
 
@@ -93,7 +97,7 @@ class _tr extends _anyElement{
 	}
 	public function print(){
 		$this->printData();
-		parent::print();
+		return parent::print();
 	}
 }
 

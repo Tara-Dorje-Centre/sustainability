@@ -29,11 +29,11 @@ implements IPage{
 		
 	}
 	public function setMainLinks($links){
-		$this->linksHeader = $links;
+		$this->linksHeading = $links;
 	}
 	public function setMain($contents){
 		$this->mainContents = $contents;
-		$this->linksHeader = $links;
+		//$this->linksHeader = $links;
 	}
 	
 	public function setFooter(string $links = 'none',string $notices = 'none',string $logo = 'none'){

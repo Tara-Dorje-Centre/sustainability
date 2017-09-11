@@ -22,7 +22,7 @@ implements Isite{
 		$this->settings->setDetails();
 		$this->setDocumentValues();
 		$links = $this->getLinks();
-		parent:: setMainLinks($links);
+		parent::setMainLinks($links);
 		$this->setContents($heading,$details);	
 		$this->setFooterValues();	
 
@@ -54,10 +54,11 @@ implements Isite{
 	}
 
 	protected function getLinks(){
-		if ($this->validLogin == false){
+	/*	if ($this->validLogin == false){
 			//user is not logged in, siteContent will display login form, display no links
 			$content = 'not logged in';
-		} else {
+			
+		} else {*/
 			$menuType = 'LIST';
 			$menuStyle = 'button';
 			$m = new links\systemMenuLinks('site');
@@ -102,7 +103,7 @@ implements Isite{
 		
 	}
 	
-}
+
 
 
 	protected function setContents($heading,$details){ 

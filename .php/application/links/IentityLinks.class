@@ -16,7 +16,7 @@ interface IentityLinks{
 	public function contextList();
 	public function viewEdit($caption, $id,$editCaption='[#]');
 	public function pagedListing($count, $page, $rows, $idParent, $idType);
-	public function calendar(url $u, $caption, $year, $month);
+	public function calendar(url &$u, $caption, $year, $month);
 }
 
 

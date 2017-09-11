@@ -22,10 +22,13 @@ class calendar{
 	private $currentDay;
 	private $isCurrent = false;
 	private $_calendar;
-	public function __construct($year, $month, $title = null){
+	private $_month;
+	public function __construct($year, $month, $title){
+	
 		$this->year = $year;
 		$this->month = $month;
 		$this->title = $title;
+		
 		$this->setLayout();
 		$this->setLinks();
 		$this->setCurrentDay();		
@@ -38,7 +41,10 @@ class calendar{
 		$this->currentYear = $t->getYear(true);
 		$this->currentMonth = $t->getMonth(true);
 		$this->currentDay = $t->getDate(true);
-		
+		/*if ($this->year == 0){
+			$this->year = $this->currentYear;
+			$this->month = $this->currentMonth;
+		}*/
 		if (($this->currentYear == $this->year) && ($this->currentMonth == ltrim($this->month,'0'))){
 			$this->isCurrent = true;
 		} else {
@@ -61,10 +67,11 @@ class calendar{
 		//calculate dayofweek for first day
 		//0 = sunday ... 6 = saturday
 		$this->firstDay = date('w', $this->firstDate); 
+
 		$this->monthName = date('F',$this->firstDate);
 		//determine blank spaces before first day based on weekstartingday
 		$this->startingBlanks = $this->firstDay;
-		
+
 		//calculate days in month
 		 $this->daysInMonth = cal_days_in_month(CAL_GREGORIAN, $this->month, $this->year);
 		//calculate lastDayOfMonth		 
@@ -165,7 +172,9 @@ class calendar{
 	return \html\spacer($n);
 	}
 	private function getBlank($cells){
-		$blank = new \html\_td(\html\spacer(),'calendar-td-blanks');
+		$content = \html\spacer();
+		
+		$blank = new \html\_td($content,'calendar-td-blanks');
 		$blank->setColspan($cells);
 		return $blank;
 	
@@ -174,16 +183,16 @@ class calendar{
 		//loop through internal array of days, printing table rows/data and content
 
 		$this->_calendar = new \html\_div('calendarContainer','calendar-container');
-		$month = new \html\_table('calendar','calendar-table');
-		$month->addRow($this->getTitleRow());
-		$month->addRow($this->getDaysOfWeekRow());
+		$this->_month = new \html\_table('calendar','calendar-table');
+		$this->_month->addRow($this->getTitleRow());
+		$this->_month->addRow($this->getDaysOfWeekRow());
 		
 		$week = new \html\_tr('calendar-row');
 		
 		//add padding cells to table
 		$dayCount = 1;
 		if ($this->startingBlanks != 0){
-			$week->addCell($this->getBlank($startingBlanks));
+			$week->addCell($this->getBlank($this->startingBlanks));
 			$dayCount += $this->startingBlanks;
 		}
 		//add days of month, break rows every seven
@@ -204,7 +213,7 @@ class calendar{
 			$dayCount++;
 			//add week to month and reset week content every 7 days
 			if ($dayCount > 7){
-				$month->addRow($week);
+				$this->_month->addRow($week);
 				unset($week);
 				$week = new \html\_tr('calendar-row');
 				$dayCount = 1;
@@ -216,9 +225,9 @@ class calendar{
 			//$blank->setColspan($this->closingBlanks);
 			$week->addCell($this->getBlank($this->closingBlanks));
 		}	
-		$month->addRow($week);
+		$this->_month->addRow($week);
 		
-		$this->_calendar->setContent($month->print());
+		$this->_calendar->setContent($this->_month->print());
 		return $this->_calendar->print();
 		
 	}
