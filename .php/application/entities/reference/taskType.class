@@ -1,16 +1,14 @@
 <?php
 namespace application\entities\reference;
 
-
-
-
 class taskType extends \application\entityType{
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'taskType';
-		parent::__construct($mode, $id, $idParent);
+	public function __construct(){
+	/*$mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'taskType';*/
+		parent::__construct();/*$mode, $id, $idParent);*/
   		
   		$this->entity = 'task-type';
-  		$this->titleEntity = 'Task Type';
+  		$this->entityTitle = 'Task Type';
      	$this->pageSave = 'pr_TaskType_Save.php';
 		
 		$this->f = new taskTypeFields();
@@ -102,12 +100,14 @@ class taskType extends \application\entityType{
 	}
 } 
 class taskTypeList extends \application\entityTypeList{
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'taskTypeList';
-		parent::__construct($mode, $id, $idParent);
+ 	public function __construct(){
+ 	/*$mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'taskTypeList';*/
+		parent::__construct();/*$mode, $id, $idParent);*/
 		
 		$this->titleEntity = 'Task Types';
-		$this->base = new taskType($this->pageMode,$this->id,$this->idParent);
+		$this->base = new taskType();
+		/*$this->pageMode,$this->id,$this->idParent);*/
 	}
 }
 ?>

@@ -2,15 +2,10 @@
 namespace application\entities\reference;
 
 class locationList extends \application\entityList{
-	protected $_MyClassName = 'LocationList';
-	protected $titleEntity = 'Locations';
-	 
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+ 	public function __construct(){
 		parent::__construct($mode, $id, $idParent);
-		
-		
-		$this->base = new location(0, $idParent);	
-		
+		$this->entityTitle = 'Locations';
+		$this->base = new location();
 	}
 	public function getRequestArguments(){
 

@@ -1,29 +1,24 @@
 <?php
-namespace application\entities\reference;
-
+namespace application\system;
 
 class userType extends \application\entityType {
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'userType';
-		parent::__construct($mode, $id, $idParent);
-		
+	public function __construct(){
+		parent::__construct();
 		$this->entity = 'user-type';
-  		$this->titleEntity = 'User Profile Type';
+  		$this->entityTitle = 'User Profile Type';
 		$this->pageSave = 'userTypeSave.php';
 		
-		$this->f = new userTypeFields();
+		$this->f = new forms\userTypeFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new userTypeSQL();
-		$this->links = new userTypeLinks();
+		$this->sql = new sql\userTypeSQL();
+		$this->links = new links\userTypeLinks();
 	}
 } 
 class userTypeList extends \application\entityTypeList{
-	public function __construct($mode = 'LIST', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'userTypeList';
-		parent::__construct($mode, $id, $idParent);
-		
-  		$this->titleEntity = 'User Profile Types';
-		$this->base = new userType($this->mode,$this->id,$this->idParent);
+	public function __construct(){
+		parent::__construct();
+  		$this->entityTitle = 'User Profile Types';
+		$this->base = new userType();
 	}
 }
 ?>

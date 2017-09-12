@@ -4,13 +4,15 @@ namespace application\entities\reference;
 
 
 class quantityType extends \application\entityType{
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'quantityType';
-		parent::__construct($mode, $id, $idParent);
+	public function __construct(){
+	/*
+	$mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'quantityType';*/
+		parent::__construct();/*$mode, $id, $idParent);*/
 		
 		$this->entity = 'quantity-type';
-		$this->titleEntity = 'Quantity Type';
-		$this->pageSave = 'pr_QuantityType_Save.php';
+		$this->entityTitle = 'Quantity Type';
+		$this->pageSave = 'quantityType.php';
 	
 		$this->f = new quantityTypeFields();
 		$this->f->setEntity($this->entity);
@@ -143,12 +145,15 @@ class quantityType extends \application\entityType{
 } 
 
 class quantityTypeList extends \application\entityTypeList{
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
+	public function __construct(){
+	/*$mode = 'VIEW', $id = 0, $idParent = 0){
 		$this->_MyClassName = 'quantityTypeList';
-		
-		parent::__construct($mode, $id, $idParent);
+		*/
+		parent::__construct();
+		/*$mode, $id, $idParent);*/
 		$this->titleEntity = 'Quantity Types';
-		$this->base = new quantityType($this->pageMode,$this->id,$this->idParent);
+		$this->base = new quantityType();
+		/*$this->pageMode,$this->id,$this->idParent);*/
 	}
 }
 

@@ -3,12 +3,13 @@ namespace application\entities\reference;
 
 
 class projectType extends \application\entityType{
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'ProjectType';
-		parent::__construct($mode, $id, $idParent);
-		
+ 	public function __construct(){
+ 	/*$mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'ProjectType';*/
+		parent::__construct();/*$mode, $id, $idParent);
+		*/
 		$this->entity = 'project-type';
-     	$this->titleEntity = 'Project Type';
+     	$this->entityTitle = 'Project Type';
    	 	$this->pageSave = 'pr_ProjectType_Save.php';
 		
 		$this->f = new projectTypeFields();
@@ -18,12 +19,13 @@ class projectType extends \application\entityType{
 	}
 } 
 class projectTypeList extends \application\entityTypeList{
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'projectTypeList';
-		parent::__construct($mode, $id, $idParent);
+ 	public function __construct(){
+ 	/*$mode = 'VIEW', $id = 0, $idParent = 0){
+		$this->_MyClassName = 'projectTypeList';*/
+		parent::__construct();/*$mode, $id, $idParent);*/
 		
 		$this->titleEntity = 'Project Types';
-		$this->base = new projectType($this->pageMode,$this->id,$this->idParent);
+		$this->base = new projectType();/*$this->pageMode,$this->id,$this->idParent);*/
 	}
 } 
 

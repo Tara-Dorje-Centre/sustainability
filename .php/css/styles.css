@@ -403,7 +403,7 @@ form{
 }
 .calendar-title{
 	font-size:12px;	
-	border-width:1px;
+	border-width:3px;
 	border-color:grey;
 	border-style:solid;
 }
@@ -416,28 +416,28 @@ form{
 	border-style:solid;
 }
 .calendar-td, .calendar-td-blanks {
-	padding:2px;
+	padding:3px;
 	margin:0;
 	vertical-align:top;
 	min-height:100px;
-	border-width:1px;
-	border-color:grey;
+	border-width:2px;
+	border-color:lightgrey;
 	border-style:solid;
 }
 .calendar-td-today{
 	padding:5px;
 	margin:0;
 	vertical-align:top;
-	border-width:5px;
-	border-color:lightgreen;
-	border-style:double;
+	border-width:3px;
+	border-color:green;
+	border-style:solid;
 	border-collapse:separate;
 }
 .calendar-td-blanks{
 background-color:lightblue;	
 }
 .calendar-date{
-font-size:11px;	
+font-size:9px;	
 font-weight:bold;
 float:left;
 margin:0;

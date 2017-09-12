@@ -5,9 +5,11 @@ namespace application\entities\reference;
 class location extends \application\entity{
 	
 	public $childLocations = 0;
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'location';
-		parent::__construct($mode, $id, $idParent);
+ 	public function __construct(){
+ 	/*//$mode = 'VIEW', $id = 0, $idParent = 0){
+		//$this->_MyClassName = 'location';
+		//*/
+		parent::__construct();/*$mode, $id, $idParent);*/
 		
   	 	$this->titleEntity = 'Location';
 	 	$this->pageSave = 'pr_Location_Save.php';

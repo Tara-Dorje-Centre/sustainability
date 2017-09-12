@@ -1,15 +1,12 @@
 <?php
 namespace application\entities\reference;
 
-
-
 class activityType extends \application\entityType{
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'activityType';
-		parent::__construct($mode, $id, $idParent);
+ 	public function __construct(){
+		parent::__construct();
 		
 		$this->entity = 'activity-type';
-	 	$this->titleEntity = 'Activity Type';
+	 	$this->entityTitle = 'Activity Type';
 	 	$this->pageSave = 'pr_ActivityType_Save.php';
 		
 		$this->f = new activityTypeFields();
@@ -19,12 +16,10 @@ class activityType extends \application\entityType{
 	}
 }
 class activityTypeList extends \application\entityTypeList{    
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'activityTypeList';
-		parent::__construct($mode, $id, $idParent);
-	
-		$this->titleEntity = 'Activity Types';
-		$this->base = new activityType($this->pageMode,$this->id,$this->idParent);
+	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Activity Types';
+		$this->base = new activityType();
 	}
 	
 }

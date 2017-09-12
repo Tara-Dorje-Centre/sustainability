@@ -1,0 +1,43 @@
+<?php 
+namespace application\forms;
+
+
+
+trait selectQueryField{
+	protected $_select;
+ 	protected $sql;
+	protected $useSelect = false;
+	public function setSql($sql){
+		$this->sql = $sql;
+		$this->_select = new \html\inputs\selectSql($this->env->variable(),$this->value(),$this->sql, $this->_caption);
+		$this->useSelect = true;
+	}
+	public function setSelect(\html\inputs\selectSql $s){
+		$this->_select = $s;
+		$this->useSelect = true;
+	}
+	public function input(){
+		if ($this->useSelect == true){
+			$input = $this->_select->print();
+		} else {
+			$input = parent::input;
+		}
+	}
+}
+
+
+
+ 
+ 
+class idQueryField extends numberQueryField{
+
+
+
+
+}
+ 
+ 
+
+ 
+
+?>

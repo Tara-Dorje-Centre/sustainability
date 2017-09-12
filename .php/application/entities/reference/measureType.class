@@ -3,12 +3,11 @@ namespace application\entities\reference;
 
 
 class measureType extends \application\entityType{
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'MeasureType';
-		parent::__construct($mode, $id, $idParent);
+ 	public function __construct(){
+		parent::__construct();
 		$this->entity = 'measure-type';
 		
-     	$this->titleEntity = 'Measure Type';
+     	$this->entityTitle = 'Measure Type';
    	 	$this->pageSave = 'pr_MeasureType_Save.php';
 		$this->f = new measureTypeFields();
 		$this->f->setEntity($this->entity);
@@ -53,7 +52,7 @@ class measureType extends \application\entityType{
 	
 	
 	
-		$measureunits = new MeasureTypeUnitList;
+		$measureunits = new measureTypeUnitList();
 		$measureunits->setDetails($this->id);
 		$detail .= $measureunits->getListing();
 		

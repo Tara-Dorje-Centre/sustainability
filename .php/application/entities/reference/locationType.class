@@ -4,11 +4,10 @@ namespace application\entities\reference;
 
 
 class locationType extends \application\entityType{
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'locationType';
-		parent::__construct($mode, $id, $idParent);
+	public function __construct(){
+		parent::__construct();
 		$this->entity = 'location-type';
-  	 	$this->titleEntity = 'Location Type';
+  	 	$this->entityTitle = 'Location Type';
 	 	$this->pageSave = 'pr_LocationType_Save.php';
 		$this->f = new locationTypeFields();
 		$this->sql = new locationTypeSQL();
@@ -19,12 +18,13 @@ class locationType extends \application\entityType{
 } 
 class locationTypeList extends \application\entityTypeList{
 
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
- 		$this->_MyClassName = 'locationTypeList';
-		parent::__construct($mode, $id, $idParent);
+ 	public function __construct(){
+		parent::__construct();
 
-	 	$this->titleEntity = 'Location Types';
+	 	$this->entityTitle = 'Location Types';
+		/*
 		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
+		*/
 	}
 	
 }

@@ -1,0 +1,15 @@
+<?php 
+
+namespace application\forms;
+
+class textField extends field {
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'TEXT';
+	}
+	
+}
+
+
+?>

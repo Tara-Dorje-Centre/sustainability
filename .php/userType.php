@@ -1,17 +1,18 @@
 ﻿<?php 
 include_once("_includes.php");
 
-$context = sessionVariableGET('context','entity');
-$scope = sessionVariableGET('scope','list');
-
+$context = $_GET['context'];
+$scope = $_GET['scope'];
+$action = $_GET['pageAction'];
 switch ($scope){
 	case 'detail':
-		$action = sessionVariableGET('pageAction','VIEW');
-		$id = sessionVariableGET('id',0);
-		$t = new UserType($action,$id);
+		/* $action = sessionVariableGET('pageAction','VIEW');
+		$id = sessionVariableGET('id',0); */
+		$t = new UserType();
+		//$action,$id);
 		break;
 	case 'save':
-		$um = new UserType;
+		$um = new application\entities\reference\userType();
 		$um->collectPostValues();
 		$um->saveChanges();
 		//omit break and print default list
@@ -20,10 +21,10 @@ switch ($scope){
 		//omit break and print default list
 		//break;
 	default:
-		$t = new UserTypeList();
-		$page = sessionVariableGET('resultsPage', 1);
+		$t = new application\entities\reference\userTypeList();
+		/*$page = sessionVariableGET('resultsPage', 1);
 		$details = 10;
-		$t->setPaging($page, $details);
+		$t->setPaging($page, $details);*/
 }
 
 $t->getRequestArguments();
