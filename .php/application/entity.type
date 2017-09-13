@@ -2,15 +2,10 @@
 namespace application;
 
 abstract class entityType extends entity{
-//use entityTypeParameters;
-	/*protected $myClassName = '_entityType';*/
-	protected $titleEntity = '[entity] Type';
-	protected $pageSave = '[entity]TypeSave.php';
-	/*
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
+	public function __construct(){
+		parent::__construct();
 	}
-	*/
+	
 	public function getRequestArguments(){
 
 
@@ -27,7 +22,7 @@ abstract class entityType extends entity{
 	protected function makePageMenu(){
 		//$this->links->reference);
 		$s = new \application\links\systemMenuLinks();
-		$this->links->addLink($s->reference);
+		$this->links->addLink($s->reference());
 	//	$this->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->_pageMenu = $this->links->print();
@@ -39,7 +34,8 @@ abstract class entityType extends entity{
 		/*$this->f->defaults();*/
 		
 		$s = $this->sql->count();
-		$next = dbGetCount($this->sql->count(), 'count_details');
+		global $conn;
+		$next = $conn->getCount($this->sql->count(), 'count_details');
 		$next += 1;
 		$this->echoValue(true,'next',$next,'setdefaults');
 		$this->f->displayOrder->set($next);
@@ -47,10 +43,9 @@ abstract class entityType extends entity{
 		
 	}
 	protected function editForm(){
+		$this->edit = new forms\inputForm($this->pageSave, $this->entityTitle,$this->pageMode,$this->entity,true);
 		
-
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode);//,$contextMenu);
+		//$this->edit->open($this->entity,$this->pageMode);//,$contextMenu);
 		
 		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->displayOrder);
@@ -58,13 +53,14 @@ abstract class entityType extends entity{
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);
-		
-		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$mode = new \application\forms\requestPageMode($this->pageMode);
+		$this->edit->hidden->inputHidden($mode);
+		//getHiddenInput('mode', $this->pageMode));
 		$this->edit->hidden->inputHidden($this->f->id);
 		
 		$this->edit->submit->addContent(getSaveChangesResetButtons());
 		
-		return $this->edit->close();
+		return $this->edit->print();
 	}
 	
 	protected function saveUpdate(){

@@ -33,8 +33,9 @@ use caption, validation, tooltip, disabled;
 		$this->makeOption($value,$display);
 	}
 	public function optionsByQuery($sql){
-
-		$result = dbGetResult($sql);
+		global $conn;
+		
+		$result = $conn->getResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 			{	

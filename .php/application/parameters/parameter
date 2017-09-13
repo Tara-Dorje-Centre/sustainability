@@ -7,12 +7,16 @@ class parameter{
 	protected const AMPERSAND = '&';
 	public $name;
 	private $value;
-	public function __construct(string $name, string $value){
+	public function __construct(string $name, $value){
 		$this->set($name,$value);
 	}
-	public function set(string $name, string $value){
+	public function set(string $name, $value){
 		$this->name = $name;
-		$this->value = $value;
+		if (!is_null($value)){
+			$this->value = $value;
+		} else {
+			$this->value = '0';
+		}
 	}
 	public function print(bool $first = false){
 		if ($first == true){

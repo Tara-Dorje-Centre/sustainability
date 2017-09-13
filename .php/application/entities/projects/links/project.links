@@ -38,7 +38,7 @@ class projectLinks extends \application\links\entityLinks {
 		}
 	
 		$u = $this->urlProjectList(0,0,$status,'NO');
-		return $u->link($caption);
+		return $this->getLink($u, $caption);
 	}
 	
 	public function myProjects($showClosed = false){

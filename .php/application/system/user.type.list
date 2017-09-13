@@ -1,0 +1,12 @@
+<?php
+namespace application\system;
+
+
+class userTypeList extends \application\entityTypeList{
+	public function __construct(){
+		parent::__construct();
+  		$this->entityTitle = 'User Profile Types';
+		$this->base = new userType();
+	}
+}
+?>

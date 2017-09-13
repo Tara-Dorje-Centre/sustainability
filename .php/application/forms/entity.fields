@@ -13,12 +13,12 @@ abstract class entityFields extends fields{
 	
     public function __construct(){
     	parent::__construct();
-    	$this->id = new _idField('id','id','Id');
-    	$this->name = new _nameField('name','name','Name');
-    	$this->description = new _descriptionField('description','description','Description');
-		$this->updated = new _dateField('updated','updated','Updated');
-    	$this->created = new _dateField('created','created','Created');
-        $this->highlight = new _cssHighlightField('highlight_style','highlight','Highlight');
+    	$this->id = new _id('id','id','Id');
+    	$this->name = new _name('name','name','Name');
+    	$this->description = new _description('description','description','Description');
+		$this->updated = new dateField('updated','updated','Updated');
+    	$this->created = new dateField('created','created','Created');
+        $this->highlight = new cssHighlightField('highlight_style','highlight','Highlight');
    
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);

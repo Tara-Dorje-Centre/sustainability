@@ -1,18 +1,22 @@
 ﻿<?php 
+//namespace application;
 include_once("_includes.php");
 
-$context = $_GET['context'];
-$scope = $_GET['scope'];
-$action = $_GET['pageAction'];
-switch ($scope){
+
+$p = new \application\portalRequest();
+
+
+
+echo $p->context.PHP_EOL;
+echo $p->scope.PHP_EOL;
+
+//$action = $_GET['pageAction'];
+switch ($p->scope){
 	case 'detail':
-		/* $action = sessionVariableGET('pageAction','VIEW');
-		$id = sessionVariableGET('id',0); */
-		$t = new UserType();
-		//$action,$id);
+		$t = new application\system\userType();
 		break;
 	case 'save':
-		$um = new application\entities\reference\userType();
+		$um = new application\system\userType();
 		$um->collectPostValues();
 		$um->saveChanges();
 		//omit break and print default list
@@ -21,12 +25,9 @@ switch ($scope){
 		//omit break and print default list
 		//break;
 	default:
-		$t = new application\entities\reference\userTypeList();
-		/*$page = sessionVariableGET('resultsPage', 1);
-		$details = 10;
-		$t->setPaging($page, $details);*/
+		$t = new application\system\userTypeList();
 }
-
+$t->setIdentifiers($p->pageAction,$p->id,$p->idParent);
 $t->getRequestArguments();
 $t->setDetails();
 $t->printPage();

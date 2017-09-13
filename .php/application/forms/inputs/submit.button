@@ -3,7 +3,7 @@ namespace application\forms;
 
 class submitButton extends field{
 
-	public function __construct(string $envVar = 'submit', string $caption = 'no caption'){
+	public function __construct(string $envVar = 'submit', string $caption = 'Save'){
 		parent::__construct('not_used', $envVar, $caption);
 		$this->_datatype = 'SUBMIT';
 	}

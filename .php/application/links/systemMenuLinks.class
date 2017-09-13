@@ -7,17 +7,21 @@ use baseEntityParameters;
 		parent::__construct($name,$type,$css);
 	}
 	protected function detailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
-		$url = $this->menuUrl($displayMode, $year, $month);
-		return $url->link($caption);
+		$u = $this->menuUrl($displayMode, $year, $month);
+		return $this->getLink($u, $caption);
+		//return $l;
+		//url->link($caption);
 
 	}
 	public function library(){
-		$url = $this->getUrl('public.php');
-		return $url->link('Library');
+		$u = $this->getUrl('public.php');
+		return $this->getLink($u, 'Library');
+		//return $l;
+
 	}
 	public function logout(){
 		$url = $this->getUrl('sys_Logout.php');
-		return $url->link('Logout');
+		return $this->getLink($url,'Logout');
 	}
 	public function menuUrl(string $displayMode, $year = 0, $month = 0){
 		$u = $this->getUrl('sys_Menu.php');

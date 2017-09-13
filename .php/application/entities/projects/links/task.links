@@ -23,7 +23,7 @@ use taskParameters;
 		}
 		$u = $this->urlList(-1,0);
 		$u->addParameter($this->pTaskStatus($status));
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	public function periodicTasksOpen(){
 		return $this->periodicTasks(false);

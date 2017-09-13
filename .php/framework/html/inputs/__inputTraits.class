@@ -80,7 +80,7 @@ trait size{
 	}
 }
 trait rows{
-	public function setRowsCols($rows = 0,$cols = 0){
+	public function setRows($rows = 0,$cols = 0){
 		$this->makeAttribute('rows',$rows);
 		$this->makeAttribute('cols',$cols);
 	}

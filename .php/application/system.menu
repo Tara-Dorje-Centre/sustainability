@@ -101,7 +101,7 @@ class systemMenu extends \framework\_echo{
 		if ($_SESSION['is-admin'] == 'yes'){
 		$e = new system\links\userLinks();
 		$this->addReference($e);
-		$e = new entities\reference\links\userTypeLinks();
+		$e = new system\links\userTypeLinks();
 		$this->addReference($e);
 		$e = new system\links\siteSettingsLinks();
 		$this->addReference($e);

@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-class urlField extends textField{
+class _url extends textField{
 
 	public function input( ){
 		$i = new \html\inputs\url($this->env->variable(),$this->value(),$this->_caption);

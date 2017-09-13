@@ -13,7 +13,7 @@ trait entityParameters {
 		$u->addParameter($this->pIdParent($idParent));
 	} 
 	protected function pPageAction(string $action){
-		return $this->getParameter('page-action',$action);
+		return $this->getParameter('pageAction',$action);
 	}
 	protected function pId( $id){
 		return $this->getParameter('id',$id);

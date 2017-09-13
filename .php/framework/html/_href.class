@@ -3,8 +3,8 @@ namespace html;
 
 class _href extends _anyElement{
 
-	public function __construct(string $url, string $display, string $css = 'none'){
-		parent::__construct('a', $css);
+	public function __construct(string $url, string $display){
+		parent::__construct('a');
 		$this->makeAttribute('href',$url);
 		if (is_null($display) or ($display == '')){
 			$display = $url;

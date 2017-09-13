@@ -2,8 +2,8 @@
 namespace application\links;
 
 class link extends \html\_href{
-	public function __construct(url $u, string $display,string $css = 'display-link', $onClickJs = null){
-		parent::__construct($u->print(), $display, $css);
+	public function __construct(url $u, string $display, $onClickJs = null){
+		parent::__construct($u->print(), $display);
 		$this->setOnClickScript($onClickJS);
 	}
 	

@@ -2,8 +2,11 @@
 namespace application;
 
 abstract class entityTypeList extends entityList{
-	//protected $myClassName = '__entityTypeList';
-	//protected $titleEntity = 'Entity Types';
+
+	public function __construct(){
+		parent::__construct();
+	}
+	
 	public function getRequestArguments(){
 
 
@@ -16,7 +19,7 @@ abstract class entityTypeList extends entityList{
 	protected function makePageMenu(){
 		//$this->links->reference);
 		$s = new \application\links\systemMenuLinks();
-		$this->base->links->addLink($s->reference);
+		$this->base->links->addLink($s->reference());
 		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		//$this->base->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->_pageMenu = $this->base->links->print();

@@ -1,0 +1,22 @@
+<?php 
+namespace application;
+
+class portalRequest{
+	public $context;
+	public $scope;
+	
+	public $pageAction;
+	public $id;
+	public $idParent;
+	
+	public function __construct(){
+		$this->context = $_GET['context'];
+		$this->scope = $_GET['scope'];
+		$this->pageAction = $_GET['pageAction'];
+		$this->id = $_GET['id'];
+		$this->idParent = $_GET['idParent'];
+	}
+
+}
+
+?>

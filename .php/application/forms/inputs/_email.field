@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-class emailField extends textField{
+class _email extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);

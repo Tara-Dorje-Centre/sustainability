@@ -11,7 +11,7 @@ interface IbaseEntity{
 abstract class baseEntity 
 extends \framework\_contentWriter 
 implements IbaseEntity{
-	//protected $myClassName = 'baseEntity';
+
 	
     public $pageMode = 'VIEW';
 	public $id;
@@ -35,11 +35,16 @@ implements IbaseEntity{
 	
 	protected $pageTitle;
 	protected $pageMenu;
-	/*
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->setIdentifiers($mode, $id, $idParent);
+	
+	public function __construct(){
+	
 	}
-*/
+	
+	public function getRequestArguments(){
+	
+	
+	}
+
 	public function setIdentifiers($mode, $id = 0, $idParent = 0){
 		$this->pageMode = $mode;
 		$this->id = $id;

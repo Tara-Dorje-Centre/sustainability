@@ -5,10 +5,9 @@ abstract class entityList extends entity{
 	public $found = 0;
 	public $base;
 	protected $_list;
-	/*public function __construct($mode = 'LIST', $id = 0, $idParent = 0){
-		$this->myClassName = '_entityList';
-		parent::__construct($mode, $id, $idParent);
-	}*/
+	public function __construct(){
+		parent::__construct();
+	}
 	
 	//override _entity.setDetails for listing
 	public function setDetails(){
@@ -19,12 +18,13 @@ abstract class entityList extends entity{
 	
 	protected function setFoundCount(){
 		$sql = $this->base->sql->count();
-		$this->found = dbGetCount($sql, 'count_details');
+		global $conn;
+		$this->found = $conn->getCount($sql, 'count_details');
 	}
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
-		$this->base->links->addLink($s->modules);
-		$this->base->links->addLink($s->reference);
+		$this->base->links->addLink($s->modules());
+		$this->base->links->addLink($s->reference());
 		$this->base->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
 		$this->_pageMenu = $this->base->links->print();
@@ -40,8 +40,10 @@ abstract class entityList extends entity{
 	}
 	
 	protected function listingStart(){
-		$paging = $this->base->links->pagingLinks($this->found,$this->resultPage,$this->perPage);	
-		$add = $this->$this->base->addForm();	
+	
+		//entity.links.pagedListing($count, $page, $rows, $idParent, $idType){
+		$paging = $this->base->links->pagedListing($this->found,$this->resultPage,$this->perPage);	
+		$add = $this->base->addForm();	
 		$entity = $this->base->entity;
 		$legend = $this->titleEntity.':  Details';
 		

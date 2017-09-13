@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
-		//$fields = inputFieldUser($entity,$this->f->loginName->value(),'loginName','Login Name');
-class _fieldIdName implements Ifield{
+
+class _idName implements Ifield{
 	public  $id;
 	public  $name;
 	
@@ -11,8 +11,8 @@ class _fieldIdName implements Ifield{
 		string $caption = 'caption',
 		string $dbColName = 'entity_name')
 	{
-		$this->id = new _idField($dbCol, $envVar,'not-used');
-		$this->name = new _nameField($dbColName,'not-used',$caption);
+		$this->id = new _id($dbCol, $envVar,'not-used');
+		$this->name = new _name($dbColName,'not-used',$caption);
 		
 		$this->enabled(true);
 	}

@@ -17,5 +17,6 @@ include_once('system/manifest');
 include_once('public/manifest');
 include_once('entities/manifest');
 
+include_once('portal.request');
 
 ?>

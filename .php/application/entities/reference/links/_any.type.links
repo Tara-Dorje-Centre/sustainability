@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\reference\links;
 
-class userTypeLinks extends \application\links\entityTypeLinks{
+class anyTypeLinks extends \application\links\entityTypeLinks{
 
 	
 	public function __construct(){

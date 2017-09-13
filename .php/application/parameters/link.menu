@@ -53,10 +53,13 @@ class linkMenu extends \framework\_contentWriter{
 		return $u;
 	}
 	public function getLink(url &$u,string $caption){
-		return $u->link($caption,$this->cssItem);
+		$l = new link($u,$caption);
+		return $l;
+
 	}
 	public function makeLink(url &$u,string $caption){
-		$this->addLink($u->link($caption,$this->cssItem));
+		$l = $this->getLink($u,$caption,$this->cssItem);
+		$this->addLink($l);
 	}
 	
 	public function addLink(link $l){

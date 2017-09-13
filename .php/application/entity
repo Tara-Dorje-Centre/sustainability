@@ -2,7 +2,7 @@
 namespace application;
 
 abstract class entity extends baseEntity{
-	//protected $myClassName = 'entity';
+
 	protected $entity;
 	protected $entityTitle = 'Entity';
 	protected $site;
@@ -13,16 +13,29 @@ abstract class entity extends baseEntity{
 	
  	protected $_edit;
  	protected $_display;
- /*	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-	}*/
+ 	public function __construct(){
+		parent::__construct();
+	}
+	
+	public function getRequestArguments(){
+		/*
+		$context
+		$scope
+	
+	
+	
+	
+		$pageAction
+		$id
+		$idParent
+		$idType
+	*/
+	}
 	
 	protected function makePageMenu(){
-		//$this->links->reference);
 		$s = new \application\links\systemMenuLinks();
-		$this->links->addLink($s->modules);
-		$this->links->addLink($s->reference);
-		//$this->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->links->addLink($s->modules());
+		$this->links->addLink($s->reference());
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->_pageMenu = $this->links->print();
 	}
@@ -32,11 +45,7 @@ abstract class entity extends baseEntity{
 	}
 	abstract protected function editForm();
 	
-	public function getRequestArguments(){
 	
-	
-	
-	}
 	
 	public function setEntity($entity,$title){
 	 	$this->entity = $entity;
@@ -161,9 +170,9 @@ abstract class entity extends baseEntity{
 		$this->site->print();
 	}
 	
-	protected function getPageHeading(){
-		$this->setPageTitle();
-		$this->setPageMenu();
+	final protected function getPageHeading(){
+		$this->makePageTitle();
+		$this->makePageMenu();
 		
 		$title = new \html\_div('section-title');
 		$menu = new \html\_div('section-menu');

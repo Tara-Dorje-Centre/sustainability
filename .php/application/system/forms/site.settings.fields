@@ -1,5 +1,5 @@
 <?php
-namespace application\forms;
+namespace application\system\forms;
 
 class siteSettingsFields extends \application\forms\fields{
 	 public $siteTitle;
@@ -29,18 +29,18 @@ class siteSettingsFields extends \application\forms\fields{
 	public function __construct(){
 		parent::__construct();
 	    $this->echoPrint(true,'begin','__construct','siteSettingsFields');
-		$this->siteTitle = new \application\forms\nameField('site_title','site-title','Site.Title');
-	 	$this->siteUrl = new \application\forms\urlField('site_url','site-url','Site.URL');
-	 	$this->loginNotice = new \application\forms\notesField('login_notice','site-login-notice', 'Login.Notice');
-	 	$this->organizationUrl = new \application\forms\urlField('organization_url','organization-url','Organization.URL');
-	 	$this->organization = new \application\forms\nameField('organization','organization','Organization');
-	 	$this->organizationDescription = new \application\forms\descriptionField('organization_description','organization-description','Organization.Description');
-	 	$this->contactName = new \application\forms\nameField('contact_name','contact-name','Contact Name');
-	 	$this->contactEmail = new \application\forms\emailField('contact_email','contact-email','Contact Email');
+		$this->siteTitle = new \application\forms\_name('site_title','site-title','Site.Title');
+	 	$this->siteUrl = new \application\forms\_url('site_url','site-url','Site.URL');
+	 	$this->loginNotice = new \application\forms\_notes('login_notice','site-login-notice', 'Login.Notice');
+	 	$this->organizationUrl = new \application\forms\_url('organization_url','organization-url','Organization.URL');
+	 	$this->organization = new \application\forms\_name('organization','organization','Organization');
+	 	$this->organizationDescription = new \application\forms\_description('organization_description','organization-description','Organization.Description');
+	 	$this->contactName = new \application\forms\_name('contact_name','contact-name','Contact Name');
+	 	$this->contactEmail = new \application\forms\_email('contact_email','contact-email','Contact Email');
 		$this->showPublicSite = new \application\forms\yesNoField('show_public_site','show-public-site','show.Public.Site');
 		$this->showCostReports = new \application\forms\yesNoField('show_cost_reports','show-cost-reports','show.Cost.Reports');
 		$this->showRevenueReports = new \application\forms\yesNoField('show_revenue_reports','show-revenue-reports','show.Revenue.Reports');
-		$this->publicFillColor = new cssColorField('public_fill_color','public-fill-color','public.Fill.Color');
+		$this->publicFillColor = new \application\forms\cssColorField('public_fill_color','public-fill-color','public.Fill.Color');
 		$this->publicSiteColor = new \application\forms\cssColorField('public_site_color','public-site-color','public.Site.Color');
 		$this->publicPageColor = new \application\forms\cssColorField('public_page_color','public-page-color','public.Page.Color');
 		$this->publicMenuColor = new \application\forms\cssColorField('public_menu_color','public-menu-color','public.Menu.Color');

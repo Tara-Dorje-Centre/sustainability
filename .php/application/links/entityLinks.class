@@ -13,7 +13,7 @@ use entityParameters;
 		$this->setLinkContext($context,$pageList,$pageDetail);
 		
 	}
-	public function listingLinks($mode = 'LIST',$id,$idParent,$idType){
+	public function listingLinks($mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
 		$this->addLink($this->add('AddChild',$id));
 		$this->addLink($this->add('AddSibling',$idParent));
 		$this->addLink($this->list('List',$idParent));
@@ -21,7 +21,7 @@ use entityParameters;
 		$this->addLink($this->list('listType',0,$idType));
 		
 	}
-	public function editingLinks($mode = 'VIEW', $id,$idParent,$idType){
+	public function editingLinks($mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		switch ($mode){
 			case 'VIEW':
 				$this->addLink($this->edit('Edit',$id));
@@ -44,19 +44,19 @@ use entityParameters;
 	}
 	
 	
-	public function urlList( $idParent, $idType){
+	public function urlList($idParent = 0, $idType = 0){
 		$u = $this->baseUrlList();
 		$this->setEntityParametersList($u, $idParent,$idType);
 		return $u;
 	}
 	
-	public function urlDetail($action, $id, $idParent){
+	public function urlDetail($action = 'VIEW', $id = 0, $idParent = 0){
 		$u = $this->baseUrlDetail();
 		$this->setEntityParametersDetail($u,$action,$id,$idParent);
 		return $u;
 	}	
 	
-	public function detail(string $caption, $action, $id=0,$idParent=0){
+	public function detail(string $caption, $action = 'VIEW', $id = 0,$idParent = 0){
 		$url = $this->urlDetail($action,$id,$idParent);
 		$l = $this->getLink($url,$caption);
 		return $l;	
@@ -67,10 +67,10 @@ use entityParameters;
 		return $l;	
 	}
 	
-	public function add($caption = 'New', $idParent){
+	public function add($caption = 'New', $idParent = 0){
 		return $this->detail($caption,'ADD',0,$idParent);
 	}
-	public function view($caption = 'View', $id){
+	public function view($caption = 'View', $id = 0){
 		return $this->detail($caption,'VIEW',$id);
 	}
 	public function edit($caption = 'Edit', $id){
@@ -94,11 +94,11 @@ use entityParameters;
 		return $d->print();
 	}	
 	
-	public function pagedListing($count, $page, $rows, $idParent, $idType){
-		$p = new linkMenuPaged($rows,'results-page');
+	public function pagedListing($count, $page, $rows, $idParent = 0, $idType = 0){
+		$p = new linkMenuPaged($rows,'resultsPage');
 		$u = $this->urlList($idParent,$idType);
-		$p->makePagedLinks($u, $count,$page);
-		return $p->print();
+		$text = $p->makePagedLinks($u, $count,$page);
+		return $text;
 	}
 	
 	
