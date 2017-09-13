@@ -4,7 +4,7 @@ namespace application\links;
 trait parametersCalendar{
 	public function calendar(url &$u, $caption, $year, $month){
 		$this->setCalendarParameters($u,$year,$month);	
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	protected function setCalendarParameters(url &$u,$year,$month){

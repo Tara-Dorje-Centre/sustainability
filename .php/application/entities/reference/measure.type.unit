@@ -1,19 +1,16 @@
 <?php
 namespace application\entities\reference;
-
-
  
 class measureTypeUnit extends \application\entity{
-	protected $_MyClassName = 'measureTypeUnit';
-	
+
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
 		$this->entity = 'measure-type-unit';
-
-		$this->f = new measureTypeUnitFields;
+		$this->entityTitle = 'Measure Type Unit';
+		$this->f = new forms\measureTypeUnitFields();
 		$this->f->setEntity($this->entity);
-		$this->l = new measureTypeUnitLinks;
-		$this->sql = new measureTypeUnitSQL;
+		$this->l = new links\measureTypeUnitLinks();
+		$this->sql = new sql\measureTypeUnitSQL();
 		
 	}
 	public function getRequestArguments(){

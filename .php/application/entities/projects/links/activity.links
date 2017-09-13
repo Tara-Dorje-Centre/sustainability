@@ -33,28 +33,29 @@ class activityLinks extends \application\links\entityLinks {
 		$myActivity = 'YES';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'My History';
-		return $u->link($caption);
+		
+		return $this->getLink($u,$caption);
 	}
 	public function groupActivity(){
 		$showCalendar = 'NO';
 		$myActivity = 'GROUP';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'Group History';
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	public function myCalendar(){
 		$showCalendar = 'YES';
 		$myActivity = 'YES';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'My Calendar';
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	public function groupCalendar(){
 		$showCalendar = 'YES';
 		$myActivity = 'GROUP';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'Group Calendar';
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	public function projectActivity($idProject){
@@ -62,7 +63,7 @@ class activityLinks extends \application\links\entityLinks {
 		$myActivity = 'PROJECT';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
 		$caption = 'Project History';
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	public function projectCalendar($idProject){
@@ -70,7 +71,7 @@ class activityLinks extends \application\links\entityLinks {
 		$myActivity = 'PROJECT';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
 		$caption = 'Project Calendar';
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	
@@ -79,14 +80,14 @@ class activityLinks extends \application\links\entityLinks {
 		$myActivity = 'TASK';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask,0);
 		$caption = 'Task History';
-		return $u->link($u,$caption);
+		return $this->getLink($u,$caption);
 	}
 	public function taskCalendar($idTask){
 		$showCalendar = 'YES';
 		$myActivity = 'TASK';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask,0);
 		$caption = 'Task Calendar';
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	

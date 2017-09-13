@@ -7,7 +7,7 @@ abstract class entityType extends entity{
 	}
 	
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}
@@ -53,12 +53,10 @@ abstract class entityType extends entity{
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);
-		$mode = new \application\forms\requestPageMode($this->pageMode);
-		$this->edit->hidden->inputHidden($mode);
-		//getHiddenInput('mode', $this->pageMode));
-		$this->edit->hidden->inputHidden($this->f->id);
 		
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
 		
 		return $this->edit->print();
 	}

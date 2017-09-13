@@ -5,10 +5,7 @@ namespace application\entities\reference;
 
 class quantityType extends \application\entityType{
 	public function __construct(){
-	/*
-	$mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'quantityType';*/
-		parent::__construct();/*$mode, $id, $idParent);*/
+		parent::__construct();
 		
 		$this->entity = 'quantity-type';
 		$this->entityTitle = 'Quantity Type';
@@ -146,14 +143,12 @@ class quantityType extends \application\entityType{
 
 class quantityTypeList extends \application\entityTypeList{
 	public function __construct(){
-	/*$mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'quantityTypeList';
-		*/
+
 		parent::__construct();
-		/*$mode, $id, $idParent);*/
-		$this->titleEntity = 'Quantity Types';
+
+		$this->entityTitle = 'Quantity Types';
 		$this->base = new quantityType();
-		/*$this->pageMode,$this->id,$this->idParent);*/
+
 	}
 }
 

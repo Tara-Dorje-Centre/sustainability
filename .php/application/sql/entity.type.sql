@@ -38,7 +38,7 @@ return $c;
 		$q = $this->cols();
 		$q .= $this->tables();
 		$q .= ' ORDER BY display_order ';
-		$q .= sqlLimitClause($page, $rows);
+		$q .= $this->limit($page, $rows);
 		return $q;
 	}
 

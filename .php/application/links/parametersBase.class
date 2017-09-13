@@ -1,7 +1,7 @@
 <?php
 namespace application\links;
 
-trait parametersBase{
+trait parametersPaging{
 
 }
 

@@ -69,6 +69,18 @@ class inputForm {
 		$this->_fields->addContent($this->submit->print());
 		$this->_fields->addContent($this->hidden->print());
 	}
+	public function setRequestMode($pageMode){
+		$mode = new requestPageMode($pageMode);
+		$this->hidden->inputHidden($mode);
+	}
+
+
+	public function setSubmitButtons(){
+		$_submit = new submitButton('submit','Save'); 
+		$_reset = new resetButton('Cancel'); 
+		$this->submit->addContent($_submit->button());
+		$this->submit->addContent($_reset->button());
+	}
 	protected function printDisplayObjects(){
 	
 		if ($this->useContextMenu == true){

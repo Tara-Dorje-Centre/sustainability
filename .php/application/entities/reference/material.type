@@ -1,29 +1,23 @@
 <?php
 namespace application\entities\reference;
 
-
-
 class materialType extends \application\entityType {    
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'materialType';
-		parent::__construct($mode, $id, $idParent);
+	public function __construct(){
+		parent::__construct();
 		$this->entity = 'material-type';
-		
-  		$this->titleEntity = 'Material Type';
+  		$this->entityTitle = 'Material Type';
   		$this->pageSave = 'pr_MaterialType_Save.php';
-		$this->f = new materialTypeFields();
+		$this->f = new forms\materialTypeFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new materialTypeSQL();
-		$this->links = new materialTypeLinks();
+		$this->sql = new sql\materialTypeSQL();
+		$this->links = new links\materialTypeLinks();
 	}
 } 
 class materialTypeList extends \application\entityTypeList{
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'materialTypeList';
-		parent::__construct($mode, $id, $idParent);
-	 	
-	 	$this->titleEntity = 'Material Types';
-		$this->base = new materialType($this->pageMode,$this->id,$this->idParent);
+ 	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Material Types';
+		$this->base = new materialType();
 	}
 }
 ?>

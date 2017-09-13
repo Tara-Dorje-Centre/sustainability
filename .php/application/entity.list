@@ -8,7 +8,11 @@ abstract class entityList extends entity{
 	public function __construct(){
 		parent::__construct();
 	}
+	public function getRequestArguments(){
+		parent::getRequestArguments();
+		//$this->f->
 	
+	}
 	//override _entity.setDetails for listing
 	public function setDetails(){
 		//check counts, dont fetch details

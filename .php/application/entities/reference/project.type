@@ -4,28 +4,26 @@ namespace application\entities\reference;
 
 class projectType extends \application\entityType{
  	public function __construct(){
- 	/*$mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'ProjectType';*/
-		parent::__construct();/*$mode, $id, $idParent);
-		*/
+ 	
+		parent::__construct();
+		
 		$this->entity = 'project-type';
      	$this->entityTitle = 'Project Type';
    	 	$this->pageSave = 'pr_ProjectType_Save.php';
 		
-		$this->f = new projectTypeFields();
+		$this->f = new forms\projectTypeFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new projectTypeSQL();
-		$this->links = new projectTypeLinks();
+		$this->sql = new sql\projectTypeSQL();
+		$this->links = new links\projectTypeLinks();
 	}
 } 
 class projectTypeList extends \application\entityTypeList{
  	public function __construct(){
- 	/*$mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'projectTypeList';*/
-		parent::__construct();/*$mode, $id, $idParent);*/
+ 	
+		parent::__construct();
 		
-		$this->titleEntity = 'Project Types';
-		$this->base = new projectType();/*$this->pageMode,$this->id,$this->idParent);*/
+		$this->entityTitle = 'Project Types';
+		$this->base = new projectType();
 	}
 } 
 

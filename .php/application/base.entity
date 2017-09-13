@@ -11,7 +11,9 @@ interface IbaseEntity{
 abstract class baseEntity 
 extends \framework\_contentWriter 
 implements IbaseEntity{
-
+	public $_submit;
+	public $_reset;
+	public $_mode;
 	
     public $pageMode = 'VIEW';
 	public $id;
@@ -39,9 +41,17 @@ implements IbaseEntity{
 	public function __construct(){
 	
 	}
+	protected function requestIdentifiers(){
+		$action = $_GET['pageAction'];
+		$id = $_GET['id'];
+		$idParent = $_GET['idParent'];
+		$this->setIdentifiers();
+	}
+	protected function requestCalendar(){
 	
+	}
 	public function getRequestArguments(){
-	
+		
 	
 	}
 

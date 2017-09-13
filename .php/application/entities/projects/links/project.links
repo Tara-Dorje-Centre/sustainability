@@ -51,7 +51,7 @@ class projectLinks extends \application\links\entityLinks {
 		}
 	
 		$u = $this->urlProjectList(0,0,$status,'YES');
-		return $u->link($caption);
+		return $this->getLink($u,$caption);
 	
 		
 	}

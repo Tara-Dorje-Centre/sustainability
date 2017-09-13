@@ -2,7 +2,7 @@
 namespace application;
 
 abstract class entity extends baseEntity{
-
+use sql\connectionFunctions;
 	protected $entity;
 	protected $entityTitle = 'Entity';
 	protected $site;

@@ -2,14 +2,13 @@
 namespace application\entities\reference;
 
 class measureTypeUnitList extends \application\entityList{
-	protected $_MyClassName = 'MeasureTypeUnitList';
-
-	
 	public $measureType;
 	public $sql;
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
+	public function __construct(){
+
+		parent::__construct();
+		$this->entityTitle = 'Measure Type Units';
+		$this->base = new measureTypeUnit();
 	}
 	
 	public function getRequestArguments(){

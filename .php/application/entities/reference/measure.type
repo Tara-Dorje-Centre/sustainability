@@ -1,7 +1,6 @@
 <?php
 namespace application\entities\reference;
 
-
 class measureType extends \application\entityType{
  	public function __construct(){
 		parent::__construct();
@@ -105,12 +104,11 @@ class measureType extends \application\entityType{
 } 
 
 class measureTypeList extends \application\entityTypeList{
-	 public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'measureTypeList';
-		parent::__construct($mode, $id, $idParent);
-		
-     	$this->titleEntity = 'Measure Types';
-		$this->base = new measureType($this->pageMode,$this->id,$this->idParent);
+	 public function __construct(){
+		parent::__construct();
+     	$this->entityTitle = 'Measure Types';
+		$this->base = new measureType();
+
 	}
 }
 ?>

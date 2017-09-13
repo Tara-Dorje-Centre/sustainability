@@ -3,18 +3,18 @@ namespace application\entities\reference;
 
 class taskType extends \application\entityType{
 	public function __construct(){
-	/*$mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'taskType';*/
-		parent::__construct();/*$mode, $id, $idParent);*/
+
+
+		parent::__construct();
   		
   		$this->entity = 'task-type';
   		$this->entityTitle = 'Task Type';
      	$this->pageSave = 'pr_TaskType_Save.php';
 		
-		$this->f = new taskTypeFields();
+		$this->f = new forms\taskTypeFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new taskTypeSQL();
-		$this->links = new taskTypeLinks();
+		$this->sql = new sql\taskTypeSQL();
+		$this->links = new links\taskTypeLinks();
 	}
 	
 	public function optionsFrequency($selectedValue = 'none', $idName = 'frequency', $disabled = 'false'){
@@ -101,13 +101,9 @@ class taskType extends \application\entityType{
 } 
 class taskTypeList extends \application\entityTypeList{
  	public function __construct(){
- 	/*$mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'taskTypeList';*/
-		parent::__construct();/*$mode, $id, $idParent);*/
-		
-		$this->titleEntity = 'Task Types';
+		parent::__construct();
+		$this->entityTitle = 'Task Types';
 		$this->base = new taskType();
-		/*$this->pageMode,$this->id,$this->idParent);*/
 	}
 }
 ?>

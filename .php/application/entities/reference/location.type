@@ -20,11 +20,9 @@ class locationTypeList extends \application\entityTypeList{
 
  	public function __construct(){
 		parent::__construct();
-
 	 	$this->entityTitle = 'Location Types';
-		/*
-		$this->base = new locationType($this->pageMode,$this->id,$this->idParent);
-		*/
+		$this->base = new locationType();
+		
 	}
 	
 }

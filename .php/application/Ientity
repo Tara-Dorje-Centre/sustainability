@@ -38,17 +38,18 @@ interface Ientity{
 	public function getListing();
 	public function printPage();
 	public function editForm();
-		public function addForm();
+	public function addForm();
 	public function saveChanges();
 	
 	public function options(
 		$selectedId = 0, 
 		$idName = 'not-set', 
-		$disabled = 'false',
-		$showLink = true,
+		//$disabled = 'false',
+	//	$showLink = true,
 		$onChangeJS = NULL);
 	
 	public function collectPostValues();
+	public function getRequestValues();
 
 }
 

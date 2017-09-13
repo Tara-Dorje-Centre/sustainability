@@ -3,10 +3,11 @@ namespace application\entities\reference;
 
 class locationList extends \application\entityList{
  	public function __construct(){
-		parent::__construct($mode, $id, $idParent);
+		parent::__construct();
 		$this->entityTitle = 'Locations';
 		$this->base = new location();
 	}
+	
 	public function getRequestArguments(){
 
 

@@ -3,6 +3,7 @@ namespace application\system;
 
 
 class userLogin extends \framework\_contentWriter{
+use \application\sql\connectionFunctions;
 	private $_form = 'LOGIN';
 	protected $myClassName = 'userLogin';
 	private $f;

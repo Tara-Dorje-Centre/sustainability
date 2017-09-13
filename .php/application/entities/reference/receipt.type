@@ -17,7 +17,6 @@ class receiptType extends \application\entityType{
 class receiptTypeList extends \application\entityTypeList{
  	public function __construct(){
 		parent::__construct();
-		
 		$this->entityTitle = 'Receipt Types';
 		$this->base = new receiptType();
 	}

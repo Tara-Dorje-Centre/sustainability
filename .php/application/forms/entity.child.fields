@@ -9,8 +9,8 @@ abstract class entityChildFields extends entityFields{
     public function __construct(){
     	parent::__construct();
     	
-    	$this->parentEntity = new _IdName('parent_id','id-parent','Parent','parent_name');
-    	$this->type = new _IdName('type_id','id-type','Type','type_name');
+    	$this->parentEntity = new _idName('parent_id','idParent','Parent','parent_name');
+    	$this->type = new _idName('type_id','idType','Type','type_name');
   		$this->_register('parentEntity', $this->parentEntity);
 		$this->_register('type', $this->type);
     }
