@@ -18,18 +18,8 @@ use sql\connectionFunctions;
 	}
 	
 	public function getRequestArguments(){
-		/*
-		$context
-		$scope
-	
-	
-	
-	
-		$pageAction
-		$id
-		$idParent
-		$idType
-	*/
+		$this->requestArgsIdentifiers();
+		$this->setDetails();
 	}
 	
 	protected function makePageMenu(){

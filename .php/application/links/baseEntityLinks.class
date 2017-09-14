@@ -19,22 +19,24 @@ use baseEntityParameters;
 	}
 	public function setLinkContext($context,$pageList,$pageDetail){
 		$this->context = $context;
-		$this->pageList = $pageList;
-		$this->pageDetail = $pageDetail;
+		$this->pagePortal = 'portal.php';
+		$this->pageList = 'portal.php';
+		$this->pageDetail = 'portal.php';
+		$this->pageSave = 'portal.php';
 	}
 	public function baseUrlList(){
 		$this->scope = 'list';
-		$url = $this->baseUrl($this->pageList,$this->scope,$this->context);
+		$url = $this->baseUrl($this->pagePortal,$this->scope,$this->context);
 		return $url;
 	}
 	public function baseUrlDetail(){
 		$this->scope = 'detail';
-		$url = $this->baseUrl($this->pageDetail,$this->scope,$this->context);
+		$url = $this->baseUrl($this->pagePortal,$this->scope,$this->context);
 		return $url;
 	}
 	public function baseUrlSave(){
 		$this->scope = 'save';
-		$url = $this->baseUrl($this->pageSave,$this->scope,$this->context);
+		$url = $this->baseUrl($this->pagePortal,$this->scope,$this->context);
 		return $url;
 	}
 }

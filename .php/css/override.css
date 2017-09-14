@@ -5,23 +5,23 @@
 #site-heading-title {
 	color: #white;
 	font-family: Arial, Myriad Pro, Helvetica;
-	font-size: 50px;
+	font-size: 20px;
 	font-style: normal;
 	width: 100%;
 	float: none;
 	text-align: center;
-	background-color: #86a600;
+	background-color: gray;
 }
 #site-organization {
 font-family: Arial, Myriad Pro, Helvetica;	
 }
 #site-heading-links {
-	background-color:darkOliveGreen;
+	background-color:darkBlue;
 	padding:5px;
 }
 #site-heading-links a {
 	color:white;
-	font-size:22px;
+	font-size:13px;
 	line-height:150%;
 }
 

@@ -77,7 +77,7 @@ class inputForm {
 
 	public function setSubmitButtons(){
 		$_submit = new submitButton('submit','Save'); 
-		$_reset = new resetButton('Cancel'); 
+		$_reset = new resetButton('reset','Cancel'); 
 		$this->submit->addContent($_submit->button());
 		$this->submit->addContent($_reset->button());
 	}

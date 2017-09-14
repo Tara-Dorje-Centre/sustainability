@@ -3,20 +3,19 @@ namespace application\links;
 
 class systemMenuLinks extends linkMenu {
 use baseEntityParameters;
-	public function __construct($name = 'system-menu', $type='LIST', $css='menu'){
-		parent::__construct($name,$type,$css);
+	public function __construct($name = 'system-menu',$type='LIST', $css='menu'){
+		parent::__construct($name,type,$css);
 	}
 	protected function detailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
 		$u = $this->menuUrl($displayMode, $year, $month);
 		return $this->getLink($u, $caption);
-		//return $l;
-		//url->link($caption);
+		
 
 	}
 	public function library(){
 		$u = $this->getUrl('public.php');
 		return $this->getLink($u, 'Library');
-		//return $l;
+		
 
 	}
 	public function logout(){

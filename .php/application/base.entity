@@ -6,6 +6,7 @@ interface IbaseEntity{
 	public function setCalendar($year = -1, $month = -1, $show = 'NO');
 	public function setCounts($count = 0, $countChildren = 0);
 	public function setIdentifiers($mode, $id = 0, $idParent = 0);
+	public function getRequestArguments();
 }
 
 abstract class baseEntity 
@@ -41,19 +42,25 @@ implements IbaseEntity{
 	public function __construct(){
 	
 	}
-	protected function requestIdentifiers(){
+	protected function requestArgsIdentifiers(){
 		$action = $_GET['pageAction'];
 		$id = $_GET['id'];
 		$idParent = $_GET['idParent'];
-		$this->setIdentifiers();
+		$this->setIdentifiers($action,$id,$idParent);
 	}
-	protected function requestCalendar(){
+	protected function requestArgsCalendar(){
+		$year = $_GET['year'];
+		$month = $_GET['month'];
+		$show = $_GET['showCalendar'];
+		$this->setCalendae($year,$month,$show);
+	}
+	protected function requestArgsPaging(){
+		$page = $_GET['resultPage'];
+		$rows = $_GET['perPage'];
 	
+		$this->setPaging($page,$rows);
 	}
-	public function getRequestArguments(){
-		
 	
-	}
 
 	public function setIdentifiers($mode, $id = 0, $idParent = 0){
 		$this->pageMode = $mode;

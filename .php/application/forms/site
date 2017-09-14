@@ -61,7 +61,7 @@ implements Isite{
 		} else {*/
 			
 			
-			$m = new links\systemMenuLinks('site-menu','LIST','button');
+			$m = new links\systemMenuLinks('site-menu','LIST','menu');
 			
 			$p = new \application\entities\projects\links\projectLinks();
 			
@@ -69,9 +69,9 @@ implements Isite{
 			
 			$a = new \application\entities\projects\links\activityLinks();
 			
-			if ($this->settings->f->showPublicSite->value == 'yes'){
+			//if ($this->settings->f->showPublicSite->value == 'yes'){
 				$m->addLink($m->library());
-			}
+			//}
 		
 		if (isset($_SESSION['currentView'])){
 			if ($_SESSION['currentView'] == 'PERIODIC_TASKS'){

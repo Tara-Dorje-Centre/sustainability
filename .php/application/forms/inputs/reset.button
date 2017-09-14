@@ -4,7 +4,7 @@ namespace application\forms;
 
 class resetButton extends field{
 
-	public function __construct(string $envVar = 'reset', string $caption = 'no caption'){
+	public function __construct(string $envVar = 'reset', string $caption = 'Reset'){
 		parent::__construct('not_used', $envVar, $caption);
 		$this->_datatype = 'SUBMIT';
 	}
