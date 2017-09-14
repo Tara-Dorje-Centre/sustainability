@@ -5,7 +5,7 @@ namespace application\links;
  class entityLinks extends baseEntityLinks
 implements IentityLinks{
 use entityParameters;
-	public function __construct($name='menu',$type='LIST',$css='menu'){
+	public function __construct($name='section-heading',$type='LIST',$css='menu'){
 		parent::__construct($name, $type, $css);
 		$context = 'entity';
 		$pageDetail = 'index.php';
@@ -14,8 +14,8 @@ use entityParameters;
 		
 	}
 	public function listingLinks($mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
-		$this->addLink($this->add('AddChild',$id));
-		$this->addLink($this->add('AddSibling',$idParent));
+	//	$this->addLink($this->add('AddChild',$id));
+		//$this->addLink($this->add('AddSibling',$idParent));
 		$this->addLink($this->list('List',$idParent));
 		$this->addLink($this->list('ListChildren',$id));
 		$this->addLink($this->list('listType',0,$idType));
@@ -24,12 +24,14 @@ use entityParameters;
 	public function editingLinks($mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		switch ($mode){
 			case 'VIEW':
+				$this->addLink($this->list('List',$idParent));
 				$this->addLink($this->edit('Edit',$id));
 				$this->addLink($this->add('AddChild',$id));
 				$this->addLink($this->add('AddSibling',$idParent));
 				$this->addLink($this->copy('Copy',$id));
 				break;
 			case 'EDIT':
+				$this->addLink($this->list('List',$idParent));
 				$this->addLink($this->view('View',$id));
 				
 				break;
@@ -37,6 +39,7 @@ use entityParameters;
 				$this->addLink($this->list('List',$idParent));
 				break;
 			default:
+				$this->addLink($this->list('List',$idParent));
 				$this->addLink($this->view('View',$id));
 		
 		}

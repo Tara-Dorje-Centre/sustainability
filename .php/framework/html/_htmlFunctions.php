@@ -1,6 +1,6 @@
 <?php
 namespace html;
-
+/*
 function sessionVariableGET($urlVariable,$defaultValue){
 	if (isset($_GET[$urlVariable])){
 		$returnValue = $_GET[$urlVariable];
@@ -27,7 +27,7 @@ function sessionVariableSESSION($urlVariable,$defaultValue){
 	}
 	return $returnValue;
 }
-
+*/
 function displayLines($value){
 	$value = nl2br($value);
 	return $value;

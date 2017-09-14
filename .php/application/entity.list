@@ -64,7 +64,7 @@ abstract class entityList extends entity{
 	
 	protected function listingRows(){
 		$sql = $this->listingSQL();
-		$result = dbGetResult($sql);
+		$result = $this->getResult($sql);
 		if($result){
 			
 			$this->_display->addRow($this->base->listHeading());

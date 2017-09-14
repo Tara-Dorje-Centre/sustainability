@@ -17,8 +17,65 @@ class portalRequest{
 		$this->idParent = $_GET['idParent'];
 	}
 
+	public function loadContext(){
+	
+		switch ($this->context){
+			case 'userType':
+				$this->loadUserType();
+				break;
+			case 'siteSettings':
+				$this->loadSiteSettings();
+			default:
+		
+				$this->loadDefault();
+		}
+	
+	}
+	protected function loadSiteSettings(){
+	
+		switch ($this->scope){
+			case 'save':
+				$um = new system\siteSettings();
+				$um->collectPostValues();
+				$um->saveChanges();
+			case 'list':
+			case 'detail':
+
+			default:
+				$t = new system\siteSettings();
+				$t->getRequestArguments();
+				$t->setDetails();
+				$t->printPage();
+		}
+	}
+	protected function loadDefault(){
+	
+		$t = new systemMenu();
+		$t->getRequestArguments();
+		$t->printPage();
+
+	}
+	protected function loadUserType(){
+		switch ($this->scope){
+			case 'detail':
+				$t = new system\userType();
+				break;
+			case 'save':
+				$um = new system\userType();
+				$um->collectPostValues();
+				$um->saveChanges();
+			case 'list':
+
+			default:
+				$t = new system\userTypeList();
+		}
+
+		$t->setIdentifiers($this->pageAction,$this->id,$this->idParent);
+		$t->getRequestArguments();
+		$t->setDetails();
+		$t->printPage();
+	}
+
 }
-
-
 
 ?>

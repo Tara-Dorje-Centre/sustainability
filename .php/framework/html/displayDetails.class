@@ -38,7 +38,11 @@ class displayDetails {
 		$this->_display->addContent($this->_fields->print());
 		
 	}
-	
+	public function setContent($content){
+
+		$this->_fields->setContent($content);
+
+	}
 	public function addContent($content){
 	
 		$this->_fields->addContent($content);

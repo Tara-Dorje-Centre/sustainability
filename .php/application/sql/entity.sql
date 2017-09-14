@@ -2,6 +2,7 @@
 namespace application\sql;
 
 class entitySQL extends  baseEntitySQL implements IentitySQL{
+use connectionFunctions;
 	protected $baseTable = 'baseTable';
 	protected $fieldDate = 'date_reported';
 	protected $fieldApproved = 'approved';

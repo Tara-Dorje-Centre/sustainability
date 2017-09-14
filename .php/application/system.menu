@@ -125,7 +125,7 @@ use sql\connectionFunctions;
 	
 	protected function  makeModuleLinks(){
 		$p = new entities\projects\links\projectLinks();
-		//$this->main->addLink($p->myProjects());
+
 		$this->main->addLink($p->allProjects());
 		
 		$t = new entities\projects\links\taskLinks();

@@ -68,7 +68,7 @@ abstract class fields extends \framework\_contentWriter{
 	}
 	
 	public function displayDetail(){
-		$this->clearContent();
+		$this->resetContent(true);
 		foreach ($this->_fields as $f){
 			$this->addContent($f->displayDetail());
 		}
@@ -76,14 +76,14 @@ abstract class fields extends \framework\_contentWriter{
 	}
 	
 	public function listCaption(){
-		$this->clearContent();
+		$this->resetContent(true);
 		foreach ($this->_fields as $f){
 			$this->addContent($f->listCaption());
 		}
 		return $this->getContent();
 	}
 	public function listDetail(){
-		$this->clearContent();
+		$this->resetContent(true);
 		foreach ($this->_fields as $f){
 			$this->addContent($f->listDetail());
 		}

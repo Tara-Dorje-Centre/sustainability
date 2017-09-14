@@ -83,10 +83,10 @@ use sql\connectionFunctions;
 	}
 	
 	public function listHeading(){
-		$tr = new html/_tr('table-headings');
-		//$th = new html/_th();
+		$tr = new \html\_tr('table-headings');
+
 		$tr->makeHeading($this->entityTitle);
-		//$tr->setContent($th->print);
+
 		$tr->addContent($this->f->listCaption());
 		return $tr;
 	}
@@ -96,7 +96,7 @@ use sql\connectionFunctions;
 	}
 	
 	protected function listRowFormat(){
-		$tr = new html/_tr('data-row',$this->f->highlight->value());
+		$tr = new \html\_tr('data-row',$this->f->highlight->value());
 
 		$tr->makeData($this->listRowLink());
 		$tr->addContent($this->f->listDetail());		
@@ -109,7 +109,7 @@ use sql\connectionFunctions;
 	}
 
 	protected function display(){
-		$this->_display = new html/_displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
+		$this->_display = new \html\displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
 		//$detail = $this->_display->open();
 		$this->_display->setContent($this->f->displayDetail());
 		//$detail .= $this->_display->close();

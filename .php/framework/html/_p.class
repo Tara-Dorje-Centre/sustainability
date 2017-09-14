@@ -6,15 +6,19 @@ class _p extends _anyElement{
 
 	public function __construct(string $caption = 'none', string $css = 'none'){
 		parent::__construct('p', $css);
-		$this->caption = $caption;
+		$this->setCaption($caption);
 	}
-	
+	protected function setCaption($caption){
+		if ($caption != 'none'){
+			$s = new _span($caption,'paragraph-caption');
+			$this->caption = $s->print();
+		} else {
+			$this->caption = '';
+		}
+	}
 	public function open(){
 		$result = parent::open();
-		if ($this->caption != 'none'){
-		$s = new _span($this->caption,'paragraph-caption');
-		$result .= $s->print();
-		}
+		$result .= $this->caption;
 		return $result();
 	}
 	

@@ -14,7 +14,7 @@ class linkMenu extends \framework\_contentWriter{
 	protected $name = 'menu';  
 	protected $nameList = 'menu-list';
 
-	public function __construct(string $name = 'menu-listing', string $type = 'DIV', string $css = 'menu'){
+	public function __construct(string $name = 'menu', string $type = 'DIV', string $css = 'menu'){
 		$this->initialize($name,$type,$css);
 	}
 	protected function initialize(string $name, string $type, string $css){

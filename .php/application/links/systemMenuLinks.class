@@ -24,7 +24,7 @@ use baseEntityParameters;
 		return $this->getLink($url,'Logout');
 	}
 	public function menuUrl(string $displayMode, $year = 0, $month = 0){
-		$u = $this->getUrl('sys_Menu.php');
+		$u = $this->getUrl('portal.php');
 		$context = 'system-menu';
 		$scope = 'view';
 		$this->setBaseParameters($u,$scope,$context);

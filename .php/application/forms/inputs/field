@@ -282,7 +282,7 @@ interface Ifield{
 
 	public function listCaption(){
 
-		if ($this->_listEnabled == true){
+		if ($this->_listEnabled){
 			$th = new \html\_th($this->_caption);
  			$value = $th->print();
 		} else {
@@ -304,19 +304,21 @@ interface Ifield{
  	}
 
  	public function displayDetail(){
- 	 	$value = '';
+ 		$d = new \html\_div('none','display-detail');
+
  		if ($this->_displayEnabled){
  			$this->format();
- 			$p = new \html\_p($this->value(),$this->caption);
- 			$value = $p->print();
- 		} else {
- 			$value = '';
+ 			$c = new \html\_anyDiv($this->_caption,'display-detail-caption');
+ 			$v = new \html\_anyDiv($this->value(),'display-detail-value');
+ 			$d->addContent($c->print());
+ 			$d->addContent($v->print());
  		}
- 		return $value;
+ 		return $d->print();
  	}
  	
  	public function write(){
  	  	if ($this->_envEnabled){
+ 	  		//writeTeimestampDate
  			$this->env->set($this->value(),true);
  		}
  	}
@@ -327,6 +329,16 @@ interface Ifield{
  	public function remove(){
  		$this->env->remove();
  	}
+ 	private function writeTimestampPostValues($name,$value){
+ 		$t = new _timestamp($value);
+		$_POST[$name.'_YYYY'] = $t->year();
+		$_POST[$name.'_MM'] = $t->month();
+		$_POST[$name.'_DD'] = $t->date();
+		$_POST[$name.'_HH'] = $t->hour();	
+		$_POST[$name.'_mm'] = $t->minute();
+		
+
+	} 
 	private function getTimestampPostValues($name){
 		$year = $_POST[$name.'_YYYY'];
 		$month = $_POST[$name.'_MM'];
@@ -347,7 +359,7 @@ interface Ifield{
  					$this->_number = $this->_raw;
         			break;
     			case 'DATE':
- 		 			$this->_raw = $this->getTimestampPostValues($this->env->variable);
+ 		 			$this->_raw = $this->getTimestampPostValues($this->env->variable());
         			$this->_date = $this->_raw;
         			break;
         		case 'BOOLEAN':
@@ -370,7 +382,7 @@ interface Ifield{
     			case 'NUMBER':
         			break;
     			case 'DATE':
-  		  			$this->_date = \html\getTimestampDate($this->_raw);
+  		  			//$this->_date = \html\getTimestampDate($this->_raw);
         			break;
     			/*
     			case 'TEXT':

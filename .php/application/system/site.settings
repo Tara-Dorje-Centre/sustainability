@@ -9,7 +9,7 @@ class siteSettings extends \application\entity{
      
 		$this->entity = 'site-settings';
      	$this->entityTitle = 'Site Settings';
-   	 	$this->pageSave = 'sys_SiteSettings_Save.php';
+   	 	$this->pageSave = 'portal.php';
    	 	
 		$this->f = new forms\siteSettingsFields();
 		$this->f->setEntity($this->entity);
@@ -17,7 +17,7 @@ class siteSettings extends \application\entity{
 		$this->sql = new sql\siteSettingsSQL();
 	}
 	public function getRequestArguments(){
-	
+	parent::getRequestArguments();
 	
 	}
 	public function setDetails(){
@@ -61,22 +61,7 @@ class siteSettings extends \application\entity{
 	
 	}
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';		
-		$settingsL = new SiteSettingsLinks($menuType,$menuStyle);
-		$menuL = new MenuLinks($menuType,$menuStyle);
-
-		$menu = $settingsL->openMenu('section-heading-links');
-		
-		$menu .= $menuL->linkReference();
-		$menu .= $settingsL->resetMenu();
-		if ($this->pageMode == 'VIEW'){
-			$menu .= $settingsL->detailEditHref();
-		} elseif ($this->pageMode == 'EDIT'){
-			$menu .= $settingsL->detailViewHref();
-		}
-		$menu .= $settingsL->closeMenu();
-		$this->_pageMenu = $menu;
+		parent::makePageMenu();
 	}
 	
 	protected function display(){
