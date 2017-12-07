@@ -13,16 +13,12 @@ class url {
 		return $this->basePage;
 	}
 	public function print(){
-		$this->makeParameters();
+		$this->printParameters();
 		$url = $this->basePage.$this->arguments;
+		
 		return $url;
 	}
-	/*
-	public function link($caption,$css='link'){
-		$l = new link($this,$caption,$css);
-		return $l;
-	}
-	*/
+	
 	public function addParameter(parameter $p){
 		$this->parameters[$p->name] = $p;
 	}
@@ -33,7 +29,7 @@ class url {
 		$p = new parameter($name,$value);
 		$this->addParameter($p);
 	}
-	public function makeParameters(){
+	public function printParameters(){
 		$this->arguments = '';
 		$first = true;
 		foreach ($this->parameters as $p){

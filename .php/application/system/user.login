@@ -100,11 +100,11 @@ use \application\sql\connectionFunctions;
 				$this->echoPrint(true,'apparently logged in ','validate');
 				$this->echoSecurity();
 			}
-		$this->echoPrint(true,'check submit vars ','validate');
+		$this->echoPrint(true,'…………check submit vars ','validate');
 		$this->echoPrint(true,'mode= '.$this->_form,'validate');
 		
 		if ($this->f->_loginSubmit->exists() == true){
-			$this->echoPrint(true, 'submit login pushed','validate');
+			$this->echoPrint(true, '………………submit login pushed','validate');
 			$this->validateLogin();
 		}
 		if ($this->f->_resetPasswordSubmit->exists() == true){
@@ -133,13 +133,13 @@ use \application\sql\connectionFunctions;
 		//then comment this line
 		//printLine('forcing login');
 		$found = 1;
-		$this->echoValue(true, 'foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
+		$this->echoValue(true, '......foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
 		if ($found == 1){
 		
 		
 		
 			$validUser = true;
-			$this->echoPrint(true,'valid login.updatingLastLogin');
+			$this->echoPrint(true,'.....?valid login.updatingLastLogin');
 			$this->updateLastLogin($login);
 			$this->echoPrint(true,'valid login.setting session security');
 			$this->setSecurity($login);
@@ -215,7 +215,7 @@ use \application\sql\connectionFunctions;
 
 
 
-		$login = new \application\forms\inputForm('sys_Login.php','Login','LOGIN',$entity,true);
+		$login = new \application\forms\inputForm('portal.php?context=system&scope=login','Login','LOGIN',$entity,true);
 		
 		
 		$login->required->input($this->f->_loginName);

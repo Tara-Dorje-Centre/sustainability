@@ -1,73 +1,54 @@
 <?php 
 namespace application;
 
-interface IbaseEntity{
-	public function setPaging($page = 1, $perPage = 10);
-	public function setCalendar($year = -1, $month = -1, $show = 'NO');
-	public function setCounts($count = 0, $countChildren = 0);
-	public function setIdentifiers($mode, $id = 0, $idParent = 0);
-	public function getRequestArguments();
-}
-
 abstract class baseEntity 
 extends \framework\_contentWriter 
 implements IbaseEntity{
-	public $_submit;
-	public $_reset;
-	public $_mode;
+
+	public $pageMode = 'VIEW';
+	public $id = 0;
+	public $idParent = 0;
+	public $idType = 0;
 	
-    public $pageMode = 'VIEW';
-	public $id;
-	public $idParent;
-	public $idType;
 	public $isPagingSet = false;
 	public $resultPage = 1;
 	public $perPage = 10;
-	 
+	
 	public $isCalendarSet = false;
 	public $month = -1;
 	public $year = -1;
 	public $showCalendar = 'NO';
-	
 	public $prevCalendarLink = '';
 	public $nextCalendarLink = '';
-	
+
 	public $countAll = 0;
 	public $countChildren = 0;
 	public $isCountSet = false;
 	
-	protected $pageTitle;
-	protected $pageMenu;
+	protected $_pageTitle;
+	protected $_pageMenu;
 	
 	public function __construct(){
 	
 	}
-	protected function requestArgsIdentifiers(){
-		$action = $_GET['pageAction'];
-		$id = $_GET['id'];
-		$idParent = $_GET['idParent'];
-		$this->setIdentifiers($action,$id,$idParent);
-	}
-	protected function requestArgsCalendar(){
-		$year = $_GET['year'];
-		$month = $_GET['month'];
-		$show = $_GET['showCalendar'];
-		$this->setCalendae($year,$month,$show);
-	}
-	protected function requestArgsPaging(){
-		$page = $_GET['resultPage'];
-		$rows = $_GET['perPage'];
 	
-		$this->setPaging($page,$rows);
-	}
 	
-
-	public function setIdentifiers($mode, $id = 0, $idParent = 0){
+	 
+	public function setIdentifiers($mode, $id = 0, $idParent = 0, $idType=0){
 		$this->pageMode = $mode;
 		$this->id = $id;
 		$this->idParent = $idParent;
+		$this->idType = $idType;
 		$this->echoState_ids(true, 'setIdentifiers');
 	}
+	protected function getRequestIdentifiers(){
+		$action = $_GET['pageAction'];
+		$id = $_GET['id'];
+		$idParent = $_GET['idParent'];
+		$idType = $_GET['idType'];
+		$this->setIdentifiers($action,$id,$idParent,$idType);
+	}
+	
 	
 	public function setPaging($page = 1, $perPage = 10){
 		$this->resultPage = $page;
@@ -75,7 +56,13 @@ implements IbaseEntity{
 		$this->isPagingSet = true;
 		$this->echoState_paging(true, 'setPaging');
 	 }
-	 
+	 public function getRequestPaging(){
+		$page = $_GET['resultPage'];
+		$rows = $_GET['perPage'];
+		$this->setPaging($page,$rows);
+	}
+	
+	
 	public function setCalendar($year = -1, $month = -1, $show = 'NO'){
 		$this->showCalendar = $show;
 	
@@ -85,13 +72,19 @@ implements IbaseEntity{
 		 } else {
 		 //dates not set, use current month and year
 		 	global $sessionTime;
-		 	$t = new _timestamp($sessionTime);
+		 	$t = new \framework\timestamp($sessionTime);
 		 	$this->year = $t->getYear(true);
 		 	$this->month = $t->getMonth(true);
 		 }
 		 
 		$this->isCalendarSet = true;
 		$this->echoState_calendar(true, 'setCalendar');
+	}
+	protected function getRequestCalendar(){
+		$year = $_GET['year'];
+		$month = $_GET['month'];
+		$show = $_GET['showCalendar'];
+		$this->setCalendar($year,$month,$show);
 	}
 	
 	public function setCounts($count = 0, $countChildren = 0){

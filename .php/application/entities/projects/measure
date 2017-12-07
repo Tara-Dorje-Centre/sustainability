@@ -2,20 +2,19 @@
 namespace application\entities\projects;
 
 class measure extends \application\entity {
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->MyClassName = 'measure';
+	public function __construct(){
+		parent::__construct();
+
 		$this->entity = 'measure';
-		$this->titleEntity = 'Measurement';
-	  	$this->pageSave = 'pr_Measure_Save.php';
-		
-		parent::__construct($mode, $id, $idParent);
+		$this->entityTitle = 'Measurement';
+	 // 	$this->pageSave = 'portal.php';
 		
 		$this->f = new forms\measureFields();
 		$this->links = new links\measureLinks();
 		$this->sql = new sql\measureSQL();
 	}
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}

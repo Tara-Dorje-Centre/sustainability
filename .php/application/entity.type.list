@@ -7,22 +7,15 @@ abstract class entityTypeList extends entityList{
 		parent::__construct();
 	}
 	
-	public function getRequestArguments(){
-
-
-
-	}
-	
 	protected function makePageTitle(){
 		$this->_pageTitle = $this->entityTitle;
 	}
 	protected function makePageMenu(){
-		//$this->links->reference);
+
 		$s = new \application\links\systemMenuLinks();
-		$this->base->links->addLink($s->reference());
+		$this->base->links->menu->addLink($s->reference());
 		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		//$this->base->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->_pageMenu = $this->base->links->print();
+		$this->_pageMenu = $this->base->links->menu->print();
 	}
 	
 	

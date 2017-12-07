@@ -1,29 +1,19 @@
 <?php
 namespace application\links;
 
- class entityTypeLinks extends entityLinks
+class entityTypeRequest extends entityRequest{}
+
+  class entityTypeLinks extends entityLinks
 implements IentityLinks{
-use entityTypeParameters;
-	public function __construct($type='LIST',$css='menu'){
+/*
 		
-		parent::__construct($type,$css);
-		$context = 'entityType';
-		$pageDetail = 'index.php';
-		$pageList = 'index.php';
-		$this->setLinkContext($context,$pageList,$pageDetail);
-		
-	}
+	public function setRequest(){
+	$this->request = new entityTypeRequest();
 	
-	public function listingLinks($mode = 'LIST',$id,$idParent,$idType){
-		//$this->reference();
-		parent::listingLinks($mode,$id,$idParent,$idType);
+	}*/
+	public function setRequest(){
+		$this->request = new \application\links\entityTypeRequest($this->entityContext);
 	}
-	public function editingLinks($mode = 'VIEW', $id,$idParent,$idType){
-		//$this->reference();
-		parent::editingLinks($mode,$id,$idParent,$idType);
-		
-	}
-	
 		
 }
 

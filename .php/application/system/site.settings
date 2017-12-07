@@ -16,10 +16,7 @@ class siteSettings extends \application\entity{
 		$this->links = new links\siteSettingsLinks();
 		$this->sql = new sql\siteSettingsSQL();
 	}
-	public function getRequestArguments(){
-	parent::getRequestArguments();
 	
-	}
 	public function setDetails(){
 		$this->verifySettings();
 
@@ -32,7 +29,7 @@ class siteSettings extends \application\entity{
 	protected function verifySettings(){
 		$sql = $this->sql->count();
 		global $conn;
-		$i = $conn->getCount($sql, 'count_settings', 0, 'verifySettings');
+		$i = $conn->getCount($sql, 'count_settings', 0);
 		if ($i == 0){
 			$this->createSettings();	
 		}
@@ -41,7 +38,7 @@ class siteSettings extends \application\entity{
 	
 
 	protected function setSessionDetails(){
-	$this->echoPrint(true,'begin','setSessionDetails','siteSettings');
+	$this->echoPrint(true,'………begin','setSessionDetails');
 		if (($this->pageMode != 'EDIT') && ($this->pageMode != 'ADD')){
 			$this->f->format();
 		}
@@ -60,19 +57,16 @@ class siteSettings extends \application\entity{
 	
 	
 	}
-	protected function makePageMenu(){
-		parent::makePageMenu();
-	}
 	
 	protected function display(){
 		$detail = parent::display();
-		$detail .= $this->getPublicSiteStylesFieldset('true');
+		//$detail .= $this->getPublicSiteStylesFieldset('true');
 		return $detail;
 	}
 	
 	private function getPublicSiteStylesFieldset($disabled = 'false'){
 
-		$styles = openFieldset('Public Site Presentation Styles');
+		//$styles = openFieldset('Public Site Presentation Styles');
 		//need disabled swtch for relevant inputs
 		$styles .= $this->f->publicFillColor->input();
 		$styles .= $this->f->publicSiteColor->input();
@@ -88,8 +82,8 @@ class siteSettings extends \application\entity{
 		$styles .= $this->f->publicFontFamily->input();
 	
 		//add the sample region after the first color select
-		$styles .= wrapDiv($this->publicSiteSample(),'public-site-sample','site-sample');
-		$styles .= closeFieldset();
+		//$styles .= wrapDiv($this->publicSiteSample(),'public-site-sample','site-sample');
+		//$styles .= closeFieldset();
 		return $styles;
 	}
 	
@@ -171,11 +165,11 @@ class siteSettings extends \application\entity{
 	
 	protected function editForm(){
 		
-		$this->entity = 'site-settings';
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
+		//$this->entity = 'site-settings';
+		//$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		//$this->f->setEntity($this->entity);
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
+		//$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		$this->edit->required->input($this->f->siteTitle);
 		$this->edit->required->input($this->f->siteUrl);	
@@ -193,7 +187,7 @@ class siteSettings extends \application\entity{
 
 		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		//$this->edit->submit->addContent(getSaveChangesResetButtons());
 		return $this->edit->close();
 	}
 	

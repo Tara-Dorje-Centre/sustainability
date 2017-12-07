@@ -2,7 +2,7 @@
 namespace application;
 
 class systemMenu extends \framework\_echo{
-use sql\connectionFunctions;
+
 
 	public $displayMode;
 	public $year;
@@ -20,7 +20,10 @@ use sql\connectionFunctions;
 		$this->links = new links\systemMenuLinks('section-heading-links');
 	}
 	
-	
+	public function printRequest(){
+		$this->getRequestArguments();
+		$this->printPage();
+	}
 	public function getRequestArguments(){
 		$this->displayMode->setEnvironment('GET');
 		$this->year->setEnvironment('GET');
@@ -110,14 +113,16 @@ use sql\connectionFunctions;
 		}
 	}
 	protected function addReference(links\entityLinks $e){
-		$this->reference[$e->context] = $e;
+		//$this->reference[$e->context] = $e;
+		$link = $e->contextList();
+		$this->main->addLink($link);
 	}
 	protected function makeReferenceLinks(){
 		$this->loadReferences();
-		foreach($this->reference as $m){
+		/*foreach($this->reference as $m){
 			$link = $m->contextList();
 			$this->main->addLink($link);
-		}
+		}*/
 	
 		$this->main->addLink($this->main->calendars());
 	}

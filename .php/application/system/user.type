@@ -6,7 +6,7 @@ class userType extends \application\entityType {
 		parent::__construct();
 		$this->entity = 'user-type';
   		$this->entityTitle = 'User Profile Type';
-		$this->pageSave = 'userTypeSave.php';
+
 		
 		$this->f = new forms\userTypeFields();
 		$this->f->setEntity($this->entity);

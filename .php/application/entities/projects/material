@@ -4,13 +4,13 @@ namespace application\entities\projects;
 class material extends \application\entity{
 
   	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'material';
+	public function __construct(){
+		parent::__construct();
+	
 		$this->entity = 'material';
-	 	$this->titleEntity = 'Material';
-  	 	$this->pageSave = 'pr_Material_Save.php';
+	 	$this->entityTitle = 'Material';
+  	 	//$this->pageSave = 'portal.php';
   	 	
-		parent::__construct($mode, $id, $idParent);
 		$this->f = new forms\materialFields();
 		$this->f->setEntity($this->entity);
 		$this->links = new links\materialLinks();
@@ -19,7 +19,7 @@ class material extends \application\entity{
 	}
 
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}

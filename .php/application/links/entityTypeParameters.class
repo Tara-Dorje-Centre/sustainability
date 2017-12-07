@@ -1,9 +1,0 @@
-<?php
-namespace application\links;
-
-trait entityTypeParameters{
-use entityParameters;
-
-}
-
-?>

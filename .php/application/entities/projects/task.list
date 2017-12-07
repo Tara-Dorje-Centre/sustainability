@@ -2,22 +2,17 @@
 namespace application\entities\projects;
 
 class taskList extends \application\entityList{
-	protected $_MyClassName = 'TaskList';
-	protected $titleEntity = 'Tasks';
 //protected $project;
 	public $periodicTasks = 'NO';
-	/*public $base;
-	//public $project;
-	//public $sql;
-	//public $links;*/
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-	
-		$this->base = new task($this->pageMode, $this->id, $this->idParent);
+
+	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Tasks';
+		$this->base = new task();
+
 	}
 	public function getRequestArguments(){
-
-
+		parent::getRequestArguments();
 
 	}
 	public function setPeriodic($periodic = 'NO'){

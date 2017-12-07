@@ -1,19 +1,20 @@
 <?php
 namespace application\system\links;
-
-trait siteSettingsParameters{
-
+class siteSettingsRequest extends \application\links\entityRequest{
 
 }
+
 class siteSettingsLinks extends \application\links\entityLinks{
-	use siteSettingsParameters;
+
 	public function __construct(){
-		$context = 'siteSettings';
-		$pageDetail = 'portal.php';
-		$pageList = 'portal.php';
-		$this->setLinkContext($context,$pageDetail, $pageList);
+			$context = 'siteSettings';
+		parent::__construct($context);
+
+		/*$this->setEntityContext($context);*/
 	}
 
-	
+	public function setRequest(){
+		$this->request = new siteSettingsRequest($this->entityContext);
+	}
 }
 ?>

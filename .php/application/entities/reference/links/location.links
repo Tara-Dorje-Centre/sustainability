@@ -1,15 +1,12 @@
 <?php
 namespace application\entities\reference\links;
 
-class locationLinks extends \application\links\entityLinks{
-
-	
-		public function __construct(){
+class locationLinks extends \application\links\entityTypeLinks{
+	public function __construct(){
 		$context = 'location';
-		$pageDetail = 'pr_Location_Detail.php';
-		$pageList = 'pr_Location_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		parent::__construct($context);
+
 	}
 }
+
 ?>

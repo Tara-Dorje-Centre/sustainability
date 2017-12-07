@@ -2,15 +2,18 @@
 namespace application\system\links;
 
 class userTypeLinks extends \application\links\entityTypeLinks{
-
 	
 	public function __construct(){
 		$context = 'userType';
-		$pageDetail = 'portal.php';
-		$pageList = 'portal.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		
+		parent::__construct($context);
+		/*$this->setEntityContext($context);*/
 	}
+	/*
+	public function setRequest(){
+		$this->request = new \application\links\entityTypeRequest($this->entityContext);
+	}
+	*/
 }
 
 ?>

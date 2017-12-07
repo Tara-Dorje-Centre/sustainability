@@ -2,7 +2,7 @@
 include_once("_includes.php");
 
 $p = new \application\portalRequest();
-echo '{'.$p->context.'.'.$p->scope.'}'.PHP_EOL;
-$p->loadContext();
+echo 'loading……………………{'.$p->entityContext.'.'.$p->scope.'}'.PHP_EOL;
+$p->load();
 
 ?>

@@ -2,22 +2,20 @@
 namespace application\entities\projects;
 
 class receiptList extends \application\entityList{
-	protected $_MyClassName = 'receiptList';
-	protected $titleEntity = 'Receipts';
 
-
-	public $task;
+	//public $task;
 	private $displayProject = 'TASK';
 	private $approved = 'no';
 	public $costActual = 0;
 	//public $costEstimated = 0;
-	//public $sql;
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->base = new receipt($this->pageMode, $this->id,$this->idParent);
+
+ 	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Receipts';
+		$this->base = new receipt();
 	}
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}

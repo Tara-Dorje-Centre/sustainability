@@ -1,56 +1,30 @@
 <?php 
 namespace application;
 
-Interface IsummarySQL{
-
-
-}
-
-Interface IdoneBySQL{
-// function colsDoneBy();
-// function whereDoneBy($doneBy = 'EVERYONE');
-public function countDoneBy( $doneBy = 'EVERYONE', $year= 0, $month = 0);
-public function listDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
-public function summaryDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
-public function summaryDoneByGroupType($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year = 0, $month = 0);
-}
-
-interface IhasTypeSQL{
-// function colsByType();
-// function whereByType();
-public function countByType($id = 0);
-public function listByType($id = 0, $page = 1, $rows = 10);
-public function summaryGroupType($id = 0);
-}
-
-interface IsParentSQL{
-	public function countChild($id, $child = array());
-	public function listChild($id, $child = array(), $page = 1, $rows = 10);
-	public function optionsChild($id, $child = array(), $selectedId = 0, $disabled = 'false');
-}
-
-interface Ientity{
-
-	public function setPaging($page = 1,$rows = 10);
+interface IbaseEntity{
+	public function setPaging($page = 1, $perPage = 10);
 	public function setCalendar($year = -1, $month = -1, $show = 'NO');
 	public function setCounts($count = 0, $countChildren = 0);
+	public function setIdentifiers($mode, $id = 0, $idParent = 0);
+	public function getRequestArguments();
+}
+
+
+interface Ientity extends IbaseEntity{
 	public function setDetails();
 	public function getListing();
-	public function printPage();
 	public function editForm();
 	public function addForm();
-	public function saveChanges();
-	
-	public function options(
-		$selectedId = 0, 
-		$idName = 'not-set', 
-		//$disabled = 'false',
-	//	$showLink = true,
-		$onChangeJS = NULL);
+
+
+	public function options($selectedId = 0, $name = 'id-type', $onChangeJS = NULL);
 	
 	public function collectPostValues();
+	public function saveChanges();
+	
 	public function getRequestValues();
-
+	public function printPage();
+	public function printRequest();
 }
 
 interface IEntityType extends IEntity{
@@ -67,7 +41,28 @@ interface IentityList extends IEntityType{
 }
 
 
+Interface IsummarySQL{
 
 
+}
 
+Interface IdoneBySQL{
+public function countDoneBy( $doneBy = 'EVERYONE', $year= 0, $month = 0);
+public function listDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
+public function summaryDoneBy($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year= 0, $month = 0);
+public function summaryDoneByGroupType($doneBy = 'EVERYONE', $page = 1, $rows = 10, $year = 0, $month = 0);
+}
+
+interface IhasTypeSQL{
+
+public function countByType($id = 0);
+public function listByType($id = 0, $page = 1, $rows = 10);
+public function summaryGroupType($id = 0);
+}
+
+interface IsParentSQL{
+	public function countChild($id, $child = array());
+	public function listChild($id, $child = array(), $page = 1, $rows = 10);
+	public function optionsChild($id, $child = array(), $selectedId = 0, $disabled = 'false');
+}
 ?>

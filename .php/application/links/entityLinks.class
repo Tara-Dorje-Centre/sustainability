@@ -2,78 +2,73 @@
 namespace application\links;
 
 
- class entityLinks extends baseEntityLinks
-implements IentityLinks{
-use entityParameters;
-	public function __construct(){
-		parent::__construct('section-heading-links', 'LIST', 'menu');
-		$context = 'entity';
-		$pageDetail = 'index.php';
-		$pageList = 'index.php';
-		$this->setLinkContext($context,$pageList,$pageDetail);
-		
+abstract class entityLinks implements IentityLinks {
+	public $menu;
+	public $request;
+	public $entityContext = 'entity';
+	protected $pagePortal = 'portal.php';
+	
+	public function __construct(string $entity = 'undefined',string $menuName = 'section-heading'){
+		$this->menu = new linkMenu($menuName,'LIST','menu');
+		$this->setEntityContext($entity);
 	}
-	public function listingLinks($mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
-	//	$this->addLink($this->add('AddChild',$id));
-		//$this->addLink($this->add('AddSibling',$idParent));
-		$this->addLink($this->list('List',$idParent));
-		$this->addLink($this->list('ListChildren',$id));
-		$this->addLink($this->list('listType',0,$idType));
-		
+	public function setEntityContext(string $entity){
+		$this->entityContext = $entity;
+		$this->setRequest();
+	}
+	/*public function print(){
+		return $this->menu->print();
+	}*/
+	protected function setRequest(){
+		$this->request = new entityRequest($this->entityContext,$this->portalPage);
+	}
+
+	public function listingLinks($mode,$id,$idParent,$idType){
+		$this->menu->addLink($this->list('List',0,$idParent,0));
+		$this->menu->addLink($this->list('ListChildren',$id,0,0));
+		$this->menu->addLink($this->list('listType',0,0,$idType));
 	}
 	public function editingLinks($mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		switch ($mode){
 			case 'VIEW':
-				$this->addLink($this->list('List',$idParent));
-				$this->addLink($this->edit('Edit',$id));
-				$this->addLink($this->add('AddChild',$id));
-				$this->addLink($this->add('AddSibling',$idParent));
-				$this->addLink($this->copy('Copy',$id));
+				$this->menu->addLink($this->list('List',0,0,0));
+				$this->menu->addLink($this->edit('Edit',$id));
+				$this->menu->addLink($this->add('AddChild',$id));
+				$this->menu->addLink($this->add('AddSibling',$idParent));
+				$this->menu->addLink($this->copy('Copy',$id));
 				break;
 			case 'EDIT':
-				$this->addLink($this->list('List',$idParent));
-				$this->addLink($this->view('View',$id));
+				$this->menu->addLink($this->list('List',0,$idParent,0));
+				$this->menu->addLink($this->view('View',$id));
 				
 				break;
 			case 'ADD':
-				$this->addLink($this->list('List',$idParent));
+				$this->menu->addLink($this->list('List',0,$idParent,0));
 				break;
 			default:
-				$this->addLink($this->list('List',$idParent));
-				$this->addLink($this->view('View',$id));
+				$this->menu->addLink($this->list('List',0,$idParent,0));
+				$this->menu->addLink($this->view('View',$id));
 		
 		}
 		
 	}
 	
 	
-	public function urlList($idParent = 0, $idType = 0){
-		$u = $this->baseUrlList();
-		$this->setEntityParametersList($u, $idParent,$idType);
-		return $u;
-	}
-	
-	public function urlDetail($action = 'VIEW', $id = 0, $idParent = 0){
-		$u = $this->baseUrlDetail();
-		$this->setEntityParametersDetail($u,$action,$id,$idParent);
-		return $u;
-	}	
-	
-	public function detail(string $caption, $action = 'VIEW', $id = 0,$idParent = 0){
-		$url = $this->urlDetail($action,$id,$idParent);
-		$l = $this->getLink($url,$caption);
+	public function detail(string $caption, $action, $id,$idParent=0,$idType=0){
+		$url = $this->request->getUrlEntityDetail($action,$id,$idParent,$idType);
+		$l = $this->menu->getLink($url,$caption);
 		return $l;	
 	}	
-	public function list(string $caption,$idParent=0,$idType=0){
-		$url = $this->urlList($idParent,$idType);
-		$l = $this->getLink($url,$caption);
+	public function list(string $caption, $id,$idParent=0,$idType=0){
+		$url = $this->request->getUrlEntityList($id,$idParent,$idType);
+		$l = $this->menu->getLink($url,$caption);
 		return $l;	
 	}
 	
-	public function add($caption = 'New', $idParent = 0){
+	public function add($caption = 'New', $idParent){
 		return $this->detail($caption,'ADD',0,$idParent);
 	}
-	public function view($caption = 'View', $id = 0){
+	public function view($caption = 'View', $id){
 		return $this->detail($caption,'VIEW',$id);
 	}
 	public function edit($caption = 'Edit', $id){
@@ -85,7 +80,7 @@ use entityParameters;
 	
 	
 	public function contextList(){
-		return $this->list($this->context,0,0);
+		return $this->list($this->entityContext,0,0);
 	}
 	
 	public function viewEdit($caption, $id,$editCaption='[#]'){
@@ -97,15 +92,12 @@ use entityParameters;
 		return $d->print();
 	}	
 	
-	public function pagedListing($count, $page, $rows, $idParent = 0, $idType = 0){
+	public function pagedListing($count, $page, $rows, $id=0, $idParent = 0, $idType = 0){
 		$p = new linkMenuPaged($rows,'resultsPage');
-		$u = $this->urlList($idParent,$idType);
-		$text = $p->makePagedLinks($u, $count,$page);
-		return $text;
+
+		$url = $this->request->getUrlEntityList($id,$idParent,$idType);
+		return $p->makePagedLinks($url, $count,$page);
 	}
-	
-	
-	
 		
 	
 }

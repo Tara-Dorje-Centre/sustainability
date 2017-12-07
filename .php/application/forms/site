@@ -14,7 +14,7 @@ implements Isite{
 	public function __construct($mode = 'VIEW'){
 		
 		$this->pageMode = $mode;
-		$this->settings = new system\siteSettings($mode);
+		$this->settings = new system\siteSettings();
 		$this->verifyLoginState();
 	}
 	public function set(string $heading = 'page heading', string $details = 'page details'){
@@ -54,11 +54,11 @@ implements Isite{
 	}
 
 	protected function getLinks(){
-	/*	if ($this->validLogin == false){
+		if ($this->validLogin == false){
 			//user is not logged in, siteContent will display login form, display no links
 			$content = 'not logged in';
 			
-		} else {*/
+		} else {
 			
 			
 			$m = new links\systemMenuLinks('site-menu','LIST','menu');
@@ -69,29 +69,35 @@ implements Isite{
 			
 			$a = new \application\entities\projects\links\activityLinks();
 			
-			//if ($this->settings->f->showPublicSite->value == 'yes'){
+			if ($this->settings->f->showPublicSite->value == 'yes'){
 				$m->addLink($m->library());
-			//}
+			}
 		
 		if (isset($_SESSION['currentView'])){
-			if ($_SESSION['currentView'] == 'PERIODIC_TASKS'){
+		switch($_SESSION['currentView']){
+			case 'PERIODIC_TASKS':
 				//user just viewed current open tasks;
 				$m->addLink($t->periodicTasksOpen());
-			} elseif ($_SESSION['currentView'] == 'MY_CALENDAR'){
+				break;
+			case 'MY_CALENDAR':
 				//user just viewed myCalendar;
 				$m->addLink($a->myCalendar());
-			} elseif ($_SESSION['currentView'] == 'GROUP_CALENDAR'){
+				break;
+			case 'GROUP_CALENDAR':
 				//user just viewed groupCalendar;
 				$m->addLink($a->groupCalendar());
-			} elseif ($_SESSION['currentView'] == 'MY_ACTIVITY'){
+				break;
+			case 'MY_ACTIVITY'::
 				//user just viewed myActivity;
 				$m->addLink($a->myActivities());
-			} elseif ($_SESSION['currentView'] == 'GROUP_ACTIVITY'){
+				break;
+			case 'GROUP_ACTIVITY':
 				//user just viewed groupActivity;
 				$m->addLink($a->groupActivities());
-			}
+				break;
+			default:
 		}
-
+		}
 		//always show current open tasks;
 		$m->addLink($t->periodicTasksOpen());		
 		//always show projects link
@@ -100,12 +106,13 @@ implements Isite{
 		//detailHref();	
 		//
 		
-		return $m->print();
+		$content = $m->print();
 		
 	}
 	
 
-
+return $content;
+}
 
 	protected function setContents($heading,$details){ 
 
@@ -129,7 +136,7 @@ implements Isite{
 	
 
 		
-		parent:: setMain($content);
+		parent::setMain($content);
 		
 	}
 	

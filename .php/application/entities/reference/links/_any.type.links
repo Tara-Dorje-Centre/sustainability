@@ -3,13 +3,10 @@ namespace application\entities\reference\links;
 
 class anyTypeLinks extends \application\links\entityTypeLinks{
 
-	
 	public function __construct(){
-		$context = 'userType';
-		$pageDetail = 'userType.php';
-		$pageList = 'userType.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		$context = 'anyType';
+		parent::__construct($context);
+
 	}
 }
 

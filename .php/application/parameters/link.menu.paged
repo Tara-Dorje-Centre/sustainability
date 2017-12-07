@@ -11,7 +11,7 @@ class linkMenuPaged extends linkMenu{
 	public function __construct($perPage = 10,string $paramNamePaging = 'results-page'){
 		parent::__construct('paged-linkset','DIV','paged');
 		$this->perPage = $perPage;
-		$this->paramNamePaging = 'results-page';
+		$this->paramNamePaging = $paramNamePaging;
 	}
 	
 	protected function setPageCount(){
@@ -21,10 +21,10 @@ class linkMenuPaged extends linkMenu{
 
 		if (floor($a) == $a){
 			$this->pageCount = $a;
-			//.floor($recordCount/$recordsPerPage);
+
 		} else {
 			$this->pageCount = floor($a) + 1;
-		//	$pages = floor($count/$per) + 1;
+
 		}
 	}
 	protected function makePageLink($pageIndex,$caption){
@@ -40,7 +40,7 @@ class linkMenuPaged extends linkMenu{
 		} else {
 			$this->info = 'Displaying '.$this->recordCount.' results. ';
 		}
-		$this->makeTextItem($this->info);
+		$this->addTextItem($this->info);
 	}
 	protected function makePrevLink(){
 		if ($this->currentPage > 1){
@@ -67,7 +67,7 @@ class linkMenuPaged extends linkMenu{
 	protected function makeLastLink($maxDisplayPage){
 
 		if ($maxDisplayPage < $this->pageCount){
-			$this->makeTextItem('...');
+			$this->addTextItem('...');
 			$this->makePageLink($this->pageCount, 'Last');
 		}
 

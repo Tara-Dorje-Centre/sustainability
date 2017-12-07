@@ -2,42 +2,51 @@
 namespace application;
 
 abstract class entity extends baseEntity{
-use sql\connectionFunctions;
+//use sql\connectionFunctions;
 	protected $entity;
-	protected $entityTitle = 'Entity';
+	protected $entityTitle = 'Undefined Entity';
 	protected $site;
 	
   	public $f;
     public $sql;
 	public $links;
-	
+	protected $_display;
  	protected $_edit;
- 	protected $_display;
+ 	public $_submit;
+	public $_reset;
+	public $_mode;
+
  	public function __construct(){
 		parent::__construct();
 	}
-	
-	public function getRequestArguments(){
-		$this->requestArgsIdentifiers();
+	final public function printRequest(){
+		$this->getRequestArguments();
 		$this->setDetails();
+		$this->printPage();
+	}
+	public function getRequestArguments(){
+		$this->getRequestIdentifiers();
+		$this->getRequestPaging();
+		$this->getRequestCalendar();
 	}
 	
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
-		$this->links->addLink($s->modules());
-		$this->links->addLink($s->reference());
+		$this->links->menu->addLink($s->modules());
+		$this->links->menu->addLink($s->reference());
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->_pageMenu = $this->links->print();
+		$this->_pageMenu = $this->links->menu->print();
 	}
 	
 	protected function makePageTitle(){
 		$this->_pageTitle = $this->entityTitle;
 	}
+	
 	abstract protected function editForm();
+	/*implement per entity*/
 	
 	
-	
-	public function setEntity($entity,$title){
+	final protected function setEntity($entity,$title){
 	 	$this->entity = $entity;
 	 	$this->entityTitle = $title;
 	}
@@ -72,7 +81,7 @@ use sql\connectionFunctions;
 		return $f->setSelect($s);
 	}
 	
-	public function listHeading(){
+	 public function listHeading(){
 		$tr = new \html\_tr('table-headings');
 
 		$tr->makeHeading($this->entityTitle);
@@ -81,11 +90,11 @@ use sql\connectionFunctions;
 		return $tr;
 	}
 	
-	protected function listRowLink(){
+	 protected function listRowLink(){
 		return $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
 	}
 	
-	protected function listRowFormat(){
+	 protected function listRowFormat(){
 		$tr = new \html\_tr('data-row',$this->f->highlight->value());
 
 		$tr->makeData($this->listRowLink());
@@ -93,22 +102,20 @@ use sql\connectionFunctions;
 		return $tr;
 	}
 	
-	public function listRow($row){
+	final public function listRow($row){
 		$this->f->fetch($row);
 		return $this->listRowFormat();
 	}
 
 	protected function display(){
 		$this->_display = new \html\displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
-		//$detail = $this->_display->open();
+
 		$this->_display->setContent($this->f->displayDetail());
-		//$detail .= $this->_display->close();
+
 		return $this->_display->print();
 	}
 	
-	protected function setPageTitle(){
-		$this->_pageTitle = $this->pageMode.':  '.$this->titleEntity;
-	}
+	
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
@@ -116,21 +123,20 @@ use sql\connectionFunctions;
 	 	}
 	}
 
-	public function addForm($idParent = 0){
+	 public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
 		if (!is_null($this->f->parentEntity)){
-		$this->f->parentEntity->set($idParent);
+			$this->f->parentEntity->set($idParent);
 		}
 		return $this->editForm();
 	}
 
-	public function collectPostValues(){
+	 public function collectPostValues(){
 		$this->pageMode = $_POST['mode'];	
 		$this->f->setEnvironment('POST');
 		$this->f->read();
 		$this->getFieldIds();
-
 		$this->echoState(true,'collectPostValues');
 	}
 				
@@ -164,8 +170,8 @@ use sql\connectionFunctions;
 		$this->makePageTitle();
 		$this->makePageMenu();
 		
-		$title = new \html\_div('section-title');
-		$menu = new \html\_div('section-menu');
+		$title = new \html\_div('section-heading-title');
+		$menu = new \html\_div('section-heading-menu');
 		$title->setContent($this->_pageTitle);
 		$menu->setContent($this->_pageMenu);
 		$heading = $title->print();
@@ -206,12 +212,15 @@ use sql\connectionFunctions;
 		printLine ('__Entity.saveInsert not overridden in child');
 	}
 	
-	public function saveChanges(){
+	final public function saveChanges(){
 		$this->echoState(true, 'saveChanges');
-		
-		if ($this->pageMode == 'EDIT'){
+		switch($this->pageMode){
+			case 'COPY':
+			
+			case 'EDIT':
 			$this->saveUpdate();
-		} else {
+			break;
+			case 'ADD':
 			$this->saveInsert();
 		}
 	}

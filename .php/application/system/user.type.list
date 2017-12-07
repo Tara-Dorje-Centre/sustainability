@@ -8,5 +8,7 @@ class userTypeList extends \application\entityTypeList{
   		$this->entityTitle = 'User Profile Types';
 		$this->base = new userType();
 	}
+	
+	
 }
 ?>

@@ -2,9 +2,10 @@
 namespace application\links;
 
 class systemMenuLinks extends linkMenu {
-use baseEntityParameters;
+
+
 	public function __construct($name = 'system-menu',$type='LIST', $css='menu'){
-		parent::__construct($name,type,$css);
+		parent::__construct($name,$type,$css);
 	}
 	protected function detailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
 		$u = $this->menuUrl($displayMode, $year, $month);
@@ -13,21 +14,31 @@ use baseEntityParameters;
 
 	}
 	public function library(){
-		$u = $this->getUrl('public.php');
+		$u = new url('public.php');
 		return $this->getLink($u, 'Library');
 		
 
 	}
 	public function logout(){
-		$url = $this->getUrl('sys_Logout.php');
-		return $this->getLink($url,'Logout');
+		$u = new url('logout.php');
+		$context = 'logout';
+		$scope = 'logout';
+		$u->makeParameter('context',$context);
+		$u->makeParameter('scope',$scope);
+		//$this->setBaseParameters($u,$scope,$context);
+		return $this->getLink($u,'Logout');
 	}
 	public function menuUrl(string $displayMode, $year = 0, $month = 0){
-		$u = $this->getUrl('portal.php');
+		$u = new url('portal.php');
 		$context = 'system-menu';
-		$scope = 'view';
-		$this->setBaseParameters($u,$scope,$context);
-		$this->setCalendarParameters($u,$year,$month);	
+		$scope = 'default-view';
+		$u->makeParameter('context',$context);
+		$u->makeParameter('scope',$scope);
+		
+		$u->makeParameter('year',$year);
+		$u->makeParameter('month',$month);
+		
+	//	$this->setCalendarParameters($u,$year,$month);	
 		
 		$u->makeParameter('displayMode', $displayMode);
 

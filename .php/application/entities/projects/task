@@ -2,10 +2,7 @@
 namespace application\entities\projects;
 
 class task extends \application\entity{
-	 
-
 	public $totals;
-	
 	public $measureCount = 0;
 	
 	public $resultsPageActivity = 1;
@@ -13,13 +10,12 @@ class task extends \application\entity{
 	public $resultsPageMaterial = 1;
 	public $resultsPageReceipt = 1;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'task';
-		parent::__construct($mode, $id, $idParent);
+	public function __construct(){
+		parent::__construct();
 	
 		$this->entity = 'task';
-		$this->titleEntity = 'Task';
-		$this->pageSave = 'pr_task_save.pho';
+		$this->entityTitle = 'Task';
+		//$this->pageSave = 'portal.php';
 	
 		$this->f = new forms\taskFields();
 		$this->f->setEntity($this->entity);
@@ -28,9 +24,9 @@ class task extends \application\entity{
 		$this->totals = new forms\summaryTotals();
 	}
 	public function getRequestArguments(){
+		parent::getRequestArguments();
 
-
-
+		$_SESSION['currentTaskId'] = $this->id;
 	}
 	public function listHeading($periodicTasks = 'NO'){
 		$tr = new html/_tr();

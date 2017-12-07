@@ -2,28 +2,18 @@
 namespace application\entities\projects;
 
 class measureList extends \application\entityList{
-	protected $_MyClassName = 'MeasureList';
 
+	public function __construct(){
+		parent::__construct();
 
-
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-	
-	//public function setHelperClasses(){
-	//($mode = 'VIEW', $id = 0, $idParent = 0){
-		//$this-> = new measure($this->pageMode, $this->f->id, $this->f-idParent);
-		$this->base = new measure($this->pageMode, $this->idParent);
-		//$this->sql = new MeasureSQL;
+		$this->base = new measure();
 	}
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}
-	public function afterSetDetails(){
-		//$this->task->setDetails();
-		//$this->setFoundCount();
-	}
+	
 		
 	protected function makePageTitle(){
 

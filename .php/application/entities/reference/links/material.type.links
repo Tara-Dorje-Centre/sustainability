@@ -3,13 +3,10 @@ namespace application\entities\reference\links;
 
 class materialTypeLinks extends \application\links\entityTypeLinks{
 	
-	
-		public function __construct(){
+	public function __construct(){
 		$context = 'materialType';
-		$pageDetail = 'pr_MaterialType_Detail.php';
-		$pageList = 'pr_MaterialType_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		parent::__construct($context);
+
 	}
 }
 

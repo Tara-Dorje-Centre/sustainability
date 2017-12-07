@@ -3,15 +3,14 @@ namespace application\entities\projects;
 
 class activityList extends \application\entityList{
 	public $myActivity = 'NO';
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-		$this->_MyClassName = 'ActivityList';
-     	$this->titleEntity = 'Activities';
-		$this->base = new activity($this->pageMode, $this->id, $this->idParent);
+	public function __construct(){
+		parent::__construct();
+     	$this->entityTitle = 'Activities';
+		$this->base = new activity();
 	}
 	public function getRequestArguments(){
 
-
+		parent::getRequestArguments();
 
 	}
 	

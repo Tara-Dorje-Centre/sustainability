@@ -10,12 +10,6 @@ abstract class entityList extends entity{
 		
 	}
 	
-	public function getRequestArguments(){
-		$this->requestArgsIdentifiers();
-		$this->requestArgsPaging();
-		$this->setDetails();
-	}
-	
 	//override _entity.setDetails for listing
 	public function setDetails(){
 		//check counts, dont fetch details
@@ -30,14 +24,15 @@ abstract class entityList extends entity{
 	}
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
-		$this->base->links->addLink($s->modules());
-		$this->base->links->addLink($s->reference());
+		$this->base->links->menu->addLink($s->modules());
+		$this->base->links->menu->addLink($s->reference());
 		$this->base->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-		$this->_pageMenu = $this->base->links->print();
+		$this->_pageMenu = $this->base->links->menu->print();
 	}
 	protected function setPageTitle(){
-		$this->_pageTitle = $this->titleEntity;
+		$this->_pageTitle = $this->entityTitle;
+		
 	}
 	
 	//overrides _entity.getPageDetails for listing query
@@ -67,7 +62,8 @@ abstract class entityList extends entity{
 	
 	protected function listingRows(){
 		$sql = $this->listingSQL();
-		$result = $this->getResult($sql);
+		global $conn;
+		$result = $conn->getResult($sql);
 		if($result){
 			
 			$this->_display->addRow($this->base->listHeading());

@@ -3,52 +3,14 @@ namespace application\entities\projects\links;
 
 
 class receiptLinks extends \application\links\entityLinks {
-	use receiptParameters;
 	public function __construct(){
 		$context = 'receipt';
-		$pageDetail = 'pr_Receipt_Detail.php';
-		$pageList = 'pr_Receipt_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		parent::__construct($context);
+	}
+	public function setRequest(){
+		$this->request = new receiptRequest($this->entityContext,$this->portalPage);
 	}
 	
-
-/*
-	 
-	
-	public function listingHref($idParent,$caption = 'Receipts', $projectId = 0, $display = 'TASK', $approved = 'no'){
-		$link = $this->listing($idParent, $projectId, $display, $approved);
-		$href = $this->formatHref($caption,$link);
-		return $href;	
-	}	
-	private function detailHref($pageAction = 'VIEW', $id = 0, $idParent = 0, $caption = 'Receipt'){
-		$link = $this->detail($pageAction,$id,$idParent);
-		$href = $this->formatHref($caption,$link);
-		return $href;	
-	}
-	public function listing($idParent, $projectId = 0, $display = 'TASK', $approved = 'no'){
-		$this->pageList = 'pr_Receipt_List.php';
-		//?taskId='.$idParent;
-		if ($projectId != 0){
-			$link .= '&projectId='.$projectId;
-		}
-		if ($display != 'TASK'){
-			$link .= '&displayProject='.$display;
-			$link .= '&approvedReceipts='.$approved;
-		}
-		return $link;
-	}
-	
-	public function detail($pageAction, $id, $idParent = 0){
-		$link = 'pr_Receipt_Detail.php?pageAction='.$pageAction;
-		if($idParent != 0){
-			$link .= '&taskId='.$idParent;			
-		}
-		if ($id != 0){
-			$link .= '&receiptId='.$id;
-		}
-		return $link;
-	}	*/
 	public function linkProjectReceipts($projectId){
 		return $this->listingHref(0,'ProjectReceipts',$projectId,'PROJECT','yes');	
 	}

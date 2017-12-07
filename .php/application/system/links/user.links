@@ -1,18 +1,23 @@
 <?php
 namespace application\system\links;
 
+class userRequest extends \application\links\entityRequest{
+
+}
+
 class userLinks extends \application\links\entityLinks {
 
 	public function __construct(){
 		$context = 'user';
-		$pageDetail = 'sys_User_Detail.php';
-		$pageList = 'sys_User_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		
+		parent::__construct($context);
+	//	$this->setEntityContext($context);
 	}
 	
 	
-	
+	public function setRequest(){
+		$this->request = new userRequest($this->entityContext);
+	}
 	
 }
 ?>

@@ -5,10 +5,8 @@ class activityTypeLinks extends \application\links\entityTypeLinks{
 	
 	public function __construct(){
 		$context = 'activityType';
-		$pageDetail = 'pr_ActivityType_Detail.php';
-		$pageList = 'pr_ActivityType_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		parent::__construct($context);
+
 	}
 }
 

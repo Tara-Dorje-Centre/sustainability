@@ -2,9 +2,7 @@
 namespace application\entities\projects;
 
 class materialList extends \application\entityList{
-	protected $_MyClassName = 'MaterialList';
-
-	public $task;
+	//public $task;
 	
 
 	private $displayProject = 'TASK';
@@ -12,17 +10,12 @@ class materialList extends \application\entityList{
 	public $costActual = 0;
 	public $costEstimated = 0;
 	
-	public $sql;
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-	//public function setHelperClasses(){
-	//$mode = 'VIEW', $id = 0, $idParent = 0){
-		//parent::__construct($mode, $id, $idParent);
-		$this->base = new material($this->pageMode, $this->id,$this->idParent);
-		//$this->sql = new MaterialSQL;
+ 	public function __construct(){
+		parent::__construct();
+		$this->base = new material();
 	}
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}

@@ -1,4 +1,7 @@
 <?php
+
+
+
 include_once('parameters/manifest');
 include_once('links/manifest');
 include_once('sql/manifest');

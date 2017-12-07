@@ -5,13 +5,10 @@ class project extends \application\entity{
 	
 	public $totals;
 	
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'project';
-		parent::__construct($mode, $id, $idParent);
-		
-		$this->titleEntity = 'Project';
+	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Project';
 		$this->entity = 'project';
-		
 		$this->f = new forms\projectFields();
 		$this->f->setEntity($this->entity);
 		$this->sql = new sql\projectSQL();
@@ -19,8 +16,8 @@ class project extends \application\entity{
 		$this->totals = new forms\summaryTotals();
 	}
 	public function getRequestArguments(){
-
-
+		parent::getRequestArguments();
+		$_SESSION['currentProjectId'] = $this->id;
 
 	}
 	public function setDetails(){

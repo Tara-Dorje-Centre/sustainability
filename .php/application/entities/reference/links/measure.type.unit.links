@@ -1,14 +1,12 @@
 <?php
 namespace application\entities\reference\links;
 
-class measureTypeUnitLinks extends \application\links\entityLinks {
+class measureTypeUnitLinks extends \application\links\entityTypeLinks {
 	
 	public function __construct(){
 		$context = 'measureTypeUnit';
-		$pageDetail = 'pr_UnitOfMeasure_Detail.php';
-		$pageList = 'pr_UnitOfMeasure_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		parent::__construct($context);
+
 	}
 
 }

@@ -2,13 +2,12 @@
 namespace application\entities\projects;
 
 class receipt extends \application\entity{
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'Receipt';
-		parent::__construct($mode, $id, $idParent);
+ 	public function __construct(){
+		parent::__construct();
 		
 		$this->entity = 'receipt';
-		$this->titleEntity = 'Receipt';
-		$this->pageSave = 'pr_Receipt_Save.php';
+		$this->entityTitle = 'Receipt';
+		//$this->pageSave = 'portal.php';
 		
 		$this->f = new forms\receiptFields();
 		$this->f->setEntity($this->entity);
@@ -16,7 +15,7 @@ class receipt extends \application\entity{
 		$this->links = new links\receiptLinks();
 	}
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}

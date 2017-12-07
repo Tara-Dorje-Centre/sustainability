@@ -11,7 +11,7 @@ public function echoPrintline(string $msg);
 
 class _echo implements Iecho{
 
-protected $echoEnabled = false;
+protected $echoEnabled = true;
 
 protected $_myClassName = 'echo';
 protected $_myFunctionName = '__construct';

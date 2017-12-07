@@ -3,46 +3,23 @@ namespace application\system;
 
 
 class userList extends \application\entityList{
-protected $_MyClassName = 'UserList';
-protected $titleEntity = 'UserProfiles';
+
+
 
 	public $userTypeId = 0;
- 	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		parent::__construct($mode, $id, $idParent);
-	
-	 	$this->base = new user($this-pageMode,$this->id,$this->idParent);
-	}
-	public function getRequestArguments(){
+ 	public function __construct(){
 
+		parent::__construct();
 
+		$this->entityTitle = 'UserProfiles';
+	 	$this->base = new user();
 
 	}
 	
-	protected function makePageTitle(){
 	
 	
-	}
 
-	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
-		$userL = new UserLinks($menuType,$menuStyle);
-		$menuL = new MenuLinks($menuType,$menuStyle);
-		
-		$menu = $userL->openMenu('section-heading-links');
-		$menu .= $menuL->linkReference();
-		$menu .= $userL->resetMenu();
-		if ($_SESSION['is-admin'] == 'yes'){
-			//only allow admins to add users
-			$menu .= $userL->detailAddHref();
-		}
-		$menu .= $userL->listingHref();
-		
-		$menu .= $userL->closeMenu();
-		$this->_pageMenu = $menu;			
-	}
-		
+	
 	protected function listingQuickEdit(){ 
 		if ($_SESSION['is-admin'] == 'yes'){
 		$quickEdit = $this->base->addForm();		

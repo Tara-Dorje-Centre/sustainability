@@ -1,18 +1,17 @@
 <?php
 namespace application\entities\projects\links;
 
-
-
 class taskLinks 
 extends \application\links\entityLinks {
-use taskParameters;
 	public function __construct(){
 		$context = 'task';
-		$pageDetail = 'pr_Task_Detail.php';
-		$pageList = 'pr_Task_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		parent::__construct($context);
+
 	}
+	public function setRequest(){
+		$this->request = new taskRequest($this->entityContext,$this->portalPage);
+	}
+	
 	public function periodicTasks(bool $closed = false){
 		if ($closed == true){
 			$status = 'COMPLETE';
@@ -21,9 +20,11 @@ use taskParameters;
 			$status = 'INCOMPLETE';
 			$caption = 'To Do';
 		}
-		$u = $this->urlList(-1,0);
-		$u->addParameter($this->pTaskStatus($status));
-		return $this->getLink($u,$caption);
+		$periodic = 'YES';
+		$url = $this->request->getUrlTaskList('LIST',-1,0,0, $status, $periodic);
+
+		$l = $this->menu->getLink($url,$caption);
+		return $l;	
 	}
 	public function periodicTasksOpen(){
 		return $this->periodicTasks(false);

@@ -3,18 +3,18 @@ namespace application\entities\projects;
 
 
 class activity extends \application\entity{       
-	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
-		$this->_MyClassName = 'activity';
-		parent::__construct($mode, $id, $idParent);
-     	$this->titleEntity = 'Activity';
-   	 	$this->pageSave = 'activitySave.php';
+	public function __construct(){
+		parent::__construct();
+		$this->entity = 'activity';
+     	$this->entityTitle = 'Activity';
+   	 	//$this->pageSave = 'portal.php';
 		$this->f = new forms\activityFields();
 		$this->sql = new sql\activitySQL();
 		$this->links = new links\activityLinks();
 	}
 	public function getRequestArguments(){
-
-
+		parent::getRequestArguments();
+		$_SESSION['currentActivityId'] = $this->id;
 
 	}
 	protected function listingRowLink(){

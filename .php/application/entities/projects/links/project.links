@@ -3,29 +3,14 @@ namespace application\entities\projects\links;
 
 
 class projectLinks extends \application\links\entityLinks {
-	use projectParameters;
+
 	public function __construct(){
 		$context = 'project';
-		$pageDetail = 'pr_Project_Detail.php';
-		$pageList = 'pr_Project_List.php';
-		parent::__construct();
-		$this->setLinkContext($context,$pageDetail, $pageList);
+		parent::__construct($context);
 	}
-	
-	public function urlProjectList($idParent, $idType, $status, $myProjects){
-		//$this->pageList = 'pr_Project_List.php';
-		$url = $this->urlList($idParent,$idType);
-		$this->setProjectParametersList($url, $status, $myProjects);
-		return $url;
+	public function setRequest(){
+		$this->request = new projectRequest($this->entityContext,$this->portalPage);
 	}
-	
-	public function urlProjectDetail($action = 'VIEW', $id, $idParent){
-	//	$this->pageDetail = 'pr_Project_Detail.php';
-		$url = $this->urlDetail($action,$id,$idParent);
-		$this->setProjectParametersDetail($url);
-		return $url;
-	}	
-	
 	
 	public function allProjects($showClosed = false){
 
@@ -36,9 +21,12 @@ class projectLinks extends \application\links\entityLinks {
 			$status = 'OPEN';
 			$caption = 'Active Projects';
 		}
-	
-		$u = $this->urlProjectList(0,0,$status,'NO');
-		return $this->getLink($u, $caption);
+		
+		$myProjects = 'NO';
+		
+		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
+
+		return $this->menu->getLink($u,$caption);
 	}
 	
 	public function myProjects($showClosed = false){
@@ -48,11 +36,14 @@ class projectLinks extends \application\links\entityLinks {
 		} else {
 			$status = 'OPEN';
 			$caption = 'My Projects';
-		}
+		}		
+		
+		$myProjects = 'YES';
+			
+		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
 	
-		$u = $this->urlProjectList(0,0,$status,'YES');
-		return $this->getLink($u,$caption);
-	
+
+		return $this->menu->getLink($u,$caption);
 		
 	}
 }
