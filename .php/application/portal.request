@@ -1,6 +1,8 @@
 <?php 
 namespace application;
 
+class portalRequest extends _echo{
+
 	public $entity;
 	public $scope;
 	protected $response;
@@ -121,13 +123,16 @@ namespace application;
 		$site->set();
 		$site->print();
 	}
+	protected function runSave(Ientity $e){
 	
+		$e->collectPostValues();
+		$e->saveChanges();
+		$this->scope = 'list';
+	}
 	protected function loadProject(){
 		if ($this->scope == 'save'){
 			$s = new entities\projects\project();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$p = new entities\projects\project();
@@ -139,9 +144,7 @@ namespace application;
 	protected function loadTask(){
 		if ($this->scope == 'save'){
 			$s = new entities\projects\task();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\projects\task();
@@ -153,9 +156,7 @@ namespace application;
 	protected function loadActivity(){
 		if ($this->scope == 'save'){
 			$s = new entities\projects\activity();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\projects\activity();
@@ -167,9 +168,7 @@ namespace application;
 	protected function loadQuantityType(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\quantityType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\quantityType();
@@ -181,10 +180,7 @@ namespace application;
 	protected function loadLocation(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\location();
-			$s->collectPostValues();
-			//saveChanges should be called by collectPostValues
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\location();
@@ -196,9 +192,7 @@ namespace application;
 	protected function loadLocationType(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\locationType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\locationType();
@@ -210,9 +204,7 @@ namespace application;
 	protected function loadProjectType(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\projectType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\projectType();
@@ -224,9 +216,7 @@ namespace application;
 	protected function loadTaskType(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\taskType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\taskType();
@@ -238,9 +228,7 @@ namespace application;
 	protected function loadActivityType(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\activityType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\activityType();
@@ -252,9 +240,7 @@ namespace application;
 	protected function loadMaterialType(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\materialType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\materialType();
@@ -269,9 +255,7 @@ namespace application;
 	protected function loadReceiptType(){
 		if ($this->scope == 'save'){
 			$s = new entities\reference\receiptType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\receiptType();
@@ -284,9 +268,7 @@ namespace application;
 	
 		if ($this->scope == 'save'){
 			$s = new entities\reference\measureType();
-			$s->collectPostValues();
-			$s->saveChanges();
-			$this->scope = 'list';
+			$this->runSave($s);
 		}
 		if ($this->scope == 'detail'){
 			$t = new entities\reference\measureType();
@@ -301,8 +283,7 @@ namespace application;
 		switch ($this->scope){
 			case 'save':
 				$um = new system\siteSettings();
-				$um->collectPostValues();
-				$um->saveChanges();
+			$this->runSave($s);
 			case 'list':
 			case 'detail':
 
