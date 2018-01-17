@@ -1,7 +1,7 @@
 <?php 
 namespace application;
 
-class portalRequest extends _echo{
+class portalRequest extends \framework\_echo{
 
 	public $entity;
 	public $scope;
