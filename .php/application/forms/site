@@ -7,7 +7,7 @@ interface Isite {
 
 class site extends \html\page
 implements Isite{
-	protected $settings;
+	public $settings;
 	public $validLogin = false;
 	protected $pageMode = 'VIEW';
 

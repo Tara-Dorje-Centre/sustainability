@@ -103,14 +103,14 @@ class systemMenu extends \framework\_echo{
 		$this->addReference($e);
 		$e = new entities\reference\links\receiptTypeLinks();
 		$this->addReference($e);
-		if ($_SESSION['is-admin'] == 'yes'){
+		//if ($_SESSION['is-admin'] == 'yes'){
 		$e = new system\links\userLinks();
 		$this->addReference($e);
 		$e = new system\links\userTypeLinks();
 		$this->addReference($e);
 		$e = new system\links\siteSettingsLinks();
 		$this->addReference($e);
-		}
+		//}
 	}
 	protected function addReference(links\entityLinks $e){
 		//$this->reference[$e->context] = $e;

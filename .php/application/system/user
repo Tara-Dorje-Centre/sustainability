@@ -5,7 +5,7 @@ class user extends \application\entity{
 	public $validationMessages;
 	public function __construct(){
 		parent::__construct();
-		$this->entity = 'user-profile';
+		$this->entity = 'user';
 		$this->entityTitle = 'User Profile';
 
 		$this->f = new UserFields();

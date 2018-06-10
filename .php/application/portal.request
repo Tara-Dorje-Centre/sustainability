@@ -21,23 +21,57 @@ class portalRequest extends \framework\_echo{
 		
 	}
 	
+	protected function loginStatus(){
+		$status = false;
+		
+		//is user currently logged in?
+		if (isset($_SESSION['logged-in']) and ($_SESSION['logged-in'] == true)){
+			$status = true;
+			$this->echoValue(true,'logged in','authorized session');
+		} else {
+			//not logged in
+			$status = false;
+			$this->echoValue(true,'not logged in','unauthorized session');
+		}
+	
+		//did user just select login
+		
+		//did user select reset password
+		
+		
+		return $status;
+	}
+	
 	public function load(){
 	
-	
-			$this->echoValue(true,'context',$this->entity->value());
+		$this->echoValue(true,'context',$this->entity->value());
 		$this->echoValue(true,'scope',$this->scope->value());
 		
+		
+	
+		if ($this->loginStatus() == false) { 
+
+			$this->echoValue(true,'not logged in...scope',$this->scope->value());
+			$this->loadLogin();
+			exit;
+
+
+		}
+	//exit;
+			
 		switch ($this->entity->value()){
+			case 'logout':
+				$this->loadLogout();
+				break;
+		
 			case 'system':
 
 	
 
 			case 'login':
-				$this->loadLogin();
-				break;
-			case 'logout':
-				$this->loadLogout();
-				break;
+				//$this->loadLogin();
+				//break;
+			
 		
 			case 'user';
 				$this->loadUserProfiles();
@@ -65,7 +99,15 @@ class portalRequest extends \framework\_echo{
 			case 'activity':
 				$this->loadActivity();
 				break;
-			
+			case 'material':
+				$this->loadMaterial();
+				break;
+			case 'receipt':
+				$this->loadReceipt();
+				break;
+			case 'measure':
+				$this->loadMeasure();
+				break;
 			case 'location':
 				$this->loadLocation();
 				break;
@@ -107,19 +149,27 @@ class portalRequest extends \framework\_echo{
 		$site->print();
 	}
 	protected function loadLogout(){
+	
+	//should be $u = NEW userLogin('LOGOUT');
+	//$u->logout();
 		unset($_SESSION['logged-in']);
 		unset($_SESSION['client-time-zone']);
 		unset($_SESSION['login-name']);
 		unset($_SESSION['user-id']);
 		unset($_SESSION['is-admin']);
 		unset($_SESSION['must-update-pwd']);	
+		
+		//module specific globals
 		unset($_SESSION['currentCropPlanId']);
 		unset($_SESSION['currentProjectId']);
 		unset($_SESSION['currentTaskId']);	
 		unset($_SESSION['currentView']);
+		
 		$sw = new siteSettings;
 		$sw->unsetSessionDetails();
 		$site = new site();
+		//site should have sessiondetails...
+		//$site->settings->unsetSessionDetails();
 		$site->set();
 		$site->print();
 	}
@@ -282,7 +332,7 @@ class portalRequest extends \framework\_echo{
 	
 		switch ($this->scope){
 			case 'save':
-				$um = new system\siteSettings();
+				$s = new system\siteSettings();
 			$this->runSave($s);
 			case 'list':
 			case 'detail':
