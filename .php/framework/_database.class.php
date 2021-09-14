@@ -39,9 +39,9 @@ public function __construct(){
 		return  $this->insert_id;
 	}
 	
-	public function query($sql){
+	public function query($sql, $resultmode = NULL){
 		$this->echo->echoValue(true, 'sql', $sql, 'query');
-		return parent::query($sql);
+		return parent::query($sql,$resultmode);
 	}
 	
 	public function runStatement($sql){
