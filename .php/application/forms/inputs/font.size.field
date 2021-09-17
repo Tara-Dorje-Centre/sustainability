@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-class fontsizeField extends numberField{
+class _fontsize extends _number{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -12,5 +12,7 @@ class fontsizeField extends numberField{
 	}
 }
  
+class fontsizeField extends _fontsize{
+}
 
 ?>

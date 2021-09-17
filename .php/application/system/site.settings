@@ -47,7 +47,7 @@ class siteSettings extends \application\entity{
 		 $this->f->write();	
 	}
 	
-	protected function unsetSessionDetails(){
+	public function unsetSessionDetails(){
 		$this->f->setEnvironment('SESSION');
 		
 		$this->f->remove();

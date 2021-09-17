@@ -6,7 +6,7 @@ class taskTypeFields extends \application\forms\entityTypeFields{
 	public function __construct(){
 	
 		parent::__construct();
-		$this->frequency = new \application\forms\_nameField('frequency','frequency','Frequency');
+		$this->frequency = new \application\forms\_name('frequency','frequency','Frequency');
 		$this->_register('frequency',$this->frequency);
 	}
 	public function setDefaults(){

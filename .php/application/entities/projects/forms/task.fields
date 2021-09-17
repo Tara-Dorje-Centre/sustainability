@@ -17,16 +17,16 @@ class taskFields extends projectChildFields{
 	
 public function __construct(){
 	parent::__construct();
-	$this->taskOrder = new _numberField('task_order','task-order','task_order');						
-	$this->summary = new _textField('summary','summary','summary');
-	$this->pctDone = new _numberField('pct_done','pct-done','pct_done');	
-	$this->hoursEstimated = new _numberField('hours_estimated','hours-estimated','hours_estimated');
-	$this->hoursActual = new _numberField('hours_actual','hours-actual','hours_actual');
-	$this->hoursNotes = new _notesField('hours_notes','hours-notes','hours_notes');			
-	$this->materialsAuthProject = new _yesNoField('materials_auth_project','materials-auth-project','materials_auth_project');
-	$this->materialsAuthBy = new _textField('materials_auth_by','materials-auth-by','materials_auth_by');
-	$this->receiptsAuthProject = new _yesNoField('receipts_auth_project','receipts-auth-project','receipts_auth_project');
-	$this->receiptsAuthBy = new _textField('receipts_auth_by','receipts-auth-by','receipts_auth_by');
+	$this->taskOrder = new application\forms\_number('task_order','task-order','task_order');						
+	$this->summary = new application\forms\_text('summary','summary','summary');
+	$this->pctDone = new application\forms\_number('pct_done','pct-done','pct_done');	
+	$this->hoursEstimated = new application\forms\_number('hours_estimated','hours-estimated','hours_estimated');
+	$this->hoursActual = new application\forms\_number('hours_actual','hours-actual','hours_actual');
+	$this->hoursNotes = new application\forms\_notes('hours_notes','hours-notes','hours_notes');			
+	$this->materialsAuthProject = new application\forms\_yesNo('materials_auth_project','materials-auth-project','materials_auth_project');
+	$this->materialsAuthBy = new application\forms\_text('materials_auth_by','materials-auth-by','materials_auth_by');
+	$this->receiptsAuthProject = new application\forms\_yesNo('receipts_auth_project','receipts-auth-project','receipts_auth_project');
+	$this->receiptsAuthBy = new application\forms\_text('receipts_auth_by','receipts-auth-by','receipts_auth_by');
 		$this->_register('taskOrder', $this->taskOrder);
  		$this->_register('summary', $this->summary);
 		$this->_register('pctDone', $this->pctDone);

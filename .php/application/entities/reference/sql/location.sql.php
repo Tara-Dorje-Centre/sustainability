@@ -2,6 +2,7 @@
 namespace application\entities\reference\sql;
 
 class locationSQL extends \application\sql\entitySQL{
+
 public function __construct(){
 		$this->baseTable = 'locations';
 		$this->typeTable = 'location_types';
@@ -119,7 +120,7 @@ public function countByParentSortKey($sortKeyParent, $idParent){
 }
 
 
-public function info($id){
+public function info($id = 0){
 
 	$q .= $this->cols();
 	$q .= $this->tables();

@@ -10,8 +10,8 @@ class locationFields extends locationChildFields{
 	public function __construct(){
 		parent::__construct();
 
-    	$this->sortKey = new f\_textField('sort_key','not-used','Sort Key'); 
-		$this->sortKeyParent = new f\_textField('parent_sort_key'); 
+    	$this->sortKey = new application\forms\_text('sort_key','not-used','Sort Key'); 
+		$this->sortKeyParent = new application\forms\_text('parent_sort_key'); 
 		$this->_register('sortKey',$this->sortKey);
 		$this->_register('sortKeyParent',$this->sortKeyParent);
     }

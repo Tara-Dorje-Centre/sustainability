@@ -1,5 +1,5 @@
 <?php
-include_once("_echo.class");
+include_once("_echo.class.php");
 include_once("_contentWriter.class");
 include_once("_database.class.php");
 include_once("_timestamp.class");

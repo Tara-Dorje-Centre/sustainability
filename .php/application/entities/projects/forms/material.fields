@@ -15,10 +15,10 @@ class materialFields extends taskChildFields{
 
 public function __construct(){
 
-	$this->paidTo = new _nameField('paid_to','paid-to','Paid To');
-	$this->costEstimated = new _numberField('cost_estimated','cost-est','Cost Estimated');			
-	$this->costActual = new _numberField('cost_actual','cost-actual','Cost Actual');
-	$this->costUnit = new _numberField('cost_unit','cost-unit','Cost Per Unit');
+	$this->paidTo = new application\forms\_name('paid_to','paid-to','Paid To');
+	$this->costEstimated = new application\forms\_number('cost_estimated','cost-est','Cost Estimated');			
+	$this->costActual = new application\forms\_number('cost_actual','cost-actual','Cost Actual');
+	$this->costUnit = new application\forms\_number('cost_unit','cost-unit','Cost Per Unit');
 	$this->_register('paidTo',$this->paidTo);
 	$this->_register('costUnit',$this->costUnit);
 	$this->_register('costEstimated',$this->costEstimated);

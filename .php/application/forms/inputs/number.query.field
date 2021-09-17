@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
- class numberQueryField extends numberField{
+ class numberQueryField extends _number{
 	use queryField;
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){

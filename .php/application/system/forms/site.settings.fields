@@ -37,21 +37,21 @@ class siteSettingsFields extends \application\forms\fields{
 	 	$this->organizationDescription = new \application\forms\_description('organization_description','organization-description','Organization.Description');
 	 	$this->contactName = new \application\forms\_name('contact_name','contact-name','Contact Name');
 	 	$this->contactEmail = new \application\forms\_email('contact_email','contact-email','Contact Email');
-		$this->showPublicSite = new \application\forms\yesNoField('show_public_site','show-public-site','show.Public.Site');
-		$this->showCostReports = new \application\forms\yesNoField('show_cost_reports','show-cost-reports','show.Cost.Reports');
-		$this->showRevenueReports = new \application\forms\yesNoField('show_revenue_reports','show-revenue-reports','show.Revenue.Reports');
-		$this->publicFillColor = new \application\forms\cssColorField('public_fill_color','public-fill-color','public.Fill.Color');
-		$this->publicSiteColor = new \application\forms\cssColorField('public_site_color','public-site-color','public.Site.Color');
-		$this->publicPageColor = new \application\forms\cssColorField('public_page_color','public-page-color','public.Page.Color');
-		$this->publicMenuColor = new \application\forms\cssColorField('public_menu_color','public-menu-color','public.Menu.Color');
-		$this->publicMenuColorHover = new \application\forms\cssColorField('public_menu_color_hover','public-menu-color-hover','public.Menu.Color.Hover');
-	 	$this->publicTextColor = new \application\forms\cssColorField('public_text_color','public-text-color','public.Text.Color');
-	 	$this->publicTextColorHover = new \application\forms\cssColorField('public_text_color_hover','public-text-color-hover','public.Text.Color.Hover');
-	 	$this->publicFontFamily = new \application\forms\fontFamilyField('public_font_family','public-font-family','public.Font.Family');
-	 	$this->publicFontSizeTitle = new \application\forms\fontSizeField('public_font_size_title','public-font-size-title','public.Font.Size.Title');
-	 	$this->publicFontSizeHeading = new \application\forms\fontSizeField('public_font_size_heading','public-font-size-heading','public.Font.Size.Heading');
-	 	$this->publicFontSizeMenu = new \application\forms\fontSizeField('public_font_size_menu','public-font-size-menu','public.FontSizeMenu');
-	 	$this->publicFontSizeText = new \application\forms\fontSizeField('public_font_size_text','public-font-size-text','publicFontSizeText');
+		$this->showPublicSite = new \application\forms\_yesNo('show_public_site','show-public-site','show.Public.Site');
+		$this->showCostReports = new \application\forms\_yesNo('show_cost_reports','show-cost-reports','show.Cost.Reports');
+		$this->showRevenueReports = new \application\forms\_yesNo('show_revenue_reports','show-revenue-reports','show.Revenue.Reports');
+		$this->publicFillColor = new \application\forms\_cssColor('public_fill_color','public-fill-color','public.Fill.Color');
+		$this->publicSiteColor = new \application\forms\_cssColor('public_site_color','public-site-color','public.Site.Color');
+		$this->publicPageColor = new \application\forms\_cssColor('public_page_color','public-page-color','public.Page.Color');
+		$this->publicMenuColor = new \application\forms\_cssColor('public_menu_color','public-menu-color','public.Menu.Color');
+		$this->publicMenuColorHover = new \application\forms\_cssColor('public_menu_color_hover','public-menu-color-hover','public.Menu.Color.Hover');
+	 	$this->publicTextColor = new \application\forms\_cssColor('public_text_color','public-text-color','public.Text.Color');
+	 	$this->publicTextColorHover = new \application\forms\_cssColor('public_text_color_hover','public-text-color-hover','public.Text.Color.Hover');
+	 	$this->publicFontFamily = new \application\forms\_fontFamily('public_font_family','public-font-family','public.Font.Family');
+	 	$this->publicFontSizeTitle = new \application\forms\_fontSize('public_font_size_title','public-font-size-title','public.Font.Size.Title');
+	 	$this->publicFontSizeHeading = new \application\forms\_fontSize('public_font_size_heading','public-font-size-heading','public.Font.Size.Heading');
+	 	$this->publicFontSizeMenu = new \application\forms\_fontSize('public_font_size_menu','public-font-size-menu','public.FontSizeMenu');
+	 	$this->publicFontSizeText = new \application\forms\_fontSize('public_font_size_text','public-font-size-text','publicFontSizeText');
 		
 	
 	

@@ -24,15 +24,15 @@ class projectFields extends
 	public function __construct(){
 		parent::__construct();
 		$this->created->enabled(false);
-		$this->summary = new _notesField('summary','summary','Summary');
-		$this->started = new _dateField('started','started','Started');
-    	$this->pctDone = new _numberField('pct_done','pct-done','Percent.Done');
-    	$this->priority = new _numberField('priority','priority','Priority');
-		$this->goals = new _notesField('goals','goals','Goals');
-		$this->purpose = new _notesField('purpose','purpose','Purpose');
-		$this->lessons = new _notesField('lessons_learned','lessons-learned','Lessons Learned');
-		$this->showAlways = new _yesNoField('show_always','show-always','Show.Always');
-		$this->location = new _fieldIdName('location_id','location-id','Location','location_name');
+		$this->summary = new application\forms\_notes('summary','summary','Summary');
+		$this->started = new application\forms\_date('started','started','Started');
+    	$this->pctDone = new application\forms\_number('pct_done','pct-done','Percent.Done');
+    	$this->priority = new application\forms\_number('priority','priority','Priority');
+		$this->goals = new application\forms\_notes('goals','goals','Goals');
+		$this->purpose = new application\forms\_notes('purpose','purpose','Purpose');
+		$this->lessons = new application\forms\_notes('lessons_learned','lessons-learned','Lessons Learned');
+		$this->showAlways = new application\forms\_yesNo('show_always','show-always','Show.Always');
+		$this->location = new application\forms\_idName('location_id','location-id','Location','location_name');
   		$this->_register('summary', $this->summary);
 		$this->_register('started', $this->started);
     	$this->_register('pctDone', $this->pctDone);	

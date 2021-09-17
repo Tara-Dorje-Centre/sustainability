@@ -132,7 +132,7 @@ use \application\sql\connectionFunctions;
 		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
 		//then comment this line
 		//printLine('forcing login');
-		$found = 1;
+		//$found = 1;
 		$this->echoValue(true, '......foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
 		if ($found == 1){
 		
@@ -148,13 +148,15 @@ use \application\sql\connectionFunctions;
 			//$_SESSION['client-time-zone'] = $_POST['client-time-zone'];
 			
 
-			//$this->f->_sLoginMessages->write();
+			//$this->s->_LoginMessages->write();
 			
 		} else {
 			//$_SESSION['login-messages'] = 'Could not validate login';
-			$this->s->remove();
+			//$this->s->remove();
 			$this->s->_loginMessages->set('Could not validate login');
-			$this->f->_loginMessages->write();
+			
+			
+			$this->s->_loginMessages->write();
 			
 		}
 		

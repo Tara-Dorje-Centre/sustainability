@@ -14,9 +14,13 @@ private $echo;
 public function __construct(){
 
 	$this->echo = new \framework\_echo();
-	$this->echo->echoPrint(false, 'creating connection', '__construct', '_Database', '');
+	$this->echo->echoPrint(true, 'creating connection to db='.$this::_database, '__construct', '_Database', '');
 
 	parent::__construct($this::_server, $this::_user, $this::_pwd, $this::_database, $this::_port);
+
+    //parent::__construct($this->_server, $this->_user, $this->_pwd, $this->_database, $this->_port);
+
+
 
 	if ($this->connect_error) {
 		$msg = 'Connect Error ['.$this->connect_errno.'] ';

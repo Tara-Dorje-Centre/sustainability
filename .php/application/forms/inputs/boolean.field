@@ -2,7 +2,7 @@
 
 namespace application\forms;
 
-class booleanField extends field{
+class _boolean extends field{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -11,6 +11,7 @@ class booleanField extends field{
 	
 }
 
-
+class booleanField extends _boolean{
+}
 
 ?>

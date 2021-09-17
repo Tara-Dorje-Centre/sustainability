@@ -3,7 +3,7 @@
 namespace application\forms;
 
 
-class dateField extends field{
+class _date extends field{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -15,6 +15,10 @@ class dateField extends field{
 		return $i->print();
 	}
 	
+
+}
+
+class dateField extends _date{
 
 }
 

@@ -8,16 +8,25 @@ class portalRequest extends \framework\_echo{
 	protected $response;
 	
 	public function __construct(){
-		$this->entity = new forms\textField('not-used','context');
-		$this->scope = new forms\textField('not-used','scope');
+		$this->entity = new forms\_text('not-used','context');
+		$this->scope = new forms\_text('not-used','scope');
 
-		$this->entity->setDefault('system-menu');
-		$this->scope->setDefault('view');
-
-		$this->entity->env->read();
-		$this->scope->env->read();
+		$this->entity->env->setEnvironment('GET');
+		$this->scope->env->setEnvironment('GET');
 
 
+		//$this->entity->setDefault('system-menu');
+		//$this->scope->setDefault('view');
+
+		//$this->entity->env->read();
+		//$this->scope->env->read();
+
+
+		$this->entity->read();
+		$this->scope->read();
+
+		$this->echoValue(true,'context',$this->entity->value());
+		$this->echoValue(true,'scope',$this->scope->value());
 		
 	}
 	
@@ -27,11 +36,11 @@ class portalRequest extends \framework\_echo{
 		//is user currently logged in?
 		if (isset($_SESSION['logged-in']) and ($_SESSION['logged-in'] == true)){
 			$status = true;
-			$this->echoValue(true,'logged in','authorized session');
+			$this->echoValue(true,'logged in','authorized session','loginStatus');
 		} else {
 			//not logged in
 			$status = false;
-			$this->echoValue(true,'not logged in','unauthorized session');
+			$this->echoValue(true,'not logged in','unauthorized session','loginStatus');
 		}
 	
 		//did user just select login
@@ -44,14 +53,18 @@ class portalRequest extends \framework\_echo{
 	
 	public function load(){
 	
-		$this->echoValue(true,'context',$this->entity->value());
-		$this->echoValue(true,'scope',$this->scope->value());
+
 		
+		if ($this->scope->value() == 'logout') {
 		
+			$this->loadLogout();
+			exit;
+			
+		}
 	
 		if ($this->loginStatus() == false) { 
 
-			$this->echoValue(true,'not logged in...scope',$this->scope->value());
+			//$this->echoValue(true,'not logged in...scope',$this->scope->value(),'load');
 			$this->loadLogin();
 			exit;
 
@@ -141,6 +154,9 @@ class portalRequest extends \framework\_echo{
 	
 	}
 	protected function loadLogin(){
+	
+		$this->echoPrint(true,'starting','loadLogin');
+	
 		$u = new \application\system\userLogin('VALIDATE');
 		$u->validate();
 
@@ -149,6 +165,8 @@ class portalRequest extends \framework\_echo{
 		$site->print();
 	}
 	protected function loadLogout(){
+	
+		$this->echoPrint(true,'starting','loadLogout');
 	
 	//should be $u = NEW userLogin('LOGOUT');
 	//$u->logout();
@@ -165,9 +183,9 @@ class portalRequest extends \framework\_echo{
 		unset($_SESSION['currentTaskId']);	
 		unset($_SESSION['currentView']);
 		
-		$sw = new siteSettings;
+		$sw = new \application\system\siteSettings;
 		$sw->unsetSessionDetails();
-		$site = new site();
+		$site = new site('LOGIN');
 		//site should have sessiondetails...
 		//$site->settings->unsetSessionDetails();
 		$site->set();

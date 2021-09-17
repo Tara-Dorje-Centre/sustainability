@@ -1,7 +1,7 @@
 <?php
 
 include_once("location.type.sql");
-include_once("location.sql");
+include_once("location.sql.php");
 
 include_once("quantity.type.sql");
 include_once("project.type.sql");

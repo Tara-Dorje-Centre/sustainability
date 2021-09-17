@@ -176,7 +176,7 @@ class material extends \application\entity{
 			$sql .= " m.cost_unit = ".$this->f->costUnit->value().", ";
 			$sql .= " m.cost_estimated = ".$this->f->costEstimated->value()." ";
 			$sql .= " m.cost_actual = ".$this->f->costActual->value()." ";
-			$sql .= " WHERE m.id = ".$this->f-id." ";
+			$sql .= " WHERE m.id = ".$this->f->id." ";
 
 			$result = dbRunSQL($sql);
 			

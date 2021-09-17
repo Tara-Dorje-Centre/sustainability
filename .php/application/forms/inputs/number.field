@@ -4,7 +4,7 @@ namespace application\forms;
 
 
 
-class numberField extends field{
+class _number extends field{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -16,5 +16,8 @@ class numberField extends field{
 	}
 }
 
+
+class numberField extends _number{
+}
 
 ?>

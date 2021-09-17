@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
- class textQueryField extends textField{
+ class textQueryField extends _text{
 	use queryField;
 	
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){

@@ -7,8 +7,8 @@ namespace application\entities\reference\forms;
 	 public $unitType;
 
  public function __construct(){
-	$this->measureType = new \application\forms\_fieldIdName('measure_type_id','measure-type-id','Measure Type','measure_type_name');
-	$this->unitType = new \application\forms\_fieldIdName('unit_type','unit-type-id','Unit Type','unit_type_name');
+	$this->measureType = new \application\forms\_idName('measure_type_id','measure-type-id','Measure Type','measure_type_name');
+	$this->unitType = new \application\forms\_idName('unit_type','unit-type-id','Unit Type','unit_type_name');
 	$this->_register('measureType',$this->measureType);
 	$this->_register('unit_type',$this->unitType);
  }

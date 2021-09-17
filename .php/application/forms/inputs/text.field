@@ -2,16 +2,21 @@
 
 namespace application\forms;
 
-class textField extends field {
 
+
+class _text extends field{
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
 		$this->_datatype = 'TEXT';
 	}
-	
 }
 
-class hiddenTextField extends textField{
+//deprecated
+class textField extends _text {
+}
+
+
+class _hiddenText extends _text{
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used'){
 		parent::__construct($dbCol,$envVar,'no-caption');
 	}
@@ -19,7 +24,13 @@ class hiddenTextField extends textField{
 		return $this->inputHidden();
 	}
 }
-class hiddenNumberField extends textField{
+
+//deprecated
+class hiddenTextField extends _hiddenText{
+}
+
+
+class _hiddenNumber extends _text{
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used'){
 		parent::__construct($dbCol,$envVar,'no-caption');
 	}
@@ -27,13 +38,20 @@ class hiddenNumberField extends textField{
 		return $this->inputHidden();
 	}
 }
-class requestVariableNumber extends hiddenTextField{
+
+//deprecated
+class hiddenNumberField extends _hiddenNumber{
+
+}
+
+class requestVariableNumber extends _hiddenText{
 	public function __construct(string $envVar = 'post-var',$value){
 		parent::__construct('not_used',$envVar,'no-caption');
 		$this->set($value);
 	}
 }
-class requestVariable extends hiddenTextField{
+
+class requestVariable extends _hiddenText{
 	public function __construct(string $envVar = 'post-var',$value){
 		parent::__construct('not_used',$envVar,'no-caption');
 		$this->set($value);
