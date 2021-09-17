@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\projects\forms;
 
-class materialsSummary extends baseSummaryCost{
+class summaryMaterials extends summaryBaseCost{
 
 	public function setProjectTotals($id){
 	

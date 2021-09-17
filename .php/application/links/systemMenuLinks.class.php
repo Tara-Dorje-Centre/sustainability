@@ -21,7 +21,7 @@ class systemMenuLinks extends linkMenu {
 	}
 	public function logout(){
 		$u = new url('portal.php');
-		$context = 'logout';
+		$context = 'system';
 		$scope = 'logout';
 		$u->makeParameter('context',$context);
 		$u->makeParameter('scope',$scope);

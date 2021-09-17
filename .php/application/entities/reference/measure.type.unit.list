@@ -73,7 +73,14 @@ class measureTypeUnitList extends \application\entityList{
 	public function setFoundCount(){
 		//$s = new MeasureTypeUnitSQL;
 		$sql = $this->sql->count($this->measureType);
-		$this->found = dbGetCount($sql, 'total_units');
+		
+		
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_units');
+		
+	
+		//$this->found = dbGetCount($sql, 'total_units');
 	}		
 	
 	

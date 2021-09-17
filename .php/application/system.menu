@@ -13,9 +13,9 @@ class systemMenu extends \framework\_echo{
 	protected $reference = array();
 	
 	public function __construct(){
-		$this->displayMode = new forms\textField('not_used','displayMode','mode');
-		$this->year = new forms\numberField('not_used','year','mode');;
-		$this->month = new forms\numberField('not_used','month','mode');
+		$this->displayMode = new forms\_text('not_used','displayMode','mode');
+		$this->year = new forms\_number('not_used','year','mode');;
+		$this->month = new forms\_number('not_used','month','mode');
 		$this->main = new links\systemMenuLinks('section-content-links');
 		$this->links = new links\systemMenuLinks('section-heading-links');
 	}

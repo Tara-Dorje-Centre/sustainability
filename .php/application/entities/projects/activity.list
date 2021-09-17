@@ -95,7 +95,13 @@ class activityList extends \application\entityList{
 				$sql = $this->sql->countProjectActivity($this->task->project->id);
 			}
 		}
-		$this->found = dbGetCount($sql, 'total_activities');
+		
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_activities');
+		
+		
+		//$this->found = dbGetCount($sql, 'total_activities');
 	}
 
 	private function getCalendarLinks(){

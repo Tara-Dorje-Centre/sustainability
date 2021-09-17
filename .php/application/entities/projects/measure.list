@@ -48,7 +48,13 @@ class measureList extends \application\entityList{
 	
 	public function setFoundCount(){
 		$sql = $this->sql->countTask($this->task->id);
-		$this->found = dbGetCount($sql, 'total_measures');
+		
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_measures');
+		
+	
+		//$this->found = dbGetCount($sql, 'total_measures');
 	}
 		
 	public function getListing($pagingBaseLink = 'USE_LISTING'){

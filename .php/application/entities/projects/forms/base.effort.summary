@@ -1,8 +1,7 @@
 <?php
 namespace application\entities\projects\forms;
 
-
-class baseSummaryEffort extends baseSummary{
+class summaryEffort extends summaryBase{
 
 	public function setProjectTotals($id){
 		$this->isProject = true;
@@ -78,6 +77,7 @@ class baseSummaryEffort extends baseSummary{
 	}
 	
 } 
+
 
 
 

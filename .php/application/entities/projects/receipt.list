@@ -84,7 +84,14 @@ class receiptList extends \application\entityList{
 		} else {
 			$sql = $this->sql->countReceiptsByTask($this->task->id);
 		}
-		$this->found = dbGetCount($sql, 'total_receipts');
+		
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_receipts');
+		
+		
+		
+		//$this->found = dbGetCount($sql, 'total_receipts');
 	}
 	
 	private function setSummary(){

@@ -8,7 +8,7 @@ include_once('__anyElement.class');
 include_once('__emptyElement.class');
 include_once('__anyEmptyElement.class');
 include_once('__repeatingElement.class');
-include_once('_br.class');
+include_once('_br.class.php');
 include_once('_div.class');
 
 include_once('_fieldset.class');

@@ -68,7 +68,13 @@ class projectList extends \application\entityList{
 		} else {
 			$sql = $this->base->sql->countByStatus($this->status);
 		}
-		$this->found = dbGetCount($sql, 'total_projects');
+
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_projects');
+		
+
+		//$this->found = dbGetCount($sql, 'total_projects');
 	}
 	
 	//override adds status and showMyProject

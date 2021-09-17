@@ -17,13 +17,13 @@ abstract class taskChildFields extends projectChildFields{
     	parent::__construct();
     	$this->task = new _fieldIdName('task_id','id-task','Task','task_name');
 		
-		$this->reported = new application\forms\_date('reported','date-reported','Reported');
-		$this->doneBy = new application\forms\_user('done_by','done-by','DoneBy');
-    	$this->linkUrl = new application\forms\_text('link_url','link-url','LinkUrl');
-		$this->linkText = new application\forms\_text('link_text','link-text','LinkText');
-		$this->notes = new application\forms\_notes('notes','notes','Notes');
-		$this->quantity = new application\forms\_number('quantity','quantity','Quantity');
-		$this->quantityType = new application\forms\_idName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
+		$this->reported = new \application\forms\_date('reported','date-reported','Reported');
+		$this->doneBy = new \application\forms\_user('done_by','done-by','DoneBy');
+    	$this->linkUrl = new \application\forms\_text('link_url','link-url','LinkUrl');
+		$this->linkText = new \application\forms\_text('link_text','link-text','LinkText');
+		$this->notes = new \application\forms\_notes('notes','notes','Notes');
+		$this->quantity = new \application\forms\_number('quantity','quantity','Quantity');
+		$this->quantityType = new \application\forms\_idName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
 		
 		$this->_register('task', $this->task);
 		$this->_register('reported', $this->reported);

@@ -78,7 +78,8 @@ class locationList extends \application\entityList{
 		} 
 			//locationid = 0, listing on add?
 			
-			
+		/*
+		
 		//	$l = new Location;
 		//	$sortKey = $l->getSortKey($this->idParent);
 		
@@ -89,6 +90,12 @@ class locationList extends \application\entityList{
 		//} else {
 			//$this->found = 0;
 		//}
+		
+		*/
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_locations');
+		
 
 	}
 	

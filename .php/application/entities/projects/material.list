@@ -102,7 +102,13 @@ class materialList extends \application\entityList{
 		} else {
 			$sql = $this->sql->countMaterialsByTask($this->task->id,$this->year,$this->month);
 		}
-		$this->found = getSQLCount($sql, 'total_materials');
+		
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_materials');
+		
+		
+		//$this->found = getSQLCount($sql, 'total_materials');
 	}
 	
 	private function setSummary(){

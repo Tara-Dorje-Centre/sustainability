@@ -22,8 +22,11 @@ class taskList extends \application\entityList{
 	protected function makePageTitle(){
 
 		if ($this->periodicTasks == 'NO'){
-			$title = $this->base->f->nameProject.br();
-			$title .= 'Project Tasks';
+			//$title = $this->base->f->nameProject.br();
+			//$title .= 'Project Tasks';
+			
+			$title = $this->base->f->nameProject;
+			$title .= '<br>Project Tasks';
 		} else {
 			$title .= 'Periodic Tasks';
 		}
@@ -69,7 +72,13 @@ class taskList extends \application\entityList{
 		} else {
 			$sql = $this->base->sql->countPeriodic($this->getPeriodicTasksComplete());
 		}
-		$this->found = dbGetCount($sql, 'total_tasks');			
+		
+		global $conn;
+		
+		$this->found = $conn->getCount($sql,'total_tasks');
+		
+		
+		//$this->found = dbGetCount($sql, 'total_tasks');			
 		
 	}
 	
