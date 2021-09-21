@@ -25,7 +25,7 @@ class taskList extends \application\entityList{
 			//$title = $this->base->f->nameProject.br();
 			//$title .= 'Project Tasks';
 			
-			$title = $this->base->f->nameProject;
+			$title = $this->base->f->project->name->value();
 			$title .= '<br>Project Tasks';
 		} else {
 			$title .= 'Periodic Tasks';
@@ -35,12 +35,13 @@ class taskList extends \application\entityList{
 	}
 	
 	protected function makePageMenu(){
+		$menu = '';
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
 	//	$projectL = new ProjectLinks($menuType,$menuStyle);
 
-		
+		/*
 		$menu = $this->base->links->openMenu('section-heading-links');
 		if ($this->periodicTasks == 'NO'){
 			$menu .= $this->base->links->add($this->idProject);
@@ -54,10 +55,13 @@ class taskList extends \application\entityList{
 							
 		}
 		$menu .= $this->base->links->closeMenu();
+		
+		*/
 		$this->_pageMenu = $menu;			
 	}
 	
 	private function getPeriodicTasksComplete(){
+		$complete = 'NO';
 		if ($this->periodicTasks == 'COMPLETE'){
 			$complete = 'YES';
 		} elseif ($this->periodicTasks == 'INCOMPLETE'){
@@ -75,7 +79,7 @@ class taskList extends \application\entityList{
 		
 		global $conn;
 		
-		$this->found = $conn->getCount($sql,'total_tasks');
+		$this->found = $conn->getCount($sql,'count_details');
 		
 		
 		//$this->found = dbGetCount($sql, 'total_tasks');			

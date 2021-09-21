@@ -28,18 +28,19 @@ class task extends \application\entity{
 
 		$_SESSION['currentTaskId'] = $this->id;
 	}
-	public function listHeading($periodicTasks = 'NO'){
-		$tr = new html/_tr();
-		$th = new html/_th();
-		$th->addContent($this->_titleEntity);
+	public function listHeading($periodicTasks = 'NO'): \html\_tr{
+		$tr = new \html\_tr('table-headings');
+		$th = new \html\_th($this->entityTitle);
+		//$th->addContent($this->entityTitle);
 		$tr->addContent($th->print());
 		$tr->addContent($this->f->listCaption());
 		
-		$th = new html/_th();
-		$th->addContent('Hotlinks');
+		$th = new \html\_th('Hotlinks');
+		//$th->addContent('Hotlinks');
 		$tr->addContent($th->print());
 		
-		return $tr->print();
+		//return $tr->print();
+		return $tr;
 	}
 	
 	
@@ -79,9 +80,9 @@ class task extends \application\entity{
 			}
 		}
 	
-		$tr = new html/_tr('data-row',$cssItem);
+		$tr = new \html\_tr('data-row',$cssItem);
 		
-		$td = new html/_td();
+		$td = new \html\_td();
 		$td->addContent($this->listRowLink());
 		$tr->addContent($td->print());
 		
@@ -95,7 +96,8 @@ class task extends \application\entity{
 			$detail .= wrapTd($this->listRowProjectLink());
 		}
 		*/
-		return $tr->print();
+		//return $tr->print();
+		return $tr;
 	}
 	
 	
@@ -301,8 +303,12 @@ class task extends \application\entity{
 	
 	
 	public function editForm(){
+	
+		$this->edit = new \application\forms\inputForm($this->links->pagePortal, $this->entityTitle, $this->pageMode, $this->entity, true);
+	
+	/*
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit = new \application\forms\_inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
 		$this->edit->required->input($this->f->taskOrder);
@@ -385,6 +391,7 @@ class task extends \application\entity{
 		$this->edit->submit->addContent(getSaveChangesResetButtons());
 
 		return $this->edit->close();
+		*/
 	}
 	
 		

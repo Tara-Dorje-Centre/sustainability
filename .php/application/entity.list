@@ -19,8 +19,9 @@ abstract class entityList extends entity{
 	
 	protected function setFoundCount(){
 		$sql = $this->base->sql->count();
-		global $conn;
-		$this->found = $conn->getCount($sql, 'count_details');
+		//global $conn;
+		//$this->found = $conn->getCount($sql, 'count_details');
+		$this->found = $this->sql->getCount($sql, 'count_details');
 	}
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
@@ -47,7 +48,7 @@ abstract class entityList extends entity{
 		$paging = $this->base->links->pagedListing($this->found,$this->resultPage,$this->perPage);	
 		$add = $this->base->addForm();	
 		$entity = $this->base->entity;
-		$legend = $this->titleEntity.':  Details';
+		$legend = $this->entityTitle.':  Details';
 		
 		
 		$this->_display = new \html\displayList($entity,$paging,$legend,$add,true);
@@ -62,10 +63,12 @@ abstract class entityList extends entity{
 	
 	protected function listingRows(){
 		$sql = $this->listingSQL();
-		global $conn;
-		$result = $conn->getResult($sql);
+		//global $conn;
+		//$result = $conn->getResult($sql);
+		$result = $this->base->sql->getResult($sql);
 		if($result){
-			
+			//$newRow = $this->base->listHeading();
+			//$this->_display->addRow($newRow);
 			$this->_display->addRow($this->base->listHeading());
 		  	while ($row = $result->fetch_assoc())
 			{	

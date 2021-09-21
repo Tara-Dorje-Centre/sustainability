@@ -42,13 +42,18 @@ class _table extends _element{
 	public function __construct($idName = 'none', $css = 'none'){
 		parent::__construct('table', $idName, $css);
 	}
-	public function addRow(_tr $tr){
+	public function addRow(_tr &$tr){
 		$this->tableRows[] = $tr;
 	}
 	public function makeRow($content,$css = 'none'){
 		$tr = new _tr($css);
 		$tr->setContent($content);
 		$this->addRow($tr);
+	}
+	public function newRow($css = 'none'){
+		$tr = new _tr($css);
+		$tr->setContent($content);
+		return $tr;
 	}
 	protected function printRows(){
 	//echo 'printing table rows';

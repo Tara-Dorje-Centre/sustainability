@@ -1,5 +1,5 @@
 <?php
-namespace application\entities;
+namespace application\entities\projects;
 
 class projectList extends \application\entityList{
 	public $showMyProjects = 'NO';
@@ -26,7 +26,7 @@ class projectList extends \application\entityList{
 	
 	
 	protected function makePageTitle(){
-
+		$title = '';
 		if ($this->showMyProjects == 'YES'){
 			$title .= 'My ';
 		}
@@ -36,12 +36,17 @@ class projectList extends \application\entityList{
 	}
 
 	protected function makePageMenu(){
+
+
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
+	//needs updating to new usage of links...add links, then use links.print to get menu
+	//see usage in systemMenu
 	
 		//$activityL = new ActivityLinks($menuType,$menuStyle);
 
+/*
 		$menu = $this->base->links->openMenu('section-heading-links');
 		
 		if ($this->status == 'CLOSED'){
@@ -58,7 +63,8 @@ class projectList extends \application\entityList{
 	$menu .= $this->base->links->resetMenu();
 	$menu .= $this->base->links->detailAddHref();					
 	$menu .= $this->base->links->closeMenu();
-		$this->_pageMenu = $menu;			
+		$this->_pageMenu = $menu;	
+*/		
 	}
 	
 	

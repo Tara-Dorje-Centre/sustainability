@@ -24,10 +24,10 @@ include_once('_p.class');
 include_once('_resourceLink.class');
 include_once('_script.class');
 include_once('_span.class');
-include_once('_tables.class');
+include_once('_tables.class.php');
 
-include_once('displayDetails.class');
-include_once('displayList.class');
+include_once('displayDetails.class.php');
+include_once('displayList.class.php');
 
 include_once('_htmlFunctions.php');
 include_once('_document.class');

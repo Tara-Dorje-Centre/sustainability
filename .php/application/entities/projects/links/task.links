@@ -9,7 +9,7 @@ extends \application\links\entityLinks {
 
 	}
 	public function setRequest(){
-		$this->request = new taskRequest($this->entityContext,$this->portalPage);
+		$this->request = new taskRequest($this->entityContext,$this->pagePortal);
 	}
 	
 	public function periodicTasks(bool $closed = false){

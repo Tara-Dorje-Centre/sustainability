@@ -15,8 +15,12 @@ class linkMenuPaged extends linkMenu{
 	}
 	
 	protected function setPageCount(){
-	$count = $this->recordCount;
-	$per = $this->perPage;
+		$count = $this->recordCount;
+		$per = $this->perPage;
+	
+		if ($per == 0){
+			$per = 10;
+		}
 		$a = ($count/$per);
 
 		if (floor($a) == $a){
@@ -113,9 +117,9 @@ class linkMenuPaged extends linkMenu{
 				if ($i == $currentPage){
 				//$linkCaption = ' ['.$recordRange.'] ';
 					$caption = '['.$i.']';
-					$css = $this->cssItem.'-current';
-					$this->makeTextItem($caption);
-					//,$this->cssItem.'-current');	
+					$css = $this->cssMenuItem.'-current';
+					$this->addTextItem($caption);
+					//,$this->cssMenuItem.'-current');	
 					//$this->addSpan($s);
 				} else {
 					//$linkCaption = '('.$recordRange.')';	

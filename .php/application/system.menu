@@ -9,13 +9,14 @@ class systemMenu extends \framework\_echo{
 	public $month;
 	protected $main;
 	protected $links;
-	protected $modules = array();
-	protected $reference = array();
+	protected $heading;
+	protected $details;
+	protected $site;
 	
 	public function __construct(){
-		$this->displayMode = new forms\_text('not_used','displayMode','mode');
-		$this->year = new forms\_number('not_used','year','mode');;
-		$this->month = new forms\_number('not_used','month','mode');
+		$this->displayMode = new forms\_text('not-used','displayMode','mode');
+		$this->year = new forms\_number('not-used','year','mode');;
+		$this->month = new forms\_number('not-used','month','mode');
 		$this->main = new links\systemMenuLinks('section-content-links');
 		$this->links = new links\systemMenuLinks('section-heading-links');
 	}
@@ -24,6 +25,7 @@ class systemMenu extends \framework\_echo{
 		$this->getRequestArguments();
 		$this->printPage();
 	}
+	
 	public function getRequestArguments(){
 		$this->displayMode->setEnvironment('GET');
 		$this->year->setEnvironment('GET');
@@ -35,6 +37,7 @@ class systemMenu extends \framework\_echo{
 		$this->year->read();
 		$this->month->read();
 	}
+	
 	public function setDetails($displayMode = 'REFERENCE', $year = 0, $month = 0){
 		$this->displayMode->set($displayMode);
 		$this->year->set($year);
@@ -42,37 +45,34 @@ class systemMenu extends \framework\_echo{
 
 	}
 	
-	public function PageTitle(){
+	public function pageTitle(){
 		$t = new \html\_div('section-heading-title');
+		
 		switch($this->displayMode->value()){
 			case 'REFERENCE':
-			$title = 'Reference';		
-			break;	
-		case 'CALENDAR':
-			$title = 'Calendar';
-			break;
-		case 'SYSTEM-UPDATES':
-			$title = 'System Updates';
-			break;
-		case 'TESTING':
-			$title = 'Testing';
-			break;
-		case 'MY_LINKS':
-			$title = 'My Links';
-			break;
-		default:
-			$title = 'Sustainable Planning Tools';						
+				$title = 'Reference';		
+				break;	
+			case 'CALENDAR':
+				$title = 'Calendar';
+				break;
+			case 'SYSTEM-UPDATES':
+				$title = 'System Updates';
+				break;
+			case 'TESTING':
+				$title = 'Testing';
+				break;
+			case 'MY_LINKS':
+				$title = 'My Links';
+				break;
+			default:
+				$title = 'Sustainable Planning Tools';						
 		}
 		
 		$t->setContent($title);
-	
 		return $t->print();	
 	}
 
-	public function PageMenu(){
-		
-
-		//$m = new links\systemMenuLinks('section-heading-links');
+	public function pageMenu(){
 		return $this->links->getPageMenu();	
 	}
 	
@@ -81,123 +81,33 @@ class systemMenu extends \framework\_echo{
 		$heading .= $this->pageMenu();
 		return $heading;
 	}	
-	protected function loadReferences(){
-	
-		$e = new entities\reference\links\locationTypeLinks();
-		$this->addReference($e);
-		$e = new entities\reference\links\locationLinks();
-		$this->addReference($e);
-		$e = new entities\reference\links\quantityTypeLinks();
-		$this->addReference($e);
-		$e = new entities\reference\links\measureTypeLinks();
-		$this->addReference($e);
-		/*$e = new CropLinks();
-		$this->addReference($e);*/
-		$e = new entities\reference\links\projectTypeLinks();
-		$this->addReference($e);
-		$e = new entities\reference\links\taskTypeLinks();
-		$this->addReference($e);
-		$e = new entities\reference\links\activityTypeLinks();
-		$this->addReference($e);
-		$e = new entities\reference\links\materialTypeLinks();
-		$this->addReference($e);
-		$e = new entities\reference\links\receiptTypeLinks();
-		$this->addReference($e);
-		//if ($_SESSION['is-admin'] == 'yes'){
-		$e = new system\links\userLinks();
-		$this->addReference($e);
-		$e = new system\links\userTypeLinks();
-		$this->addReference($e);
-		$e = new system\links\siteSettingsLinks();
-		$this->addReference($e);
-		//}
-	}
-	protected function addReference(links\entityLinks $e){
-		//$this->reference[$e->context] = $e;
-		$link = $e->contextList();
-		$this->main->addLink($link);
-	}
-	protected function makeReferenceLinks(){
-		$this->loadReferences();
-		/*foreach($this->reference as $m){
-			$link = $m->contextList();
-			$this->main->addLink($link);
-		}*/
-	
-		$this->main->addLink($this->main->calendars());
-	}
-	
-	
-	protected function  makeModuleLinks(){
-		$p = new entities\projects\links\projectLinks();
-
-		$this->main->addLink($p->allProjects());
-		
-		$t = new entities\projects\links\taskLinks();
-		$this->main->addLink($t->periodicTasks());
-		
-		$a = new entities\projects\links\activityLinks();
-		$this->main->addLink($a->groupCalendar());
-		$this->main->addLink($a->groupActivity());
-	
-	}
-	
-	
-	
-	protected function makeMyLinks(){
-		$p = new entities\projects\links\projectLinks();
-		$this->main->addLink($p->myProjects());
-		$this->main->addLink($p->allProjects());
-		
-		$t = new entities\projects\links\taskLinks();
-		$this->main->addLink($t->periodicTasks());
-		
-		$a = new entities\projects\links\activityLinks();
-		$this->main->addLink($a->myCalendar());
-		$this->main->addLink($a->myActivity());
-		
-		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
-			if ($_SESSION['must-update-pwd'] == 'yes'){
-				$this->main->makeSpan('Please update your profile password.');
-			}
-			$u = new system\links\userLinks();
-			$this->main->addLink($u->view('My Profile', $_SESSION['user-id']));
-		}
-	
-	}
-	
-	
 	
 	public function printPage(){
 		$this->site = new \application\site('MENU');
 		if ($this->site->validLogin == true){
-			$heading = $this->getPageHeading();
-			$details = $this->getPageDetails();
+			$this->heading = $this->getPageHeading();
+			$this->details = $this->getPageDetails();
 		} else {
-		//invalid login state, site will display login form
-		//dont run page queries or build objects
-			$heading = 'invalid login state';
-			$details = 'invalid login state';
+			//invalid login state, site will display login form
+			//dont run page queries or build objects
+			$this->heading = 'invalid login state';
+			$this->details = 'invalid login state';
 		}
-		$this->site->set($heading, $details);
+		$this->site->set($this->heading, $this->details);
 		$this->site->print();
 	}
 
 	public function getPageDetails(){
-	
-		$details = $this->display();
-		return $details;
-		
+		return $this->display();
 	}
 	
-	
 	protected function display(){
-	$this->echoPrint(true,'start','display');
-	$this->echoValue(true,'displayMode', $this->displayMode->value(), 'display');
-	
+		$this->echoPrint(true,'start','display');
+		$this->echoValue(true,'displayMode', $this->displayMode->value(), 'display');
+		$content = '';
 		switch($this->displayMode->value()){
 			case 'REFERENCE':
-				$content = $this->displayReference();
+				$content = $this->displayReferenceLinks();
 				break;
 			case 'CALENDAR':
 				$content = $this->displayCalendar();
@@ -212,28 +122,89 @@ class systemMenu extends \framework\_echo{
 				$content = $this->displayTesting();		
 				break;				
 			default:
-				$content = $this->displayModules();
+				$content = $this->displayModuleLinks();
 		}
 		return $content;
-		
 	}
 	
-	private function displayReference(){
-		$this->echoPrint(true,'start','displayReference');
-		$this->makeReferenceLinks();
+	protected function  displayModuleLinks(){
+		$l = new entities\projects\links\projectLinks();
+		$this->main->addLink($l->allProjects());
 		
-
+		$l = new entities\projects\links\taskLinks();
+		$this->main->addLink($l->periodicTasks());
 		
-		return $this->main->print();			
-		
-	}
-	private function displayMyLinks(){
-		$this->makeMyLinks();
+		$l = new entities\projects\links\activityLinks();
+		$this->main->addLink($l->groupCalendar());
+		$this->main->addLink($l->groupActivity());
 		return $this->main->print();
-		
 	}
-	private function displayModules(){
-		$this->makeModuleLinks();
+	
+	protected function displayMyLinks(){
+		$l = new entities\projects\links\projectLinks();
+		$this->main->addLink($l->myProjects());
+		$this->main->addLink($l->allProjects());
+		
+		$l = new entities\projects\links\taskLinks();
+		$this->main->addLink($l->periodicTasks());
+		
+		$l = new entities\projects\links\activityLinks();
+		$this->main->addLink($l->myCalendar());
+		$this->main->addLink($l->myActivity());
+		
+		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
+			if ($_SESSION['must-update-pwd'] == 'yes'){
+				$this->main->makeSpan('Please update your profile password.');
+			}
+			$l = new system\links\userLinks();
+			$this->main->addLink($l->view('My Profile', $_SESSION['user-id']));
+		}
+		return $this->main->print();
+	
+	}
+
+	protected function displayReferenceLinks(){
+	
+		$e = new entities\reference\links\locationTypeLinks();
+		$this->main->addLink($e->contextList());
+
+		$e = new entities\reference\links\locationLinks();
+		$this->main->addLink($e->contextList());
+
+		$e = new entities\reference\links\quantityTypeLinks();
+		$this->main->addLink($e->contextList());
+
+		$e = new entities\reference\links\measureTypeLinks();
+		$this->main->addLink($e->contextList());
+		
+		$e = new entities\reference\links\projectTypeLinks();
+		$this->main->addLink($e->contextList());
+				
+		$e = new entities\reference\links\taskTypeLinks();
+		$this->main->addLink($e->contextList());
+				
+		$e = new entities\reference\links\activityTypeLinks();
+		$this->main->addLink($e->contextList());
+				
+		$e = new entities\reference\links\materialTypeLinks();
+		$this->main->addLink($e->contextList());
+
+		$e = new entities\reference\links\receiptTypeLinks();
+		$this->main->addLink($e->contextList());
+
+		//if ($_SESSION['is-admin'] == 'yes'){
+			$e = new system\links\userLinks();
+			$this->main->addLink($e->contextList());
+
+			$e = new system\links\userTypeLinks();
+			$this->main->addLink($e->contextList());
+
+			$e = new system\links\siteSettingsLinks();
+			$this->main->addLink($e->contextList());
+
+		//}
+		
+		$this->main->addLink($this->main->calendars());
 		return $this->main->print();
 	}
 

@@ -7,7 +7,7 @@ class measureLinks extends \application\links\entityLinks {
 		parent::__construct($context);
 	}
 	public function setRequest(){
-		$this->request = new measureRequest($this->entityContext,$this->portalPage);
+		$this->request = new measureRequest($this->entityContext,$this->pagePortal);
 	}
 	
 	

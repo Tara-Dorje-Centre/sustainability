@@ -6,29 +6,34 @@ abstract class entityLinks implements IentityLinks {
 	public $menu;
 	public $request;
 	public $entityContext = 'entity';
-	protected $pagePortal = 'portal.php';
+	public $pagePortal = 'portal.php';
 	
 	public function __construct(string $entity = 'undefined',string $menuName = 'section-heading'){
 		$this->menu = new linkMenu($menuName,'LIST','menu');
 		$this->setEntityContext($entity);
 	}
+	
+	public function formatToggleLink($l,$c){
+	
+	}
+	
 	public function setEntityContext(string $entity){
 		$this->entityContext = $entity;
 		$this->setRequest();
 	}
-	/*public function print(){
+	public function print(){
 		return $this->menu->print();
-	}*/
+	}
 	protected function setRequest(){
-		$this->request = new entityRequest($this->entityContext,$this->portalPage);
+		$this->request = new entityRequest($this->entityContext,$this->pagePortal);
 	}
 
-	public function listingLinks($mode,$id,$idParent,$idType){
+	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
 		$this->menu->addLink($this->list('List',0,$idParent,0));
 		$this->menu->addLink($this->list('ListChildren',$id,0,0));
 		$this->menu->addLink($this->list('listType',0,0,$idType));
 	}
-	public function editingLinks($mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
+	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		switch ($mode){
 			case 'VIEW':
 				$this->menu->addLink($this->list('List',0,0,0));
@@ -54,27 +59,27 @@ abstract class entityLinks implements IentityLinks {
 	}
 	
 	
-	public function detail(string $caption, $action, $id,$idParent=0,$idType=0){
+	public function detail(string $caption,string $action, $id = 0, $idParent=0, $idType=0){
 		$url = $this->request->getUrlEntityDetail($action,$id,$idParent,$idType);
 		$l = $this->menu->getLink($url,$caption);
 		return $l;	
 	}	
-	public function list(string $caption, $id,$idParent=0,$idType=0){
+	public function list(string $caption, $id = 0, $idParent=0, $idType=0){
 		$url = $this->request->getUrlEntityList($id,$idParent,$idType);
 		$l = $this->menu->getLink($url,$caption);
 		return $l;	
 	}
 	
-	public function add($caption = 'New', $idParent){
+	public function add(string $caption = 'New', $idParent = 0){
 		return $this->detail($caption,'ADD',0,$idParent);
 	}
-	public function view($caption = 'View', $id){
+	public function view(string $caption = 'View', $id = 0){
 		return $this->detail($caption,'VIEW',$id);
 	}
-	public function edit($caption = 'Edit', $id){
+	public function edit(string $caption = 'Edit', $id = 0){
 		return $this->detail($caption,'EDIT',$id);
 	}
-	public function copy($caption = 'Copy', $id){
+	public function copy(string $caption = 'Copy', $id = 0){
 		return $this->detail($caption,'COPY',$id);
 	}
 	
@@ -83,7 +88,7 @@ abstract class entityLinks implements IentityLinks {
 		return $this->list($this->entityContext,0,0);
 	}
 	
-	public function viewEdit($caption, $id,$editCaption='[#]'){
+	public function viewEdit(string $caption, $id = 0,string $editCaption='[#]'){
 		$d = new \html\_div('list-link','list-item-link');
 		$lView = $this->view($caption,$id);
 		$lEdit = $this->edit($editCaption,$id);
@@ -92,7 +97,7 @@ abstract class entityLinks implements IentityLinks {
 		return $d->print();
 	}	
 	
-	public function pagedListing($count, $page, $rows, $id=0, $idParent = 0, $idType = 0){
+	public function pagedListing($count, $page, $rows = 0, $id=0, $idParent = 0, $idType = 0){
 		$p = new linkMenuPaged($rows,'resultsPage');
 
 		$url = $this->request->getUrlEntityList($id,$idParent,$idType);

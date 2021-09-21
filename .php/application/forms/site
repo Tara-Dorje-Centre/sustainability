@@ -69,9 +69,11 @@ implements Isite{
 			
 			$a = new \application\entities\projects\links\activityLinks();
 			
-			if ($this->settings->f->showPublicSite->value == 'yes'){
+			if ($this->settings->f->showPublicSite->value() == 'yes'){
 				$m->addLink($m->library());
 			}
+		
+		$m->addLink($m->modules());
 		
 		if (isset($_SESSION['currentView'])){
 		switch($_SESSION['currentView']){
@@ -142,6 +144,7 @@ return $content;
 	
 	protected function getNoticeTiming(){
 		global $sessionTime, $sessionTimeZone;
+		$timezone = '';
 		$timing = 'Request Time: '.$sessionTime.'(UTC'.$sessionTimeZone.')';
 		$t = new \html\_div('display-request-time');
 		$t->setContent($timing);

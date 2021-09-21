@@ -18,12 +18,12 @@ abstract class entityFields extends fields{
     	
     	
 		
-    	$this->id = new _id('id','id','Id');
+    	$this->id = new _id('id','id','not-used');
     	$this->name = new _name('name','name','Name');
-    	$this->description = new _description('description','description','Description');
-		$this->updated = new _date('updated','updated','Updated');
-    	$this->created = new _date('created','created','Created');
-        $this->highlight = new _cssHighlight('highlight_style','highlight','Highlight');
+    	$this->description = new _description('description','description','not-used');
+		$this->updated = new _date('updated','updated','not-used');
+    	$this->created = new _date('created','created','not-used');
+        $this->highlight = new _cssHighlight('highlight_style','highlight','not-used');
         
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);

@@ -3,17 +3,17 @@ namespace application\links;
 
 interface IentityLinks{
 	
-	public function listingLinks($mode = 'LIST',$id,$idParent,$idType);
-	public function editingLinks($mode = 'VIEW', $id,$idParent,$idType);
-	public function detail(string $caption, $action, $id,$idParent,$idType);
-	public function list(string $caption,$id,$idParent,$idType);
-	public function add($caption = 'New', $idParent);
-	public function view($caption = 'View', $id);
-	public function edit($caption = 'Edit', $id);
-	public function copy($caption = 'Copy', $id);
+	public function listingLinks(string $mode = 'LIST', $id = 0, $idParent = 0, $idType = 0);
+	public function editingLinks(string $mode = 'VIEW', $id = 0, $idParent = 0, $idType = 0);
+	public function detail(string $caption,string $action, $id = 0, $idParent = 0, $idType = 0);
+	public function list(string $caption,$id = 0,$idParent = 0,$idType = 0);
+	public function add(string $caption = 'New', $idParent = 0);
+	public function view(string $caption = 'View', $id = 0);
+	public function edit(string $caption = 'Edit', $id = 0);
+	public function copy(string $caption = 'Copy', $id = 0);
 	public function contextList();
-	public function viewEdit($caption, $id,$editCaption='[#]');
-	public function pagedListing($count, $page, $rows, $idParent, $idType);
+	public function viewEdit(string $caption, $id = 0,string $editCaption='[#]');
+	public function pagedListing($count, $page, $rows = 0, $idParent = 0, $idType = 0);
 	
 }
 

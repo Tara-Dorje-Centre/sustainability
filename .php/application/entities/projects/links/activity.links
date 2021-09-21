@@ -9,7 +9,7 @@ class activityLinks extends \application\links\entityLinks {
 		parent::__construct($context);
 	}
 	public function setRequest(){
-		$this->request = new activityRequest($this->entityContext,$this->portalPage);
+		$this->request = new activityRequest($this->entityContext,$this->pagePortal);
 	}
 	
 	public function urlActivityList($idParent, $idType, $showCalendar, $myActivity, $idTask,$idProject){
@@ -19,7 +19,7 @@ class activityLinks extends \application\links\entityLinks {
 		return $url;
 	}
 	
-	public function urlActivityDetail($action = 'VIEW', $id, $idParent,$showCalendar,$myActivity,$idTask,$idProject){
+	public function urlActivityDetail($action, $id, $idParent,$showCalendar,$myActivity,$idTask,$idProject){
 
 		$url = parent::urlDetail($action,$id,$idParent);
 		$this->setActivityParametersDetail($url, $showCalendar, $myActivity, $idTask,$idProject);

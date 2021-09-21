@@ -76,7 +76,7 @@ if ($taskStatus == 'CLOSED'){
 return $q;
 }
 
-public function listPeriodic($complete = 'NO',$resultPage,$rowsPerPage){
+public function listPeriodic($complete = 'NO',$page = 0,$rows = 0){
 	
 	$q = $this->cols();
 	$q .= $this->tables(true);
@@ -84,7 +84,8 @@ public function listPeriodic($complete = 'NO',$resultPage,$rowsPerPage){
 	$q .= $this->periodicTasksSubquery($complete);
 	$q .= " ORDER BY ";
 	$q .= " project_type, project_name, t.task_order ";
-	$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	//$q .= sqlLimitClause($resultPage, $rowsPerPage);
+	$q .= $this->limit($page, $rows);
 	return $q;
 }
 public function countPeriodic($complete = 'NO'){

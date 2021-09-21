@@ -120,10 +120,20 @@ public function __construct(){
 		return $this->getScalar($sql, $field);
 	}
 	public function limit($page, $perPage){
-	$limitSQL = " LIMIT ";
-	$limitOffset = ($page - 1) * $perPage;
-	$limitSQL .= $limitOffset.", ".$perPage;
-	return $limitSQL;	
-}
+		$limitSQL = '';
+		if (is_null($perPage)){
+	    	$perPage = 0;
+		}
+	
+	
+	
+		if ($perPage > 0){
+	     	$limitSQL = " LIMIT ";
+	     	$limitOffset = ($page - 1) * $perPage;
+	     	$limitSQL .= $limitOffset.", ".$perPage;
+		}
+	
+		return $limitSQL;	
+	}
 }
 ?>

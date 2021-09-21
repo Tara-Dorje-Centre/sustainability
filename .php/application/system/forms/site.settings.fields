@@ -1,7 +1,7 @@
 <?php
 namespace application\system\forms;
 
-class siteSettingsFields extends \application\forms\fields{
+class siteSettingsFields extends \application\forms\entityChildFields{
 	 public $siteTitle;
 	 public $siteUrl;
 	 public $loginNotice;
@@ -80,6 +80,16 @@ class siteSettingsFields extends \application\forms\fields{
 	$this->_register('publicFontSizeMenu', $this->publicFontSizeMenu);
 	$this->_register('publicFontSizeText', $this->publicFontSizeText);
 		
+		//disable inherited entity fields
+		$this->id->enabled(false);
+		$this->name->enabled(false);
+		$this->description->enabled(false);
+		$this->created->enabled(false);
+		$this->updated->enabled(false);
+		$this->highlight->enabled(false);
+		
+		$this->parentEntity->enabled(false);
+		$this->type->enabled(false);
 	}
 	public function getRequestArguments(){
 

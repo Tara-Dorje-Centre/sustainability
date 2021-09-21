@@ -9,7 +9,7 @@ class projectLinks extends \application\links\entityLinks {
 		parent::__construct($context);
 	}
 	public function setRequest(){
-		$this->request = new projectRequest($this->entityContext,$this->portalPage);
+		$this->request = new projectRequest($this->entityContext,$this->pagePortal);
 	}
 	
 	public function allProjects($showClosed = false){
@@ -24,7 +24,7 @@ class projectLinks extends \application\links\entityLinks {
 		
 		$myProjects = 'NO';
 		
-		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
+		$u = $this->request->getUrlProjectList('LIST',0,0,0,$status, $myProjects);
 
 		return $this->menu->getLink($u,$caption);
 	}
@@ -40,7 +40,7 @@ class projectLinks extends \application\links\entityLinks {
 		
 		$myProjects = 'YES';
 			
-		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
+		$u = $this->request->getUrlProjectList('LIST',0,0,0,$status, $myProjects);
 	
 
 		return $this->menu->getLink($u,$caption);

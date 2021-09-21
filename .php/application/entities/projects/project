@@ -43,7 +43,11 @@ class project extends \application\entity{
 			$s = new ReceiptSQL;
 			$sql = $s->summaryProjectReceiptype($this->id, 'yes');
 			
-			$result = dbGetResult($sql);
+			global $conn;
+			$result = $conn->getResult($sql);
+			
+			
+			//$result = dbGetResult($sql);
 			if($result){
 		  	while ($row = $result->fetch_assoc())
 			{	
@@ -82,6 +86,8 @@ class project extends \application\entity{
 	
 	
 	protected function makePageMenu(){
+	
+	/*
 		$menuType = 'LIST';
 		$menuStyle = 'menu';
 		
@@ -121,6 +127,7 @@ class project extends \application\entity{
 		}
 		$menu .= $this->links->closeMenu();
 		$this->_pageMenu = $menu;
+	*/
 	}
 	
 	
@@ -182,6 +189,11 @@ class project extends \application\entity{
 	
 
 	public function editForm(){
+
+		$this->edit = new \application\forms\inputForm($this->links->pagePortal, $this->entityTitle, $this->pageMode, $this->entity, true);
+	
+	
+	/*
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
@@ -212,6 +224,9 @@ class project extends \application\entity{
 		$this->edit->submit->addContent(getSaveChangesResetButtons());
 
 		return $this->edit->close();
+		*/
+		
+		return $this->edit->print();
 	}
 
     public function UpdateTaskSummary(){

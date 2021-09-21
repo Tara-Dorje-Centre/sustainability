@@ -8,7 +8,7 @@ class receiptLinks extends \application\links\entityLinks {
 		parent::__construct($context);
 	}
 	public function setRequest(){
-		$this->request = new receiptRequest($this->entityContext,$this->portalPage);
+		$this->request = new receiptRequest($this->entityContext,$this->pagePortal);
 	}
 	
 	public function linkProjectReceipts($projectId){

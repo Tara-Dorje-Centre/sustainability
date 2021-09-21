@@ -60,7 +60,8 @@ $q .= $this->tables();
 $q .= $this->whereStatus($status);
 
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
-$q .= sqlLimitClause($page, $rows);
+//$q .= sqlLimitClause($page, $rows);
+$q .= $this->limit($page, $rows);
 return $q;
 }
 
@@ -81,7 +82,8 @@ $q .= $this->whereStatus($status);
 $q .= " AND p.id IN ";
 $q .= $this->subqueryActivityDoneBy($doneBy);
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
-$q .= sqlLimitClause($page, $rows);
+//$q .= sqlLimitClause($page, $rows);
+$q .= $this->limit($page, $rows);
 return $q;
 }
 

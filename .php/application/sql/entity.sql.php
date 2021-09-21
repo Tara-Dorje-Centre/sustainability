@@ -79,6 +79,7 @@ use connectionFunctions;
 	}
 
 	protected function whereYearMonth($year = 0, $month = 0, $first = false){
+		$w = '';
 		if ($year > 0){
 			$w = $this->where($first);
 			$f = $this->dateYear($this->fieldDate);
@@ -94,20 +95,20 @@ use connectionFunctions;
 	}
 
 	protected function whereApproved($approved = 'no', $first = false){
+		$w = '';
 		if ($approved == 'yes'){
-		$w = $this->whereString($approved, $this->fieldApproved, true, $first);
-	}
-	return $w;
+			$w = $this->whereString($approved, $this->fieldApproved, true, $first);
+		}
+		return $w;
 	}
 
 	protected function whereDoneBy($doneBy = 'EVERYONE', $first = false){
-		if ($doneBy != 'EVERYONE'){
-		$w = $this->whereString($doneBy, $this->fieldDoneBy, true, $first);
-		$w .= " AND show_always != 'no' ";
-	} else {
 		$w = '';
-	}
-	return $w;
+		if ($doneBy != 'EVERYONE'){
+			$w = $this->whereString($doneBy, $this->fieldDoneBy, true, $first);
+			$w .= " AND show_always != 'no' ";
+		}
+		return $w;
 	}
 
 	protected function whereId($id, $first = true){
@@ -123,10 +124,10 @@ use connectionFunctions;
 	}
 
 	public function countDoneBy($doneBy = 'EVERYONE'){
-	$q = $this->colsCount();
-	$q .= $this->tables(false);
-	$q .= $this->whereDoneBy($doneBy, true);
-	return $q;
+		$q = $this->colsCount();
+		$q .= $this->tables(false);
+		$q .= $this->whereDoneBy($doneBy, true);
+		return $q;
 	}
 
 
@@ -140,7 +141,7 @@ use connectionFunctions;
 	public function list($page = 1, $rows = 10){
 		$q = $this->cols();
 		$q .= $this->tables();
-		$q .= sqlLimitClause($page, $rows);
+		$q .= $this->limit($page, $rows);
 		return $q;
 	}
 
@@ -148,7 +149,7 @@ use connectionFunctions;
 		$q = $this->cols();
 		$q .= $this->tables();
 		$q .= $this->whereDoneBy($doneBy, true);
-		$q .= sqlLimitClause($page, $rows);
+		$q .= $this->limit($page, $rows);
 		return $q;
 	}
 
@@ -168,12 +169,11 @@ use connectionFunctions;
 	} 
 
 	public function calendarLinksDoneBy($doneBy = 'EVERYONE'){
-	$q = $this->colsCalendarLinks();
-	$q .= $this->tables(false);
-	$q .= $this->whereDoneBy($doneBy);
-	$q .= $this->groupByCalendarLinks();
-	
-	return $q;
+		$q = $this->colsCalendarLinks();
+		$q .= $this->tables(false);
+		$q .= $this->whereDoneBy($doneBy);
+		$q .= $this->groupByCalendarLinks();
+		return $q;
 	}
 
 	public function options(){

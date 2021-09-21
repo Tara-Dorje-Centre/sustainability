@@ -45,14 +45,14 @@ class hiddenNumberField extends _hiddenNumber{
 }
 
 class requestVariableNumber extends _hiddenText{
-	public function __construct(string $envVar = 'post-var',$value){
+	public function __construct(string $envVar = 'post-var',$value = 0){
 		parent::__construct('not_used',$envVar,'no-caption');
 		$this->set($value);
 	}
 }
 
 class requestVariable extends _hiddenText{
-	public function __construct(string $envVar = 'post-var',$value){
+	public function __construct(string $envVar = 'post-var',$value = ''){
 		parent::__construct('not_used',$envVar,'no-caption');
 		$this->set($value);
 	}

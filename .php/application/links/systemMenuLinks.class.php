@@ -64,8 +64,6 @@ class systemMenuLinks extends linkMenu {
 		return $this->detailLink('CALENDAR', $caption,$year,$month);
 	}
 	public function getPageMenu(){
-		
-		
 		$this->addLink($this->modules());
 		$this->addLink($this->reference());
 		$this->addLink($this->myLinks());

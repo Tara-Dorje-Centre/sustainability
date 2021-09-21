@@ -3,7 +3,7 @@ namespace html\inputs;
 
 class selectYesNo extends _select{
 	
-	public function __construct($name, $value = 'no', $caption, $onchangeJS = null){
+	public function __construct($name = '', $value = 'no', $caption = '', $onchangeJS = null){
 		parent::__construct($name,$value, $caption,$onChangeJS);
 		$this->makeOptions();
 	}

@@ -4,9 +4,9 @@ namespace framework;
 interface Iecho{
 public function setEchoState(bool $enabled = false);
 public function echoLocale(string $f = '-use-current');
-public function echoValue(bool $show = true, string $n, $v, string $f = '-use-current-');
-public function echoPrint(bool $show = true, string $msg, string $f = '-use-current-');
-public function echoPrintline(string $msg);
+public function echoValue(bool $show = true, string $n = 'name', $v = 'value', string $f = '-use-current-');
+public function echoPrint(bool $show = true, string $msg = 'message', string $f = '-use-current-');
+public function echoPrintline(string $msg = 'message');
 }
 
 class _echo implements Iecho{
@@ -28,7 +28,7 @@ public function echoLocale(string $f = '-use-current-'){
 		$this->_myFunctionName = $f;
 	}
 }
-protected function echoVN($v, string $n = '-not-set-'){
+protected function echoVN($v = 'value', string $n = '-not-set-'){
 	if ($n != '-not-set-'){
 		return $n.'=['.$v.']';
 	} else {
@@ -39,20 +39,20 @@ protected function echoCF(){
 		return $this->_myClassName.'.'.$this->_myFunctionName.':';
 }
 
-public function echoValue(bool $show = true, string $n, $v, string $f = '-use-current-'){
+public function echoValue(bool $show = true, string $n = 'name', $v = 'value', string $f = '-use-current-'){
 	$this->echoLocale($f);
 	if ($show == true){
 		$this->echoPrintline($this->echoCF().$this->echoVN($v, $n));
 	}
 }
 
-public function echoPrint(bool $show = true,string $msg, string $f = '-use-current-'){
+public function echoPrint(bool $show = true,string $msg = 'message', string $f = '-use-current-'){
 	$this->echoLocale($f);
 	if ($show == true){
 		$this->echoPrintline($this->echoCF().$this->echoVN($msg));
 	}
 }
-public function echoPrintline(string$msg){
+public function echoPrintline(string$msg = 'message'){
 	
 	if ($this->echoEnabled == true){
 		echo $msg.'<br />'.PHP_EOL;

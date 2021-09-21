@@ -17,25 +17,17 @@ class _idName implements Ifield{
 		$this->enabled(true);
 	}
 	public function enabled(bool $use = false){
-		if ($use == true){
- 	//public function setEnabled( $fetch,  $show,  $list,  $post, $input ){
-			$this->name->setEnabled(true,true,true,false,false);
-			$this->id->setEnabled(true,false,false,true,true);
-		
-		} else {
-			$this->name->enabled($use);
-			$this->id->enabled($use);
-		}
+		$this->name->enabled($use);
+		$this->id->enabled($use);
 	}
  	public function setEnabled(
  		bool $fetch = false, 
  		bool $show = false, 
  		bool $list = false, 
- 		bool $post = false,
- 		bool $input = false)
+ 		bool $post = false)
  	{
-		$this->id->setEnabled($fetch,false,false,$post,$input);
-		$this->name->setEnabled($fetch,$show,$list,false,false);
+		$this->id->setEnabled($fetch,false,false,$post);
+		$this->name->setEnabled($fetch,$show,$list,false);
 	}
 	public function fetchEnabled(bool $use = false){
  		$this->id->fetchEnabled($use);
@@ -53,10 +45,7 @@ class _idName implements Ifield{
  		$this->id->listEnabled(false);
  		$this->name->listEnabled($use);
  	}
-	public function inputEnabled(bool $use = false){
- 		$this->id->inputEnabled($use);
- 		$this->name->inputEnabled(false);
- 	}
+	
  	public function setCaption(string $caption = 'no caption'){
  		$this->name->setCaption($caption);
  	}

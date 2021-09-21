@@ -5,12 +5,12 @@ class displayList extends displayDetails{
 	public $_list;
 	protected $links;
 	public function __construct(string $entity = 'entity',string $links = 'links',string $legend = 'legend',string $quickEdit = 'none',string $contextMenu = 'none'){
-	parent::__construct($entity,'list',$legend,$quickEdit,$contextMenu);
-	$this->links = $links;
-	$this->_list = new \html\_table($this->entity.'displayListTable', 'displayListTable');
+	     parent::__construct($entity,'list',$legend,$quickEdit,$contextMenu);
+	     $this->links = $links;
+	     $this->_list = new _table($this->entity.'displayListTable', 'displayListTable');
 
 	}
-	public function addRow(\html\_tr $tr){
+	public function addRow(_tr &$tr){
 		$this->_list->addRow($tr);
 	}
 	

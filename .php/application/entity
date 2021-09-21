@@ -53,8 +53,10 @@ abstract class entity extends baseEntity{
 	public function setDetails(){
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
-			global $conn;
-			$result = $conn->getResult($sql);
+			//global $conn;
+			//$result = $conn->getResult($sql);
+			$result = $this->sql->getResult($sql);
+			
 			if($result){
 				while ($row = $result->fetch_assoc())
 				{	
@@ -81,10 +83,10 @@ abstract class entity extends baseEntity{
 		return $f->setSelect($s);
 	}
 	
-	 public function listHeading(){
+	 public function listHeading(): \html\_tr{
 		$tr = new \html\_tr('table-headings');
 
-		$tr->makeHeading($this->entityTitle);
+		$tr->makeHeading('table-heading',$this->entityTitle);
 
 		$tr->addContent($this->f->listCaption());
 		return $tr;
@@ -94,8 +96,8 @@ abstract class entity extends baseEntity{
 		return $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
 	}
 	
-	 protected function listRowFormat(){
-		$tr = new \html\_tr('data-row',$this->f->highlight->value());
+	protected function listRowFormat(){
+		$tr = new \html\_tr($this->f->highlight->value());
 
 		$tr->makeData($this->listRowLink());
 		$tr->addContent($this->f->listDetail());		
@@ -129,7 +131,13 @@ abstract class entity extends baseEntity{
 		if (!is_null($this->f->parentEntity)){
 			$this->f->parentEntity->set($idParent);
 		}
-		return $this->editForm();
+		
+		$edit = $this->editForm();
+		if (is_null($edit)){
+		     $edit = '';
+		}
+		//return $this->editForm();
+		return $edit;
 	}
 
 	 public function collectPostValues(){

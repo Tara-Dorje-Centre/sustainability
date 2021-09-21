@@ -57,8 +57,15 @@ implements IbaseEntity{
 		$this->echoState_paging(true, 'setPaging');
 	 }
 	 public function getRequestPaging(){
-		$page = $_GET['resultPage'];
-		$rows = $_GET['perPage'];
+	 	$page = 1;
+	 	$rows = 10;
+	 	if (isset($_SESSION['resultPage'])){
+			$page = $_GET["resultPage"];
+		}
+		if (isset($_SESSION['perPage'])){
+			$rows = $_GET["perPage"];
+		}
+		
 		$this->setPaging($page,$rows);
 	}
 	
@@ -81,9 +88,19 @@ implements IbaseEntity{
 		$this->echoState_calendar(true, 'setCalendar');
 	}
 	protected function getRequestCalendar(){
-		$year = $_GET['year'];
-		$month = $_GET['month'];
-		$show = $_GET['showCalendar'];
+		$year = -1;
+		$month = -1;
+		$show = 'NO';
+		if (isset($_SESSION['year'])){
+			$year = $_GET['year'];
+		}
+		if (isset($_SESSION['month'])){
+			$month = $_GET['month'];
+		}
+		if (isset($_SESSION['showCalendar'])){
+			$show = $_GET['showCalendar'];
+		}
+		
 		$this->setCalendar($year,$month,$show);
 	}
 	

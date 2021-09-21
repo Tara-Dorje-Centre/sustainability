@@ -13,17 +13,20 @@ interface Ifield{
 	public function setEnvironment(string $env= 'POST');
  	public function setEnvironmentVariable(string $var = 'not-used');
  	public function setFetchColumn(string $dbCol = 'not_used');
+ 	public function enabled(bool $use = false);
  	public function setEnabled(
  		bool $fetch = false, 
  		bool $display = false, 
  		bool $list = false, 
- 		bool $env = false,
- 		bool $input = false);
+ 		bool $env = false
+ 		//,
+ 		//bool $input = false
+ 		);
 	public function fetchEnabled(bool $use = false);
 	public function envEnabled(bool $use = false);
 	public function displayEnabled(bool $use = false);
 	public function listEnabled(bool $use = false);
-	public function inputEnabled(bool $use = false);
+	//public function inputEnabled(bool $use = false);
  	public function set($value);
  	public function setDefault($value);
  	public function reset(bool $useDefault = false);
@@ -45,8 +48,8 @@ interface Ifield{
  implements Ifield{
  	public $env;
  	protected $_default = NULL;
- 	protected $_dbCol = 'not_used';
- 	protected $_caption = 'no caption';
+ 	protected $_dbCol = 'not-used';
+ 	protected $_caption = 'not-used';
  	protected  $_dataType = 'TEXT';
  	protected 	$_raw = NULL;
  	protected  $_number = 0;
@@ -57,18 +60,33 @@ interface Ifield{
  	protected  $_envEnabled = false;
  	protected  $_listEnabled = false;
  	protected  $_displayEnabled = false;
-  	protected  $_inputEnabled = false;
+  	//protected  $_inputEnabled = true;
   	protected $_validation = '';
 	protected $_tooltip = '';
  	public function __construct(
- 		string $dbCol = 'not_used', 
+ 		string $dbCol = 'not-used', 
  		string $envVar = 'not-used', 
- 		string $caption = 'no caption')
+ 		string $caption = 'not-used')
  	{
  		$this->env = new _environmentVariable($envVar,'POST');
  		$this->setFetchColumn($dbCol);
  		$this->setCaption($caption);
- 		$this->enabled(true);
+ 		$this->enabled(false);
+ 		if ($dbCol != 'not-used'){
+ 			$this->fetchEnabled(true);
+ 			//$this->inputEnabled(true);
+ 		}
+ 		
+ 		if ($envVar != 'not-used'){
+ 			$this->envEnabled(true);
+ 		}
+ 		
+ 		if ($caption != 'not-used' OR $caption == 'hidden'){
+ 			$this->displayEnabled(true);
+ 			$this->listEnabled(true);
+ 			//$this->inputEnabled(true);
+ 		}
+ 		
  	}
  	public function echoFieldState(){
 	
@@ -102,17 +120,19 @@ interface Ifield{
  		bool $fetch = false, 
  		bool $display = false, 
  		bool $list = false, 
- 		bool $env = false,
- 		bool $input = false)
+ 		bool $env = false
+ 		//,
+ 		//bool $input = false
+ 		)
  	{
  		$this->fetchEnabled($fetch);
  		$this->displayEnabled($display);
  		$this->listEnabled($list);
  		$this->envEnabled($env);
- 		$this->inputEnabled($input);
+ 		//$this->inputEnabled($input);
  	}
  	public function enabled(bool $use = false){
- 		$this->setEnabled($use,$use,$use,$use,$use);
+ 		$this->setEnabled($use,$use,$use,$use);
  	}
 	public function fetchEnabled(bool $use = false){
  		$this->_fetchEnabled = $use;
@@ -126,9 +146,9 @@ interface Ifield{
 	public function listEnabled(bool $use = false){
  		$this->_listEnabled = $use;
  	}
-	public function inputEnabled(bool $use = false){
- 		$this->_inputEnabled = $use;
- 	}
+	//public function inputEnabled(bool $use = false){
+ 		//$this->_inputEnabled = $use;
+ 	//}
 	public function set($value){
 		$this->_raw = $value;
 		switch ($this->_datatype) {
@@ -412,9 +432,9 @@ interface Ifield{
 		$this->_datatype = 'TEXT';
 	}
 	public function input( ){
-		if ($this->_inputEnabled){
+		//if ($this->_inputEnabled){
 			return $this->inputFreeText();
-		}
+		//}
 	}
 	
 	protected function inputFreeText( ){

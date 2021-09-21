@@ -51,7 +51,8 @@ class linkMenu extends \framework\_echo{
 
 	}
 	public function makeLink(url &$u,string $caption){
-		$l = $this->getLink($u,$caption,$this->cssItem);
+		//$css passed uses $cssMenuItem...should use menu or list item
+		$l = $this->getLink($u,$caption,$this->cssMenuItem);
 		$this->addLink($l);
 	}
 	

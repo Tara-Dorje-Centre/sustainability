@@ -11,9 +11,11 @@ class portalRequest extends \framework\_echo{
 		$this->entity = new forms\_text('not-used','context');
 		$this->scope = new forms\_text('not-used','scope');
 
+		$this->entity->envEnabled(true);
+		$this->scope->envEnabled(true);
+
 		$this->entity->env->setEnvironment('GET');
 		$this->scope->env->setEnvironment('GET');
-
 
 		//$this->entity->setDefault('system-menu');
 		//$this->scope->setDefault('view');

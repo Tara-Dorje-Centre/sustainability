@@ -99,7 +99,7 @@ return $q;
 
 
 
-public function calendarSummaryProject($id = 0, $year, $month){
+public function calendarSummaryProject($id = 0, $year = 0, $month = 0){
 //show daily tally by task and person
 $q = "SELECT  ";
 $q .= " SUM(a.hours_actual) sum_hours, ";

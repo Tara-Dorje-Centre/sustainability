@@ -7,7 +7,7 @@ class materialLinks extends \application\links\entityLinks {
 		parent::__construct($context);
 	}
 	public function setRequest(){
-		$this->request = new materialRequest($this->entityContext,$this->portalPage);
+		$this->request = new materialRequest($this->entityContext,$this->pagePortal);
 	}
 	
 	

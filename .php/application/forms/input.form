@@ -1,6 +1,8 @@
 <?php 
 namespace application\forms;
 
+
+
 class inputForm {
 	protected $_form;
 	protected $_fields;
@@ -101,5 +103,10 @@ class inputForm {
 	}
 
 }
+
+class _inputForm extends inputForm{
+
+}
+
 
 ?>

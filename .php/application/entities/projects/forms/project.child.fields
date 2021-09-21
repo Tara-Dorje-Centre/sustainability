@@ -8,23 +8,23 @@ extends \application\forms\entityChildFields{
 	public $projectType;
 	public $location;
 	public $started;
-	public $approved;
-	public $approvedBy;
+	//public $approved;
+	//public $approvedBy;
 	
     public function __construct(){
     	parent::__construct();
     	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
     	$this->projectType = new \application\forms\_idName('project_type','project-type','Project Type','project_type_name');
     	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
-    	$this->started = new \application\forms\_date('started','started','Started');           
-    	$this->approved = new \application\forms\_yesNo('approved','approved','Approved');
-    	$this->approvedBy = new \application\forms\_user('approved_by','approved-by','Approved By');
+    	$this->started = new \application\forms\_date('started','started','not-used');           
+    	$this->approved = new \application\forms\_yesNo('approved','approved','not-used');
+    	$this->approvedBy = new \application\forms\_user('approved_by','approved-by','not-used');
   		$this->_register('project', $this->project);
  		$this->_register('projectType', $this->projectType);
 		$this->_register('location', $this->location);
 		$this->_register('started', $this->started);
-		$this->_register('approved', $this->approved);
-		$this->_register('approvedBy', $this->approvedBy);
+		//$this->_register('approved', $this->approved);
+		//$this->_register('approvedBy', $this->approvedBy);
 
     }
 	public function setDefaults(){
@@ -32,8 +32,8 @@ extends \application\forms\entityChildFields{
     	//$this->parentProject->setDefault(0);
     	$this->location->setDefault(0);
     	$this->started->setDefault($this->_currentTimestamp);
-    	$this->approved->setDefault('no');
-    	$this->approvedBy->setDefault($this->_currentUser);
+    	//$this->approved->setDefault('no');
+    	//$this->approvedBy->setDefault($this->_currentUser);
     	
     }
     
