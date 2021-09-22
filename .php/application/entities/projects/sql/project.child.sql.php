@@ -53,7 +53,7 @@ return $q;
 public function summaryProject($id = 0,$year= 0, $month = 0, $approved = 'no'){
 $q = $this->colsSummary();
 $q .= $this->tables(false);
-$q .= $this->whereProject($id, year, $month, $approved);
+$q .= $this->whereProject($id, $year, $month, $approved);
 return $q;
 }
 

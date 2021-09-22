@@ -24,7 +24,7 @@ abstract class entityRequest extends request {
 		return $url;
 	}
 	
-	public function getUrlEntityList($id,$idParent,$idType){
+	public function getUrlEntityList($action,$id,$idParent,$idType){
 		$url = $this->getUrlList($this->basePage,$this->entityContext);
 		$this->setUrlParametersEntity($url,'LIST',$id,$idParent,$idType);
 		return $url;

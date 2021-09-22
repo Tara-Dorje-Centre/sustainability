@@ -13,7 +13,7 @@ interface IentityLinks{
 	public function copy(string $caption = 'Copy', $id = 0);
 	public function contextList();
 	public function viewEdit(string $caption, $id = 0,string $editCaption='[#]');
-	public function pagedListing($count, $page, $rows = 0, $idParent = 0, $idType = 0);
+	public function pagedListing($count, $page, $rows = 10, $idParent = 0, $idType = 0);
 	
 }
 

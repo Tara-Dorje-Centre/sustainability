@@ -6,7 +6,7 @@ class _selectOption extends \html\_element{
 	protected $display;
 	public function __construct($value,string $display,bool $selected = false){
 		parent::__construct('option');
-		$this->value = value;
+		$this->value = $value;
 		$this->makeAttribute('value',$this->value);
 		$this->setContent($display);
 		$this->setSelected($selected);

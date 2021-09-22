@@ -12,22 +12,33 @@ abstract class entityLinks implements IentityLinks {
 		$this->menu = new linkMenu($menuName,'LIST','menu');
 		$this->setEntityContext($entity);
 	}
-	
+	/*
 	public function formatToggleLink($l,$c){
 	
 	}
-	
+	*/
 	public function setEntityContext(string $entity){
 		$this->entityContext = $entity;
 		$this->setRequest();
 	}
-	public function print(){
-		return $this->menu->print();
-	}
+	
 	protected function setRequest(){
 		$this->request = new entityRequest($this->entityContext,$this->pagePortal);
 	}
-
+	
+	public function print(){
+		return $this->menu->print();
+	}
+	
+	public function addLink(link $l){
+		$this->menu->addLink($l);
+	}
+	
+	public function getLink(url $url, $caption){
+		$l = $this->menu->getLink($url,$caption);
+		return $l;	
+	}
+	
 	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
 		$this->menu->addLink($this->list('List',0,$idParent,0));
 		$this->menu->addLink($this->list('ListChildren',$id,0,0));
@@ -65,7 +76,7 @@ abstract class entityLinks implements IentityLinks {
 		return $l;	
 	}	
 	public function list(string $caption, $id = 0, $idParent=0, $idType=0){
-		$url = $this->request->getUrlEntityList($id,$idParent,$idType);
+		$url = $this->request->getUrlEntityList('LIST',$id,$idParent,$idType);
 		$l = $this->menu->getLink($url,$caption);
 		return $l;	
 	}
@@ -100,7 +111,7 @@ abstract class entityLinks implements IentityLinks {
 	public function pagedListing($count, $page, $rows = 0, $id=0, $idParent = 0, $idType = 0){
 		$p = new linkMenuPaged($rows,'resultsPage');
 
-		$url = $this->request->getUrlEntityList($id,$idParent,$idType);
+		$url = $this->request->getUrlEntityList('LIST',$id,$idParent,$idType);
 		return $p->makePagedLinks($url, $count,$page);
 	}
 		

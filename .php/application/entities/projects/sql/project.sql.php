@@ -73,7 +73,7 @@ $q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";
 
 return $q;
 }
-public function listActivityDoneBy($doneBy, $status, $page, $rows){
+public function listByActivityDoneBy($doneBy, $status, $page, $rows){
 
 $q = $this->cols();
 $q .= $this->tables();

@@ -28,8 +28,8 @@ abstract class entityType extends entity{
 		/*$this->f->defaults();*/
 		
 		$s = $this->sql->count();
-		//global $conn;
-		$next = $this->getCount($s, 'count_details');
+		global $conn;
+		$next = $conn->getCount($s, 'count_details');
 		$next += 1;
 		$this->echoValue(true,'next',$next,'setdefaults');
 		$this->f->displayOrder->set($next);
@@ -38,8 +38,6 @@ abstract class entityType extends entity{
 	}
 	protected function editForm(){
 		$this->edit = new forms\inputForm($this->pageSave, $this->entityTitle,$this->pageMode,$this->entity,true);
-		
-
 		
 		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->displayOrder);

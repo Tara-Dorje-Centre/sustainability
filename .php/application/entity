@@ -6,7 +6,7 @@ abstract class entity extends baseEntity{
 	protected $entity;
 	protected $entityTitle = 'Undefined Entity';
 	protected $site;
-	
+	protected $pageSave = 'portal.php';
   	public $f;
     public $sql;
 	public $links;
