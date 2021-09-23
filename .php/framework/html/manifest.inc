@@ -1,6 +1,6 @@
 <?php
 include_once('__weblink.class');
-include_once('__element.class');
+include_once('__element.class.php');
 include_once('__collection.class');
 include_once('__attribute.class');
 
@@ -23,7 +23,7 @@ include_once('_p.class');
 
 include_once('_resourceLink.class');
 include_once('_script.class');
-include_once('_span.class');
+include_once('_span.class.php');
 include_once('_tables.class.php');
 
 include_once('displayDetails.class.php');

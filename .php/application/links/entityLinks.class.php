@@ -8,7 +8,7 @@ abstract class entityLinks implements IentityLinks {
 	public $entityContext = 'entity';
 	public $pagePortal = 'portal.php';
 	
-	public function __construct(string $entity = 'undefined',string $menuName = 'section-heading'){
+	public function __construct(string $entity = 'undefined',string $menuName = 'section-heading-links'){
 		$this->menu = new linkMenu($menuName,'LIST','menu');
 		$this->setEntityContext($entity);
 	}
@@ -108,8 +108,8 @@ abstract class entityLinks implements IentityLinks {
 		return $d->print();
 	}	
 	
-	public function pagedListing($count, $page, $rows = 0, $id=0, $idParent = 0, $idType = 0){
-		$p = new linkMenuPaged($rows,'resultsPage');
+	public function pagedListing($count, $page, $rows = 10, $id=0, $idParent = 0, $idType = 0){
+		$p = new linkMenuPaged($rows,'results-page');
 
 		$url = $this->request->getUrlEntityList('LIST',$id,$idParent,$idType);
 		return $p->makePagedLinks($url, $count,$page);

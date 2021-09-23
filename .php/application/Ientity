@@ -17,7 +17,7 @@ interface Ientity extends IbaseEntity{
 	public function addForm();
 
 
-	public function options($selectedId = 0, $name = 'id-type', $onChangeJS = NULL);
+	//public function options($selectedId = 0, $name = 'id-type', $onChangeJS = NULL);
 	
 	public function collectPostValues();
 	public function saveChanges();

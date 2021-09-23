@@ -152,7 +152,7 @@ class activity extends \application\entity{
 	
 	
 	
-	protected function editForm($editContext = 'ActivityDetail'){
+	public function editForm($editContext = 'ActivityDetail'){
 		
 		$this->echoState(true,'editForm');
 		

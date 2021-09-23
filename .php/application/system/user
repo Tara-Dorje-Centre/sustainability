@@ -235,7 +235,7 @@ class user extends \application\entity{
 	}
 
 	
-	protected function editForm(){
+	public function editForm(){
 	
 		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] != $this->id)){
 			$form = $this->secureEditForm();

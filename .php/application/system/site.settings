@@ -163,7 +163,7 @@ class siteSettings extends \application\entity{
 		return $x;		
 	}
 	
-	protected function editForm(){
+	public function editForm(){
 		
 		//$this->entity = 'site-settings';
 		//$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		

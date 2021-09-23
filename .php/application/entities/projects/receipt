@@ -57,7 +57,7 @@ class receipt extends \application\entity{
 		$this->_pageMenu = $menu;
 	}
 	
-	protected function editForm(){
+	public function editForm(){
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);

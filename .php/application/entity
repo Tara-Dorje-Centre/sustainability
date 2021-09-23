@@ -2,6 +2,7 @@
 namespace application;
 
 abstract class entity extends baseEntity{
+//implements \application\Ientity{
 //use sql\connectionFunctions;
 	protected $entity;
 	protected $entityTitle = 'Undefined Entity';
@@ -42,7 +43,7 @@ abstract class entity extends baseEntity{
 		$this->_pageTitle = $this->entityTitle;
 	}
 	
-	abstract protected function editForm();
+	abstract public function editForm();
 	/*implement per entity*/
 	
 	
@@ -53,9 +54,9 @@ abstract class entity extends baseEntity{
 	public function setDetails(){
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
-			//global $conn;
-			//$result = $conn->getResult($sql);
-			$result = $this->sql->getResult($sql);
+			global $conn;
+			$result = $conn->getResult($sql);
+			//$result = $this->sql->getResult($sql);
 			
 			if($result){
 				while ($row = $result->fetch_assoc())
@@ -152,7 +153,7 @@ abstract class entity extends baseEntity{
 		if(!is_null($this->f->id)){
 			$this->id = $this->f->id->value();
 		}
-		if (!is_null($this->f->parentEntity)){
+		if (!is_null($this->f->parentEntity->id->value())){
 			$this->idParent = $this->f->parentEntity->id->value();
 		}
 	}

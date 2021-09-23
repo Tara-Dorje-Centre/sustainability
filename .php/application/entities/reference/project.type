@@ -3,6 +3,7 @@ namespace application\entities\reference;
 
 
 class projectType extends \application\entityType{
+
  	public function __construct(){
  	
 		parent::__construct();

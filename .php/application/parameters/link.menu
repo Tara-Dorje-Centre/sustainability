@@ -31,9 +31,9 @@ class linkMenu extends \framework\_echo{
 	protected function setCss(string $css){
 		$this->css = $css;
 		$this->cssMenu = $css.'-links';
-		$this->cssMenuItem = $css.'-item';
+		$this->cssMenuItem = $css.'links-item';
 		$this->cssList = $css.'-list';
-		$this->cssListItem = $css.'-list-item';
+		$this->cssListItem = $css.'list-item';
 	}
 
 	protected function setType(string $type){
@@ -50,7 +50,7 @@ class linkMenu extends \framework\_echo{
 		return $l;
 
 	}
-	public function makeLink(url &$u,string $caption){
+	public function makeLink(url &$u,string $caption,$css = 'menu-item'){
 		//$css passed uses $cssMenuItem...should use menu or list item
 		$l = $this->getLink($u,$caption,$this->cssMenuItem);
 		$this->addLink($l);
@@ -65,7 +65,8 @@ class linkMenu extends \framework\_echo{
 	}
 	
 	public function addTextItem(string $text,$css='-text'){
-		$s = new \html\_span($text,$this->cssMenuItem.$css);
+		$s = new \html\_span($css);
+		$s->setContent($text);
 		$this->addSpan($s);
 	}
 	

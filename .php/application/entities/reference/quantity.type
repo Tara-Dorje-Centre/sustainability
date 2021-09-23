@@ -67,7 +67,7 @@ class quantityType extends \application\entityType{
 	
 	
 	
-	protected function editForm(){
+	public function editForm(){
 	
 		$entity = 'unit-type';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		

@@ -139,9 +139,7 @@ p{
 .contextMenu{
 	float:right;	
 }
-#paged-linkset{
-	text-align:left;	
-}
+
 div.testing-frame{
 	margin:0;
 	padding:0;
@@ -168,23 +166,41 @@ div.testing-frame{
 	margin:2px;
 	padding:2px;
 }
+#paged-linkset{
+	text-align:left;	
+	display:inline;
+}
 .paged-links {
 	padding:1px;
 	line-height:160%;
 	max-width:90%;
-}
-.paged-links-list{
-	margin:0;
-	padding:0;	
-	list-style-type:none;
-}
-.paged-links-list-item{
 	display:inline;
 }
 .paged-links-item{
 	padding:1px;
 	background-color:white;
 	margin:1px;
+	display:inline;
+}
+.paged-links-item-current{
+	font-family: Verdana, Arial, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style:normal;
+	font-weight:normal;
+	vertical-align:top;
+	text-decoration:none;
+	background-color:blue;
+	color:white;	
+	display:inline;
+}
+.paged-links-list{
+	margin:0;
+	padding:0;	
+	list-style-type:none;
+	display:inline;
+}
+.paged-links-list-item{
+	display:inline;
 }
 .button-links {
 	line-height:200%;
@@ -205,16 +221,6 @@ div.testing-frame{
 	display:inline;
 }
 
-.paged-links-item-current{
-	font-family: Verdana, Arial, Arial, Helvetica, sans-serif;
-	font-size: 13px;
-	font-style:normal;
-	font-weight:normal;
-	vertical-align:top;
-	text-decoration:none;
-	background-color:blue;
-	color:white;	
-}
 .menu-links-item, .paged-links-item, .button-links-item, .menu-links-list, .paged-links-list, .button-links-list{
 	font-family: Verdana, Arial, Arial, Helvetica, sans-serif;
 	font-size: 11px;

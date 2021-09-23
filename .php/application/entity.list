@@ -22,6 +22,7 @@ abstract class entityList extends entity{
 		global $conn;
 		$this->found = $conn->getCount($sql, 'count_details');
 		//$this->found = $this->sql->getCount($sql, 'count_details');
+		$this->echoValue(true, 'count', $this->found,'setFoundCount');
 	}
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
@@ -92,7 +93,7 @@ abstract class entityList extends entity{
 		return $this->_display->print();
 	}
 	
-	protected function editForm(){
+	public function editForm(){
 		return 'editForm not available';
 	}
 

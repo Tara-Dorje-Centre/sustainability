@@ -59,10 +59,10 @@ implements IbaseEntity{
 	 public function getRequestPaging(){
 	 	$page = 1;
 	 	$rows = 10;
-	 	if (isset($_SESSION['resultPage'])){
-			$page = $_GET["resultPage"];
+	 	if (isset($_GET['results-page'])){
+			$page = $_GET["results-page"];
 		}
-		if (isset($_SESSION['perPage'])){
+		if (isset($_GET['perPage'])){
 			$rows = $_GET["perPage"];
 		}
 		
@@ -156,7 +156,7 @@ implements IbaseEntity{
 	protected function echoState_paging($show = true, $f = '-use-current-', $c= '-use-current-'){
 
 		if ($this->isPagingSet == true){
-			$s = false;
+			$s = $show;
 			$this->echoLocale($f, $c);
 			$this->echoValue($s, 'resultPage', $this->resultPage);
 			$this->echoValue($s, 'perPage', $this->perPage);

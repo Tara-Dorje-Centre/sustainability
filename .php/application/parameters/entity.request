@@ -32,16 +32,16 @@ abstract class entityRequest extends request {
 	}
 	
 	public function  getUrlEntityMenu($id,$idParent,$idType){
-			$url = $this->getUrlMenu($this->basePage,$this->entityContext);
-			$this->setUrlParametersEntity($url,'MENU',$id,$idParent,$idType);
-			return $url;
-		}
+		$url = $this->getUrlMenu($this->basePage,$this->entityContext);
+		$this->setUrlParametersEntity($url,'MENU',$id,$idParent,$idType);
+		return $url;
+	}
 		
-		public function getUrlEntitySave($id,$idParent,$idType){
-			$url = $this->getUrlSave($this->basePage,$this->entityContext);
-			$this->setURLparametersEntity($url,'SAVE',$id,$idParent,$idType);
-			return $url;
-		}
+	public function getUrlEntitySave($id,$idParent,$idType){
+		$url = $this->getUrlSave($this->basePage,$this->entityContext);
+		$this->setURLparametersEntity($url,'SAVE',$id,$idParent,$idType);
+		return $url;
+	}
 	
 }
 

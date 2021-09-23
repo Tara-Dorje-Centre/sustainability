@@ -2,6 +2,7 @@
 namespace application;
 
 abstract class entityType extends entity{
+
 	public function __construct(){
 		parent::__construct();
 	}
@@ -36,8 +37,11 @@ abstract class entityType extends entity{
 		}
 		
 	}
-	protected function editForm(){
-		$this->edit = new forms\inputForm($this->pageSave, $this->entityTitle,$this->pageMode,$this->entity,true);
+	public function editForm(){
+	
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
+	
+		$this->edit = new forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
 		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->displayOrder);

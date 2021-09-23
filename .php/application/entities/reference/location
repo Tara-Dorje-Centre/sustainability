@@ -140,7 +140,7 @@ class location extends \application\entity{
 
 
 
-	protected function editForm(){
+	public function editForm(){
 		$this->echoState(true,'editForm');
 		$this->entity = 'location';
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
