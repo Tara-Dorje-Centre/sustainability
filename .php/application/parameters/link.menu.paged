@@ -7,11 +7,11 @@ class linkMenuPaged extends linkMenu{
 	protected $currentPage = 1;
 	protected $recordCount = 0;
 	protected $info = 'display results';
-	protected $paramNamePaging = 'results-page';
+	protected $paramPaging = 'results-page';
 	public function __construct($perPage = 10,string $paramPaging = 'resultsPage'){
 		parent::__construct('paged-linkset','DIV','paged-links');
 		$this->perPage = $perPage;
-		$this->paramNamePaging = $paramPaging;
+		$this->paramPaging = $paramPaging;
 	}
 	
 	protected function setPageCount(){
@@ -30,7 +30,7 @@ class linkMenuPaged extends linkMenu{
 		}
 	}
 	protected function makePageLink($pageIndex,$caption,$css='paged-links-item'){
-		$this->baseUrl->makeParameter($this->paramNamePaging,$pageIndex);
+		$this->baseUrl->makeParameter($this->paramPaging,$pageIndex);
 		$this->makeLink($this->baseUrl, $caption,$css);
 	}
 	protected function showResultsInfo(){
