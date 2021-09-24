@@ -87,7 +87,7 @@ abstract class entity extends baseEntity{
 	 public function listHeading(): \html\_tr{
 		$tr = new \html\_tr('table-headings');
 
-		$tr->makeHeading('table-heading',$this->entityTitle);
+		$tr->makeHeading('View [Edit]',$this->entityTitle);
 
 		$tr->addContent($this->f->listCaption());
 		return $tr;

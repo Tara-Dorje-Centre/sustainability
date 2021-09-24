@@ -9,7 +9,7 @@ class linkMenuPaged extends linkMenu{
 	protected $info = 'display results';
 	protected $paramPaging = 'results-page';
 	public function __construct($perPage = 10,string $paramPaging = 'resultsPage'){
-		parent::__construct('paged-linkset','DIV','paged-links');
+		parent::__construct('paging-linkset','DIV','paging-links');
 		$this->perPage = $perPage;
 		$this->paramPaging = $paramPaging;
 	}
@@ -29,7 +29,7 @@ class linkMenuPaged extends linkMenu{
 			$this->pageCount = floor($a) + 1;
 		}
 	}
-	protected function makePageLink($pageIndex,$caption,$css='paged-links-item'){
+	protected function makePageLink($pageIndex,$caption,$css='paging-links-item'){
 		$this->baseUrl->makeParameter($this->paramPaging,$pageIndex);
 		$this->makeLink($this->baseUrl, $caption,$css);
 	}
@@ -42,7 +42,7 @@ class linkMenuPaged extends linkMenu{
 		} else {
 			$this->info = 'Displaying '.$this->recordCount.' results. ';
 		}
-		$this->addTextItem($this->info);
+		$this->addTextItem($this->info, 'paging-links-text');
 	}
 	protected function makePrevLink(){
 		if ($this->currentPage > 1){
@@ -112,11 +112,11 @@ class linkMenuPaged extends linkMenu{
 			if ($i == $this->currentPage){
 				//highlight current page with square brackets and skip hyperlink
 				$caption = '[Page '.$i.']';
-				$css = 'paged-links-item-current';
+				$css = 'paging-links-item-current';
 				$this->addTextItem($caption, $css);
 			} else {
 				$caption = $i;
-				$css = 'paged-links-item';
+				$css = 'paging-links-item';
 				$this->makePageLink($i, $caption,$css);
 			}
 		}
