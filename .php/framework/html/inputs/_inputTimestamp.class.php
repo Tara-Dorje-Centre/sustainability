@@ -18,11 +18,11 @@ use caption, validation;
 		$this->makeSelectParts($name);
 	}
 	protected function setParts($value){
-		$this->_ts = new \_timestamp($value);
+		$this->_ts = new \framework\_timestamp($value);
 		
 		if ($this->_ts->getYear() == '0000'){
 			global $sessionTime;
-			$current = new \_timestamp($sessionTime);
+			$current = new \framework\_timestamp($sessionTime);
 			$this->currentYear = $current->getYear();
 			
 		} else {

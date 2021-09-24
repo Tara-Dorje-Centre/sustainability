@@ -9,12 +9,12 @@ class quantityType extends \application\entityType{
 		
 		$this->entity = 'quantity-type';
 		$this->entityTitle = 'Quantity Type';
-		$this->pageSave = 'quantityType.php';
+		//$this->pageSave = 'quantityType.php';
 	
-		$this->f = new quantityTypeFields();
+		$this->f = new forms\quantityTypeFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new quantityTypeSQL();
-		$this->links = new quantityTypeLinks();
+		$this->sql = new sql\quantityTypeSQL();
+		$this->links = new links\quantityTypeLinks();
 	}
 	
 	/*

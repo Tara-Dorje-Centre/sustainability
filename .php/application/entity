@@ -54,6 +54,7 @@ abstract class entity extends baseEntity{
 	public function setDetails(){
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
+			
 			global $conn;
 			$result = $conn->getResult($sql);
 			//$result = $this->sql->getResult($sql);
@@ -111,7 +112,7 @@ abstract class entity extends baseEntity{
 	}
 
 	protected function display(){
-		$this->_display = new \html\displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
+		$this->_display = new \html\displayDetails($this->entity,$this->pageMode,$this->entityTitle.':  Details');
 
 		$this->_display->setContent($this->f->displayDetail());
 
@@ -129,9 +130,9 @@ abstract class entity extends baseEntity{
 	 public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
-		if (!is_null($this->f->parentEntity)){
-			$this->f->parentEntity->set($idParent);
-		}
+		//if (!is_null($this->f->parentEntity)){
+			//$this->f->parentEntity->set($idParent);
+		//}
 		
 		$edit = $this->editForm();
 		if (is_null($edit)){
@@ -142,7 +143,7 @@ abstract class entity extends baseEntity{
 	}
 
 	 public function collectPostValues(){
-		$this->pageMode = $_POST['mode'];	
+		$this->pageMode = $_GET['pageAction'];	
 		$this->f->setEnvironment('POST');
 		$this->f->read();
 		$this->getFieldIds();
@@ -153,9 +154,10 @@ abstract class entity extends baseEntity{
 		if(!is_null($this->f->id)){
 			$this->id = $this->f->id->value();
 		}
-		if (!is_null($this->f->parentEntity->id->value())){
-			$this->idParent = $this->f->parentEntity->id->value();
-		}
+		
+		//if (!is_null($this->f->parentEntity->id->value())){
+		//	$this->idParent = $this->f->parentEntity->id->value();
+		//}
 	}
 	
 	final public function printPage(){

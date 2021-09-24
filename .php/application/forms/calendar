@@ -90,9 +90,9 @@ class calendar{
 			$list->addContent(\html\spacer());
 			$this->days[$i] = $list;
 			
-			$this->addItem($i,'test item a'.$i);
-			$this->addItem($i,'test item b'.$i);
-			$this->addItem($i,'test item c'.$i);
+			//$this->addItem($i,'test item a'.$i);
+			//$this->addItem($i,'test item b'.$i);
+			//$this->addItem($i,'test item c'.$i);
 			//new \html\spacer();	
 		}
 	}

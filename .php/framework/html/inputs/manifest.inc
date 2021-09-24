@@ -10,7 +10,7 @@ include_once('_select.class.php');
 include_once('_selectOption.class.php');
 include_once('selectRange.class.php');
 include_once('selectQuery.class.php');
-include_once('selectTimestamp.class');
+include_once('selectTimestamp.class.php');
 include_once('selectColor.class');
 include_once('selectFontFamily.class');
 include_once('selectFontSize.class');
@@ -24,7 +24,7 @@ include_once('__inputCaptioned.class');
 include_once('_inputText.class');
 include_once('_inputTextarea.class');
 include_once('_inputNumber.class');
-include_once('_inputTimestamp.class');
+include_once('_inputTimestamp.class.php');
 
 include_once('hidden.class');
 include_once('password.class');

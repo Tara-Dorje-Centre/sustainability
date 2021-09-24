@@ -1,14 +1,14 @@
 <?php
 namespace framework;
 
-class timestamp{
+class _timestamp{
 	public $timestamp;
 	public $year;
 	public $month;
 	public $date;
 	public $hour;
 	public $minute;
-	public function __construct($value){
+	public function __construct($value = NULL){
 		if(!is_null($value)){
 			$this->set($value);
 		}
@@ -25,7 +25,7 @@ class timestamp{
 		$this->hour = substr($value,11,2);
 		$this->minute = substr($value,14,2);
 	}
-	public function setParts($year = '0000',$month = '00',$day = '00',$hour = '00', $minute = '00'){
+	public function setParts($year = '0000',$month = '00',$date = '00',$hour = '00', $minute = '00'){
 	$this->year = $year;
 	$this->month = $month;
 	$this->date = $date;
@@ -34,7 +34,11 @@ class timestamp{
 	$this->makeTimestamp();
 	}		
 	public function makeTimestamp(){
-		$this->timestamp = $this->year.'-'.$this->month.'-'.$this->day.' '.$this->hour.':'.$this->minute.':00';
+		$this->timestamp = $this->year.'-'.$this->month.'-'.$this->date.' '.$this->hour.':'.$this->minute.':00';
+	}
+	public function getTimestamp(){
+		$this->makeTimestamp();
+		return $this->timestamp;
 	}
 	protected function trimValue($value,bool $trim){
 		if ($trim == true){
@@ -64,6 +68,7 @@ class timestamp{
 	}
 }
 
-
+class timestamp extends _timestamp{
+}
 	
 ?>

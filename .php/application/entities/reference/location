@@ -6,12 +6,14 @@ class location extends \application\entity{
 	public $childLocations = 0;
  	public function __construct(){
 		parent::__construct();
-		
   	 	$this->entityTitle = 'Location';
-	 	$this->pageSave = 'pr_Location_Save.php';
-		$this->sql = new locationSQL();
-		$this->links = new locationLinks();
-		$this->f = new locationFields();
+  	 	$this->entity = 'location';
+
+	 	//$this->pageSave = 'pr_Location_Save.php';
+		$this->sql = new sql\locationSQL();
+		$this->links = new links\locationLinks();
+		$this->f = new forms\locationFields();
+		$this->f->setEntity($this->entity);
 	}
 	public function getRequestArguments(){
 
@@ -33,6 +35,8 @@ class location extends \application\entity{
 		$this->echoState(true,'setChildCount');
 		if ($this->id > 0){
 		$sql = $this->sql->countChildren($this->id);
+		
+		
 		$this->childLocations = dbGetCount($sql, 'total_locations');
 		} else {
 		$this->childLocations = 0;
@@ -142,9 +146,10 @@ class location extends \application\entity{
 
 	public function editForm(){
 		$this->echoState(true,'editForm');
-		$this->entity = 'location';
+		
+				
 		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
+
 		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
 		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	

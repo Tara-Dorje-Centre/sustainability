@@ -69,7 +69,7 @@ p{
 	text-align:left;
 	font-style:italic;
 }
-#site-heading-links{
+#site-heading-links,#site-menu,#site-menu-list{
 	max-width:100%;
 	float:none;
 	text-align:center;
@@ -140,6 +140,7 @@ p{
 .contextMenu{
 	float:right;	
 	list-style-type:none;
+	font-size: 16px;
 }
 
 div.testing-frame{
@@ -165,11 +166,9 @@ div.testing-frame{
 .menu-links-list{
 	margin:0;
 	padding:0;	
-	display:inline;
 	list-style-type:none;
 }
 .menu-links-list-item {
-	display:inline;
 	list-style-type:none;
 }
 .menu-links-item, .menu-links-list-item{

@@ -10,7 +10,7 @@ class projectType extends \application\entityType{
 		
 		$this->entity = 'project-type';
      	$this->entityTitle = 'Project Type';
-   	 	$this->pageSave = 'pr_ProjectType_Save.php';
+   	 	//$this->pageSave = 'pr_ProjectType_Save.php';
 		
 		$this->f = new forms\projectTypeFields();
 		$this->f->setEntity($this->entity);

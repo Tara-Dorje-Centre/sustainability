@@ -8,8 +8,8 @@ class quantityTypeFields extends \application\forms\entityTypeFields{
     
 	public function __construct(){
 		parent::__construct();
-		$this->symbol = new application\forms\_name('symbol','symbol','Symbol');
-		$this->type = new application\forms\_name('type','unit-type','Unit Type');
+		$this->symbol = new \application\forms\_name('symbol','symbol','Symbol');
+		$this->type = new \application\forms\_name('type','unit-type','Unit Type');
 		$this->_register('symbol',$this->symbol);
 		$this->_register('type',$this->type);
 	}

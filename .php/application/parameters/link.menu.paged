@@ -92,6 +92,10 @@ class linkMenuPaged extends linkMenu{
 		$this->setPageCount();
 		$this->showResultsInfo();
 		$this->baseUrl = $u;
+		if ($this->pageCount > 1){
+			//skip paging links for single page results
+		
+		
 		//dont print more than four links foreward or backward
 		$minDisplayPage = $this->currentPage - 4;
 		$maxDisplayPage = $this->currentPage + 4;
@@ -124,6 +128,7 @@ class linkMenuPaged extends linkMenu{
 		$this->makeNextLink();
 		$this->makeLastLink($maxDisplayPage);
 		
+		}
 		return $this->print();
 	}
 	

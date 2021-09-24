@@ -350,7 +350,8 @@ interface Ifield{
  		$this->env->remove();
  	}
  	private function writeTimestampPostValues($name,$value){
- 		$t = new _timestamp($value);
+ 		$t = new \framework\_timestamp($value);
+		
 		$_POST[$name.'_YYYY'] = $t->year();
 		$_POST[$name.'_MM'] = $t->month();
 		$_POST[$name.'_DD'] = $t->date();
@@ -365,7 +366,8 @@ interface Ifield{
 		$date = $_POST[$name.'_DD'];
 		$hour = $_POST[$name.'_HH'];
 		$minute = $_POST[$name.'_mm'];
-		$time = new _timestamp();
+		
+		$time = new \framework\_timestamp();
 		$time->setParts($year,$month,$date,$hour,$minute);
 		return $time->getTimestamp();
 
