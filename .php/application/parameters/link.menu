@@ -31,9 +31,9 @@ class linkMenu extends \framework\_echo{
 	protected function setCss(string $css){
 		$this->css = $css;
 		$this->cssMenu = $css.'-links';
-		$this->cssMenuItem = $css.'links-item';
-		$this->cssList = $css.'links-list';
-		$this->cssListItem = $css.'links-list-item';
+		$this->cssMenuItem = $css.'-links-item';
+		$this->cssList = $css.'-links-list';
+		$this->cssListItem = $css.'-links-list-item';
 	}
 
 	protected function setType(string $type){
