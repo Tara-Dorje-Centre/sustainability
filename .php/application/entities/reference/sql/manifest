@@ -3,7 +3,7 @@
 include_once("location.type.sql");
 include_once("location.sql.php");
 
-include_once("quantity.type.sql");
+include_once("quantity.type.sql.php");
 include_once("project.type.sql");
 include_once("task.type.sql");
 include_once("activity.type.sql");

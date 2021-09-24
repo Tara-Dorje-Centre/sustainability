@@ -11,6 +11,7 @@ class quantityTypeSQL extends \application\sql\entityTypeSQL{
 	protected function cols(){
 		$c = parent::cols();
 		$c .= ", et.symbol ";
+		$c .= ", et.type ";
 		return $c;	
 	}
 
