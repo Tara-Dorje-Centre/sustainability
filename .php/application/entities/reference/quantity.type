@@ -17,18 +17,16 @@ class quantityType extends \application\entityType{
 		$this->links = new links\quantityTypeLinks();
 	}
 	
-	/*
+	
 	protected function pageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
+		/*
+		
 		
 		$units = new UnitOfMeasureLinks($menuType,$menuStyle);
 		$measureTypes = new MeasureTypeLinks($menuType,$menuStyle);
-		$menuL = new MenuLinks($menuType,$menuStyle);
-		
-		$menu = $units->openMenu('section-heading-links');
+
 		$menu .= $menuL->linkReference();
-		$menu .= $units->resetMenu();
+
 		if ($this->pageMode == 'VIEW'){
 			$menu .= $units->detailEditHref($this->id);
 		} elseif ($this->pageMode == 'EDIT'){
@@ -37,10 +35,10 @@ class quantityType extends \application\entityType{
 		$menu .= $units->listingHref();
 		//$menu .= $measureTypes->listingHref();
 		
-		$menu .= $units->closeMenu();
-		return $menu;
+		
+		*/
 	}
-	*/
+	
 	
 	
 	public function options(
@@ -69,26 +67,26 @@ class quantityType extends \application\entityType{
 	
 	public function editForm(){
 	
-		$entity = 'unit-type';
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
 	
-		$this->edit->required->addContent($this->f->name->input());
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
-		$this->edit->required->addContent($this->f->symbol->input());
-		$this->edit->required->addContent($this->f->type->input());
+		$this->edit->required->input($this->f->name);
 		
-		$this->edit->required->addContent($this->f->displayOrder->input());
-		$this->edit->required->addContent(inputFieldHighlightStyle($entity,$this->f->highlight->value(),'highlight'));
-		$this->edit->optional->addContent($this->f->description->input());
-		$this->edit->optional->addContent($this->f->notes->input());
-		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$this->edit->hidden->addContent($this->f->id->inputHidden());
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
-		return $this->edit->close();
+		$this->edit->required->input($this->f->symbol);
+		$this->edit->required->input($this->f->type);
 		
+		$this->edit->required->input($this->f->displayOrder);
+		$this->edit->required->input($this->f->highlight);
+		
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
+		
+		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
+		
+		return $this->edit->print();
 		
 	}
 	

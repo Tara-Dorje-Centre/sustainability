@@ -3,13 +3,11 @@ namespace application\entities\reference;
 
 class taskType extends \application\entityType{
 	public function __construct(){
-
-
 		parent::__construct();
   		
   		$this->entity = 'task-type';
   		$this->entityTitle = 'Task Type';
-     	$this->pageSave = 'pr_TaskType_Save.php';
+     	//$this->pageSave = 'pr_TaskType_Save.php';
 		
 		$this->f = new forms\taskTypeFields();
 		$this->f->setEntity($this->entity);
@@ -36,25 +34,32 @@ class taskType extends \application\entityType{
 	
 	public function editForm(){
 
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
+	
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
 		$this->edit->required->input($this->f->name);
 		
+		/*
+		//todo...
 		$select = $this->optionsFrequency($this->f->frequency->value(),$this->f->frequency->env->variable());
 		$this->edit->required->choice($this->f->frequency, $select);
+		
+		*/
 		
 		$this->edit->required->input($this->f->displayOrder);
 		$this->edit->required->input($this->f->highlight);
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);
-		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		
 		$this->edit->hidden->inputHidden($this->f->id);
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
-		return $this->edit->close();
-	
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
+		
+		return $this->edit->print();
+
+
 	}
 	
 	protected function saveUpdate(){
