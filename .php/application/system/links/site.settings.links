@@ -7,7 +7,7 @@ class siteSettingsRequest extends \application\links\entityRequest{
 class siteSettingsLinks extends \application\links\entityLinks{
 
 	public function __construct(){
-			$context = 'siteSettings';
+		$context = 'siteSettings';
 		parent::__construct($context);
 
 		/*$this->setEntityContext($context);*/

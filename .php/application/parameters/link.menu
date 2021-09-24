@@ -19,7 +19,7 @@ class linkMenu extends \framework\_echo{
 	}
 	public function initialize(string $name, string $type, string $css='menu'){
 		$this->setName($name);
-		$this->setCss($css);
+		$this->setCSS($css);
 		$this->setType($type);
 		
 		$this->_menuDiv = new \html\_div($this->name,$this->cssMenu);
@@ -28,7 +28,7 @@ class linkMenu extends \framework\_echo{
 		}
 	}
 
-	protected function setCss(string $css){
+	protected function setCSS(string $css = 'menu'){
 		$this->css = $css;
 		$this->cssMenu = $css.'-links';
 		$this->cssMenuItem = $css.'-links-item';

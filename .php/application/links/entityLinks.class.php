@@ -41,16 +41,17 @@ abstract class entityLinks implements IentityLinks {
 	
 	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
 		$this->menu->addLink($this->list('List',0,$idParent,0));
-		$this->menu->addLink($this->list('ListChildren',$id,0,0));
-		$this->menu->addLink($this->list('listType',0,0,$idType));
+		//$this->menu->addLink($this->list('ListChildren',$id,0,0));
+		//$this->menu->addLink($this->list('listType',0,0,$idType));
 	}
 	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		switch ($mode){
 			case 'VIEW':
 				$this->menu->addLink($this->list('List',0,0,0));
 				$this->menu->addLink($this->edit('Edit',$id));
-				$this->menu->addLink($this->add('AddChild',$id));
-				$this->menu->addLink($this->add('AddSibling',$idParent));
+				$this->menu->addLink($this->add('Add',0,0,0));
+				//$this->menu->addLink($this->add('AddChild',$id));
+				//$this->menu->addLink($this->add('AddSibling',$idParent));
 				$this->menu->addLink($this->copy('Copy',$id));
 				break;
 			case 'EDIT':
@@ -95,8 +96,12 @@ abstract class entityLinks implements IentityLinks {
 	}
 	
 	
-	public function contextList(){
-		return $this->list($this->entityContext,0,0);
+	public function contextList(string $caption = 'entity-context'){
+		$linkCaption = $caption;
+		if ($caption == 'entity-context'){
+		     $linkCaption = $this->entityContext;
+		}
+		return $this->list($linkCaption,0,0);
 	}
 	
 	public function viewEdit(string $caption, $id = 0,string $editCaption='[#]'){

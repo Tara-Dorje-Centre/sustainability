@@ -11,7 +11,7 @@ interface IentityLinks{
 	public function view(string $caption = 'View', $id = 0);
 	public function edit(string $caption = 'Edit', $id = 0);
 	public function copy(string $caption = 'Copy', $id = 0);
-	public function contextList();
+	public function contextList(string $caption = 'entity-context');
 	public function viewEdit(string $caption, $id = 0,string $editCaption='[#]');
 	public function pagedListing($count, $page, $rows = 10, $idParent = 0, $idType = 0);
 	

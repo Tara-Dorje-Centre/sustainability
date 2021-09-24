@@ -166,41 +166,41 @@ class systemMenu extends \framework\_echo{
 	protected function displayReferenceLinks(){
 	
 		$e = new entities\reference\links\locationTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Location Types'));
 
 		$e = new entities\reference\links\locationLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Locations'));
 
 		$e = new entities\reference\links\quantityTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Quantity Types'));
 
 		$e = new entities\reference\links\measureTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Measure Types'));
 		
 		$e = new entities\reference\links\projectTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Project Types'));
 				
 		$e = new entities\reference\links\taskTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Task Types'));
 				
 		$e = new entities\reference\links\activityTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Activity Types'));
 				
 		$e = new entities\reference\links\materialTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Material Types'));
 
 		$e = new entities\reference\links\receiptTypeLinks();
-		$this->main->addLink($e->contextList());
+		$this->main->addLink($e->contextList('Receipt Types'));
 
 		//if ($_SESSION['is-admin'] == 'yes'){
 			$e = new system\links\userLinks();
-			$this->main->addLink($e->contextList());
+			$this->main->addLink($e->contextList('User Profiles'));
 
 			$e = new system\links\userTypeLinks();
-			$this->main->addLink($e->contextList());
+			$this->main->addLink($e->contextList('User Types'));
 
 			$e = new system\links\siteSettingsLinks();
-			$this->main->addLink($e->contextList());
+			$this->main->addLink($e->contextList('Site Settings'));
 
 		//}
 		

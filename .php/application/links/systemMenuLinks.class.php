@@ -3,21 +3,16 @@ namespace application\links;
 
 class systemMenuLinks extends linkMenu {
 
-
 	public function __construct($name = 'system-menu',$type='LIST', $css='menu'){
 		parent::__construct($name,$type,$css);
 	}
 	protected function detailLink($displayMode = 'MY_LINKS',$caption = 'MyLinks', $year = 0, $month = 0){
 		$u = $this->menuUrl($displayMode, $year, $month);
 		return $this->getLink($u, $caption);
-		
-
 	}
 	public function library(){
 		$u = new url('public.php');
 		return $this->getLink($u, 'Library');
-		
-
 	}
 	public function logout(){
 		$u = new url('portal.php');

@@ -26,7 +26,6 @@ abstract class entityType extends entity{
 	protected function setDefaults(){
 		parent::setDefaults();
 		if ($this->pageMode == 'ADD'){
-		/*$this->f->defaults();*/
 		
 		$s = $this->sql->count();
 		global $conn;

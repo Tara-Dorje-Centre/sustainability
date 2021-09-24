@@ -12,6 +12,7 @@ class linkMenuPaged extends linkMenu{
 		parent::__construct('paging-linkset','DIV','paging');
 		$this->perPage = $perPage;
 		$this->paramPaging = $paramPaging;
+		$this->setCSS('paging');
 	}
 	
 	protected function setPageCount(){
@@ -70,6 +71,7 @@ class linkMenuPaged extends linkMenu{
 			$this->makePageLink($this->pageCount, 'Last('.$this->pageCount.')');
 		}
 	}
+	/*
 	protected function getPageRecordRange($pageIndex){
 	
 			$minRecord = (($pageIndex - 1) * $this->perPage) + 1;
@@ -84,6 +86,7 @@ class linkMenuPaged extends linkMenu{
 			}
 			return $recordRange;
 	}
+	*/
 	public function makePagedLinks(url $u, $recordCount = 1, $currentPage = 1){
 		$this->recordCount = $recordCount;
 		$this->currentPage = $currentPage;

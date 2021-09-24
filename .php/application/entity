@@ -130,9 +130,10 @@ abstract class entity extends baseEntity{
 	 public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
+		if (isset($this->f->parentEntity)){
 		//if (!is_null($this->f->parentEntity)){
-			//$this->f->parentEntity->set($idParent);
-		//}
+			$this->f->parentEntity->set($idParent);
+		}
 		
 		$edit = $this->editForm();
 		if (is_null($edit)){
@@ -151,13 +152,16 @@ abstract class entity extends baseEntity{
 	}
 				
 	protected function getFieldIds(){
-		if(!is_null($this->f->id)){
+		if(isset($this->f->id)){
+		//if(!is_null($this->f->id)){
 			$this->id = $this->f->id->value();
 		}
+		//isset ($abc->def->ghi)
 		
+		if (isset($this->f->parentEntity)){
 		//if (!is_null($this->f->parentEntity->id->value())){
-		//	$this->idParent = $this->f->parentEntity->id->value();
-		//}
+			$this->idParent = $this->f->parentEntity->id->value();
+		}
 	}
 	
 	final public function printPage(){
