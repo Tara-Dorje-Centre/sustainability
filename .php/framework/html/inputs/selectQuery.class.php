@@ -9,4 +9,9 @@ class selectQuery extends _select{
 	}
 	
 }
+
+class selectSQL extends selectQuery{
+
+}
+
 ?>

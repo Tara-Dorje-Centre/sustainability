@@ -37,7 +37,7 @@ class calendar{
 	
 	private function setCurrentDay(){
 		global $sessionTime;
-		$t = new \framework\timestamp($sessionTime);
+		$t = new \framework\_timestamp($sessionTime);
 		$this->currentYear = $t->getYear(true);
 		$this->currentMonth = $t->getMonth(true);
 		$this->currentDay = $t->getDate(true);
@@ -104,7 +104,7 @@ class calendar{
 	}
 
 	public function addItemByTimestamp($timestamp, $text, $itemStyle = 'calendar-item'){
-		$ts = new _timestamp($timestamp);
+		$ts = new \framework\_timestamp($timestamp);
 		$dayIndex = $ts->getDate(true);
 		$this->addItem($dayIndex,$text, $itemStyle);	
 	}

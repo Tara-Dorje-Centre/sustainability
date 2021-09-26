@@ -28,8 +28,10 @@ abstract class entityType extends entity{
 		if ($this->pageMode == 'ADD'){
 		
 		$s = $this->sql->count();
-		global $conn;
-		$next = $conn->getCount($s, 'count_details');
+		
+		$next = $this->sql->getCount($s, 'count_details');
+		//global $conn;
+		//$next = $conn->getCount($s, 'count_details');
 		$next += 1;
 		$this->echoValue(true,'next',$next,'setdefaults');
 		$this->f->displayOrder->set($next);
@@ -67,8 +69,9 @@ abstract class entityType extends entity{
 			$sql .= " base.display_order = ".$this->f->displayOrder->value().", ";
 			$sql .= " base.notes = '".$this->f->notes->value()."' ";
 			$sql .= " WHERE base.id = ".$this->f->id->value()."  ";		
-				
-			$result = dbRunSQL($sql);
+			
+			
+			$result = $this->sql->runStatement($sql);
 	}
 	
 	protected function saveInsert(){
@@ -89,9 +92,10 @@ abstract class entityType extends entity{
 			$sql .= "'".$this->f->highlight->value()."', ";
 			$sql .= "'".$this->f->notes->value()."') ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->f->id->set(dbInsertedId());
+			$id = $this-≥sql->getInsertedId();
+			$this->f->id->set($id);
 			$this->id = $this->f->id->value();
 	}
 	

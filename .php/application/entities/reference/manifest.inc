@@ -1,8 +1,8 @@
 <?php
 
-include_once("forms/manifest");
-include_once("sql/manifest");
-include_once("links/manifest");
+include_once("forms/manifest.inc");
+include_once("sql/manifest.inc");
+include_once("links/manifest.inc");
 
 
 include_once("location.type");

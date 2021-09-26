@@ -19,9 +19,9 @@ abstract class entityList extends entity{
 	
 	protected function setFoundCount(){
 		$sql = $this->base->sql->count();
-		global $conn;
-		$this->found = $conn->getCount($sql, 'count_details');
-		//$this->found = $this->sql->getCount($sql, 'count_details');
+		//global $conn;
+		//$this->found = $conn->getCount($sql, 'count_details');
+		$this->found = $this->base->sql->getCount($sql, 'count_details');
 		$this->echoValue(true, 'count', $this->found,'setFoundCount');
 	}
 	protected function makePageMenu(){

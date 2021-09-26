@@ -55,9 +55,9 @@ abstract class entity extends baseEntity{
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
 			
-			global $conn;
-			$result = $conn->getResult($sql);
-			//$result = $this->sql->getResult($sql);
+			//global $conn;
+			//$result = $conn->getResult($sql);
+			$result = $this->sql->getResult($sql);
 			
 			if($result){
 				while ($row = $result->fetch_assoc())
@@ -131,7 +131,6 @@ abstract class entity extends baseEntity{
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
 		if (isset($this->f->parentEntity)){
-		//if (!is_null($this->f->parentEntity)){
 			$this->f->parentEntity->set($idParent);
 		}
 		
@@ -139,7 +138,7 @@ abstract class entity extends baseEntity{
 		if (is_null($edit)){
 		     $edit = '';
 		}
-		//return $this->editForm();
+
 		return $edit;
 	}
 
@@ -153,13 +152,10 @@ abstract class entity extends baseEntity{
 				
 	protected function getFieldIds(){
 		if(isset($this->f->id)){
-		//if(!is_null($this->f->id)){
 			$this->id = $this->f->id->value();
 		}
-		//isset ($abc->def->ghi)
 		
 		if (isset($this->f->parentEntity)){
-		//if (!is_null($this->f->parentEntity->id->value())){
 			$this->idParent = $this->f->parentEntity->id->value();
 		}
 	}
@@ -231,12 +227,13 @@ abstract class entity extends baseEntity{
 		$this->echoState(true, 'saveChanges');
 		switch($this->pageMode){
 			case 'COPY':
-			
+				$this->copy();
+				break;
 			case 'EDIT':
-			$this->saveUpdate();
-			break;
+				$this->saveUpdate();
+				break;
 			case 'ADD':
-			$this->saveInsert();
+				$this->saveInsert();
 		}
 	}
 	

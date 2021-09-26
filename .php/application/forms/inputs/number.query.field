@@ -4,7 +4,7 @@ namespace application\forms;
  class numberQueryField extends _number{
 	use queryField;
 
- 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+ 	public function __construct(string $dbCol = 'not-used', string $envVar = 'not-used', string $caption = 'not-used'){
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	

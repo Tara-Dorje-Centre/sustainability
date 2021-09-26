@@ -33,7 +33,7 @@ return $c;
 		return $f;
 	}
 	
-	//override entity list sql to order by disdplkayorder
+	//override entity list sql to order by displayorder
 	public function list($page = 1, $rows = 10){
 		$q = $this->cols();
 		$q .= $this->tables();
