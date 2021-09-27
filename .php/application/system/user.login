@@ -70,7 +70,7 @@ use \application\sql\connectionFunctions;
 		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
 	}
 	
-	private function obfuscate($pass,$login){
+	public function obfuscate($pass,$login){
 		//$salt = crypt($login);
 		$hash = md5($pass.$login);
 		return $hash;	
@@ -80,7 +80,6 @@ use \application\sql\connectionFunctions;
 		$valid = false;
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
 		global $conn;
-		
 		$found = $conn->getCount($sql,'user_count');
 		
 
@@ -133,10 +132,8 @@ use \application\sql\connectionFunctions;
 		//then comment this line
 		//printLine('forcing login');
 		//$found = 1;
-		$this->echoValue(true, '......foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
+		//$this->echoValue(true, '......foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
 		if ($found == 1){
-		
-		
 		
 			$validUser = true;
 			$this->echoPrint(true,'.....?valid login.updatingLastLogin');
@@ -168,8 +165,9 @@ use \application\sql\connectionFunctions;
 	private function setSecurity($loginName){
 		$this->echoPrint(true, 'begin','setSecurity');
 		$sql = $this->sql->securityUser($loginName);
-		global $conn;
-		$result = $conn->getResult($sql);
+		//global $conn;
+		//$result = $conn->getResult($sql);
+		$result = $this->sql->getResult($sql);
 		if($result){
 			$this->echoPrint(true, 'found user profile','setSecurity');
 	  		while ($row = $result->fetch_assoc())
@@ -200,12 +198,12 @@ use \application\sql\connectionFunctions;
 		$this->echoValue(true, 'clientTimeZone?', $this->s->_clientTimeZone->value());
 		$this->echoValue(true, 'loginMessages?', $this->s->_loginMessages->value());
 	}
-	private function updateLastLogin(string $loginName = 'unknkownId'){
+	public function updateLastLogin(string $loginName = 'unknkownId'){
 		
 		$sql = $this->sql->updateLastLogin($loginName);
-		global $conn;
-		$result = $conn->runStatement($sql);
-		
+		//global $conn;
+		//$result = $conn->runStatement($sql);
+		$result = $this->sql->runStatement($sql);
 	}
 	
 	public function loginForm(){

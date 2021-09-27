@@ -111,8 +111,14 @@ use connectionFunctions;
 		return $w;
 	}
 
-	protected function whereId($id, $first = true){
-		$w = $this->whereNumber($id, $this->fieldId, $first);
+	protected function whereId($id, $first = true,$fieldId = 'no-alias'){
+		if ($fieldId != 'no-alias'){
+			$i = $fieldId;
+		} else {
+			$i = $this>fieldId;
+		}
+			
+		$w = $this->whereNumber($id, $i, $first);
 		return $w;
 	}
 

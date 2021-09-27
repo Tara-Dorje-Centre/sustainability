@@ -25,8 +25,8 @@ class userFields extends \application\forms\entityFields{
 		$this->email = new \application\forms\_email('email','email','Email Address'); 
 		$this->focus = new \application\forms\_notes('focus','focus','Focus Area');
 		$this->interests = new \application\forms\_notes('interests','interests','Interests');
-		$this->pwd = new \application\forms\_password('not_used','login-pwd','login-password');
-		$this->pwdConfirm = new \application\forms\_password('not_used','pwd-confirm','confirm-password');
+		$this->pwd = new \application\forms\_password('not-used','login-pwd','login-password');
+		$this->pwdConfirm = new \application\forms\_password('not-used','pwd-confirm','confirm-password');
 		$this->loginName = new \application\forms\_user('login_name','login-name','login-name');
 		$this->lastLogin = new \application\forms\_date('last_login','last-login','Last Login'); 
 		$this->isAdmin = new \application\forms\_yesNo('is_admin','is-admin','Administrator');
@@ -42,11 +42,27 @@ class userFields extends \application\forms\entityFields{
 		$this->_register('pwd', $this->pwd);
 		$this->_register('pwdConfirm', $this->pwdConfirm);
 		$this->_register('lastLogin', $this->lastLogin);
-		$this->_register('lastLogin', $this->lastLogin);
 		$this->_register('isAdmin', $this->isAdmin);
 		$this->_register('isActive', $this->isActive);
 		$this->_register('mustUpdatePwd', $this->mustUpdatePwd);
 		$this->_register('type', $this->type);
+		
+		//disable inherited fields
+		$this->name->fetchEnabled(false);
+		$this->description->enabled(false);
+		// $this->displayOrder->enabled(false);
+		$this->highlight->enabled(false);
+		
+		$this->pwdConfirm->listEnabled(false);
+		$this->pwd->listEnabled(false);
+		$this->pwdConfirm->displayEnabled(false);
+		$this->pwd->displayEnabled(false);
+		
+		
+		$this->focus->listEnabled(false);
+		$this->interests->listEnabled(false);
+				
+				
 	}
    
     
@@ -59,7 +75,7 @@ class userFields extends \application\forms\entityFields{
 	}
 	public function fetch($row){
 		parent::fetch($row);
-		$this->name->set($this->formatUserName($this->nameLast.value,$this->namFirst->value));
+		$this->name->set($this->formatUserName($this->nameLast->value(),$this->nameFirst->value()));
 		
 	}
 	public function setDefaults(){

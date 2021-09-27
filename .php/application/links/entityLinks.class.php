@@ -52,7 +52,7 @@ abstract class entityLinks implements IentityLinks {
 				$this->menu->addLink($this->add('Add',0,0,0));
 				//$this->menu->addLink($this->add('AddChild',$id));
 				//$this->menu->addLink($this->add('AddSibling',$idParent));
-				$this->menu->addLink($this->copy('Copy',$id));
+				//$this->menu->addLink($this->copy('Copy',$id));
 				break;
 			case 'EDIT':
 				$this->menu->addLink($this->list('List',0,$idParent,0));

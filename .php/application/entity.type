@@ -20,7 +20,8 @@ abstract class entityType extends entity{
 		$this->links->addLink($s->reference());
 
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->_pageMenu = $this->links->menu->print();
+		//$this->_pageMenu = $this->links->menu->print();
+		$this->_pageMenu = $this->links->print();
 	}
 	
 	protected function setDefaults(){

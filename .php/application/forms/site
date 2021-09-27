@@ -12,13 +12,13 @@ implements Isite{
 	protected $pageMode = 'VIEW';
 
 	public function __construct($mode = 'VIEW'){
-		
+	
 		$this->pageMode = $mode;
 		$this->settings = new system\siteSettings();
 		$this->verifyLoginState();
 	}
+	
 	public function set(string $heading = 'page heading', string $details = 'page details'){
-
 		$this->settings->setDetails();
 		$this->setDocumentValues();
 		$links = $this->getLinks();
@@ -105,8 +105,6 @@ implements Isite{
 		//always show projects link
 		$m->addLink($p->allProjects(false));
 		$m->addLink($m->logout());
-		//detailHref();	
-		//
 		
 		$content = $m->print();
 		
@@ -119,7 +117,6 @@ return $content;
 	protected function setContents($heading,$details){ 
 
 		if ($this->validLogin == false){
-
 			$l = new system\userLogin('LOGIN-FORM');
 			$content = $l->loginForm();
 		} else {
@@ -228,8 +225,9 @@ return $content;
 
 		//use external stylesheet
 		$css = new \html\_cssLink('./css/styles.css');
-		$override = new \html\_cssLink('./css/override.css');
 		$content = $css->print();
+		
+		$override = new \html\_cssLink('./css/override.css');
 		$content .= $override->print();
 		
 		return $content;

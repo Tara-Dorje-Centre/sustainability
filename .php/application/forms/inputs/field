@@ -450,7 +450,10 @@ interface Ifield{
 		return $i->print();
 	}
 	
-	
+	public function inputChoice(string $options){
+	    return $options;
+		//return $this->id->inputChoice($options);
+	}
  	
  	
 }

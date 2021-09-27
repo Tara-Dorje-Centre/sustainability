@@ -73,6 +73,15 @@ public function securityUser($loginName){
 		return $sql;
 		
 	}
+	
+	public function info($id = 0){
+		$q = $this->cols();
+		$q .= $this->tables(true);
+		$q .= $this->whereId($id, true, 'u.id');
+		return $q;
+	}
+
+	
 	/*
 	public function options($selectedId = 0, $disabled = 'false'){
 	

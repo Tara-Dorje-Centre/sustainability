@@ -58,8 +58,12 @@ trait connectionFunctions {
 	}
 	
 	protected function limit($page,$rows){
+	if ($page >0){
 		global $conn;
 		return $conn->limit($page,$rows);
+	} else {
+		return '';
+	}
 	}
 	
 }

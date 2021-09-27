@@ -3,25 +3,30 @@ namespace application\system;
 
 class user extends \application\entity{
 	public $validationMessages;
+	//private $_userLogin;
+	
+	
 	public function __construct(){
 		parent::__construct();
 		$this->entity = 'user';
 		$this->entityTitle = 'User Profile';
 
-		$this->f = new UserFields();
+		$this->f = new forms\UserFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new UserSQL();
-		$this->links = new UserLinks();
+		$this->sql = new sql\UserSQL();
+		$this->links = new links\UserLinks();
+		
+		//$this->_userLogin = new userLogin();
 	}
 	
 	public function getRequestArguments(){
 	
-	parent::getRequestArguments();
+		parent::getRequestArguments();
 	
 	}
 	
 	public function display(){
-		$detail = parent::display;
+		$detail = parent::display();
 		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		
 			$detail .= $this->requestPasswordResetForm();
 		}
@@ -39,7 +44,7 @@ class user extends \application\entity{
 
 		if ($this->pageMode != 'ADD'){
 			$heading = $this->f->loginName->value();
-			if (($_SESSION['user-id'] == $this->id) && ($_SESSION['must-update-pwd'] == 'yes')){
+			if (($_SESSION['user-id'] == $this->id) AND ($_SESSION['must-update-pwd'] == 'yes')){
 				$heading .= br().'Please update your profile password.';
 			}
 
@@ -52,26 +57,24 @@ class user extends \application\entity{
 	
 	
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		$userL = new UserLinks($menuType,$menuStyle);		
-		$menuL = new MenuLinks($menuType,$menuStyle);
-		
-		$menu = $userL->openMenu('section-heading-links');
-		$menu .= $menuL->linkReference();
-		$menu .= $userL->resetMenu();
+	
+		$s = new \application\links\systemMenuLinks();
+		$this->links->addLink($s->reference());
+
 		if ($this->pageMode == 'VIEW'){
-			if ($_SESSION['is-admin'] == 'yes' || $_SESSION['user-id'] == $this->id){
+			if ($_SESSION['is-admin'] == 'yes' OR $_SESSION['user-id'] == $this->id){
 				//user is admin or self, show edit link
-				$menu .= $userL->edit('edit profile',$this->id);
+				$this->links->addLink($this->links->edit('Edit Profile',$this->id));
 			}
 		} elseif ($this->pageMode == 'EDIT'){
-			$menu .= $userL->view('view',$this->id);
+			$this->links->addLink($this->links->view('View Profile',$this->id));
 		}
-		$menu .= $userL->listingHref();
-		
-		$menu .= $userL->closeMenu();
-		$this->_pageMenu = $menu;
+		if ($_SESSION['is-admin'] == 'yes'){
+			$this->links->addLink($this->links->add('Add Profile'));
+		}
+		$this->links->addLink($this->links->contextList('All Profiles'));
+	
+		$this->_pageMenu = $this->links->print();
 	}
 	
 
@@ -100,10 +103,8 @@ class user extends \application\entity{
 		
 	}
 	
-
-
-
 	private function generatePassword($length = 11) {
+		
 		$chars = '.!%^&*#@';
 		$clen = mb_strlen($chars);
 		$base = md5(microtime());
@@ -118,10 +119,11 @@ class user extends \application\entity{
 			}
 		}
 		return $password;
+
 	}
+
 	
-	
-	
+	/*
 	public function resetPassword($loginName, $loginEmail){
 		
 		//verify that login and email exist for an active account
@@ -146,11 +148,15 @@ class user extends \application\entity{
 			$message .= $links->formatHref($_SESSION['site-url'],$_SESSION['site-url']).br();
 			$this->mailUser($message,'Password Reset');
 			$_SESSION['login-messages'] = 'Profile password reset';
-	/*	} else {
+	
+	
+		} else {
 			$_SESSION['login-messages'] = 'Active profile not found, contact an administrator';	
-		}*/
+		}
 	}
+    */
 
+/*
 	private function mailUser($message = '', $subject = 'User Notification'){
 
 		$fromAddress = ini_get('sendmail_from');
@@ -162,11 +168,10 @@ class user extends \application\entity{
 		$newSubject = $_SESSION['site-title'].':'.$subject;
 		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
 	}
-	
+*/
 	private function obfuscate($pass,$login){
-		//$salt = crypt($login);
-		$hash = md5($pass.$login);
-		return $hash;	
+		$ul = new userLogin();
+		return $ul->obfuscate($pass,$login);
 	}
 
 	
@@ -199,8 +204,8 @@ class user extends \application\entity{
 	public function requestPasswordResetForm(){
 		$entity = 'user-password-reset';
 		$contextMenu = null;
-		$request = new _editForm($entity,$this->pageMode,$this->pageSave);
-		$request->open($contextMenu,$this->_titleEntity);
+		$request = new \application\forms\inputForm($entity,$this->pageMode,$this->pageSave);
+		//$request->open($contextMenu,$this->_titleEntity);
 
 		$request->hidden->addContent($this->f->id->inputHidden());
 		$request->hidden->addContent($this->f->email->inputHidden());	
@@ -208,7 +213,7 @@ class user extends \application\entity{
 		$request->submit->addContent(getSubmitButton('Request Reset','submit-pwd-reset'));
 		$request->submit->addContent($this->getLoginMessages());
 
-		return $request->close();
+		return $request->print();
 		
 	}
 	
@@ -216,7 +221,7 @@ class user extends \application\entity{
 	protected function listRowLink(){
 
 		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] == $this->f->id->value)){
-			$link = $this->links->itemViewEdit($this->f->loginName->value(),$this->f->id->value());
+			$link = $this->links->viewEdit($this->f->loginName->value(),$this->f->id->value());
 		} else {
 			$link = $this->links->view($this->f->loginName->value(),$this->f->id->value());
 		}
@@ -237,7 +242,7 @@ class user extends \application\entity{
 	
 	public function editForm(){
 	
-		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] != $this->id)){
+		if (($_SESSION['is-admin'] == 'yes') OR ($_SESSION['user-id'] != $this->id)){
 			$form = $this->secureEditForm();
 		} else {
 			$form = $this->display();
@@ -248,11 +253,10 @@ class user extends \application\entity{
 	protected function secureEditForm(){
 		$this-> echoState(true,'secureEditForm');
 
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
 	
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
+		
 		if ($this->pageMode == 'ADD'){
 			$this->f->loginName->setValidation(@$this->validationMessages['login']);			
 			$this->edit->required->input($this->f->loginName);
@@ -260,28 +264,24 @@ class user extends \application\entity{
 			$input = $this->f->loginName->inputHidden();
 			$this->edit->required->addContent('Login name ['.$this->f->loginName->value().'] cannot be changed');
 		}
-		$this->f->loginPwd->setValidation(@$this->validationMessages['password']);
-		$this->edit->required->inputPassword($this->f->pwd);
-		$this->edit->required->inputPassword($this->f->pwdConfirm);
 		
-
+		$this->f->pwd->setValidation(@$this->validationMessages['password']);
+		$this->edit->required->input($this->f->pwd);
+		$this->edit->required->input($this->f->pwdConfirm);
+		
 		$this->f->email->setvalidation(@$this->validationMessages['email']);
 		$this->edit->required->input($this->f->email);
 		$this->edit->optional->input($this->f->nameFirst);
 		$this->edit->optional->input($this->f->nameLast);
 
-
 		$m = new UserType;
-		$select = $m->options($this->f->typeEntity->id->value(),$this->f->typeEntity->id->env->variable());
-		$this->edit->optional->choice($this->f->type->id,$select);
+		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
+		$this->edit->optional->inputChoice($this->f->type->id,$select->print());
 		
-
 		$this->edit->optional->input($this->f->focus);
 		$this->edit->optional->input($this->f->interests);
 	
-		
-		
-		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){
+		if ($_SESSION['is-admin'] == 'yes' AND $_SESSION['user-id'] != $this->id){
 			//if admin and not editing self allow setting admin
 			//prevents admins from disabling their own accounts
 			$this->edit->optional->input($this->f->isAdmin);
@@ -291,24 +291,25 @@ class user extends \application\entity{
 			$this->edit->optional->inputHidden($this->f->isAdmin);
 			$this->edit->optional->inputHidden($this->f->isActive);
 			$this->edit->optional->inputHidden($this->f->mustUpdatePwd);
-		}				
+		}		
 		
-		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$edit->hidden->inputHidden($this->f->id);
+		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
+		
+		return $this->edit->print();
 
-		$edit->submit->addContent( getSaveChangesResetButtons());
-		return $edit->close();
 	}
 	
 	
 	public function collectPostValues(){
 		parent::collectPostValues();
 		//get password for local validation
-		$pwd = dbEscapeString($_POST['loginPwd']);
-		$pwdConfirm = dbEscapeString($_POST['loginPwdConfirm']);
+		$pwd = $this->sql->getEscapeString($_POST['login-pwd']);
+		$pwdConfirm = $this->sql->getEscapeString($_POST['pwd-confirm']);
 		//clear the password from post variables if canceling form post
-		$_POST['loginPwd'] = 'password';
-		$_POST['loginPwdConfirm'] = 'password';
+		$_POST['login-pwd'] = 'password';
+		$_POST['pwd-confirm'] = 'password';
 
 		//validate login name
 		if (($this->f->loginName->value() == '') || is_null($this->f->loginName->value())){
@@ -327,7 +328,7 @@ class user extends \application\entity{
 		}
 		//validate password
 		if (($pwd != '') && ($pwd == $pwdConfirm) && ($pwd != 'password')){
-			$this->f->loginPwd->set($this->obfuscate($pwd, $this->f->loginName-value));
+			$this->f->loginPwd->set($this->obfuscate($pwd, $this->f->loginName->value()));
 		} else {
 			if ($pwd == '' || is_null($pwd) || is_null($pwdConfirm) || $pwdConfirm == ''){
 				$validation = 'Password cannot be blank';
@@ -341,7 +342,10 @@ class user extends \application\entity{
 	protected function cancelPost($message, $validation){
 		//echo 'in cancel post:'.$message;
 		//set validation message
-		$this->validationMessages[$validation] = span($message,'highlight-validation');
+		$s = new \html\_span('highlight-validation');
+		$s->setContent($message);
+		$this->validationMessages[$validation] = $s->print();
+
 		//display editing form with current validation state
 		$this->printPage();
 		die;
@@ -364,7 +368,7 @@ class user extends \application\entity{
 			$sql .= " u.type_id = ".$this->f->type->id->value()." ";
 			$sql .= " WHERE u.id = ".$this->f->id->value()."  ";			
 
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 
 			$this->mailUser('Your User Profile Has Been Updated');
 			
@@ -402,9 +406,12 @@ class user extends \application\entity{
 			$sql .= " CURRENT_TIMESTAMP, ";			
 			$sql .= " ".$this->f->type->id->value().") ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 
-			$this->id = dbInsertedId();
+			$id = $this-≥sql->getInsertedId();
+			$this->f->id->set($id);
+			$this->id = $this->f->id->value();
+			
 	}
 	
 	

@@ -25,12 +25,14 @@ abstract class entityList extends entity{
 		$this->echoValue(true, 'count', $this->found,'setFoundCount');
 	}
 	protected function makePageMenu(){
+	
+	$s = new \application\links\systemMenuLinks();
 		$s = new \application\links\systemMenuLinks();
 		$this->base->links->menu->addLink($s->modules());
 		$this->base->links->menu->addLink($s->reference());
-		$this->base->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-		$this->_pageMenu = $this->base->links->menu->print();
+		$this->_pageMenu = $this->base->links->print();
 	}
 	protected function setPageTitle(){
 		$this->_pageTitle = $this->entityTitle;
