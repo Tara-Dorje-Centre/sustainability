@@ -44,30 +44,6 @@ class hiddenNumberField extends _hiddenNumber{
 
 }
 
-class requestVariableNumber extends _hiddenText{
-	public function __construct(string $envVar = 'post-var',$value = 0){
-		parent::__construct('not_used',$envVar,'no-caption');
-		$this->set($value);
-	}
-}
 
-class requestVariable extends _hiddenText{
-	public function __construct(string $envVar = 'post-var',$value = ''){
-		parent::__construct('not_used',$envVar,'no-caption');
-		$this->set($value);
-	}
-}
-class requestPageMode extends requestVariable{
-	public function __construct($value){
-		parent::__construct('pageMode',$value);
-
-	}
-}
-class requestPageAction extends requestVariable{
-	public function __construct($value){
-		parent::__construct('pageAction',$value);
-
-	}
-}
 
 ?>

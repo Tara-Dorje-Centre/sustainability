@@ -2,18 +2,50 @@
 namespace application\entities\reference\forms;
 
 
-class locationFields extends locationChildFields{
-
+class locationFields extends \application\forms\fields{
+	
+	public $id;
+	public $name;	
+	public $description;
+    public $updated;
+	public $created;
+	public $highlight;
+	public $parent;
+	public $type;
 	public $sortKeyParent;
 	public $sortKey;
 	
 	public function __construct(){
 		parent::__construct();
 
-    	$this->sortKey = new \application\forms\_text('sort_key','not-used','Sort Key'); 
-		$this->sortKeyParent = new \application\forms\_text('parent_sort_key'); 
+		$this->id = new \application\forms\_id('id','id','not-used');
+    	$this->name = new \application\forms\_name('name','name','Name');
+    	$this->description = new \application\forms\_description('description','description','Description');
+		$this->updated = new \application\forms\_date('updated','updated','Updated');
+    	$this->created = new \application\forms\_date('created','created','Created');
+        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
+     	$this->parent = new \application\forms\_idName('parent_id','idParent','Parent','parent_name');   
+        $this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
+        $this->sortKey = new \application\forms\_text('sort_key','not-used','Sort Key'); 
+        $this->sortKeyParent = new \application\forms\_text('parent_sort_key'); 
+
+		$this->_register('id', $this->id);
+		$this->_register('name', $this->name);
+		$this->_register('description', $this->description);
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+   		$this->_register('highlight', $this->highlight);
+		$this->_register('parent', $this->parent);
+		$this->_register('type', $this->type);
 		$this->_register('sortKey',$this->sortKey);
 		$this->_register('sortKeyParent',$this->sortKeyParent);
+		
+		$this->updated->envEnabled(false);
+        $this->created->envEnabled(false);
+        $this->updated->listEnabled(false);
+        $this->created->listEnabled(false);
+		$this->description->listEnabled(false);
+		$this->sortKeyParent->listEnabled(false);
     }
 	
 	

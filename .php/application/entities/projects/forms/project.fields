@@ -1,16 +1,23 @@
 <?php
 namespace application\entities\projects\forms;
-class projectFields extends 
-\application\forms\entityChildFields{
+
+class projectFields extends \application\forms\fields{
   /*
- ^_currentUser set to $_SESSION['login-name']
- °_currentTimestamp set to $sessionTime
+ _currentUser set to $_SESSION['login-name']
+ _currentTimestamp set to $sessionTime
  
- _fieldsetEntityChild
-   id, name, description
- created°, updated°, highlight
- parentEntity, typeEntity
 */
+
+
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	public $parent;
+	public $type;
+
   	public $summary;
 	public $started;
     public $pctDone;	
@@ -23,7 +30,18 @@ class projectFields extends
 	
 	public function __construct(){
 		parent::__construct();
-		$this->created->enabled(false);
+		
+		
+		$this->id = new \application\forms\_id('id','id','not-used');
+    	$this->name = new \application\forms\_name('name','name','Name');
+    	$this->description = new \application\forms\_description('description','description','Description');
+		$this->updated = new \application\forms\_date('updated','updated','Updated');
+    	$this->created = new \application\forms\_date('created','created','Created');
+        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
+		$this->parent = new \application\forms\_idName('parent_id','idParent','Parent','parent_name');
+    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
+
+
 		$this->summary = new \application\forms\_notes('summary','summary','Summary');
 		$this->started = new \application\forms\_date('started','started','Started');
     	$this->pctDone = new \application\forms\_number('pct_done','pct-done','Percent.Done');
@@ -33,6 +51,19 @@ class projectFields extends
 		$this->lessons = new \application\forms\_notes('lessons_learned','lessons-learned','Lessons Learned');
 		$this->showAlways = new \application\forms\_yesNo('show_always','show-always','Show.Always');
 		$this->location = new \application\forms\_idName('location_id','location-id','Location','location_name');
+  		
+  		
+  		
+		$this->_register('id', $this->id);
+		$this->_register('name', $this->name);
+		$this->_register('description', $this->description);
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+   		$this->_register('highlight', $this->highlight);
+   		$this->_register('parent', $this->parent);
+		$this->_register('type', $this->type);
+   
+  		
   		$this->_register('summary', $this->summary);
 		$this->_register('started', $this->started);
     	$this->_register('pctDone', $this->pctDone);	
@@ -42,11 +73,29 @@ class projectFields extends
     	$this->_register('lessons', $this->lessons);	 
 		$this->_register('showAlways', $this->showAlways);
 		$this->_register('location', $this->location);
+		
+		$this->updated->envEnabled(false);
+        $this->created->envEnabled(false);
+        
+        $this->updated->listEnabled(false);
+        $this->created->listEnabled(false);
     }
 	public function setDefaults(){
 		parent::setDefaults();
-		global $sessionTime;
-		$this->started->setDefault($this->currentTimestamp);	
+		
+		
+$this->id->setDefault(0);
+    	$this->id->setDefault(0);
+		$this->name->setDefault('');
+		$this->description->setDefault('');
+		$this->created->setDefault($this->_currentTimestamp);
+		$this->updated->setDefault($this->_currentUser);
+		$this->highlight->setDefault('none');
+		$this->parent->setDefault(0);
+    	$this->type->setDefault(0);
+    	
+		//global $sessionTime;
+		//$this->started->setDefault($this->currentTimestamp);	
 		$this->location->setDefault(0);
 		$this->showAlways->setDefault('yes');
 		$this->priority->seDefault(1);

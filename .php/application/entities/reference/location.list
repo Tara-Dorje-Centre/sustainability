@@ -9,7 +9,7 @@ class locationList extends \application\entityList{
 	}
 	
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}
@@ -26,42 +26,36 @@ class locationList extends \application\entityList{
 	}
 	
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
 		
-		$this->base->links->saveMenuSettings();
-		$this->base->links->setType($menuType);
-		$this->base->links->setStyle($menuStyle);
-		$menuL = new MenuLinks($menuType,$menuStyle);
+		$s = new \application\links\systemMenuLinks();
+		$this->base->links->menu->addLink($s->reference());
 		
-		$menu = $this->base->links->openMenu('section-heading-links');
- 		$menu .= $menuL->linkReference();
-		$menu .= $this->base->links->resetMenu();
+		//$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
+		
+		
+		
 		if ($this->idParent > 0){
-			$menu .= $this->base->links->view('Up',$this->idParent);	
+			$this->base->links->menu->addLink($this->base->links->view('Up',$this->idParent));	
 		} else {
-			$menu .= $this->base->links->add();
+			$this->base->links->menu->addLink($this->base->links->add('New', 0));
 		}
-		$menu .= $this->base->links->list('AllLocations',-1);
+		$this->base->links->menu->addLink($this->base->links->list('AllLocations',-1));
 				
 		if ($this->idParent > 0){
-			$menu .= $this->base->links->resetMenu();
+
 			//showing sub locations for a parent
 			if ($this->found != 0){	
 				$caption = 'SubLocations ['.$this->found.']';
-				$menu .= $this->base->links->list($caption,$this->id);
+				$this->base->links->menu->addLink($this->base->links->list($caption,$this->id));
 			} else {
 				$menu .= 'No Sublocations';
 			}
 			//add new sublocation to current parent
-			$menu .= $this->base->links->add('addSubLocation',$this->idParent);
+			$this->base->links->menu->addLink($this->base->links->add('New Sub Location',$this->idParent));
 		}
 		
-		$menu .= $this->base->links->closeMenu();
 		
-				$this->base->links->restoreMenuSettings();
-				
-		$this->_pageMenu = $menu;			
+		$this->_pageMenu = $this->base->links->print();
 	}
 	
 	public function setCount(){
@@ -72,43 +66,24 @@ class locationList extends \application\entityList{
 		} else {
 			// id parent is 0 -- list primary locatons
 			// f id s positive -- listdirect children
-			$sql = $this->base->sql->countChildren($this->idParent);
+			$sql = $this->base->sql->countChildren($this->id);
 
 			$this->echoPrint(true, ' count child locations');
 		} 
-			//locationid = 0, listing on add?
 			
-		/*
-		
-		//	$l = new Location;
-		//	$sortKey = $l->getSortKey($this->idParent);
-		
-		
-		//if ($this->id != 0){
-			$this->found = dbGetCount($sql, 'total_locations');
-			
-		//} else {
-			//$this->found = 0;
-		//}
-		
-		*/
-		global $conn;
-		
-		$this->found = $conn->getCount($sql,'total_locations');
-		
+		$this->found = $this->base->sql->getCount($sql, 'count_details');
 
 	}
 	
 	protected function listingQuickEdit(){
-		$this->base->idParent =$this->idParent;
+		$this->base->idParent = $this->idParent;
 		// new Location('ADD', 0, $this->id);
-		$quickEdit =$this->base->addForm();			
+		$quickEdit = $this->base->addForm();			
 		return $quickEdit;
 	}
 	
 	protected function listingSQL(){
 	
-		
 		 if ($this->idParent == -1){
 		 $this->echoPrint(true, 'fetching all','getListingRows');
 
@@ -116,16 +91,11 @@ class locationList extends \application\entityList{
 		 } else {
 		 $this->echoPrint(true, 'fetching children','getListingRows');
 
-		 $sql = $this->base->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
-		 //$l = new Location;
-		 //$sortKey = $l->getSortKey($this->idParent);
+		 $sql = $this->base->sql->listChildren($this->id,$this->resultPage,$this->perPage);
 		 }
 		 
 		 return $sql;
-		 
 	}
 	
-
-
 }
 ?>

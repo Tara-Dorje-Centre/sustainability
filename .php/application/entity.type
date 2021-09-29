@@ -95,7 +95,7 @@ abstract class entityType extends entity{
 			
 			$result = $this->sql->runStatement($sql);
 			
-			$id = $this-≥sql->getInsertedId();
+			$id = $this->sql->getInsertedId();
 			$this->f->id->set($id);
 			$this->id = $this->f->id->value();
 	}

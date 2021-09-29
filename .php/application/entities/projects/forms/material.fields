@@ -25,11 +25,7 @@ public function __construct(){
 	$this->_register('costActual',$this->costActual);
 
 }
-	public function getRequestArguments(){
 
-
-
-	}
 public function setDefaults(){
 	$this->paidTo->setDefault(1);
 	$this->costUnit->setDefault(0);

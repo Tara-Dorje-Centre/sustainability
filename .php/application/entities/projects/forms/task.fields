@@ -1,8 +1,22 @@
 <?php
 namespace application\entities\projects\forms;
 
-class taskFields extends projectChildFields{
+class taskFields extends \application\forms\fields{
 	
+	
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	public $parent;
+	public $type;
+	
+	public $project;
+	public $projectType;
+	public $location;
+	public $started;
 	
 	public $taskOrder;
     public $summary;
@@ -17,6 +31,24 @@ class taskFields extends projectChildFields{
 	
 public function __construct(){
 	parent::__construct();
+	
+	$this->id = new \application\forms\_id('id','id','not-used');
+    	$this->name = new \application\forms\_name('name','name','Name');
+    	$this->description = new \application\forms\_description('description','description','Description');
+		$this->updated = new \application\forms\_date('updated','updated','Updated');
+    	$this->created = new \application\forms\_date('created','created','Created');
+        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
+		$this->parent = new \application\forms\_idName('parent_id','idParent','Parent','parent_name');
+    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
+
+		$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
+    	$this->projectType = new \application\forms\_idName('project_type','project-type','Project Type','project_type_name');
+    	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
+    	$this->started = new \application\forms\_date('started','started','not-used');           
+    	//$this->approved = new \application\forms\_yesNo('approved','approved','not-used');
+    	//$this->approvedBy = new \application\forms\_user('approved_by','approved-by','not-used');
+  		
+	
 	$this->taskOrder = new \application\forms\_number('task_order','task-order','task_order');						
 	$this->summary = new \application\forms\_text('summary','summary','not-used');
 	$this->pctDone = new \application\forms\_number('pct_done','pct-done','pct_done');	
@@ -27,6 +59,21 @@ public function __construct(){
 	$this->materialsAuthBy = new \application\forms\_text('materials_auth_by','materials-auth-by','not-used');
 	$this->receiptsAuthProject = new \application\forms\_yesNo('receipts_auth_project','receipts-auth-project','not-used');
 	$this->receiptsAuthBy = new \application\forms\_text('receipts_auth_by','receipts-auth-by','not-used');
+	
+	
+	$this->_register('id', $this->id);
+		$this->_register('name', $this->name);
+		$this->_register('description', $this->description);
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+   		$this->_register('highlight', $this->highlight);
+   		$this->_register('parent', $this->parent);
+		
+		$this->_register('project', $this->project);
+ 		$this->_register('projectType', $this->projectType);
+		$this->_register('location', $this->location);
+		$this->_register('started', $this->started);
+		
 		$this->_register('taskOrder', $this->taskOrder);
  		$this->_register('summary', $this->summary);
 		$this->_register('pctDone', $this->pctDone);
@@ -38,9 +85,31 @@ public function __construct(){
 		$this->_register('receiptsAuthProject', $this->receiptsAuthProject);
 		$this->_register('receiptsAuthBy', $this->receiptsAuthBy);
 		
+		$this->updated->envEnabled(false);
+        $this->created->envEnabled(false);
+        
+        $this->updated->listEnabled(false);
+        $this->created->listEnabled(false);
     }
 	public function setDefaults(){
     	parent::setDefaults();
+    	
+    	
+    	$this->id->setDefault(0);
+		$this->name->setDefault('');
+		$this->description->setDefault('');
+		$this->created->setDefault($this->_currentTimestamp);
+		$this->updated->setDefault($this->_currentUser);
+		$this->highlight->setDefault('none');
+		$this->parentEntity->setDefault(0);
+    	$this->type->setDefault(0);
+    	
+    	
+    	$this->project->setDefault(0);
+    	$this->projectType->setDefault(0);
+    	$this->location->setDefault(0);
+    	$this->started->setDefault('');
+    	
     	$this->summary->setDefault('');
     	$this->pctDone->setDefault(0);
     	$this->taskOrder->setDefault(0);

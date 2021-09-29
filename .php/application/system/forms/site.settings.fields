@@ -1,7 +1,7 @@
 <?php
 namespace application\system\forms;
 
-class siteSettingsFields extends \application\forms\entityChildFields{
+class siteSettingsFields extends \application\forms\fields{
 	 public $siteTitle;
 	 public $siteUrl;
 	 public $loginNotice;
@@ -53,76 +53,59 @@ class siteSettingsFields extends \application\forms\entityChildFields{
 	 	$this->publicFontSizeMenu = new \application\forms\_fontSize('public_font_size_menu','public-font-size-menu','public.FontSizeMenu');
 	 	$this->publicFontSizeText = new \application\forms\_fontSize('public_font_size_text','public-font-size-text','publicFontSizeText');
 		
+		$this->_register('siteTitle', $this->siteTitle);
+		$this->_register('siteUrl', $this->siteUrl);
+		$this->_register('loginNotice', $this->loginNotice);
+		$this->_register('organization', $this->organization);
+		$this->_register('organizationUrl', $this->organizationUrl);
+		$this->_register('organizationDescription', $this->organizationDescription);
+		$this->_register('contactName', $this->contactName);
+		$this->_register('contactEmail', $this->contactEmail);
+		$this->_register('showPublicSite', $this->showPublicSite);
+		$this->_register('showCostReports', $this->showCostReports);
+		$this->_register('showRevenueReports', $this->showRevenueReports);
+		$this->_register('publicFillColor', $this->publicFillColor);
+		$this->_register('publicSiteColor', $this->publicSiteColor);
+		$this->_register('publicPageColor', $this->publicPageColor);
+		$this->_register('publicMenuColor', $this->publicMenuColor);
+		$this->_register('publicMenuColorHover', $this->publicMenuColorHover);
+		$this->_register('publicTextColor', $this->publicTextColor);
+		$this->_register('publicTextColorHover', $this->publicTextColorHover);
+		$this->_register('publicFontFamily', $this->publicFontFamily);
+		$this->_register('publicFontSizeTitle', $this->publicFontSizeTitle);
+		$this->_register('publicFontSizeHeading', $this->publicFontSizeHeading);
+		$this->_register('publicFontSizeMenu', $this->publicFontSizeMenu);
+		$this->_register('publicFontSizeText', $this->publicFontSizeText);
 	
-	
-
-	$this->_register('siteTitle', $this->siteTitle);
-	$this->_register('siteUrl', $this->siteUrl);
-	$this->_register('loginNotice', $this->loginNotice);
-	$this->_register('organization', $this->organization);
-	$this->_register('organizationUrl', $this->organizationUrl);
-	$this->_register('organizationDescription', $this->organizationDescription);
-	$this->_register('contactName', $this->contactName);
-	$this->_register('contactEmail', $this->contactEmail);
-	$this->_register('showPublicSite', $this->showPublicSite);
-	$this->_register('showCostReports', $this->showCostReports);
-	$this->_register('showRevenueReports', $this->showRevenueReports);
-	$this->_register('publicFillColor', $this->publicFillColor);
-	$this->_register('publicSiteColor', $this->publicSiteColor);
-	$this->_register('publicPageColor', $this->publicPageColor);
-	$this->_register('publicMenuColor', $this->publicMenuColor);
-	$this->_register('publicMenuColorHover', $this->publicMenuColorHover);
-	$this->_register('publicTextColor', $this->publicTextColor);
-	$this->_register('publicTextColorHover', $this->publicTextColorHover);
-	$this->_register('publicFontFamily', $this->publicFontFamily);
-	$this->_register('publicFontSizeTitle', $this->publicFontSizeTitle);
-	$this->_register('publicFontSizeHeading', $this->publicFontSizeHeading);
-	$this->_register('publicFontSizeMenu', $this->publicFontSizeMenu);
-	$this->_register('publicFontSizeText', $this->publicFontSizeText);
-		
-		//disable inherited entity fields
-		$this->id->enabled(false);
-		$this->name->enabled(false);
-		$this->description->enabled(false);
-		$this->created->enabled(false);
-		$this->updated->enabled(false);
-		$this->highlight->enabled(false);
-		
-		$this->parentEntity->enabled(false);
-		$this->type->enabled(false);
-	}
-	public function getRequestArguments(){
-
-
 
 	}
+	
 	public function setDefaults(){
 		parent::setDefaults();
 		
 		$this->siteTitle->setDefault('default');
-		// $this->name->set($this->siteTitle->value);
-		 $this->siteUrl->setDefault('default');
-		 $this->loginNotice->setDefault('default');
-		 $this->organization->setDefault('default');
-		 $this->organizationUrl->setDefault('default');
-		 $this->organizationDescription->setDefault('default');
-		 $this->contactName->setDefault('default');
-		 $this->contactEmail->setDefault('default');
-		 $this->showPublicSite->setDefault('yes');
-		 $this->showCostReports->setDefault('no');
-		 $this->showRevenueReports->setDefault('no');
-		 $this->publicFillColor->setDefault('none');
-		 $this->publicSiteColor->setDefault('none');
-		 $this->publicPageColor->setDefault('none');
-		 $this->publicMenuColor->setDefault('none');
-		 $this->publicMenuColorHover->setDefault('none');
-		 $this->publicTextColor->setDefault('black');
-		 $this->publicTextColorHover->setDefault('green');
-		 $this->publicFontFamily->setDefault('Arial');
-		 $this->publicFontSizeTitle->setDefault(20);
-		 $this->publicFontSizeHeading->setDefault(16);
-		 $this->publicFontSizeMenu->setDefault(14);
-		 $this->publicFontSizeText->setDefault(12);
+		$this->siteUrl->setDefault('default');
+		$this->loginNotice->setDefault('default');
+		$this->organization->setDefault('default');
+		$this->organizationUrl->setDefault('default');
+		$this->organizationDescription->setDefault('default');
+		$this->contactName->setDefault('default');
+		$this->contactEmail->setDefault('default');
+		$this->showPublicSite->setDefault('yes');
+		$this->showCostReports->setDefault('no');
+		$this->showRevenueReports->setDefault('no');
+		$this->publicFillColor->setDefault('none');
+		$this->publicSiteColor->setDefault('none');
+		$this->publicPageColor->setDefault('none');
+		$this->publicMenuColor->setDefault('none');
+		$this->publicMenuColorHover->setDefault('none');
+		$this->publicTextColor->setDefault('black');
+		$this->publicTextColorHover->setDefault('green');
+		$this->publicFontFamily->setDefault('Arial');
+		$this->publicFontSizeTitle->setDefault(20);
+		$this->publicFontSizeHeading->setDefault(16);
+		$this->publicFontSizeMenu->setDefault(14);
+		$this->publicFontSizeText->setDefault(12);
 		
 	}
 	

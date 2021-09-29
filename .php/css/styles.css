@@ -245,6 +245,23 @@ a.menu-links-item:hover, a.paging-links-item:hover, a.button-links-item:hover{
 	background-color:green;
 	color:white;	
 }
+.fieldset-legend{
+    font-size:18px;
+	font-weight:bold;
+}
+.display-detail{
+    margin:0;
+	padding:5px;	
+
+}
+.display-detail-caption{
+	font-size:14px;
+
+}
+.display-detail-value{
+	font-size:16px;
+
+}
 .highlite-section{
 	color:red;
 	background-color:yellow;

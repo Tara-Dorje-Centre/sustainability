@@ -127,7 +127,7 @@ public function __construct(){
 	
 	
 	
-		if ($perPage > 0){
+		if ($perPage > 0 AND $page > 0){
 	     	$limitSQL = " LIMIT ";
 	     	$limitOffset = ($page - 1) * $perPage;
 	     	$limitSQL .= $limitOffset.", ".$perPage;

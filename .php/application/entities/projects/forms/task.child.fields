@@ -3,6 +3,12 @@ namespace application\entities\projects\forms;
 
 abstract class taskChildFields extends projectChildFields{
 
+
+	public $project;
+	public $projectType;
+	public $location;
+	public $started;
+
 	public $task;
 	public $taskType;
 	public $reported;
@@ -15,8 +21,16 @@ abstract class taskChildFields extends projectChildFields{
 	
     public function __construct(){
     	parent::__construct();
-    	$this->task = new _fieldIdName('task_id','id-task','Task','task_name');
-		
+    	
+    	
+    	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
+    	$this->projectType = new \application\forms\_idName('project_type','project-type','Project Type','project_type_name');
+    	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
+    	$this->started = new \application\forms\_date('started','started','not-used');           
+
+    	
+    	$this->task = new \application\forms\_idName('task_id','id-task','Task','task_name');
+		$this->taskType = new \application\forms\_idName('task_type_id','task-type','Task Type','task_type');
 		$this->reported = new \application\forms\_date('reported','date-reported','Reported');
 		$this->doneBy = new \application\forms\_user('done_by','done-by','DoneBy');
     	$this->linkUrl = new \application\forms\_text('link_url','link-url','LinkUrl');
@@ -25,7 +39,15 @@ abstract class taskChildFields extends projectChildFields{
 		$this->quantity = new \application\forms\_number('quantity','quantity','Quantity');
 		$this->quantityType = new \application\forms\_idName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
 		
+		$this->_register('project', $this->project);
+ 		$this->_register('projectType', $this->projectType);
+		$this->_register('location', $this->location);
+		$this->_register('started', $this->started);
+
+		
+		
 		$this->_register('task', $this->task);
+		$this->_register('taskType', $this->taskType);
 		$this->_register('reported', $this->reported);
 		$this->_register('doneBy', $this->doneBy);
 		$this->_register('linkUrl', $this->linkUrl);

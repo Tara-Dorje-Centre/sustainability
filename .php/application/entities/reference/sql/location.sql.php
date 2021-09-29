@@ -48,34 +48,34 @@ public function list($page = 1, $rows = 10){
 	
 	$q .= " ORDER BY l.sort_key ";
 
-	$q .= sqlLimitClause($page, $rows);
+	$q .= $this->limit($page, $rows);
 	return $q;
 }
 
 
 public function listChildren($idParent, $page = 1, $rows = 10){
 
-	$q .= $this->cols();
+	$q = $this->cols();
 	$q .= $this->tables(true);
 	//if ($idParent != -1){
 	$q .= " WHERE l.parent_id = ".$idParent." "; 
 	//} 
 	$q .= " ORDER BY l.sort_key ";
 
-	$q .= sqlLimitClause($page, $rows);
+	$q .= $this->limit($page, $rows);
 	return $q;
 }
 
 public function count(){
 	$q = " SELECT  ";
-	$q .= " COUNT(*) total_locations ";
+	$q .= " COUNT(*) count_details ";
 	$q .= $this->tables();
 	return $q;
 }
 
 public function countChildren($id){
 	$q = " SELECT  ";
-	$q .= " COUNT(*) total_locations ";
+	$q .= " COUNT(*) count_details ";
 	$q .= $this->tables();
 	//if ($id >= 0){
 	$q .= " WHERE l.parent_id = ".$id." "; 

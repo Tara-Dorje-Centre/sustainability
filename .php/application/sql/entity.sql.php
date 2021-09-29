@@ -115,7 +115,7 @@ use connectionFunctions;
 		if ($fieldId != 'no-alias'){
 			$i = $fieldId;
 		} else {
-			$i = $this>fieldId;
+			$i = $this->fieldId;
 		}
 			
 		$w = $this->whereNumber($id, $i, $first);

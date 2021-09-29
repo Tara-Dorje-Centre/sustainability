@@ -4,6 +4,9 @@ namespace application\entities\projects\forms;
 abstract class projectChildFields 
 extends \application\forms\entityChildFields{
 
+
+
+
 	public $project;
 	public $projectType;
 	public $location;
@@ -13,12 +16,17 @@ extends \application\forms\entityChildFields{
 	
     public function __construct(){
     	parent::__construct();
+    	
+    	
     	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
     	$this->projectType = new \application\forms\_idName('project_type','project-type','Project Type','project_type_name');
     	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
     	$this->started = new \application\forms\_date('started','started','not-used');           
-    	$this->approved = new \application\forms\_yesNo('approved','approved','not-used');
-    	$this->approvedBy = new \application\forms\_user('approved_by','approved-by','not-used');
+    	//$this->approved = new \application\forms\_yesNo('approved','approved','not-used');
+    	//$this->approvedBy = new \application\forms\_user('approved_by','approved-by','not-used');
+  		
+  		
+  		
   		$this->_register('project', $this->project);
  		$this->_register('projectType', $this->projectType);
 		$this->_register('location', $this->location);
@@ -29,7 +37,11 @@ extends \application\forms\entityChildFields{
     }
 	public function setDefaults(){
     	parent::setDefaults();
-    	//$this->parentProject->setDefault(0);
+    	
+    	
+    	
+    	$this->project->setDefault(0);
+    	$this->projectType->setDefault(0);
     	$this->location->setDefault(0);
     	$this->started->setDefault($this->_currentTimestamp);
     	//$this->approved->setDefault('no');

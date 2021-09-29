@@ -9,19 +9,18 @@ class location extends \application\entity{
   	 	$this->entityTitle = 'Location';
   	 	$this->entity = 'location';
 
-	 	//$this->pageSave = 'pr_Location_Save.php';
 		$this->sql = new sql\locationSQL();
 		$this->links = new links\locationLinks();
 		$this->f = new forms\locationFields();
 		$this->f->setEntity($this->entity);
 	}
 	public function getRequestArguments(){
-
+		parent::getRequestArguments();
 
 
 	}
 	protected function listRowLink(){
-		$link = $this->links->itemViewEdit($this->f->sortKey->value(),$this->f->id->value());
+		$link = $this->links->viewEdit($this->f->sortKey->value(),$this->f->id->value());
 		return $link;
 	}
 	
@@ -37,7 +36,7 @@ class location extends \application\entity{
 		$sql = $this->sql->countChildren($this->id);
 		
 		
-		$this->childLocations = dbGetCount($sql, 'total_locations');
+		$this->childLocations = $this->sql->getCount($sql, 'count_details');
 		} else {
 		$this->childLocations = 0;
 		}
@@ -61,51 +60,50 @@ class location extends \application\entity{
 	}
 	
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
 		
-		$locationL = new LocationLinks($menuType,$menuStyle);
-		$menuL = new MenuLinks($menuType,$menuStyle);
-		
-		$menu = $locationL->openMenu('section-heading-links');		
-		$menu .= $menuL->linkReference();
-		$menu .= $locationL->resetMenu();
 		
 		if ($this->idParent > 0){
-			$menu .= $locationL->detailViewHref($this->idParent,'Up');
+			$this->links->addLink($this->links->view('Up',$this->idParent));
 		}
 		if ($this->pageMode == 'VIEW'){
-			$menu .= $locationL->detailEditHref($this->id);
+			$this->links->addLink($this->links->edit('Edit', $this->id));
 		} elseif ($this->pageMode == 'EDIT'){
-			$menu .= $locationL->detailViewHref($this->id);
+			$this->links->addLink($this->links->view('View', $this->id));
 		}
-		$menu .= $locationL->listingHref(-1);	
+		$this->links->addLink($this->links->list('All Locations', -1));	
 
 		if ($this->pageMode != 'ADD'){
-			$menu .= $locationL->resetMenu();
 			
 			$i = $this->childLocations;
 			if ($i != 0){
-				$menu .= $locationL->listingHref($this->id,'Sublocations('.$i.')');
+				$this->links->addLink($this->links->list('Sublocations('.$i.')',$this->id));
 			} else {
 				$menu .= 'No Sublocations';	
 			}
-			$menu .= $locationL->detailAddHref($this->id);
+			$this->links->addLink($this->links->add('New',$this->id));
 		}
 	
-		$menu .= $locationL->closeMenu();
-		$this->_pageMenu = $menu;
+
+		$this->_pageMenu = $this->links->print();
 	}
 	
 
-	
+	public function options($selected = 0, $id = 'id-type'){
+	/*
 	public function options(
 		$selected = 0, 
 		$idName = 'locationId', 
 		$disabled = 'false',
 		$showLink = true,
 		$onChangeJS = NULL){
+	*/
 
+		$sql = $this->sql->options($selected);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $this->entityTitle);
+		$s->defaultOption(0,'-select '.$this->entityTitle);
+		return $s;
+
+/*
 		$this->echoState(true, 'options');
 		
 		
@@ -124,56 +122,57 @@ class location extends \application\entity{
 			$select .= $links;	
 		}
 		return $select;
-
+*/
 	}
 	
 	protected function setDefaults(){
 	
-
-		//if ($this->pageMode == 'ADD'){
-			//if add came from all locations default, reset to 0 for no parent
-			if ($this->idParent == -1){
-				$this->idParent = 0;
-			}
-		//}
+		//if add came from all locations default, reset to 0 for no parent
+		if ($this->idParent == -1){
+			$this->idParent = 0;
+		}
+		
 		parent::setDefaults();
 	}  
-//add to entity
-
-
-
-
 
 	public function editForm(){
-		$this->echoState(true,'editForm');
-		
-				
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
+	
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
+	
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
+		
 		$this->edit->required->input($this->f->name);
-
-		$type = new locationType('OPTIONS');
-		$select = $type->options($this->f->typeEntity->value(),$this->f->typeEntity->env->variable(),'false',true);
-		$this->edit->required->choice($this->f->typeEntity->id, $select);
 		
-					
+		$m = new locationType;
+		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
+		$this->edit->required->inputChoice($this->f->type->id,$select->print());
+
+		$m = new location;
+		$select = $m->options($this->f->parent->id->value(),$this->f->parent->id->env->variable());
+		$this->edit->required->inputChoice($this->f->parent->id,$select->print());
+
+		
+		
+		//$this->edit->required->input($this->f->displayOrder);
+		//$this->edit->required->input($this->f->highlight);
+		
 		$this->edit->optional->input($this->f->description);
+		//$this->edit->optional->input($this->f->notes);
 		
-		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$this->edit->hidden->addContent($this->f->parentEntity->id->inputHidden());
-		$this->edit->hidden->addContent($this->f->id->inputHidden());
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		$this->edit->hidden->inputHidden($this->f->id);
+		//$this->edit->hidden->inputHidden($this->f->parent->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
+		
+		return $this->edit->print();
 
-		return $this->edit->close();
 	}
 
 
 	private function getSortKey($id){
 		$sql = $this->sql->sortKey($id);
-		$sortKey = dbGetScalar($sql, 'sort_key');
+		$sortKey = $this->sql->getScalar($sql, 'sort_key');
 		return $sortKey;		
 	}
 
@@ -192,7 +191,7 @@ class location extends \application\entity{
 		$sortKey = $this->buildSortKey();
 		if ($sortKey != $this->f->sortKey->value()){
 			$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
-		$result = dbRunSQL($sql);
+		$result = $this->sql->runSQL($sql);
 		}
 	
 	}
@@ -208,7 +207,7 @@ class location extends \application\entity{
 			$sql .= " l.description = '".$this->f->description->value()."' ";
 			$sql .= " WHERE l.id = ".$this->id."  ";			
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
 			$this->updateSortKey();
 	}
@@ -224,15 +223,15 @@ class location extends \application\entity{
 			$sql .= " description) ";
 			$sql .= " VALUES (";
 			$sql .= "'".$this->f->name->value()."', ";
-			$sql .= " ".$this->parent->value().", ";
-			$sql .= " ".$this->f->type->value().", ";
+			$sql .= " ".$this->f->parent->id->value().", ";
+			$sql .= " ".$this->f->type->id->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= "'".$this->f->description->value()."') ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->id = dbInsertedId();
+			$this->id = $this->sql->getInsertedId();
 			
 			$this->updateSortKey();
 		

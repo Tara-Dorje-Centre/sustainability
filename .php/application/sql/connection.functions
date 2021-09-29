@@ -14,12 +14,12 @@ trait connectionFunctions {
 	
 	public function query($sql){
 		global $conn;
-		return $conn->query(sql);
+		return $conn->query($sql);
 	}
 	
 	public function runStatement($sql){
 		global $conn;
-		return $conn->runStatement(sql);
+		return $conn->runStatement($sql);
 	}
 	
 	public function getResult($sql){
@@ -58,12 +58,8 @@ trait connectionFunctions {
 	}
 	
 	protected function limit($page,$rows){
-	if ($page >0){
 		global $conn;
 		return $conn->limit($page,$rows);
-	} else {
-		return '';
-	}
 	}
 	
 }

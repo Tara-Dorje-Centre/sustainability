@@ -12,29 +12,30 @@ abstract class entityLinks implements IentityLinks {
 		$this->menu = new linkMenu($menuName,'LIST','menu');
 		$this->setEntityContext($entity);
 	}
-	/*
-	public function formatToggleLink($l,$c){
 	
-	}
-	*/
+	
 	public function setEntityContext(string $entity){
 		$this->entityContext = $entity;
 		$this->setRequest();
 	}
 	
+	abstract protected function setRequest();
+	/*implement per entity*/
+	/*
 	protected function setRequest(){
 		$this->request = new entityRequest($this->entityContext,$this->pagePortal);
 	}
+	*/
 	
-	public function print(){
+	final public function print(){
 		return $this->menu->print();
 	}
 	
-	public function addLink(link $l){
+	final public function addLink(link $l){
 		$this->menu->addLink($l);
 	}
 	
-	public function getLink(url $url, $caption){
+	final public function getLink(url $url, $caption){
 		$l = $this->menu->getLink($url,$caption);
 		return $l;	
 	}
@@ -94,7 +95,6 @@ abstract class entityLinks implements IentityLinks {
 	public function copy(string $caption = 'Copy', $id = 0){
 		return $this->detail($caption,'COPY',$id);
 	}
-	
 	
 	public function contextList(string $caption = 'entity-context'){
 		$linkCaption = $caption;

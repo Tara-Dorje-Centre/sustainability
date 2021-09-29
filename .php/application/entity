@@ -20,11 +20,13 @@ abstract class entity extends baseEntity{
  	public function __construct(){
 		parent::__construct();
 	}
+	
 	final public function printRequest(){
 		$this->getRequestArguments();
 		$this->setDetails();
 		$this->printPage();
 	}
+	
 	public function getRequestArguments(){
 		$this->getRequestIdentifiers();
 		$this->getRequestPaging();
@@ -72,7 +74,7 @@ abstract class entity extends baseEntity{
 		
 	}	
 	
-	public function options($selected, $id = 'id-type'){
+	public function options($selected = 0, $id = 'id-type'){
 		$sql = $this->sql->options($selected);
 		$s = new \html\inputs\selectQuery($id,$selected,$sql, $this->entityTitle);
 		$s->defaultOption(0,'-select '.$this->entityTitle);
@@ -80,7 +82,6 @@ abstract class entity extends baseEntity{
 	}	
 	
 	public function optionsField(_field &$f){
-		//$m = new receiptType('OPTIONS');
 		$s = $this->options($f->value(),$f->env->variable());
 		return $f->setSelect($s);
 	}
@@ -143,11 +144,12 @@ abstract class entity extends baseEntity{
 	}
 
 	 public function collectPostValues(){
-		$this->pageMode = $_GET['pageAction'];	
+		$this->pageMode = $_POST['page-mode'];	
 		$this->f->setEnvironment('POST');
 		$this->f->read();
 		$this->getFieldIds();
 		$this->echoState(true,'collectPostValues');
+		//$this->f->echoFieldState();
 	}
 				
 	protected function getFieldIds(){
@@ -155,8 +157,8 @@ abstract class entity extends baseEntity{
 			$this->id = $this->f->id->value();
 		}
 		
-		if (isset($this->f->parentEntity)){
-			$this->idParent = $this->f->parentEntity->id->value();
+		if (isset($this->f->parent)){
+			$this->idParent = $this->f->parent->id->value();
 		}
 	}
 	
@@ -225,6 +227,8 @@ abstract class entity extends baseEntity{
 	
 	final public function saveChanges(){
 		$this->echoState(true, 'saveChanges');
+		//$this->f->echoFieldState();
+		$this->echoValue(true,'pageMode',$this->pageMode);
 		switch($this->pageMode){
 			case 'COPY':
 				$this->copy();
