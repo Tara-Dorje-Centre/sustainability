@@ -24,11 +24,16 @@ class locationFields extends \application\forms\fields{
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
     	$this->created = new \application\forms\_date('created','created','Created');
         $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-     	$this->parent = new \application\forms\_idName('parent_id','id-parent','Parent','parent_name');   
-        $this->type = new \application\forms\_idName('type_id','id-type','Type','type_name');
+     	$this->parent = new \application\forms\_idName('parent_id','id-parent','Parent Location','parent_name');   
+        $this->type = new \application\forms\_idName('type_id','id-type','Location Type','type_name');
         $this->sortKey = new \application\forms\_text('sort_key','not-used','Sort Key'); 
-        $this->sortKeyParent = new \application\forms\_text('parent_sort_key'); 
+        $this->sortKeyParent = new \application\forms\_text('parent_sort_key','not-used','Sort Key Parent'); 
 
+		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
 		$this->_register('description', $this->description);
@@ -39,13 +44,21 @@ class locationFields extends \application\forms\fields{
 		$this->_register('type', $this->type);
 		$this->_register('sortKey',$this->sortKey);
 		$this->_register('sortKeyParent',$this->sortKeyParent);
-		
+	}
+	
+	private function disableFields(){
 		$this->updated->envEnabled(false);
         $this->created->envEnabled(false);
+        
+        $this->id->listEnabled(false);
+        $this->highlight->listEnabled(false);
         $this->updated->listEnabled(false);
         $this->created->listEnabled(false);
 		$this->description->listEnabled(false);
 		$this->sortKeyParent->listEnabled(false);
+		
+		$this->id->displayEnabled(false);
+		$this->highlight->displayEnabled(false);
     }
 	
 	

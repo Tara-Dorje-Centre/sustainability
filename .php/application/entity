@@ -74,9 +74,18 @@ abstract class entity extends baseEntity{
 		
 	}	
 	
-	public function options($selected = 0, $id = 'id-type'){
+	public function options(
+		$selected = 0, 
+		$id = 'id-type',
+		$caption = 'use-entity'){
+		
+		if ($caption == 'use-entity'){
+			$c = $this->entityTitle;
+		} else {
+			$c = $caption;
+		}
 		$sql = $this->sql->options($selected);
-		$s = new \html\inputs\selectQuery($id,$selected,$sql, $this->entityTitle);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
 		$s->defaultOption(0,'-select '.$this->entityTitle);
 		return $s;
 	}	
