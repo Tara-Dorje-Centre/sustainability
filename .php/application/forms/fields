@@ -114,7 +114,7 @@ abstract class fields extends \framework\_contentWriter{
 	public function echoFieldState(){
 		
 		foreach ($this->_fields as $f){
-			$this->echoValue(true,$f->env->variable(),$f->value());
+			$this->echoValue(true,$f->getEnvironmentVariable(),$f->value());
 		}
 		
 	

@@ -1,6 +1,6 @@
 <?php
 
-include_once("inputs/manifest");
+include_once("inputs/manifest.inc");
 
 include_once("input.form.section");
 include_once("input.form");

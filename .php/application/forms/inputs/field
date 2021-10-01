@@ -2,67 +2,25 @@
 
 namespace application\forms;
 
-interface Ifield{
-	public const dtTEXT = 'TEXT';
-	public const dtNUMBER = 'NUMBER';
-	public const dtDATE = 'DATE';
-	public const dtBOOLEAN = 'BOOLEAN';
-	
- 	public function setCaption(string $caption = 'no caption');
-	public function setEntity(string $entity);
-	public function setEnvironment(string $env= 'POST');
- 	public function setEnvironmentVariable(string $var = 'not-used');
- 	public function setFetchColumn(string $dbCol = 'not_used');
- 	public function enabled(bool $use = false);
- 	public function setEnabled(
- 		bool $fetch = false, 
- 		bool $display = false, 
- 		bool $list = false, 
- 		bool $env = false
- 		//,
- 		//bool $input = false
- 		);
-	public function fetchEnabled(bool $use = false);
-	public function envEnabled(bool $use = false);
-	public function displayEnabled(bool $use = false);
-	public function listEnabled(bool $use = false);
-	//public function inputEnabled(bool $use = false);
- 	public function set($value);
- 	public function setDefault($value);
- 	public function reset(bool $useDefault = false);
- 	public function get();
-   	public function value();
- 	public function valueSQL();
- 	public function valueRaw();
- 	public function read();
- 	public function write();
-	public function fetch($row);
-	public function format();
- 	public function listCaption();
- 	public function listDetail();
- 	public function displayDetail();
- 	public function input();
- }
-
  abstract class field extends \framework\_contentWriter
  implements Ifield{
  	public $env;
- 	protected $_default = NULL;
- 	protected $_dbCol = 'not-used';
- 	protected $_caption = 'not-used';
+ 	protected  $_default = NULL;
+ 	protected  $_dbCol = 'not-used';
+ 	protected  $_caption = 'not-used';
  	protected  $_dataType = 'TEXT';
- 	protected 	$_raw = NULL;
+ 	protected  $_raw = NULL;
  	protected  $_number = 0;
  	protected  $_text = '';
  	protected  $_date = '';
- 	protected $_boolean = false;
+ 	protected  $_boolean = false;
  	protected  $_fetchEnabled = false;
  	protected  $_envEnabled = false;
  	protected  $_listEnabled = false;
  	protected  $_displayEnabled = false;
-  	//protected  $_inputEnabled = true;
-  	protected $_validation = '';
-	protected $_tooltip = '';
+  	protected  $_inputEnabled = true;
+  	protected  $_validation = '';
+	protected  $_tooltip = '';
  	public function __construct(
  		string $dbCol = 'not-used', 
  		string $envVar = 'not-used', 
@@ -81,7 +39,7 @@ interface Ifield{
  			$this->envEnabled(true);
  		}
  		
- 		if ($caption != 'not-used' OR $caption == 'hidden'){
+ 		if ($caption != 'not-used' OR $caption != 'hidden'){
  			$this->displayEnabled(true);
  			$this->listEnabled(true);
  			//$this->inputEnabled(true);
@@ -112,6 +70,9 @@ interface Ifield{
  	public function setEnvironmentVariable(string $var = 'not-used'){
  		$this->env->setEnvironmentVariable($var);
  	}
+ 	public function getEnvironmentVariable(){
+ 		return $this->env->variable();
+ 	}
  	public function setFetchColumn(string $dbCol = 'not_used'){
  	 	 	$this->_dbCol = $dbCol;
  	}
@@ -120,11 +81,8 @@ interface Ifield{
  		bool $fetch = false, 
  		bool $display = false, 
  		bool $list = false, 
- 		bool $env = false
- 		//,
- 		//bool $input = false
- 		)
- 	{
+ 		bool $env = false){
+ 		
  		$this->fetchEnabled($fetch);
  		$this->displayEnabled($display);
  		$this->listEnabled($list);
@@ -146,9 +104,9 @@ interface Ifield{
 	public function listEnabled(bool $use = false){
  		$this->_listEnabled = $use;
  	}
-	//public function inputEnabled(bool $use = false){
- 		//$this->_inputEnabled = $use;
- 	//}
+	public function inputEnabled(bool $use = false){
+ 		$this->_inputEnabled = $use;
+ 	}
 	public function set($value){
 		$this->_raw = $value;
 		switch ($this->_datatype) {
@@ -168,11 +126,13 @@ interface Ifield{
  		 		$this->_text = $this->_raw ;
 		}
 	}
-	public function setDefault($value){
-		//if (!is_null($value)){
+	public function setDefault($value = NULL){
+		if (!is_null($value)){
 			$this->_default = $value;
 			$this->reset(true);
-		//} else {
+		} else {
+			$this->reset(false);
+		}
 		//	$this->_default = $this->getDataTypeDefault();
 		//}
 			//$this->set(false);
@@ -338,7 +298,7 @@ interface Ifield{
  	
  	public function write(){
  	  	if ($this->_envEnabled){
- 	  		//writeTeimestampDate
+ 	  		
  			$this->env->set($this->value(),true);
  		}
  	}
@@ -408,7 +368,7 @@ interface Ifield{
         			break;
     			/*
     			case 'TEXT':
-  		  			$this->_text = displayLines($this->_raw);
+  		  			$this->_text = \html\displayLines($this->_raw);
         			break;
         		*/
         		case 'BOOLEAN':

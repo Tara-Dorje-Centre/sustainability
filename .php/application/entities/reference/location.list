@@ -28,30 +28,30 @@ class locationList extends \application\entityList{
 	protected function makePageMenu(){
 		
 		$s = new \application\links\systemMenuLinks();
-		$this->base->links->menu->addLink($s->reference());
+		$this->base->links->addLink($s->reference());
 		
 		//$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
 		
 		
 		if ($this->idParent > 0){
-			$this->base->links->menu->addLink($this->base->links->view('Up',$this->idParent));	
+			$this->base->links->addLink($this->base->links->view('Up',$this->idParent));	
 		} else {
-			$this->base->links->menu->addLink($this->base->links->add('New', 0));
+			$this->base->links->addLink($this->base->links->add('New', 0));
 		}
-		$this->base->links->menu->addLink($this->base->links->list('AllLocations',-1));
+		$this->base->links->addLink($this->base->links->list('AllLocations'));
 				
 		if ($this->idParent > 0){
 
 			//showing sub locations for a parent
 			if ($this->found != 0){	
 				$caption = 'SubLocations ['.$this->found.']';
-				$this->base->links->menu->addLink($this->base->links->list($caption,$this->id));
+				$this->base->links->addLink($this->base->links->list($caption,$this->id));
 			} else {
 				$menu .= 'No Sublocations';
 			}
 			//add new sublocation to current parent
-			$this->base->links->menu->addLink($this->base->links->add('New Sub Location',$this->idParent));
+			$this->base->links->addLink($this->base->links->add('New Sub Location',$this->idParent));
 		}
 		
 		

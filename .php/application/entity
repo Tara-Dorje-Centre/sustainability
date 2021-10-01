@@ -149,7 +149,8 @@ abstract class entity extends baseEntity{
 		$this->f->read();
 		$this->getFieldIds();
 		$this->echoState(true,'collectPostValues');
-		//$this->f->echoFieldState();
+		
+		$this->f->echoFieldState();
 	}
 				
 	protected function getFieldIds(){

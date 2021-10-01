@@ -1,6 +1,7 @@
 <?php
 
 include_once ("environment.variable");
+include_once("Ifield");
 include_once("field");
 include_once("text.field");
 include_once("request.variables.field");

@@ -21,6 +21,7 @@ $c = $this->select();
 	$c .= " p.sort_key parent_sort_key, ";
 	$c .= " l.type_id, ";
 	$c .= " t.name type_name, ";
+	$c .= " t.highlight_style, ";
 	$c .= " l.name, ";
 	$c .= " l.sort_key, ";
 	$c .= " l.description, ";
@@ -93,7 +94,7 @@ public function sortKey($id){
 public function sortKeyUpdate($id, $sortKey){
 		
 		$sql = " UPDATE locations as l	";
-		$sql .= " SET l.sort_key = '".dbEscapeString($sortKey)."' ";	
+		$sql .= " SET l.sort_key = '".$sortKey."' ";	
 		$sql .= " WHERE l.id = ".$id." ";
 	return $sql;
 }
@@ -101,7 +102,7 @@ public function sortKeyUpdate($id, $sortKey){
 
 public function listByParentSortKey($sortKeyParent, $idParent, $page = 1, $perPage = 10){
 
-	$q .= $this->columns();
+	$q = $this->columns();
 	$q .= $this->tables();
 	$q .= " WHERE l.sort_key LIKE '".$sortKeyParent."%' "; 
 	$q .= " AND l.id != ".$idParent." ";
@@ -122,7 +123,7 @@ public function countByParentSortKey($sortKeyParent, $idParent){
 
 public function info($id = 0){
 
-	$q .= $this->cols();
+	$q = $this->cols();
 	$q .= $this->tables();
 	$q .= " WHERE l.id = ".$id." "; 
 	return $q;

@@ -24,8 +24,8 @@ class locationFields extends \application\forms\fields{
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
     	$this->created = new \application\forms\_date('created','created','Created');
         $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-     	$this->parent = new \application\forms\_idName('parent_id','idParent','Parent','parent_name');   
-        $this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
+     	$this->parent = new \application\forms\_idName('parent_id','id-parent','Parent','parent_name');   
+        $this->type = new \application\forms\_idName('type_id','id-type','Type','type_name');
         $this->sortKey = new \application\forms\_text('sort_key','not-used','Sort Key'); 
         $this->sortKeyParent = new \application\forms\_text('parent_sort_key'); 
 

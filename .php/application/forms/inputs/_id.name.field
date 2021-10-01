@@ -11,7 +11,7 @@ class _idName implements Ifield{
 		string $caption = 'caption',
 		string $dbColName = 'entity_name')
 	{
-		$this->id = new _id($dbCol, $envVar,'not-used');
+		$this->id = new _id($dbCol, $envVar,$caption);
 		$this->name = new _name($dbColName,'not-used',$caption);
 		
 		$this->enabled(true);
@@ -24,9 +24,9 @@ class _idName implements Ifield{
  		bool $fetch = false, 
  		bool $show = false, 
  		bool $list = false, 
- 		bool $post = false)
+ 		bool $env = false)
  	{
-		$this->id->setEnabled($fetch,false,false,$post);
+		$this->id->setEnabled($fetch,false,false,$env);
 		$this->name->setEnabled($fetch,$show,$list,false);
 	}
 	public function fetchEnabled(bool $use = false){
@@ -45,7 +45,9 @@ class _idName implements Ifield{
  		$this->id->listEnabled(false);
  		$this->name->listEnabled($use);
  	}
-	
+	public function inputEnabled(bool $use = false){
+ 		$this->id->inputEnabled($use);
+ 	}
  	public function setCaption(string $caption = 'no caption'){
  		$this->name->setCaption($caption);
  	}
@@ -57,6 +59,9 @@ class _idName implements Ifield{
 	}
  	public function setEnvironmentVariable(string $var = 'not-used'){
  	 		$this->id->setEnvironmentVariable($var);
+ 	}
+ 	public function getEnvironmentVariable(){
+ 		return $this->id->env->variable();
  	}
  	public function env(){
  	
@@ -71,7 +76,7 @@ class _idName implements Ifield{
 	public function set($value){
 	 	$this->id->set($value);
 	}
-	public function setDefault($value){
+	public function setDefault($value = NULL){
 	 	$this->id->setDefault($value);
  	 	$this->name->setDefault('');
 	}
@@ -108,14 +113,14 @@ class _idName implements Ifield{
  	}
  	
  	public function read(){
- 	 	$this->id->env->read();
+ 	 	$this->id->read();
  	}
  	 	
  	public function write(){
- 	 	$this->id->env->write();
+ 	 	$this->id->write();
  	}
  	public function remove(){
- 	 	$this->id->env->remove();
+ 	 	$this->id->remove();
  	}
  	public function format(){
  		return $this->name->format();

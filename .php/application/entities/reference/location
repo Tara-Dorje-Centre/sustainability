@@ -61,6 +61,11 @@ class location extends \application\entity{
 	
 	protected function makePageMenu(){
 		
+		$s = new \application\links\systemMenuLinks();
+		$this->links->addLink($s->reference());
+		
+		$this->links->addLink($this->links->list('All Locations'));	
+		
 		
 		if ($this->idParent > 0){
 			$this->links->addLink($this->links->view('Up',$this->idParent));
@@ -70,7 +75,7 @@ class location extends \application\entity{
 		} elseif ($this->pageMode == 'EDIT'){
 			$this->links->addLink($this->links->view('View', $this->id));
 		}
-		$this->links->addLink($this->links->list('All Locations', -1));	
+
 
 		if ($this->pageMode != 'ADD'){
 			
@@ -78,7 +83,7 @@ class location extends \application\entity{
 			if ($i != 0){
 				$this->links->addLink($this->links->list('Sublocations('.$i.')',$this->id));
 			} else {
-				$menu .= 'No Sublocations';	
+				$this->links->menu->addTextItem( 'No Sublocations');	
 			}
 			$this->links->addLink($this->links->add('New',$this->id));
 		}
@@ -190,8 +195,9 @@ class location extends \application\entity{
 
 		$sortKey = $this->buildSortKey();
 		if ($sortKey != $this->f->sortKey->value()){
-			$sql = $this->sql->sortKeyUpdate($this->id, $sortKey);
-		$result = $this->sql->runSQL($sql);
+			$key = $this->sql->getEscapeString($sortKey);
+			$sql = $this->sql->sortKeyUpdate($this->id, $key);
+			$result = $this->sql->runStatement($sql);
 		}
 	
 	}
@@ -203,6 +209,7 @@ class location extends \application\entity{
 			$sql .= " SET ";
 			$sql .= " l.name = '".$this->f->name->value()."', ";
 			$sql .= " l.type_id = ".$this->f->type->id->value().", ";
+			$sql .= " l.parent_id = ".$this->f->parent->id->value().", ";
 			$sql .= " l.updated = CURRENT_TIMESTAMP, ";
 			$sql .= " l.description = '".$this->f->description->value()."' ";
 			$sql .= " WHERE l.id = ".$this->id."  ";			

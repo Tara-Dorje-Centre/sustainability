@@ -1,0 +1,45 @@
+<?php 
+
+namespace application\forms;
+
+interface Ifield{
+	public const dtTEXT = 'TEXT';
+	public const dtNUMBER = 'NUMBER';
+	public const dtDATE = 'DATE';
+	public const dtBOOLEAN = 'BOOLEAN';
+	
+ 	public function setCaption(string $caption = 'no caption');
+	public function setEntity(string $entity);
+	public function setEnvironment(string $env= 'POST');
+ 	public function setEnvironmentVariable(string $var = 'not-used');
+ 	public function getEnvironmentVariable();
+ 	public function setFetchColumn(string $dbCol = 'not_used');
+ 	public function enabled(bool $use = false);
+ 	public function setEnabled(
+ 		bool $fetch = false, 
+ 		bool $display = false, 
+ 		bool $list = false, 
+ 		bool $env = false);
+	public function fetchEnabled(bool $use = false);
+	public function envEnabled(bool $use = false);
+	public function displayEnabled(bool $use = false);
+	public function listEnabled(bool $use = false);
+	public function inputEnabled(bool $use = false);
+ 	public function set($value);
+ 	public function setDefault($value = NULL);
+ 	public function reset(bool $useDefault = false);
+ 	public function get();
+   	public function value();
+ 	public function valueSQL();
+ 	public function valueRaw();
+ 	public function read();
+ 	public function write();
+	public function fetch($row);
+	public function format();
+ 	public function listCaption();
+ 	public function listDetail();
+ 	public function displayDetail();
+ 	public function input();
+ }
+
+?>
