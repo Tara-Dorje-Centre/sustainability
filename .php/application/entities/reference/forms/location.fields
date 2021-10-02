@@ -36,12 +36,12 @@ class locationFields extends \application\forms\fields{
 	private function registerFields(){
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
+		$this->_register('type', $this->type);
 		$this->_register('description', $this->description);
 		$this->_register('created', $this->created);
 		$this->_register('updated', $this->updated);
    		$this->_register('highlight', $this->highlight);
 		$this->_register('parent', $this->parent);
-		$this->_register('type', $this->type);
 		$this->_register('sortKey',$this->sortKey);
 		$this->_register('sortKeyParent',$this->sortKeyParent);
 	}

@@ -20,22 +20,17 @@ abstract class entityType extends entity{
 		$this->links->addLink($s->reference());
 
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		//$this->_pageMenu = $this->links->menu->print();
 		$this->_pageMenu = $this->links->print();
 	}
 	
 	protected function setDefaults(){
 		parent::setDefaults();
 		if ($this->pageMode == 'ADD'){
-		
-		$s = $this->sql->count();
-		
-		$next = $this->sql->getCount($s, 'count_details');
-		//global $conn;
-		//$next = $conn->getCount($s, 'count_details');
-		$next += 1;
-		$this->echoValue(true,'next',$next,'setdefaults');
-		$this->f->displayOrder->set($next);
+			$s = $this->sql->count();
+			$next = $this->sql->getCount($s, 'count_details');
+			$next += 1;
+			$this->echoValue(true,'next',$next,'setdefaults');
+			$this->f->displayOrder->set($next);
 		}
 		
 	}

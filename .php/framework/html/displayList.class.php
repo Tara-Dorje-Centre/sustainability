@@ -26,13 +26,10 @@ class displayList extends displayDetails{
 	}
 	protected function close(){
 		$this->_display->addContent($this->_list->print());
-		parent::close();
 	}
-	
 	
 	public function print(){
 		$this->open();
-		
 		$this->close();
 		return $this->_display->print();
 	}

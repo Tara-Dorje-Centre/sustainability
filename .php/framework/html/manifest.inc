@@ -11,7 +11,7 @@ include_once('__repeatingElement.class');
 include_once('_br.class.php');
 include_once('_div.class');
 
-include_once('_fieldset.class');
+include_once('_fieldset.class.php');
 include_once('_form.class');
 include_once('_hr.class');
 include_once('_href.class');

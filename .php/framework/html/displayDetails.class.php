@@ -30,14 +30,10 @@ class displayDetails {
 			$this->_display->addContent($d->printContent($this->contextMenu));
 		}
 		
-		
-	
-	}
-	
-	protected function close(){
 		$this->_display->addContent($this->_fields->print());
-		
+	
 	}
+	
 	public function setContent($content){
 
 		$this->_fields->setContent($content);
@@ -50,8 +46,7 @@ class displayDetails {
 	}
 	public function print(){
 		$this->open();
-		
-		$this->close();
+
 		return $this->_display->print();
 	}
 }

@@ -13,7 +13,8 @@ abstract class entityTypeList extends entityList{
 	protected function makePageMenu(){
 
 		$s = new \application\links\systemMenuLinks();
-		$this->base->links->menu->addLink($s->reference());
+		$this->base->links->addLink($s->reference());
+		
 		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		$this->_pageMenu = $this->base->links->print();
 	}

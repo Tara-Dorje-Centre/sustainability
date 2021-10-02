@@ -57,8 +57,6 @@ abstract class entity extends baseEntity{
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
 			
-			//global $conn;
-			//$result = $conn->getResult($sql);
 			$result = $this->sql->getResult($sql);
 			
 			if($result){
@@ -129,19 +127,17 @@ abstract class entity extends baseEntity{
 		return $this->_display->print();
 	}
 	
-	
-	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);
 	 	}
 	}
 
-	 public function addForm($idParent = 0){
+	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
-		if (isset($this->f->parentEntity)){
-			$this->f->parentEntity->set($idParent);
+		if (isset($this->f->parent->id)){
+			$this->f->parent->id->set($idParent);
 		}
 		
 		$edit = $this->editForm();
@@ -167,7 +163,7 @@ abstract class entity extends baseEntity{
 			$this->id = $this->f->id->value();
 		}
 		
-		if (isset($this->f->parent)){
+		if (isset($this->f->parent->id)){
 			$this->idParent = $this->f->parent->id->value();
 		}
 	}
@@ -237,7 +233,7 @@ abstract class entity extends baseEntity{
 	
 	final public function saveChanges(){
 		$this->echoState(true, 'saveChanges');
-		//$this->f->echoFieldState();
+
 		$this->echoValue(true,'pageMode',$this->pageMode);
 		switch($this->pageMode){
 			case 'COPY':

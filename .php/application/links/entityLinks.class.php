@@ -14,7 +14,7 @@ abstract class entityLinks implements IentityLinks {
 	}
 	
 	
-	public function setEntityContext(string $entity){
+	final public function setEntityContext(string $entity){
 		$this->entityContext = $entity;
 		$this->setRequest();
 	}
@@ -45,6 +45,7 @@ abstract class entityLinks implements IentityLinks {
 		//$this->menu->addLink($this->list('ListChildren',$id,0,0));
 		//$this->menu->addLink($this->list('listType',0,0,$idType));
 	}
+	
 	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		switch ($mode){
 			case 'VIEW':

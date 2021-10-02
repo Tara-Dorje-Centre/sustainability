@@ -70,14 +70,14 @@ public function listChildren($idParent, $page = 1, $rows = 10){
 public function count(){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) count_details ";
-	$q .= $this->tables();
+	$q .= " FROM locations AS l ";
 	return $q;
 }
 
 public function countChildren($id){
 	$q = " SELECT  ";
 	$q .= " COUNT(*) count_details ";
-	$q .= $this->tables();
+	$q .= " FROM locations AS l ";
 	//if ($id >= 0){
 	$q .= " WHERE l.parent_id = ".$id." "; 
 	//} 

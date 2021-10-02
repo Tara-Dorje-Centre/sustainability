@@ -5,15 +5,18 @@ trait queryField{
 	protected $_select;
  	protected $sql;
 	protected $useSelect = false;
+	
 	public function setSql($sql){
 		$this->sql = $sql;
 		$s = new \html\inputs\selectSql($this->env->variable(),$this->value(),$this->sql, $this->_caption);
 		$this->setSelect($s);;
 	}
+	
 	public function setSelect(\html\inputs\selectSql $s){
 		$this->_select = $s;
 		$this->useSelect = true;
 	}
+	
 	public function input(){
 		if ($this->useSelect == true){
 			$input = $this->_select->print();

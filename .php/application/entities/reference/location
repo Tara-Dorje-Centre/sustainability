@@ -33,12 +33,10 @@ class location extends \application\entity{
 	private function setChildCount(){
 		$this->echoState(true,'setChildCount');
 		if ($this->id > 0){
-		$sql = $this->sql->countChildren($this->id);
-		
-		
-		$this->childLocations = $this->sql->getCount($sql, 'count_details');
+			$sql = $this->sql->countChildren($this->id);
+			$this->childLocations = $this->sql->getCount($sql, 'count_details');
 		} else {
-		$this->childLocations = 0;
+			$this->childLocations = 0;
 		}
 		$this->echoState(true,'setChildCount');
 	}
@@ -49,7 +47,7 @@ class location extends \application\entity{
 		if ($this->pageMode != 'ADD'){
 			$heading = $this->f->sortKey->value();
 		} else {
-			if ($this->idParent == 0){
+			if ($this->idParent <= 0){
 				$heading = 'Add New Location';
 			} else {
 				$heading = $this->f->sortKeyParent->value().' Add Sub Location';	
@@ -63,31 +61,7 @@ class location extends \application\entity{
 		
 		$s = new \application\links\systemMenuLinks();
 		$this->links->addLink($s->reference());
-		
-		$this->links->addLink($this->links->list('All Locations'));	
-		
-		
-		if ($this->idParent > 0){
-			$this->links->addLink($this->links->view('Up',$this->idParent));
-		}
-		if ($this->pageMode == 'VIEW'){
-			$this->links->addLink($this->links->edit('Edit', $this->id));
-		} elseif ($this->pageMode == 'EDIT'){
-			$this->links->addLink($this->links->view('View', $this->id));
-		}
-
-
-		if ($this->pageMode != 'ADD'){
-			
-			$i = $this->childLocations;
-			if ($i != 0){
-				$this->links->addLink($this->links->list('Sublocations('.$i.')',$this->id));
-			} else {
-				$this->links->menu->addTextItem( 'No Sublocations');	
-			}
-			$this->links->addLink($this->links->add('New',$this->id));
-		}
-	
+		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 
 		$this->_pageMenu = $this->links->print();
 	}
@@ -107,36 +81,15 @@ class location extends \application\entity{
 	public function options(
 		$selected = 0, 
 		$idName = 'locationId', 
-		$disabled = 'false',
-		$showLink = true,
+		$caption,
 		$onChangeJS = NULL){
 	*/
 
 		$sql = $this->sql->options($selected);
 		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
-		$s->defaultOption(0,'-select '.$this->entityTitle);
+		$s->defaultOption(0,'-No '.$this->entityTitle);
 		return $s;
-
-/*
-		$this->echoState(true, 'options');
 		
-		
-		$sql = $this->sql->options();
-		//selected, $disabled);
-		
-		$default = 0;
-		$defaultCaption = '-No Location';
-		$allOptions = getSelectOptionsSQL($sql,$selected,$disabled,$default,$defaultCaption);		
-		
-		$select = getSelectList($idName,$allOptions,'none',$disabled );	
-
-		if ($showLink == true){
-			$ll = new LocationLinks;	
-			$links =$ll->itemViewEdit($this->_entityTitle,$selectedValue);
-			$select .= $links;	
-		}
-		return $select;
-*/
 	}
 	
 	protected function setDefaults(){
@@ -150,8 +103,6 @@ class location extends \application\entity{
 	}  
 
 	public function editForm(){
-	
-	
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
 	
 		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
@@ -162,17 +113,11 @@ class location extends \application\entity{
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 
+		$this->edit->optional->input($this->f->description);
+
 		$m = new location;
 		$select = $m->options($this->f->parent->id->value(),$this->f->parent->id->env->variable(),'Parent Location');
-		$this->edit->required->inputChoice($this->f->parent->id,$select->print());
-
-		
-		
-		//$this->edit->required->input($this->f->displayOrder);
-		//$this->edit->required->input($this->f->highlight);
-		
-		$this->edit->optional->input($this->f->description);
-		//$this->edit->optional->input($this->f->notes);
+		$this->edit->optional->inputChoice($this->f->parent->id,$select->print());
 		
 		$this->edit->hidden->inputHidden($this->f->id);
 		//$this->edit->hidden->inputHidden($this->f->parent->id);
@@ -184,30 +129,30 @@ class location extends \application\entity{
 	}
 
 
-	private function getSortKey($id){
+	public function getSortKey($id){
 		$sql = $this->sql->sortKey($id);
 		$sortKey = $this->sql->getScalar($sql, 'sort_key');
 		return $sortKey;		
 	}
 
-	private function buildSortKey(){
-			if ($this->idParent == 0){
+	private function buildSortKey($parentId){
+		if ($parentId == 0){
 			$sortKey = $this->f->name->value();
 		} else {
-			$sortKey = $this->f->sortKeyParent->value();
+			$sortKey = $this->getSortKey($parentId);
 			$sortKey .= '.'.$this->f->name->value();
-			}
-			return $sortKey;
+		}
+		return $sortKey;
 
 	}
-	private function updateSortKey(){
+	private function updateSortKey($id, $parentId){
 
-		$sortKey = $this->buildSortKey();
-		if ($sortKey != $this->f->sortKey->value()){
+		$sortKey = $this->buildSortKey($parentId);
+		//if ($sortKey != $this->f->sortKey->value()){
 			$key = $this->sql->getEscapeString($sortKey);
 			$sql = $this->sql->sortKeyUpdate($this->id, $key);
 			$result = $this->sql->runStatement($sql);
-		}
+		//}
 	
 	}
 
@@ -225,7 +170,7 @@ class location extends \application\entity{
 			
 			$result = $this->sql->runStatement($sql);
 			
-			$this->updateSortKey();
+			$this->updateSortKey($this->id,$this->f->parent->id->value());
 	}
 	
 	protected function saveInsert(){
@@ -249,7 +194,7 @@ class location extends \application\entity{
 			
 			$this->id = $this->sql->getInsertedId();
 			
-			$this->updateSortKey();
+			$this->updateSortKey($this->id,$this->f->parent->id->value());
 		
 	
 	}
