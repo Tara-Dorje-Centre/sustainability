@@ -93,16 +93,14 @@ class location extends \application\entity{
 	}
 	
 	protected function setDefaults(){
-	
-		//if add came from all locations default, reset to 0 for no parent
-		if ($this->idParent == -1){
-			$this->idParent = 0;
-		}
-		
 		parent::setDefaults();
+		
+		
+
 	}  
 
 	public function editForm(){
+		
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
 	
 		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
@@ -114,9 +112,16 @@ class location extends \application\entity{
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 
 		$this->edit->optional->input($this->f->description);
-
+		
+		if ($this->f->parent->value() == -1){
+			$this->f->parent->set(0);
+		}
+		
+		if ($this->idParent > 0){
+			$this->f->parent->set($this->idParent);
+		}
 		$m = new location;
-		$select = $m->options($this->f->parent->id->value(),$this->f->parent->id->env->variable(),'Parent Location');
+		$select = $m->options($this->f->parent->value(),$this->f->parent->id->env->variable(),'Parent Location');
 		$this->edit->optional->inputChoice($this->f->parent->id,$select->print());
 		
 		$this->edit->hidden->inputHidden($this->f->id);

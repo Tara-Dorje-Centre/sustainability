@@ -47,13 +47,7 @@ class locationList extends \application\entityList{
 	}
 	
 	protected function listingQuickEdit(){
-		$p = 0;
-		if ($this->idParent < 0){
-			$p = 0;			
-		} else {
-			$p = $this->idParent;		
-		}	
-		$quickEdit = $this->base->addForm($p);		
+		$quickEdit = $this->base->addForm($this->idParent);		
 		return $quickEdit;
 	}
 	
