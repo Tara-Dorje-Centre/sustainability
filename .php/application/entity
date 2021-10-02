@@ -136,7 +136,7 @@ abstract class entity extends baseEntity{
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
-		if (isset($this->f->parent->id)){
+		if (isset($this->f->parent->id) AND ($idParent >= 0)){
 			$this->f->parent->id->set($idParent);
 		}
 		
@@ -204,7 +204,7 @@ abstract class entity extends baseEntity{
 			$details = $this->display();
 			break;
 		case 'ADD':
-			$details = $this->addForm();
+			$details = $this->addForm($this->idParent);
 			break;
 		case 'EDIT':
 			$details = $this->editForm();

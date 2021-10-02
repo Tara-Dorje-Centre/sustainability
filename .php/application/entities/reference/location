@@ -50,7 +50,7 @@ class location extends \application\entity{
 			if ($this->idParent <= 0){
 				$heading = 'Add New Location';
 			} else {
-				$heading = $this->f->sortKeyParent->value().' Add Sub Location';	
+				$heading = $this->getSortKey($this->idParent).': Add Sub Location';	
 			}
 		}
 
