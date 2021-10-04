@@ -77,14 +77,7 @@ class location extends \application\entity{
 		} else {
 			$c = $caption;
 		}
-	/*
-	public function options(
-		$selected = 0, 
-		$idName = 'locationId', 
-		$caption,
-		$onChangeJS = NULL){
-	*/
-
+	
 		$sql = $this->sql->options($selected);
 		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
 		$s->defaultOption(0,'-No '.$this->entityTitle);
@@ -198,7 +191,7 @@ class location extends \application\entity{
 			$result = $this->sql->runStatement($sql);
 			
 			$this->id = $this->sql->getInsertedId();
-			
+			$this->f->id->set($this->id);
 			$this->updateSortKey($this->id,$this->f->parent->id->value());
 		
 	

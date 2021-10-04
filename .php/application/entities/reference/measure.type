@@ -7,29 +7,27 @@ class measureType extends \application\entityType{
 		$this->entity = 'measure-type';
 		
      	$this->entityTitle = 'Measure Type';
-   	 	//$this->pageSave = 'pr_MeasureType_Save.php';
+
 		$this->f = new forms\measureTypeFields();
 		$this->f->setEntity($this->entity);
 		$this->sql = new sql\measureTypeSQL();
 		$this->links = new links\measureTypeLinks();
 	}
 	
-	public function getRequestArguments(){
 	
-	
-	}
-/*
+
 	protected function setPageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
-		//$units = new UnitOfMeasureLinks($menuType,$menuStyle);
+	
+	
+	
+	/*
+		//$units = new quantityTypeLinks($menuType,$menuStyle);
 		$measureTypesL = new MeasureTypeLinks($menuType,$menuStyle);
 		$measureTypeUnitsL = new MeasureTypeUnitLinks($menuType,$menuStyle);
 		$menuL = new MenuLinks($menuType,$menuStyle);
 		
-		$menu = $measureTypesL->openMenu('section-heading-links');
 		$menu .= $menuL->linkReference();
+		
 		if ($this->pageMode == 'VIEW'){
 			$menu .= $measureTypesL->detailEditHref($this->id);
 		} elseif ($this->pageMode == 'EDIT'){
@@ -38,25 +36,25 @@ class measureType extends \application\entityType{
 		if ($this->pageMode != 'ADD'){
 			$menu .= $measureTypeUnitsL->listingHref($this->id);
 		}
-		$menu .= $measureTypesL->resetMenu();
+
 		$menu .= $measureTypesL->listingHref();	
-	
-		$menu .= $measureTypesL->closeMenu();
-		$this->_pageMenu = $menu;
-	}
 	*/
+	}
+
 	
 	public function display(){
 		parent::display();
 	
 	
-	
+	/*
+	//show measure type units for this measure type
 		$measureunits = new measureTypeUnitList();
 		$measureunits->setDetails($this->id);
 		$detail .= $measureunits->getListing();
 		
 		$detail .= closeDisplayDetails();
 		return $detail;
+		*/
 	}
 	
 	protected function saveUpdate(){
@@ -72,7 +70,7 @@ class measureType extends \application\entityType{
 			$sql .= " mt.notes = '".$this->f->notes->value()."' ";
 			$sql .= " WHERE mt.id = ".$this->f->id->value()."  ";		
 				
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 		}
 		
 		
@@ -95,9 +93,9 @@ class measureType extends \application\entityType{
 			$sql .= "'".$this->f->description->value()."', ";
 			$sql .= "'".$this->f->notes->value()."') ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->id = dbInsertedId();
+			$this->id = $this->sql->getInsertedId();
 	
 	}
 	

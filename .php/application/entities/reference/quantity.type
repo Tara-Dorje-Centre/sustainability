@@ -19,6 +19,8 @@ class quantityType extends \application\entityType{
 	
 	
 	protected function pageMenu(){
+	
+	
 		/*
 		
 		
@@ -40,31 +42,6 @@ class quantityType extends \application\entityType{
 	}
 	
 	
-	
-	public function options(
-		$selectedValue = 0, 
-		$idName = 'unitTypeId', 
-		$disabled = 'false', 
-		$showLink = true,
-		$changeJS = NULL){
-	
-		$sql = $this->sql->options($selectedValue,$disabled);
-		
-		$defaultValue = '0';
-		$defaultCaption = '-select Unit Type';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
-				
-		$select = getSelectList($idName,$allOptions,'none',$disabled,$changeJS);
-		
-		if ($showLink == true){
-			$links =$this->links->detailViewEditHref($selectedValue);
-			$select .= $links;
-		}
-		return $select;
-	}	
-	
-	
-	
 	public function editForm(){
 	
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
@@ -77,7 +54,8 @@ class quantityType extends \application\entityType{
 		$this->edit->required->input($this->f->type);
 		
 		$this->edit->required->input($this->f->displayOrder);
-		$this->edit->required->input($this->f->highlight);
+		
+		$this->edit->optional->input($this->f->highlight);
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);
@@ -92,50 +70,50 @@ class quantityType extends \application\entityType{
 	
 	public function saveUpdate(){
 	
-			$sql = " UPDATE units_of_measure AS p ";
-			$sql .= " SET ";
-			$sql .= " p.description = '".$this->f->description->value()."', ";
-			$sql .= " p.type = '".$this->f->type->value()."', ";
-			$sql .= " p.display_order = ".$this->f->displayOrder->value().", ";
-			$sql .= " p.highlight_style = '".$this->f->highlight->value()."', ";
-			$sql .= " p.name = '".$this->f->name->value()."', ";
+		$sql = " UPDATE units_of_measure AS p ";
+		$sql .= " SET ";
+		$sql .= " p.description = '".$this->f->description->value()."', ";
+		$sql .= " p.type = '".$this->f->type->value()."', ";
+		$sql .= " p.display_order = ".$this->f->displayOrder->value().", ";
+		$sql .= " p.highlight_style = '".$this->f->highlight->value()."', ";
+		$sql .= " p.name = '".$this->f->name->value()."', ";
 
-			$sql .= " p.symbol = '".$this->f->symbol->value()."', ";
-			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.notes = '".$this->f->notes->value()."' ";
-			$sql .= " WHERE p.id = ".$this->f->id->value()."  ";			
-			$result = dbRunSQL($sql);
+		$sql .= " p.symbol = '".$this->f->symbol->value()."', ";
+		$sql .= " p.updated = CURRENT_TIMESTAMP, ";
+		$sql .= " p.notes = '".$this->f->notes->value()."' ";
+		$sql .= " WHERE p.id = ".$this->f->id->value()."  ";			
+			
+		$result = $this->sql->runStatement($sql);
 
 	}
 	
 	protected function saveInsert(){
 	
-			$sql = " INSERT INTO units_of_measure ";
-			$sql .= " (name, ";
-			$sql .= " description, ";
-			$sql .= " display_order, ";
-			$sql .= " highlight_style, ";
-
-			$sql .= " created, ";
-			$sql .= " updated, ";
-			$sql .= " type, ";
-			$sql .= " symbol, ";
-			$sql .= " notes) ";
-			$sql .= " VALUES (";
-			$sql .= "'".$this->f->name->value()."', ";
-			$sql .= "'".$this->f->description->value()."', ";
-			$sql .= "'".$this->f->displayOrder->value()."', ";
-			$sql .= "'".$this->f->highlight->value()."', ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->f->type->value()."', ";
-			$sql .= "'".$this->f->symbol->value()."', ";
-			$sql .= "'".$this->f->notes->value()."') ";
+		$sql = " INSERT INTO units_of_measure ";
+		$sql .= " (name, ";
+		$sql .= " description, ";
+		$sql .= " display_order, ";
+		$sql .= " highlight_style, ";
+		$sql .= " created, ";
+		$sql .= " updated, ";
+		$sql .= " type, ";
+		$sql .= " symbol, ";
+		$sql .= " notes) ";
+		$sql .= " VALUES (";
+		$sql .= "'".$this->f->name->value()."', ";
+		$sql .= "'".$this->f->description->value()."', ";
+		$sql .= "'".$this->f->displayOrder->value()."', ";
+		$sql .= "'".$this->f->highlight->value()."', ";
+		$sql .= " CURRENT_TIMESTAMP, ";
+		$sql .= " CURRENT_TIMESTAMP, ";
+		$sql .= "'".$this->f->type->value()."', ";
+		$sql .= "'".$this->f->symbol->value()."', ";
+		$sql .= "'".$this->f->notes->value()."') ";
 			
-			$result = dbRunSQL($sql);
+		$result = $this->sql->runStatement($sql);
 			
-			$this->id = dbInsertedId();
-			$this->f->id-set($this->id);
+		$this->id = $this->sql->getInsertedId();
+		$this->f->id->set($this->id);
 	}
 } 
 

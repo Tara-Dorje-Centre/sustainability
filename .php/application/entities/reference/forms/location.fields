@@ -55,6 +55,7 @@ class locationFields extends \application\forms\fields{
         $this->updated->listEnabled(false);
         $this->created->listEnabled(false);
 		$this->description->listEnabled(false);
+		$this->sortKey->listEnabled(false);
 		$this->sortKeyParent->listEnabled(false);
 		
 		$this->id->displayEnabled(false);

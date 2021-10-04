@@ -2,16 +2,15 @@
 namespace application\forms;
 
 abstract class entityTypeFields extends fields{
+	//standard entity type fields
 	public $id;
 	public $name;		
 	public $created;
     public $updated;
 	public $description;
 	public $highlight;
-	
 	public $displayOrder;
 	public $notes;
-
 	
 	public function __construct(){
 		parent::__construct();
@@ -24,23 +23,32 @@ abstract class entityTypeFields extends fields{
         $this->highlight = new _cssHighlight('highlight_style','highlight','Highlight');
         $this->notes = new _notes('notes','notes','Notes');
 		$this->displayOrder = new _number('display_order','display-order','Display Order');
-		
+    
+		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
+	//define field ordering for display and list
 		$this->_register('id', $this->id);
+		$this->_register('displayOrder', $this->displayOrder);
 		$this->_register('name', $this->name);
 		$this->_register('description', $this->description);
+		$this->_register('notes', $this->notes);
 		$this->_register('created', $this->created);
 		$this->_register('updated', $this->updated);
    		$this->_register('highlight', $this->highlight);
-  		$this->_register('notes', $this->notes);
-		$this->_register('displayOrder', $this->displayOrder);
-
-    	$this->updated->envEnabled(false);
+	}
+    
+    
+	private function disableFields(){
+		$this->updated->envEnabled(false);
         $this->created->envEnabled(false);
         $this->updated->listEnabled(false);
         $this->created->listEnabled(false);
     	$this->description->listEnabled(false);
     	$this->notes->listEnabled(false);
-    }
+	}
     
 	public function setDefaults(){
     	parent::setDefaults();

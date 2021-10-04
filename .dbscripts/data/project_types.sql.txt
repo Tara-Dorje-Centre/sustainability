@@ -1,0 +1,18 @@
+
+
+
+
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(1, 'Gardening', '', 'Gardening project', '2017-08-06 03:15:04', '2013-01-20 17:31:03', 'highlight-purple', 0);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(2, 'Construction', '', '', '2017-07-29 15:58:46', '2013-01-20 17:56:18', 'text-blue', 5);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(3, 'Repairs', '', '', '2017-08-06 03:15:37', '2013-01-20 17:56:30', 'text-red', 8);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(4, 'Maintenance/Cleanup', '', '', '2017-07-29 15:43:59', '2013-01-20 17:56:56', 'text-red', 7);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(5, 'Sustainability', '', 'Practical applications of sustainability concepts', '2017-07-29 15:57:47', '2013-01-20 17:57:47', 'text-green', 1);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(6, 'Food Preparation', '', 'Preparing food, meals, food supplies.', '2017-07-31 16:48:34', '2013-01-20 19:06:30', 'highlight-turquoise', 3);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(7, 'Research', '', '', '2017-07-29 15:48:41', '2013-01-20 19:17:26', 'text-blue', 2);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(8, 'Organization', '', '', '2017-07-29 15:59:42', '2013-01-20 19:51:46', 'text-blue', 4);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(9, 'Development', '', '', '2017-07-29 15:46:36', '2017-07-29 15:46:36', 'none', 9);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(10, 'Analysis', '', '', '2017-07-29 15:49:26', '2017-07-29 15:49:26', 'none', 10);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(11, 'Editing', '', '', '2017-07-29 15:50:20', '2017-07-29 15:50:20', 'none', 10);
+INSERT INTO project_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(12, 'Review', '', '', '2017-07-29 15:51:24', '2017-07-29 15:51:24', 'text-red', 12);
+
+

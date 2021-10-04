@@ -78,13 +78,13 @@ abstract class entity extends baseEntity{
 		$caption = 'use-entity'){
 		
 		if ($caption == 'use-entity'){
-			$c = $this->entityTitle;
+			$c = '-select '.$this->entityTitle;
 		} else {
 			$c = $caption;
 		}
 		$sql = $this->sql->options($selected);
 		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
-		$s->defaultOption(0,'-select '.$this->entityTitle);
+		$s->defaultOption(0,$c);
 		return $s;
 	}	
 	

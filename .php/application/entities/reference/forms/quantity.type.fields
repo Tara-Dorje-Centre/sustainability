@@ -3,15 +3,36 @@ namespace application\entities\reference\forms;
 
 
 class quantityTypeFields extends \application\forms\entityTypeFields{
+    
+    
+    
     public $symbol;	
     public $type;
     
 	public function __construct(){
 		parent::__construct();
+		
+		
 		$this->symbol = new \application\forms\_name('symbol','symbol','Symbol');
-		$this->type = new \application\forms\_name('type','unit-type','Unit Type');
+		$this->type = new \application\forms\_name('type','unit-type','Unit Group');
+		
+	
+	
+		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	protected function registerFields(){
+	
+	
 		$this->_register('symbol',$this->symbol);
 		$this->_register('type',$this->type);
+	}
+	
+	protected function disableFields(){
+	
+	
+	
 	}
 	
 	public function setDefaults(){

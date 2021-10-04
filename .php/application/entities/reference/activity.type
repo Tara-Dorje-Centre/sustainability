@@ -7,8 +7,7 @@ class activityType extends \application\entityType{
 		
 		$this->entity = 'activity-type';
 	 	$this->entityTitle = 'Activity Type';
-	 	//$this->pageSave = 'pr_ActivityType_Save.php';
-		
+
 		$this->f = new forms\activityTypeFields();
 		$this->f->setEntity($this->entity);
 		$this->sql = New sql\activityTypeSQL();

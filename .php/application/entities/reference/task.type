@@ -7,7 +7,6 @@ class taskType extends \application\entityType{
   		
   		$this->entity = 'task-type';
   		$this->entityTitle = 'Task Type';
-     	//$this->pageSave = 'pr_TaskType_Save.php';
 		
 		$this->f = new forms\taskTypeFields();
 		$this->f->setEntity($this->entity);
@@ -15,20 +14,14 @@ class taskType extends \application\entityType{
 		$this->links = new links\taskTypeLinks();
 	}
 	
-	public function optionsFrequency($selectedValue = 'none', $idName = 'frequency', $disabled = 'false'){
-		$sql = "SELECT f.frequency value, f.description caption ";
-		$sql .= "FROM task_type_frequencies f ";
-		if ($disabled == 'true'){
-			$sql = " WHERE f.frequency = '".$selectedValue."' ";	
-		}
-		$sql .= " ORDER BY f.display_order ";
+	public function optionsFrequency($selected = 'none', $id = 'frequency'){
 		
-		$defaultValue = 'none';
-		$defaultCaption = '-not set';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
+		$sql = $this->sql->optionsFrequency();
 		
-		$select = getSelectList($idName,$allOptions,'none',$disabled );
-		return $select;
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, 'Task Frequency');
+		$s->defaultOption('none','-Not set');
+		return $s;
+	
 	}	
 	
 	
@@ -40,12 +33,9 @@ class taskType extends \application\entityType{
 		
 		$this->edit->required->input($this->f->name);
 		
-		/*
-		//todo...
 		$select = $this->optionsFrequency($this->f->frequency->value(),$this->f->frequency->env->variable());
-		$this->edit->required->choice($this->f->frequency, $select);
+		$this->edit->required->inputChoice($this->f->frequency,$select->print());
 		
-		*/
 		
 		$this->edit->required->input($this->f->displayOrder);
 		$this->edit->required->input($this->f->highlight);
@@ -74,7 +64,7 @@ class taskType extends \application\entityType{
 			$sql .= " p.highlight_style = '".$this->f->highlight->value()."', ";
 			$sql .= " p.notes = '".$this->f->notes->value()."' ";
 			$sql .= " WHERE p.id = ".$this->f->id->value()."  ";			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 	}
 	
 	protected function saveInsert(){
@@ -97,13 +87,14 @@ class taskType extends \application\entityType{
 			$sql .= " '".$this->f->description->value()."', ";
 			$sql .= " '".$this->f->highlight->value()."', ";
 			$sql .= " '".$this->f->notes->value()."') ";
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->id = dbInsertedId();
+			$this->id = $this->sql->getInsertedId();
 			$this->f->id->set($this->id);
 			
 	}
 } 
+
 class taskTypeList extends \application\entityTypeList{
  	public function __construct(){
 		parent::__construct();

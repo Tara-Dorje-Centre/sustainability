@@ -1,9 +1,6 @@
 <?php
 namespace application\entities\reference\sql;
 
-
-
-
 class quantityTypeSQL extends \application\sql\entityTypeSQL{
 	public function __construct(){
 		$this->baseTable = 'units_of_measure';
@@ -17,9 +14,9 @@ class quantityTypeSQL extends \application\sql\entityTypeSQL{
 
 	public function options($selectedId = 0, $disabled = 'false'){
 	$q = " SELECT ";
-	$q .= " um.type, ";
+	//$q .= " um.type, ";
 	$q .= " um.id as value, ";
-	$q .= " concat(um.name,'(',um.symbol,')') as caption ";
+	$q .= " concat(um.type,'-',um.name,'(',um.symbol,')') as caption ";
 	$q .= " FROM units_of_measure um ";
 	if ($disabled == 'true'){
 		$q .= " WHERE um.id = ".$selectedId." ";	

@@ -11,15 +11,7 @@ class measureTypeUnitList extends \application\entityList{
 		$this->base = new measureTypeUnit();
 	}
 	
-	public function getRequestArguments(){
-
-
-
-	}
-	
 	public function setDetails(){
-	
-		
 		//$this->measureType->setDetails();
 		$this->setFoundCount();
 	}
@@ -38,52 +30,26 @@ class measureTypeUnitList extends \application\entityList{
 	}	
 
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
 		
 		$units = new UnitOfMeasureLinks($menuType,$menuStyle);
 		$measureTypes = new MeasureTypeLinks($menuType,$menuStyle);
 		$measureTypeUnits = new MeasureTypeUnitLinks($menuType,$menuStyle);
-
-		
-		$menu = $units->openMenu('section-heading-links');
-	
-		$mtul = new MeasureTypeUnitLinks;
-		$mtl = new MeasureTypeLinks;
-		$uml = new UnitOfMeasureLinks;			
+			
 
 		if ($this->measureTypeId > 0){
 			$menu .= $measureTypeUnits->detailAddHref($this->measureType->id);
 		}
 		$menu .= $measureTypeUnits->listingHref($this->measureType->id,'Refresh');
-		$menu .= $units->resetMenu();
+
 		
 		$menu .= $measureTypeUnits->listingHref(0);
-		$menu .= $units->resetMenu();
+
 		$menu .= $measureTypes->listingHref();
 		$menu .= $units->listingHref();		
 		
-		$menu .= $units->closeMenu();	
+
 		$this->_pageMenu = $menu;			
-	}	
-	
-	
-	
-	
-	public function setFoundCount(){
-		//$s = new MeasureTypeUnitSQL;
-		$sql = $this->sql->count($this->measureType);
-		
-		
-		global $conn;
-		
-		$this->found = $conn->getCount($sql,'total_units');
-		
-	
-		//$this->found = dbGetCount($sql, 'total_units');
 	}		
-	
-	
 	
 	public function getListing(){
 		//$s = new MeasureTypeUnitSQL;

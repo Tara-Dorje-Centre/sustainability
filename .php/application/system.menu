@@ -177,6 +177,9 @@ class systemMenu extends \framework\_echo{
 		$e = new entities\reference\links\measureTypeLinks();
 		$this->main->addLink($e->contextList('Measure Types'));
 		
+		$e = new entities\reference\links\measureTypeUnitLinks();
+		$this->main->addLink($e->contextList('Measure Type Units'));
+		
 		$e = new entities\reference\links\projectTypeLinks();
 		$this->main->addLink($e->contextList('Project Types'));
 				
