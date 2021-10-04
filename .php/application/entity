@@ -1,8 +1,8 @@
 <?php 
 namespace application;
 
-abstract class entity extends baseEntity{
-//implements \application\Ientity{
+abstract class entity extends baseEntity
+implements \application\Ientity{
 //use sql\connectionFunctions;
 	protected $entity;
 	protected $entityTitle = 'Undefined Entity';
@@ -102,7 +102,7 @@ abstract class entity extends baseEntity{
 		return $tr;
 	}
 	
-	 protected function listRowLink(){
+	protected function listRowLink(){
 		return $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
 	}
 	

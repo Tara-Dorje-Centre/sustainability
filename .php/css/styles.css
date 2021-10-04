@@ -249,10 +249,10 @@ a.menu-links-item:hover, a.paging-links-item:hover, a.button-links-item:hover{
     font-size:18px;
 	font-weight:bold;
 }
-.display-detail{
+.display-detail, .edit-input{
     margin:0;
 	padding:5px;	
-
+	display:inline;
 }
 .display-detail-caption{
 	font-size:14px;

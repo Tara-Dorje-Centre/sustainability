@@ -5,15 +5,7 @@ abstract class entityChildFields extends entityFields{
 	
 	
 		
-    public function __construct(){
-    	parent::__construct();
-    	
-    	
-    }
-	public function setDefaults(){
-    	parent::setDefaults();
-    	
-    }
+    
     
 	
 }

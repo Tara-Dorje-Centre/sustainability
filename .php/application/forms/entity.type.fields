@@ -42,6 +42,8 @@ abstract class entityTypeFields extends fields{
     
     
 	private function disableFields(){
+		$this->id->listEnabled(false);
+        $this->id->displayEnabled(false);
 		$this->updated->envEnabled(false);
         $this->created->envEnabled(false);
         $this->updated->listEnabled(false);

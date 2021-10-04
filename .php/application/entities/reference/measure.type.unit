@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\reference;
  
-class measureTypeUnit extends \application\entity{
+class measureTypeUnit extends \application\entityType{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
@@ -14,14 +14,6 @@ class measureTypeUnit extends \application\entity{
 		
 	}
 	
-	protected function makePageTitle(){	
-/*
-		//$title .= 'Measure Type:&nbsp;'.$this->measureType->name.br();
-		$title .= 'Units:'.$this->unitOfMeasure;		
-*/
-		$this->_pageTitle = $title;
-	}
-	
 	
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
@@ -29,34 +21,10 @@ class measureTypeUnit extends \application\entity{
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 
 		
-		/*
-		$mtul = new MeasureTypeUnitLinks;
-	
-		if ($this->pageMode == 'VIEW'){
-			$this->links->addLink( $this->links->edit('Edit', $this->id);
-		}
-		if ($this->pageMode == 'EDIT'){
-			$menu .= $this->links->view($this->id,'View');
-		}
-		if ($this->pageMode != 'ADD'){
-			$menu .= $mtul->add($this->measureType->id);
-		}
-		$menu .= $mtul->listingHref($this->measureType->id,'MeasureType Units');
-		$menu .= $mtul->listingHref(0,'All MeasureType Units');
-		*/
-		
 		$this->_pageMenu = $this->links->print();
 		
 	}
-	/*
-		
-	public function getMeasureTypeAndUnitSymbol(){
-		$text = $this->measureTypeName.'('.$this->unitSymbol.')';
-		return $text;
-	}
 	
-*/
-
 	public function editForm(){
 		
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
@@ -85,7 +53,7 @@ class measureTypeUnit extends \application\entity{
 			$sql = " UPDATE measure_type_units m ";
 			$sql .= " SET ";
 			$sql .= " m.measure_type_id = ".$this->f->measureType->id->value().", ";
-			$sql .= " m.unit_measure_id = ".$this->f->unitType->id->value().", ";
+			$sql .= " m.unit_measure_id = ".$this->f->quantityType->id->value().", ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
@@ -100,8 +68,8 @@ class measureTypeUnit extends \application\entity{
 			$sql .= " updated, ";
 			$sql .= " created) ";
 			$sql .= " VALUES (";
-			$sql .= " ".$this->measureType->id->value().", ";
-			$sql .= " ".$this->unitType->id->value().", ";
+			$sql .= " ".$this->f->measureType->id->value().", ";
+			$sql .= " ".$this->f->quantityType->id->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP) ";
 			

@@ -18,30 +18,6 @@ class quantityType extends \application\entityType{
 	}
 	
 	
-	protected function pageMenu(){
-	
-	
-		/*
-		
-		
-		$units = new UnitOfMeasureLinks($menuType,$menuStyle);
-		$measureTypes = new MeasureTypeLinks($menuType,$menuStyle);
-
-		$menu .= $menuL->linkReference();
-
-		if ($this->pageMode == 'VIEW'){
-			$menu .= $units->detailEditHref($this->id);
-		} elseif ($this->pageMode == 'EDIT'){
-			$menu .= $units->detailViewHref($this->id);
-		}
-		$menu .= $units->listingHref();
-		//$menu .= $measureTypes->listingHref();
-		
-		
-		*/
-	}
-	
-	
 	public function editForm(){
 	
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
@@ -51,7 +27,7 @@ class quantityType extends \application\entityType{
 		$this->edit->required->input($this->f->name);
 		
 		$this->edit->required->input($this->f->symbol);
-		$this->edit->required->input($this->f->type);
+		//$this->edit->required->input($this->f->type);
 		
 		$this->edit->required->input($this->f->displayOrder);
 		
@@ -73,7 +49,7 @@ class quantityType extends \application\entityType{
 		$sql = " UPDATE units_of_measure AS p ";
 		$sql .= " SET ";
 		$sql .= " p.description = '".$this->f->description->value()."', ";
-		$sql .= " p.type = '".$this->f->type->value()."', ";
+		//$sql .= " p.type = '".$this->f->type->value()."', ";
 		$sql .= " p.display_order = ".$this->f->displayOrder->value().", ";
 		$sql .= " p.highlight_style = '".$this->f->highlight->value()."', ";
 		$sql .= " p.name = '".$this->f->name->value()."', ";
@@ -96,7 +72,7 @@ class quantityType extends \application\entityType{
 		$sql .= " highlight_style, ";
 		$sql .= " created, ";
 		$sql .= " updated, ";
-		$sql .= " type, ";
+		//$sql .= " type, ";
 		$sql .= " symbol, ";
 		$sql .= " notes) ";
 		$sql .= " VALUES (";
@@ -106,7 +82,7 @@ class quantityType extends \application\entityType{
 		$sql .= "'".$this->f->highlight->value()."', ";
 		$sql .= " CURRENT_TIMESTAMP, ";
 		$sql .= " CURRENT_TIMESTAMP, ";
-		$sql .= "'".$this->f->type->value()."', ";
+		//$sql .= "'".$this->f->type->value()."', ";
 		$sql .= "'".$this->f->symbol->value()."', ";
 		$sql .= "'".$this->f->notes->value()."') ";
 			

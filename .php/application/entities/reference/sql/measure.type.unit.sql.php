@@ -3,7 +3,7 @@ namespace application\entities\reference\sql;
 
 class measureTypeUnitSQL extends \application\sql\entitySQL{
 	public function __construct(){
-		$this->baseTable = 'measure_type_units_v';
+		$this->baseTable = 'measure_type_units_v mtu ';
 
 	}
 	
@@ -39,22 +39,35 @@ protected function cols(){
 	$c = " mtu.id, ";
 	$c .= " mtu.measure_type_id, ";
 	$c .= " mtu.unit_measure_id, ";
+	$c .= " mtu.display_order, ";
+	$c .= " mtu.highlight_style, ";
 	$c .= " mtu.updated, ";
 	$c .= " mtu.created, ";
+	$c .= " concat(mtu.measure_type,'(',mtu.unit_symbol,')') as name, ";
 	$c .= " mtu.measure_type, ";
 	$c .= " mtu.unit_type, ";
 	$c .= " mtu.unit_of_measure, ";
 	$c .= " mtu.unit_symbol ";
 	return $c;	
 }
-/*
-public function info($id){
+
+public function info($id = 0){
 	$q = " SELECT ";	
 	$q .= $this->cols();
 	$q .= " FROM measure_type_units_v mtu ";
-	$q .= " WHERE mtu.id = '".$measureTypeUnitId."' ";
+	$q .= " WHERE mtu.id = '".$id."' ";
 	return $q;
-}*/
+}
+
+public function list($page = 1, $rows = 10){
+	$q = " SELECT ";	
+	$q .= $this->cols();
+	$q .= " FROM measure_type_units_v mtu ";
+	$q .= " ORDER BY measure_type, display_order, unit_of_measure ";
+	$q .= $this->limit($page, $rows);
+	return $q;	
+}
+
 public function listMeasureType($id,$page = 1, $rows = 10){
 	$q = " SELECT ";	
 	$q .= $this->cols();
@@ -63,25 +76,25 @@ public function listMeasureType($id,$page = 1, $rows = 10){
 		$q .= " WHERE mtu.measure_type_id = ".$id." ";
 	}
 	$q .= " ORDER BY unit_type, measure_type, unit_of_measure ";
-	$q .= sqlLimitClause($page, $rows);
+	$q .= $this->limit($page, $rows);
 	return $q;	
 }
-/*
+
 public function count(){
 	$q = " SELECT ";	
-	$q .= " COUNT(*) total_units ";
+	$q .= " COUNT(*) count_details ";
 	$q .= " FROM measure_type_units_v mtu ";
 	//if ($measureTypeId > 0){
 	//	$q .= " WHERE mtu.measure_type_id = ".$id." ";
 	//}
 	return $q;	
 }
-*/
+
 public function countMeasureType($id){
 	$q = " SELECT ";	
 	$q .= " COUNT(*) total_units ";
 	$q .= " FROM measure_type_units_v mtu ";
-	if ($measureTypeId > 0){
+	if ($id > 0){
 		$q .= " WHERE mtu.measure_type_id = ".$id." ";
 	}
 	return $q;	
@@ -98,14 +111,6 @@ public function options($selectedId = 0, $disabled = 'false'){
 	$q .= " ORDER BY unit_type, caption ";
 	return $q;	
 }
-/*
-
-public function list($page = 1, $rows = 10){
-
-
-
-}
-*/
 
 
 }

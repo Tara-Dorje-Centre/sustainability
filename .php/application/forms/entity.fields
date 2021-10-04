@@ -26,6 +26,12 @@ abstract class entityFields extends fields{
 		$this->parentEntity = new _idName('parent_id','idParent','Parent','parent_name');
     	$this->type = new _idName('type_id','idType','Type','type_name');
 
+		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
+
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
 		$this->_register('description', $this->description);
@@ -35,6 +41,9 @@ abstract class entityFields extends fields{
    		$this->_register('parentEntity', $this->parentEntity);
 		$this->_register('type', $this->type);
    
+   }
+   
+	private function disableFields(){
    
    		$this->updated->envEnabled(false);
         $this->created->envEnabled(false);
@@ -43,6 +52,9 @@ abstract class entityFields extends fields{
         $this->created->listEnabled(false);
    
     }
+	
+	
+	
 	
 	public function setDefaults(){
     	$this->id->setDefault(0);

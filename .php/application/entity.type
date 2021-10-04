@@ -10,6 +10,11 @@ abstract class entityType extends entity{
 		parent::setDetails();
 		$this->f->name->caption = $this->entityTitle;
 	}
+	
+	public function display(){
+		return parent::display();
+	}
+	
 	protected function makePageTitle(){
 		$this->_pageTitle = $this->entityTitle;
 	}

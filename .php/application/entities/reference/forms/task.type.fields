@@ -41,12 +41,12 @@ class taskTypeFields extends \application\forms\fields{
 		$this->_register('name', $this->name);
 		
 		$this->_register('frequency',$this->frequency);
-		
+		$this->_register('highlight', $this->highlight);
 		$this->_register('description', $this->description);
 		$this->_register('notes', $this->notes);
 		$this->_register('created', $this->created);
 		$this->_register('updated', $this->updated);
-   		$this->_register('highlight', $this->highlight);
+
 	}
 	
 	private function disableFields(){
