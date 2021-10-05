@@ -15,8 +15,8 @@ class taskFields extends \application\forms\fields{
 	
 	public $project;
 	public $projectType;
-	public $location;
-	public $started;
+	public $projectLocation;
+
 	
 	public $taskOrder;
     public $summary;
@@ -43,11 +43,8 @@ public function __construct(){
 
 		$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
     	$this->projectType = new \application\forms\_idName('project_type','project-type','Project Type','project_type_name');
-    	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
-    	$this->started = new \application\forms\_date('started','started','not-used');           
-    	//$this->approved = new \application\forms\_yesNo('approved','approved','not-used');
-    	//$this->approvedBy = new \application\forms\_user('approved_by','approved-by','not-used');
-  		
+    	$this->projectLocation = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
+    	
 	
 	$this->taskOrder = new \application\forms\_number('task_order','task-order','task_order');						
 	$this->summary = new \application\forms\_text('summary','summary','not-used');
@@ -61,7 +58,14 @@ public function __construct(){
 	$this->receiptsAuthBy = new \application\forms\_text('receipts_auth_by','receipts-auth-by','not-used');
 	
 	
-	$this->_register('id', $this->id);
+	
+	$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
+	
+		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
 		$this->_register('description', $this->description);
 		$this->_register('created', $this->created);
@@ -69,10 +73,12 @@ public function __construct(){
    		$this->_register('highlight', $this->highlight);
    		$this->_register('parent', $this->parent);
 		
+		
+		
 		$this->_register('project', $this->project);
  		$this->_register('projectType', $this->projectType);
-		$this->_register('location', $this->location);
-		$this->_register('started', $this->started);
+		$this->_register('projectLocation', $this->projectLocation);
+
 		
 		$this->_register('taskOrder', $this->taskOrder);
  		$this->_register('summary', $this->summary);
@@ -85,11 +91,18 @@ public function __construct(){
 		$this->_register('receiptsAuthProject', $this->receiptsAuthProject);
 		$this->_register('receiptsAuthBy', $this->receiptsAuthBy);
 		
+		
+   }
+   
+	private function disableFields(){
+		
 		$this->updated->envEnabled(false);
         $this->created->envEnabled(false);
         
         $this->updated->listEnabled(false);
         $this->created->listEnabled(false);
+        
+        
     }
 	public function setDefaults(){
     	parent::setDefaults();

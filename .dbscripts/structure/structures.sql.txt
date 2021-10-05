@@ -144,6 +144,7 @@ CREATE TABLE location_types (
 CREATE TABLE materials (
   id bigint(20) NOT NULL,
   task_id bigint(20) NOT NULL,
+    activity_id bigint(20) NOT NULL DEFAULT '0',
   location_id bigint(20) NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
@@ -176,6 +177,7 @@ CREATE TABLE material_types (
 CREATE TABLE measures (
   id bigint(20) NOT NULL,
   task_id bigint(20) NOT NULL,
+    activity_id bigint(20) NOT NULL DEFAULT '0',
   location_id bigint(20) NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,

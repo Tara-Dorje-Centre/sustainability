@@ -1,7 +1,7 @@
 CREATE TABLE receipts (
   id bigint(20) NOT NULL,
   task_id bigint(20) NOT NULL,
-  activity_id bigint(20) NOT NULL,
+  activity_id bigint(20) NOT NULL DEFAULT '0',
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
   date_reported timestamp NULL DEFAULT '0000-00-00 00:00:00',

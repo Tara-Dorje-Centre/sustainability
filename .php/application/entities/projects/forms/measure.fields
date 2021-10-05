@@ -1,7 +1,33 @@
 <?php
 namespace application\entities\projects\forms;
 
-class measureFields extends taskChildFields{
+class measureFields extends \application\forms\fields{
+	
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	public $parent;
+	public $type;
+
+
+	public $project;
+	public $projectType;
+	public $projectLocation;
+
+
+	public $task;
+	public $taskType;
+	public $reported;
+	public $doneBy;
+	public $linkUrl;
+ 	public $linkText;
+ 	public $notes;
+ 	public $quantity;
+ 	public $quantityType;
+	
 	
 	 public $value;	
 	 public $measureTypeUnit;	
@@ -9,15 +35,70 @@ class measureFields extends taskChildFields{
 	// public $quantityType;
 	// public $unitSymbol;
 	
+	public function __construct(){
+		parent::__construct();
+    	
+		$this->id = new \application\forms\_id('id','id','not-used');
+    	$this->name = new \application\forms\_name('name','name','Name');
+    	$this->description = new \application\forms\_description('description','description','Description');
+		$this->updated = new \application\forms\_date('updated','updated','Updated');
+    	$this->created = new \application\forms\_date('created','created','Created');
+        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
+		$this->parent = new \application\forms\_idName('parent_id','idParent','Parent','parent_name');
+    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
 
- public function __construct(){
+    	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
+    	$this->projectType = new \application\forms\_idName('project_type','project-type','Project Type','project_type_name');
+    	$this->projectLocation = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
 
- 
-	 $this->value = new \application\forms\_number('value','value','Value');	
-	 $this->measureTypeUnit = new \application\forms\_idName('measure_type_unit_id','measure-type-unit-id','Measure Type Units','dbcolname');						
+    	$this->task = new \application\forms\_idName('task_id','id-task','Task','task_name');
+		$this->taskType = new \application\forms\_idName('task_type_id','task-type','Task Type','task_type');
+		$this->reported = new \application\forms\_date('reported','date-reported','Reported');
+		$this->doneBy = new \application\forms\_user('done_by','done-by','DoneBy');
+    	$this->linkUrl = new \application\forms\_text('link_url','link-url','LinkUrl');
+		$this->linkText = new \application\forms\_text('link_text','link-text','LinkText');
+		$this->notes = new \application\forms\_notes('notes','notes','Notes');
+		$this->quantity = new \application\forms\_number('quantity','quantity','Quantity');
+		$this->quantityType = new \application\forms\_idName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
+		
+		$this->value = new \application\forms\_number('value','value','Value');	
+	 	$this->measureTypeUnit = new \application\forms\_idName('measure_type_unit_id','measure-type-unit-id','Measure Type Units','dbcolname');						
 	// $this->measureType = new \application\forms\_idName('measure_type_id','measure-type-id','Measure Type','dbcolname');
-	 $this->unitSymbol = new \application\forms\_name('unit_symbol','not-used','Symbol');
-	 $this->unitType = new \application\forms\_name('unit_type','not-used','Unit Type');
+	 	$this->unitSymbol = new \application\forms\_name('unit_symbol','not-used','Symbol');
+	 	$this->unitType = new \application\forms\_name('unit_type','not-used','Unit Type');
+	 
+		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
+	
+	 
+	 $this->_register('id', $this->id);
+		$this->_register('name', $this->name);
+		$this->_register('description', $this->description);
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+   		$this->_register('highlight', $this->highlight);
+   		$this->_register('parent', $this->parent);
+		
+		$this->_register('project', $this->project);
+ 		$this->_register('projectType', $this->projectType);
+		$this->_register('projectLocation', $this->projectLocation);
+		
+		$this->_register('task', $this->task);
+		$this->_register('taskType', $this->taskType);
+		$this->_register('reported', $this->reported);
+		$this->_register('doneBy', $this->doneBy);
+		$this->_register('linkUrl', $this->linkUrl);
+		$this->_register('linkText', $this->linkText);
+		$this->_register('notes', $this->notes);
+		$this->_register('quantity',$this->quantity);
+		$this->_register('quantityType',$this->quantityType);
+ 
+	 
+	 
+	 
 	 $this->_register('value',$this->value);
 	 $this->_register('measureTypeUnit',$this->measureTypeUnit);
 	// $this->_register('measureType',$this->measureType);
@@ -26,8 +107,32 @@ class measureFields extends taskChildFields{
  }
 
 
+private function disableFields(){
+		$this->id->listEnabled(false);
+		$this->id->displayEnabled(false);
+		$this->updated->envEnabled(false);
+        $this->created->envEnabled(false);
+        
+        $this->updated->listEnabled(false);
+        $this->created->listEnabled(false);
+        
+ 
+ 
+    }
+
+
  public function setDefaults(){
  	parent::setDefaults();
+
+
+		//$this->parentTask->setDefault(0);
+		$this->reported->setDefault($this->_currentTimestamp);
+		$this->doneBy->setDefault($this->_currentUser);
+		$this->linkUrl->setDefault('');
+		$this->linkText->setDefault('');
+		$this->notes->setDefault('');
+		$this->quantity->setDefault(1);
+		$this->quantityType->setDefault(0);
 
 	 
  }

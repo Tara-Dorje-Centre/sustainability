@@ -52,7 +52,11 @@ class projectFields extends \application\forms\fields{
 		$this->showAlways = new \application\forms\_yesNo('show_always','show-always','Show.Always');
 		$this->location = new \application\forms\_idName('location_id','location-id','Location','location_name');
   		
-  		
+		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
   		
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
@@ -74,17 +78,23 @@ class projectFields extends \application\forms\fields{
 		$this->_register('showAlways', $this->showAlways);
 		$this->_register('location', $this->location);
 		
+   }
+   
+	private function disableFields(){
+		
+		
 		$this->updated->envEnabled(false);
         $this->created->envEnabled(false);
         
         $this->updated->listEnabled(false);
         $this->created->listEnabled(false);
     }
+    
 	public function setDefaults(){
 		parent::setDefaults();
 		
 		
-$this->id->setDefault(0);
+		$this->id->setDefault(0);
     	$this->id->setDefault(0);
 		$this->name->setDefault('');
 		$this->description->setDefault('');
