@@ -43,8 +43,8 @@ class project extends \application\entity{
 			$s = new ReceiptSQL;
 			$sql = $s->summaryProjectReceiptype($this->id, 'yes');
 			
-			global $conn;
-			$result = $conn->getResult($sql);
+			//global $conn;
+			$result = $this->sql->getResult($sql);
 			
 			
 			//$result = dbGetResult($sql);
@@ -137,8 +137,9 @@ class project extends \application\entity{
 		$detail .= openDisplayDetails();
 		$detail .= $this->totals->display();
 
-
-		 $tasks = new TaskList('VIEW', 0, $this->id);
+		//taskList constructor has no args
+		//need to set parentId to current project
+		 $tasks = new taskList('VIEW', 0, $this->id);
 		 $tasks->setPaging($this->resultPage,10);
 		 $link = $this->links->detail('VIEW',$this->id);
 		 $detail .= $tasks->getListing($link);

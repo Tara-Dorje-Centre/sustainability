@@ -74,9 +74,11 @@ class userFields extends \application\forms\fields{
    }
    
 	private function disableFields(){
+		$this->lastLogin->envEnabled(false);
+		$this->created->envEnabled(false);
+		$this->updated->envEnabled(false);
 		
 		$this->name->fetchEnabled(false);
-		
 		$this->pwdConfirm->listEnabled(false);
 		$this->pwd->listEnabled(false);
 		$this->created->listEnabled(false);

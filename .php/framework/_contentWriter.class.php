@@ -30,10 +30,10 @@ abstract class _contentWriter extends _echo implements Iecho, IcontentWriter{
 		return $delimiter.$value.$delimiter;
 	}
 	public function qString(string $value = ''){
-		return $this->encloseString($value."'");
+		return $this->encloseString($value,"'");
 	}
 	public function qqString(string $value = ''){
-		return $this->encloseString($value.'"');
+		return $this->encloseString($value,'"');
 	}
 }
  

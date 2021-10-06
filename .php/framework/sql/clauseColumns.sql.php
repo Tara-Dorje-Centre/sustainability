@@ -9,7 +9,7 @@ class clauseColumns extends clause{
 	protected $colPrefix = ', ';
 	protected $printMode = 'SELECT';
 	public function __construct($type){
-		parent::__construct(type);
+		parent::__construct($type);
 	}
 	public function addCol(column $c){
 		$this->hasCols = true;
@@ -19,7 +19,7 @@ class clauseColumns extends clause{
 		$c = new column($name,$qualifier,$alias);
 		$this->addCol($c);
 	}
-	public function addEditColumn($name,$value,$qualifier){
+	public function addEditColumn($name,$value,$qualifier=null){
 		$c = new column($name,$qualifier);
 		$c->set($value);
 		$this->addCol($c);
@@ -45,7 +45,7 @@ class clauseColumns extends clause{
 		$this->addContent(' '.$this->term.' ');
 		$this->printCols();
 		} else {
-		$this->clearContent();
+		$this->resetContent();
 		}
 		return $this->getContent();
 	}

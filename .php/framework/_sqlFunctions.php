@@ -2,22 +2,10 @@
 namespace framework\sql;
 
 /*
-function printLine($msg, $show = true){
-	$e = new _echo();
-	$e->echoLocale(' ', '_sqlFunctions');
-	$e->echoPrint($show,$msg);
-}
 */
-
 /*
- function sqlLimitClause($page, $perPage){
-	$limitSQL = " LIMIT ";
-	$limitOffset = ($page - 1) * $perPage;
-	$limitSQL .= $limitOffset.", ".$perPage;
-	return $limitSQL;	
-}
 */
-
+/*
 function getSelectOptionsSQL($sql,$selectedValue = 0, $disabled = false, $defaultValue = 0, $defaultCaption = ''){
 	if ($defaultValue === 'NO_DEFAULT_VALUE'){
 		//omit default value
@@ -46,7 +34,7 @@ function getSelectOptionsSQL($sql,$selectedValue = 0, $disabled = false, $defaul
 	
 	return $allOptions;	
 }
-
+*/
 
 
 ?>

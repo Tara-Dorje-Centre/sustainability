@@ -11,9 +11,9 @@ include_once('_selectOption.class.php');
 include_once('selectRange.class.php');
 include_once('selectQuery.class.php');
 include_once('selectTimestamp.class.php');
-include_once('selectColor.class');
-include_once('selectFontFamily.class');
-include_once('selectFontSize.class');
+include_once('selectColor.class.php');
+include_once('selectFontFamily.class.php');
+include_once('selectFontSize.class.php');
 include_once('selectHighlight.class.php');
 include_once('selectYesNo.class.php');
 

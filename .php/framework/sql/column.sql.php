@@ -7,7 +7,7 @@ class column{
 	public $alias;
 	public $value;
 	public $operator = '=';
-	public function __construct($name,$qualifier,$alias){
+	public function __construct($name,$qualifier=null,$alias=null){
 		$this->name = $name;
 		$this->qualifier = $qualifier;
 		$this->alias = $alias;

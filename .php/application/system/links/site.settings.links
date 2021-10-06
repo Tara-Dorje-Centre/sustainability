@@ -10,11 +10,49 @@ class siteSettingsLinks extends \application\links\entityLinks{
 		$context = 'siteSettings';
 		parent::__construct($context);
 
-		/*$this->setEntityContext($context);*/
+
 	}
 
 	public function setRequest(){
 		$this->request = new siteSettingsRequest($this->entityContext);
 	}
+	
+	
+public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
+		$this->menu->addLink($this->view('View...list',$id));
+	}
+	
+	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
+		switch ($mode){
+			case 'VIEW':
+				$this->menu->addLink($this->edit('Edit',$id));
+				break;
+			case 'SAVE':
+				$this->menu->addLink($this->edit('Edit',$id));
+				break;
+				
+			case 'EDIT':
+				$this->menu->addLink($this->view('View',$id));
+				break;
+			case 'ADD':
+				$this->menu->addLink($this->view('View',$id));
+				break;
+			default:
+				$this->menu->addLink($this->view('View...default',$id));
+		
+		}
+		
+	}
+	
+	
+	public function contextList(string $caption = 'entity-context'){
+		$linkCaption = $caption;
+		if ($caption == 'entity-context'){
+		     $linkCaption = $this->entityContext;
+		}
+		return $this->view($linkCaption,0,0);
+	}
+	
+	
 }
 ?>

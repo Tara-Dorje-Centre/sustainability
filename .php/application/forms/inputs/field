@@ -77,6 +77,10 @@ namespace application\forms;
  	 	 	$this->_dbCol = $dbCol;
  	}
 
+	public function getFetchColumn(){
+ 	 	 	return $this->_dbCol;
+ 	}
+
  	public function setEnabled(
  		bool $fetch = false, 
  		bool $display = false, 
@@ -239,8 +243,10 @@ namespace application\forms;
    		}
    		
  		if ($quoted == true){
- 		   	$v = new _sqlClause();
-    		$value = $v->encloseString($baseValue);
+ 			//todo: this adds an extra / to escaped values
+ 		   	global $conn;
+			$dbValue = $conn->getEscapeString($baseValue);
+    		$value = $this->encloseString($dbValue);
  		} else {
  			$value = $baseValue;
  		}

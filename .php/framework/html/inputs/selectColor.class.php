@@ -3,7 +3,7 @@ namespace html\inputs;
 
 class selectColor extends _select{
 	
-	public function __construct($name, $value, $caption, $onchangeJS = null){
+	public function __construct($name, $value, $caption, $onChangeJS = null){
 		parent::__construct($name,$value,$caption,$onChangeJS);
 
 		$this->defaultOption('none','no color');

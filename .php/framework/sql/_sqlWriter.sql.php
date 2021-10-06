@@ -53,9 +53,9 @@ public function addOrderingColumn($name){
  	$this->cols->addEditColumn($field,$value);
  	
  }
- public function editField(_field &$fld){
+ public function editField(\application\forms\field &$fld){
  
- 		$this->editColumn($fld->dbColumn,$fld->valueSQL());
+ 		$this->editColumn($fld->getFetchColumn(),$fld->valueSQL());
  }
  public function where($field,$value,$operator = '='){
  	$this->where->compare($field,$value,$operator);

@@ -73,6 +73,12 @@ class _idName implements Ifield{
  	public function setFetchColumn(string $dbCol = 'query_alias|column_name'){
  	 	 	$this->id->setFetchColumn($dbCol);
  	}
+ 	
+	public function getFetchColumn(){
+ 	 	 	return $this->id->getFetchColumn();
+ 	}
+ 	
+ 	
 	public function set($value){
 	 	$this->id->set($value);
 	}

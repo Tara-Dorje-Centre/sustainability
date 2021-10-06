@@ -3,7 +3,7 @@ namespace framework\sql;
 
 
 class update extends clauseColumns{
-	protected $term = '(';
+	protected $term = '';
 	protected $prefix = ', ';
 	protected $printMode = 'UPDATE';
 	public function __construct(){
@@ -13,7 +13,7 @@ class update extends clauseColumns{
 		//$this->addContent(' (');
 		//$this->printMode = 'UPDATE';
 		$this->printCols();
-		$this->addContent(') ');
+		//$this->addContent(') ');
 		return $this->getContent();
 	}
 }

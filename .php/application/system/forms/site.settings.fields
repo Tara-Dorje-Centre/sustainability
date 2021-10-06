@@ -50,8 +50,8 @@ class siteSettingsFields extends \application\forms\fields{
 	 	$this->publicFontFamily = new \application\forms\_fontFamily('public_font_family','public-font-family','public.Font.Family');
 	 	$this->publicFontSizeTitle = new \application\forms\_fontSize('public_font_size_title','public-font-size-title','public.Font.Size.Title');
 	 	$this->publicFontSizeHeading = new \application\forms\_fontSize('public_font_size_heading','public-font-size-heading','public.Font.Size.Heading');
-	 	$this->publicFontSizeMenu = new \application\forms\_fontSize('public_font_size_menu','public-font-size-menu','public.FontSizeMenu');
-	 	$this->publicFontSizeText = new \application\forms\_fontSize('public_font_size_text','public-font-size-text','publicFontSizeText');
+	 	$this->publicFontSizeMenu = new \application\forms\_fontSize('public_font_size_menu','public-font-size-menu','public.Font.Size.Menu');
+	 	$this->publicFontSizeText = new \application\forms\_fontSize('public_font_size_text','public-font-size-text','public.Font.Size.Text');
 		
 		
 		$this->registerFields();
@@ -87,7 +87,7 @@ class siteSettingsFields extends \application\forms\fields{
 
 	}
 	
-	   }
+	   
    
 	private function disableFields(){
 	

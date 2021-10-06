@@ -328,7 +328,7 @@ class user extends \application\entity{
 		}
 		//validate password
 		if (($pwd != '') && ($pwd == $pwdConfirm) && ($pwd != 'password')){
-			$this->f->loginPwd->set($this->obfuscate($pwd, $this->f->loginName->value()));
+			$this->f->pwd->set($this->obfuscate($pwd, $this->f->loginName->value()));
 		} else {
 			if ($pwd == '' || is_null($pwd) || is_null($pwdConfirm) || $pwdConfirm == ''){
 				$validation = 'Password cannot be blank';
@@ -399,7 +399,7 @@ class user extends \application\entity{
 			$sql .= " '".$this->f->focus->value()."', ";
 			$sql .= " '".$this->f->interests->value()."', ";
 			$sql .= " '".$this->f->loginName->value()."', ";
-			$sql .= " '".$this->f->loginPwd->value()."', ";
+			$sql .= " '".$this->f->pwd->value()."', ";
 			$sql .= " '".$this->f>isAdmin-value()."', ";
 			$sql .= " '".$this->f->isActive>value()."', ";
 			$sql .= " '".$this->f->mustUpdatePwd->value()."', ";

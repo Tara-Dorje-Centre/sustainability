@@ -14,6 +14,7 @@ interface Ifield{
  	public function setEnvironmentVariable(string $var = 'not-used');
  	public function getEnvironmentVariable();
  	public function setFetchColumn(string $dbCol = 'not_used');
+ 	public function getFetchColumn();
  	public function enabled(bool $use = false);
  	public function setEnabled(
  		bool $fetch = false, 
