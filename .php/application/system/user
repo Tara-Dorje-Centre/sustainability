@@ -86,7 +86,9 @@ class user extends \application\entity{
 			if ($this->pageMode == 'ADD'){
 				//non admin trying to add a user
 				//revert to viewing self
-				$this->setDetails($_SESSION['user-id'],0,'VIEW');
+				$this->id = $_SESSION['user-id'];
+				$this->pageMode = 'VIEW';
+				$this->setDetails();
 			} elseif ($this->pageMode == 'EDIT' AND $_SESSION['user-id'] == $this->id){
 				//editing self, ok
 			} else {
