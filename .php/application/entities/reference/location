@@ -179,14 +179,17 @@ class location extends \application\entity{
 			$sql .= " type_id, ";
 			$sql .= " created, ";
 			$sql .= " updated, ";
-			$sql .= " description) ";
+			$sql .= " description, ";
+			$sql .= " sort_key) ";
 			$sql .= " VALUES (";
 			$sql .= "'".$this->f->name->value()."', ";
 			$sql .= " ".$this->f->parent->id->value().", ";
 			$sql .= " ".$this->f->type->id->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
-			$sql .= "'".$this->f->description->value()."') ";
+			$sql .= "'".$this->f->description->value()."', ";
+			//default to timestamp for initial unique value
+			$sql .= " CURRENT_TIMESTAMP) ";
 			
 			$result = $this->sql->runStatement($sql);
 			

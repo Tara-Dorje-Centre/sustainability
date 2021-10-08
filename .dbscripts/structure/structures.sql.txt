@@ -122,9 +122,9 @@ CREATE TABLE locations (
   parent_id bigint(20) NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  sort_key varchar(1000) COLLATE latin1_general_ci NOT NULL,
+    updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  sort_key varchar(1000) COLLATE latin1_general_ci NOT NULL DEFAULT CURRENT_TIMESTAMP,
   type_id bigint(20) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
