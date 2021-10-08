@@ -7,8 +7,8 @@ CREATE TABLE activities (
   id bigint(20) NOT NULL,
   task_id bigint(20) NOT NULL,
   done_by varchar(50) COLLATE latin1_general_ci NOT NULL,
-  started timestamp NULL DEFAULT '0000-00-00 00:00:00',
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  started timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   activity_order decimal(10,2) NOT NULL DEFAULT '1.00',
   hours_estimated decimal(10,2) NOT NULL,
   hours_actual decimal(10,2) NOT NULL,
@@ -23,8 +23,8 @@ CREATE TABLE activity_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   display_order int(4) DEFAULT '0',
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -122,7 +122,7 @@ CREATE TABLE locations (
   parent_id bigint(20) NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
-    updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   sort_key varchar(1000) COLLATE latin1_general_ci NOT NULL DEFAULT CURRENT_TIMESTAMP,
   type_id bigint(20) NOT NULL DEFAULT '0'
@@ -134,8 +134,8 @@ CREATE TABLE location_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none',
   display_order int(4) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -148,8 +148,8 @@ CREATE TABLE materials (
   location_id bigint(20) NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
-  date_reported timestamp NULL DEFAULT '0000-00-00 00:00:00',
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  date_reported timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity double(10,2) NOT NULL DEFAULT '1.00',
   qty_unit_measure_id bigint(20) NOT NULL DEFAULT '0',
   cost_unit double(10,2) NOT NULL DEFAULT '0.00',
@@ -167,8 +167,8 @@ CREATE TABLE material_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none',
   display_order int(4) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -181,8 +181,8 @@ CREATE TABLE measures (
   location_id bigint(20) NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
-  date_reported timestamp NULL DEFAULT '0000-00-00 00:00:00',
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  date_reported timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   value float NOT NULL,
   measure_type_unit_id bigint(20) NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL
@@ -193,8 +193,8 @@ CREATE TABLE measure_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   display_order int(4) DEFAULT '0',
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -204,8 +204,8 @@ CREATE TABLE measure_type_units (
   id bigint(20) NOT NULL,
   measure_type_id bigint(20) NOT NULL,
   unit_measure_id bigint(20) NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   display_order int(4) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 
@@ -215,8 +215,8 @@ CREATE TABLE projects (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
   summary varchar(1000) COLLATE latin1_general_ci NOT NULL,
-  started timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  started timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   pct_done decimal(10,2) NOT NULL DEFAULT '0.00',
   priority decimal(10,2) NOT NULL DEFAULT '1.00',
   parent_id bigint(20) NOT NULL,
@@ -239,8 +239,8 @@ CREATE TABLE project_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none',
   display_order int(4) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -252,8 +252,8 @@ CREATE TABLE receipts (
   activity_id bigint(20) NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
-  date_reported timestamp NULL DEFAULT '0000-00-00 00:00:00',
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  date_reported timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity double(10,2) NOT NULL DEFAULT '1.00',
   qty_unit_measure_id bigint(20) NOT NULL DEFAULT '0',
   cost_unit double(10,2) NOT NULL DEFAULT '0.00',
@@ -269,8 +269,8 @@ CREATE TABLE receipt_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none',
   display_order int(4) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -311,7 +311,7 @@ CREATE TABLE tasks (
   description varchar(1000) COLLATE latin1_general_ci NOT NULL,
   summary varchar(1000) COLLATE latin1_general_ci NOT NULL,
   started timestamp NULL DEFAULT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   pct_done decimal(10,2) NOT NULL DEFAULT '0.00',
   task_order decimal(10,2) NOT NULL DEFAULT '1.00',
   parent_id bigint(20) NOT NULL DEFAULT '0',
@@ -330,8 +330,8 @@ CREATE TABLE task_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none',
   frequency varchar(10) COLLATE latin1_general_ci NOT NULL DEFAULT 'no',
   display_order int(4) NOT NULL DEFAULT '0'
@@ -349,8 +349,8 @@ CREATE TABLE units_of_measure (
   id bigint(20) NOT NULL,
   type varchar(100) COLLATE latin1_general_ci NOT NULL,
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   symbol varchar(20) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci DEFAULT NULL,
@@ -369,8 +369,8 @@ CREATE TABLE users (
   login_name varchar(50) COLLATE latin1_general_ci NOT NULL,
   login_pwd varchar(1000) COLLATE latin1_general_ci NOT NULL,
   last_login timestamp NULL DEFAULT NULL,
-  created timestamp NULL DEFAULT NULL,
-  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  created timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   type_id bigint(20) NOT NULL DEFAULT '0',
   is_admin varchar(10) COLLATE latin1_general_ci NOT NULL DEFAULT 'no',
   must_update_pwd varchar(10) COLLATE latin1_general_ci NOT NULL DEFAULT 'no',
@@ -383,8 +383,8 @@ CREATE TABLE user_types (
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
   notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
   description varchar(500) COLLATE latin1_general_ci NOT NULL,
-  updated timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  created timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   highlight_style varchar(100) COLLATE latin1_general_ci NOT NULL DEFAULT 'none',
   display_order int(4) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;

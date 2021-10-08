@@ -8,7 +8,7 @@ CREATE TABLE users (
   login_name varchar(50) COLLATE latin1_general_ci NOT NULL,
   login_pwd varchar(1000) COLLATE latin1_general_ci NOT NULL,
   last_login timestamp NULL DEFAULT NULL,
-  created timestamp NULL DEFAULT NULL,
+  created timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   type_id bigint(20) NOT NULL DEFAULT '0',
   is_admin varchar(10) COLLATE latin1_general_ci NOT NULL DEFAULT 'no',
