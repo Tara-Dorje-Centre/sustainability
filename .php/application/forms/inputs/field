@@ -244,8 +244,9 @@ namespace application\forms;
    		
  		if ($quoted == true){
  			//todo: this adds an extra / to escaped values
- 		   	global $conn;
-			$dbValue = $conn->getEscapeString($baseValue);
+ 		   	//global $conn;
+			//$dbValue = $conn->getEscapeString($baseValue);
+    		$dbValue = \addslashes($baseValue);
     		$value = $this->encloseString($dbValue);
  		} else {
  			$value = $baseValue;

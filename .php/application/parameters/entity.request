@@ -11,10 +11,18 @@ abstract class entityRequest extends request {
 	}
 		
 	public function setUrlParametersEntity(url &$u, string $action, $id = 0, $idParent = 0, $idType = 0){
+		/*
 		$this->setUrlParameter($u,'pageAction',$action);
 		$this->setUrlParameter($u,'id',$id);
 		$this->setUrlParameter($u,'idParent',$idParent);
 		$this->setUrlParameter($u,'idType',$idType);
+		*/
+		
+		$this->setUrlParameter($u,'page-action',$action);
+		$this->setUrlParameter($u,'id',$id);
+		$this->setUrlParameter($u,'id-parent',$idParent);
+		$this->setUrlParameter($u,'id-type',$idType);
+		
 	} 
 	
 	public function getUrlEntityDetail(string $action, $id = 0, $idParent = 0, $idType = 0){

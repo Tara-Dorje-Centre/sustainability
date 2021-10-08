@@ -85,7 +85,11 @@ class userFields extends \application\forms\fields{
 		$this->updated->listEnabled(false);
 		$this->focus->listEnabled(false);
 		$this->interests->listEnabled(false);
+		$this->id->listEnabled(false);
+		$this->highlight->listEnabled(false);
 		
+		$this->highlight->displayEnabled(false);
+		$this->id->displayEnabled(false);
 		$this->pwdConfirm->displayEnabled(false);
 		$this->pwd->displayEnabled(false);
 				

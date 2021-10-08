@@ -42,10 +42,18 @@ implements IbaseEntity{
 		$this->echoState_ids(true, 'setIdentifiers');
 	}
 	protected function getRequestIdentifiers(){
+		/*
 		$action = $_GET['pageAction'];
 		$id = $_GET['id'];
 		$idParent = $_GET['idParent'];
 		$idType = $_GET['idType'];
+		*/
+		
+		$action = $_GET['page-action'];
+		$id = $_GET['id'];
+		$idParent = $_GET['id-parent'];
+		$idType = $_GET['id-type'];
+		
 		$this->setIdentifiers($action,$id,$idParent,$idType);
 	}
 	

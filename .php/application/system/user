@@ -87,7 +87,7 @@ class user extends \application\entity{
 				//non admin trying to add a user
 				//revert to viewing self
 				$this->setDetails($_SESSION['user-id'],0,'VIEW');
-			} elseif ($this->pageMode == 'EDIT' && $_SESSION['user-id'] == $this->id){
+			} elseif ($this->pageMode == 'EDIT' AND $_SESSION['user-id'] == $this->id){
 				//editing self, ok
 			} else {
 				$this->pageMode = 'VIEW';
@@ -193,7 +193,7 @@ class user extends \application\entity{
 	
 	private function getLoginMessages(){
 		if (isset($_SESSION['login-messages']) && $_SESSION['login-messages'] != ''){
-			$messages = $_SESSION['login-messages'].br();
+			$messages = $_SESSION['login-messages'].'<br/>';
 			unset($_SESSION['login-messages']);
 		} else {
 			$messages = '';
@@ -203,38 +203,49 @@ class user extends \application\entity{
 	
 	public function requestPasswordResetForm(){
 		$entity = 'user-password-reset';
-		$contextMenu = null;
-		$request = new \application\forms\inputForm($entity,$this->pageMode,$this->pageSave);
+		//$contextMenu = null;
+		//$request = new \application\forms\inputForm($entity,$this->pageMode,$this->pageSave);
 		//$request->open($contextMenu,$this->_titleEntity);
 
-		$request->hidden->addContent($this->f->id->inputHidden());
-		$request->hidden->addContent($this->f->email->inputHidden());	
-		$request->hidden->addContent($this->f->loginName->inputHidden());
-		$request->submit->addContent(getSubmitButton('Request Reset','submit-pwd-reset'));
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
+	
+		$request = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$entity,true);
+		
+		$request->hidden->inputHidden($this->f->id);
+		$request->hidden->inputHidden($this->f->email);	
+		$request->hidden->inputHidden($this->f->loginName);
+
+		
+		$_submit = new \application\forms\submitButton('submit-pwd-reset','Request Reset'); 
+		$request->submit->addContent($_submit->button());	
+		
 		$request->submit->addContent($this->getLoginMessages());
 
+
 		return $request->print();
+		
 		
 	}
 	
 	//overrride entity.listrowlink to limit editing to administrators or self edit
 	protected function listRowLink(){
 
-		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] == $this->f->id->value)){
+		if (($_SESSION['is-admin'] == 'yes') OR ($_SESSION['user-id'] == $this->f->id->value())){
 			$link = $this->links->viewEdit($this->f->loginName->value(),$this->f->id->value());
 		} else {
-			$link = $this->links->view($this->f->loginName->value(),$this->f->id->value());
+			$link = $this->links->view($this->f->loginName->value(),$this->f->id->value())->print();
 		}
 			return $link;
 	}
 		
 	public function addForm($idParent = 0){
+		$form = '';
 		if ($_SESSION['is-admin'] == 'yes'){
 			$this->pageMode = 'ADD';
 			$this->setDefaults();
 			$form = $this->editForm();
 		} else {
-			$quickEdit = 'Please request Administrator assistance to add users';
+			$form = 'Please request Administrator assistance to add users';
 		}
 		return $form;
 	}
@@ -261,7 +272,7 @@ class user extends \application\entity{
 			$this->f->loginName->setValidation(@$this->validationMessages['login']);			
 			$this->edit->required->input($this->f->loginName);
 		} else {
-			$input = $this->f->loginName->inputHidden();
+			$this->edit->hidden->inputHidden($this->f->loginName);
 			$this->edit->required->addContent('Login name ['.$this->f->loginName->value().'] cannot be changed');
 		}
 		
@@ -360,8 +371,8 @@ class user extends \application\entity{
 			$sql .= " u.email = '".$this->f->email->value()."', ";
 			$sql .= " u.focus = '".$this->f->focus->value()."', ";
 			$sql .= " u.interests = '".$this->f->interests->value()."', ";
-			$sql .= " u.login_name = '".$this->f->loginName->value."', ";
-			$sql .= " u.login_pwd = '".$this->f->loginPwd->value()."', ";
+			$sql .= " u.login_name = '".$this->f->loginName->value()."', ";
+			$sql .= " u.login_pwd = '".$this->f->pwd->value()."', ";
 			$sql .= " u.is_admin = '".$this->f->isAdmin->value()."', ";
 			$sql .= " u.is_active = '".$this->f->isActive->value()."', ";
 			$sql .= " u.must_update_pwd = '".$this->f->mustUpdatePwd->value()."', ";
@@ -370,7 +381,7 @@ class user extends \application\entity{
 
 			$result = $this->sql->runStatement($sql);
 
-			$this->mailUser('Your User Profile Has Been Updated');
+			//$this->mailUser('Your User Profile Has Been Updated');
 			
 			if ($this->f->loginName->value() == $_SESSION['login-name']){
 				$this->setSecurity($this->f->loginName->value());
@@ -400,15 +411,15 @@ class user extends \application\entity{
 			$sql .= " '".$this->f->interests->value()."', ";
 			$sql .= " '".$this->f->loginName->value()."', ";
 			$sql .= " '".$this->f->pwd->value()."', ";
-			$sql .= " '".$this->f>isAdmin-value()."', ";
-			$sql .= " '".$this->f->isActive>value()."', ";
+			$sql .= " '".$this->f->isAdmin->value()."', ";
+			$sql .= " '".$this->f->isActive->value()."', ";
 			$sql .= " '".$this->f->mustUpdatePwd->value()."', ";
 			$sql .= " CURRENT_TIMESTAMP, ";			
 			$sql .= " ".$this->f->type->id->value().") ";
 			
 			$result = $this->sql->runStatement($sql);
 
-			$id = $this-≥sql->getInsertedId();
+			$id = $this->sql->getInsertedId();
 			$this->f->id->set($id);
 			$this->id = $this->f->id->value();
 			
