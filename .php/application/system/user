@@ -94,7 +94,7 @@ class user extends \application\entity{
 			}	 
 		}
 
-		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
+		if ($this->pageMode == 'EDIT' OR $this->pageMode == 'ADD'){
 			$details = $this->editForm();
 		} else {
 			$details = $this->display();
@@ -137,7 +137,7 @@ class user extends \application\entity{
 		
 			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
 		
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
 			$links = new UserLinks;	
 			$message = $_SESSION['site-title'].br();
@@ -178,7 +178,7 @@ class user extends \application\entity{
 	private function setSecurity($loginName){
 		$sql = $this->sql->securityUser($loginName);
 
-		$result = dbGetResult($sql);
+		$result = $this->sql->getResult($sql);
 		if($result){
 	  		while ($row = $result->fetch_assoc())
 			{
@@ -253,7 +253,7 @@ class user extends \application\entity{
 	
 	public function editForm(){
 	
-		if (($_SESSION['is-admin'] == 'yes') OR ($_SESSION['user-id'] != $this->id)){
+		if (($_SESSION['is-admin'] == 'yes') OR ($_SESSION['user-id'] == $this->id)){
 			$form = $this->secureEditForm();
 		} else {
 			$form = $this->display();
