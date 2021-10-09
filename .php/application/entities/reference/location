@@ -113,8 +113,8 @@ class location extends \application\entity{
 		if ($this->idParent > 0){
 			$this->f->parent->set($this->idParent);
 		}
-		$m = new location;
-		$select = $m->options($this->f->parent->value(),$this->f->parent->id->env->variable(),'Parent Location');
+		//$m = new location;
+		$select = $this->options($this->f->parent->value(),$this->f->parent->id->env->variable(),'Parent Location');
 		$this->edit->optional->inputChoice($this->f->parent->id,$select->print());
 		
 		$this->edit->hidden->inputHidden($this->f->id);

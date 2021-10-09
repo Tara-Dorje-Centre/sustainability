@@ -12,12 +12,14 @@ public function __construct(){
 
 //projects table fields displayed in listing
 	protected function cols(){
-	$c = $this->select();
+		$c = $this->select();
 		$c .= " p.id, ";
 		$c .= " p.type_id, ";
 		$c .= " pt.name type_name, ";
 		$c .= " pt.highlight_style, ";
 		$c .= " p.parent_id, ";
+		//dummy field until outer joined to tables
+		$c .= " 'parent project name' parent_name, ";
 		$c .= " p.name, ";
 		$c .= " p.description, ";
 		$c .= " p.summary, ";

@@ -84,8 +84,9 @@ class project extends \application\entity{
 		$this->_pageTitle = $heading;
 	}
 	
-	
+	/*
 	protected function makePageMenu(){
+	*/
 	
 	/*
 		$menuType = 'LIST';
@@ -128,106 +129,114 @@ class project extends \application\entity{
 		$menu .= $this->links->closeMenu();
 		$this->_pageMenu = $menu;
 	*/
-	}
 	
+	/*
+	}
+	*/
 	
 	
 	protected function display(){
 		$detail = parent::display();
+		
+		/*
 		$detail .= openDisplayDetails();
 		$detail .= $this->totals->display();
-
 		//taskList constructor has no args
 		//need to set parentId to current project
 		 $tasks = new taskList('VIEW', 0, $this->id);
 		 $tasks->setPaging($this->resultPage,10);
 		 $link = $this->links->detail('VIEW',$this->id);
 		 $detail .= $tasks->getListing($link);
-
 		 $detail .= closeDisplayDetails();
+		 */
 		 return $detail;
 	}
+	
 	public function options(
-		$selectedValue = 0, 
-		$idName = 'projectId', 
-		$disabled = 'false',
-		$showLink = true,
-		$onChangeJS = NULL){
-	
-		$sql = $this->sql->options($selectedValue, $disabled);	
-		$defaultValue = 0;
-		$defaultCaption = '-select Project';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
-		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);
-		if ($showLink === true){
-			//$l = new ProjectLinks;	
-			$links =$ths->links->detailViewEditHref($selectedValue);
-			$select .= $links;
+		$selected = 0, 
+		$id = 'id-type',
+		$caption = 'use-entity'){
+		
+		if ($caption == 'use-entity'){
+			$c = $this->entityTitle;
+		} else {
+			$c = $caption;
 		}
-		return $select;
-	}	
 	
+		$sql = $this->sql->options($selected);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
+		$s->defaultOption(0,'-No '.$this->entityTitle);
+		return $s;
+		
+	}
+		
 	public function optionsByType(
-		$projectTypeId = '0',
-		$selectedValue = '0', 
-		$idName = 'projectId', 
-		$disabled = 'false',
-		$showLink = true,
-		$onChangeJS = NULL){
-	
-		$sql = $this->sql->optionsByType($projectTypeId);
-		$defaultValue = '0';
-		$defaultCaption = '-select Project';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);			
-		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS);
-		if ($showLink === true){
-			//$l = new ProjectLinks;	
-			$links =$this->links->detailViewEditHref($selectedValue);
-			$select .= $links;
+		$selected = 0, 
+		$id = 'id-project',
+		$typeId = 0,
+		$caption = 'use-entity'){
+		
+		if ($caption == 'use-entity'){
+			$c = $this->entityTitle;
+		} else {
+			$c = $caption;
 		}
-		return $select;
-	}	
 	
+		$sql = $this->sql->optionsByType($typeId);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
+		$s->defaultOption(0,'-No '.$this->entityTitle);
+		return $s;
+		
+	}
 
 	public function editForm(){
 
-		$this->edit = new \application\forms\inputForm($this->links->pagePortal, $this->entityTitle, $this->pageMode, $this->entity, true);
-	
-	
-	/*
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
-	
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
+		
 		$this->edit->required->input($this->f->name);
-		$this->edit->required->input($this->f->purpose);
 		
-		$base = new projectType('OPTIONS');
-		$select = $base->options($this->f->type->value,$this->f->type->env->variable,'false',true);
-		$this->edit->required->choice($this->f->type->id, $select);
-		
-		$base = new Location('OPTIONS');
-		$select = $base->options($this->f->location->id->value(),$this->f->location->id->env->variable(),'false',true);
-		$this->edit->required->choice($this->f->location->id, $select);
+		$m = new \application\entities\reference\projectType;
+		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
+		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 
-		$this->edit->required->input($this->f->started);
+		//$this->edit->required->input($this->f->started);
 		$this->edit->required->input($this->f->priority);
 		$this->edit->optional->input($this->f->pctDone);
-		$this->edit->optional->input($this->f->description);
+		
+		$m = new \application\entities\reference\location;
+		$select = $m->options($this->f->location->value(),$this->f->location->id->env->variable(),'Location');
+		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
+		
+		if ($this->idParent > 0){
+			$this->f->parent->set($this->idParent);
+		}
+		
+		$select = $this->options($this->f->parent->value(),$this->f->parent->id->env->variable(),'Parent Project');
+		$this->edit->optional->inputChoice($this->f->parent->id,$select->print());
+		
+		
 		$this->edit->optional->input($this->f->showAlways);
+		
+		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->summary);
+		$this->edit->optional->input($this->f->purpose);
 		$this->edit->optional->input($this->f->goals);
 		$this->edit->optional->input($this->f->lessons);
-		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$this->edit->hidden->inputHidden($this->f->parentEntity->id);
-		$this->edit->hidden->inputHidden($this->f->id);
-		
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
 
-		return $this->edit->close();
-		*/
+		$this->edit->optional->input($this->f->hoursEstimated);
+		$this->edit->optional->input($this->f->hoursNotes);
+		//$this->edit->optional->input($this->f->hoursActual);
+		$this->edit->optional->input($this->f->budgetEstimated);
+		$this->edit->optional->input($this->f->budgetNotes);
+
+		$this->edit->hidden->inputHidden($this->f->id);
+		//$this->edit->hidden->inputHidden($this->f->parent->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
 		
 		return $this->edit->print();
+		
 	}
 
     public function UpdateTaskSummary(){
@@ -243,7 +252,7 @@ class project extends \application\entity{
 			$sql .= " p.hours_actual = ".$this->totals->tasks->actual." ";
 			$sql .= " where p.id = ".$this->id." ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 	
 		}
 	}
@@ -255,8 +264,8 @@ class project extends \application\entity{
 		
 			$sql = $this->sql->copy($sourceId);
 			
-			$result = dbRunSQL($sql);
-			$copyId = dbInsertedId();
+			$result = $this->sql->runStatement($sql);
+			$copyId = $this->sql->getInsertedId();
 			
 			$sql = copyTasks($sourceId, $copyId);
 			$result = dbRunSQL($sql);
@@ -276,18 +285,27 @@ class project extends \application\entity{
 			$sql .= " p.location_id = ".$this->f->location->value().", ";
 			$sql .= " p.priority = ".$this->f->priority->value().", ";
 			$sql .= " p.pct_done = ".$this->f->pctDone->value().", ";
-			$sql .= " p.started = '".$this->f->started->value()."', ";			
+			//$sql .= " p.started = '".$this->f->started->value()."', ";			
 			$sql .= " p.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " p.description = '".$this->f->description->value()."', ";
+
 			$sql .= " p.show_always = '".$this->f->showAlways->value()."', ";
-			$sql .= " p.type_id = ".$this->f->type->value().", ";
+			$sql .= " p.location_id = ".$this->f->location->value().", ";
+			$sql .= " p.type_id = ".$this->f->type->id->value().", ";
+			$sql .= " p.parent_id = ".$this->f->parent->id->value().", ";
+			
+			$sql .= " p.hours_estimated = ".$this->f->hoursEstimated->value().", ";
+			$sql .= " p.budget_estimated = ".$this->f->budgetEstimated->value().", ";
+			$sql .= " p.hours_notes = '".$this->f->hoursNotes->value()."', ";
+			$sql .= " p.budget_notes = '".$this->f->budgetNotes->value()."', ";
+		
+			$sql .= " p.description = '".$this->f->description->value()."', ";
 			$sql .= " p.purpose = '".$this->f->purpose->value()."', ";
 			$sql .= " p.goals = '".$this->f->goals->value()."', ";
 			$sql .= " p.lessons_learned = '".$this->f->lessons->value()."', ";
 			$sql .= " p.summary = '".$this->f->summary->value()."' ";
 			$sql .= " WHERE p.id = ".$this->id."  ";			
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
 	}
 			
@@ -297,30 +315,45 @@ class project extends \application\entity{
 			$sql .= " (name, ";
 			$sql .= " parent_id, ";
 			$sql .= " location_id, ";
+			$sql .= " type_id, ";
+			$sql .= " priority, ";
+			$sql .= " pct_done, ";
+			$sql .= " hours_estimated, ";
+			$sql .= " budget_estimated, ";
+			$sql .= " show_always, ";
 			$sql .= " started, ";
 			$sql .= " updated, ";
 			$sql .= " description, ";
+			$sql .= " hours_notes, ";
+			$sql .= " budget_notes, ";
 			$sql .= " summary, ";
 			$sql .= " lessons_learned, ";
-			$sql .= " show_always, ";
-			$sql .= " type_id, ";
+			$sql .= " goals, ";
 			$sql .= " purpose) ";
 			$sql .= " VALUES (";
 			$sql .= "'".$this->f->name->value()."', ";
-			$sql .= " ".$this->idParent.", ";
+			$sql .= " ".$this->f->parent->value().", ";
 			$sql .= " ".$this->f->location->value().", ";
-			$sql .= " '".$this->f->started->value()."', ";
+			$sql .= " ".$this->f->type->value().", ";
+			$sql .= " ".$this->f->priority->value().", ";
+			$sql .= " ".$this->f->pctDone->value().", ";
+			$sql .= " ".$this->f->hoursEstimated->value().", ";
+			$sql .= " ".$this->f->budgetEstimated->value().", ";
+			$sql .= "'".$this->f->showAlways->value()."', ";
+			//$sql .= " '".$this->f->started->value()."', ";
+			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= "'".$this->f->hoursNotes->value()."', ";
+			$sql .= "'".$this->f->budgetNotes->value()."', ";
 			$sql .= "'".$this->f->summary->value()."', ";
 			$sql .= "'".$this->f->lessons->value()."', ";
-			$sql .= "'".$this->f->showAlways->value()."', ";
-			$sql .= " ".$this->f->idType->value().", ";
+			$sql .= "'".$this->f->goals->value()."', ";
 			$sql .= "'".$this->f->purpose->value()."') ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->id = dbInsertedId();
+			$this->id = $this->sql->getInsertedId();
 	
 	}
 	

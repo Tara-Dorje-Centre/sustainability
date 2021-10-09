@@ -13,9 +13,17 @@ class projectList extends \application\entityList{
 	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
-
-		$this->status = $_GET['project-status'];
-		$this->showMyProjects = $_GET['my-projects'];
+		if (isset($_GET['project-status']){
+			$this->status = $_GET['project-status'];
+		} else {
+			$this->setStatus();
+		}
+		
+		if (isset($_GET['project-status']){
+			$this->showMyProjects = $_GET['my-projects'];
+		} else {
+			$this->setMyProjects();
+		}
 		
 	}
 	public function setMyProjects($showMyProjects = 'NO'){
@@ -37,6 +45,7 @@ class projectList extends \application\entityList{
 		$this->_pageTitle = $title;	
 	}
 
+	
 	protected function makePageMenu(){
 		$showClosed = false;
 		$showMy = false;
@@ -68,8 +77,8 @@ class projectList extends \application\entityList{
 			$sql = $this->base->sql->countByStatus($this->status);
 		}
 
-		global $conn;
-		$this->found = $conn->getCount($sql,'total_projects');
+		//global $conn;
+		$this->found = $this->base->sql->getCount($sql,'total_projects');
 		
 	}
 	
