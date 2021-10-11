@@ -86,7 +86,8 @@ public function optionsProject($id = 0){
 	$q .= " t.id as value, ";
 	$q .= " concat_ws(' ',t.task_order,t.name) as caption ";
 $q .= $this->tables();
-$q .= $this->whereProject($id);
+//$q .= $this->whereProject($id);
+$q .= " where t.project_id = ".$id;
 	$q .= " AND p.pct_done < 1 ";
 	$q .= " ORDER BY caption ";
 	return $q;	

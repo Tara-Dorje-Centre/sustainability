@@ -95,6 +95,7 @@ public function listPeriodic($complete = 'NO',$page = 0,$rows = 0){
 	$q .= $this->limit($page, $rows);
 	return $q;
 }
+
 public function countPeriodic($complete = 'NO'){
 $q = $this->colsCount();
 	$q .= $this->tables(true);
@@ -105,6 +106,7 @@ $q = $this->colsCount();
 	$q .= $this->periodicTasksSubquery($complete);
 	return $q;
 }
+
 private function periodicTasksBaseSubquery($frequency, $where){
 $q = " ( select a.task_id ";
 $q .= " from activities a join tasks t on a.task_id = t.id ";
@@ -114,6 +116,7 @@ $q .= " and a.hours_actual > 0 ";
 $q .= $where." ) ";
 return $q;	
 }
+
 private function periodicTasksBaseSelect($frequency,$subqueryWhere, $complete = 'NO'){
 $q = " SELECT t.id ";
 $q .= " FROM projects p JOIN tasks t ON p.id = t.project_id ";
@@ -127,6 +130,7 @@ if ($complete == 'YES'){
 $q .= $this->periodicTasksBaseSubquery($frequency,$subqueryWhere);
 return $q;
 }
+
 private function periodicTasksSubquery($complete = 'NO'){
 	$q = " (";
 	$subqueryWhere = " and date(a.started) = date(CURRENT_TIMESTAMP) ";	
@@ -149,7 +153,6 @@ private function periodicTasksSubquery($complete = 'NO'){
 	return $q;
 }
 
-
 	public function updateReceiptsAuth($id, $project, $by){
 		$sql = " UPDATE tasks as t ";
 		$sql .= " SET ";
@@ -161,7 +164,6 @@ private function periodicTasksSubquery($complete = 'NO'){
 
 	}
 	
-
 	public function updateMaterialsAuth($id, $project, $by){
 		$sql = " UPDATE tasks as t ";
 		$sql .= " SET ";

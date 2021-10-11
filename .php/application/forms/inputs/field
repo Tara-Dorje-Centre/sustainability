@@ -137,10 +137,7 @@ namespace application\forms;
 		} else {
 			$this->reset(false);
 		}
-		//	$this->_default = $this->getDataTypeDefault();
-		//}
-			//$this->set(false);
-		//}
+
 	}
  	public function reset(bool $useDefault = false){
 		if ($useDefault == true){
@@ -268,39 +265,36 @@ namespace application\forms;
 	}
 
 	public function listCaption(){
-
+		$value = '';
 		if ($this->_listEnabled){
 			$th = new \html\_th($this->_caption);
  			$value = $th->print();
-		} else {
-			$value = '';
 		}
 		return $value;
  	}
  	
  	public function listDetail(){
- 	 	
+ 	 	$value = '';
  		if ($this->_listEnabled){
   		    $this->format();
   		    $td = new \html\_td($this->value());
   		    $value = $td->print();
-  		} else {
-  			$value = '';
   		}
  		return $value;
  	}
 
  	public function displayDetail(){
- 		$d = new \html\_div('none','display-detail');
-
+ 	 	$value = '';
  		if ($this->_displayEnabled){
+ 		 	$d = new \html\_div('none','display-detail');
  			$this->format();
  			$c = new \html\_anyDiv($this->_caption,'display-detail-caption');
  			$v = new \html\_anyDiv($this->value(),'display-detail-value');
  			$d->addContent($c->print());
  			$d->addContent($v->print());
+ 			$value = $d->print();
  		}
- 		return $d->print();
+ 		return $value;
  	}
  	
  	public function write(){
