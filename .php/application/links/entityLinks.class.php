@@ -41,33 +41,33 @@ abstract class entityLinks implements IentityLinks {
 	}
 	
 	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
-		$this->menu->addLink($this->list('List',0,$idParent,0));
-		$this->menu->addLink($this->add('Add',0,0,0));
-		//$this->menu->addLink($this->list('ListChildren',$id,0,0));
-		//$this->menu->addLink($this->list('listType',0,0,$idType));
+		$this->addLink($this->list('List',0,$idParent,0));
+		$this->addLink($this->add('Add',0));
+		//$this->addLink($this->list('ListChildren',$id,0,0));
+		//$this->addLink($this->list('listType',0,0,$idType));
 	}
 	
 	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
 		switch ($mode){
 			case 'VIEW':
-				$this->menu->addLink($this->list('List',0,0,0));
-				$this->menu->addLink($this->edit('Edit',$id));
-				$this->menu->addLink($this->add('Add',0,0,0));
-				//$this->menu->addLink($this->add('AddChild',$id));
-				//$this->menu->addLink($this->add('AddSibling',$idParent));
-				//$this->menu->addLink($this->copy('Copy',$id));
+				$this->addLink($this->list('List',0,0,0));
+				$this->addLink($this->edit('Edit',$id));
+				$this->addLink($this->add('Add',$idParent));
+				//$this->addLink($this->add('AddChild',$id));
+				//$this->addLink($this->add('AddSibling',$idParent));
+				//$this->addLink($this->copy('Copy',$id));
 				break;
 			case 'EDIT':
-				$this->menu->addLink($this->list('List',0,$idParent,0));
-				$this->menu->addLink($this->view('View',$id));
+				$this->addLink($this->list('List',0,$idParent,0));
+				$this->addLink($this->view('View',$id));
 				
 				break;
 			case 'ADD':
-				$this->menu->addLink($this->list('List',0,$idParent,0));
+				$this->addLink($this->list('List',0,$idParent,0));
 				break;
 			default:
-				$this->menu->addLink($this->list('List',0,$idParent,0));
-				$this->menu->addLink($this->view('View',$id));
+				$this->addLink($this->list('List',0,$idParent,0));
+				$this->addLink($this->view('View',$id));
 		
 		}
 		
@@ -76,12 +76,12 @@ abstract class entityLinks implements IentityLinks {
 	
 	public function detail(string $caption,string $action, $id = 0, $idParent=0, $idType=0){
 		$url = $this->request->getUrlEntityDetail($action,$id,$idParent,$idType);
-		$l = $this->menu->getLink($url,$caption);
+		$l = $this->getLink($url,$caption);
 		return $l;	
 	}	
 	public function list(string $caption, $id = 0, $idParent=0, $idType=0){
 		$url = $this->request->getUrlEntityList('LIST',$id,$idParent,$idType);
-		$l = $this->menu->getLink($url,$caption);
+		$l = $this->getLink($url,$caption);
 		return $l;	
 	}
 	

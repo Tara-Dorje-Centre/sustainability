@@ -1,7 +1,9 @@
 <?php
 namespace application\sql;
 
-class entitySQL extends  baseEntitySQL implements IentitySQL{
+class entitySQL 
+extends  baseEntitySQL 
+implements IentitySQL{
 use connectionFunctions;
 	protected $baseTable = 'baseTable';
 	protected $fieldDate = 'date_reported';
@@ -27,6 +29,13 @@ use connectionFunctions;
 	protected function colsCount($first = true){
 		$c = $this->select($first);
 		$c .= $this->alias('COUNT(*)', $this->fieldCount);
+		return $c;
+	}
+	
+	protected function colsOption($first = true){
+		$c = $this->select($first);
+		$c .= " id as value, ";
+		$c .= " name as caption ";
 		return $c;
 	}
 
@@ -66,12 +75,7 @@ use connectionFunctions;
 		return $q;
 	}
 
-	protected function colsOption($first = true){
-		$c = $this->select($first);
-		$c .= " id as value, ";
-		$c .= " name as caption ";
-		return $c;
-	}
+	
 
 	protected function tables($joinTypes = false){
 		$f = " FROM ".$this->baseTable." ";

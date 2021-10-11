@@ -19,8 +19,8 @@ namespace application\forms;
 abstract class fields extends \framework\_contentWriter{
 
 	public $entity = 'fieldset';
-	protected $currentTimestamp = '';
-	protected $currentUser = '';
+	public $currentTimestamp = '';
+	public $currentUser = '';
 	protected $fields = array();
 	
 	public function __construct(){

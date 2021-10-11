@@ -21,18 +21,11 @@ class displayList extends displayDetails{
 		$this->makeRow($content);
 	}
 	protected function open(){
+		$this->_fields->addContent($this->links);
+		$this->_fields->addContent($this->_list->print());
 		parent::open();
-		$this->_display->addContent($this->links);
 	}
-	protected function close(){
-		$this->_display->addContent($this->_list->print());
-	}
-	
-	public function print(){
-		$this->open();
-		$this->close();
-		return $this->_display->print();
-	}
+
 }
 
 ?>

@@ -19,24 +19,24 @@ public function __construct(){
 		$c .= " pt.highlight_style, ";
 		$c .= " p.parent_id, ";
 		//dummy field until outer joined to tables
-		$c .= " 'parent project name' parent_name, ";
+		$c .= " pp.name parent_name, ";
 		$c .= " p.name, ";
-		$c .= " p.description, ";
-		$c .= " p.summary, ";
 		$c .= " p.priority, ";
 		$c .= " p.started, ";
 		$c .= " p.updated, ";
 		$c .= " p.pct_done, ";
-		$c .= " p.goals, ";
-		$c .= " p.lessons_learned, ";
 		$c .= " p.show_always, ";
 		$c .= " p.location_id, ";
-		$c .= " l.sort_key location_name, ";
+		$c .= " l.name location_name, ";
+		$c .= " p.description, ";
+		$c .= " p.summary, ";
 		$c .= " p.purpose, ";
-		$c .= " p.hours_estimated, ";
-		$c .= " p.hours_actual, ";
+		$c .= " p.goals, ";
+		$c .= " p.lessons_learned, ";
+		//$c .= " p.hours_actual, ";
 		$c .= " p.budget_estimated, ";
 		$c .= " p.budget_notes, ";
+		$c .= " p.hours_estimated, ";
 		$c .= " p.hours_notes ";
 		return $c;
 	}
@@ -47,6 +47,10 @@ public function __construct(){
 		$t = " FROM projects p ";
 		$t .= " LEFT OUTER JOIN locations l ";
 		$t .= " ON p.location_id = l.id ";
+		
+		$t .= " LEFT OUTER JOIN projects pp ";
+		$t .= " ON p.parent_id = pp.id ";
+		
 		if ($joinTypes == true){
 			$t .= " LEFT OUTER JOIN project_types pt ";
 			$t .= " ON p.type_id = pt.id ";

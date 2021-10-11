@@ -23,7 +23,7 @@ extends \application\links\entityLinks {
 		$periodic = 'YES';
 		$url = $this->request->getUrlTaskList('LIST',-1,0,0, $status, $periodic);
 
-		$l = $this->menu->getLink($url,$caption);
+		$l = $this->getLink($url,$caption);
 		return $l;	
 	}
 	public function periodicTasksOpen(){
@@ -31,6 +31,45 @@ extends \application\links\entityLinks {
 	}
 	public function periodicTasksClosed(){
 		return $this->periodicTasks(true);
+	}
+	
+	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
+		$p = new projectLinks();
+		$this->addLink($p->view('View Project',$idParent));
+		
+		$this->addLink($this->list('List Tasks',0,$idParent,0));
+		$this->addLink($this->add('New Task',$idParent));
+
+	}
+	
+	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
+		
+		$p = new projectLinks();
+		$this->addLink($p->view('View Project',$idParent));
+		
+		switch ($mode){
+			case 'VIEW':
+				$this->addLink($this->list('List Tasks',0,$idParent,0));
+				$this->addLink($this->edit('Edit Task',$id));
+				$this->addLink($this->add('New Task',$idParent));
+				//$this->addLink($this->add('AddChild',$id));
+				//$this->addLink($this->add('AddSibling',$idParent));
+				//$this->addLink($this->copy('Copy',$id));
+				break;
+			case 'EDIT':
+				$this->addLink($this->list('List Tasks',0,$idParent,0));
+				$this->addLink($this->view('View Task',$id));
+				
+				break;
+			case 'ADD':
+				$this->addLink($this->list('List',0,$idParent,0));
+				break;
+			default:
+				$this->addLink($this->list('List',0,$idParent,0));
+				$this->addLink($this->view('View',$id));
+		
+		}
+		
 	}
 	
 }

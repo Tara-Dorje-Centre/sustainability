@@ -7,33 +7,34 @@ class taskSQL extends projectChildSQL{
 		$this->fieldId = 't.id';
 
 	}
-	
 
-	
-
+protected function colsOption($first = true){
+		$c = $this->select($first);
+		$c .= " id as value, ";
+		$c .= " name as caption ";
+		return $c;
+}
 
 protected function cols(){
 $c = $this->select();
 $c .= " t.id,  ";
 $c .= " t.project_id,  ";
 $c .= " p.name project_name, ";
-$c .= " pt.name project_type, ";
-//$c .= " pt.highlight_style project_highlight_style, ";
 $c .= " t.location_id,  ";
 $c .= " l.name location_name, ";
 $c .= " t.type_id,  ";
-$c .= " tt.highlight_style, ";
 $c .= " tt.name type_name, ";
+$c .= " tt.highlight_style, ";
 $c .= " tt.frequency, ";
 $c .= " t.task_order,  ";
 $c .= " t.name,  ";
-$c .= " t.description,  ";
-$c .= " t.summary,  ";
 $c .= " t.started,  ";
 $c .= " t.updated,  ";
 $c .= " t.pct_done,  ";
-$c .= " t.hours_estimated,  ";
+$c .= " t.description,  ";
+$c .= " t.summary,  ";
 $c .= " t.hours_actual,  ";
+$c .= " t.hours_estimated,  ";
 $c .= " t.hours_notes, ";
 $c .= " t.materials_auth_project, ";
 $c .= " t.materials_auth_by, ";
@@ -46,7 +47,7 @@ public function tables($joinTypes = true){
 	$q = " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " LEFT OUTER JOIN locations l on t.location_id = l.id ";
 	if ($joinTypes == true){
-	$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
+	//$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
 	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
 	}
 	return $q;
@@ -62,6 +63,12 @@ $q .= " sum(t.pct_done)/count(*) as overall_pct_done ";
 return $q;
 }
  
+public function countProjectTasks($id){
+$q = $this->colsCount();
+$q .= " FROM tasks AS t ";
+$q .= $this->whereNumber($id, 't.project_id',true);
+return $q;
+}
 
 public function countProjectTaskStatus($id, $taskStatus = 'OPEN'){
 $q = $this->colsCount();
@@ -84,7 +91,7 @@ public function listPeriodic($complete = 'NO',$page = 0,$rows = 0){
 	$q .= $this->periodicTasksSubquery($complete);
 	$q .= " ORDER BY ";
 	$q .= " project_type, project_name, t.task_order ";
-	//$q .= sqlLimitClause($resultPage, $rowsPerPage);
+
 	$q .= $this->limit($page, $rows);
 	return $q;
 }

@@ -115,13 +115,13 @@ use dimensions;
 }
 
 class _th extends _tableCell{
-	public function __construct($content, string $css = 'none'){
+	public function __construct($content = '', string $css = 'none'){
 		parent::__construct('th', $content, $css);
 	}
 }
 
 class _td extends _tableCell{
-	public function __construct($content, string $css = 'none'){
+	public function __construct($content = '', string $css = 'none'){
 		parent::__construct('td', $content, $css);
 	}
 }

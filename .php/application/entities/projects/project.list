@@ -13,13 +13,13 @@ class projectList extends \application\entityList{
 	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
-		if (isset($_GET['project-status']){
+		if (isset($_GET['project-status'])){
 			$this->status = $_GET['project-status'];
 		} else {
 			$this->setStatus();
 		}
 		
-		if (isset($_GET['project-status']){
+		if (isset($_GET['project-status'])){
 			$this->showMyProjects = $_GET['my-projects'];
 		} else {
 			$this->setMyProjects();

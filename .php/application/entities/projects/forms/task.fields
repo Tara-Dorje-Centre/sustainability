@@ -2,132 +2,125 @@
 namespace application\entities\projects\forms;
 
 class taskFields extends \application\forms\fields{
-	
-	
-	public $id;
-	public $name;		
-	public $created;
-    public $updated;
-	public $description;
-	public $highlight;
-	public $parent;
-	public $type;
-	
-	public $project;
-	public $projectType;
-	public $projectLocation;
 
-	
+	public $id;
 	public $taskOrder;
-    public $summary;
+	public $name;		
+	public $started;
+    public $updated;
     public $pctDone ;	
+	public $description;
+    public $summary;
+	public $project;
+	public $type;
+	public $highlight;
+	public $frequency;
+	public $location;
+	public $hoursActual;
     public $hoursEstimated ;
-    public $hoursActual;
     public $hoursNotes;	
 	public $materialsAuthProject;
 	public $materialsAuthBy;
 	public $receiptsAuthProject;
 	public $receiptsAuthBy;
 	
-public function __construct(){
-	parent::__construct();
+	public function __construct(){
+		parent::__construct();
 	
-	$this->id = new \application\forms\_id('id','id','not-used');
+		$this->id = new \application\forms\_id('id','id','not-used');
+    	$this->taskOrder = new \application\forms\_number('task_order','task-order','Task Order');						
     	$this->name = new \application\forms\_name('name','name','Name');
-    	$this->description = new \application\forms\_description('description','description','Description');
+    	$this->started = new \application\forms\_date('started','started','Started');
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
-    	$this->created = new \application\forms\_date('created','created','Created');
-        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-		$this->parent = new \application\forms\_idName('parent_id','idParent','Parent','parent_name');
-    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
-
+		$this->pctDone = new \application\forms\_number('pct_done','pct-done','pct Done');	
+		$this->description = new \application\forms\_description('description','description','Description');
+		$this->summary = new \application\forms\_description('summary','summary','Summary');
 		$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
-    	$this->projectType = new \application\forms\_idName('project_type','project-type','Project Type','project_type_name');
-    	$this->projectLocation = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
-    	
+    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
+    	$this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
+    	$this->frequency = new \application\forms\_name('frequency','frequency','Frequency');
+    	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
+		$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','Hours Actual');
+		$this->hoursEstimated = new \application\forms\_number('hours_estimated','hours-estimated','Hours Estimated');
+		$this->hoursNotes = new \application\forms\_notes('hours_notes','hours-notes','Hours Notes');			
+		$this->materialsAuthProject = new \application\forms\_yesNo('materials_auth_project','materials-auth-project','Materials Authorized');
+		$this->materialsAuthBy = new \application\forms\_name('materials_auth_by','materials-auth-by','Materials Authorized By');
+		$this->receiptsAuthProject = new \application\forms\_yesNo('receipts_auth_project','receipts-auth-project','Receipts Authorized');
+		$this->receiptsAuthBy = new \application\forms\_name('receipts_auth_by','receipts-auth-by','Receipts Authorized By');
 	
-	$this->taskOrder = new \application\forms\_number('task_order','task-order','task_order');						
-	$this->summary = new \application\forms\_text('summary','summary','not-used');
-	$this->pctDone = new \application\forms\_number('pct_done','pct-done','pct_done');	
-	$this->hoursEstimated = new \application\forms\_number('hours_estimated','hours-estimated','not-used');
-	$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','not-used');
-	$this->hoursNotes = new \application\forms\_notes('hours_notes','hours-notes','not-used');			
-	$this->materialsAuthProject = new \application\forms\_yesNo('materials_auth_project','materials-auth-project','not-used');
-	$this->materialsAuthBy = new \application\forms\_text('materials_auth_by','materials-auth-by','not-used');
-	$this->receiptsAuthProject = new \application\forms\_yesNo('receipts_auth_project','receipts-auth-project','not-used');
-	$this->receiptsAuthBy = new \application\forms\_text('receipts_auth_by','receipts-auth-by','not-used');
-	
-	
-	
-	$this->registerFields();
+		$this->registerFields();
 		$this->disableFields();
 	}
 	
 	private function registerFields(){
 	
 		$this->_register('id', $this->id);
-		$this->_register('name', $this->name);
-		$this->_register('description', $this->description);
-		$this->_register('created', $this->created);
-		$this->_register('updated', $this->updated);
-   		$this->_register('highlight', $this->highlight);
-   		$this->_register('parent', $this->parent);
-		
-		
-		
-		$this->_register('project', $this->project);
- 		$this->_register('projectType', $this->projectType);
-		$this->_register('projectLocation', $this->projectLocation);
-
-		
 		$this->_register('taskOrder', $this->taskOrder);
- 		$this->_register('summary', $this->summary);
+		$this->_register('name', $this->name);
+		$this->_register('started', $this->started);
+		$this->_register('updated', $this->updated);
 		$this->_register('pctDone', $this->pctDone);
-		$this->_register('hoursEstimated', $this->hoursEstimated);
+		$this->_register('description', $this->description);
+ 		$this->_register('summary', $this->summary);
+   		//$this->_register('parent', $this->parent);
+		$this->_register('project', $this->project);
+		$this->_register('type', $this->type);
+   		$this->_register('highlight', $this->highlight);
+		$this->_register('frequency', $this->frequency);
+		$this->_register('location', $this->location);
 		$this->_register('hoursActual', $this->hoursActual);
+		$this->_register('hoursEstimated', $this->hoursEstimated);
 		$this->_register('hoursNotes', $this->hoursNotes);
 		$this->_register('materialsAuthProject', $this->materialsAuthProject);
 		$this->_register('materialsAuthBy', $this->materialsAuthBy);
 		$this->_register('receiptsAuthProject', $this->receiptsAuthProject);
 		$this->_register('receiptsAuthBy', $this->receiptsAuthBy);
-		
-		
    }
    
 	private function disableFields(){
 		
 		$this->updated->envEnabled(false);
-        $this->created->envEnabled(false);
+       // $this->started->envEnabled(false);
+        $this->hoursActual->envEnabled(false);
+       
+        $this->id->listEnabled(false);
         
+        $this->description->listEnabled(false);
+        $this->summary->listEnabled(false);
+        $this->highlight->listEnabled(false);
+        $this->hoursActual->listEnabled(false);
+        $this->hoursEstimated->listEnabled(false);
+        $this->hoursNotes->listEnabled(false);
         $this->updated->listEnabled(false);
-        $this->created->listEnabled(false);
+        $this->started->listEnabled(false);
+        
+        
+        $this->materialsAuthProject->listEnabled(false);
+        $this->materialsAuthBy->listEnabled(false);
+        $this->receiptsAuthProject->listEnabled(false);
+        $this->receiptsAuthBy->listEnabled(false);
         
         
     }
 	public function setDefaults(){
     	parent::setDefaults();
     	
-    	
     	$this->id->setDefault(0);
-		$this->name->setDefault('');
-		$this->description->setDefault('');
-		$this->created->setDefault($this->_currentTimestamp);
-		$this->updated->setDefault($this->_currentUser);
-		$this->highlight->setDefault('none');
-		$this->parentEntity->setDefault(0);
-    	$this->type->setDefault(0);
-    	
-    	
-    	$this->project->setDefault(0);
-    	$this->projectType->setDefault(0);
-    	$this->location->setDefault(0);
-    	$this->started->setDefault('');
-    	
-    	$this->summary->setDefault('');
-    	$this->pctDone->setDefault(0);
     	$this->taskOrder->setDefault(0);
+		$this->name->setDefault('');
+		$this->started->setDefault($this->currentTimestamp);
+		$this->updated->setDefault($this->currentTimestamp);
+    	$this->pctDone->setDefault(0);
+		$this->description->setDefault('');
+    	$this->summary->setDefault('');
+		
+		$this->project->setDefault(0);
+    	$this->projectType->setDefault(0);
+    	$this->type->setDefault(0);
+    	$this->highlight->setDefault('none');
+    	$this->location->setDefault(0);
+    	
     	$this->hoursEstimated->setDefault(0);
-    	$this->hoursActual->setDefault(0);
     	$this->hoursNotes->setDefault('');
     	$this->materialsAuthProject->setDefault('no');
     	$this->materialsAuthBy->setDefault('n/a');

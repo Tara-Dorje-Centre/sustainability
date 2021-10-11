@@ -2,7 +2,7 @@
 namespace html\inputs;
 
 class selectYear extends selectRange{
-	public function __construct($name, $value, $year, $caption){
+	public function __construct($name, $value, $year, $caption = 'YYYY'){
 		parent::__construct($name,$value, $caption);
 		$min = $year - 5;
 		$max = $year + 5;
@@ -11,7 +11,7 @@ class selectYear extends selectRange{
 }
 
 class selectMonth extends selectRange{
-	public function __construct($name, $value, $caption){
+	public function __construct($name, $value, $caption = 'MM'){
 		parent::__construct($name,$value, $caption);
 		$min = 1;
 		$max = 12;
@@ -20,7 +20,7 @@ class selectMonth extends selectRange{
 }
 
 class selectDay extends selectRange{
-	public function __construct($name, $value, $caption){
+	public function __construct($name, $value, $caption = 'DD'){
 		parent::__construct($name,$value, $caption);
 		$min = 1;
 		$max = 31;
@@ -29,7 +29,7 @@ class selectDay extends selectRange{
 }
 
 class selectHour extends selectRange{
-	public function __construct($name, $value, $caption){
+	public function __construct($name, $value, $caption = 'hh'){
 		parent::__construct($name,$value, $caption);
 		$min = 0;
 		$max = 23;
@@ -38,7 +38,7 @@ class selectHour extends selectRange{
 }
 
 class selectMinute extends selectRange{
-	public function __construct($name, $value, $caption){
+	public function __construct($name, $value, $caption = 'mm'){
 		parent::__construct($name,$value, $caption);
 		$min = 0;
 		$max = 59;

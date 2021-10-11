@@ -15,22 +15,23 @@ class project extends \application\entity{
 		$this->links = new links\projectLinks();
 		$this->totals = new forms\summaryTotals();
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 		$_SESSION['currentProjectId'] = $this->id;
-
 	}
+	
 	public function setDetails(){
 		if ($this->pageMode == 'COPY'){
-		$this->copyProject();
-		$_SESSION['currentProjectId'] = $this->id;
+			$this->copyProject();
+			$_SESSION['currentProjectId'] = $this->id;
 		}
-		
 		parent::setDetails();
 		
-		$this->totals->setProjectTotals($this->id);
+		//$this->totals->setProjectTotals($this->id);
 		
 	}
+	
 	private function setReceiptSummaryByType(){
 
 		$costs = openTable('receipt-info','displayListTable');
@@ -71,69 +72,14 @@ class project extends \application\entity{
 		
 	}
 
-
-	
 	protected function makePageTitle(){
-
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->f->name->value();
+			$heading = 'Project: '.$this->f->name->value();
 		} else {
 			$heading = 'Add New Project';
 		}
-
 		$this->_pageTitle = $heading;
 	}
-	
-	/*
-	protected function makePageMenu(){
-	*/
-	
-	/*
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
-		//$this->links = new ProjectLinks($menuType,$menuStyle);
-		$taskL = new TaskLinks($menuType,$menuStyle);		
-		$activityL = new ActivityLinks($menuType, $menuStyle);
-		$materialL = new MaterialLinks($menuType, $menuStyle);
-		$receiptL = new ReceiptLinks($menuType, $menuStyle);
-		
-		$menu = $this->links->openMenu('section-heading-links');
-		$menu .= $this->links->listingHref();
-		$menu .= $this->links->resetMenu();
-
-		if ($this->pageMode == 'VIEW'){
-			$menu .= $this->links->detailEditHref($this->id);
-			$menu .= $this->links->detailCopyHref($this->id);
-
-		} elseif ($this->pageMode == 'EDIT'){
-			$menu .= $this->links->detailViewHref($this->id);
-		}
-
-		if ($this->pageMode != 'ADD'){	
-			$menu .= $this->links->resetMenu();
-			$menu .= $activityL->linkProjectCalendar($this->id);
-			$menu .= $activityL->linkProjectActivities($this->id);		
-			if ($this->totals->materials->count > 0){
-				$menu .= $this->links->resetMenu();		
-				$menu .= $materialL->listingHref(-1,'ProjectMaterials',$this->id,'PROJECT','yes');
-			}				
-			if ($this->totals->receiptsCount > 0){
-				$menu .= $this->links->resetMenu();		
-				$menu .= $receiptL->listingHref(-1,'ProjectReceipts',$this->id,'PROJECT','yes');
-			}				
-
-			$menu .= $this->links->resetMenu();
-			$menu .= $taskL->detailAddHref($this->id);
-		}
-		$menu .= $this->links->closeMenu();
-		$this->_pageMenu = $menu;
-	*/
-	
-	/*
-	}
-	*/
-	
 	
 	protected function display(){
 		$detail = parent::display();
@@ -141,6 +87,7 @@ class project extends \application\entity{
 		/*
 		$detail .= openDisplayDetails();
 		$detail .= $this->totals->display();
+		
 		//taskList constructor has no args
 		//need to set parentId to current project
 		 $tasks = new taskList('VIEW', 0, $this->id);
@@ -189,6 +136,22 @@ class project extends \application\entity{
 		
 	}
 
+	public function getProjectName($id){
+		$sql = 'select name from projects ';
+		$sql .= 'where id = '.$id;
+		$name = $this->sql->getScalar($sql,'name','[project name]');
+		return $name;
+	}
+
+
+	protected function setDefaults(){
+		if ($this->pageMode == 'ADD'){
+	 		$this->f->reset(true);
+	 		$this->f->started->set($this->f->currentTimestamp);
+	 	}
+	}
+
+
 	public function editForm(){
 
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
@@ -200,7 +163,7 @@ class project extends \application\entity{
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 
-		//$this->edit->required->input($this->f->started);
+		$this->edit->required->input($this->f->started);
 		$this->edit->required->input($this->f->priority);
 		$this->edit->optional->input($this->f->pctDone);
 		
@@ -268,7 +231,7 @@ class project extends \application\entity{
 			$copyId = $this->sql->getInsertedId();
 			
 			$sql = copyTasks($sourceId, $copyId);
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 		
 			//reset page mode from COPY to EDIT
 			//continue in setdetails using the copied id

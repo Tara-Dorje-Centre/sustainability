@@ -73,6 +73,7 @@ public function __construct(){
 			$value = $default;
 		}
 	
+			$this->echo->echoValue(true, $field, $value, 'getScalar');
 		return $value;
 	}
 	

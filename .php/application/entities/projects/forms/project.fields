@@ -27,7 +27,7 @@ class projectFields extends \application\forms\fields{
 	public $showAlways;
 
 	public $hoursEstimated;
-	public $hoursActual;
+	//public $hoursActual;
 	public $hoursNotes;
 	public $budgetEstimated;
 	public $budgetNotes;
@@ -62,7 +62,7 @@ class projectFields extends \application\forms\fields{
 
   		
   		$this->hoursEstimated = new \application\forms\_number('hours_estimated','hours-estimated','Hours Estimated');
-	 	$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','Hours Actual');
+	 	//$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','Hours Actual');
 	    $this->hoursNotes = new \application\forms\_description('hours_notes','hours-notes','Hours Notes');
 	    $this->budgetEstimated = new \application\forms\_number('budget_estimated','budget-estimated','Budget Estimated');
 		$this->budgetNotes = new \application\forms\_description('budget_notes','budget-notes','Budget Notes');
@@ -92,7 +92,7 @@ class projectFields extends \application\forms\fields{
     	$this->_register('lessons', $this->lessons);	 
 		$this->_register('showAlways', $this->showAlways);
 		$this->_register('hoursEstimated', $this->hoursEstimated);
-    	$this->_register('hoursActual', $this->hoursActual);
+    	//$this->_register('hoursActual', $this->hoursActual);
 		$this->_register('hoursNotes', $this->hoursNotes);	
     	$this->_register('budgetEstimated', $this->budgetEstimated);	 
 		$this->_register('budgetNotes', $this->budgetNotes);
@@ -103,7 +103,7 @@ class projectFields extends \application\forms\fields{
 		
 		
 		$this->updated->envEnabled(false);
-        $this->started->envEnabled(false);
+      //  $this->started->envEnabled(false);
         
         $this->updated->listEnabled(false);
         $this->started->listEnabled(false);
@@ -122,7 +122,7 @@ class projectFields extends \application\forms\fields{
         
         $this->showAlways->listEnabled(false);
         $this->hoursEstimated->listEnabled(false);
-        $this->hoursActual->listEnabled(false);
+        //$this->hoursActual->listEnabled(false);
         $this->budgetEstimated->listEnabled(false);          
                 
         $this->id->displayEnabled(false);
@@ -137,8 +137,8 @@ class projectFields extends \application\forms\fields{
     	$this->id->setDefault(0);
 		$this->name->setDefault('');
 		$this->description->setDefault('');
-		$this->started->setDefault($this->_currentTimestamp);
-		$this->updated->setDefault($this->_currentTimestamp);
+		$this->started->setDefault($this->currentTimestamp);
+		$this->updated->setDefault($this->currentTimestamp);
 		$this->highlight->setDefault('none');
 		$this->parent->setDefault(0);
     	$this->type->setDefault(0);

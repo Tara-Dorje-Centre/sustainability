@@ -6,7 +6,6 @@ interface IprojectChildSQL{
 	public function countProject($id = 0);
 	public function listProject($id = 0, $page = 1, $rows = 10);
 	public function summaryProject($id = 0,$year= 0, $month = 0);
-	//public function summaryProjectGroupType($id = 0, $year= 0, $month = 0);
 	public function summaryProjectDoneBy($id = 0, $doneBy = 'EVERYONE', $year= 0, $month = 0);
 	public function optionsProject($id = 0);
 }
@@ -18,7 +17,7 @@ implements IprojectChildSQL{
 protected $fieldProjectId = 'project_id';
 
 protected function whereProject($id = 0,	$year= 0, $month = 0, $approved = 'no', $first = true){
-	$w = $this->whereNumber($id, $this->fieldProjectId, $first);
+	$w = $this->whereNumber($id, $this->fieldProjectId, true);
 	$w .= $this->whereYearMonth($year, $month);
 	$w .= $this->whereApproved($approved);
 	return $w;
@@ -37,7 +36,8 @@ return $q;
 public function countProject($id = 0, $year= 0, $month = 0, $approved = 'no'){
 	$q = $this->colsCount();
 	$q .= $this->tables(false);
-	$q .= $this->whereProject($id, $year, $month, $approved);
+	$q .= ' where t.project_id = '.$id.' ';
+	//$q .= $this->whereProject($id, $year, $month, $approved);
 	return $q;	
 }
 	
@@ -45,8 +45,9 @@ public function countProject($id = 0, $year= 0, $month = 0, $approved = 'no'){
 public function listProject($id = 0, $page = 1, $rows = 10, $year= 0, $month = 0, $approved = 'no'){
 $q = $this->cols();
 $q .= $this->tables(true);
-$q .= $this->whereProject($id, $year, $month, $approved);
-	$q .= sqlLimitClause($page, $rows);
+$q .= ' where t.project_id = '.$id.' ';
+//$q .= $this->whereProject($id);
+$q .= $this->limit($page, $rows);
 return $q;
 }
 
@@ -87,9 +88,6 @@ public function optionsProject($id = 0){
 $q .= $this->tables();
 $q .= $this->whereProject($id);
 	$q .= " AND p.pct_done < 1 ";
-	/*if ($disabled == 'true'){
-		$q .= " AND p.id = ".$selectedId." ";	
-	}*/
 	$q .= " ORDER BY caption ";
 	return $q;	
 }

@@ -245,23 +245,91 @@ a.menu-links-item:hover, a.paging-links-item:hover, a.button-links-item:hover{
 	background-color:green;
 	color:white;	
 }
+.fieldset{
+    border-color:black;
+	border-style:solid;
+	border-width:2px;
+}
 .fieldset-legend{
     font-size:18px;
 	font-weight:bold;
+	font-variant:small-caps;
 }
 .display-detail, .edit-input{
-    margin:0;
+    margin:5px;
 	padding:5px;	
-	display:inline;
+	display:inline-block;
 }
-.display-detail-caption{
+.display-detail-caption, .input-caption{
+    margin:5px;
+	padding:5px;	
 	font-size:14px;
-
+	font-variant:small-caps;
+    display:block;
 }
 .display-detail-value{
+    margin:5px;
+	padding:5px;	
 	font-size:16px;
-
+    display:block;
 }
+
+
+
+
+
+.display-details{
+	clear:both;
+	font-size:13px;
+	width:95%;
+}
+.display-caption{
+	font-size:22px;
+	font-weight:bold;
+	font-variant:small-caps;
+}
+
+.input-web-link-caption{
+	float:left;
+}
+
+.input-web-link-url{
+	float:left;
+}
+
+.editing-input{
+	font-size:15px;
+	font-weight:normal;
+}
+.editing-input-date{
+	min-width:30px;	
+}
+.editing-input-time{
+	min-width:30px;	
+}
+
+.editing-button{
+	font-size:13px;
+	font-weight:bold;
+	font-variant:small-caps;
+	min-width:50px;
+	text-align:center;
+}
+.editing-caption{
+	font-size:15px;
+	font-weight:bold;
+	font-variant:small-caps;
+	min-width:50px;
+	text-align:right;
+}
+
+.captioned-input{
+float:left;	
+margin-bottom:10px;
+margin-right:10px;
+display:inline;
+}
+
 .highlite-section{
 	color:red;
 	background-color:yellow;
@@ -328,57 +396,7 @@ a.menu-links-item:hover, a.paging-links-item:hover, a.button-links-item:hover{
 .text-grey{
 	color:darkgrey;
 }
-.display-details{
-	clear:both;
-	font-size:13px;
-	width:95%;
-}
-.display-caption{
-	font-size:22px;
-	font-weight:bold;
-	font-variant:small-caps;
-}
 
-.input-web-link-caption{
-	float:left;
-}
-
-.input-web-link-url{
-	float:left;
-}
-
-.editing-input{
-	font-size:15px;
-	font-weight:normal;
-}
-.editing-input-date{
-	min-width:30px;	
-}
-.editing-input-time{
-	min-width:30px;	
-}
-
-.editing-button{
-	font-size:13px;
-	font-weight:bold;
-	font-variant:small-caps;
-	min-width:50px;
-	text-align:center;
-}
-.editing-caption{
-	font-size:15px;
-	font-weight:bold;
-	font-variant:small-caps;
-	min-width:50px;
-	text-align:right;
-}
-
-.captioned-input{
-float:left;	
-margin-bottom:10px;
-margin-right:10px;
-display:inline;
-}
 
 .displayListTable{
 	empty-cells:show;

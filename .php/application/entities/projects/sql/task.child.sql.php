@@ -11,16 +11,20 @@ interface ItaskChildSQL extends IprojectChildSQL{
 	public function optionsTask($d = 0);
 }
 
-class taskChildSQL extends projectChildSQL implements ItaskChildSQL{
+class taskChildSQL 
+extends projectChildSQL 
+implements ItaskChildSQL{
 
 protected $fieldTaskId = 'task_id';
 
+
 protected function whereTask($id = 0,	$year= 0, $month = 0, $approved = 'no', $first = true){
-	$w = $this->_equalNumber($id, $this->fieldTaskId, $first);
-	$w .= $this->_equalYearMonth($year, $month);
-	$w .= $this->_equalApproved($approved);
+	$w = $this->whereId($id, $first, $this->fieldTaskId);
+	//$w .= $this->_equalYearMonth($year, $month);
+	//$w .= $this->_equalApproved($approved);
 	return $w;
 }
+
 
 public function getTaskId($id = 0){
 $q = " SELECT  ";

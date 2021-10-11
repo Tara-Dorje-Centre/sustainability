@@ -35,10 +35,10 @@ implements \application\Ientity{
 	
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
-		$this->links->menu->addLink($s->modules());
-		$this->links->menu->addLink($s->reference());
+		$this->links->addLink($s->modules());
+		$this->links->addLink($s->reference());
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->_pageMenu = $this->links->menu->print();
+		$this->_pageMenu = $this->links->print();
 	}
 	
 	protected function makePageTitle(){

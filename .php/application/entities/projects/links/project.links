@@ -12,6 +12,49 @@ class projectLinks extends \application\links\entityLinks {
 		$this->request = new projectRequest($this->entityContext,$this->pagePortal);
 	}
 	
+	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
+		switch ($mode){
+			case 'VIEW':
+				$this->addLink($this->list('List Projects',0,0,0));
+				$this->addLink($this->edit('Edit Project',$id));
+				$this->addLink($this->add('Add Project',0,0,0));
+				//$this->addLink($this->add('AddChild',$id));
+				//$this->addLink($this->add('AddSibling',$idParent));
+				$this->addLink($this->copy('Copy Project',$id));
+				break;
+			case 'EDIT':
+				$this->addLink($this->list('List Projects',0,$idParent,0));
+				$this->addLink($this->view('View Project',$id));
+				
+				break;
+			case 'ADD':
+				$this->addLink($this->list('List',0,$idParent,0));
+				break;
+			default:
+				$this->addLink($this->list('List',0,$idParent,0));
+				$this->addLink($this->view('View Project',$id));
+		
+		}
+		
+		if ($mode == 'VIEW'){
+			$l = new taskLinks();
+			$this->addLink($l->list('List Tasks', 0, $id));
+			$this->addLink($l->add('Add Task',$id));
+			
+			/* after these links are tested
+			$a= new activityLinks();
+			$m = new materialLinks();
+			$r = new receiptLinks();
+			$this->addLink($a->linkProjectCalendar($id));
+			$this->addLink($a->linkProjectActivities($id));		
+			$this->addLink($m->list(-1,'ProjectMaterials',$id,'PROJECT','yes'));
+			$this->addLink($r->list(-1,'ProjectReceipts',$id,'PROJECT','yes'));	
+			*/
+		}
+		
+	}
+	
+	
 	public function allProjects($showClosed = false){
 
 		if ($showClosed == true){
@@ -26,7 +69,7 @@ class projectLinks extends \application\links\entityLinks {
 		
 		$u = $this->request->getUrlProjectList('LIST',0,0,0,$status, $myProjects);
 
-		return $this->menu->getLink($u,$caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	public function myProjects($showClosed = false){
@@ -43,7 +86,7 @@ class projectLinks extends \application\links\entityLinks {
 		$u = $this->request->getUrlProjectList('LIST',0,0,0,$status, $myProjects);
 	
 
-		return $this->menu->getLink($u,$caption);
+		return $this->getLink($u,$caption);
 		
 	}
 }

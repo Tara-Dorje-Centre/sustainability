@@ -13,7 +13,9 @@ class taskList extends \application\entityList{
 	}
 	public function getRequestArguments(){
 		parent::getRequestArguments();
-
+		//push identifiers to base object
+		//sets quickEdit form default idParent
+		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
 	}
 	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
@@ -22,40 +24,38 @@ class taskList extends \application\entityList{
 	protected function makePageTitle(){
 
 		if ($this->periodicTasks == 'NO'){
-			//$title = $this->base->f->nameProject.br();
-			//$title .= 'Project Tasks';
 			
-			$title = $this->base->f->project->name->value();
-			$title .= '<br>Project Tasks';
+			$p = new project();
+			$name = $p->getProjectName($this->idParent);
+			$title = 'Project: '.$name.'<br />';
+			$title .= 'All Tasks';
 		} else {
 			$title .= 'Periodic Tasks';
 		}
 
-		$this->_pageTitle = $title.'[task list]';
+		$this->_pageTitle = $title;
 	}
-	
+	/*
 	protected function makePageMenu(){
 	
 		
 	//	$projectL = new ProjectLinks($menuType,$menuStyle);
 
-		/*
-
+		
 		if ($this->periodicTasks == 'NO'){
 			$menu .= $this->base->links->add($this->idProject);
 			$menu .= $this->base->links->listingHref($this->base->idProject);
 			$menu .= $this->project->links->detailViewHref($this->base->idProject);	
 		} else {
-			
 			//$menu .= $taskL->linksPeriodicTasks();
 			//$menu .= $taskL->formatOptionsLink();
 			//$menu .= $projectL->listingAllProjects();
-							
 		}
 		
-		*/
-		$this->_pageMenu = $menu;			
-	}
+		$this->_pageMenu = $menu;	
+		
+		
+	}*/
 	
 	private function getPeriodicTasksComplete(){
 		$complete = 'NO';
@@ -91,15 +91,17 @@ class taskList extends \application\entityList{
 	}
 	
 	protected function listingQuickEdit(){
-	//override to set add form
-		//$at = new Task('ADD', 0,
-		// $this->base->idParent = $this->idParent;
 		$quickEdit =$this->base->addForm($this->idParent);		
 		return $quickEdit;
 	}
 	
 	
-	public function getListingSQL(){
+	public function listingSQL(){
+	
+		//$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
+				
+	
+	
 		if ($this->periodicTasks == 'NO'){
 			$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
 		} else {
