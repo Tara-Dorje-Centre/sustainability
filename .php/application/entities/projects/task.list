@@ -2,9 +2,10 @@
 namespace application\entities\projects;
 
 class taskList extends \application\entityList{
-//protected $project;
-	public $periodicTasks = 'NO';
 
+	public $periodicTasks = 'NO';
+	public $taskStatus = 'INCOMPLETE';
+	public $statusComplete = false;
 	public function __construct(){
 		parent::__construct();
 		$this->entityTitle = 'Tasks';
@@ -16,53 +17,76 @@ class taskList extends \application\entityList{
 		//push identifiers to base object
 		//sets quickEdit form default idParent
 		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
+		
+		$p = 'NO';
+		if (isset($_GET['periodic-tasks'])){
+			$p = $_GET['periodic-tasks'];
+		}
+		$this->setPeriodic($p);
+		$this->base->setPeriodic($p);
+		
+		$p = 'INCOMPLETE';
+		if (isset($_GET['task-status'])){
+			$p = $_GET['task-status'];
+		}
+		$this->setStatus($p);
+		//$this->base->setStatus($p);
+		
 	}
+	
+	
 	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
 	}
 	
+	public function setStatus($status = 'INCOMPLETE'){
+		$this->taskStatus = $status;
+		if ($status == 'COMPLETE'){
+			$this->statusComplete = true;
+		} else {
+			$this->statusComplete = false;
+		}
+	}
 	protected function makePageTitle(){
-
+		$title = 'Periodic Tasks: ';
 		if ($this->periodicTasks == 'NO'){
-			
 			$p = new project();
 			$name = $p->getProjectName($this->idParent);
 			$title = 'Project: '.$name.'<br />';
 			$title .= 'All Tasks';
 		} else {
-			$title .= 'Periodic Tasks';
+		
+			$title .= $this->taskStatus;
 		}
-
 		$this->_pageTitle = $title;
 	}
-	/*
-	protected function makePageMenu(){
 	
+	
+	protected function makePageMenu(){
+		$s = new \application\links\systemMenuLinks();
+		$this->base->links->addLink($s->modules());
+		$this->base->links->addLink($s->reference());
 		
-	//	$projectL = new ProjectLinks($menuType,$menuStyle);
-
+		
+		$p = new links\projectLinks();
 		
 		if ($this->periodicTasks == 'NO'){
-			$menu .= $this->base->links->add($this->idProject);
-			$menu .= $this->base->links->listingHref($this->base->idProject);
-			$menu .= $this->project->links->detailViewHref($this->base->idProject);	
+			$this->base->links->addLink($p->view('View Project',$this->idParent));
+			$this->base->links->addLink($this->base->links->list('List Tasks',0,$this->idParent,0));
+			$this->base->links->addLink($this->base->links->add('New Task',$this->idParent));
+
 		} else {
-			//$menu .= $taskL->linksPeriodicTasks();
-			//$menu .= $taskL->formatOptionsLink();
-			//$menu .= $projectL->listingAllProjects();
+			$this->base->links->addLink($this->base->links->periodicTasks(!$this->statusComplete));
+			$this->base->links->addLink($p->contextList('Active Projects'));
 		}
-		
-		$this->_pageMenu = $menu;	
-		
-		
-	}*/
+		$this->_pageMenu = $this->base->links->print();
+	}
+
 	
 	private function getPeriodicTasksComplete(){
 		$complete = 'NO';
-		if ($this->periodicTasks == 'COMPLETE'){
+		if ($this->statusComplete == true){
 			$complete = 'YES';
-		} elseif ($this->periodicTasks == 'INCOMPLETE'){
-			$complete = 'NO';
 		}
 		return $complete;		
 	}
@@ -95,12 +119,7 @@ class taskList extends \application\entityList{
 		return $quickEdit;
 	}
 	
-	
 	public function listingSQL(){
-	
-		//$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
-				
-	
 	
 		if ($this->periodicTasks == 'NO'){
 			$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);

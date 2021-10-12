@@ -15,10 +15,10 @@ extends \application\links\entityLinks {
 	public function periodicTasks(bool $closed = false){
 		if ($closed == true){
 			$status = 'COMPLETE';
-			$caption = 'Done';
+			$caption = 'Tasks Done';
 		} else {
 			$status = 'INCOMPLETE';
-			$caption = 'To Do';
+			$caption = 'Tasks To Do';
 		}
 		$periodic = 'YES';
 		$url = $this->request->getUrlTaskList('LIST',-1,0,0, $status, $periodic);
@@ -31,15 +31,6 @@ extends \application\links\entityLinks {
 	}
 	public function periodicTasksClosed(){
 		return $this->periodicTasks(true);
-	}
-	
-	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
-		$p = new projectLinks();
-		$this->addLink($p->view('View Project',$idParent));
-		
-		$this->addLink($this->list('List Tasks',0,$idParent,0));
-		$this->addLink($this->add('New Task',$idParent));
-
 	}
 	
 	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){

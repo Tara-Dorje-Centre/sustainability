@@ -49,7 +49,7 @@ $q .= " JOIN tasks t ON a.task_id = t.id ";
 $q .= " JOIN projects p ON t.project_id = p.id ";
 if ($joinTypes == true){
 $q .= " LEFT OUTER JOIN activity_types at ON a.type_id = at.id ";
-$q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
+//$q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
 }
 return $q;
 }

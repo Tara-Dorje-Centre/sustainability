@@ -2,26 +2,25 @@
 namespace application\entities\projects;
 
 class task extends \application\entity{
-	public $totals;
-	public $measureCount = 0;
+	//public $totals;
+	//public $measureCount = 0;
 	public $periodicTasks = 'NO';
 	public $resultsPageActivity = 1;
-	public $resultsPageMeasure = 1;
-	public $resultsPageMaterial = 1;
-	public $resultsPageReceipt = 1;
+	//public $resultsPageMeasure = 1;
+	//public $resultsPageMaterial = 1;
+	//public $resultsPageReceipt = 1;
 	
 	public function __construct(){
 		parent::__construct();
 	
 		$this->entity = 'task';
 		$this->entityTitle = 'Task';
-		//$this->pageSave = 'portal.php';
 	
 		$this->f = new forms\taskFields();
 		$this->f->setEntity($this->entity);
 		$this->sql = new sql\taskSQL();
 		$this->links = new links\taskLinks();
-		$this->totals = new forms\summaryTotals();
+		//$this->totals = new forms\summaryTotals();
 	}
 	public function getRequestArguments(){
 		parent::getRequestArguments();
@@ -32,43 +31,41 @@ class task extends \application\entity{
 			$this->idParent = $this->getProjectId($this->id);
 		}
 	}
+	
+	
+	public function setPeriodic($periodic = 'NO'){
+		$this->periodicTasks = $periodic;
+	}
+	
 	public function listHeading($periodicTasks = 'NO'): \html\_tr{
 		$tr = new \html\_tr('table-headings');
 		$th = new \html\_th($this->entityTitle);
-		//$th->addContent($this->entityTitle);
+
 		$tr->addContent($th->print());
 		$tr->addContent($this->f->listCaption());
 		
 		$th = new \html\_th('Hotlinks');
-		//$th->addContent('Hotlinks');
 		$tr->addContent($th->print());
-		
-		//return $tr->print();
+		if ($this->periodicTasks != 'NO'){
+			$th = new \html\_th('Project');
+			$tr->addContent($th->print());
+		}
 		return $tr;
 	}
 	
 	
 	public function listRowHotLinks(){
-	return 'activity add link';
-	/*
-		$activitiesL = new links\activityLinks('DIV','button');
-		$materialsL = new MaterialLinks('DIV','button');
-		$measuresL = new MeasureLinks('DIV','button');
-		$receiptsL = new ReceiptLinks('DIV','button');
-		$id = $this->f->id->value();
-		$menu = $activitiesL->openMenu('hotlinks-list');
-		$menu .= $activitiesL->add('Activity',$id);
-		$menu .= $measuresL->add('Measures',$id);
-		$menu .= $materialsL->add('Materials',$id);
-		$menu .= $receiptsL->add('Receipts',$id);
-		$menu .= $activitiesL->closemenu();
-		return $menu;
-		*/
+		//return 'activity add link';
+		
+		$a = new links\activityLinks();
+		$link = $a->add('New Activity',$this->f->id->value());
+		return $link->print();
+		
 	}
 	
 	protected function listRowProjectLink(){
-		$l = new links\projectLinks();
-		$link = $l->view($this->f->project->name->value(),$this->f->project->id->value());
+		$p = new links\projectLinks();
+		$link = $p->view($this->f->project->name->value(),$this->f->project->id->value());
 		return $link->print();
 	}
 	
@@ -97,12 +94,14 @@ class task extends \application\entity{
 		$td = new \html\_td();
 		$td->addContent($this->listRowHotLinks());
 		$tr->addContent($td->print());
-		/*
+		
 		if ($this->periodicTasks != 'NO'){
-			$detail .= wrapTd($this->listRowProjectLink());
+		$td = new \html\_td();
+		$td->addContent($this->listRowProjectLink());
+		$tr->addContent($td->print());
 		}
-		*/
-		//return $tr->print();
+		
+
 		return $tr;
 	}
 	
@@ -124,35 +123,16 @@ class task extends \application\entity{
 		 $this->f->hoursEstimated->set(round($this->totals->tasks->actual / $this->totals->tasks->count,2));
 		 $this->f->hoursActual->set($this->totals->tasks->actual);
 		 }
-
-		//$this->setMeasureCount();
 		*/
 	}
 	
-
-	
 	public function setPagingDetails(
-		$pageActivity = 1, 
-		$pageMaterial = 1, 
-		$pageMeasure = 1, 
-		$pageReceipt = 1){
-
-		$this->resultsPageMeasure = $pageMeasure;
+		$pageActivity = 1){
 		$this->resultsPageActivity = $pageActivity;
-		$this->resultsPageMaterial = $pageMaterial;
-		$this->resultsPageReceipt = $pageReceipt;
 	}
-	/*
-	protected function setMeasureCount(){
-		$this->echoState(true, 'setMeasureCount');
-		$s = new MeasureSQL;
-		$sql = $s->countTask($this->id);
-		$this->measureCount = dbGetCount($sql, 'total_measures', 0);
-	}
-	*/
+	
 	public function getProjectId($taskId){
-		$sql = 'select project_id from tasks ';
-		$sql .= 'where id = '.$taskId;
+		$sql = $this->sql->getProjectId($taskId);
 		$projectId = $this->sql->getScalar($sql,'project_id',0);
 		return $projectId;
 	
@@ -161,7 +141,7 @@ class task extends \application\entity{
 		$p = new project();
 		$name = 'Project: '.$p->getProjectName($this->idParent);
 		$title = $name.'<br />';
-		//$title = $this->f->project->name->value().'<br />';
+
 		if ($this->pageMode != 'ADD'){
 			$title .= 'Task: '.$this->f->name->value();
 		} else {
@@ -170,113 +150,9 @@ class task extends \application\entity{
 
 		$this->_pageTitle = $title;	
 	}
-	
-	
-	/*
-	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
-		$p = new ProjectLinks($menuType,$menuStyle);
-		$t = new TaskLinks($menuType,$menuStyle);
-		$measure = new MeasureLinks($menuType,$menuStyle);
-		$material = new MaterialLinks($menuType,$menuStyle);
-		$a = new ActivityLinks($menuType,$menuStyle);	
-		$r = new ReceiptLinks($menuType,$menuStyle);
-		
-
-		$menu .= $p->detailViewHref($this->f->project->id->value());
-
-
-		if ($this->project->materialsCount > 0){
-			$menu .= $material->listingHref($this->id,'ProjectMaterials',$this->f->project->id->value(),'PROJECT','yes');
-
-		}
-		if ($this->project->receiptsCount > 0){
-			$menu .= $r->listingHref($this->id,'ProjectReceipts',$this->f->project->id->value(),'PROJECT','yes');
-
-		}
-		
-		if ($this->pageMode == 'VIEW'){
-			$menu .= $t->detailEditHref($this->id);
-			$menu .= $t->detailCopyHref($this->id);
-		} elseif ($this->pageMode == 'EDIT') {
-			//$menu .= $tasks->formatOptionsLink();
-			$menu .= $t->detailViewHref($this->id);
-		}		
-
-		if ($this->materialCount > 0){
-			$menu .= $materials->listingHref($this->id,'TaskMaterials',0,'TASK');
-		}
-		if ($this->receiptCount > 0){
-			$menu .= $r->listingHref($this->id,'TaskReceipts',0,'TASK');
-		}
-
-		if ($this->pageMode != 'ADD'){
-			
-			$menu .= $a->detailAddHref($this->id);
-			$menu .= $measure->detailAddHref($this->id);
-			$menu .= $material->detailAddHref($this->id);
-			$menu .= $r->detailAddHref($this->id);
-		}
-				
-		$this->_pageMenu = $menu;		
-	}
-	*/
-	/*
-	protected function displayChildDetails(){
-	 //	$l = new TaskLinks();
-	 $baseLink = $this->links->detail('VIEW',$this->id);
-	 
-	 $detail = openDiv('taskDetails');
-
-	 if ($this->totals->tasks->count > 0){
-	 $activities = new ActivityList($this->pageMode, 0, $this->id);
-	 $activities->setPaging($this->resultsPageActivity);
-	 $activities->setDetails();
-	 $detail .= $activities->getListing($baseLink);
-	 }
-
-	 if ($this->measureCount > 0){
-	 $measures = new MeasureList($this->pageMode, 0, $this->id);
-
-	 $measures->setPaging($this->resultsPageMeasure);
-	 $measures->setDetails();
-	 $detail .= $measures->getListing($baseLink);
-	 }
-
-	 if ($this->totals->materials->count > 0){
-	 $materials = new MaterialList($this->pageMode, 0, $this->id);
-	 $materials->setPaging($this->resultsPageMaterial);
-
-	 $materials->setDisplay('TASK');
-	 $materials->setApproved('no');
-	 $materials->setCalendar($this->year,$this->month);
-	 $materials->setDetails();
-	 $detail .= $materials->getListing($baseLink);
-	 }
-
-	 if ($this->totals->receipts->count > 0){
-	 $receipts = new ReceiptList($this->pageMode, 0, $this->id);
-	 $receipts->setPaging($this->resultsPageReceipt);
-
-	 $receipts->setDisplay('TASK');
-	 $receipts->setApproved('no');
-	 $receipts->setCalendar($this->year,$this->month);
-	 $receipts->setDetails();
-	 $detail .= $receipts->getListing($baseLink);
-	 }
-	 $detail .= closeDiv();
-	 return $detail();
-
-
-	 }
-	 */
 	 
 	 public function display(){
 		$detail = parent::display();
-		//$detail .= $this->totals->display();
-		//$detail .= $this->displayChildDetails();
 
 		return $detail;
 	}
@@ -308,7 +184,7 @@ class task extends \application\entity{
 	}	
 	*/
 	protected function nextTaskOrder(){
-		$sql = $this->sql->countProjectTasks($this->idParent);
+		$sql = $this->sql->countProject($this->idParent);
 		$count = $this->sql->getCount($sql, 'count_details');
 		$count += 1;
 		return $count;

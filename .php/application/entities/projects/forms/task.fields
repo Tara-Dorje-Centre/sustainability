@@ -93,7 +93,7 @@ class taskFields extends \application\forms\fields{
         $this->hoursNotes->listEnabled(false);
         $this->updated->listEnabled(false);
         $this->started->listEnabled(false);
-        
+        $this->project->listEnabled(false);
         
         $this->materialsAuthProject->listEnabled(false);
         $this->materialsAuthBy->listEnabled(false);

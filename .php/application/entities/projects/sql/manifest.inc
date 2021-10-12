@@ -1,6 +1,6 @@
 <?php
 include_once("project.sql.php");
-include_once("project.child.sql.php");
+include_once("Iproject.child.sql.php");
 include_once("task.sql.php");
 include_once("task.child.sql.php");
 include_once("activity.sql.php");

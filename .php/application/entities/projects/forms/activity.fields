@@ -6,7 +6,7 @@ class activityFields extends \application\forms\fields{
 	
 
     	
-    	public $id;
+    public $id;
 	public $name;		
 	public $created;
     public $updated;
@@ -108,10 +108,10 @@ $this->_register('id', $this->id);
 		$this->id->listEnabled(false);
 		$this->id->displayEnabled(false);
 		$this->updated->envEnabled(false);
-        $this->created->envEnabled(false);
+        //$this->reported->envEnabled(false);
         
         $this->updated->listEnabled(false);
-        $this->created->listEnabled(false);
+        $this->reported->listEnabled(false);
         
  
  
@@ -123,8 +123,8 @@ $this->_register('id', $this->id);
 		
 		
 				//$this->parentTask->setDefault(0);
-		$this->reported->setDefault($this->_currentTimestamp);
-		$this->doneBy->setDefault($this->_currentUser);
+		$this->reported->setDefault($this->currentTimestamp);
+		$this->doneBy->setDefault($this->currentUser);
 		$this->linkUrl->setDefault('');
 		$this->linkText->setDefault('');
 		$this->notes->setDefault('');

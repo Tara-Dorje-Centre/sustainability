@@ -77,7 +77,6 @@ class projectList extends \application\entityList{
 			$sql = $this->base->sql->countByStatus($this->status);
 		}
 
-		//global $conn;
 		$this->found = $this->base->sql->getCount($sql,'total_projects');
 		
 	}
@@ -87,15 +86,8 @@ class projectList extends \application\entityList{
 		$l = $this->base->links->listingPaged($this->status,$this->showMyProjects, $this->found,$this->resultPage,$this->perPage);	
 		return $l;
 	}
-	/*
 	
-	protected function listingQuickEdit(){
-		$quickEdit =$this->base->addForm();		
-		return $quickEdit;
-	}
-	*/
 	protected function listingSQL(){
-	
 	
 		if ($this->showMyProjects == 'YES'){
 			$user = $_SESSION['login-name'];

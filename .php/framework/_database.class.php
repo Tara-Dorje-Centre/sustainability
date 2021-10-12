@@ -62,6 +62,7 @@ public function __construct(){
 	}
 	
 	public function getScalar($sql, $field, $default = 0){
+		$value = $default;
 		$result = $this->getResult($sql);
 		if($result){
 	  		while ($row = $result->fetch_assoc()){
@@ -69,11 +70,8 @@ public function __construct(){
 				$value = $row[$field];
 			}
 			$result->close();
-		} else {
-			$value = $default;
 		}
-	
-			$this->echo->echoValue(true, $field, $value, 'getScalar');
+		$this->echo->echoValue(true, $field, $value, 'getScalar');
 		return $value;
 	}
 	

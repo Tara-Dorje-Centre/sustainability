@@ -3,7 +3,7 @@ namespace application\entities\projects;
 
 class project extends \application\entity{
 	
-	public $totals;
+	//public $totals;
 	
 	public function __construct(){
 		parent::__construct();
@@ -13,7 +13,8 @@ class project extends \application\entity{
 		$this->f->setEntity($this->entity);
 		$this->sql = new sql\projectSQL();
 		$this->links = new links\projectLinks();
-		$this->totals = new forms\summaryTotals();
+		
+		//$this->totals = new forms\summaryTotals();
 	}
 	
 	public function getRequestArguments(){
@@ -32,46 +33,7 @@ class project extends \application\entity{
 		
 	}
 	
-	private function setReceiptSummaryByType(){
-
-		$costs = openTable('receipt-info','displayListTable');
-		
-		if ($this->totals->receipts->count > 0){
-			$heading = wrapTh('Receipt Type');
-			$heading .= wrapTh('Received');
-			$costs .= wrapTr($heading);
-		
-			$s = new ReceiptSQL;
-			$sql = $s->summaryProjectReceiptype($this->id, 'yes');
-			
-			//global $conn;
-			$result = $this->sql->getResult($sql);
-			
-			
-			//$result = dbGetResult($sql);
-			if($result){
-		  	while ($row = $result->fetch_assoc())
-			{	
-				$type = ($row["receipt_type"]);
-				$costActual = $row["sum_cost_actual"];
-				$item = wrapTd($type);
-				$item .= wrapTd($costActual);
-				$costs .= wrapTr($item);
-			}
-			$result->close();
-			}
-			
-			$item = wrapTh('Totals');
-			$item .= wrapTd($this->receiptsCost);
-			$costs .= wrapTr($item);
-		} else {
-			$costs .= wrapTr(wrapTh('No Income Received'));
-		}
-		$costs .= closeTable();
-		$this->receiptsSummary = $costs;
-		
-	}
-
+	
 	protected function makePageTitle(){
 		if ($this->pageMode != 'ADD'){
 			$heading = 'Project: '.$this->f->name->value();
@@ -137,8 +99,7 @@ class project extends \application\entity{
 	}
 
 	public function getProjectName($id){
-		$sql = 'select name from projects ';
-		$sql .= 'where id = '.$id;
+		$sql = $this->sql->getProjectName($id);
 		$name = $this->sql->getScalar($sql,'name','[project name]');
 		return $name;
 	}
@@ -230,7 +191,7 @@ class project extends \application\entity{
 			$result = $this->sql->runStatement($sql);
 			$copyId = $this->sql->getInsertedId();
 			
-			$sql = copyTasks($sourceId, $copyId);
+			$sql = $this->sql->copyTasks($sourceId, $copyId);
 			$result = $this->sql->runStatement($sql);
 		
 			//reset page mode from COPY to EDIT

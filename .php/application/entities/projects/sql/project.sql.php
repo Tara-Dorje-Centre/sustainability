@@ -18,7 +18,6 @@ public function __construct(){
 		$c .= " pt.name type_name, ";
 		$c .= " pt.highlight_style, ";
 		$c .= " p.parent_id, ";
-		//dummy field until outer joined to tables
 		$c .= " pp.name parent_name, ";
 		$c .= " p.name, ";
 		$c .= " p.priority, ";
@@ -66,7 +65,7 @@ $q .= $this->tables();
 $q .= $this->whereStatus($status);
 
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
-//$q .= sqlLimitClause($page, $rows);
+
 $q .= $this->limit($page, $rows);
 return $q;
 }
@@ -79,6 +78,7 @@ $q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ) ";
 
 return $q;
 }
+
 public function listByActivityDoneBy($doneBy, $status, $page, $rows){
 
 $q = $this->cols();
@@ -88,10 +88,16 @@ $q .= $this->whereStatus($status);
 $q .= " AND p.id IN ";
 $q .= $this->subqueryActivityDoneBy($doneBy);
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
-//$q .= sqlLimitClause($page, $rows);
+
 $q .= $this->limit($page, $rows);
 return $q;
 }
+
+	public function getProjectName($id){
+		$sql = 'select name from projects ';
+		$sql .= 'where id = '.$id;
+		return $sql;
+	}
 
 public function countByActivityDoneBy($doneBy, $status){
 $q = " SELECT  count(*) total_projects ";
@@ -128,6 +134,7 @@ $q .= $this->tables();
 
 $q .= " WHERE p.parent_id = ".$projectId." "; 
 $q .= " ORDER BY p.sort_key, p.priority, p.id ";
+//needs paging and limit
 return $q;
 }
 
@@ -148,10 +155,9 @@ public function optionsByType($typeId = 0){
 	$q .= " p.name as caption ";
 	$q .= " FROM projects p ";
 	$q .= " WHERE p.pct_done < 1 ";
-	if ($typdId > 0){
-	$q .= " AND (p.type_id > 0 AND p.type_id = ".$typeId.") ";
+	if ($typeId > 0){
+	$q .= " AND p.type_id = ".$typeId.") ";
 	}
-
 	$q .= " ORDER BY name ";
 	return $q;	
 }
@@ -232,16 +238,8 @@ public function optionsByType($typeId = 0){
 	}
 
 /*
-public function list($page = 1, $rows = 10){
 
-
-
-}
 public function count(){
-
-
-}
-
 */
 
 }

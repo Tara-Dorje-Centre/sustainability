@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\projects\sql;
 
-interface ItaskChildSQL extends IprojectChildSQL{
+interface ItaskChildSQL {
 	public function getTaskId($id = 0);
 	public function countTask($id = 0);
 	public function listTask($id = 0, $page = 1, $rows = 10);
@@ -11,8 +11,8 @@ interface ItaskChildSQL extends IprojectChildSQL{
 	public function optionsTask($d = 0);
 }
 
-class taskChildSQL 
-extends projectChildSQL 
+abstract class taskChildSQL 
+extends \application\sql\entitySQL 
 implements ItaskChildSQL{
 
 protected $fieldTaskId = 'task_id';

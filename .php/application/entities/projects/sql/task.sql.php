@@ -1,25 +1,23 @@
 <?php
 namespace application\entities\projects\sql;
 
-class taskSQL extends projectChildSQL{
+class taskSQL 
+extends \application\sql\entitySQL 
+{
 	public function __construct(){
 		$this->baseTable = 'tasks';
 		$this->fieldId = 't.id';
 
 	}
 
-protected function colsOption($first = true){
-		$c = $this->select($first);
-		$c .= " id as value, ";
-		$c .= " name as caption ";
-		return $c;
-}
+
 
 protected function cols(){
 $c = $this->select();
 $c .= " t.id,  ";
 $c .= " t.project_id,  ";
 $c .= " p.name project_name, ";
+$c .= " pt.name project_type, ";
 $c .= " t.location_id,  ";
 $c .= " l.name location_name, ";
 $c .= " t.type_id,  ";
@@ -47,7 +45,7 @@ public function tables($joinTypes = true){
 	$q = " FROM projects p join tasks t ON p.id = t.project_id ";
 	$q .= " LEFT OUTER JOIN locations l on t.location_id = l.id ";
 	if ($joinTypes == true){
-	//$q .= " LEFT OUTER JOIN project_types pt on p.type_id = pt.id ";
+	$q .= " JOIN project_types pt ON p.type_id = pt.id ";
 	$q .= " LEFT OUTER JOIN task_types tt on t.type_id = tt.id ";
 	}
 	return $q;
@@ -62,25 +60,53 @@ $q .= " sum(t.hours_actual) as sum_hours_actual, ";
 $q .= " sum(t.pct_done)/count(*) as overall_pct_done ";
 return $q;
 }
- 
-public function countProjectTasks($id){
-$q = $this->colsCount();
-$q .= " FROM tasks AS t ";
-$q .= $this->whereNumber($id, 't.project_id',true);
+
+public function getProjectId($id = 0){
+$q = " SELECT t.project_id ";
+$q .= " FROM tasks as t ";
+$q .= " WHERE t.id = ".$id;
 return $q;
 }
 
-public function countProjectTaskStatus($id, $taskStatus = 'OPEN'){
-$q = $this->colsCount();
-$q .= " FROM tasks AS t ";
-$q .= $this->where($id, 't.project_id');
-if ($taskStatus == 'OPEN'){
-	$q .= " AND t.pct_done < 1 "; 
+ public function countProject($id = 0){
+	$q = $this->colsCount();
+	$q .= " FROM tasks AS t ";
+	$q .= ' where t.project_id = '.$id;
+	return $q;	
 }
-if ($taskStatus == 'CLOSED'){
-	$q .= " AND t.pct_done = 1 ";
+
+protected function colsOption($first = true){
+		$c = $this->select($first);
+		$c .= " t.id as value, ";
+		$c .= " concat_ws(':',t.task_order, t.name) as caption ";
+		return $c;
 }
+
+
+
+public function optionsProject($id = 0){
+	$q = $this->colsOption(true);
+	$q .= " FROM tasks as t ";
+	$q .= " where t.project_id = ".$id;
+	//$q .= " AND p.pct_done < 1 ";
+	$q .= " ORDER BY caption ";
+	return $q;	
+}
+
+public function listProject($id = 0, $page = 1, $rows = 10){
+$q = $this->cols();
+$q .= $this->tables(true);
+$q .= ' where t.project_id = '.$id.' ';
+$q .= $this->limit($page, $rows);
 return $q;
+}
+
+public function calendarLinksProject($id){
+$q = $this->colsCalendarLinks();
+$q .= $this->tables(false);
+$q .= ' where t.project_id = '.$id.' ';
+  $q .= $this->groupByCalendarLinks();
+  return $q;
 }
 
 public function listPeriodic($complete = 'NO',$page = 0,$rows = 0){
@@ -91,17 +117,14 @@ public function listPeriodic($complete = 'NO',$page = 0,$rows = 0){
 	$q .= $this->periodicTasksSubquery($complete);
 	$q .= " ORDER BY ";
 	$q .= " project_type, project_name, t.task_order ";
-
 	$q .= $this->limit($page, $rows);
 	return $q;
 }
 
 public function countPeriodic($complete = 'NO'){
 $q = $this->colsCount();
-	$q .= $this->tables(true);
-	/* " FROM projects p join tasks t ON p.id = t.project_id ";
-	$q .= " JOIN project_types pt on p.type_id = pt.id ";
-	$q .= " JOIN task_types tt on t.type_id = tt.id ";*/
+	//$q .= $this->tables(true);
+	$q .= " FROM tasks as t ";
 	$q .= " WHERE t.id IN ";
 	$q .= $this->periodicTasksSubquery($complete);
 	return $q;
@@ -208,10 +231,11 @@ private function periodicTasksSubquery($complete = 'NO'){
 			$sql .= " 0, ";
 			$sql .= " hours_notes, ";
 			$sql .= " 'no', ";
-			$sql .= " 'n/a copied project', ";
+			$sql .= " 'n/a copied task', ";
 			$sql .= " 'no', ";
-			$sql .= " 'n/a copied project' ";
-			$sql .= " FROM tasks t WHERE t.id = ".$sourceId." ";
+			$sql .= " 'n/a copied task' ";
+			$sql .= " FROM tasks t ";
+			$sql .= " WHERE t.id = ".$sourceId." ";
 			
 			return $sql;
 			
