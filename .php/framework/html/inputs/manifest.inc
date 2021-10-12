@@ -1,5 +1,5 @@
 <?php
-include_once('__inputTraits.class');
+include_once('__inputTraits.class.php');
 
 include_once('__input.class');
 include_once('__button.class');

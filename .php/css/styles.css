@@ -256,27 +256,23 @@ a.menu-links-item:hover, a.paging-links-item:hover, a.button-links-item:hover{
 	font-variant:small-caps;
 }
 .display-detail, .edit-input{
-    margin:5px;
-	padding:5px;	
+    margin:2px;
+	padding:2px;	
 	display:inline-block;
 }
 .display-detail-caption, .input-caption{
-    margin:5px;
-	padding:5px;	
+    margin:2px;
+	padding:2px;	
 	font-size:14px;
 	font-variant:small-caps;
     display:block;
 }
 .display-detail-value{
-    margin:5px;
-	padding:5px;	
+    margin:2px;
+	padding:2px;	
 	font-size:16px;
     display:block;
 }
-
-
-
-
 
 .display-details{
 	clear:both;
