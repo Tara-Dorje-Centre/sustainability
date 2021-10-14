@@ -101,7 +101,7 @@ class taskList extends \application\entityList{
 		$this->found = $this->base->sql->getCount($sql,'count_details');
 		
 	}
-	
+	/*
 	protected function listingPagingLinks($pagingBaseLink = 'USE_LISTING'){
 	
 		if ($pagingBaseLink == 'USE_LISTING'){
@@ -118,7 +118,7 @@ class taskList extends \application\entityList{
 		$quickEdit =$this->base->addForm($this->idParent);		
 		return $quickEdit;
 	}
-	
+	*/
 	public function listingSQL(){
 	
 		if ($this->periodicTasks == 'NO'){

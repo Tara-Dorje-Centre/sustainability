@@ -14,50 +14,42 @@ class activityLinks extends \application\links\entityLinks {
 	
 	public function urlActivityList($idParent, $idType, $showCalendar, $myActivity, $idTask,$idProject){
 		$url = $this->request->getUrlActivityList('LIST',0,$idParent,$idType, $showCalendar, $myActivity,$idTask,$idProject);
-		//$url = parent::urlList($idParent,$idType);
-	//	$this->setActivityParametersList($url, $showCalendar, $myActivity, $idTask,$idProject);
 		return $url;
 	}
 	
 	public function urlActivityDetail($action, $id, $idParent,$showCalendar,$myActivity,$idTask,$idProject){
-
 		$url = parent::urlDetail($action,$id,$idParent);
 		$this->setActivityParametersDetail($url, $showCalendar, $myActivity, $idTask,$idProject);
 		return $url;
 	}	
-	
-	
 	
 	public function myActivity(){
 		$showCalendar = 'NO';
 		$myActivity = 'YES';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'My History';
-				$l = $this->menu->getLink($u, $caption);
-		return $l;
-		//his->getLink($u,$caption);
+		return $this->getLink($u, $caption);
 	}
 	public function groupActivity(){
 		$showCalendar = 'NO';
 		$myActivity = 'GROUP';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'Group History';
-		
-		return $this->menu->getLink($u,$caption);
+		return $this->getLink($u,$caption);
 	}
 	public function myCalendar(){
 		$showCalendar = 'YES';
 		$myActivity = 'YES';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'My Calendar';
-		return $this->menu->getLink($u,$caption);
+		return $this->getLink($u,$caption);
 	}
 	public function groupCalendar(){
 		$showCalendar = 'YES';
 		$myActivity = 'GROUP';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
 		$caption = 'Group Calendar';
-		return $this->menu->getLink($u,$caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	public function projectActivity($idProject){
@@ -65,7 +57,7 @@ class activityLinks extends \application\links\entityLinks {
 		$myActivity = 'PROJECT';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
 		$caption = 'Project History';
-		return $this->menu->getLink($u,$caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	public function projectCalendar($idProject){
@@ -73,7 +65,7 @@ class activityLinks extends \application\links\entityLinks {
 		$myActivity = 'PROJECT';
 		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
 		$caption = 'Project Calendar';
-		return $this->menu->getLink($u,$caption);
+		return $this->getLink($u,$caption);
 	}
 	
 	

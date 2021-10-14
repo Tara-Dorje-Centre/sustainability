@@ -46,6 +46,7 @@ class task extends \application\entity{
 		
 		$th = new \html\_th('Hotlinks');
 		$tr->addContent($th->print());
+		
 		if ($this->periodicTasks != 'NO'){
 			$th = new \html\_th('Project');
 			$tr->addContent($th->print());
@@ -96,9 +97,9 @@ class task extends \application\entity{
 		$tr->addContent($td->print());
 		
 		if ($this->periodicTasks != 'NO'){
-		$td = new \html\_td();
-		$td->addContent($this->listRowProjectLink());
-		$tr->addContent($td->print());
+			$td = new \html\_td();
+			$td->addContent($this->listRowProjectLink());
+			$tr->addContent($td->print());
 		}
 		
 
@@ -108,22 +109,11 @@ class task extends \application\entity{
 	
 	
 	public function setDetails(){
-   		
 		if ($this->pageMode == 'COPY'){
 			$this->copyTask();
 		}
 		
 		parent::setDetails();
-		
-		/*
-		$this->totals->setTaskTotals($this->f->id->value());
-		 //if activity records with hours exist
-		 //update estimated effort to reflect current average of actual hours
-		 if ($this->totals->tasks->count > 0 && $this->totals->tasks->actual > 0){
-		 $this->f->hoursEstimated->set(round($this->totals->tasks->actual / $this->totals->tasks->count,2));
-		 $this->f->hoursActual->set($this->totals->tasks->actual);
-		 }
-		*/
 	}
 	
 	public function setPagingDetails(
@@ -133,10 +123,22 @@ class task extends \application\entity{
 	
 	public function getProjectId($taskId){
 		$sql = $this->sql->getProjectId($taskId);
-		$projectId = $this->sql->getScalar($sql,'project_id',0);
-		return $projectId;
-	
+		$id = $this->sql->getScalar($sql,'project_id',0);
+		return $id;
 	}
+	
+	public function getProjectName($taskId){
+		$sql = $this->sql->getProjectName($taskId);
+		$name = $this->sql->getScalar($sql,'name',0);
+		return $name;
+	}
+	
+	public function getTaskName($taskId){
+		$sql = $this->sql->getTaskName($taskId);
+		$name = $this->sql->getScalar($sql,'name',0);
+		return $name;
+	}
+	
 	protected function makePageTitle(){
 		$p = new project();
 		$name = 'Project: '.$p->getProjectName($this->idParent);
@@ -209,14 +211,10 @@ class task extends \application\entity{
 		$this->edit->required->input($this->f->taskOrder);
 		$this->edit->required->input($this->f->started);
 		
-		
-		
 		$m = new project();
 		$select = $m->options($this->f->project->value(),$this->f->project->id->env->variable(),'Parent Project');
 		$this->edit->optional->inputChoice($this->f->project->id,$select->print());
 		
-	
-
 		$m = new \application\entities\reference\taskType;
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
@@ -296,10 +294,6 @@ class task extends \application\entity{
 		return $this->edit->print();
 		
 	}
-	
-		
-
-	
 	
 	public function updateActivitySummary(){	
 		
@@ -441,7 +435,7 @@ class task extends \application\entity{
 			$result = $this->sql->runStatement($sql);
 			
 			$this->id = $this->sql->getInsertedId();
-
+			$this->f->id->set($this->id);
 			//$this->project->UpdateTaskSummary();
 			
 	}

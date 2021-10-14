@@ -1,9 +1,10 @@
 <?php 
 namespace application;
 
-abstract class entity extends baseEntity
+abstract class entity 
+extends baseEntity
 implements \application\Ientity{
-//use sql\connectionFunctions;
+
 	protected $entity;
 	protected $entityTitle = 'Undefined Entity';
 	protected $site;
@@ -78,7 +79,7 @@ implements \application\Ientity{
 		$caption = 'use-entity'){
 		
 		if ($caption == 'use-entity'){
-			$c = '-select '.$this->entityTitle;
+			$c = $this->entityTitle;
 		} else {
 			$c = $caption;
 		}

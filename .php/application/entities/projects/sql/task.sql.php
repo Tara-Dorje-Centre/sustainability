@@ -68,6 +68,21 @@ $q .= " WHERE t.id = ".$id;
 return $q;
 }
 
+public function getProjectName($id = 0){
+$q = " SELECT p.name ";
+$q .= " FROM tasks t ";
+$q .= " JOIN projects p ON t.project_id = p.id ";
+$q .= " WHERE t.id = ".$id;
+return $q;
+}
+
+public function getTaskName($id = 0){
+$q = " SELECT t.name ";
+$q .= " FROM tasks as t ";
+$q .= " WHERE t.id = ".$id;
+return $q;
+}
+
  public function countProject($id = 0){
 	$q = $this->colsCount();
 	$q .= " FROM tasks AS t ";

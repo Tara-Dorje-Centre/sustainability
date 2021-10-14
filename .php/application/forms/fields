@@ -28,9 +28,9 @@ abstract class fields extends \framework\_contentWriter{
 		global $sessionTime;
 		$this->currentTimestamp = $sessionTime;
 		if (isset($_SESSION['login-name'])){
-			$this->currentUserName = $_SESSION['login-name'];
+			$this->currentUser = $_SESSION['login-name'];
 		} else {
-			$this->currentUserName = 'no-user';
+			$this->currentUser = 'no-user';
 		}
 	}
 	protected function _register(string $fieldName, Ifield $field){

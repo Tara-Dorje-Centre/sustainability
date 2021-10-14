@@ -401,7 +401,7 @@ namespace application\forms;
 	}
 	
 	protected function inputFreeText( ){
-		$i = new \html\_inputText($this->env->variable(),$this->value(),$this->_caption);
+		$i = new \html\inputs\_inputText($this->env->variable(),$this->value(),$this->_caption);
 		return $i->print();
 		
 	}

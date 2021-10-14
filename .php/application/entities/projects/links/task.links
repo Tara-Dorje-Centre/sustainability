@@ -53,11 +53,11 @@ extends \application\links\entityLinks {
 				
 				break;
 			case 'ADD':
-				$this->addLink($this->list('List',0,$idParent,0));
+				$this->addLink($this->list('List Tasks',0,$idParent,0));
 				break;
 			default:
-				$this->addLink($this->list('List',0,$idParent,0));
-				$this->addLink($this->view('View',$id));
+				$this->addLink($this->list('List Tasks',0,$idParent,0));
+				$this->addLink($this->view('View Task',$id));
 		
 		}
 		
