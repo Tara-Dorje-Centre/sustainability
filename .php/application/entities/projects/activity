@@ -109,8 +109,7 @@ extends \application\entity{
 
 		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
 		// build link and display in linkText
-			$url = new \application\links\url($this->f->linkUrl->value());
-			$link = new \application\links\link($url,$this->f->linkText->value());
+			$link = $this->links->buildLink($this->f->linkUrl->value(), $this->f->linkText->value());
 			$this->f->linkText->set($link->print());
 		}
 		

@@ -40,6 +40,11 @@ abstract class entityLinks implements IentityLinks {
 		return $l;	
 	}
 	
+	
+	final public function buildLink(string $page, string $caption, $css = 'link-item'){
+		return $this->menu->buildLink($page, $caption, $css);
+	}
+	
 	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
 		$this->addLink($this->list('List',0,$idParent,0));
 		$this->addLink($this->add('Add',0));

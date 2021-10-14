@@ -4,7 +4,7 @@ CREATE TABLE activities (
   done_by varchar(50) COLLATE latin1_general_ci NOT NULL,
   started timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  activity_order decimal(10,2) NOT NULL DEFAULT '1.00',
+  activity_order int(10) NOT NULL DEFAULT '1',
   hours_estimated decimal(10,2) NOT NULL,
   hours_actual decimal(10,2) NOT NULL,
   comments varchar(500) COLLATE latin1_general_ci NOT NULL,

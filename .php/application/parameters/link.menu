@@ -49,12 +49,16 @@ class linkMenu extends \framework\_echo{
 		$l = new link($u,$caption);
 		$l->setCSS($css);
 		return $l;
-
 	}
 	public function makeLink(url &$u,string $caption, $css = 'menu-links-item'){
 		//$css passed uses $cssMenuItem...should use menu or list item
 		$l = $this->getLink($u,$caption,$css);
 		$this->addLink($l);
+	}
+	
+	public function buildLink(string $page, string $caption, $css = 'link-item'){
+		$u = new url($page);
+		return $this->getLink($u, $caption, $css);
 	}
 	
 	public function addLink(link $l){

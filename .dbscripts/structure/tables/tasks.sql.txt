@@ -8,7 +8,7 @@ CREATE TABLE tasks (
   started timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   pct_done decimal(10,2) NOT NULL DEFAULT '0.00',
-  task_order decimal(10,2) NOT NULL DEFAULT '1.00',
+  task_order int(10) NOT NULL DEFAULT '1',
   parent_id bigint(20) NOT NULL DEFAULT '0',
   hours_estimated decimal(10,2) NOT NULL DEFAULT '0.00',
   hours_actual decimal(10,2) NOT NULL DEFAULT '0.00',
