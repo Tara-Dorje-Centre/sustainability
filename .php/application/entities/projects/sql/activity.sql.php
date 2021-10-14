@@ -3,7 +3,7 @@ namespace application\entities\projects\sql;
 
 class activitySQL 
 extends \application\sql\entitySQL{
-//extends taskChildSQL{
+
 
 	public function __construct(){
 		$this->baseTable = 'activities';
@@ -105,11 +105,34 @@ public function getActivityName($id){
 		return $q;
 	}
 
+	public function countProject($id){
+		$q = "SELECT count(*) as count_details ";
+		$q .= "FROM activities a ";
+		$q .= " JOIN tasks t ON a.task_id = t.id ";
+		$q .= "WHERE t.project_id = ".$id;
+		return $q;
+	}
+
+	public function info($id = 0){
+		$q = $this->cols();
+		$q .= $this->tables(true);
+		$q .= " WHERE a.id = ".$id;
+		return $q;
+	}
+
 	
 	public function listTask($id = 0, $page = 1, $rows =10){
 		$q = $this->cols();
 		$q .= $this->tables(true);
 		$q .= " WHERE a.task_id = ".$id;
+		$q .= $this->limit($page, $rows);
+		return $q;
+	}
+
+	public function listProject($id = 0, $page = 1, $rows =10){
+		$q = $this->cols();
+		$q .= $this->tables(true);
+		$q .= " WHERE t.project_id = ".$id;
 		$q .= $this->limit($page, $rows);
 		return $q;
 	}

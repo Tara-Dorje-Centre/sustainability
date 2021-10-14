@@ -25,12 +25,12 @@ class taskList extends \application\entityList{
 		$this->setPeriodic($p);
 		$this->base->setPeriodic($p);
 		
-		$p = 'INCOMPLETE';
+		$s = 'INCOMPLETE';
 		if (isset($_GET['task-status'])){
-			$p = $_GET['task-status'];
+			$s = $_GET['task-status'];
 		}
-		$this->setStatus($p);
-		//$this->base->setStatus($p);
+		$this->setStatus($s);
+		$this->base->setStatus($s);
 		
 	}
 	
@@ -119,6 +119,23 @@ class taskList extends \application\entityList{
 		return $quickEdit;
 	}
 	*/
+	
+	//override listing start 
+	//to hide quickedit on periodic tasks
+	protected function listingStart(){
+
+		$paging = $this->base->links->pagedListing($this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent);	
+		$add = '';
+		if ($this->periodicTasks == 'NO'){
+			$add = $this->base->addForm($this->idParent);	
+		}
+		$entity = $this->base->entity;
+		$legend = $this->entityTitle.':  Listing';
+		$this->_display = new \html\displayList($entity,$paging,$legend,$add,true);
+
+	}
+	
+	
 	public function listingSQL(){
 	
 		if ($this->periodicTasks == 'NO'){

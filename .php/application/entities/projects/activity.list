@@ -17,7 +17,10 @@ extends \application\entityList{
 	}
 	public function getRequestArguments(){
 		parent::getRequestArguments();
-
+		//push identifiers to base object
+		//sets quickEdit form default idParent
+		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
+		
 		$my = 'NO';
 		if (isset($_GET['my-activity'])){
 			$my = $_GET['my-activity'];
@@ -71,7 +74,7 @@ extends \application\entityList{
 			$t = new links\taskLinks();
 			$this->base->links->addLink($p->view('View Project', $projectId));				
 			$this->base->links->addLink($t->view('View Task', $this->idParent));
-			$this->base->links->addLink($this->base->links->list('List Activities', $this->idParent));
+			$this->base->links->addLink($this->base->links->list('List Activities', 0,$this->idParent));
 			$this->base->links->addLink($this->base->links->add('New Activity', $this->idParent));
 
 		} elseif ($this->myActivity == 'YES' OR $this->myActivity == 'GROUP') {			
@@ -114,7 +117,7 @@ extends \application\entityList{
 			} elseif ($this->myActivity == 'PROJECT') {
 				$t = new task();
 				$projectId = $t->getProjectId($this->idParent);
-				$sql = $this->base->sql->countProjectActivity($projectId);
+				$sql = $this->base->sql->countProject($projectId);
 			}
 		}
 		
@@ -297,7 +300,7 @@ extends \application\entityList{
 			$sql = $this->base->sql->listTask($this->idParent,$this->resultPage,$this->perPage);
 		} elseif ($this->myActivity == 'PROJECT'){
 			$t = new task();
-			$projectId = $t->getProjecId($this->idParent);
+			$projectId = $t->getProjectId($this->idParent);
 			$sql = $this->base->sql->listProject($projectId,$this->resultPage,$this->perPage);	
 		} else {
 			$sql = $this->base->sql->listByDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			

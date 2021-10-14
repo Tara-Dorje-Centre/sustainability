@@ -43,9 +43,10 @@ extends \application\links\entityLinks {
 				$this->addLink($this->list('List Tasks',0,$idParent,0));
 				$this->addLink($this->edit('Edit Task',$id));
 				$this->addLink($this->add('New Task',$idParent));
-				//$this->addLink($this->add('AddChild',$id));
-				//$this->addLink($this->add('AddSibling',$idParent));
+				
 				//$this->addLink($this->copy('Copy',$id));
+				$a = new activityLinks();
+				$this->addLink($a->list('List Activities',0,$id));
 				break;
 			case 'EDIT':
 				$this->addLink($this->list('List Tasks',0,$idParent,0));

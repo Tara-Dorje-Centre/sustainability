@@ -72,14 +72,14 @@ class activityLinks extends \application\links\entityLinks {
 	public function taskActivity($idTask){
 		$showCalendar = 'NO';
 		$myActivity = 'TASK';
-		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask,0);
+		$u = $this->urlActivityList(-1, $idTask, $showCalendar, $myActivity, $idTask,0);
 		$caption = 'Task History';
 		return $this->getLink($u,$caption);
 	}
 	public function taskCalendar($idTask){
 		$showCalendar = 'YES';
 		$myActivity = 'TASK';
-		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask,0);
+		$u = $this->urlActivityList(-1, $idTask, $showCalendar, $myActivity, $idTask,0);
 		$caption = 'Task Calendar';
 		return $this->getLink($u,$caption);
 	}

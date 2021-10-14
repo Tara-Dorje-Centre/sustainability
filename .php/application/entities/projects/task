@@ -5,6 +5,8 @@ class task extends \application\entity{
 	//public $totals;
 	//public $measureCount = 0;
 	public $periodicTasks = 'NO';
+	public $taskStatus = 'INCOMPLETE';
+	public $statusComplete = false;
 	public $resultsPageActivity = 1;
 	//public $resultsPageMeasure = 1;
 	//public $resultsPageMaterial = 1;
@@ -35,6 +37,15 @@ class task extends \application\entity{
 	
 	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
+	}
+	
+	public function setStatus($status = 'INCOMPLETE'){
+		$this->taskStatus = $status;
+		if ($status == 'COMPLETE'){
+			$this->statusComplete = true;
+		} else {
+			$this->statusComplete = false;
+		}
 	}
 	
 	public function listHeading($periodicTasks = 'NO'): \html\_tr{

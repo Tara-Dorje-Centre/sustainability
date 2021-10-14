@@ -65,14 +65,21 @@ extends \application\forms\fields{
 	
 	
 	private function disableFields(){
-		$this->id->listEnabled(false);
-		$this->id->displayEnabled(false);
-		$this->updated->envEnabled(false);
+	
+	$this->updated->envEnabled(false);
         //$this->started->envEnabled(false);
 		$this->name->envEnabled(false);
+		$this->id->displayEnabled(false);
+		$this->highlight->displayEnabled(false);
+		$this->activityOrder->displayEnabled(false);
+		$this->id->listEnabled(false);
+		$this->name->listEnabled(false);
+		//$this->highlight->listEnabled(false);
+		$this->activityOrder->listEnabled(false);
         $this->updated->listEnabled(false);
         $this->started->listEnabled(false);
         $this->comments->listEnabled(false);
+        $this->linkUrl->listEnabled(false);
     }
 	
 	

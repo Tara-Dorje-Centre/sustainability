@@ -79,7 +79,7 @@ implements \application\Ientity{
 		$caption = 'use-entity'){
 		
 		if ($caption == 'use-entity'){
-			$c = $this->entityTitle;
+			$c = '--'.$this->entityTitle;
 		} else {
 			$c = $caption;
 		}

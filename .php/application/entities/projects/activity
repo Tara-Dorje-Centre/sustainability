@@ -106,9 +106,9 @@ extends \application\entity{
 		$td->addContent($this->listRowLink());
 		$tr->addContent($td->print());
 		
-		$this->f->linkUrl->listEnabled(false);
+
 		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
-		// link url is list disabled
+		// build link and display in linkText
 			$url = new \application\links\url($this->f->linkUrl->value());
 			$link = new \application\links\link($url,$this->f->linkText->value());
 			$this->f->linkText->set($link->print());
@@ -137,7 +137,7 @@ extends \application\entity{
 	}
 	
 	public function getTaskId($activityId){
-		$sql = $this->sql->getProjectId($activityId);
+		$sql = $this->sql->getTaskId($activityId);
 		$id = $this->sql->getScalar($sql,'task_id',0);
 		return $id;
 	}
@@ -210,7 +210,7 @@ extends \application\entity{
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);
-	 		$this->f->activityOrder->set($this->nextActivityOrder());
+	 		//$this->f->activityOrder->set($this->nextActivityOrder());
 	 		$this->f->started->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
 	 	}
@@ -221,7 +221,7 @@ extends \application\entity{
 		if ($this->idParent > 0){
 			$this->f->task->id->set($this->idParent);
 		}
-		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),$this->f->project->id->value(),0);
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),$this->f->task->id->value(),0);
 		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
 		
@@ -244,7 +244,8 @@ extends \application\entity{
 		$edit->required->addContent($this->f->parentTask->inputChoice($input));
 		*/
 		
-		$this->edit->required->input($this->f->activityOrder);
+		//force activity order before running insert
+		//$this->edit->required->input($this->f->activityOrder);
 		$m = new \application\entities\reference\activityType;
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
@@ -300,9 +301,12 @@ extends \application\entity{
 	}
 	
 	protected function saveInsert(){
+		
+		 	$this->f->activityOrder->set($this->nextActivityOrder());
+	
 			$sql = " INSERT INTO activities ";
 			$sql .= " ( ";
-			//$sql .= " activity_order, ";
+			$sql .= " activity_order, ";
 			$sql .= " task_id, ";
 			$sql .= " type_id, ";
 			$sql .= " done_by, ";
@@ -314,7 +318,7 @@ extends \application\entity{
 			$sql .= " link_text, ";
 			$sql .= " comments) ";
 			$sql .= " VALUES (";
-			//$sql .= " ".$this->activityOrder->value().", ";
+			$sql .= " ".$this->f->activityOrder->value().", ";
 			$sql .= " ".$this->f->task->id->value().", ";
 			$sql .= " ".$this->f->type->id->value().", ";
 			$sql .= " '".$this->f->doneBy->value()."', ";
