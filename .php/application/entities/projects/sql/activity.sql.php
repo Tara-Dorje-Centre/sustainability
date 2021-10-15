@@ -96,6 +96,13 @@ extends \application\sql\entitySQL{
 		return $q;
 	}
 
+	public function info($id = 0){
+		$q = $this->cols();
+		$q .= $this->tables(true);
+		$q .= " WHERE a.id = ".$id;
+		return $q;
+	}
+
 	public function countTask($id){
 		$q = "SELECT count(*) as count_details ";
 		$q .= "FROM activities a ";
@@ -115,15 +122,8 @@ extends \application\sql\entitySQL{
 		$q = " SELECT count(*) as count_details ";
 		$q .= " FROM activities a ";
 		if ($doneBy <> 'EVERYONE'){
-		$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ";
+			$q .= " WHERE UPPER(a.done_by) = UPPER('".$doneBy."') ";
 		}
-		return $q;
-	}
-
-	public function info($id = 0){
-		$q = $this->cols();
-		$q .= $this->tables(true);
-		$q .= " WHERE a.id = ".$id;
 		return $q;
 	}
 

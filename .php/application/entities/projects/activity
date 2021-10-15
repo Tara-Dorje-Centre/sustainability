@@ -217,6 +217,7 @@ extends \application\entity{
 	 		//$this->f->activityOrder->set($this->nextActivityOrder());
 	 		$this->f->started->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
+	 		$this->f->hoursActual->set(1);
 	 	}
 	}
 	

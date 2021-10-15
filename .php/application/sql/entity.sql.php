@@ -8,7 +8,7 @@ use connectionFunctions;
 	protected $baseTable = 'baseTable';
 	protected $fieldDate = 'date_reported';
 	protected $fieldApproved = 'approved';
-	protected $fieldDoneBy = 'done_by';
+	//protected $fieldDoneBy = 'done_by';
 	protected $fieldId = 'id';
 	protected $fieldTypeId = 'type_id';
 	protected $fieldParentId = 'parent_id';
@@ -43,35 +43,7 @@ use connectionFunctions;
 		$c = $this->colsCount($first);
 		return $c;
 	}
-	
-	protected function colsDoneBy($first = true){
-		$c = $this->select($first);
-		$c .= $this->nullReplace($this->fieldDoneBy)." done_by ";
-		return $c;
-	}
-	
-	protected function colsCalendarLinks($first = true){
-		$c = $this->select($first);
-		$c .= $this->dateYear($this->fieldDate)." AS year, ";
-		$c .= $this->dateMonth($this->fieldDate)." AS month ";
-		return $c;
-	}
-	
-	protected function groupByCalendarLinks($first = true){
-		$g = $this->groupBy($first);
-		$g .= $this->dateYear($this->fieldDate).", ";
-		$g .= $this->dateMonth($this->fieldDate)." ";
-		return $g;
-	}
-	/*
-	public function calendarLinksDoneBy($doneBy = 'EVERYONE'){
-		$q = $this->colsCalendarLinks();
-		$q .= $this->tables(false);
-		$q .= $this->whereDoneBy($doneBy);
-		$q .= $this->groupByCalendarLinks();
-		return $q;
-	}
-*/
+
 	protected function groupByType($first = true){
 		$g = $this->groupBy($first);
 		$g .= " ".$this->fieldTypeId." ";
@@ -113,15 +85,6 @@ use connectionFunctions;
 		return $w;
 	}
 
-	protected function whereDoneBy($doneBy = 'EVERYONE', $first = false){
-		$w = '';
-		if ($doneBy != 'EVERYONE'){
-			$w = $this->whereString($doneBy, $this->fieldDoneBy, true, $first);
-			$w .= " AND show_always != 'no' ";
-		}
-		return $w;
-	}
-
 	protected function whereId($id, $first = true,$fieldId = 'no-alias'){
 		if ($fieldId != 'no-alias'){
 			$i = $fieldId;
@@ -139,15 +102,7 @@ use connectionFunctions;
 		return $q;	
 	}
 
-/*
-	public function countDoneBy($doneBy = 'EVERYONE'){
-		$q = $this->colsCount();
-		$q .= $this->tables(false);
-		$q .= $this->whereDoneBy($doneBy, true);
-		return $q;
-	}
 
-*/
 	public function info($id = 0){
 		$q = $this->cols();
 		$q .= $this->tables(true);
@@ -158,14 +113,6 @@ use connectionFunctions;
 	public function list($page = 1, $rows = 10){
 		$q = $this->cols();
 		$q .= $this->tables();
-		$q .= $this->limit($page, $rows);
-		return $q;
-	}
-
-	public function listDoneBy($doneBy, $page = 1, $rows = 10){
-		$q = $this->cols();
-		$q .= $this->tables();
-		$q .= $this->whereDoneBy($doneBy, true);
 		$q .= $this->limit($page, $rows);
 		return $q;
 	}
@@ -192,7 +139,64 @@ use connectionFunctions;
 		$q .= $this->orderBy()." caption ";
 		return $q;	
 	}
+	
+	
+	
+	/* 
+	//all done by functions depend on activities
+	//moved to activities sql
+	protected function colsDoneBy($first = true){
+		$c = $this->select($first);
+		$c .= $this->nullReplace($this->fieldDoneBy)." done_by ";
+		return $c;
+	}
+	
+	protected function colsCalendarLinks($first = true){
+		$c = $this->select($first);
+		$c .= $this->dateYear($this->fieldDate)." AS year, ";
+		$c .= $this->dateMonth($this->fieldDate)." AS month ";
+		return $c;
+	}
+	
+	protected function groupByCalendarLinks($first = true){
+		$g = $this->groupBy($first);
+		$g .= $this->dateYear($this->fieldDate).", ";
+		$g .= $this->dateMonth($this->fieldDate)." ";
+		return $g;
+	}
+	
+	public function calendarLinksDoneBy($doneBy = 'EVERYONE'){
+		$q = $this->colsCalendarLinks();
+		$q .= $this->tables(false);
+		$q .= $this->whereDoneBy($doneBy);
+		$q .= $this->groupByCalendarLinks();
+		return $q;
+	}
 
+	protected function whereDoneBy($doneBy = 'EVERYONE', $first = false){
+		$w = '';
+		if ($doneBy != 'EVERYONE'){
+			$w = $this->whereString($doneBy, $this->fieldDoneBy, true, $first);
+			$w .= " AND show_always != 'no' ";
+		}
+		return $w;
+	}
+
+	public function countDoneBy($doneBy = 'EVERYONE'){
+		$q = $this->colsCount();
+		$q .= $this->tables(false);
+		$q .= $this->whereDoneBy($doneBy, true);
+		return $q;
+	}
+
+	public function listDoneBy($doneBy, $page = 1, $rows = 10){
+		$q = $this->cols();
+		$q .= $this->tables();
+		$q .= $this->whereDoneBy($doneBy, true);
+		$q .= $this->limit($page, $rows);
+		return $q;
+	}
+	*/
 
 }
 

@@ -24,19 +24,7 @@ protected function whereTask($id = 0,	$year= 0, $month = 0, $approved = 'no', $f
 	//$w .= $this->_equalApproved($approved);
 	return $w;
 }
-
-
-
-
-
-
-	
-
-
-	
-
-
-
+/*
 public function calendarLinksTask($id){
 	$q = $this->colsCalendarLinks();
 $q .= $this->tables(false);
@@ -44,7 +32,9 @@ $q .= $this->tables(false);
   	$q .= $this->groupByCalendarLinks();
 	return $q;
 }
+*/
 
+// move to task sql
 public function optionsTask($id = 0){
 //$selectedId = 0,$disabled = 'false'){
 	$q = " SELECT ";

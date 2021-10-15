@@ -96,7 +96,7 @@ extends \application\forms\fields{
 		$this->linkText->setDefault('');
 		$this->comments->setDefault('');
 		$this->hoursEstimated->setDefault(0);
-		$this->hoursActual->setDefault(0);
+		$this->hoursActual->setDefault(1);
 		
 	}
 	
