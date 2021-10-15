@@ -37,19 +37,19 @@ class projectLinks extends \application\links\entityLinks {
 		}
 		
 		if ($mode == 'VIEW'){
-			$l = new taskLinks();
-			$this->addLink($l->list('List Tasks', 0, $id));
-			$this->addLink($l->add('Add Task',$id));
+			$t = new taskLinks();
+			$this->addLink($t->list('List Tasks', 0, $id));
+			$this->addLink($t->add('Add Task',$id));
 			
-			/* after these links are tested
+			// after these links are tested
 			$a= new activityLinks();
-			$m = new materialLinks();
-			$r = new receiptLinks();
-			$this->addLink($a->linkProjectCalendar($id));
-			$this->addLink($a->linkProjectActivities($id));		
-			$this->addLink($m->list(-1,'ProjectMaterials',$id,'PROJECT','yes'));
-			$this->addLink($r->list(-1,'ProjectReceipts',$id,'PROJECT','yes'));	
-			*/
+			$this->addLink($a->projectCalendar($id));
+			$this->addLink($a->projectActivity($id));		
+			//$m = new materialLinks();
+			//$this->addLink($m->list(-1,'ProjectMaterials',$id,'PROJECT','yes'));
+			//$r = new receiptLinks();
+			//$this->addLink($r->list(-1,'ProjectReceipts',$id,'PROJECT','yes'));	
+			
 		}
 		
 	}

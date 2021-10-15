@@ -5,6 +5,7 @@ class activityList
 extends \application\entityList{
 
 	public $myActivity = 'NO';
+	public $projectId = 0;
 	//defined in base entity
 	//public $showCalendar = 'NO';
 	//public $prevCalendarLink = '';
@@ -32,8 +33,15 @@ extends \application\entityList{
 		if (isset($_GET['show-calendar'])){
 			$show = $_GET['show-calendar'];
 		}
-		$this->setShowCalendar($show);
-		$this->base->setShowCalendar($show);
+		//$this->setShowCalendar($show);
+		$this->base->setShowCalendar($this->showCalendar);
+		
+		$id = 0;
+		if (isset($_GET['project-id'])){
+			$id = $_GET['project-id'];
+		}
+		$this->setProjectId($id);
+		$this->base->setProjectId($id);
 	}
 	
 	public function setMyActivity($my = 'NO'){
@@ -42,6 +50,10 @@ extends \application\entityList{
 	
 	public function setShowCalendar($show = 'NO'){
 		$this->showCalendar = $show;
+	}
+	
+	public function setProjectId($id = 0){
+		$this->projectId = $id;
 	}
 	
 	protected function makePageTitle(){
@@ -57,8 +69,8 @@ extends \application\entityList{
 		} elseif ($this->myActivity == 'YES') {
 			$title .= $_SESSION['login-name'].':  Activity History';
 		} elseif ($this->myActivity == 'PROJECT') {
-			$t = new task();
-			$title .= 'All Project Activity: '.$t->getProjectName($this->idParent);
+			$p = new project();
+			$title .= 'All Project Activity: '.$p->getProjectName($this->projectId);
 		}
 
 		$this->_pageTitle = $title;	
@@ -78,19 +90,19 @@ extends \application\entityList{
 			$this->base->links->addLink($this->base->links->add('New Activity', $this->idParent));
 
 		} elseif ($this->myActivity == 'YES' OR $this->myActivity == 'GROUP') {			
-			$this->base->links->addLink($this->base->links->linkMyCalendar());
-			$this->base->links->addLink($this->base->links->linkGroupCalendar());
-			$this->base->links->addLink($this->base->links->linkMyActivities());
-			$this->base->links->addLink($this->base->links->linkGroupActivities());
+			$this->base->links->addLink($this->base->links->myCalendar());
+			$this->base->links->addLink($this->base->links->groupCalendar());
+			$this->base->links->addLink($this->base->links->myActivity());
+			$this->base->links->addLink($this->base->links->groupActivity());
 		} elseif ($this->myActivity == 'PROJECT') {
 			//showing project activities
-			$t = new task();
-			$projectId = $t->getProjectId($this->idParent);
+			//$t = new task();
+			//$projectId = $t->getProjectId($this->idParent);
 			$p = new links\projectLinks();
 
-			$this->base->links->addLink($p->view('View Project', $projectId));				
-			$this->base->links->addLink($this->base->links->linkProjectCalendar($projectId));									
-			$this->base->links->addLink($this->base->links->linkProjectActivities($projectId));
+			$this->base->links->addLink($p->view('View Project', $this->projectId));				
+			$this->base->links->addLink($this->base->links->projectCalendar($this->projectId));									
+			$this->base->links->addLink($this->base->links->projectActivity($this->projectId));
 		}
 		
 
@@ -113,11 +125,11 @@ extends \application\entityList{
 			$sql = $this->base->sql->countTask($this->idParent);
 		} else {
 			if ($this->myActivity == 'YES' OR $this->myActivity == 'GROUP'){
-				$sql = $this->base->sql->countByDoneBy($this->getActivityDoneBy());
+				$sql = $this->base->sql->countDoneBy($this->getActivityDoneBy());
 			} elseif ($this->myActivity == 'PROJECT') {
-				$t = new task();
-				$projectId = $t->getProjectId($this->idParent);
-				$sql = $this->base->sql->countProject($projectId);
+				//$t = new task();
+				//$projectId = $t->getProjectId($this->idParent);
+				$sql = $this->base->sql->countProject($this->projectId);
 			}
 		}
 		
@@ -126,29 +138,29 @@ extends \application\entityList{
 	}
 
 
-//todo
+
 	private function getCalendarLinks(){
 		$this->echoState(true, 'getCalendarLinks');
-		$t = new task();
-		$projectId = $t->getProjectId($this->idParent);
 		
-		$l = new ActivityLinks('DIV','paged');
-		$baseUrl = $l->listing(-1,$this->myActivity,$this->showCalendar,$projectId);
-		$links = $l->openMenu('calendar-links');
-				
+		$l = new links\activityLinks();
+		
+		//$baseUrl = $l->listing(-1,$this->myActivity,$this->showCalendar,$this->projectId);
+		$u = $l->urlActivityList(-1, 0, $this->showCalendar, $this->myActivity, 0,$this->projectId);
+		$baseUrl = $u;
+		
+		$links = new \html\_div('calendar-links');
 		$this->prevCalendarLink = '';
 		$this->nextCalendarLink = '';
 		$foundCurrent = false;
 		$foundNext = false;
 				
 		if ($this->myActivity == 'PROJECT') {
-		
-			$sql = $this->base->sql->calendarLinksProject($projectId);
+			$sql = $this->base->sql->calendarLinksProject($this->projectId);
 		} else {
-			$sql = $this->base->sql->calendarLinksMyActivity($this->getActivityDoneBy());			
+			$sql = $this->base->sql->calendarLinksDoneBy($this->getActivityDoneBy());			
 		}
 
-		$result = $this->base->getResult($sql);
+		$result = $this->base->sql->getResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
@@ -157,64 +169,72 @@ extends \application\entityList{
 			$caption = $year.'-'.$month;
 			if ($year == $this->year AND $month == $this->month){
 				//skip link and show caption if link for current display monthyear
-				$link = span($caption,$l->cssItem.'-current');
+				$link = $l->buildTextItem($caption, 'calendar-links-current');
 				$foundCurrent = true;
 			} else {
-				$link = $l->formatCalendarHref($caption,$baseUrl,$year,$month);
+				$link = $l->buildCalendarLink($caption,$baseUrl,$year,$month);
 				if ($foundCurrent == false){
-					$this->prevCalendarLink = $l->formatCalendarHref('Previous',$baseUrl,$year,$month);
+					$prev = $l->buildCalendarLink('Previous',$baseUrl,$year,$month);
+					$this->prevCalendarLink = $prev->print();
 				} else {
 					if ($foundNext == false){
-						$this->nextCalendarLink = $l->formatCalendarHref('Next',$baseUrl,$year,$month);
+						$next = $l->buildCalendarLink('Next',$baseUrl,$year,$month);
+						$this->nextCalendarLink = $next->print();
 						$foundNext = true;
 					}
 				}
 			}
-			$links .= $link;
+
+			$links->addContent($link->print());
 		}
 		$result->close();
 		}
 		
-		$links .= $l->closeMenu();
-		return $links;
+		return $links->print();
 	}
 
 	private function buildCalendar(\application\forms\calendar $cal, $name = 'activity-calendar'){
-		
-		$cal->setLinks($this->nextCalendarLink, $this->prevCalendarLink);			
-		
-		$d = new \html\div($name);
+		$d = new \html\_div($name);
 		$d->addContent($this->getCalendarLinks());	
+		$cal->setLinks($this->nextCalendarLink, $this->prevCalendarLink);			
 		$d->addContent($cal->buildCalendar());
 		
 		return $d->print();	
 	}
 
-	private function getCalendarItemHighlight($row){
+	private function getCalendarItemCSS($hours, $highlight){
 		//highlight scheduled but incomplete activities
-		if ($row["sum_hours"] == 0){
-			$highlight = 'highlight-yellow';
+		if ($hours == 0){
+			$css = 'highlight-yellow';
 		} else {
-			$highlight = $row['highlight_style'];
+			$css = $highlight;
 		}
-		return $highlight;
+		return $css;
 	}
 
 	public function getProjectActivityCalendar(){
-		$tl = new \links\taskLinks();
+		$tl = new links\taskLinks();
 		$title = 'Project Activities';
 		$cal = new \application\forms\calendar($this->year,$this->month,$title);
 		
-		$sql = $this->base->sql->calendarSummaryProject($this->task->project->id,$this->year,$this->month);
+		$sql = $this->base->sql->calendarSummaryProject($this->projectId,$this->year,$this->month);
 		
 		$result = $this->base->sql->getResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{
-			$l = $tl->view($row['name'],$row['id']);
-			$item = $row['done_by'].' '.$l->print();
-			$css = $this->getCalendarItemHighlight($row);
-			$cal->addItemByTimestamp($row["started"],$item,$css);
+		
+			$id = $row['id'];
+			$name = $row['name'];
+			$hours = $row['sum_hours'];
+			$doneBy = $row['done_by'];
+			$started = $row['started'];
+			$highlight = $row['highlight_style'];
+		
+			$l = $tl->view($name,$id);
+			$item = $doneBy.' '.$l->print();
+			$css = $this->getCalendarItemCSS($hours,$highlight);
+			$cal->addItemByTimestamp($started,$item,$css);
 		}
 		$result->close();
 		}
@@ -223,24 +243,32 @@ extends \application\entityList{
 	}
 	
 	public function getGroupActivityCalendar(){
-		$pl = new ProjectLinks();
+		$pl = new links\projectLinks();
 		$title = 'Group Activities';
 		$cal = new \application\forms\calendar($this->year,$this->month,$title);
 
-		$sql = $this->base->sql->calendarSummaryMyActivity($this->getActivityDoneBy(),$this->year,$this->month);
+		$sql = $this->base->sql->calendarSummaryDoneBy($this->getActivityDoneBy(),$this->year,$this->month);
 		
-		$result = $this->base->getResult($sql);
+		$result = $this->base->sql->getResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
-			if ($row['id'] != 0){
-				$l = $pl->view($row['name'],$row['id']);
-				$item = $row['done_by'].' '.$l->print;				
+		
+			$id = $row['id'];
+			$name = $row['name'];
+			$hours = $row['sum_hours'];
+			$doneBy = $row['done_by'];
+			$started = $row['started'];
+			$highlight = $row['highlight_style'];
+		
+			if ($id != 0){
+				$l = $pl->view($name,$id);
+				$item = $doneBy.' '.$l->print();				
 			} else {
-				$item = $row["sum_hours"].' '.$row['done_by'];;				
+				$item = $hours.' '.$doneBy;				
 			}
-			$css = $this->getCalendarItemHighlight($row);
-			$cal->addItemByTimestamp($row["started"],$item,$css);
+			$css = $this->getCalendarItemCSS($hours,$highlight);
+			$cal->addItemByTimestamp($started,$item,$css);
 		}
 		$result->close();
 		}
@@ -249,24 +277,32 @@ extends \application\entityList{
 	}
 
 	public function getMyActivityCalendar(){
-		$pl = new \links\projectLinks();
+		$pl = new links\projectLinks();
 		$title = 'My Activities: '.$this->getActivityDoneBy();
 		$cal = new \application\forms\calendar($this->year,$this->month,$title);
 
-		$sql = $this->base->sql->calendarSummaryMyActivity($this->getActivityDoneBy(),$this->year,$this->month);
+		$sql = $this->base->sql->calendarSummaryDoneBy($this->getActivityDoneBy(),$this->year,$this->month);
 
-		$result = $this->base->getResult($sql);
+		$result = $this->base->sql->getResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{
-			if ($row['id'] != 0){
-				$l = $pl->view($row['name'],$row['id']);
-				$item = $row["sum_hours"].' '.$l->print();
+		
+			$id = $row['id'];
+			$name = $row['name'];
+			$hours = $row['sum_hours'];
+			$doneBy = $row['done_by'];
+			$started = $row['started'];
+			$highlight = $row['highlight_style'];
+		
+			if ($id != 0){
+				$l = $pl->view($name,$id);
+				$item = $hours.' '.$l->print();
 			} else {
-				$item = $row["sum_hours"].' '.$row['name'];
+				$item = $hours.' '.$name;
 			}
-			$css = $this->getCalendarItemHighlight($row);
-			$cal->addItemByTimestamp($row["started"],$item,$css);
+			$css = $this->getCalendarItemCSS($hours,$highlight);
+			$cal->addItemByTimestamp($started,$item,$css);
 		}
 		$result->close();
 		}
@@ -295,15 +331,31 @@ extends \application\entityList{
 		return $content;
 	}
 	
+	
+	//override listing start 
+	//to hide quickedit on activity history
+	protected function listingStart(){
+		//added arguments for project history
+		$paging = $this->base->links->pagedListing($this->found,$this->resultPage,$this->perPage, $this->idParent,$this->showCalendar,$this->myActivity,$this->idParent,$this->projectId);	
+		$add = '';
+		if ($this->myActivity == 'NO'){
+			$add = $this->base->addForm($this->idParent);	
+		}
+		$entity = $this->base->entity;
+		$legend = $this->entityTitle.':  Listing';
+		$this->_display = new \html\displayList($entity,$paging,$legend,$add,true);
+
+	}
+	
 	protected function listingSQL(){
 		if ($this->myActivity == 'NO'){
 			$sql = $this->base->sql->listTask($this->idParent,$this->resultPage,$this->perPage);
 		} elseif ($this->myActivity == 'PROJECT'){
-			$t = new task();
-			$projectId = $t->getProjectId($this->idParent);
-			$sql = $this->base->sql->listProject($projectId,$this->resultPage,$this->perPage);	
+			//$t = new task();
+			//$projectId = $t->getProjectId($this->idParent);
+			$sql = $this->base->sql->listProject($this->projectId,$this->resultPage,$this->perPage);	
 		} else {
-			$sql = $this->base->sql->listByDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			
+			$sql = $this->base->sql->listDoneBy($this->getActivityDoneBy(),$this->resultPage,$this->perPage);			
 		}
 		return $sql;
 	}

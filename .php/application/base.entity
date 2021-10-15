@@ -99,14 +99,14 @@ implements IbaseEntity{
 		$year = -1;
 		$month = -1;
 		$show = 'NO';
-		if (isset($_SESSION['year'])){
+		if (isset($_GET['year'])){
 			$year = $_GET['year'];
 		}
-		if (isset($_SESSION['month'])){
+		if (isset($_GET['month'])){
 			$month = $_GET['month'];
 		}
-		if (isset($_SESSION['showCalendar'])){
-			$show = $_GET['showCalendar'];
+		if (isset($_GET['show-calendar'])){
+			$show = $_GET['show-calendar'];
 		}
 		
 		$this->setCalendar($year,$month,$show);

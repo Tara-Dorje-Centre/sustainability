@@ -95,7 +95,7 @@ class task extends \application\entity{
 			}
 		}
 	
-		$tr = new \html\_tr('data-row',$cssItem);
+		$tr = new \html\_tr($cssItem);
 		
 		$td = new \html\_td();
 		$td->addContent($this->listRowLink());

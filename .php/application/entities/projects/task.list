@@ -114,10 +114,7 @@ class taskList extends \application\entityList{
 	
 	}
 	
-	protected function listingQuickEdit(){
-		$quickEdit =$this->base->addForm($this->idParent);		
-		return $quickEdit;
-	}
+	
 	*/
 	
 	//override listing start 

@@ -13,6 +13,7 @@ extends \application\forms\fields{
 	public $project;
 	public $doneBy;
 	public $started;
+	public $startDate;
     public $updated;
  	public $activityOrder;
 	public $hoursEstimated;
@@ -30,8 +31,9 @@ extends \application\forms\fields{
     	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
         $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
     	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
-    	$this->doneBy = new \application\forms\_user('done_by','done-by','DoneBy');
+    	$this->doneBy = new \application\forms\_user('done_by','done-by','Done By');
     	$this->started = new \application\forms\_date('started','started','Started');
+    	$this->startDate = new \application\forms\_name('start_date','not-used','Start Date');
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
 		$this->activityOrder = new \application\forms\_number('activity_order','activity-order','Activity Order');
     	$this->hoursEstimated = new \application\forms\_number('hours_estimated','hours-estimated','Effort Estimate');
@@ -48,12 +50,13 @@ extends \application\forms\fields{
 	
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
+   		$this->_register('project', $this->project);
 		$this->_register('task', $this->task);
 		$this->_register('type', $this->type);
    		$this->_register('highlight', $this->highlight);
-   		$this->_register('project', $this->project);
 		$this->_register('doneBy', $this->doneBy);
 		$this->_register('started', $this->started);
+		$this->_register('startDate', $this->startDate);
 		$this->_register('updated', $this->updated);
    		$this->_register('activityOrder', $this->activityOrder);
 		$this->_register('hoursEstimated',$this->hoursEstimated);
@@ -67,14 +70,15 @@ extends \application\forms\fields{
 	private function disableFields(){
 	
 	$this->updated->envEnabled(false);
-        //$this->started->envEnabled(false);
+        $this->startDate->envEnabled(false);
 		$this->name->envEnabled(false);
 		$this->id->displayEnabled(false);
 		$this->highlight->displayEnabled(false);
+		$this->started->displayEnabled(false);
 		$this->activityOrder->displayEnabled(false);
 		$this->id->listEnabled(false);
 		$this->name->listEnabled(false);
-		//$this->highlight->listEnabled(false);
+		$this->highlight->listEnabled(false);
 		$this->activityOrder->listEnabled(false);
         $this->updated->listEnabled(false);
         $this->started->listEnabled(false);

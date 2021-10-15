@@ -49,6 +49,7 @@ use connectionFunctions;
 		$c .= $this->nullReplace($this->fieldDoneBy)." done_by ";
 		return $c;
 	}
+	
 	protected function colsCalendarLinks($first = true){
 		$c = $this->select($first);
 		$c .= $this->dateYear($this->fieldDate)." AS year, ";
@@ -62,7 +63,15 @@ use connectionFunctions;
 		$g .= $this->dateMonth($this->fieldDate)." ";
 		return $g;
 	}
-
+	/*
+	public function calendarLinksDoneBy($doneBy = 'EVERYONE'){
+		$q = $this->colsCalendarLinks();
+		$q .= $this->tables(false);
+		$q .= $this->whereDoneBy($doneBy);
+		$q .= $this->groupByCalendarLinks();
+		return $q;
+	}
+*/
 	protected function groupByType($first = true){
 		$g = $this->groupBy($first);
 		$g .= " ".$this->fieldTypeId." ";
@@ -74,9 +83,7 @@ use connectionFunctions;
 		$q .= $this->fieldParentId." ";
 		return $q;
 	}
-
 	
-
 	protected function tables($joinTypes = false){
 		$f = " FROM ".$this->baseTable." ";
 		return $f;
@@ -129,10 +136,10 @@ use connectionFunctions;
 	public function count(){
 		$q = $this->colsCount();
 		$q .= $this->tables(false);
-		//$q .= $this->whereId($id);
 		return $q;	
 	}
 
+/*
 	public function countDoneBy($doneBy = 'EVERYONE'){
 		$q = $this->colsCount();
 		$q .= $this->tables(false);
@@ -140,7 +147,7 @@ use connectionFunctions;
 		return $q;
 	}
 
-
+*/
 	public function info($id = 0){
 		$q = $this->cols();
 		$q .= $this->tables(true);
@@ -170,7 +177,6 @@ use connectionFunctions;
 	} 
 	
 	public function summaryByType(){
-	
 		$q = $this->colsSummary();
 		$q .= $this->tables(false);
 		$q .= $this->groupByType();
@@ -178,23 +184,13 @@ use connectionFunctions;
 		return $q;
 	} 
 
-	public function calendarLinksDoneBy($doneBy = 'EVERYONE'){
-		$q = $this->colsCalendarLinks();
-		$q .= $this->tables(false);
-		$q .= $this->whereDoneBy($doneBy);
-		$q .= $this->groupByCalendarLinks();
-		return $q;
-	}
+	
 
 	public function options(){
-	//$selectedId = 0, $disabled = 'false'){
-	$q = $this->colsOption(true);
-	$q .= $this->tables(true);
-	/*if (($selectedId > 0) && ($disabled != 'false')){
-		$q .= $this->whereId($selectedId);
-	}*/
-	$q .= $this->orderBy()." caption ";
-	return $q;	
+		$q = $this->colsOption(true);
+		$q .= $this->tables(true);
+		$q .= $this->orderBy()." caption ";
+		return $q;	
 	}
 
 

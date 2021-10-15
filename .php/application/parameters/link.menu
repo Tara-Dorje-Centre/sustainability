@@ -61,21 +61,26 @@ class linkMenu extends \framework\_echo{
 		return $this->getLink($u, $caption, $css);
 	}
 	
-	public function addLink(link $l){
+	final public function addLink(link $l){
 		$this->_links[] = $l;
 	}
 	
-	public function addSpan(\html\_span $s){
+	final public function buildTextItem(string $text,$css='menu-links-item-text'){
+		$s = new \html\_span($css);
+		$s->setContent($text);
+		return $s;
+	}
+	
+	final public function addSpan(\html\_span $s){
 		$this->_links[] = $s;
 	}
 	
-	public function addTextItem(string $text,$css='menu-links-item-text'){
-		$s = new \html\_span($css);
-		$s->setContent($text);
+	final public function addTextItem(string $text,$css='menu-links-item-text'){
+		$s = $this->buildTextItem($text, $css);
 		$this->addSpan($s);
 	}
 	
-	protected function printLinks(){
+	final protected function printLinks(){
 		foreach ($this->_links as $l){
 			$item = $l->print();
 			$this->printItem($item);

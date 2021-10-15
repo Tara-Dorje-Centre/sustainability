@@ -6,6 +6,7 @@ class activity
 extends \application\entity{       
 
 	public $myActivity = 'NO';
+	public $projectId = 0;
 	//defined in base entity
 	//public $showCalendar = 'NO';
 	
@@ -36,6 +37,11 @@ extends \application\entity{
 	public function setShowCalendar($show = 'NO'){
 		$this->showCalendar = $show;
 	}
+	
+	public function setProjectId($id = 0){
+		$this->projectId = $id;
+	}
+	
 	
 	public function listHeading($periodicTasks = 'NO'): \html\_tr{
 	
@@ -73,13 +79,13 @@ extends \application\entity{
 		
 	}
 	
-	protected function listRowProjectLink(){
+	protected function projectRowlink(){
 		$p = new links\projectLinks();
 		$link = $p->view($this->f->project->name->value(),$this->f->project->id->value());
 		return $link->print();
 	}
 	
-	protected function listRowTaskLink(){
+	protected function taskRowlink(){
 		$t = new links\taskLinks();
 		$link = $t->view($this->f->task->name->value(),$this->f->task->id->value());
 		return $link->print();
@@ -87,20 +93,19 @@ extends \application\entity{
 	
 	public function listRowFormat(){
 		if ($this->myActivity != 'NO'){
-			$this->f->task->name->set($this->taskRowlink);
-			$cssItem = $this->f->highlight->value();
+			$this->f->task->name->set($this->taskRowlink());
 			if ($this->myActivity != 'PROJECT'){
-				$this->f->project->name->set($this->projectRowlink);
-			}
-		} else {
-			if ($this->f->hoursActual->value() == 0){
-				$cssItem = 'highlight-yellow';
-			} else {
-				$cssItem = 'none';
+				$this->f->project->name->set($this->projectRowlink());
 			}
 		}
+		if ($this->f->hoursActual->value() == 0){
+			$cssItem = 'highlight-yellow';
+		} else {
+			$cssItem = $this->f->highlight->value();
+		}
 		
-		$tr = new \html\_tr('data-row',$cssItem);
+		
+		$tr = new \html\_tr($cssItem);
 		
 		$td = new \html\_td();
 		$td->addContent($this->listRowLink());
@@ -249,6 +254,7 @@ extends \application\entity{
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 		
+		$this->edit->required->input($this->f->hoursEstimated);
 		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
 		$this->edit->required->input($this->f->hoursActual);
 		$this->edit->required->input($this->f->started);

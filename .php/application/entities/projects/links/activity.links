@@ -83,8 +83,20 @@ class activityLinks extends \application\links\entityLinks {
 		$caption = 'Task Calendar';
 		return $this->getLink($u,$caption);
 	}
+
+	//override paged listing adding activity arguments
+	public function pagedListing($count, $page, $rows = 10, $idParent = 0, $showCalendar = 'NO', $myActivity = 'NO',$idTask = 0,$idProject = 0){
+		$p = new \application\links\linkMenuPaged($rows,'results-page');
+
+		$url = $this->urlActivityList($idTask,0,$showCalendar,$myActivity,$idTask,$idProject);
+		return $p->makePagedLinks($url, $count,$page);
+	}
 	
 	
+	public function buildCalendarLink($caption,$baseUrl,$year,$month){
+		$this->request->setUrlCalendarParameters($baseUrl,$year,$month);
+		return $this->getLink($baseUrl,$caption,'calendar-links-item');
+	}
 	
 }
 ?>
