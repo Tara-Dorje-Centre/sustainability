@@ -6,10 +6,6 @@ extends \application\entityList{
 
 	public $myActivity = 'NO';
 	public $projectId = 0;
-	//defined in base entity
-	//public $showCalendar = 'NO';
-	//public $prevCalendarLink = '';
-	//public $nextCalendarLink = '';
 	
 	public function __construct(){
 		parent::__construct();
@@ -28,11 +24,12 @@ extends \application\entityList{
 		}
 		$this->setMyActivity($my);
 		$this->base->setMyActivity($my);
-		
+		/*
 		$show = 'NO';
 		if (isset($_GET['show-calendar'])){
 			$show = $_GET['show-calendar'];
 		}
+		*/
 		//$this->setShowCalendar($show);
 		$this->base->setShowCalendar($this->showCalendar);
 		
@@ -144,16 +141,16 @@ extends \application\entityList{
 	//override listing start 
 	//to add args to paged listing
 	//to hide quickedit on activity history
-	protected function listingStart(){
+	protected function listingStart(\application\links\url $altUrl = NULL){
 		//added arguments for project history
-		$paging = $this->base->links->pagedListing($this->found,$this->resultPage,$this->perPage, $this->idParent,$this->showCalendar,$this->myActivity,$this->idParent,$this->projectId);	
+		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage, $this->idParent,$this->showCalendar,$this->myActivity,$this->idParent,$this->projectId);	
 		$add = '';
 		if ($this->myActivity == 'NO'){
 			$add = $this->base->addForm($this->idParent);	
 		}
 		$entity = $this->base->entity;
 		$legend = $this->entityTitle.':  Listing';
-		$this->_display = new \html\displayList($entity,$paging,$legend,$add,true);
+		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
 
 	}
 	

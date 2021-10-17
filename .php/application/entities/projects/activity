@@ -285,6 +285,19 @@ extends \application\entity{
 		
 	}
 	
+	protected function updateTaskHoursActual(){
+		$sql = "SELECT SUM(a.hours_actual) hours ";
+		$sql .= "FROM activities a ";
+		$sql .= "WHERE a.task_id = ".$this->f->task->id->value();
+		$hours = $this->sql->getScalar($sql, 'hours', 0);
+		
+		$sql = " UPDATE tasks t ";
+		$sql .= " SET hours_actual = ".$hours;
+		$sql .= " WHERE t.id = ".$this->f->task->id->value();
+		
+		$result = $this->sql->runStatement($sql);
+	
+	}
 	
 	protected function saveUpdate(){
 			$sql = " UPDATE activities a ";
@@ -303,7 +316,7 @@ extends \application\entity{
 
 			$result = $this->sql->runStatement($sql);
 			
-			//$this->task->updateActivitySummary();
+			$this->updateTaskHoursActual();
 	}
 	
 	protected function saveInsert(){
@@ -341,7 +354,7 @@ extends \application\entity{
 			$this->id = $this->sql->getInsertedId();
 			$this->f->id->set($this->id);
 
-			//$this->task->updateActivitySummary();
+			$this->updateTaskHoursActual();
 	}
 	
 	

@@ -17,8 +17,8 @@ extends \application\sql\entitySQL{
 		$c .= " a.task_id,  ";
 		$c .= " t.name task_name, ";
 		$c .= " a.type_id, ";
-		$c .= " tt.name type_name, ";
-		$c .= " tt.highlight_style, ";	
+		$c .= " at.name type_name, ";
+		$c .= " at.highlight_style, ";	
 		$c .= " t.project_id, ";
 		$c .= " p.name project_name, ";
 		$c .= " a.done_by,  ";

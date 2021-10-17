@@ -45,6 +45,7 @@ class projectLinks extends \application\links\entityLinks {
 			$a= new activityLinks();
 			$this->addLink($a->projectCalendar($id));
 			$this->addLink($a->projectActivity($id));		
+			
 			//$m = new materialLinks();
 			//$this->addLink($m->list(-1,'ProjectMaterials',$id,'PROJECT','yes'));
 			//$r = new receiptLinks();

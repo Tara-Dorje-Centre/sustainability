@@ -83,12 +83,18 @@ class taskFields extends \application\forms\fields{
        // $this->started->envEnabled(false);
         $this->hoursActual->envEnabled(false);
        
-        $this->id->listEnabled(false);
+       
+
         
+        $this->id->displayEnabled(false);
+        $this->project->displayEnabled(false);
+        $this->highlight->displayEnabled(false);
+        
+        $this->id->listEnabled(false);
         $this->description->listEnabled(false);
         $this->summary->listEnabled(false);
         $this->highlight->listEnabled(false);
-        $this->hoursActual->listEnabled(false);
+        //$this->hoursActual->listEnabled(false);
         $this->hoursEstimated->listEnabled(false);
         $this->hoursNotes->listEnabled(false);
         $this->updated->listEnabled(false);

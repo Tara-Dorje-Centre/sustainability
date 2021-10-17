@@ -54,7 +54,7 @@ public function echoPrint(bool $show = true,string $msg = 'message', string $f =
 }
 public function echoPrintline(string$msg = 'message'){
 	//disable all echo printing
-	//$this->echoEnabled = false;
+	$this->echoEnabled = false;
 	if ($this->echoEnabled == true){
 		echo $msg.'<br />'.PHP_EOL;
 	}

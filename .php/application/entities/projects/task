@@ -87,7 +87,7 @@ class task extends \application\entity{
 			if ($this->f->hoursActual->value() == 0){
 				$cssItem = 'highlight-yellow';
 			} else {
-				$cssItem = 'none';
+				$cssItem = $this->f->highlight->value();
 			}
 		}
 	
@@ -152,7 +152,7 @@ class task extends \application\entity{
 		$title = $name.'<br />';
 
 		if ($this->pageMode != 'ADD'){
-			$title .= 'Task: '.$this->f->name->value();
+			$title .= $this->pageMode.' Task: '.$this->f->name->value();
 		} else {
 			$title .= 'Add New Task.';
 		}
@@ -160,10 +160,17 @@ class task extends \application\entity{
 		$this->_pageTitle = $title;	
 	}
 	 
-	 public function display(){
+	protected function display(){
 		$detail = parent::display();
-
-		return $detail;
+		//$detail .= $this->totals->display();
+		//display activitylist with correct paging link
+		$t = new activityList();
+		$t->idParent = $this->id;
+		$t->setFoundCount();
+		$t->setPaging($this->resultPage,10);
+		$u = $this->links->viewUrl($this->id);
+		$detail .= $t->getListing($u);
+		 return $detail;
 	}
 	
 	/*

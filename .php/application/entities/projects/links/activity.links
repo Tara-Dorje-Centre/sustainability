@@ -85,10 +85,14 @@ class activityLinks extends \application\links\entityLinks {
 	}
 
 	//override paged listing adding activity arguments
-	public function pagedListing($count, $page, $rows = 10, $idParent = 0, $showCalendar = 'NO', $myActivity = 'NO',$idTask = 0,$idProject = 0){
+	public function pagedListing(\application\links\url $altUrl = NULL, $count = 0, $page = 1, $rows = 10, $idParent = 0, $showCalendar = 'NO', $myActivity = 'NO',$idTask = 0,$idProject = 0){
 		$p = new \application\links\linkMenuPaged($rows,'results-page');
-
-		$url = $this->urlActivityList($idTask,0,$showCalendar,$myActivity,$idTask,$idProject);
+		if (is_null($altUrl)){
+			$url = $this->urlActivityList($idTask,0,$showCalendar,$myActivity,$idTask,$idProject);
+		} else {
+			$url = $altUrl;
+		}
+		
 		return $p->makePagedLinks($url, $count,$page);
 	}
 	

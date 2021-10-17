@@ -41,13 +41,13 @@ abstract class entityList extends entity{
 		return $details;
 	}
 	
-	protected function listingStart(){
+	protected function listingStart(\application\links\url $altUrl = NULL){
 
-		$paging = $this->base->links->pagedListing($this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent);	
+		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent);	
 		$add = $this->base->addForm($this->idParent);	
 		$entity = $this->base->entity;
 		$legend = $this->entityTitle.':  Listing';
-		$this->_display = new \html\displayList($entity,$paging,$legend,$add,true);
+		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
 
 	}
 	
@@ -72,8 +72,8 @@ abstract class entityList extends entity{
 		}
 	}
 	
-	public function getListing(){
-		$this->listingStart();
+	public function getListing(\application\links\url $altUrl = NULL){
+		$this->listingStart($altUrl);
 		$this->listingRows();
 		return $this->_display->print();
 	}

@@ -1,7 +1,8 @@
 <?php
 namespace application\system;
 
-class siteSettings extends \application\entity{
+class siteSettings 
+extends \application\entity{
 
  	public function __construct(){
 

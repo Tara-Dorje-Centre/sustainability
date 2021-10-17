@@ -45,19 +45,14 @@ class project extends \application\entity{
 	
 	protected function display(){
 		$detail = parent::display();
-		
-		/*
-		$detail .= openDisplayDetails();
-		$detail .= $this->totals->display();
-		
-		//taskList constructor has no args
-		//need to set parentId to current project
-		 $tasks = new taskList('VIEW', 0, $this->id);
-		 $tasks->setPaging($this->resultPage,10);
-		 $link = $this->links->detail('VIEW',$this->id);
-		 $detail .= $tasks->getListing($link);
-		 $detail .= closeDisplayDetails();
-		 */
+		//$detail .= $this->totals->display();
+		//display tasklist with correct paging link
+		$t = new taskList();
+		$t->idParent = $this->id;
+		$t->setFoundCount();
+		$t->setPaging($this->resultPage,10);
+		$u = $this->links->viewUrl($this->id);
+		$detail .= $t->getListing($u);
 		 return $detail;
 	}
 	
