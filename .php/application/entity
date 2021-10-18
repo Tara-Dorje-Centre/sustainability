@@ -104,11 +104,13 @@ implements \application\Ientity{
 	}
 	
 	protected function listRowLink(){
-		return $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
+		$link = $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
+		return $link;
 	}
 	
 	protected function listRowFormat(){
-		$tr = new \html\_tr($this->f->highlight->value());
+		$css = $this->f->highlight->value();
+		$tr = new \html\_tr($css);
 
 		$tr->makeData($this->listRowLink());
 		$tr->addContent($this->f->listDetail());		
@@ -137,6 +139,7 @@ implements \application\Ientity{
 	public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
+		$this->idParent = $idParent;
 		if (isset($this->f->parent->id) AND ($idParent >= 0)){
 			$this->f->parent->id->set($idParent);
 		}

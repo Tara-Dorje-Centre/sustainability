@@ -3,13 +3,17 @@ namespace application\entities\projects;
 
 class material extends \application\entity{
 
-  	
+	public $displayLevel = 'ACTIVITY';
+  	public $showSummary = 'NO';
+	public $projectId = 0;
+	public $taskId = 0;
+	public $activityId = 0;
+	
 	public function __construct(){
 		parent::__construct();
 	
 		$this->entity = 'material';
 	 	$this->entityTitle = 'Material';
-  	 	//$this->pageSave = 'portal.php';
   	 	
 		$this->f = new forms\materialFields();
 		$this->f->setEntity($this->entity);
@@ -21,138 +25,250 @@ class material extends \application\entity{
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 
-
+		if ($this->id > 0 AND $this->idParent == 0){
+			$this->idParent = $this->getActivityId($this->id);
+		}
 	}
+	
+	public function setDisplayLevel($display = 'ACTIVITY'){
+		$this->displayLevel = $display;
+	}
+	
+	
+	public function setShowSummary($show = 'NO'){
+		$this->showSummary = $show;
+	}
+	
+	public function setProjectId($id = 0){
+		$this->projectId = $id;
+	}
+	
+	public function setTaskId($id = 0){
+		$this->taskId = $id;
+	}
+	
+	public function setActivityId($id = 0){
+		$this->activityId = $id;
+	}
+	
+	
+	public function getActivityId($materialId){
+		$sql = $this->sql->getActivityId($materialId);
+		$id = $this->sql->getScalar($sql,'activity_id',0);
+		return $id;
+	}
+	
+	public function getActivityName($materialId){
+		$sql = $this->sql->getActivityName($materialId);
+		$name = $this->sql->getScalar($sql,'name',0);
+		return $name;
+	}
+	
+	
 	protected function makePageTitle(){	
-		$title = openDiv('section-heading-title','none');
-		$title .= $this->f->parentProject->name->value().br();
-		$title .= 'Task: '.$this->parentTask->name->value();		
-		$title .= closeDiv();
+		if ($this->pageMode == 'ADD'){
+			$a = new activity();
+			$activityName = $a->getActivityName($this->idParent);
+			$taskName = $a->getTaskName($this->idParent);
+			$projectName = $a->getProjectName($this->idParent);
+		} else {
+			$projectName = $this->f->project->name->value();
+			$taskName = $this->f->task->name->value();
+			$activityName = $this->f->activity->name->value();
+		}
+		$title = 'Project: '.$projectName.'<br/>';
+		$title .= 'Task: '.$taskName.'<br/>';		
+		$title .= 'Activity: '.$activityName.'<br/>';
+		$title .= $this->pageMode.' Material';
 		$this->_pageTitle = $title;
-	}
+	}	
 	
 	
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
+		$a = new activity();
+		$projectId = $a->getProjectId($this->idParent);
+		$taskId = $a->getTaskId($this->idParent);
 		
-		$projects = new ProjectLinks($menuType,$menuStyle);
-		$tasks = new TaskLinks($menuType,$menuStyle);
-		$materials = new MaterialLinks($menuType,$menuStyle);
-					
-		$menu = $projects->openMenu('section-heading-links');
-
-		$menu .= $projects->detailViewHref($this->f->parentProject->id->value());
-		if ($this->task->project->materialsCount > 0){
-//			$menu .= $projects->resetMenu();
-			$menu .= $materials->listingHref(0,'ProjectMaterials',$this->f->parentProject->id->value(),'PROJECT','YES');
-		}
 		
-		$menu .= $projects->resetMenu();
-		$menu .= $tasks->detailViewHref($this->f->parentTask->id->value);
-		if ($this->task->materialCount > 0){
-			$menu .= $materials->listingHref($this->f->parentTask->id->value,'TaskMaterials',0,'TASK','NO');
-		}
-		$menu .= $projects->resetMenu();
+		$p = new links\projectLinks();
+		$t = new links\taskLinks();
+		$a = new links\activityLinks();
+		$this->links->addLink($p->view('View Project', $projectId));
+		$this->links->addLink($t->view('View Task', $taskId));
+		$this->links->addLink($a->view('View Activity', $this->idParent));
+		//can add lists for task and project
+		$this->links->addLink($this->links->list('Activity Materials', 0, $this->idParent));
 		
 		if ($this->pageMode == 'VIEW'){
-			$menu .= $materials->detailEditHref($this->id);
-		} elseif ($this->pageMode == 'EDIT'){
+			$this->links->addLink($this->links->edit('Edit Material', $this->id));
+			$this->links->addLink($this->links->add('New Material', $this->idParent));
+		}		
+		
+		if ($this->pageMode == 'EDIT'){
+			$this->links->addLink($this->links->view('View Material', $this->id));
+		}
+
+		$this->_pageMenu = $this->links->print();
+
+	}
+	
+	
+	public function display(){
+	
+		$detail = parent::display();
+
+		return $detail;
+	}
+	
+	
+	
+	protected function projectRowlink(){
+		$p = new links\projectLinks();
+		$link = $p->view($this->f->project->name->value(),$this->f->project->id->value());
+		$link->setCSS('list-item-link');
+		return $link->print();
+	}
+	
+	protected function taskRowlink(){
+		$t = new links\taskLinks();
+		$link = $t->view($this->f->task->name->value(),$this->f->task->id->value());
+		$link->setCSS('list-item-link');
+		return $link->print();
+	}
+	
+	protected function activityRowlink(){
+		$t = new links\activityLinks();
+		$link = $t->view($this->f->activity->name->value(),$this->f->activity->id->value());
+		$link->setCSS('list-item-link');
+		return $link->print();
+	}
+	
+	public function listRowFormat(){
+		$this->f->project->name->set($this->projectRowlink());
+		$this->f->task->name->set($this->taskRowlink());
+		$this->f->activity->name->set($this->activityRowlink());
 			
-			$menu .= $materials->detailViewHref($this->id);
+		$tr = new \html\_tr($this->f->highlight->value());
+		$td = new \html\_td();
+		$td->addContent($this->listRowLink());
+		$tr->addContent($td->print());
+		
+		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
+		// build link and display in linkText
+			$link = $this->links->buildLink($this->f->linkUrl->value(), $this->f->linkText->value());
+			$this->f->linkText->set($link->print());
 		}
 		
-		$menu .= $projects->closeMenu();
-		$this->_pageMenu = $menu;
+		$tr->addContent($this->f->listDetail());
+	
+		return $tr;
+			
 	}
-
-	public function display(){
-		parent::display();
-		
-		if (($this->f->linkText->value() != '') && ($this->f->linkUrl->value() != '')){
-			$l = new MaterialLinks('DIV','menu');
-			$link = $l->formatHref($this->f->linkText->value(),$this->linkUrl->value(),'_blank');
-			$detail .= captionedParagraph('a-weblink','Web Link',$link);
-		}		
-
-		
-		return $detail;
-	}	
 	
 	protected function setDefaults(){
 		parent::setDefaults();
-	
-		if ($this->pageMode == 'ADD'){		
-	
-			if (isset($_SESSION['last-material-date'])){
-			 $this->dateReported->setDefault($_SESSION['last-material-date']);
-			}
-			
-			if (isset($_SESSION['last-material-paid-to'])){
-			 $this->paidTo->setDefault($_SESSION['last-material-paid-to']);
-			}
-		
-			if (isset($_SESSION['last-material-done-by'])){
-			 $this->doneBy->setDefault($_SESSION['last-material-done-by']);
-			} 
+		if ($this->pageMode == 'ADD'){
+	 		$this->f->reset(true);
+	 		$this->f->reported->set($this->f->currentTimestamp);
+	 		$this->f->doneBy->set($this->f->currentUser);
+	 		$this->setSessionDefaults();
+	 	}
+	}
+
+	protected function setSessionDefaults(){
+		if (isset($_SESSION['last-material-type-id'])){
+			$this->f->type->id->set($_SESSION['last-material-type-id']);
+		}
+		if (isset($_SESSION['last-material-quantity-type-id'])){
+			$this->f->quantityType->id->set($_SESSION['last-material-quantity-type-id']);
+		}
+		if (isset($_SESSION['last-material-location-id'])){
+			$this->f->location->id->set($_SESSION['last-material-location-id']);
+		}
+		if (isset($_SESSION['last-material-paid-to'])){
+			$this->f->paidTo->set($_SESSION['last-material-paid-to']);
+		}
+		if (isset($_SESSION['last-material-done-by'])){
+			$this->f->doneBy->se($_SESSION['last-material-done-by']);
+		} 
+		if (isset($_SESSION['last-material-reported'])){
+			$this->f->reported->set($_SESSION['last-material-reported']);
 		}
 	}
 	
+	private function setRecentValues(){
+		//called by collectPostValues
+		$_SESSION['last-material-type-id'] = $this->f->type->id->value();
+		$_SESSION['last-material-quantity-type-id'] = $this->f->quantityType->id->value();
+		$_SESSION['last-material-location-id'] = $this->f->location->id->value();
+		$_SESSION['last-material-paid-to'] = $this->f->paidTo->value();
+ 		$_SESSION['last-material-done-by'] = $this->f->doneBy->value();
+ 		$_SESSION['last-material-reported'] = $this->f->reported->value();
+	}
+	
 	public function editForm(){
-	
+		if ($this->idParent > 0){
+			$this->f->activity->id->set($this->idParent);
+		}
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),$this->f->activity->id->value(),0);
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
 		
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
-	
+		$m = new \application\entities\reference\materialType;
+		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
+		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 		
 		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->doneBy);
-		$this->edit->required->input($this->f->reported);
 		$this->edit->required->input($this->f->paidTo);
+		$this->edit->required->input($this->f->reported);
 		
 		$this->edit->required->input($this->f->quantity);
-		$this->edit->required->input($this->f->costUnit);
-		
-		$base = new quantityType('OPTIONS');
-		$select = $base->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
-		$this->edit->required->choice($this->f->quantityType->id,$select);
-		
 
-		$base = new materialType('OPTIONS');
-		$select = $base->options($this->f->typeEntity->id->value(),$this->f->typeEntity->env->variable());
-		$this->edit->required->choice($this->f->typeEntity->id,$select);
+		$m = new \application\entities\reference\measureTypeUnit;
+		$select = $m->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
+		$this->edit->required->inputChoice($this->f->quantityType->id,$select->print());
 		
-		$this->f->costEstimated->setCaption('Estimated Cost (Based on unit cost and quantity)');
-		$this->f->costActual->setCaption('Actual Cost (reset when task costs are approved)');
-		
+		$this->edit->required->input($this->f->costUnit);
 		$this->edit->optional->input($this->f->costEstimated);
 		$this->edit->optional->input($this->f->costActual);
-		$this->edit->optional->input($this->f->linkText);
-		$this->edit->optional->input($this->f->linkUrl);
+	
+		$m = new \application\entities\reference\location;
+		$select = $m->options($this->f->location->id->value(),$this->f->location->id->env->variable());
+		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
 		
 		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->linkUrl);
+		$this->edit->optional->input($this->f->linkText);
 		$this->edit->optional->input($this->f->notes);
 		
-		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		$this->edit->hidden->inputHidden($this->f->task->id);
+		
 		$this->edit->hidden->inputHidden($this->f->id);
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
-
-		return $this->edit->close();
+		$this->edit->hidden->inputHidden($this->f->activity->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
+		
+		return $this->edit->print();
 	}
 	
 	public function collectPostValues(){
 		parent::collectPostValues();
-		$_SESSION['last-material-paid-to'] = $this->paidTo->value();
- 		$_SESSION['last-material-done-by'] = $this->doneBy->value();
- 		$_SESSION['last-material-date'] = $this->reported->value();
+		$this->echoState(true, 'collectPostValues');
+	
+		$this->idParent = $this->f->activity->id->value();
+		
+		$this->setCostDetails();
+		$this->setRecentValues();
+	}
+	
+	private function setCostDetails(){
 		
 		$this->f->costEstimated->set($this->f->costUnit->value() * $this->f->quantity->value());
 
-		$this->setParentTask();
 	}
+	
+	
+	
 
 	protected function saveUpdate(){
 	
@@ -169,18 +285,18 @@ class material extends \application\entity{
 			$sql .= " m.paid_to = '".$this->f->paidTo->value()."', ";			
 			$sql .= " m.link_text = '".$this->f->linkText->value()."', ";
 			$sql .= " m.link_url = '".$this->f->linkUrl->value()."', ";
-			$sql .= " m.type_id = ".$this->f->typeEntity->id->value().", ";
+			$sql .= " m.type_id = ".$this->f->type->id->value().", ";
 			$sql .= " m.location_id = ".$this->f->location->id->value().", ";
 			$sql .= " m.quantity = ".$this->f->quantity->value().", ";
-			$sql .= " m.qty_unit_measure_id = ".$this->f->quantityUnits->id->value().", ";
+			$sql .= " m.qty_unit_measure_id = ".$this->f->quantityType->id->value().", ";
 			$sql .= " m.cost_unit = ".$this->f->costUnit->value().", ";
 			$sql .= " m.cost_estimated = ".$this->f->costEstimated->value()." ";
 			$sql .= " m.cost_actual = ".$this->f->costActual->value()." ";
 			$sql .= " WHERE m.id = ".$this->f->id." ";
 
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->task->resetMaterialsAuthorization();
+			//$this->task->resetMaterialsAuthorization();
 			
 		}
 			
@@ -189,7 +305,7 @@ class material extends \application\entity{
 			$sql = " INSERT INTO materials ";
 			$sql .= " (name, ";
 			$sql .= " description, ";
-			$sql .= " task_id, ";
+			$sql .= " activity_id, ";
 			$sql .= " location_id, ";
 			$sql .= " date_reported, ";
 			$sql .= " done_by, ";
@@ -207,7 +323,7 @@ class material extends \application\entity{
 			$sql .= " VALUES (";
 			$sql .= "'".$this->f->name->value()."', ";
 			$sql .= "'".$this->f->description->value()."', ";
-			$sql .= "".$this->f->taskEntity->id->value().", ";
+			$sql .= "".$this->f->activity->id->value().", ";
 			$sql .= "".$this->f->location->id->value().", ";
 			$sql .= " '".$this->f->reported->value()."', ";
 			$sql .= " '".$this->f->doneBy->value()."', ";
@@ -218,15 +334,17 @@ class material extends \application\entity{
 			$sql .= "".$this->f->quantity->value().", ";
 			$sql .= "".$this->f->costUnit->value().", ";
 			$sql .= "".$this->f->costEstimated->value().", ";
-			//$sql .= "".$this->f->costActual.", ";
-			$sql .= " ".$this->f->typeEntity->id->value().", ";
-			$sql .= " ".$this->f->quantityUnits->id->value().", ";
+			$sql .= "".$this->f->costActual.", ";
+			$sql .= " ".$this->f->type->id->value().", ";
+			$sql .= " ".$this->f->quantityType->id->value().", ";
 			$sql .= "'".$this->f->notes->value()."') ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->f->id = dbInsertedId();
-			$this->f->task->f->resetMaterialsAuthorization();
+			$this->id = $this->sql->getInsertedId();
+			$this->f->id->set($this->id);
+			
+			//$this->f->task->f->resetMaterialsAuthorization();
 		
 	
 	}

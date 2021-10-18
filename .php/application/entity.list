@@ -44,6 +44,7 @@ abstract class entityList extends entity{
 	protected function listingStart(\application\links\url $altUrl = NULL){
 
 		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent);	
+		
 		$add = $this->base->addForm($this->idParent);	
 		$entity = $this->base->entity;
 		$legend = $this->entityTitle.':  Listing';

@@ -1,10 +1,9 @@
 CREATE TABLE materials (
   id bigint(20) NOT NULL,
-  task_id bigint(20) NOT NULL,
-    activity_id bigint(20) NOT NULL DEFAULT '0',
-  location_id bigint(20) NOT NULL,
+  activity_id bigint(20) NOT NULL DEFAULT '0',
+  location_id bigint(20) NOT NULL DEFAULT '0',
   name varchar(100) COLLATE latin1_general_ci NOT NULL,
-  description varchar(1000) COLLATE latin1_general_ci NOT NULL,
+  description varchar(1000) COLLATE latin1_general_ci NULL,
   date_reported timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   updated timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   quantity double(10,2) NOT NULL DEFAULT '1.00',
@@ -12,10 +11,11 @@ CREATE TABLE materials (
   cost_unit double(10,2) NOT NULL DEFAULT '0.00',
   cost_estimated double(10,2) NOT NULL DEFAULT '0.00',
   cost_actual double(10,2) NOT NULL DEFAULT '0.00',
-  notes varchar(1000) COLLATE latin1_general_ci NOT NULL,
-  link_url varchar(1000) COLLATE latin1_general_ci NOT NULL,
-  link_text varchar(100) COLLATE latin1_general_ci NOT NULL,
+  notes varchar(1000) COLLATE latin1_general_ci NULL,
+  link_url varchar(1000) COLLATE latin1_general_ci NULL,
+  link_text varchar(100) COLLATE latin1_general_ci NULL,
   done_by varchar(100) COLLATE latin1_general_ci NOT NULL,
+  paid_to varchar(100) COLLATE latin1_general_ci NULL,
   type_id bigint(20) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
 

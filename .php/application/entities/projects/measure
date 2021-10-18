@@ -2,12 +2,17 @@
 namespace application\entities\projects;
 
 class measure extends \application\entity {
+	
+	public $displayLevel = 'ACTIVITY';
+	public $projectId = 0;
+	public $taskId = 0;
+	public $activityId = 0;
+	
 	public function __construct(){
 		parent::__construct();
 
 		$this->entity = 'measure';
 		$this->entityTitle = 'Measurement';
-	 // 	$this->pageSave = 'portal.php';
 		
 		$this->f = new forms\measureFields();
 		$this->links = new links\measureLinks();
@@ -16,120 +21,221 @@ class measure extends \application\entity {
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 
-
+		if ($this->id > 0 AND $this->idParent == 0){
+			$this->idParent = $this->getActivityId($this->id);
+		}
 	}
-		
-	public function setDetails(){
-		parent::setDetails();
-		$this->setParentTask();			
-		
+	
+	public function setDisplayLevel($display = 'ACTIVITY'){
+		$this->displayLevel = $display;
+	}
+	
+	public function setProjectId($id = 0){
+		$this->projectId = $id;
+	}
+	
+	public function setTaskId($id = 0){
+		$this->taskId = $id;
+	}
+	
+	public function setActivityId($id = 0){
+		$this->activityId = $id;
+	}
+	
+	public function getActivityId($measureId){
+		$sql = $this->sql->getActivityId($measureId);
+		$id = $this->sql->getScalar($sql,'activity_id',0);
+		return $id;
+	}
+	
+	public function getActivityName($measureId){
+		$sql = $this->sql->getActivityName($measureId);
+		$name = $this->sql->getScalar($sql,'name',0);
+		return $name;
+	}
+	
+	protected function makePageTitle(){	
+		if ($this->pageMode == 'ADD'){
+			$a = new activity();
+			$activityName = $a->getActivityName($this->idParent);
+			$taskName = $a->getTaskName($this->idParent);
+			$projectName = $a->getProjectName($this->idParent);
+		} else {
+			$projectName = $this->f->project->name->value();
+			$taskName = $this->f->task->name->value();
+			$activityName = $this->f->activity->name->value();
+		}
+		$title = 'Project: '.$projectName.'<br/>';
+		$title .= 'Task: '.$taskName.'<br/>';		
+		$title .= 'Activity: '.$activityName.'<br/>';
+		$title .= $this->pageMode.' Measure';
+		$this->_pageTitle = $title;
 	}	
 	
-	public function setParentTask(){
-		$this->task->setDetails($this->pageMode, $this->task->id->value());
-	}
-		
-	protected function makePageTitle(){	
-		
-		$title .= $this->task->project->name->value().br();
-		$title .= 'Task: '.$this->task->name->value();		
-
-		$this->_pageTitle = $title;
-	}
-	
-	
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
+		$a = new activity();
+		$projectId = $a->getProjectId($this->idParent);
+		$taskId = $a->getTaskId($this->idParent);
 		
-		$projects = new ProjectLinks($menuType,$menuStyle);
-		$tasks = new TaskLinks($menuType,$menuStyle);
-		$measures = new MeasureLinks($menuType,$menuStyle);
-					
-		$menu = $projects->openMenu('section-heading-links');
-
-		$menu .= $tasks->detailViewHref($this->task->id);
-		$menu .= $projects->detailViewHref($this->task->project->id);			
-		//$menu .= $measures->listingHref($this->task->id);
-		$menu .= $projects->resetMenu();
+		
+		$p = new links\projectLinks();
+		$t = new links\taskLinks();
+		$a = new links\activityLinks();
+		$this->links->addLink($p->view('View Project', $projectId));
+		$this->links->addLink($t->view('View Task', $taskId));
+		$this->links->addLink($a->view('View Activity', $this->idParent));
+		//can add lists for task and project
+		$this->links->addLink($this->links->list('Activity Measures', 0, $this->idParent));
+		
 		if ($this->pageMode == 'VIEW'){
-			$menu .= $measures->detailEditHref($this->id);
-		}
+			$this->links->addLink($this->links->edit('Edit Measure', $this->id));
+			$this->links->addLink($this->links->add('New Measure', $this->idParent));
+		}		
+		
 		if ($this->pageMode == 'EDIT'){
-			$menu .= $measures->detailViewHref($this->id);
+			$this->links->addLink($this->links->view('View Measure', $this->id));
 		}
-		
-		$menu .= $projects->closeMenu();
-		$this->_pageMenu = $menu;
-	}
-		
 
-	public function getMeasureTypeAndUnitSymbol(){
-		$t = $this->measureType.'('.$this->unitSymbol.')';
-		return $t;
+		$this->_pageMenu = $this->links->print();
+
 	}
 	
 	
+	public function display(){
+		$detail = parent::display();
+
+		return $detail;
+	}
+	
+	
+	protected function projectRowlink(){
+		$p = new links\projectLinks();
+		$link = $p->view($this->f->project->name->value(),$this->f->project->id->value());
+		$link->setCSS('list-item-link');
+		return $link->print();
+	}
+	
+	protected function taskRowlink(){
+		$t = new links\taskLinks();
+		$link = $t->view($this->f->task->name->value(),$this->f->task->id->value());
+		$link->setCSS('list-item-link');
+		return $link->print();
+	}
+	
+	protected function activityRowlink(){
+		$t = new links\activityLinks();
+		$link = $t->view($this->f->activity->name->value(),$this->f->activity->id->value());
+		$link->setCSS('list-item-link');
+		return $link->print();
+	}
+	
+	public function listRowFormat(){
+		$this->f->project->name->set($this->projectRowlink());
+		$this->f->task->name->set($this->taskRowlink());
+		$this->f->activity->name->set($this->activityRowlink());
+			
+		$tr = new \html\_tr($this->f->highlight->value());
+		$td = new \html\_td();
+		$td->addContent($this->listRowLink());
+		$tr->addContent($td->print());
+		
+		$tr->addContent($this->f->listDetail());
+	
+		return $tr;
+			
+	}
+	
+	protected function setDefaults(){
+		parent::setDefaults();
+		if ($this->pageMode == 'ADD'){
+	 		$this->f->reset(true);
+	 		$this->f->reported->set($this->f->currentTimestamp);
+	 		$this->f->doneBy->set($this->f->currentUser);
+			$this->setSessionDefaults();
+	 	}
+	}
+
+	private function setSessionDefaults(){
+		if (isset($_SESSION['last-measure-location-id'])){
+			$this->f->location->id->set($_SESSION['last-measure-location-id']);
+		}
+		if (isset($_SESSION['last-measure-type-id'])){
+			$this->f->type->id->set($_SESSION['last-measure-type-id']);
+		}
+		if (isset($_SESSION['last-measure-done-by'])){
+			$this->f->doneBy->set($_SESSION['last-measure-done-by']);
+		}
+		if (isset($_SESSION['last-measure-reported'])){
+			$this->f->reported->set($_SESSION['last-measure-reported']);
+		}
+	}
+	
+	private function setRecentValues(){
+		//called by collectPostValues
+		$_SESSION['last-measure-location-id'] = $this->f->location->id->value();
+		$_SESSION['last-measure-type-id'] = $this->f->type->id->value();
+ 		$_SESSION['last-measure-done-by'] = $this->f->doneBy->value();
+ 		$_SESSION['last-measure-reported'] = $this->f->reported->value();
+	}
+
 	public function editForm(){
+		if ($this->idParent > 0){
+			$this->f->activity->id->set($this->idParent);
+		}
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),$this->f->activity->id->value(),0);
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
-
+		$m = new \application\entities\reference\measureTypeUnit;
+		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
+		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 		
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		$this->f->setEntity($this->entity);
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
-	
+		$m = new \application\entities\reference\location;
+		$select = $m->options($this->f->location->id->value(),$this->f->location->id->env->variable());
+		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
 		
-		$m = new measureType('OPTIONS');
-		$fields .= $m->optionsField($this->f->typeEntity->id);
-		 //->value(),$this->typeEntity->id->env->variable());
-		//$fields .=$this->f->typeEntity->id->inputChoice($select);
+		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->value);
+		$this->edit->required->input($this->f->doneBy);
+		$this->edit->required->input($this->f->reported);
 		
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
+
+		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->hidden->inputHidden($this->f->activity->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
 		
-		$fields .= $this->value->input();
-
-		$m = new MeasureTypeUnit;
-		$fields .= $m->optionsField($this->measureTypeUnit->id);
-		//>value(),$this->measureTypeUnit->id->env->variable());
-		//$fields .= $this->measureTypeUnit->id->inputChoice($select);
-
-		$fields .= $this->reported->input();
-		$fields = $this->name->input();
-		$fields .= $this->description->input();
-		$fields .= $this->notes->input();
-
-
-
-		//hidden fields and submit,reset buttons
-		$hidden = getHiddenInput('mode', $this->pageMode);
-		$hidden .= $this->task->id->inputHidden();
-		$hidden .= $this->location->id->inputHidden();
-
-		$hidden .= $this->id->inputHidden();
-		
-		
-		$edit->submit->addContent(getSaveChangesResetButtons());
-
-		return $edit->close();
+		return $this->edit->print();
 	}
+	
+	public function collectPostValues(){
+		parent::collectPostValues();
+		$this->echoState(true, 'collectPostValues');
+	
+		$this->idParent = $this->f->activity->id->value();
+		
+		$this->setRecentValues();
+	}
+
+	
 
 	protected function saveUpdate(){
 	
-
-			
 			$sql = " UPDATE measures m ";
 			$sql .= " SET ";
-			$sql .= " m.name = '".$this->name."', ";
-			$sql .= " m.description = '".$this->description."', ";
-			$sql .= " m.notes = '".$this->notes."', ";
+			$sql .= " m.name = '".$this->f->name->value()."', ";
+			$sql .= " m.description = '".$this->f->description->value()."', ";
+			$sql .= " m.notes = '".$this->f->notes->value()."', ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " m.value = ".$this->value.", ";
-			$sql .= " m.date_reported = '".$this->dateReported."', ";
-			$sql .= " m.location_id = ".$this->locationId.", ";
-			$sql .= " m.measure_type_unit_id = ".$this->measureTypeUnitId." ";
-			$sql .= " WHERE m.id = ".$this->id." ";
+			$sql .= " m.doneBy = ".$this->f->doneBy->value().", ";
+			$sql .= " m.value = ".$this->f->value->value().", ";
+			$sql .= " m.date_reported = '".$this->f->reported->value()."', ";
+			$sql .= " m.location_id = ".$this->f->location->id->value().", ";
+			$sql .= " m.measure_type_unit_id = ".$this->f->type->id->value()." ";
+			$sql .= " WHERE m.id = ".$this->f->id->value()." ";
 
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
 	}
 	
@@ -137,27 +243,29 @@ class measure extends \application\entity {
 	
 			$sql = " INSERT INTO measures ";
 			$sql .= " (name, ";
-			$sql .= " task_id, ";
+			$sql .= " activity_id, ";
 			$sql .= " location_id, ";
 			$sql .= " measure_type_unit_id, ";
 			$sql .= " date_reported, ";
+			$sql .= " done_by, ";
 			$sql .= " value, ";
 			$sql .= " description, ";
 			$sql .= " notes) ";
 			$sql .= " VALUES (";
-			$sql .= "'".$this->name."', ";
-			$sql .= " ".$this->task->id.", ";
-			$sql .= " ".$this->locationId.", ";
-			$sql .= "".$this->measureTypeUnitId.", ";
-			$sql .= " '".$this->dateReported."', ";
-			$sql .= "".$this->value.", ";
-			$sql .= "'".$this->description."', ";
-			$sql .= "'".$this->notes."') ";
+			$sql .= "'".$this->f->name->value()."', ";
+			$sql .= " ".$this->f->activity->id->value().", ";
+			$sql .= " ".$this->f->location->id->value().", ";
+			$sql .= " ".$this->f->type->id->value().", ";
+			$sql .= " '".$this->f->reported->value()."', ";
+			$sql .= " '".$this->f->doneBy->value()."', ";
+			$sql .= " ".$this->f->value->value().", ";
+			$sql .= "'".$this->f->description->value()."', ";
+			$sql .= "'".$this->f->notes->value()."') ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->id = dbInsertedId();
-	
+			$this->id = $this->sql->getInsertedId();
+			$this->f->id->set($this->id);
 	}
 	
 } 

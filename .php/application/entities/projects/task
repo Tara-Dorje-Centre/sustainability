@@ -79,7 +79,7 @@ class task extends \application\entity{
 	
 	
 	public function listRowFormat(){
-	
+		/*
 		if ($this->periodicTasks != 'NO'){
 			$cssItem = $this->f->highlight->value();
 		} else {
@@ -89,6 +89,11 @@ class task extends \application\entity{
 			} else {
 				$cssItem = $this->f->highlight->value();
 			}
+		}
+		*/
+		$cssItem = $this->f->highlight->value();
+		if ($this->f->hoursActual->value() == 0){
+			$cssItem = 'highlight-yellow';
 		}
 	
 		$tr = new \html\_tr($cssItem);
@@ -166,6 +171,7 @@ class task extends \application\entity{
 		//display activitylist with correct paging link
 		$t = new activityList();
 		$t->idParent = $this->id;
+		$t->base->idParent = $this->id;
 		$t->setFoundCount();
 		$t->setPaging($this->resultPage,10);
 		$u = $this->links->viewUrl($this->id);

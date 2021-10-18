@@ -3,11 +3,11 @@ namespace application\entities\projects;
 
 class receiptList extends \application\entityList{
 
-	//public $task;
-	private $displayProject = 'TASK';
-	private $approved = 'no';
-	public $costActual = 0;
-	//public $costEstimated = 0;
+	public $showSummary = 'NO';
+	public $displayLevel = 'ACTIVITY';
+	public $projectId = 0;
+	public $taskId = 0;
+	public $activityId = 0;
 
  	public function __construct(){
 		parent::__construct();
@@ -17,188 +17,145 @@ class receiptList extends \application\entityList{
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 
-
-	}
-	public function setDisplay($display = 'TASK'){
-		$this->displayProject = $display;
-	}
-	
-	public function setApproved($approved = 'no'){
-		$this->approved = $approved;
-	}
-	
-	public function afterSetDetails(){
-		//$this->task->setDetails();
-		//$this->setFoundCount();
-		$this->setSummary();
-	}
+		//push identifiers to base object
+		//sets quickEdit form default idParent
+		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-	protected function makePageTitle(){
+		$display = 'ACTIVITY';
+		if (isset($_GET['display-level'])){
+			$display = $_GET['display-level'];
+		}
+		$this->setDisplayLevel($display);
+		$this->base->setDisplayLevel($display);
 
-		if ($this->displayProject == 'TASK'){
-			$title = $this->task->project->name.br();
-			$title .= 'Task: '.$this->task->name.br();
-			if ($this->task->receiptsAuthProject == 'yes'){
-				$title .= 'Receipts Approved = '.$this->costActual;
-			} else {
-				$title .= 'Receipts Estimated';
-			}
-		} elseif ($this->displayProject == 'PROJECT'){
-			$title = $this->task->project->name.br();	
-			$title .= 'Receipts Approved = '.$this->costActual;
+		$show = 'NO';
+		if (isset($_GET['show-summary'])){
+			$show = $_GET['show-summary'];
+		}
+		$this->setShowSummary($show);
+		$this->base->setShowSummary($show);
+
+		$id = 0;
+		if (isset($_GET['project-id'])){
+			$id = $_GET['project-id'];
+		}
+		$this->setProjectId($id);
+		$this->base->setProjectId($id);
+		
+		$id = 0;
+		if (isset($_GET['task-id'])){
+			$id = $_GET['task-id'];
+		}
+		$this->setTaskId($id);
+		$this->base->setTaskId($id);
+		
+		$id = 0;
+		if (isset($_GET['activity-id'])){
+			$id = $_GET['activity-id'];
+		}
+		$this->setActivityId($id);
+		$this->base->setActivityId($id);
+	}
+	
+	public function setDisplayLevel($display = 'ACTIVITY'){
+		$this->displayLevel = $display;
+	}
+	
+	public function setShowSummary($show = 'NO'){
+		$this->showSummary = $show;
+	}
+	
+	public function setProjectId($id = 0){
+		$this->projectId = $id;
+	}
+	
+	public function setTaskId($id = 0){
+		$this->taskId = $id;
+	}
+	
+	public function setActivityId($id = 0){
+		$this->activityId = $id;
+	}
+	
+	
+		
+	
+	protected function makePageTitle(){
+		$title = '';
+		
+		if ($this->displayLevel == 'ACTIVITY'){
+		
+		} elseif ($this->displayLevel == 'TASK'){
+		
+		} elseif ($this->displayLevel == 'PROJECT'){
+		
 		}
 
-		$this->_pageTitle = $title;	
+		$this->_pageTitle = $title;
 	}	
 
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
+		$menu = '';
 		
-		$projects = new ProjectLinks($menuType,$menuStyle);
-		$tasks = new TaskLinks($menuType,$menuStyle);
-		$rL = new ReceiptLinks($menuType,$menuStyle);
-					
-		$menu = $projects->openMenu('section-heading-links');
+		if ($this->displayLevel == 'ACTIVITY'){
 		
-		$menu .= $projects->detailViewHref($this->task->project->id);			
-		if ($this->task->project->receiptsCount > 0){
-			$menu .= $rL->linkProjectReceipts($this->task->project->id);
+		} elseif ($this->displayLevel == 'TASK'){
+		
+		} elseif ($this->displayLevel == 'PROJECT'){
+		
 		}
-		if ($this->displayProject == 'TASK'){
-			$menu .= $projects->resetMenu();	
-			$menu .= $tasks->detailViewHref($this->task->id);
-			if ($this->found > 0){
-				$menu .= $rL->linkTaskReceipts($this->task->id);		
-			}
-			$menu .= $projects->resetMenu();	
-			$menu .= $rL->detailAddHref($this->task->id);
-		}
-		$menu .= $projects->closeMenu();	
+		
 		$this->_pageMenu = $menu;			
 	}	
 	
-	protected function setFoundCount(){
-		if ($this->displayProject == 'PROJECT'){
-			$sql = $this->sql->countReceiptsByProject($this->task->project->id, $this->approved);
-		} else {
-			$sql = $this->sql->countReceiptsByTask($this->task->id);
+	
+	public function setFoundCount(){
+		$this->echoState(true, 'setFoundCount');
+		$this->echoValue(true, 'displayLevel',$this->displayLevel, 'setFoundCount');
+		if ($this->displayLevel == 'ACTIVITY'){
+			$sql = $this->base->sql->countActivity($this->activityId);
+		} elseif ($this->displayLevel == 'TASK'){
+			$sql = $this->base->sql->countTask($this->taskId);
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$sql = $this->base->sql->countProject($this->projectId);
 		}
+		$this->found = $this->base->sql->getCount($sql,'count_details');
 		
-		global $conn;
-		
-		$this->found = $conn->getCount($sql,'total_receipts');
-		
-		
-		
-		//$this->found = dbGetCount($sql, 'total_receipts');
 	}
 	
-	private function setSummary(){
-		if ($this->displayProject == 'PROJECT'){
-			$sql = $this->sql->summarizeReceiptsByProject($this->task->project->id, $this->approved);
-		} else {
-			$sql = $this->sql->summarizeReceiptsByTask($this->task->id);
+	
+	
+	
+	protected function listingSQL(){
+	
+		if ($this->displayLevel == 'ACTIVITY'){
+			$sql = $this->base->sql->listActivity($this->activityId);
+		} elseif ($this->displayLevel == 'TASK'){
+			$sql = $this->base->sql->listTask($this->taskId);
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$sql = $this->base->sql->listProject($this->projectId);
 		}
-
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-		{
-			$this->costActual = $row["sum_cost_actual"];
-		}
-		$result->close();		
-		}	
+	
+		return $sql;
 	}
 	
+	//override listing start 
+	//to add args to paged listing
+	protected function listingStart(\application\links\url $altUrl = NULL){
 		
-	public function getListing($pagingBaseLink = 'USE_LISTING'){
-		if ($this->displayProject == 'PROJECT'){
-			$id = $this->task->project->id;
-			$sql = $this->sql->listReceiptsByProject($id, $this->resultPage, $this->perPage, $this->approved);		
-		} elseif ($this->displayProject == 'TASK'){
-			$sql = $this->sql->listReceiptsByTask($this->task->id,$this->resultPage,$this->perPage);		
+		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage, $this->activityId,$this->taskId,$this->projectId,$this->showSummary,$this->displayLevel);	
+		$add = '';
+		if ($this->showSummary == 'NO' AND $this->displayLevel == 'ACTIVITY'){
+			$add = $this->base->addForm($this->activityId);	
 		}
-		
-		$receiptL = new ReceiptLinks;
-		$taskL = new TaskLinks;
-				
-		if ($pagingBaseLink == 'USE_LISTING'){
-			$base = $receiptL->listing($this->task->id, $this->task->project->id,$this->displayProject,$this->approved);
-		} else { 
-			$base = $pagingBaseLink;
-		}
-		$pagingLinks = $receiptL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
-		
-		$r = new Receipt('ADD', 0, $this->task->id);
+		$entity = $this->base->entity;
+		$legend = $this->entityTitle.':  Listing';
+		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
 
-		$quickEdit = $r->editForm();
-		$list = openDisplayList('receipt','Receipts',$pagingLinks,$quickEdit);
-
-		$heading = '';
-		if ($this->displayProject == 'PROJECT'){
-			$heading = wrapTh('Task');	
-		}
-		$heading .=  wrapTh('Receipt');
-		$heading .= wrapTh('Type');
-		$heading .=  wrapTh('Date Reported');
-		$heading .=  wrapTh('Received By');
-		$heading .= wrapTh('Qty Units');
-		$heading .=  wrapTh('Qty');
-		$heading .=  wrapTh('Unit Amount');
-		$heading .=  wrapTh('Amount Actual');
-		$heading .= wrapTh('Received From');
-		$list .=  wrapTr($heading);
-
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-		{	
-			$m = new Receipt;
-			$m->id = $row["id"];
-			$m->task->id = $row["task_id"];
-			$m->task->name = $row["task_name"];
-			$m->activityId = $row["activity_id"];
-			$m->name = stripslashes($row["name"]);
-			$m->typeName = stripslashes($row["type_name"]);
-			//$m->description = stripslashes($row["description"]);
-			$m->dateReported = $row["date_reported"];
-			$m->receivedBy = stripslashes($row["received_by"]);
-			$m->receivedFrom = stripslashes($row["received_from"]);
-			$m->updated = $row["updated"];	
-			$m->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
-			$m->quantity = $row["quantity"];	
-			$m->costActual = $row["cost_actual"];
-			$m->costUnit = $row["cost_unit"];
-			//$m->notes = stripslashes($row["notes"]);
-			$cssItem = stripslashes($row["highlight_style"]);
-
-			$m->formatForDisplay();
-			
-			$detail = '';
-			if ($this->displayProject == 'PROJECT'){
-				$link = $taskL->detailViewEditHref($m->task->id, $m->task->name);
-				$detail = wrapTd($link);
-			}
-			$link = $receiptL->detailViewEditHref($m->id,$m->name);
-			$detail .= wrapTd($link);
-			$detail .= wrapTd($m->typeName);			
-			$detail .= wrapTd($m->dateReported);
-			$detail .= wrapTd($m->receivedBy);
-			$detail .= wrapTd($m->quantityUnitMeasureName);
-			$detail .= wrapTd($m->quantity);
-			$detail .= wrapTd($m->costUnit);
-			$detail .= wrapTd($m->costActual);
-			$detail .= wrapTd($m->receivedFrom);
-
-			$list .=  wrapTr($detail, $cssItem);
-		}
-		$result->close();
-		}
-		
-		$list .= closeDisplayList();
-		return $list;
-		
 	}
+	
+	
+	
+	
 }
 ?>

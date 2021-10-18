@@ -7,10 +7,13 @@ extends \application\forms\fields{
     	
     public $id;
     public $name;
+    
+    public $project;
     public $task;
+    
 	public $type;
 	public $highlight;
-	public $project;
+
 	public $doneBy;
 	public $started;
 	public $startDate;

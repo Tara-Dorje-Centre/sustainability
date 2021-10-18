@@ -232,6 +232,53 @@ class portalRequest extends \framework\_echo{
 		}
 		$t->printRequest();
 	}
+	
+	
+	protected function loadMaterial(){
+		if ($this->scope->value()  == 'save'){
+			$s = new entities\projects\material();
+			$this->save($s);
+		}
+		if ($this->scope->value()  == 'detail'){
+			$t = new entities\projects\material();
+		} else {
+			$t = new entities\projects\materialList();
+		}
+		$t->printRequest();
+	}
+	
+	
+	
+protected function loadReceipt(){
+		if ($this->scope->value()  == 'save'){
+			$s = new entities\projects\receipt();
+			$this->save($s);
+		}
+		if ($this->scope->value()  == 'detail'){
+			$t = new entities\projects\receipt();
+		} else {
+			$t = new entities\projects\receiptList();
+		}
+		$t->printRequest();
+	}
+	
+	
+	
+protected function loadMeasure(){
+		if ($this->scope->value()  == 'save'){
+			$s = new entities\projects\measure();
+			$this->save($s);
+		}
+		if ($this->scope->value()  == 'detail'){
+			$t = new entities\projects\measure();
+		} else {
+			$t = new entities\projects\measureList();
+		}
+		$t->printRequest();
+	}
+	
+	
+	
 	protected function loadQuantityType(){
 		if ($this->scope->value()  == 'save'){
 			$s = new entities\reference\quantityType();

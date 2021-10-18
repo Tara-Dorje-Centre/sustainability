@@ -1,7 +1,8 @@
 <?php
 namespace application\entities\reference;
  
-class measureTypeUnit extends \application\entityType{
+class measureTypeUnit 
+extends \application\entityType{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);

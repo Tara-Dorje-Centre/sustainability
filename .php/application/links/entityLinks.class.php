@@ -122,7 +122,9 @@ abstract class entityLinks implements IentityLinks {
 	public function viewEdit(string $caption, $id = 0,string $editCaption='[#]'){
 		$d = new \html\_div('list-link','list-item-link');
 		$lView = $this->view($caption,$id);
+		$lView->setCSS('list-item-link');
 		$lEdit = $this->edit($editCaption,$id);
+		$lEdit->setCSS('list-item-link');
 		$d->addContent($lView->print());
 		$d->addContent($lEdit->print());
 		return $d->print();

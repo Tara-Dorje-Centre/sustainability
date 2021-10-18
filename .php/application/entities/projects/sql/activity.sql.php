@@ -38,7 +38,7 @@ extends \application\sql\entitySQL{
 
 	protected function colsSummary($first = true){
 		$q = $this->select($first);
-		$q .= " COUNT(*) total_activities, ";
+		//$q .= " COUNT(*) total_activities, ";
 		$q .= " SUM(a.hours_estimated) total_hours_estimated, ";
 		$q .= " SUM(a.hours_actual) total_hours_actual ";
 		return $q;
@@ -163,6 +163,13 @@ extends \application\sql\entitySQL{
 		return $q;
 	}
 	
+	public function summaryProject($id = 0){
+		$q = $this->colsSummary();
+		$q .= $this->tables(false);
+		$q .= " WHERE t.project_id = ".$id;
+		return $q;
+	}
+	
 	public function summaryTaskDoneBy($id = 0, $doneBy = 'EVERYONE'){
 		$q = $this->colsSummary();
 		$q .= $this->colsDoneBy(false);
@@ -252,6 +259,17 @@ extends \application\sql\entitySQL{
 		return $w;
 	}
 
+
+	public function whereTaskYearMonth($id, $year, $month){
+		$w = " WHERE a.task_id = ".$id." ";
+		if ($year > 0){
+			$w .= " AND YEAR(a.started) = ".$year." ";
+			if ($month > 0){
+				$w .= " AND MONTH(a.started) = ".$month." ";
+			}
+		}
+		return $w;
+	}
 
 	public function calendarLinksProject($id){
 		$q = "SELECT  ";

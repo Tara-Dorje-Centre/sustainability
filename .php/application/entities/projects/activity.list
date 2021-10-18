@@ -24,13 +24,8 @@ extends \application\entityList{
 		}
 		$this->setMyActivity($my);
 		$this->base->setMyActivity($my);
-		/*
-		$show = 'NO';
-		if (isset($_GET['show-calendar'])){
-			$show = $_GET['show-calendar'];
-		}
-		*/
-		//$this->setShowCalendar($show);
+		
+		//showCalendar set in baseEntity
 		$this->base->setShowCalendar($this->showCalendar);
 		
 		$id = 0;
@@ -44,11 +39,7 @@ extends \application\entityList{
 	public function setMyActivity($my = 'NO'){
 		$this->myActivity = $my;
 	}
-	/*
-	public function setShowCalendar($show = 'NO'){
-		$this->showCalendar = $show;
-	}
-	*/
+	
 	public function setProjectId($id = 0){
 		$this->projectId = $id;
 	}
@@ -118,8 +109,6 @@ extends \application\entityList{
 			if ($this->myActivity == 'YES' OR $this->myActivity == 'GROUP'){
 				$sql = $this->base->sql->countDoneBy($this->getActivityDoneBy());
 			} elseif ($this->myActivity == 'PROJECT') {
-				//$t = new task();
-				//$projectId = $t->getProjectId($this->idParent);
 				$sql = $this->base->sql->countProject($this->projectId);
 			}
 		}
@@ -143,7 +132,7 @@ extends \application\entityList{
 	//to hide quickedit on activity history
 	protected function listingStart(\application\links\url $altUrl = NULL){
 		//added arguments for project history
-		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage, $this->idParent,$this->showCalendar,$this->myActivity,$this->idParent,$this->projectId);	
+		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage, $this->showCalendar,$this->myActivity,$this->idParent,$this->projectId);	
 		$add = '';
 		if ($this->myActivity == 'NO'){
 			$add = $this->base->addForm($this->idParent);	

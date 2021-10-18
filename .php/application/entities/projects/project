@@ -49,6 +49,7 @@ class project extends \application\entity{
 		//display tasklist with correct paging link
 		$t = new taskList();
 		$t->idParent = $this->id;
+		$t->base->idParent = $this->id;
 		$t->setFoundCount();
 		$t->setPaging($this->resultPage,10);
 		$u = $this->links->viewUrl($this->id);

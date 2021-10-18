@@ -7,8 +7,6 @@ extends \application\entity{
 
 	public $myActivity = 'NO';
 	public $projectId = 0;
-	//defined in base entity
-	//public $showCalendar = 'NO';
 	
 	public function __construct(){
 		parent::__construct();
@@ -71,23 +69,34 @@ extends \application\entity{
 	}
 
 	public function listRowHotLinks(){
-		return 'materials, receipts, measures add links';
 		
-		//$a = new links\activityLinks();
-		//$link = $a->add('New Activity',$this->f->id->value());
-		//return $link->print();
+		$m = new links\materialLinks();
+		$l = $m->add('New.Material',$this->f->id->value());
+		$links = $l->print();
+		
+		$r = new links\receiptLinks();
+		$l = $r->add('New.Receipt',$this->f->id->value());
+		$links .= $l->print();
+		
+		$m = new links\measureLinks();
+		$l = $m->add('New.Measure',$this->f->id->value());
+		$links .= $l->print();
+		
+		return $links;
 		
 	}
 	
 	protected function projectRowlink(){
 		$p = new links\projectLinks();
 		$link = $p->view($this->f->project->name->value(),$this->f->project->id->value());
+		$link->setCSS('list-item-link');
 		return $link->print();
 	}
 	
 	protected function taskRowlink(){
 		$t = new links\taskLinks();
 		$link = $t->view($this->f->task->name->value(),$this->f->task->id->value());
+		$link->setCSS('list-item-link');
 		return $link->print();
 	}
 	
@@ -98,13 +107,11 @@ extends \application\entity{
 				$this->f->project->name->set($this->projectRowlink());
 			}
 		}
+		
+		$cssItem = $this->f->highlight->value();
 		if ($this->f->hoursActual->value() == 0){
 			$cssItem = 'highlight-yellow';
-		} else {
-			$cssItem = $this->f->highlight->value();
 		}
-		
-		
 		$tr = new \html\_tr($cssItem);
 		
 		$td = new \html\_td();
@@ -214,7 +221,7 @@ extends \application\entity{
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);
-	 		//$this->f->activityOrder->set($this->nextActivityOrder());
+	 		$this->f->activityOrder->set($this->nextActivityOrder());
 	 		$this->f->started->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
 	 		$this->f->hoursActual->set(1);
@@ -264,7 +271,8 @@ extends \application\entity{
 		$this->edit->optional->input($this->f->linkText);
 		$this->edit->optional->input($this->f->comments);
 
-		//$edit->hidden->addContent(getHiddenInput('editContext',$editContext));
+
+
 		
 		$this->edit->hidden->inputHidden($this->f->id);
 		//comment after ajax calls are done
@@ -273,8 +281,6 @@ extends \application\entity{
 		$this->edit->setSubmitButtons();
 		
 		return $this->edit->print();
-		
-		
 	}
 	
 	public function collectPostValues(){
