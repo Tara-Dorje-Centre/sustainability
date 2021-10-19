@@ -176,9 +176,9 @@ class measure extends \application\entity {
 		if (isset($_SESSION['last-measure-done-by'])){
 			$this->f->doneBy->set($_SESSION['last-measure-done-by']);
 		}
-		if (isset($_SESSION['last-measure-reported'])){
-			$this->f->reported->set($_SESSION['last-measure-reported']);
-		}
+		//if (isset($_SESSION['last-measure-reported'])){
+			//$this->f->reported->set($_SESSION['last-measure-reported']);
+		//}
 	}
 	
 	private function setRecentValues(){
@@ -186,7 +186,7 @@ class measure extends \application\entity {
 		$_SESSION['last-measure-location-id'] = $this->f->location->id->value();
 		$_SESSION['last-measure-type-id'] = $this->f->type->id->value();
  		$_SESSION['last-measure-done-by'] = $this->f->doneBy->value();
- 		$_SESSION['last-measure-reported'] = $this->f->reported->value();
+ 		//$_SESSION['last-measure-reported'] = $this->f->reported->value();
 	}
 
 	public function editForm(){

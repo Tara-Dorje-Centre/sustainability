@@ -155,7 +155,10 @@ class portalRequest extends \framework\_echo{
 	}
 	protected function loadLogout(){
 		$this->echoPrint(true,'starting','loadLogout');
-
+		session_destroy();
+		$_SESSION['logged-in'] = false;
+		
+		/*
 		unset($_SESSION['logged-in']);
 		unset($_SESSION['client-time-zone']);
 		unset($_SESSION['login-name']);
@@ -167,6 +170,9 @@ class portalRequest extends \framework\_echo{
 		unset($_SESSION['currentProjectId']);
 		unset($_SESSION['currentTaskId']);	
 		unset($_SESSION['currentView']);
+		*/
+		
+		
 		
 		$sw = new \application\system\siteSettings;
 		$sw->unsetSessionDetails();
