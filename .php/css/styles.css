@@ -245,10 +245,10 @@ a.menu-links-item:hover, a.paging-links-item:hover, a.button-links-item:hover{
 	background-color:green;
 	color:white;	
 }
-.fieldset{
+.fieldset,.summary-fieldset{
     border-color:black;
 	border-style:solid;
-	border-width:2px;
+	border-width:1px;
 }
 .fieldset-legend{
     font-size:18px;

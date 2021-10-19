@@ -164,25 +164,50 @@ class receiptList extends \application\entityList{
 	protected function listingSQL(){
 	
 		if ($this->displayLevel == 'ACTIVITY'){
-			$sql = $this->base->sql->listActivity($this->activityId);
+			$sql = $this->base->sql->listActivity($this->activityId,$this->resultPage,$this->perPage);
 		} elseif ($this->displayLevel == 'TASK'){
-			$sql = $this->base->sql->listTask($this->taskId);
+			$sql = $this->base->sql->listTask($this->taskId,$this->resultPage,$this->perPage);
 		} elseif ($this->displayLevel == 'PROJECT'){
-			$sql = $this->base->sql->listProject($this->projectId);
+			$sql = $this->base->sql->listProject($this->projectId,$this->resultPage,$this->perPage);
 		}
 	
 		return $sql;
 	}
 	
+	
+	private function getSummary(){
+		$summary = new \html\_div('summary');
+		$details = new \html\_fieldset('summary',$this->displayLevel.' Totals','summary-fieldset');
+		
+		if ($this->displayLevel == 'ACTIVITY'){
+			$sql = $this->base->sql->summaryActivity($this->activityId);
+		} elseif ($this->displayLevel == 'TASK'){
+			$sql = $this->base->sql->summaryTask($this->taskId);
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$sql = $this->base->sql->summaryProject($this->projectId);
+		}
+		$items = $this->base->sql->getScalar($sql,'total_items');
+		//$est = $this->base->sql->getScalar($sql, 'sum_estimated');
+		$actual = $this->base->sql->getScalar($sql, 'sum_actual');
+		$d = new \html\_div();
+		$d->addContent($items.' entries.  ');
+		//$d->addContent('  Estimated cost = '.$est.'.');
+		$d->addContent('  Total receipts = '.$actual.'.');
+		$details->addContent($d->print());
+		
+		$summary->addContent($details->print());
+		return $summary->print();
+	}
 	//override listing start 
 	//to add args to paged listing
 	protected function listingStart(\application\links\url $altUrl = NULL){
 		
 		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage, $this->activityId,$this->taskId,$this->projectId,$this->showSummary,$this->displayLevel);	
-		$add = '';
+		$add = $this->getSummary();
 		if ($this->showSummary == 'NO' AND $this->displayLevel == 'ACTIVITY'){
-			$add = $this->base->addForm($this->activityId);	
+			$add .= $this->base->addForm($this->activityId);	
 		}
+
 		$entity = $this->base->entity;
 		$legend = $this->entityTitle.':  Listing';
 		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');

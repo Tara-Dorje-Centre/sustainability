@@ -108,7 +108,7 @@ public function options($selectedId = 0, $disabled = 'false'){
 	if ($disabled == 'true'){
 		$q .= " WHERE mtu.id = ".$selectedId." ";	
 	}
-	$q .= " ORDER BY unit_type, caption ";
+	$q .= " ORDER BY caption ";
 	return $q;	
 }
 

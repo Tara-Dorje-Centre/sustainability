@@ -154,15 +154,16 @@ class measureList extends \application\entityList{
 	protected function listingSQL(){
 	
 		if ($this->displayLevel == 'ACTIVITY'){
-			$sql = $this->base->sql->listActivity($this->activityId);
+			$sql = $this->base->sql->listActivity($this->activityId,$this->resultPage,$this->perPage);
 		} elseif ($this->displayLevel == 'TASK'){
-			$sql = $this->base->sql->listTask($this->taskId);
+			$sql = $this->base->sql->listTask($this->taskId,$this->resultPage,$this->perPage);
 		} elseif ($this->displayLevel == 'PROJECT'){
-			$sql = $this->base->sql->listProject($this->projectId);
+			$sql = $this->base->sql->listProject($this->projectId,$this->resultPage,$this->perPage);
 		}
 	
 		return $sql;
 	}
+	
 	
 	
 	//override listing start 

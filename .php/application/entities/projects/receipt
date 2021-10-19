@@ -20,6 +20,7 @@ class receipt extends \application\entity{
 		$this->sql = new sql\receiptSQL;
 		$this->links = new links\receiptLinks();
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 
@@ -252,7 +253,7 @@ class receipt extends \application\entity{
 	}
 	
 	private function setCostDetails(){
-	
+		//quantity, costUnit, costActual
 			$this->f->costActual->set($this->f->costUnit->value() * $this->f->quantity->value());
 			
 	}

@@ -87,7 +87,9 @@ private function disableFields(){
         $this->description->listEnabled(false);
         $this->notes->listEnabled(false);
  
- 
+ 		$this->highlight->listEnabled(false);
+        
+        $this->highlight->displayEnabled(false);
     }
 
 

@@ -86,9 +86,9 @@ extends \application\forms\fields{
 		$this->_register('quantityType',$this->quantityType);
 		
 		$this->_register('costUnit',$this->costUnit);
-		$this->_register('costEstimated',$this->costEstimated);
 		$this->_register('costActual',$this->costActual);
-
+		$this->_register('costEstimated',$this->costEstimated);
+		
 		$this->_register('linkUrl', $this->linkUrl);
 		$this->_register('linkText', $this->linkText);
 		$this->_register('notes', $this->notes);
@@ -106,6 +106,9 @@ private function disableFields(){
         $this->name->listEnabled(false);
         $this->description->listEnabled(false);
         $this->notes->listEnabled(false);
+        $this->highlight->listEnabled(false);
+        
+        $this->highlight->displayEnabled(false);
     }
 
 

@@ -243,18 +243,15 @@ class material extends \application\entity{
 		$this->edit->required->input($this->f->costActual);
 		$this->edit->required->input($this->f->costEstimated);
 
-	
+
 		$m = new \application\entities\reference\location;
 		$select = $m->options($this->f->location->id->value(),$this->f->location->id->env->variable());
 		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
 		
-		$this->edit->optional->input($this->f->description);
-		$this->edit->optional->input($this->f->notes);
 		$this->edit->optional->input($this->f->linkUrl);
 		$this->edit->optional->input($this->f->linkText);
-		
-
-		
+		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
 		
 		$this->edit->hidden->inputHidden($this->f->id);
 		$this->edit->hidden->inputHidden($this->f->activity->id);
@@ -275,9 +272,20 @@ class material extends \application\entity{
 	}
 	
 	private function setCostDetails(){
+		//quantity, costUnit, costActual
+		if ($this->f->costActual->value() == 0){
+			$this->f->costActual->set($this->f->costUnit->value() * $this->f->quantity->value());
+		} else {
+			if ($this->f->quantity->value() == 0){
+				$this->f->quantity->set(1);
+			}
+			$this->f->costUnit->set($this->f->costActual->value() / $this->f->quantity->value());
+		}
 		
-		$this->f->costEstimated->set($this->f->costUnit->value() * $this->f->quantity->value());
-
+		if ($this->f->costEstimated->value() == 0){
+			$this->f->costEstimated->set($this->f->costActual->value());
+		}
+		
 	}
 	
 	
@@ -293,7 +301,7 @@ class material extends \application\entity{
 			$sql .= " m.description = '".$this->f->description->value()."', ";
 			$sql .= " m.notes = '".$this->f->notes->value()."', ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " m.date_reported = '".$this->f->dateReported->value()."', ";
+			$sql .= " m.date_reported = '".$this->f->reported->value()."', ";
 			$sql .= " m.done_by = '".$this->f->doneBy->value()."', ";
 			$sql .= " m.paid_to = '".$this->f->paidTo->value()."', ";			
 			$sql .= " m.link_text = '".$this->f->linkText->value()."', ";
@@ -303,9 +311,9 @@ class material extends \application\entity{
 			$sql .= " m.quantity = ".$this->f->quantity->value().", ";
 			$sql .= " m.qty_unit_measure_id = ".$this->f->quantityType->id->value().", ";
 			$sql .= " m.cost_unit = ".$this->f->costUnit->value().", ";
-			$sql .= " m.cost_estimated = ".$this->f->costEstimated->value()." ";
+			$sql .= " m.cost_estimated = ".$this->f->costEstimated->value().", ";
 			$sql .= " m.cost_actual = ".$this->f->costActual->value()." ";
-			$sql .= " WHERE m.id = ".$this->f->id." ";
+			$sql .= " WHERE m.id = ".$this->f->id->value()." ";
 
 			$result = $this->sql->runStatement($sql);
 			

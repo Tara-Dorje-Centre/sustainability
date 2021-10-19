@@ -43,8 +43,8 @@ extends \application\sql\entitySQL{
 
 	protected function colsSummary($first = true){
 		$q = $this->select($first);
-		//$q .= " COUNT(*) total_receipts, ";
-		$q .= " SUM(r.cost_actual) sum_cost_actual ";
+		$q .= " COUNT(*) total_items, ";
+		$q .= " SUM(r.cost_actual) sum_actual ";
 		//$q .= " SUM(r.cost_actual) sum_cost_estimated ";
 		return $q;
 	}
@@ -163,14 +163,14 @@ extends \application\sql\entitySQL{
 	}
 
 	public function summaryActivity($id = 0, $year = 0, $month = 0){
-		$q .= $this->colsSummary();
+		$q = $this->colsSummary();
 		$q .= $this->tables(true);
 		$q .= " WHERE r.activity_id = ".$id;
 		return $q;
 	}
 
 	public function summaryTask($id = 0, $year = 0, $month = 0){
-		$q .= $this->colsSummary();
+		$q = $this->colsSummary();
 		$q .= $this->tables(true);
 		$q .= $this->whereTaskYearMonth($id, $year, $month);
 		return $q;

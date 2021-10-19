@@ -95,6 +95,11 @@ private function disableFields(){
         $this->name->listEnabled(false);
         $this->description->listEnabled(false);
         $this->notes->listEnabled(false);
+        
+		$this->highlight->listEnabled(false);
+        
+        $this->highlight->displayEnabled(false);
+        
     }
 	
 	
