@@ -21,6 +21,9 @@ class projectLinks extends \application\links\entityLinks {
 				//$this->addLink($this->add('AddChild',$id));
 				//$this->addLink($this->add('AddSibling',$idParent));
 				$this->addLink($this->copy('Copy Project',$id));
+				
+
+				
 				break;
 			case 'EDIT':
 				$this->addLink($this->list('List Projects',0,$idParent,0));
@@ -46,11 +49,13 @@ class projectLinks extends \application\links\entityLinks {
 			$this->addLink($a->projectCalendar($id));
 			$this->addLink($a->projectActivity($id));		
 			
-			//$m = new materialLinks();
-			//$this->addLink($m->list(-1,'ProjectMaterials',$id,'PROJECT','yes'));
-			//$r = new receiptLinks();
-			//$this->addLink($r->list(-1,'ProjectReceipts',$id,'PROJECT','yes'));	
-			
+			$m = new materialLinks();
+			$this->addLink($m->projectMaterials($id));
+			$r = new receiptLinks();
+			$this->addLink($r->projectReceipts($id));
+			$m = new measureLinks();
+			$this->addLink($m->projectMeasures($id));
+				
 		}
 		
 	}

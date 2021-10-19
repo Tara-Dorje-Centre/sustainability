@@ -74,7 +74,7 @@ extends \application\forms\fields{
 	
 	$this->updated->envEnabled(false);
         $this->startDate->envEnabled(false);
-		$this->name->envEnabled(false);
+		//$this->name->envEnabled(false);
 		$this->id->displayEnabled(false);
 		$this->highlight->displayEnabled(false);
 		$this->started->displayEnabled(false);

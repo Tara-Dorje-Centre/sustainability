@@ -115,6 +115,17 @@ class receipt extends \application\entity{
 		return $detail;
 	}
 	
+	public function listHeading(): \html\_tr{
+		$tr = new \html\_tr('table-headings');
+		
+		$th = new \html\_th($this->entityTitle);
+		$tr->addContent($th->print());
+		
+		$tr->addContent($this->f->listCaption());
+		
+		return $tr;
+	}
+	
 	
 	protected function projectRowlink(){
 		$p = new links\projectLinks();
@@ -159,6 +170,7 @@ class receipt extends \application\entity{
 	 		$this->f->reset(true);
 	 		$this->f->reported->set($this->f->currentTimestamp);
 	 		$this->f->receivedBy->set($this->f->currentUser);
+	 		$this->f->quantity->set(1);
 			$this->setSessionDefaults();
 	 	}
 	}
@@ -241,7 +253,7 @@ class receipt extends \application\entity{
 	
 	private function setCostDetails(){
 	
-			$this->costActual->set($this->f->costUnit->value() * $this->f->quantity->value());
+			$this->f->costActual->set($this->f->costUnit->value() * $this->f->quantity->value());
 			
 	}
 
@@ -303,7 +315,7 @@ class receipt extends \application\entity{
 			$sql .= "".$this->f->costActual->value().", ";
 			$sql .= " ".$this->f->type->id->value().", ";
 			$sql .= " ".$this->f->quantityType->id->value().", ";
-			$sql .= "'".$this->f->notes."') ";
+			$sql .= "'".$this->f->notes->value()."') ";
 			
 			$result = $this->sql->runStatement($sql);
 

@@ -194,6 +194,15 @@ extends \application\entity{
 		if ($this->pageMode == 'VIEW'){
 			$this->links->addLink($this->links->edit('Edit Activity', $this->id));
 			$this->links->addLink($this->links->add('New Activity', $this->idParent));
+			$m = new links\materialLinks();
+			$this->links->addLink($m->activityMaterials($this->id));
+		
+			$r = new links\receiptLinks();
+			$this->links->addLink($r->activityReceipts($this->id));
+		
+			$m = new links\measureLinks();
+			$this->links->addLink($m->activityMeasures($this->id));
+		
 		}		
 		
 		if ($this->pageMode == 'EDIT'){
@@ -221,7 +230,11 @@ extends \application\entity{
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);
+	 		$t = new task();
+	 		$name = $t->getTaskName($this->idParent);
 	 		$this->f->activityOrder->set($this->nextActivityOrder());
+	 		$this->f->name->set($name.'.'.$this->f->activityOrder->value());
+
 	 		$this->f->started->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
 	 		$this->f->hoursActual->set(1);
@@ -262,6 +275,7 @@ extends \application\entity{
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 		
+		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->hoursEstimated);
 		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
 		$this->edit->required->input($this->f->hoursActual);
@@ -308,6 +322,7 @@ extends \application\entity{
 	protected function saveUpdate(){
 			$sql = " UPDATE activities a ";
 			$sql .= " SET ";
+			$sql .= " a.name = '".$this->f->name->value()."', ";
 			$sql .= " a.done_by = '".$this->f->doneBy->value()."', ";
 			$sql .= " a.comments = '".$this->f->comments->value()."', ";
 			$sql .= " a.updated = CURRENT_TIMESTAMP, ";
@@ -331,6 +346,7 @@ extends \application\entity{
 	
 			$sql = " INSERT INTO activities ";
 			$sql .= " ( ";
+			$sql .= " name, ";
 			$sql .= " activity_order, ";
 			$sql .= " task_id, ";
 			$sql .= " type_id, ";
@@ -343,6 +359,7 @@ extends \application\entity{
 			$sql .= " link_text, ";
 			$sql .= " comments) ";
 			$sql .= " VALUES (";
+			$sql .= " '".$this->f->name->value()."', ";
 			$sql .= " ".$this->f->activityOrder->value().", ";
 			$sql .= " ".$this->f->task->id->value().", ";
 			$sql .= " ".$this->f->type->id->value().", ";

@@ -28,7 +28,7 @@ class measureFields extends
 		parent::__construct();
     	
 		$this->id = new \application\forms\_id('id','id','not-used');
-    	$this->name = new \application\forms\_name('name','name','Name');
+    	$this->name = new \application\forms\_name('name','name','Measure');
     	
     	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
     	$this->task = new \application\forms\_idName('task_id','id-task','Task','task_name');
@@ -79,11 +79,13 @@ private function disableFields(){
 		$this->id->listEnabled(false);
 		$this->id->displayEnabled(false);
 		$this->updated->envEnabled(false);
-        $this->reported->envEnabled(false);
+        //$this->reported->envEnabled(false);
         
         $this->updated->listEnabled(false);
         $this->reported->listEnabled(false);
-        
+        $this->name->listEnabled(false);
+        $this->description->listEnabled(false);
+        $this->notes->listEnabled(false);
  
  
     }

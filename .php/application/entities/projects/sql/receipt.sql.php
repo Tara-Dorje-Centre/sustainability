@@ -21,8 +21,7 @@ extends \application\sql\entitySQL{
 		$c .= " t.name task_name, ";
 		$c .= " r.activity_id, ";
 		$c .= " a.activity_order, ";
-		$c .= " concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) as activity_name, ";
-		//$c .= " r.name, ";
+		$c .= " a.name activity_name, ";
 		$c .= " IFNULL(r.name, 'Unspecified') name, ";
 		$c .= " r.description, ";
 		$c .= " r.date_reported, ";
@@ -31,7 +30,7 @@ extends \application\sql\entitySQL{
 		$c .= " r.updated, ";
 		$c .= " r.quantity, ";
 		$c .= " r.qty_unit_measure_id, ";
-		$c .= " uom.name qty_unit_measure_name, ";
+		$c .= " uom.unit_of_measure qty_unit_measure_name, ";
 		$c .= " r.cost_unit, ";
 		$c .= " r.cost_actual, ";
 		//$c .= " r.cost_actual cost_estimated, ";
@@ -57,7 +56,7 @@ extends \application\sql\entitySQL{
 		$q .= " JOIN projects AS p ON t.project_id = p.id ";
 		if ($joinTypes == true){
 			$q .= " LEFT OUTER JOIN receipt_types AS rt ON r.type_id = rt.id ";
-			$q .= " LEFT OUTER JOIN units_of_measure uom ON r.qty_unit_measure_id = uom.id ";
+			$q .= " LEFT OUTER JOIN measure_type_units_v uom ON r.qty_unit_measure_id = uom.id ";
 		}
 		return $q;
 	}
@@ -77,7 +76,8 @@ extends \application\sql\entitySQL{
 	}
 
 	public function getActivityName($id){
-		$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		//$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		$q = "SELECT a.name, ";
 		$q .= " FROM receipts r ";
 		$q .= " JOIN activities a ON r.activity_id = a.id ";
 		$q .= " JOIN tasks t ON a.task_id = t.id ";

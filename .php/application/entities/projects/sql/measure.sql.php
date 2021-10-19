@@ -19,7 +19,7 @@ extends \application\sql\entitySQL{
 		$c .= " t.name task_name, ";
 		$c .= " m.activity_id, ";
 		$c .= " a.activity_order, ";
-		$c .= " concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) as activity_name, ";
+		$c .= " a.name as activity_name, ";
 		$c .= " m.location_id, ";
 		$c .= " l.sort_key location_name, ";
 		//$c .= " m.name, ";
@@ -31,7 +31,7 @@ extends \application\sql\entitySQL{
 		$c .= " m.value, ";
 		$c .= " m.notes, ";
 		$c .= " m.measure_type_unit_id, ";
-		$c .= " mtu.measure_type type_name, ";
+		$c .= " mtu.unit_of_measure type_name, ";
 		$c .= " 'none' highlight_style, ";
 		$c .= " mtu.unit_type, ";
 		$c .= " mtu.unit_symbol ";
@@ -46,7 +46,7 @@ extends \application\sql\entitySQL{
 		$q .= " LEFT OUTER JOIN locations AS l ON m.location_id = l.id ";
 		if ($joinTypes == true){
 			$q .= " LEFT OUTER JOIN measure_type_units_v as mtu ";
-			$q .= " ON m.measure_type_unit_id = mtu.measure_type_unit_id ";
+			$q .= " ON m.measure_type_unit_id = mtu.id ";
 		}
 		return $q;
 	}
@@ -59,7 +59,8 @@ extends \application\sql\entitySQL{
 	}
 	
 	public function getActivityName($id){
-		$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		//$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		$q = "SELECT a.name, ";
 		$q .= " FROM measures m ";
 		$q .= " JOIN activities a ON m.activity_id = a.id ";
 		$q .= " JOIN tasks t ON a.task_id = t.id ";

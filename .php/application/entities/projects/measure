@@ -107,6 +107,17 @@ class measure extends \application\entity {
 		return $detail;
 	}
 	
+	public function listHeading(): \html\_tr{
+		$tr = new \html\_tr('table-headings');
+		
+		$th = new \html\_th($this->entityTitle);
+		$tr->addContent($th->print());
+		
+		$tr->addContent($this->f->listCaption());
+		
+		return $tr;
+	}
+	
 	
 	protected function projectRowlink(){
 		$p = new links\projectLinks();

@@ -13,7 +13,7 @@ extends \application\sql\entitySQL{
 	protected function cols($first = true){
 		$c = $this->select($first);
 		$c .= " a.id,  ";
-		$c .= " concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) as name, ";
+		$c .= " a.name, ";
 		$c .= " a.task_id,  ";
 		$c .= " t.name task_name, ";
 		$c .= " a.type_id, ";
@@ -56,7 +56,8 @@ extends \application\sql\entitySQL{
 	}
 
 	public function getActivityName($id){
-		$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		//$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		$q = "SELECT a.name ";
 		$q .= " FROM activities a ";
 		$q .= " JOIN tasks t ON a.task_id = t.id ";
 		$q .= " WHERE a.id = ".$id;

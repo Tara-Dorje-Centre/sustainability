@@ -20,7 +20,7 @@ extends \application\sql\entitySQL{
 		$c .= " t.name task_name, ";
 		$c .= " m.activity_id, ";
 		$c .= " a.activity_order, ";
-		$c .= " concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) as activity_name, ";
+		$c .= " a.name as activity_name, ";
 		$c .= " m.location_id, ";
 		$c .= " l.name location_name, ";
 		//$c .= " m.name, ";
@@ -32,7 +32,7 @@ extends \application\sql\entitySQL{
 		$c .= " m.updated, ";
 		$c .= " m.quantity, ";
 		$c .= " m.qty_unit_measure_id, ";
-		$c .= " uom.name qty_unit_measure_name, ";
+		$c .= " uom.unit_of_measure qty_unit_measure_name, ";
 		$c .= " m.cost_unit, ";
 		$c .= " m.cost_estimated, ";
 		$c .= " m.cost_actual, ";
@@ -61,7 +61,7 @@ extends \application\sql\entitySQL{
 		$q .= " LEFT OUTER JOIN locations AS l ON m.location_id = l.id ";
 		if ($joinTypes == true){
 			$q .= " LEFT OUTER JOIN material_types AS mt ON m.type_id = mt.id ";
-			$q .= " LEFT OUTER JOIN units_of_measure uom ON m.qty_unit_measure_id = uom.id ";
+			$q .= " LEFT OUTER JOIN measure_type_units_v uom ON m.qty_unit_measure_id = uom.id ";
 		}
 		return $q;
 	}
@@ -75,13 +75,14 @@ extends \application\sql\entitySQL{
 
 	public function getActivityId($id){
 		$q = " SELECT m.activity_id ";
-		$q .= " FROM measures m ";
+		$q .= " FROM materials m ";
 		$q .= " WHERE m.id = ".$id;
 		return $q;
 	}
 
 	public function getActivityName($id){
-		$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		//$q = "SELECT concat_ws('.', t.task_order, t.name, lpad(a.activity_order,3,'.')) name ";
+		$q = "SELECT a.name, ";
 		$q .= " FROM materials m ";
 		$q .= " JOIN activities a ON m.activity_id = a.id ";
 		$q .= " JOIN tasks t ON a.task_id = t.id ";

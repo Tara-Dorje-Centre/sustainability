@@ -18,7 +18,7 @@ class receiptLinks extends \application\links\entityLinks {
 	}
 	
 	public function projectReceipts($idProject){
-		$u = $this->urlReceiptsList(0, 0, $idProject,'NO','PROJECT');
+		$u = $this->urlReceiptList(0, 0, $idProject,'NO','PROJECT');
 		$caption = 'Project Receipts';
 		return $this->getLink($u,$caption);
 	}

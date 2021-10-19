@@ -26,69 +26,98 @@ class receiptList extends \application\entityList{
 			$display = $_GET['display-level'];
 		}
 		$this->setDisplayLevel($display);
-		$this->base->setDisplayLevel($display);
 
 		$show = 'NO';
 		if (isset($_GET['show-summary'])){
 			$show = $_GET['show-summary'];
 		}
 		$this->setShowSummary($show);
-		$this->base->setShowSummary($show);
 
 		$id = 0;
 		if (isset($_GET['project-id'])){
 			$id = $_GET['project-id'];
 		}
 		$this->setProjectId($id);
-		$this->base->setProjectId($id);
 		
 		$id = 0;
 		if (isset($_GET['task-id'])){
 			$id = $_GET['task-id'];
 		}
 		$this->setTaskId($id);
-		$this->base->setTaskId($id);
-		
+
 		$id = 0;
 		if (isset($_GET['activity-id'])){
 			$id = $_GET['activity-id'];
+		} else {
+			$id = $this->idParent;
 		}
 		$this->setActivityId($id);
-		$this->base->setActivityId($id);
+		
+		$this->setIdsByDisplayLevel();
+
+	}
+	
+	public function setIdsByDisplayLevel(){
+	
+		if ($this->displayLevel == 'ACTIVITY'){
+			$a = new activity();
+			$this->taskId = $a->getTaskId($this->activityId);
+			$this->projectId = $a->getProjectId($this->activityId);
+		} elseif ($this->displayLevel == 'TASK'){
+			$t = new task();
+			$this->projectId = $t->getProjectId($this->taskId);
+		} 
 	}
 	
 	public function setDisplayLevel($display = 'ACTIVITY'){
 		$this->displayLevel = $display;
+		$this->base->setDisplayLevel($display);
 	}
 	
 	public function setShowSummary($show = 'NO'){
 		$this->showSummary = $show;
+		$this->base->setShowSummary($show);
 	}
 	
 	public function setProjectId($id = 0){
 		$this->projectId = $id;
+		$this->base->setProjectId($id);
 	}
 	
 	public function setTaskId($id = 0){
 		$this->taskId = $id;
+		$this->base->setTaskId($id);
 	}
 	
 	public function setActivityId($id = 0){
 		$this->activityId = $id;
+		$this->base->setActivityId($id);
 	}
 	
 	
 		
 	
 	protected function makePageTitle(){
-		$title = '';
+		$title = 'displayLevel'.$this->displayLevel.'<br/>';
+		$title .= 'idParent:'.$this->idParent.'<br/>';
+		$title .= 'idActivity:'.$this->activityId.'<br/>';
+		$title .= 'idTask:'.$this->taskId.'<br/>';
+		$title .= 'idProject:'.$this->projectId;
 		
 		if ($this->displayLevel == 'ACTIVITY'){
-		
+			$a = new activity();
+			$title = 'Project: '.$a->getProjectName($this->activityId).'<br/>';
+			$title .= 'Task: '.$a->getTaskName($this->activityId).'<br/>';
+			$title .= 'Activity: '.$a->getActivityName($this->activityId).'<br/>';
+			$title .= 'Activity Receipts';
 		} elseif ($this->displayLevel == 'TASK'){
-		
+			$t = new task();
+			$title = 'Project: '.$t->getProjectName($this->taskId).'<br/>';
+			$title .= 'Task: '.$t->getTaskName($this->taskId).'<br/>';
+			$title .= 'Task Receipts';
 		} elseif ($this->displayLevel == 'PROJECT'){
-		
+			$p = new project();
+			$title = 'Project: '.$p->getProjectName($this->projectId).'<br/>';
 		}
 
 		$this->_pageTitle = $title;
@@ -96,16 +125,22 @@ class receiptList extends \application\entityList{
 
 	protected function makePageMenu(){
 		$menu = '';
-		
+		$p = new links\projectLinks();
+		$t = new links\taskLinks();
+		$a = new links\activityLinks();
 		if ($this->displayLevel == 'ACTIVITY'){
-		
+			$this->base->links->addLink($p->view('View Project',$this->projectId));
+			$this->base->links->addLink($t->view('View Task',$this->taskId));
+			$this->base->links->addLink($a->view('View Activity',$this->activityId));
+			$this->base->links->addLink($this->base->links->add('New Receipt',$this->activityId));
 		} elseif ($this->displayLevel == 'TASK'){
-		
+			$this->base->links->addLink($p->view('View Project',$this->projectId));
+			$this->base->links->addLink($t->view('View Task',$this->taskId));
 		} elseif ($this->displayLevel == 'PROJECT'){
-		
+			$this->base->links->addLink($p->view('View Project',$this->projectId));
 		}
-		
-		$this->_pageMenu = $menu;			
+		$menu = $this->base->links->print();
+		$this->_pageMenu = $menu;				
 	}	
 	
 	

@@ -47,6 +47,12 @@ extends \application\links\entityLinks {
 				//$this->addLink($this->copy('Copy',$id));
 				$a = new activityLinks();
 				$this->addLink($a->list('List Activities',0,$id));
+				$m = new materialLinks();
+				$this->addLink($m->taskMaterials($id));
+				$r = new receiptLinks();
+				$this->addLink($r->taskReceipts($id));
+				$m = new measureLinks();
+				$this->addLink($m->taskMeasures($id));
 				break;
 			case 'EDIT':
 				$this->addLink($this->list('List Tasks',0,$idParent,0));

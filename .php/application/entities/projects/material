@@ -120,7 +120,16 @@ class material extends \application\entity{
 		return $detail;
 	}
 	
-	
+	public function listHeading(): \html\_tr{
+		$tr = new \html\_tr('table-headings');
+		
+		$th = new \html\_th($this->entityTitle);
+		$tr->addContent($th->print());
+		
+		$tr->addContent($this->f->listCaption());
+		
+		return $tr;
+	}
 	
 	protected function projectRowlink(){
 		$p = new links\projectLinks();
@@ -171,6 +180,7 @@ class material extends \application\entity{
 	 		$this->f->reset(true);
 	 		$this->f->reported->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
+	 		$this->f->quantity->set(1);
 	 		$this->setSessionDefaults();
 	 	}
 	}
@@ -189,7 +199,7 @@ class material extends \application\entity{
 			$this->f->paidTo->set($_SESSION['last-material-paid-to']);
 		}
 		if (isset($_SESSION['last-material-done-by'])){
-			$this->f->doneBy->se($_SESSION['last-material-done-by']);
+			$this->f->doneBy->set($_SESSION['last-material-done-by']);
 		} 
 		if (isset($_SESSION['last-material-reported'])){
 			$this->f->reported->set($_SESSION['last-material-reported']);
@@ -230,17 +240,20 @@ class material extends \application\entity{
 		$this->edit->required->inputChoice($this->f->quantityType->id,$select->print());
 		
 		$this->edit->required->input($this->f->costUnit);
-		$this->edit->optional->input($this->f->costEstimated);
-		$this->edit->optional->input($this->f->costActual);
+		$this->edit->required->input($this->f->costActual);
+		$this->edit->required->input($this->f->costEstimated);
+
 	
 		$m = new \application\entities\reference\location;
 		$select = $m->options($this->f->location->id->value(),$this->f->location->id->env->variable());
 		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
 		
 		$this->edit->optional->input($this->f->description);
+		$this->edit->optional->input($this->f->notes);
 		$this->edit->optional->input($this->f->linkUrl);
 		$this->edit->optional->input($this->f->linkText);
-		$this->edit->optional->input($this->f->notes);
+		
+
 		
 		
 		$this->edit->hidden->inputHidden($this->f->id);
@@ -334,7 +347,7 @@ class material extends \application\entity{
 			$sql .= "".$this->f->quantity->value().", ";
 			$sql .= "".$this->f->costUnit->value().", ";
 			$sql .= "".$this->f->costEstimated->value().", ";
-			$sql .= "".$this->f->costActual.", ";
+			$sql .= "".$this->f->costActual->value().", ";
 			$sql .= " ".$this->f->type->id->value().", ";
 			$sql .= " ".$this->f->quantityType->id->value().", ";
 			$sql .= "'".$this->f->notes->value()."') ";

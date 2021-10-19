@@ -1,5 +1,6 @@
 CREATE TABLE activities (
   id bigint(20) NOT NULL,
+    name varchar(100) COLLATE latin1_general_ci NOT NULL,
   task_id bigint(20) NOT NULL,
   done_by varchar(50) COLLATE latin1_general_ci NOT NULL,
   started timestamp NULL DEFAULT CURRENT_TIMESTAMP,
