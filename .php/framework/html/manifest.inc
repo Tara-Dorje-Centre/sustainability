@@ -30,9 +30,9 @@ include_once('displayDetails.class.php');
 include_once('displayList.class.php');
 
 include_once('_htmlFunctions.php');
-include_once('_document.class');
-include_once('page.class');
-include_once('pagePublic.class');
+include_once('_document.class.php');
+include_once('page.class.php');
+include_once('pagePublic.class.php');
 
 
 include_once('css/manifest.inc');

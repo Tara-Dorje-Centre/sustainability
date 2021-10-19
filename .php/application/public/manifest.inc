@@ -1,5 +1,5 @@
 <?php
-include_once("public.site.sql");
-include_once("public.site.links");
-include_once("public.site");
+include_once("public.site.sql.php");
+include_once("public.site.links.php");
+include_once("public.site.php");
 ?>
