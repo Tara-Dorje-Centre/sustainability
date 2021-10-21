@@ -21,7 +21,7 @@ font-family: Arial, Myriad Pro, Helvetica;
 }
 #site-heading-links a {
 	color:white;
-	font-size:13px;
+	font-size:15px;
 	line-height:150%;
 }
 
@@ -159,10 +159,10 @@ legend.display-caption {
 	font-weight: normal;
 	font-variant: normal;
 	width: 100%;
-	font-size: 33px;
+	font-size: 20px;
 	color: #444;
-	padding-bottom: 15px;
-	margin-bottom: 15px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
 }
 .display-details {
 	width: 100%;

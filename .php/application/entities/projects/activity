@@ -194,6 +194,7 @@ extends \application\entity{
 		if ($this->pageMode == 'VIEW'){
 			$this->links->addLink($this->links->edit('Edit Activity', $this->id));
 			$this->links->addLink($this->links->add('New Activity', $this->idParent));
+			
 			$m = new links\materialLinks();
 			$this->links->addLink($m->activityMaterials($this->id));
 		

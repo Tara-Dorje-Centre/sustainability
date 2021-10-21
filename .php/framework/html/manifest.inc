@@ -2,7 +2,7 @@
 include_once('__weblink.class');
 include_once('__element.class.php');
 include_once('__collection.class');
-include_once('__attribute.class');
+include_once('__attribute.class.php');
 
 include_once('__anyElement.class.php');
 include_once('__emptyElement.class');

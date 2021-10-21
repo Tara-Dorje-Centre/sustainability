@@ -57,10 +57,61 @@ abstract class _element{
 	}
 	
 	public function addAttribute(_attribute $a){
-		if ($a->isValid() == true){
+		if (($a->isValid() == true) AND ($this->validateAttribute($a) == true)){
 			$this->_attributes[$a->name] = $a;
 		}
 	}
+	
+	protected function validateAttribute(_attribute $a){
+		//name attribute has limited use cases
+		$valid = true;
+		if ($a->name == 'name'){
+			switch ($this->_tag){
+				case 'button':
+					$valid = true;
+					break;
+				case 'fieldset':
+					$valid = true;
+					break;
+				case 'form':
+					$valid = true;
+					break;
+				case 'iframe':
+					$valid = true;
+					break;
+				case 'input':
+					$valid = true;
+					break;
+				case 'map';
+					$valid = true;
+					$break;
+				case 'meta':
+					$valid = true;
+					break;
+				case 'object':
+					$valid = true;
+					break;
+				case 'output':
+					$valid = true;
+					break;
+				case 'param':
+					$valid = true;
+					break;
+				case 'select':
+					$valid = true;
+					break;
+				case 'textarea':
+					$valid = true;
+					break;
+				default:
+					//name is not valid for other elements
+					$valid = false;
+			}
+		}
+		
+		return $valid;
+	}
+	
 	public function removeAttribute(string $name){
 		unset($this->attributes[$name]);
 	}
@@ -84,6 +135,22 @@ abstract class _element{
 			$this->makeAttribute('name', $this->_name);
 		}
 	}
+
+
+	public function setId(string $id = 'none'){
+		if ($id != 'none'){
+			$this->_id = $idName;
+			$this->makeAttribute('id', $this->_id);
+		}
+	}
+
+	public function setName(string $name = 'none'){
+		if ($name != 'none'){
+			$this->_name = $name;
+			$this->makeAttribute('name', $this->_name);
+		}
+	}
+
 
 	public function setCSS(string $css){
 		$this->_css = $css;
