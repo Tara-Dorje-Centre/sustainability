@@ -174,8 +174,9 @@ extends \application\entity{
 			$projectName = $this->f->project->name->value();
 			$taskName = $this->f->task->name->value();
 		}
-		$title = 'Project: '.$projectName.'<br/>';
-		$title .= 'Task: '.$taskName.'<br/>';		
+		$br = new \html\_br();
+		$title = 'Project: '.$projectName.$br->print();
+		$title .= 'Task: '.$taskName.$br->print();
 		$title .= $this->pageMode.' Activity';
 		$this->_pageTitle = $title;
 	}	

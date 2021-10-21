@@ -11,16 +11,16 @@ class _date extends field{
 	}
 	
 	public function input(){
-		$i = new \html\inputs\_inputTimestamp($this->env->variable(),$this->value(),$this->_caption);
+		$i = new \html\inputs\timestamp($this->env->variable(),$this->value(),$this->_caption);
 		return $i->print();
 	}
 	
 
 }
 
-class dateField extends _date{
+//class dateField extends _date{
 
-}
+//}
 
 
 ?>

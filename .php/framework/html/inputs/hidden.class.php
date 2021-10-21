@@ -2,20 +2,20 @@
 namespace html\inputs;
 
 class hidden extends __input{
-	private $n;
-	private $v;
+	private $name;
+	private $value;
 	public function __construct($name, $value){
 		$css = 'editing-input-hidden';
 		parent::__construct('hidden',$name,$css);
 		$this->setValue($value);
 		
-		$this->n = $name;
-		$this->v = $value;
+		$this->name = $name;
+		$this->value = $value;
 	}
 	public function print(){
 		$input = parent::print();
 		//show values during development
-		$input .= $this->n.'['.$this->v.']';
+		$input .= $this->name.'['.$this->value.']';
 		return $input;
 
 	}

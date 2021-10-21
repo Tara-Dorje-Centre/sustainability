@@ -6,7 +6,7 @@ include_once("field");
 include_once("text.field");
 include_once("request.variables.field");
 include_once("number.field");
-include_once("date.field");
+include_once("_date.field");
 include_once("boolean.field");
 include_once('reset.button');
 include_once('submit.button');

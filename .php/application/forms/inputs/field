@@ -365,18 +365,16 @@ namespace application\forms;
     			case 'NUMBER':
         			break;
     			case 'DATE':
-  		  			//$this->_date = \html\getTimestampDate($this->_raw);
+  		  			$this->_date = $this->_raw;
         			break;
-    			/*
     			case 'TEXT':
-  		  			$this->_text = \html\displayLines($this->_raw);
+  		  			$this->_text = \nl2br($this->_raw);
         			break;
-        		*/
         		case 'BOOLEAN':
         			$this->booleanSetText();
         			break;
     			default:
-  		  			$this->_text = \html\displayLines($this->_raw);
+  		  			$this->_text = \nl2br($this->_raw);
 			}
   		$this->convertNull();
  		
@@ -401,7 +399,7 @@ namespace application\forms;
 	}
 	
 	protected function inputFreeText( ){
-		$i = new \html\inputs\_inputText($this->env->variable(),$this->value(),$this->_caption);
+		$i = new \html\inputs\text($this->env->variable(),$this->value(),$this->_caption);
 		return $i->print();
 		
 	}

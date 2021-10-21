@@ -56,14 +56,12 @@ class _table extends _element{
 		return $tr;
 	}
 	protected function printRows(){
-	//echo 'printing table rows';
-	//$i = 0;
-		foreach ($this->tableRows as $r){
-			$this->addContent($r->print());
-			//$i++;
+		if ((isset($this->tableRows) == true) AND (count($this->tableRows) > 0)){
+			foreach ($this->tableRows as $r){
+				$this->addContent($r->print());
+			}
+			unset($this->tableRows);
 		}
-		//echo $i.'rows printed';
-		unset($this->tableRows);
 	}
 	public function print(){
 		$this->printRows();
@@ -95,10 +93,12 @@ class _tr extends _anyElement{
 	}
 	
 	protected function printData(){
-		foreach ($this->rowData as $c){
-			$this->addContent($c->print());
+		if ((isset($this->rowData) == true) AND (count($this->rowData) > 0)){
+			foreach ($this->rowData as $c){
+				$this->addContent($c->print());
+			}
+			unset($this->rowData);
 		}
-		unset($this->rowData);
 	}
 	public function print(){
 		$this->printData();

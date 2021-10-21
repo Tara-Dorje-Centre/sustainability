@@ -62,7 +62,6 @@ class receipt extends \application\entity{
 		return $name;
 	}
 	
-	
 	protected function makePageTitle(){	
 		if ($this->pageMode == 'ADD'){
 			$a = new activity();
@@ -74,9 +73,10 @@ class receipt extends \application\entity{
 			$taskName = $this->f->task->name->value();
 			$activityName = $this->f->activity->name->value();
 		}
-		$title = 'Project: '.$projectName.'<br/>';
-		$title .= 'Task: '.$taskName.'<br/>';		
-		$title .= 'Activity: '.$activityName.'<br/>';
+		$br = new \html\_br();
+		$title = 'Project: '.$projectName.$br->print();
+		$title .= 'Task: '.$taskName.$br->print();
+		$title .= 'Activity: '.$activityName.$br->print();
 		$title .= $this->pageMode.' Receipt';
 		$this->_pageTitle = $title;
 	}	

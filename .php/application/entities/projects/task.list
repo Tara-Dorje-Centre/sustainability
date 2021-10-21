@@ -49,10 +49,11 @@ class taskList extends \application\entityList{
 	}
 	protected function makePageTitle(){
 		$title = 'Periodic Tasks: ';
+		$br = new \html\_br();
 		if ($this->periodicTasks == 'NO'){
 			$p = new project();
 			$name = $p->getProjectName($this->idParent);
-			$title = 'Project: '.$name.'<br />';
+			$title = 'Project: '.$name.$br->print();
 			$title .= 'All Tasks';
 		} else {
 		

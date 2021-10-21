@@ -141,9 +141,10 @@ class task extends \application\entity{
 	}
 	
 	protected function makePageTitle(){
+		$br = new \html\_br();
 		$p = new project();
 		$name = 'Project: '.$p->getProjectName($this->idParent);
-		$title = $name.'<br />';
+		$title = $name.$br->print();
 
 		if ($this->pageMode != 'ADD'){
 			$title .= $this->pageMode.' Task: '.$this->f->name->value();

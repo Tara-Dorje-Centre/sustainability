@@ -94,30 +94,24 @@ class receiptList extends \application\entityList{
 		$this->base->setActivityId($id);
 	}
 	
-	
-		
-	
 	protected function makePageTitle(){
-		$title = 'displayLevel'.$this->displayLevel.'<br/>';
-		$title .= 'idParent:'.$this->idParent.'<br/>';
-		$title .= 'idActivity:'.$this->activityId.'<br/>';
-		$title .= 'idTask:'.$this->taskId.'<br/>';
-		$title .= 'idProject:'.$this->projectId;
 		
+		$br = new \html\_br();
 		if ($this->displayLevel == 'ACTIVITY'){
 			$a = new activity();
-			$title = 'Project: '.$a->getProjectName($this->activityId).'<br/>';
-			$title .= 'Task: '.$a->getTaskName($this->activityId).'<br/>';
-			$title .= 'Activity: '.$a->getActivityName($this->activityId).'<br/>';
+			$title = 'Project: '.$a->getProjectName($this->activityId).$br->print();
+			$title .= 'Task: '.$a->getTaskName($this->activityId).$br->print();
+			$title .= 'Activity: '.$a->getActivityName($this->activityId).$br->print();
 			$title .= 'Activity Receipts';
 		} elseif ($this->displayLevel == 'TASK'){
 			$t = new task();
-			$title = 'Project: '.$t->getProjectName($this->taskId).'<br/>';
-			$title .= 'Task: '.$t->getTaskName($this->taskId).'<br/>';
+			$title = 'Project: '.$t->getProjectName($this->taskId).$br->print();
+			$title .= 'Task: '.$t->getTaskName($this->taskId).$br->print();
 			$title .= 'Task Receipts';
 		} elseif ($this->displayLevel == 'PROJECT'){
 			$p = new project();
-			$title = 'Project: '.$p->getProjectName($this->projectId).'<br/>';
+			$title = 'Project: '.$p->getProjectName($this->projectId).$br->print();
+			$title .= 'Project Receipts';
 		}
 
 		$this->_pageTitle = $title;

@@ -1,7 +1,7 @@
 <?php
 namespace html\inputs;
 
-class _inputTextarea extends \html\_element{
+class textarea extends \html\_element{
 use valueContent, caption, validation, tooltip, disabled, dimensionsRows;
 	public function __construct($name, $value, $caption,$css = 'editing-input-textarea'){
 		parent::__construct('textarea',$name, $css);

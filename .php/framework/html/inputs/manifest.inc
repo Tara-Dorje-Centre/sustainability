@@ -1,11 +1,13 @@
 <?php
 include_once('__inputTraits.class.php');
 
-include_once('__input.class');
-include_once('__button.class');
+include_once('__input.class.php');
+include_once('__button.class.php');
+
 include_once('_select.class.php');
 
-
+include_once('submit.class.php');
+include_once('reset.class.php');
 
 include_once('_selectOption.class.php');
 include_once('selectRange.class.php');
@@ -19,28 +21,27 @@ include_once('selectYesNo.class.php');
 
 
 
-include_once('__inputCaptioned.class');
+include_once('__inputCaptioned.class.php');
 
-include_once('_inputText.class');
-include_once('_inputTextarea.class');
-include_once('_inputNumber.class');
-include_once('_inputTimestamp.class.php');
+include_once('text.class.php');
+include_once('textarea.class.php');
+include_once('number.class.php');
+include_once('timestamp.class.php');
 
-include_once('hidden.class');
-include_once('password.class');
-include_once('submit.class');
-include_once('reset.class');
+include_once('hidden.class.php');
+include_once('password.class.php');
 
+include_once('email.class.php');
 
 
 //based on inputTextarea
-include_once('comments.class');
-include_once('description.class');
-include_once('notes.class');
+include_once('comments.class.php');
+include_once('description.class.php');
+include_once('notes.class.php');
 
 //based on inputText
-include_once('name.class');
-include_once('user.class');
-include_once('url.class');
+include_once('name.class.php');
+include_once('user.class.php');
+include_once('url.class.php');
 
 ?>

@@ -62,11 +62,13 @@ trait validation{
 	}
 
 }
+
 trait tooltip{
 	public function setTooltip(string $tooltip = 'none'){
 		$this->makeAttribute('title',$tooltip);
 	}
 }
+
 trait disabled{
 	public function setDisabled($disabled = 'false'){
 		if ($disabled != 'false'){
@@ -74,22 +76,49 @@ trait disabled{
 		}
 	}
 }
+
 trait size{
 	public function setSize($size = 0){
 		$this->makeAttribute('size',$size);
 	}
 }
+
+
+
+trait max{
+	public function setMax($max = 0){
+		$this->makeAttribute('max',$max);
+	}
+}
+
+trait min{
+	public function setMin($min = 0){
+		$this->makeAttribute('min',$min);
+	}
+}
+
+trait step{
+	public function setStep($step = 0){
+		$this->makeAttribute('step',$step);
+	}
+}
+
+
+
+
 trait rows{
 	public function setRows($rows = 0,$cols = 0){
 		$this->makeAttribute('rows',$rows);
 		$this->makeAttribute('cols',$cols);
 	}
 }
+
 trait maxLength{
 	public function setMaxlength($maxLength = 0){
 		$this->makeAttribute('maxlength',$maxLength);
 	}
 }
+
 trait dimensionsSize{
 use size, maxLength;
 	public function setDimensions($maxLength = 0, $size = 0){
@@ -104,4 +133,6 @@ use rows, maxLength;
 		$this->setRows($rows,$columns);
 	}
 }
+
+
 ?>

@@ -115,12 +115,15 @@ abstract class _element{
 	public function removeAttribute(string $name){
 		unset($this->attributes[$name]);
 	}
+	
 	protected function buildAttributes(){
 		$this->_attribs = self::_EMPTY;
-		foreach ($this->_attributes as $a){
-			$this->_attribs .= $a->print();
-		}
+		if ((isset($this->_attributes) == true) AND (count($this->_attributes) > 0)){
+			foreach ($this->_attributes as $a){
+				$this->_attribs .= $a->print();
+			}
 		unset($this->_attributes);
+		}
 	}
 
 	protected function setTag(string $tag){

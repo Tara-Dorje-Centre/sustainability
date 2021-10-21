@@ -47,10 +47,10 @@ extends \application\entityList{
 	protected function makePageTitle(){
 		
 		$title = '';
-		
+		$br = new \html\_br();
 		if ($this->myActivity == 'NO'){
 			$t = new task();
-			$title .= 'Project: '.$t->getProjectName($this->idParent).'<br/>';
+			$title .= 'Project: '.$t->getProjectName($this->idParent).$br->print();
 			$title .= 'Task: '.$t->getTaskName($this->idParent);
 		} elseif ($this->myActivity == 'GROUP') {
 			$title .= 'Group Activity History';

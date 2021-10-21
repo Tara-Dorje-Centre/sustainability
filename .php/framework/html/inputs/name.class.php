@@ -1,12 +1,14 @@
 <?php
 namespace html\inputs;
 
-class url extends _inputText{
+//class name extends _inputText{
+class name extends text{
 	public function __construct($name, $value, $caption){
-		$css = 'editing-input-url';
+		$css = 'editing-input-name';
 		parent::__construct($name, $value, $caption, $css);
-		$this->setDimensions(500, 50);
+		$this->setDimensions(100, 20);
 	}
 }
+
 
 ?>

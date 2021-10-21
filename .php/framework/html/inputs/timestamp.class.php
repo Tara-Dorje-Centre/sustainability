@@ -1,7 +1,7 @@
 <?php
 namespace html\inputs;
 
-class _inputTimestamp extends \html\_div{
+class timestamp extends \html\_div{
 use caption, validation;
 	protected $_ts;
 	protected $year;

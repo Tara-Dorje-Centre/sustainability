@@ -11,7 +11,7 @@ class _number extends field{
 		$this->_datatype = 'NUMBER';
 	}
 	public function input(){
-		$i = new \html\inputs\_inputNumber($this->env->variable(),$this->value(),$this->_caption);
+		$i = new \html\inputs\number($this->env->variable(),$this->value(),$this->_caption);
 		return $i->print();
 	}
 }
