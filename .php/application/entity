@@ -76,7 +76,8 @@ implements \application\Ientity{
 	public function options(
 		$selected = 0, 
 		$id = 'id-type',
-		$caption = 'use-entity'){
+		$caption = 'use-entity',
+		$onChangeJS = null){
 		
 		if ($caption == 'use-entity'){
 			$c = '--'.$this->entityTitle;
