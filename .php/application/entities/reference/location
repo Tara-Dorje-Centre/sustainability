@@ -70,7 +70,8 @@ class location extends \application\entity{
 	public function options(
 		$selected = 0, 
 		$id = 'id-type',
-		$caption = 'use-entity'){
+		$caption = 'use-entity',
+		$onChangeJS = null){
 		
 		if ($caption == 'use-entity'){
 			$c = $this->entityTitle;
@@ -79,7 +80,7 @@ class location extends \application\entity{
 		}
 	
 		$sql = $this->sql->options($selected);
-		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c, $onChangeJS);
 		$s->defaultOption(0,'-No '.$this->entityTitle);
 		return $s;
 		

@@ -85,7 +85,7 @@ implements \application\Ientity{
 			$c = $caption;
 		}
 		$sql = $this->sql->options($selected);
-		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c, $onChangeJS);
 		$s->defaultOption(0,$c);
 		return $s;
 	}	
