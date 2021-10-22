@@ -11,7 +11,7 @@ class _boolean extends field{
 	
 }
 
-class booleanField extends _boolean{
-}
+//class booleanField extends _boolean{
+//}
 
 ?>

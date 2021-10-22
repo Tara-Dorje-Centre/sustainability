@@ -12,6 +12,8 @@ class _number extends field{
 	}
 	public function input(){
 		$i = new \html\inputs\number($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
 		return $i->print();
 	}
 }

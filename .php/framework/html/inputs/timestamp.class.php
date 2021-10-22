@@ -2,7 +2,7 @@
 namespace html\inputs;
 
 class timestamp extends \html\_div{
-use caption, validation;
+use caption, validation, tooltip;
 	protected $_ts;
 	protected $year;
 	protected $currentYear;

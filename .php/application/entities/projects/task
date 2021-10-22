@@ -221,26 +221,30 @@ class task extends \application\entity{
 		$this->edit->required->input($this->f->taskOrder);
 		$this->edit->required->input($this->f->started);
 		
-		$m = new project();
-		$select = $m->options($this->f->project->value(),$this->f->project->id->env->variable(),'Parent Project');
-		$this->edit->optional->inputChoice($this->f->project->id,$select->print());
-		
+
 		$m = new \application\entities\reference\taskType;
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 
-		//$this->edit->required->input($this->f->started);
-		$this->edit->optional->input($this->f->pctDone);
+		$this->edit->required->input($this->f->started);
+		
+		
+		$this->edit->required->input($this->f->hoursEstimated);
+		$this->edit->required->input($this->f->pctDone);
+		
 		
 		$m = new \application\entities\reference\location;
 		$select = $m->options($this->f->location->value(),$this->f->location->id->env->variable(),'Location');
-		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
+		$this->edit->required->inputChoice($this->f->location->id,$select->print());
 		
-	
+		$m = new project();
+		$select = $m->options($this->f->project->value(),$this->f->project->id->env->variable(),'Parent Project');
+		$this->edit->required->inputChoice($this->f->project->id,$select->print());
+		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->summary);
 		
-		$this->edit->optional->input($this->f->hoursEstimated);
+
 		$this->edit->optional->input($this->f->hoursNotes);
 
 		

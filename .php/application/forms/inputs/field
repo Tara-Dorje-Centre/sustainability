@@ -19,8 +19,8 @@ namespace application\forms;
  	protected  $_listEnabled = false;
  	protected  $_displayEnabled = false;
   	protected  $_inputEnabled = true;
-  	protected  $_validation = '';
-	protected  $_tooltip = '';
+  	protected  $_validation = 'none';
+	protected  $_tooltip = 'none';
  	public function __construct(
  		string $dbCol = 'not-used', 
  		string $envVar = 'not-used', 
@@ -400,6 +400,8 @@ namespace application\forms;
 	
 	protected function inputFreeText( ){
 		$i = new \html\inputs\text($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
 		return $i->print();
 		
 	}

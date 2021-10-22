@@ -8,6 +8,8 @@ class _email extends _text{
 	}
  	public function input( ){
  		$i = new \html\inputs\email($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
 		return $i->print();
 	}
 }

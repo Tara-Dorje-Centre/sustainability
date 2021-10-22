@@ -13,8 +13,8 @@ class _yesNo extends _text{
 	
 }
 
-class yesNoField extends _yesNo{
-}
+//class yesNoField extends _yesNo{
+//}
  
 
 ?>
