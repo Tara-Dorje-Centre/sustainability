@@ -393,9 +393,9 @@ namespace application\forms;
 		$this->_datatype = 'TEXT';
 	}
 	public function input( ){
-		//if ($this->_inputEnabled){
-			return $this->inputFreeText();
-		//}
+		
+		return $this->inputFreeText();
+		
 	}
 	
 	protected function inputFreeText( ){

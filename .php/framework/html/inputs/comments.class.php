@@ -1,5 +1,6 @@
 <?php
 namespace html\inputs;
+
 class comments extends textArea{
 
 	public function __construct($name,$value,$caption){

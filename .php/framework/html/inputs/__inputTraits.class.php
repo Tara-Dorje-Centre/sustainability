@@ -65,7 +65,9 @@ trait validation{
 
 trait tooltip{
 	public function setTooltip(string $tooltip = 'none'){
-		$this->makeAttribute('title',$tooltip);
+		if ($tooltip != 'none'){
+			$this->makeAttribute('title',$tooltip);
+		}
 	}
 }
 

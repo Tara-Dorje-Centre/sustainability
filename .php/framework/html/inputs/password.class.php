@@ -2,7 +2,7 @@
 namespace html\inputs;
 
 class password extends __inputCaptioned{
-use disabled, tooltip, dimensionsSize;
+use dimensionsSize;
 	public function __construct($name = 'password', $caption = 'Password'){
 		$css = 'editing-input-password';
 		parent::__construct('password',$name, $caption, $css);

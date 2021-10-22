@@ -271,7 +271,7 @@ extends \application\entity{
 		$edit->required->addContent($this->f->parentTask->inputChoice($input));
 		*/
 		
-		//force activity order before running insert
+		//force activity order with sql lookup before running insert
 		//$this->edit->required->input($this->f->activityOrder);
 		$m = new \application\entities\reference\activityType;
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
@@ -279,7 +279,9 @@ extends \application\entity{
 		
 		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->hoursEstimated);
+		
 		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
+		$this->f->hoursActual->setTooltip($tooltip);
 		$this->edit->required->input($this->f->hoursActual);
 		$this->edit->required->input($this->f->started);
 		$this->edit->required->input($this->f->doneBy);

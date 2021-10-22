@@ -23,17 +23,23 @@ class _ajax{
 	
 	public function respond(){
 	
-		if ($this->ajaxFunction == 'PROJECT_TASKS_SELECT'){
+		switch ($this->ajaxFunction){
+		case 'PROJECT_TASKS_SELECT':
 			$this->response = $this->PROJECT_TASKS_SELECT();
-		} else if ($this->ajaxFunction == 'PROJECT_TASKS_RESET'){
+			break;
+		case 'PROJECT_TASKS_RESET':
 			$this->response = $this->PROJECT_TASKS_RESET();
-		} else if ($this->ajaxFunction == 'TASK_EST_EFFORT'){
+			break;
+		case 'TASK_EST_EFFORT':
 			$this->response = $this->TASK_EST_EFFORT();
-		} else if ($this->ajaxFunction == 'PROJECTS_SELECT'){
+			break;
+		case 'PROJECTS_SELECT':
 			$this->response = $this->PROJECTS_SELECT();
-		} else if ($this->ajaxFunction == 'PROJECTS_BY_TYPE_SELECT'){
+			break;
+		case 'PROJECTS_BY_TYPE_SELECT':
 			$this->response = $this->PROJECTS_BY_TYPE_SELECT();
-		} else {
+			break;
+		default:
 			$this->response = $this->UNDEFINED_AJAX_FUNCTION();
 		}
 		
@@ -48,7 +54,7 @@ private function UNDEFINED_AJAX_FUNCTION(){
 	return $div;
 }
 
-//if ($ajaxFunction == 'MESSAGES'
+
 private function PROJECT_TASKS_SELECT(){
 	//pass project id to display tasks
 	$projectId = $this->ajaxId;
