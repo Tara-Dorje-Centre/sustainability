@@ -19,7 +19,36 @@ class _number extends field{
 }
 
 
-class numberField extends _number{
+class percent extends _number{
+
+	public function input(){
+		$i = new \html\inputs\percent($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
+		return $i->print();
+	}
 }
+
+
+class hours extends _number{
+
+	public function input(){
+		$i = new \html\inputs\hours($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
+		return $i->print();
+	}
+}
+
+class priority extends _number{
+
+	public function input(){
+		$i = new \html\inputs\priority($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
+		return $i->print();
+	}
+}
+
 
 ?>

@@ -53,15 +53,15 @@ class projectFields extends \application\forms\fields{
 		$this->location = new \application\forms\_idName('location_id','location-id','Location','location_name');
 
 		$this->summary = new \application\forms\_notes('summary','summary','Summary');
-    	$this->pctDone = new \application\forms\_number('pct_done','pct-done','Percent.Done');
-    	$this->priority = new \application\forms\_number('priority','priority','Priority');
+    	$this->pctDone = new \application\forms\percent('pct_done','pct-done','Percent.Done');
+    	$this->priority = new \application\forms\priority('priority','priority','Priority');
 		$this->goals = new \application\forms\_notes('goals','goals','Goals');
 		$this->purpose = new \application\forms\_notes('purpose','purpose','Purpose');
 		$this->lessons = new \application\forms\_notes('lessons_learned','lessons-learned','Lessons Learned');
 		$this->showAlways = new \application\forms\_yesNo('show_always','show-always','Show.Always');
 
   		
-  		$this->hoursEstimated = new \application\forms\_number('hours_estimated','hours-estimated','Hours Estimated');
+  		$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Hours Estimated');
 	 	//$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','Hours Actual');
 	    $this->hoursNotes = new \application\forms\_description('hours_notes','hours-notes','Hours Notes');
 	    $this->budgetEstimated = new \application\forms\_number('budget_estimated','budget-estimated','Budget Estimated');

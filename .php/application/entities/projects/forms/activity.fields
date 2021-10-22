@@ -39,9 +39,9 @@ extends \application\forms\fields{
     	$this->startDate = new \application\forms\_name('start_date','not-used','Start Date');
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
 		$this->activityOrder = new \application\forms\_number('activity_order','activity-order','Activity Order');
-    	$this->hoursEstimated = new \application\forms\_number('hours_estimated','hours-estimated','Effort Estimate');
-    	$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','Effort Actual');
-    	$this->linkUrl = new \application\forms\_text('link_url','link-url','LinkUrl');
+    	$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Effort Estimate');
+    	$this->hoursActual = new \application\forms\hours('hours_actual','hours-actual','Effort Actual');
+    	$this->linkUrl = new \application\forms\_url('link_url','link-url','LinkUrl');
 		$this->linkText = new \application\forms\_text('link_text','link-text','LinkText');
 		$this->comments = new \application\forms\_comments('comments','comments','Comments');
 		

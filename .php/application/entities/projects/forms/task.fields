@@ -32,7 +32,7 @@ class taskFields extends \application\forms\fields{
     	$this->name = new \application\forms\_name('name','name','Name');
     	$this->started = new \application\forms\_date('started','started','Started');
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
-		$this->pctDone = new \application\forms\_number('pct_done','pct-done','pct Done');	
+		$this->pctDone = new \application\forms\percent('pct_done','pct-done','pct Done');	
 		$this->description = new \application\forms\_description('description','description','Description');
 		$this->summary = new \application\forms\_description('summary','summary','Summary');
 		$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
