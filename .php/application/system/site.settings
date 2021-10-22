@@ -53,6 +53,22 @@ extends \application\entity{
 		
 		$this->f->remove();
 		
+		//session_destroy();
+		
+		$_SESSION['logged-in'] = false;
+		
+		//unset($_SESSION['logged-in']);
+		unset($_SESSION['client-time-zone']);
+		unset($_SESSION['login-name']);
+		unset($_SESSION['user-id']);
+		unset($_SESSION['is-admin']);
+		unset($_SESSION['must-update-pwd']);	
+		
+		//module specific globals
+		unset($_SESSION['currentProjectId']);
+		unset($_SESSION['currentTaskId']);	
+		unset($_SESSION['currentActivityId']);
+		
 	}
 	protected function makePageTitle(){
 	

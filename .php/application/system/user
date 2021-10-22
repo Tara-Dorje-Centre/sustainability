@@ -3,7 +3,6 @@ namespace application\system;
 
 class user extends \application\entity{
 	public $validationMessages;
-	//private $_userLogin;
 	
 	
 	public function __construct(){
@@ -16,11 +15,9 @@ class user extends \application\entity{
 		$this->sql = new sql\UserSQL();
 		$this->links = new links\UserLinks();
 		
-		//$this->_userLogin = new userLogin();
 	}
 	
 	public function getRequestArguments(){
-	
 		parent::getRequestArguments();
 	
 	}
@@ -104,7 +101,7 @@ class user extends \application\entity{
 		return $details;
 		
 	}
-	
+	/*
 	private function generatePassword($length = 11) {
 		
 		$chars = '.!%^&*#@';
@@ -123,7 +120,7 @@ class user extends \application\entity{
 		return $password;
 
 	}
-
+	*/
 	
 	/*
 	public function resetPassword($loginName, $loginEmail){
@@ -171,11 +168,12 @@ class user extends \application\entity{
 		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
 	}
 */
+/*
 	private function obfuscate($pass,$login){
 		$ul = new userLogin();
 		return $ul->obfuscate($pass,$login);
 	}
-
+*/
 	
 	private function setSecurity($loginName){
 		$sql = $this->sql->securityUser($loginName);
@@ -341,7 +339,7 @@ class user extends \application\entity{
 		}
 		//validate password
 		if (($pwd != '') && ($pwd == $pwdConfirm) && ($pwd != 'password')){
-			$this->f->pwd->set($this->obfuscate($pwd, $this->f->loginName->value()));
+			$this->f->pwd->set($this->f->pwd->obfuscate($pwd, $this->f->loginName->value()));
 		} else {
 			if ($pwd == '' || is_null($pwd) || is_null($pwdConfirm) || $pwdConfirm == ''){
 				$validation = 'Password cannot be blank';
