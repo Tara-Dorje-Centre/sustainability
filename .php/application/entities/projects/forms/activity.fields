@@ -36,7 +36,7 @@ extends \application\forms\fields{
     	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
     	$this->doneBy = new \application\forms\_user('done_by','done-by','Done By');
     	$this->started = new \application\forms\_date('started','started','Started');
-    	$this->startDate = new \application\forms\_name('start_date','not-used','Start Date');
+    	$this->startDate = new \application\forms\_text('start_date','not-used','Start Date');
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
 		$this->activityOrder = new \application\forms\_number('activity_order','activity-order','Activity Order');
     	$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Effort Estimate');

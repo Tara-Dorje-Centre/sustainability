@@ -12,7 +12,7 @@ class userSecurityFields extends \application\forms\fields{
 	public $_isLoggedIn;
 	
 	public function __construct(){
-	    $this->_loginMessages = new \application\forms\_text('not-used','login-messages','Login'); 
+	    $this->_loginMessages = new \application\forms\_description('not-used','login-messages','Login'); 
     	$this->_currentUser = new \application\forms\_user('login_name','login-name','not-used'); 
 		$this->_currentUserId = new \application\forms\_id('id','user-id','not-used'); 
 		$this->_isAdmin = new \application\forms\_yesNo('is_admin','is-admin','not-used');

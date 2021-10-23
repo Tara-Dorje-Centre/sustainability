@@ -50,25 +50,23 @@ extends \application\entity{
 	
 	public function unsetSessionDetails(){
 		$this->f->setEnvironment('SESSION');
-		
 		$this->f->remove();
 		
-		//session_destroy();
+		$this->echoPrint(true, 'DUMP SESSION VARIABLES', 'unsetSessionDetails');
+		foreach ($_SESSION as $key=>$val){
+			$this->echoPrint(true, $key.': '.$val);
+			unset($_SESSION[$key]);
+		}
 		
 		$_SESSION['logged-in'] = false;
 		
-		//unset($_SESSION['logged-in']);
-		unset($_SESSION['client-time-zone']);
-		unset($_SESSION['login-name']);
-		unset($_SESSION['user-id']);
-		unset($_SESSION['is-admin']);
-		unset($_SESSION['must-update-pwd']);	
+		$this->echoPrint(true, 'SESSION VARIABLES AFTER UNSET');
+		foreach ($_SESSION as $key=>$val){
+			$this->echoPrint(true, $key.': '.$val);
+		}
 		
-		//module specific globals
-		unset($_SESSION['currentProjectId']);
-		unset($_SESSION['currentTaskId']);	
-		unset($_SESSION['currentActivityId']);
-		
+		//session_destroy();
+	
 	}
 	protected function makePageTitle(){
 	

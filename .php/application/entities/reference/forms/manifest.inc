@@ -1,7 +1,6 @@
 <?php
 
 include_once("location.type.fields");
-include_once("location.child.fields");
 include_once("location.fields");
 include_once("quantity.type.fields");
 include_once("project.type.fields");

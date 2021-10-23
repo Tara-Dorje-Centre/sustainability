@@ -2,8 +2,6 @@
 namespace application\forms;
 
 abstract class entityFields extends fields{
-	//public $_submit;
-	//public $_reset;
 	
 	public $id;
 	public $name;		

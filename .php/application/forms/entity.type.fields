@@ -22,7 +22,7 @@ abstract class entityTypeFields extends fields{
     	$this->created = new _date('created','created','Created');
         $this->highlight = new _cssHighlight('highlight_style','highlight','Highlight');
         $this->notes = new _notes('notes','notes','Notes');
-		$this->displayOrder = new _number('display_order','display-order','Display Order');
+		$this->displayOrder = new order('display_order','display-order','Display Order');
     
 		$this->registerFields();
 		$this->disableFields();

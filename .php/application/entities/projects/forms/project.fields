@@ -62,10 +62,10 @@ class projectFields extends \application\forms\fields{
 
   		
   		$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Hours Estimated');
-	 	//$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','Hours Actual');
-	    $this->hoursNotes = new \application\forms\_description('hours_notes','hours-notes','Hours Notes');
-	    $this->budgetEstimated = new \application\forms\_number('budget_estimated','budget-estimated','Budget Estimated');
-		$this->budgetNotes = new \application\forms\_description('budget_notes','budget-notes','Budget Notes');
+	 	//$this->hoursActual = new \application\forms\hours('hours_actual','hours-actual','Hours Actual');
+	    $this->hoursNotes = new \application\forms\_notes('hours_notes','hours-notes','Hours Notes');
+	    $this->budgetEstimated = new \application\forms\currency('budget_estimated','budget-estimated','Budget Estimated');
+		$this->budgetNotes = new \application\forms\_notes('budget_notes','budget-notes','Budget Notes');
 	
   		
   		

@@ -28,7 +28,7 @@ class taskFields extends \application\forms\fields{
 		parent::__construct();
 	
 		$this->id = new \application\forms\_id('id','id','not-used');
-    	$this->taskOrder = new \application\forms\_number('task_order','task-order','Task Order');						
+    	$this->taskOrder = new \application\forms\order('task_order','task-order','Task Order');						
     	$this->name = new \application\forms\_name('name','name','Name');
     	$this->started = new \application\forms\_date('started','started','Started');
 		$this->updated = new \application\forms\_date('updated','updated','Updated');
@@ -40,13 +40,13 @@ class taskFields extends \application\forms\fields{
     	$this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
     	$this->frequency = new \application\forms\_name('frequency','frequency','Frequency');
     	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
-		$this->hoursActual = new \application\forms\_number('hours_actual','hours-actual','Hours Actual');
-		$this->hoursEstimated = new \application\forms\_number('hours_estimated','hours-estimated','Hours Estimated');
+		$this->hoursActual = new \application\forms\hours('hours_actual','hours-actual','Hours Actual');
+		$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Hours Estimated');
 		$this->hoursNotes = new \application\forms\_notes('hours_notes','hours-notes','Hours Notes');			
 		$this->materialsAuthProject = new \application\forms\_yesNo('materials_auth_project','materials-auth-project','Materials Authorized');
-		$this->materialsAuthBy = new \application\forms\_name('materials_auth_by','materials-auth-by','Materials Authorized By');
+		$this->materialsAuthBy = new \application\forms\_user('materials_auth_by','materials-auth-by','Materials Authorized By');
 		$this->receiptsAuthProject = new \application\forms\_yesNo('receipts_auth_project','receipts-auth-project','Receipts Authorized');
-		$this->receiptsAuthBy = new \application\forms\_name('receipts_auth_by','receipts-auth-by','Receipts Authorized By');
+		$this->receiptsAuthBy = new \application\forms\_user('receipts_auth_by','receipts-auth-by','Receipts Authorized By');
 	
 		$this->registerFields();
 		$this->disableFields();

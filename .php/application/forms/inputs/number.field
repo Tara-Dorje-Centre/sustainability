@@ -18,6 +18,25 @@ class _number extends field{
 	}
 }
 
+class currency extends _number{
+
+	public function input(){
+		$i = new \html\inputs\currency($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
+		return $i->print();
+	}
+}
+
+class order extends _number{
+
+	public function input(){
+		$i = new \html\inputs\order($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
+		return $i->print();
+	}
+}
 
 class percent extends _number{
 

@@ -1,7 +1,0 @@
-<?php
-namespace application\entities\reference\forms;
-
-class locationChildFields extends \application\forms\entityChildFields{
-
-}
-?>

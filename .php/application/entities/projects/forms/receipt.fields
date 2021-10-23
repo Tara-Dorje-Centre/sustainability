@@ -50,8 +50,8 @@ extends \application\forms\fields{
 
 		$this->quantity = new \application\forms\_number('quantity','quantity','Quantity');
 		$this->quantityType = new \application\forms\_idName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
-		$this->costUnit = new \application\forms\_number('cost_unit','cost-unit','Unit Amount');
-		$this->costActual = new \application\forms\_number('cost_actual','cost-actual','Amount Actual');
+		$this->costUnit = new \application\forms\currency('cost_unit','cost-unit','Unit Amount');
+		$this->costActual = new \application\forms\currency('cost_actual','cost-actual','Amount Actual');
 
 		$this->notes = new \application\forms\_notes('notes','notes','Notes');
 

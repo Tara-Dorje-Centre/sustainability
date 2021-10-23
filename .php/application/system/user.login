@@ -3,7 +3,8 @@ namespace application\system;
 
 
 class userLogin extends \framework\_contentWriter{
-use \application\sql\connectionFunctions;
+//use \application\sql\connectionFunctions;
+
 	private $_form = 'LOGIN';
 	protected $myClassName = 'userLogin';
 	private $f;
@@ -81,10 +82,9 @@ use \application\sql\connectionFunctions;
 	public function validateLoginAndEmail($loginName, $loginEmail){
 		$valid = false;
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
-		//global $conn;
+		
 		$found = $this->sql->getCount($sql,'user_count');
 		
-
 		if ($found == 1){
 			$valid = true;
 		} 
@@ -137,6 +137,7 @@ use \application\sql\connectionFunctions;
 		//printLine('forcing login');
 		//$found = 1;
 		//$this->echoValue(true, '......foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
+		
 		if ($found == 1){
 		
 			$validUser = true;
@@ -228,7 +229,7 @@ use \application\sql\connectionFunctions;
 		$login->optional->addContent('Lost Password:'.$msg);
 		$this->f->_clientTimeZone->set('0');
 		$login->hidden->inputHidden($this->f->_clientTimeZone);
-		//= getHiddenInput('client-time-zone','');
+		
 		$login->submit->button($this->f->_loginSubmit);
 		
 		$login->submit->addContent($_SESSION['site-login-notice']);

@@ -7,7 +7,6 @@ include_once("input.form");
 
 include_once("fields");
 include_once("entity.fields");
-include_once("entity.child.fields");
 include_once("entity.type.fields");
 
 include_once("calendar");
