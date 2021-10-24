@@ -1,8 +1,8 @@
 <?php 
-namespace application;
+namespace application\sql;
 
 class publicSiteSQL{
-
+use connectionFunctions;
 public function menuItems($viewMode = 'MAIN', $viewId = 0){
 
 //echo 'viewMode='.$viewMode;

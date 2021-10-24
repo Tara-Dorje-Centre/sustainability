@@ -10,7 +10,8 @@ class _p extends _anyElement{
 	}
 	protected function setCaption($caption){
 		if ($caption != 'none'){
-			$s = new _span($caption,'paragraph-caption');
+			$s = new _span('paragraph-caption');
+			$s->addContent($caption);
 			$this->caption = $s->print();
 		} else {
 			$this->caption = '';
@@ -19,7 +20,7 @@ class _p extends _anyElement{
 	public function open(){
 		$result = parent::open();
 		$result .= $this->caption;
-		return $result();
+		return $result;
 	}
 	
 	

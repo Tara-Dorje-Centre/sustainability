@@ -16,10 +16,10 @@ include_once('_form.class');
 include_once('_hr.class.php');
 include_once('_href.class.php');
 include_once('_img.class');
-include_once('_inlineStyle.class');
+include_once('_inlineStyle.class.php');
 include_once('_lists.class');
 include_once('_meta.class');
-include_once('_p.class');
+include_once('_p.class.php');
 
 include_once('_resourceLink.class');
 include_once('_script.class');

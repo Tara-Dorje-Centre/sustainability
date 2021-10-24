@@ -1,21 +1,23 @@
 <?php 
-namespace application;
+namespace application\links;
 
 class publicSiteLinks extends \application\links\linkMenu{
 	public function __construct($menuType = 'LIST',$styleBase = 'site'){
 		parent::__construct($menuType,$styleBase);
 	}
 	
-	public function menuHref($caption, $viewMode = 'MAIN', $viewId = 0,$cssSuffix = ''){
-		$link = $this->menu($viewMode, $viewId);
-		$href = $this->formatHref($caption,$link,'_self',$cssSuffix);
-		return $href;	
+	public function menuLink($caption, $viewMode = 'MAIN', $viewId = 0,$css = 'public-menu-item'){
+		$page = $this->menu($viewMode, $viewId);
+		$link = $this->buildLink($page, $caption, $css);
+		// target="_self" not available via buildLink
+		
+		return $link;	
 	}
 	public function menu($viewMode = 'MAIN', $viewId = 0){
-		$link = 'public.php';
-		$link .= '?viewMode='.$viewMode;
-		$link .= '&viewId='.$viewId;
-		return $link;
+		$page = 'public.php';
+		$page .= '?viewMode='.$viewMode;
+		$page .= '&viewId='.$viewId;
+		return $page;
 	}
 	public function menuPaged($baseLink,$found, $resultPage, $perPage){
 		$l = $baseLink.'&paging=';

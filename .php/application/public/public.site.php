@@ -10,8 +10,8 @@ class publicSite extends \html\pagePublic{
 	private $found = 0;
 	
 	public function __construct(){
-		$this->links = new publicSiteLinks;
-		$this->sql = new publicSiteSQL;	
+		$this->links = new links\publicSiteLinks;
+		$this->sql = new sql\publicSiteSQL;	
 		
 	}
 
@@ -31,7 +31,7 @@ class publicSite extends \html\pagePublic{
 	protected function getStyleDetails(){
 		$sql = $this->sql->siteStyles();
 
-		$result = dbGetResult($sql);
+		$result = $this->sql->getResult($sql);
 		if($result){
 		while ($row = $result->fetch_assoc())
 		{	
@@ -49,7 +49,7 @@ class publicSite extends \html\pagePublic{
 			$this->fontSizeText = $row["public_font_size_text"];
 					
 		}
-		$result->close;
+		$result->close();
 		}
 
 	}
@@ -57,7 +57,7 @@ class publicSite extends \html\pagePublic{
 	private function getSiteContents(){
 		$sql = $this->sql->siteContent();
 		
-		$result = dbGetResult($sql);
+		$result = $this->sql->getResult($sql);
 		if($result){
 		while ($row = $result->fetch_assoc())
 		{	
@@ -67,122 +67,128 @@ class publicSite extends \html\pagePublic{
 			$contactEmail = $row['contact_email'];
 			$showPublicSite = $row['show_public_site'];
 		}
-		$result->close;
+		$result->close();
 		}
 		
 		if ($showPublicSite == 'no'){
-			include('sys_Login.php');
+			include('portal.php');
 			die;
 		}
 		
-		$link = getHref($orgUrl,$org,'none','_blank');
-		$mailto = getHref('mailto:'.$contactEmail,$contactName,'none');
-
-		$year = getSessionYear();
-		
 		$this->mainTitle = $org;
 		//$this->mainImage = image('images/logo.gif','current site image',150,75,0,'public-site-image');
-		$this->mainFooter = '&copy;'.$year.spacer().$link.spacer(4);
-		$this->mainFooter .= 'Please contact '.spacer().$mailto.' for more information.';
-		$this->mainFooter .= spacer().getHref('sys_Login.php', 'Project Planning Site','none','_self');
+		
+		$sp = \html\spacer();
+		$f = new \html\_div('site-footer-details');
+		
+		$year = date('Y',time());
+		$f->addContent('&copy;'.$year.$sp);
+		
+		$l = $this->links->buildLink($orgUrl, $org, 'none');
+		// target="_blank" not supported in build link
+		$f->addContent($l->print().$sp);
+		
+		$href = 'mailto:'.$contactEmail;
+		$m = $this->links->buildLink($href, $contactName, 'none');
+		$f->addContent('Please contact '.$sp.$m->print().' for more information.');
+		
+		$l = $this->links->buildLink('portal.php', 'Project Planning Site', 'none');
+		//target="_self" not supported n buildLink
+		$f->addContent($sp.$l->print());
+		
+		$this->mainFooter = $f->print();
+		//echo $this->mainFooter;
 	}
 	
 	private function getMenuItems(){
-		$menu = $this->links->openMenu('site-menu-content');
-		$menu .= $this->links->menuHref('Main Menu');
+		$m = new \html\_div('site-menu-content');
+
+		//$m->addContent(
+		$l = $this->links->menuLink('Main Menu');
+		$this->links->addLink($l);
 		
 		$sql = $this->sql->menuItems($this->viewMode, $this->viewId);
 		
-		$result = dbGetResult($sql);
+		$result = $this->sql->getResult($sql);
 		if($result){
 		while ($row = $result->fetch_assoc())
-		{	
-
-//		view_id
-//		view_mode
-//		caption
-//		sort_order
+		{
 
 			$caption = $row['caption'];
 			$viewMode = $row['view_mode'];
 			$viewId = $row['view_id'];
 
-			/**
-			if ($viewMode == 'PROJECT_TYPE'){
-			} elseif ($viewMode == 'PROJECT'){
-			} elseif ($viewMode == 'TASK'){
-			} else {
-			}
-			**/
-			
+			$css = 'public-menu-item';
 			if ($this->viewMode == $viewMode && $this->viewId == $viewId){
 				//menu item is for current page
-				$cssSuffix = '-current';	
-			} else {
-				$cssSuffix = '';
+				$css .= '-current';	
 			}
 				
-			$menu .= $this->links->menuHref($caption,$viewMode,$viewId,$cssSuffix);
+			//$m->addContent(
+			$l = $this->links->menuLink($caption,$viewMode,$viewId,$css);
+			$this->links->addLink($l);
 		}		
-		$result->close;
+		$result->close();
 		}
-		
-		$menu .= $this->links->closeMenu();
-		
-		$this->menuItems = $menu;
+		$m->addContent($this->links->print());
+		$this->menuItems = $m->print();
+	
 	}
 
 	private function getPageContents(){
 	
 		$sql = $this->sql->pageContent($this->viewMode, $this->viewId);
 	
-		$result = dbGetResult($sql);
+		$result = $this->sql->getResult($sql);
 		if($result){
 		while ($row = $result->fetch_assoc())
 		{			
 			$this->pageTitle = $row['title'];
-			$this->pageContents = displaylines($row['content']);	
+			$this->pageContents = nl2br($row['content']);	
 		}
-		$result->close;
+		$result->close();
 		}
 		
 	}
 	
 	private function getPageDetails(){
-		$allDetails = br();
+		$d = new \html\_div();
 		$sql = $this->sql->detailContent($this->viewMode, $this->viewId);
 
-		$result = dbGetResult($sql);
+		$result = $this->sql->getResult($sql);
 		if($result){
 		while ($row = $result->fetch_assoc())
 		{			
 			
-			$heading = displaylines($row["heading"]);
+			$heading = nl2br($row["heading"]);
 			if (strlen($heading) > 0){
-				$item = paragraph($heading,'detail-heading','public-detail-title');
-				$allDetails .= $item;
+				$p = new \html\_p('none','public-detail-title');
+				$p->addContent($heading);
+				$d->addContent($p->print());
 			}
 			
-			$contents = displaylines($row["content"]);
+			$contents = nl2br($row["content"]);
 			if (strlen($contents) > 0){
-				$item = paragraph($contents,'detail-item','public-detail-item');
-				$allDetails .= $item;
+				$p = new \html\_p('none','public-detail-item');
+				$p->addContent($contents);
+				$d->addContent($p->print());
 			}
 
 			$linkText = $row["link_text"];
 			$linkUrl = $row["link_url"];
 			if (strlen($linkText) > 0 && strlen($linkUrl) > 0){
-				$link = getHref($linkUrl, $linkText, 'none', '_blank');
-				$item = paragraph($link,'detail-link','public-detail-item');	
-				$allDetails .= $item;
+				$l = $this->links->buildLink($linkUrl, $linkText, 'none');
+				// target="_blank" not available via buildLink
+				$p = new \html\_p('none','public-detail-link');
+				$p->addContent($l->print());
+				$d->addContent($p->print());
 			}
-			//$item = paragraph($contents,'detail-item','public-detail-item');	
-			//$allDetails .= $item;
+
 		}
-		$result->close;
+		$result->close();
 		}
 
-		$this->pageDetails = $allDetails;	
+		$this->pageDetails = $d->print();	
 	}
 
 }

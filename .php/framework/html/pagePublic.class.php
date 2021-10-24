@@ -58,7 +58,7 @@ implements IPage {
 		$c->addContent($this->siteHeading());
 		$c->addContent($this->siteContent());
 		$c->addContent($this->siteFooter());
-		$this->_document->addContent($c->print());
+		$this->_document->setBody($c->print());
 		return $this->_document->print();
 		
 	}
@@ -67,12 +67,14 @@ implements IPage {
 		$c = new _div('public-site-content');
 		$c->addContent($this->siteMenu());
 		$c->addContent($this->pageContent());
+		//echo $c->print();
 		return $c->print();
 	}
 
 	protected function siteMenu(){
 		$m = new _div('public-site-menu');
 		$m->addContent($this->menuItems);
+		//echo $this->menuItems;
 		return $m->print();
 	}
 
@@ -96,7 +98,9 @@ implements IPage {
 
 	protected function siteFooter(){
 		$f = new _div('public-site-footer');	
-		$f->addContent = $this->mainFooter;
+		$f->addContent($this->mainFooter);
+		//echo $this->mainFooter;
+		//echo $f->print();
 		return $f->print();
 	}
 
@@ -117,116 +121,117 @@ implements IPage {
 
 	protected function buildInternalStyles(){
 	
-		$css = openInlineStyle();
+		$css = '<style>';
+		//openInlineStyle();
 	
-		$clearMarginPadding = clearMarginPadding();		
-		$clearMarginPaddingBorder = clearMarginPaddingBorder();
-		$marginThin = setMargin(5);
-		$marginThick = setMargin(10);
-		$marginLeftWide = setMarginCustom('left', 170);
-		$paddingThin = setPadding(5);
-		$paddingThick = setPadding(10);
-		$positionRelative = setPosition('relative');
-		$clearTextDecoration = textDecoration('none');
-		$widthFull = widthPercent(100);
-		$width150 = widthPixels(150);
-		$floatLeft = setFloat('left');
-		$clearBoth = setClear('both');
-		$verticalAlignTop = verticalAlign('top');
-		$fontNormal = setFont($this->fontSizeText, 'normal', 'normal');
-		$fontBold = setFont($this->fontSizeText, 'normal', 'bold');
-		$fontItalic = setFont($this->fontSizeText, 'italic', 'normal');
-		$fontTitle = setFont($this->fontSizeTitle, 'normal', 'bold');
-		$fontHeading = setFont($this->fontSizeHeading, 'normal', 'normal');
-		$fontMenu = setFont($this->fontSizeMenu, 'normal', 'normal');
+		$clearMarginPadding = \css\clearMarginPadding();		
+		$clearMarginPaddingBorder = \css\clearMarginPaddingBorder();
+		$marginThin = \css\setMargin(5);
+		$marginThick = \css\setMargin(10);
+		$marginLeftWide = \css\setMarginCustom('left', 170);
+		$paddingThin = \css\setPadding(5);
+		$paddingThick = \css\setPadding(10);
+		$positionRelative = \css\setPosition('relative');
+		$clearTextDecoration = \css\textDecoration('none');
+		$widthFull = \css\widthPercent(100);
+		$width150 = \css\widthPixels(150);
+		$floatLeft = \css\setFloat('left');
+		$clearBoth = \css\setClear('both');
+		$verticalAlignTop = \css\verticalAlign('top');
+		$fontNormal = \css\setFont($this->fontSizeText, 'normal', 'normal');
+		$fontBold = \css\setFont($this->fontSizeText, 'normal', 'bold');
+		$fontItalic = \css\setFont($this->fontSizeText, 'italic', 'normal');
+		$fontTitle = \css\setFont($this->fontSizeTitle, 'normal', 'bold');
+		$fontHeading = \css\setFont($this->fontSizeHeading, 'normal', 'normal');
+		$fontMenu = \css\setFont($this->fontSizeMenu, 'normal', 'normal');
 
-		$fontFooter = setFont(11, 'normal','normal');
-		$textColor = colorText($this->textColor);
-		$textColorHover = colorText($this->textColorHover);
-		$fillColor = colorBackground($this->fillColor);
-		$siteColor = colorBackground($this->siteColor); 
-		$pageColor = colorBackground($this->pageColor);
-		$menuColor = colorBackground($this->menuColor);
-		$menuColorHover = colorBackground($this->menuColorHover);
+		$fontFooter = \css\setFont(11, 'normal','normal');
+		$textColor = \css\colorText($this->textColor);
+		$textColorHover = \css\colorText($this->textColorHover);
+		$fillColor = \css\colorBackground($this->fillColor);
+		$siteColor = \css\colorBackground($this->siteColor); 
+		$pageColor = \css\colorBackground($this->pageColor);
+		$menuColor = \css\colorBackground($this->menuColor);
+		$menuColorHover = \css\colorBackground($this->menuColorHover);
 		
 				
-		$p = setFontFamily($this->fontFamily);
+		$p = \css\setFontFamily($this->fontFamily);
 		$p .= $fontNormal;
 		$p .= $textColor;
 		$p .= $fillColor;
 		$p .= $clearMarginPaddingBorder;
-		$css .= wrapStyle('body', $p);
+		$css .= \css\wrapStyle('body', $p);
 		
-		$css .= wrapStyle('div', $clearMarginPaddingBorder);
-		$css .= wrapStyle('p', $clearMarginPaddingBorder);
-		$css .= wrapStyle('.site-links-list', $clearMarginPaddingBorder);
+		$css .= \css\wrapStyle('div', $clearMarginPaddingBorder);
+		$css .= \css\wrapStyle('p', $clearMarginPaddingBorder);
+		$css .= \css\wrapStyle('.site-links-list', $clearMarginPaddingBorder);
 
 		$p = $clearMarginPadding;
-		$p .= clearListStyle();
-		$css .= wrapStyle('.site-links-list-ul', $p);
+		$p .= \css\clearListStyle();
+		$css .= \css\wrapStyle('.site-links-list-ul', $p);
 
-		$css .= wrapStyle('.site-links-item-li', $clearMarginPadding);
+		$css .= \css\wrapStyle('.site-links-item-li', $clearMarginPadding);
 		//define a style matching site-links-item but using hover color and hover text color 
 		//menu item that matches the current page uses this style via -current suffix
 		$p = $menuColorHover;
-		$p .= setDisplay('block');
+		$p .= \css\setDisplay('block');
 		$p .= $clearTextDecoration;
 		$p .= $textColorHover;
 		$p .= $fontMenu;
-		$p .= textAlign('left');
+		$p .= \css\textAlign('left');
 		$p .= $paddingThin;
-		$css .= wrapStyle('.site-links-item-current', $p);
+		$css .= \css\wrapStyle('.site-links-item-current', $p);
 
-		$p = setDisplay('block');
+		$p = \css\setDisplay('block');
 		$p .= $clearTextDecoration;
 		$p .= $textColor;
 		$p .= $fontMenu;
-		$p .= textAlign('left');
+		$p .= \css\textAlign('left');
 		$p .= $paddingThin;
-		$css .= wrapStyle('.site-links-item', $p);
+		$css .= \css\wrapStyle('.site-links-item', $p);
 
 		$p = $clearTextDecoration;
 		$p .= $textColorHover;
 		$p .= $menuColorHover;
-		$css .= wrapStyle('.site-links-item:hover', $p);
+		$css .= \css\wrapStyle('.site-links-item:hover', $p);
 
 		$p = $positionRelative;
 		$p .= $marginThick;
 		$p .= $paddingThick;
-		$p .= minHeightPixels(400);
+		$p .= \css\minHeightPixels(400);
 		$p .= $siteColor;
-		$css .= wrapStyle('#public-site-container', $p);
+		$css .= \css\wrapStyle('#public-site-container', $p);
 
 		$p = $positionRelative;
 		$p .= $verticalAlignTop;
-		$p .= minHeightPixels(50);
+		$p .= \css\minHeightPixels(50);
 		$p .= $widthFull;
 		$p .= $clearBoth;
-		$css .= wrapStyle('#public-site-heading', $p);
+		$css .= \css\wrapStyle('#public-site-heading', $p);
 
 		$p = $positionRelative;
 		$p .= $widthFull;
 		$p .= $clearBoth;
-		$css .= wrapStyle('#public-site-content', $p);
+		$css .= \css\wrapStyle('#public-site-content', $p);
 
 		$p = $positionRelative;
 		$p .= $marginLeftWide;
 		$p .= $paddingThick;
 		$p .= $fontTitle;
-		$css .= wrapStyle('#public-site-title', $p);
+		$css .= \css\wrapStyle('#public-site-title', $p);
 
 		$p = $floatLeft;
 		$p .= $width150;
-		$css .= wrapStyle('#public-site-image', $p);
+		$css .= \css\wrapStyle('#public-site-image', $p);
 		
 		$p = $positionRelative;
 		$p .= $clearBoth;
-		$p .= minHeightPixels(30);
+		$p .= \css\minHeightPixels(30);
 		$p .= $verticalAlignTop;
 		$p .= $widthFull;
 		$p .= $paddingThick;
 		$p .= $fontFooter;
-		$css .= wrapStyle('#public-site-footer', $p);
+		$css .= \css\wrapStyle('#public-site-footer', $p);
 
 		$p = $positionRelative;
 		$p .= $verticalAlignTop;
@@ -234,32 +239,34 @@ implements IPage {
 		$p .= $width150;
 		$p .= $paddingThin;
 		$p .= $menuColor;
-		$css .= wrapStyle('#public-site-menu', $p);
+		$css .= \css\wrapStyle('#public-site-menu', $p);
 
 		$p = $positionRelative;
 		$p .= $marginLeftWide;
 		$p .= $paddingThick;
-		$p .= minHeightPixels(350);
+		$p .= \css\minHeightPixels(350);
 		$p .= $pageColor;
-		$css .= wrapStyle('#public-page-container', $p);
+		$css .= \css\wrapStyle('#public-page-container', $p);
+		
 		$p = $positionRelative;
 		$p .= $paddingThick;
 		$p .= $fontHeading;
-		$css .= wrapStyle('#public-page-title', $p);
+		$css .= \css\wrapStyle('#public-page-title', $p);
 		
 		//#public-page-content {position:relative;}
 		//#public-page-details {position:relative;}
 
 		$p = $fontHeading;
 		$p .= $marginThin;
-		$css .= wrapStyle('.public-detail-title', $p);
+		$css .= \css\wrapStyle('.public-detail-title', $p);
 
 		$p = $fontNormal;
 		$p .= $marginThin;
-		$css .= wrapStyle('.public-detail-item', $p);
+		$css .= \css\wrapStyle('.public-detail-item', $p);
 		
 
-		$css .= closeInlineStyle();
+		$css .= '</style>';
+		//closeInlineStyle();
 		
 
 		return $css;

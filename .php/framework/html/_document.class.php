@@ -12,11 +12,11 @@ class _document {
 	protected $_scripts;
 	public function __construct($title, $onLoad = 'none'){
 	
-	$this->html= new _anyElement('html');
-	$this->head = new _anyElement('head');
-	$this->title = new _anyElement('title');
+		$this->html= new _anyElement('html');
+		$this->head = new _anyElement('head');
+		$this->title = new _anyElement('title');
 		$this->title->setContent($title);
-	$this->body = new _anyElement('body');
+		$this->body = new _anyElement('body');
 		$this->body->makeAttribute('onload', $onLoad);
 	}
 	public function setStyles($styles = null){
