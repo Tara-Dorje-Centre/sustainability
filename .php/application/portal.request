@@ -209,11 +209,16 @@ class portalRequest extends \framework\_echo{
 	
 	
 	protected function loadProject(){
+		$save = false;
 		if ($this->scope->value() == 'save'){
 			$s = new entities\projects\project();
-			$this->save($s, 'list');
+			$this->save($s, 'detail');
+			$save = true;
 		}
 		if ($this->scope->value() == 'detail'){
+			if ($save == true){
+				$_GET['id'] = $s->id;
+			}
 			$t = new entities\projects\project();
 		} else {
 			$t = new entities\projects\projectList();
