@@ -94,7 +94,7 @@ public function pageContent($viewMode = 'MAIN', $viewId = 0){
 		$q .= " concat_ws(' ', p.description, p.purpose, p.summary) as content ";
 		$q .= " FROM projects as p JOIN project_types as pt ON p.type_id = pt.id ";
 		$q .= " WHERE p.show_always != 'no' AND p.id = ".$viewId." ";
-		//$q .= " ORDER BY pt.display_order ";	
+		//$q .= " ORDER BY pt.display_order, p.name ";	
 	} else {
 		//viewing a task
 		$q = " SELECT t.name as title, ";
@@ -137,7 +137,7 @@ public function detailContent($viewMode = 'MAIN', $viewId = 0){
 		$q = " SELECT l.sort_key as sort_key, p.name as heading, p.description as content, ";
 		$q .= " 'Project' as type, null as link_text, null as link_url ";
 		$q .= " FROM projects p	LEFT OUTER JOIN locations l ON p.location_id = l.id ";
-		$q .= " WHERE p.show_always != 'no' AND p.pct_done < 1 AND p.type_id = ".$viewId." ORDER BY sort_key ";
+		$q .= " WHERE p.show_always != 'no' AND p.pct_done < 1 AND p.type_id = ".$viewId." ORDER BY sort_key, p.name ";
 		
 	} else {
 		//viewing main, project id and task id are set to 0
