@@ -132,6 +132,7 @@ class project extends \application\entity{
 	 		$this->f->reset(true);
 	 		$this->f->started->set($this->f->currentTimestamp);
 	 		$this->f->showAlways->set('yes');
+	 		$this->f->pctDone->set(0);
 	 	}
 	}
 
@@ -152,20 +153,20 @@ class project extends \application\entity{
 		$this->edit->required->input($this->f->hoursEstimated);
 		$this->edit->required->input($this->f->budgetEstimated);
 		
-		$this->edit->optional->input($this->f->pctDone);
+		$this->edit->required->input($this->f->pctDone);
 		
 		$m = new \application\entities\reference\location;
 		$select = $m->options($this->f->location->value(),$this->f->location->id->env->variable(),'Location');
-		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
+		$this->edit->required->inputChoice($this->f->location->id,$select->print());
 		
 		if ($this->idParent > 0){
 			$this->f->parent->set($this->idParent);
 		}
 		$select = $this->options($this->f->parent->value(),$this->f->parent->id->env->variable(),'Parent Project');
-		$this->edit->optional->inputChoice($this->f->parent->id,$select->print());
+		$this->edit->required->inputChoice($this->f->parent->id,$select->print());
 		
 		
-		$this->edit->optional->input($this->f->showAlways);
+		$this->edit->required->input($this->f->showAlways);
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->summary);
