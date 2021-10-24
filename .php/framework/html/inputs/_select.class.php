@@ -54,6 +54,10 @@ use caption, validation, tooltip, disabled;
 		$i->addContent(parent::print());
 		return $i->print();
 	}
+	
+	public function printNoCaption(){
+		return parent::print();
+	}
 }
 
 

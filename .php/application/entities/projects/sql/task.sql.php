@@ -83,6 +83,13 @@ $q .= " WHERE t.id = ".$id;
 return $q;
 }
 
+public function getTaskHoursEstimated($id = 0){
+$q = " SELECT t.hours_estimated ";
+$q .= " FROM tasks as t ";
+$q .= " WHERE t.id = ".$id;
+return $q;
+}
+
  public function countProject($id = 0){
 	$q = $this->colsCount();
 	$q .= " FROM tasks AS t ";
@@ -93,13 +100,13 @@ return $q;
 protected function colsOption($first = true){
 		$c = $this->select($first);
 		$c .= " t.id as value, ";
-		$c .= " concat_ws(':',t.task_order, t.name) as caption ";
+		$c .= " concat_ws(': ',lpad(t.task_order,2,'0'), t.name) as caption ";
 		return $c;
 }
 
 
 
-public function optionsProject($id = 0){
+public function optionsByProject($id = 0){
 	$q = $this->colsOption(true);
 	$q .= " FROM tasks as t ";
 	$q .= " where t.project_id = ".$id;

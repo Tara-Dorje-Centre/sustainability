@@ -59,7 +59,7 @@ class project extends \application\entity{
 	
 	public function options(
 		$selected = 0, 
-		$id = 'id-type',
+		$id = 'id-project',
 		$caption = 'use-entity',
 		$onChangeJS = null){
 		
@@ -76,11 +76,31 @@ class project extends \application\entity{
 		
 	}
 		
+	public function optionsTypesInUse(
+		$selected = 0, 
+		$id = 'project-type-id',
+		$caption = 'use-entity',
+		$onChangeJS = null){
+		
+		if ($caption == 'use-entity'){
+			$c = $this->entityTitle;
+		} else {
+			$c = $caption;
+		}
+	
+		$sql = $this->sql->optionsTypesInUse($selected);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c, $onChangeJS);
+		$s->defaultOption(0,'-No '.$this->entityTitle);
+		return $s;
+		
+	}
+	
 	public function optionsByType(
 		$selected = 0, 
-		$id = 'id-project',
+		$id = 'project-id',
 		$typeId = 0,
-		$caption = 'use-entity'){
+		$caption = 'use-entity',
+		$onChangeJS = null){
 		
 		if ($caption == 'use-entity'){
 			$c = $this->entityTitle;
@@ -89,7 +109,7 @@ class project extends \application\entity{
 		}
 	
 		$sql = $this->sql->optionsByType($typeId);
-		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c, $onChangeJS);
 		$s->defaultOption(0,'-No '.$this->entityTitle);
 		return $s;
 		
@@ -100,7 +120,12 @@ class project extends \application\entity{
 		$name = $this->sql->getScalar($sql,'name','[project name]');
 		return $name;
 	}
-
+	
+	public function getProjectTypeId($id){
+		$sql = $this->sql->getProjectTypeId($id);
+		$id = $this->sql->getScalar($sql,'type_id','0');
+		return $id;
+	}
 
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){

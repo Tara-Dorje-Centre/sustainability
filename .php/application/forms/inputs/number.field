@@ -16,6 +16,12 @@ class _number extends field{
 		$i->setValidation($this->_validation);
 		return $i->print();
 	}
+	
+	public function inputNoCaption(){
+		$i = new \html\inputs\number($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
+	
 }
 
 class currency extends _number{
@@ -25,6 +31,11 @@ class currency extends _number{
 		$i->setTooltip($this->_tooltip);
 		$i->setValidation($this->_validation);
 		return $i->print();
+	}
+	
+	public function inputNoCaption(){
+		$i = new \html\inputs\currency($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
 	}
 }
 
@@ -36,6 +47,12 @@ class order extends _number{
 		$i->setValidation($this->_validation);
 		return $i->print();
 	}
+	
+	public function inputNoCaption(){
+		$i = new \html\inputs\order($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
+	
 }
 
 class percent extends _number{
@@ -45,6 +62,11 @@ class percent extends _number{
 		$i->setTooltip($this->_tooltip);
 		$i->setValidation($this->_validation);
 		return $i->print();
+	}
+	
+	public function inputNoCaption(){
+		$i = new \html\inputs\percent($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
 	}
 }
 
@@ -57,6 +79,12 @@ class hours extends _number{
 		$i->setValidation($this->_validation);
 		return $i->print();
 	}
+	
+	public function inputNoCaption(){
+		$i = new \html\inputs\hours($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
+	
 }
 
 class priority extends _number{
@@ -67,6 +95,12 @@ class priority extends _number{
 		$i->setValidation($this->_validation);
 		return $i->print();
 	}
+	
+	public function inputNoCaption(){
+		$i = new \html\inputs\priority($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
+	
 }
 
 

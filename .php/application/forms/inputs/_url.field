@@ -9,6 +9,12 @@ class _url extends _text{
 		$i->setValidation($this->_validation);
 		return $i->print();
 	}
+	
+	public function inputNoCaption( ){
+ 		$i = new \html\inputs\url($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
+	
 }
 
 

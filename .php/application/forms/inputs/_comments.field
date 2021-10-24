@@ -13,6 +13,11 @@ class _comments extends _text{
 		return $i->print();
 	}
 	
+	public function inputNoCaption( ){
+ 		$i = new \html\inputs\comments($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
+	
 }
 	
 

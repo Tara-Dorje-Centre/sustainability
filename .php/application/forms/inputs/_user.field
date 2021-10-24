@@ -12,7 +12,11 @@ class _user extends _text{
 		$i->setValidation($this->_validation);
 		return $i->print();
 	}
-
+	
+	public function inputNoCaption( ){
+ 		$i = new \html\inputs\user($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
 }
 
 ?>

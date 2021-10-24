@@ -406,6 +406,11 @@ namespace application\forms;
 		
 	}
 	
+	protected function inputNoCaption( ){
+		$i = new \html\inputs\text($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
+	
 	public function inputHidden( ){
 		$i = new \html\inputs\hidden($this->env->variable(), $this->value());
 		return $i->print();

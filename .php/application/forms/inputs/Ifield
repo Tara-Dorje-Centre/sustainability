@@ -41,6 +41,7 @@ interface Ifield{
  	public function listDetail();
  	public function displayDetail();
  	public function input();
+ 	
  }
 
 ?>

@@ -21,6 +21,8 @@ extends \application\sql\entitySQL{
 		$c .= " at.highlight_style, ";	
 		$c .= " t.project_id, ";
 		$c .= " p.name project_name, ";
+		$c .= " p.type_id project_type_id, ";
+		$c .= " pt.name project_type_name, ";
 		$c .= " a.done_by,  ";
 		$c .= " a.started,  ";
 		$c .= " DATE(a.started) start_date, ";
@@ -49,6 +51,7 @@ extends \application\sql\entitySQL{
 		$q .= " JOIN tasks t ON a.task_id = t.id ";
 		$q .= " JOIN projects p ON t.project_id = p.id ";
 		if ($joinTypes == true){
+			$q .= " LEFT OUTER JOIN project_types pt ON p.type_id = pt.id ";
 			$q .= " LEFT OUTER JOIN task_types tt ON t.type_id = tt.id ";
 			$q .= " LEFT OUTER JOIN activity_types at ON a.type_id = at.id ";
 		}

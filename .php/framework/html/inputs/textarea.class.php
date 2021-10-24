@@ -18,5 +18,10 @@ use valueContent, caption, validation, tooltip, disabled, dimensionsRows;
 		$d->addContent(parent::print());
 		return $d->print();
 	}
+	
+	public function printNoCaption(){
+		return parent::print();
+	}
+	
 }
 ?>

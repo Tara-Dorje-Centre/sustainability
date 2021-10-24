@@ -4,13 +4,13 @@ namespace application\entities\projects\sql;
 class projectSQL 
 extends \application\sql\entitySQL{
 
-public function __construct(){
-	$this->baseTable = 'projects';
-	$this->fieldId = 'p.id';
+	public function __construct(){
+		$this->baseTable = 'projects';
+		$this->fieldId = 'p.id';
 
-}
+	}
 
-//projects table fields displayed in listing
+	//projects table fields displayed in listing
 	protected function cols(){
 		$c = $this->select();
 		$c .= " p.id, ";
@@ -80,11 +80,9 @@ return $q;
 }
 
 public function listByActivityDoneBy($doneBy, $status, $page, $rows){
-
 $q = $this->cols();
 $q .= $this->tables();
 $q .= $this->whereStatus($status);
-
 $q .= " AND p.id IN ";
 $q .= $this->subqueryActivityDoneBy($doneBy);
 $q .= " ORDER BY l.sort_key, p.priority, p.id ";
@@ -95,6 +93,13 @@ return $q;
 
 	public function getProjectName($id){
 		$sql = 'select name from projects ';
+		$sql .= 'where id = '.$id;
+		return $sql;
+	}
+	
+	
+	public function getProjectTypeId($id){
+		$sql = 'select type_id from projects ';
 		$sql .= 'where id = '.$id;
 		return $sql;
 	}
@@ -146,9 +151,22 @@ public function options(){
 	
 	$q .= " WHERE p.pct_done < 1 ";
 
-	$q .= " ORDER BY name ";
+	$q .= " ORDER BY p.name ";
 	return $q;	
 }
+
+public function optionsTypesInUse(){
+	$q = " SELECT ";
+	$q .= " p.type_id as value, ";
+	$q .= " pt.name as caption ";
+	$q .= " FROM projects p ";
+	$q .= " JOIN project_types pt ";
+	$q .= " ON p.type_id = pt.id ";
+	$q .= " WHERE p.pct_done < 1 ";
+	$q .= " GROUP BY pt.name, p.type_id ";
+	return $q;	
+}
+
 public function optionsByType($typeId = 0){
 	$q = " SELECT ";
 	$q .= " p.id as value, ";
@@ -156,9 +174,9 @@ public function optionsByType($typeId = 0){
 	$q .= " FROM projects p ";
 	$q .= " WHERE p.pct_done < 1 ";
 	if ($typeId > 0){
-	$q .= " AND p.type_id = ".$typeId.") ";
+	$q .= " AND p.type_id = ".$typeId." ";
 	}
-	$q .= " ORDER BY name ";
+	$q .= " ORDER BY p.name ";
 	return $q;	
 }
 

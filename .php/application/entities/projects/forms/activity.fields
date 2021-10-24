@@ -9,6 +9,7 @@ extends \application\forms\fields{
     public $name;
     
     public $project;
+    public $projectType;
     public $task;
     
 	public $type;
@@ -30,10 +31,11 @@ extends \application\forms\fields{
     	
 		$this->id = new \application\forms\_id('id','id','not-used');
     	$this->name = new \application\forms\_name('name','name','Name');
-    	$this->task = new \application\forms\_idName('task_id','id-task','Task','task_name');
-    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
+    	$this->task = new \application\forms\_idName('task_id','task-id','Task','task_name');
+    	$this->type = new \application\forms\_idName('type_id','type-id','Type','type_name');
         $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-    	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
+    	$this->project = new \application\forms\_idName('project_id','project-id','Project','project_name');
+    	$this->projectType = new \application\forms\_idName('project_type_id','project-type-id','Project Type','project_type_name');
     	$this->doneBy = new \application\forms\_user('done_by','done-by','Done By');
     	$this->started = new \application\forms\_date('started','started','Started');
     	$this->startDate = new \application\forms\_text('start_date','not-used','Start Date');
@@ -54,6 +56,7 @@ extends \application\forms\fields{
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
    		$this->_register('project', $this->project);
+		$this->_register('projectType', $this->projectType);
 		$this->_register('task', $this->task);
 		$this->_register('type', $this->type);
    		$this->_register('highlight', $this->highlight);

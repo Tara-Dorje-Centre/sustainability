@@ -234,11 +234,13 @@ extends \application\entity{
 	 		$this->f->reset(true);
 	 		$t = new task();
 	 		$name = $t->getTaskName($this->idParent);
+	 		$hours = $t->getTaskHoursEstimated($this->idParent);
 	 		$this->f->activityOrder->set($this->nextActivityOrder());
 	 		$this->f->name->set($name.'.'.$this->f->activityOrder->value());
 
 	 		$this->f->started->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
+	 		$this->f->hoursEstimated->set($hours);
 	 		$this->f->hoursActual->set(1);
 	 	}
 	}
@@ -248,31 +250,37 @@ extends \application\entity{
 		if ($this->idParent > 0){
 			$this->f->task->id->set($this->idParent);
 		}
+		$taskId = $this->f->task->id->value();
+		$t = new task();
+		$projectId = $t->getProjectId($taskId);
+		$p = new project();
+		$projectTypeId = $p->getProjectTypeId($projectId);
+		
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),$this->f->task->id->value(),0);
 		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
 		
+		$m = new project();
+		$changeJS = "ajaxRefresh('PROJECTS_BY_TYPE_SELECT',this,'project-id');";
+		$select = $m->optionsTypesInUse($projectTypeId,'project-type-id', 'Project Type',$changeJS);
+		$this->edit->required->inputChoice($this->f->projectType->id,$select->print());
+		
+		$changeJS = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'task-id');";
+		$select = $m->optionsByType($projectId,'project-id',$projectTypeId, 'Project',$changeJS);
+		$this->edit->required->inputChoice($this->f->project->id,$select->print());
 		
 		
-		/*
-		$base = new ProjectType('OPTIONS');
-		$changeJs = "ajaxRefresh('PROJECTS_BY_TYPE_SELECT',this,'projectId');";
-		$input = $base->options($this->f->parentProjectType->id->value(),$this->f->parentProjectType->id->env->variable(),'false',false,$changeJs);
-		$edit->required->addContent($this->f->parentProjectType->inputChoice($input));
+		$m = new task();
+		$changeJS = "ajaxRefresh('TASK_ACTIVITY_NAME',this,'name');";		
+		//$changeJS = null;
+		$select = $m->optionsByProject($taskId,'task-id',$projectId,'Task',$changeJS);
+		$this->edit->required->inputChoice($this->f->task->id,$select->print());
 		
-		$base = new project('OPTIONS');
-		$changeJs = "ajaxRefresh('PROJECT_TASKS_SELECT',this,'taskId');";
-		$input = $base->options($this->f->parentProject->id->value(),$this->f->parentProject->id->variable(),'false',false,$changeJs);
-		$edit->required->addContent($this->f->parentProject->inputChoice($input));
 		
-		$base = new task('OPTIONS');
-		$changeJs = "ajaxRefresh('TASK_EST_EFFORT',this,'activityHoursActual');";		
-		$input = $base->options($this->f->task->id->value(),$this->f->task->id->env->variable(),'false',false,$changeJs);
-		$edit->required->addContent($this->f->parentTask->inputChoice($input));
-		*/
 		
 		//force activity order with sql lookup before running insert
 		//$this->edit->required->input($this->f->activityOrder);
+		
 		$m = new \application\entities\reference\activityType;
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
@@ -294,7 +302,7 @@ extends \application\entity{
 		
 		$this->edit->hidden->inputHidden($this->f->id);
 		//comment after ajax calls are done
-		$this->edit->hidden->inputHidden($this->f->task->id);
+		//$this->edit->hidden->inputHidden($this->f->task->id);
 		$this->edit->setRequestMode($this->pageMode);
 		$this->edit->setSubmitButtons();
 		

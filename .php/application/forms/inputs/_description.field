@@ -12,6 +12,11 @@ class _description extends _text{
 		$i->setValidation($this->_validation);
 		return $i->print();
 	}
+	
+	public function inputNoCaption( ){
+ 		$i = new \html\inputs\description($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
+	}
 }
 
 

@@ -140,6 +140,13 @@ class task extends \application\entity{
 		return $name;
 	}
 	
+	public function getTaskHoursEstimated($taskId){
+		$sql = $this->sql->getTaskHoursEstimated($taskId);
+		$hours = $this->sql->getScalar($sql,'hours_estimated',0);
+		return $hours;
+	}
+	
+	
 	protected function makePageTitle(){
 		$br = new \html\_br();
 		$p = new project();
@@ -169,32 +176,27 @@ class task extends \application\entity{
 		 return $detail;
 	}
 	
-	/*
-	public function options(
-		$selectedValue = 0,
-		$idName = 'taskId', 
-		$disabled = 'false',
-		$showLink = true,
-		$onChangeJS = NULL,
-		$ajaxEvent = NULL,
-		$ajaxEventType = NULL){
-	
+	public function optionsByProject(
+		$selected = 0, 
+		$id = 'id-project',
+		$projectId = 0,
+		$caption = 'use-entity',
+		$onChangeJS = null){
 		
-		$sql = $this->sql->optionsProject($this->f->project->id->value(), $selectedValue, $disabled);
-		
-		$defaultValue = 0;
-		$defaultCaption = '-No Task';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
-		
-		$select = getSelectList($idName,$allOptions,'none',$disabled,$onChangeJS, $ajaxEvent, $ajaxEventType);
-		if ($showLink === true){
-			
-			$links =$this->links->detailViewEditHref($selectedValue);
-			$select .= $links;
+		if ($caption == 'use-entity'){
+			$c = $this->entityTitle;
+		} else {
+			$c = $caption;
 		}
-		return $select;
-	}	
-	*/
+	
+		$sql = $this->sql->optionsByProject($projectId);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c, $onChangeJS);
+		$s->defaultOption(0,'-No '.$this->entityTitle);
+		return $s;
+		
+	}
+	
+	
 	protected function nextTaskOrder(){
 		$sql = $this->sql->countProject($this->idParent);
 		$count = $this->sql->getCount($sql, 'count_details');

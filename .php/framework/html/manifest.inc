@@ -13,7 +13,7 @@ include_once('_div.class.php');
 
 include_once('_fieldset.class.php');
 include_once('_form.class');
-include_once('_hr.class');
+include_once('_hr.class.php');
 include_once('_href.class.php');
 include_once('_img.class');
 include_once('_inlineStyle.class');
