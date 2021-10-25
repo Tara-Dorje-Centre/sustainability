@@ -20,7 +20,6 @@ class systemMenuLinks extends linkMenu {
 		$scope = 'logout';
 		$u->makeParameter('context',$context);
 		$u->makeParameter('scope',$scope);
-		//$this->setBaseParameters($u,$scope,$context);
 		return $this->getLink($u,'Logout');
 	}
 	public function menuUrl(string $displayMode, $year = 0, $month = 0){
@@ -32,9 +31,6 @@ class systemMenuLinks extends linkMenu {
 		
 		$u->makeParameter('year',$year);
 		$u->makeParameter('month',$month);
-		
-	//	$this->setCalendarParameters($u,$year,$month);	
-		
 		$u->makeParameter('displayMode', $displayMode);
 
 		return $u;

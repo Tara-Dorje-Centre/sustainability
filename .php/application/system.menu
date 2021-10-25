@@ -154,7 +154,8 @@ class systemMenu extends \framework\_echo{
 		
 		if (isset($_SESSION['logged-in']) && $_SESSION['logged-in'] == true){
 			if ($_SESSION['must-update-pwd'] == 'yes'){
-				$this->main->makeSpan('Please update your profile password.');
+				$this->main->addTextItem('Please update your profile password.');
+				
 			}
 			$l = new system\links\userLinks();
 			$this->main->addLink($l->view('My Profile', $_SESSION['user-id']));

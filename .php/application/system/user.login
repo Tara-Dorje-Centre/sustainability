@@ -42,19 +42,28 @@ class userLogin extends \framework\_contentWriter{
 			$newPassCrypt = $this->f->_loginPassword->obfuscate($this->sql->getEscapeString($newPass),$loginName);
 		
 		
-			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
+			$sql = $this->sql->updatePass($loginName, $newPassCrypt);
 			
 			$result = $this->sql->runStatement($sql);
 			
-			$links = new UserLinks;	
+			$links = new links\userLinks;	
 			$br = new \html\_br();
-			$message = $_SESSION['site-title'].br();
-			$message .= $links->formatHref($_SESSION['site-org'],$_SESSION['site-org-url']).br->print();
-			$message .= "Profile password has been reset".br->print();
-			$message .= "Login Name = ".$loginName.br->print();
-			$message .= "New Password = ".$newPass.br->print();
-			$message .= $links->formatHref($_SESSION['site-url'],$_SESSION['site-url']).br->print();
+			$m = new \html\_div();
+			$m->addContent($_SESSION['site-title'].$br->print());
+			
+			$l = $links->buildLink($_SESSION['organization-url'],$_SESSION['organization'],);
+			$m->addContent($l->print().$br->print());
+			
+			$m->addContent("Profile password has been reset".$br->print());
+			$m->addContent("Login Name = ".$loginName.$br->print());
+			$m->addContent("New Password = ".$newPass.$br->print());
+			
+			$l = $links->buildLink($_SESSION['site-title'],$_SESSION['site-url']);
+			$m->addContent($l->print());
+			$message = $m->print();
+			//echo $message;
 			$this->mailUser($message,'Password Reset');
+			
 			$_SESSION['login-messages']  = 'Profile password reset';
 		} else {
 			$_SESSION['login-messages'] = 'Active profile not found, contact an administrator';	
@@ -63,22 +72,10 @@ class userLogin extends \framework\_contentWriter{
 
 	private function mailUser($message = '', $subject = 'User Notification'){
 
-		$fromAddress = ini_get('sendmail_from');
-		$headers = "From: ".$fromAddress."\n";
-		$headers .= "X-Mailer: PHP/".phpversion()."\n"; 
-		$headers .= "MIME-Version: 1.0\n"; 
-		$headers .= "Content-Type: text/html; charset=utf-8\n"; 
-		$headers .= "Content-Transfer-Encoding: 8bit\n"; 
-		$newSubject = $_SESSION['site-title'].':'.$subject;
-		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
+		\application\mailUser($message, $subject);
+
 	}
-	/*
-	public function obfuscate(string $password, string $login): string{
-		//$salt = crypt($login);
-		$hash = md5($password.$login);
-		return $hash;	
-	}
-	*/
+	
 	public function validateLoginAndEmail($loginName, $loginEmail){
 		$valid = false;
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
@@ -90,6 +87,7 @@ class userLogin extends \framework\_contentWriter{
 		} 
 		return $valid;
 	}
+	
 	public function validate(){
 	
 		$this->f->read();
@@ -108,6 +106,7 @@ class userLogin extends \framework\_contentWriter{
 			$this->echoPrint(true, '………………submit login pushed','validate');
 			$this->validateLogin();
 		}
+		
 		if ($this->f->_resetPasswordSubmit->exists() == true){
 			$this->echoPrint(true, 'reset pasword pushed','validate');
 			$this->resetPassword( );
@@ -147,7 +146,7 @@ class userLogin extends \framework\_contentWriter{
 			$this->setSecurity($login);
 			
 			$_SESSION['logged-in'] = true;
-			//$_SESSION['client-time-zone'] = $_POST['client-time-zone'];
+			$_SESSION['client-time-zone'] = $_POST['client-time-zone'];
 			
 			//$this->s->_LoginMessages->write();
 			
@@ -215,7 +214,8 @@ class userLogin extends \framework\_contentWriter{
 		$entity = 'site-login';
 		$this->f->setEntity($entity);
 
-		$login = new \application\forms\inputForm('portal.php?context=system&scope=login','Login','LOGIN',$entity,true);
+		$formUrl = 'portal.php?context=system&scope=login';
+		$login = new \application\forms\inputForm($formUrl,'Login','LOGIN',$entity,true);
 		
 		$login->required->input($this->f->_loginName);
 		$login->required->input($this->f->_loginPassword);

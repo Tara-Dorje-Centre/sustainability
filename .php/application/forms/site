@@ -61,7 +61,7 @@ implements Isite{
 		} else {
 			
 			
-			$m = new links\systemMenuLinks('site-menu','LIST','menu');
+			$m = new links\systemMenuLinks('site-menu','LIST','site-menu');
 			
 			$p = new \application\entities\projects\links\projectLinks();
 			
@@ -111,7 +111,7 @@ implements Isite{
 	}
 	
 
-return $content;
+	return $content;
 }
 
 	protected function setContents($heading,$details){ 
@@ -140,7 +140,12 @@ return $content;
 	}
 	
 	protected function getNoticeTiming(){
-		global $sessionTime, $sessionTimeZone;
+		
+		global $conn, $sessionTime, $sessionTimeZone;
+		$conn->setSessionTimeZone();
+		$sessionTimeZone = $conn->getSessionTimeZone();
+		$sessionTime = $conn->getSessionTime();
+		
 		$timezone = '';
 		$timing = 'Request Time: '.$sessionTime.'(UTC'.$sessionTimeZone.')';
 		$t = new \html\_div('display-request-time');
@@ -151,9 +156,10 @@ return $content;
 		} else {
 			$timeZone = ' Time Zone set to UTC';	
 		}
-		$t->addContent($timezone);
+		$t->addContent($timeZone);
 		return $t->print();
 	}
+	
 	protected function getNoticeLoginName(){
 		if (isset($_SESSION['login-name'])){
 			$loginName = $_SESSION['login-name'];
@@ -169,14 +175,18 @@ return $content;
 		$org = $this->settings->f->organization->value();
 		$orgUrl = $this->settings->f->organizationUrl->value();
 		
+		$year = date('Y',time());
+		$copyright = '&copy;'.$year;
+		$copyright.= \html\spacer();
+		$o->addContent($copyright);
+		
 		if (($orgUrl == '') || is_null($orgUrl)){
 			$content = $org;
 		} else {
-			$l = new \html\_href($orgUrl,$org, 'menu-links-item', '_blank');
-			//$content = getHref($orgUrl, $org, 'menu-links-item', '_blank');
+			$l = new \html\_href($orgUrl, $org, 'menu-links-item', '_blank');
 			$content = $l->print();
 		}
-		$o->setContent($content);
+		$o->addContent($content);
 		return $o->print();
 	}
 	protected function getFooterNotices(){
@@ -191,7 +201,6 @@ return $content;
 		$url = 'https://sourceforge.net/projects/sustainability';
 		$text = 'Sustainability OpenSource';
 		$l = new \html\_href($url,$text,'menu-links-item','_blank');
-		//$l = getHref(,'Sustainability','menu-links-item','_blank');
 		return $l->print();
 	}
 	

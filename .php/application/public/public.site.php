@@ -84,16 +84,14 @@ class publicSite extends \html\pagePublic{
 		$year = date('Y',time());
 		$f->addContent('&copy;'.$year.$sp);
 		
-		$l = $this->links->buildLink($orgUrl, $org, 'none');
-		// target="_blank" not supported in build link
+		$l = $this->links->buildLink($orgUrl, $org, 'none', '_blank');
 		$f->addContent($l->print().$sp);
 		
 		$href = 'mailto:'.$contactEmail;
 		$m = $this->links->buildLink($href, $contactName, 'none');
 		$f->addContent('Please contact '.$sp.$m->print().' for more information.');
 		
-		$l = $this->links->buildLink('portal.php', 'Project Planning Site', 'none');
-		//target="_self" not supported n buildLink
+		$l = $this->links->buildLink('portal.php', 'Project Planning Site', 'none', '_self');
 		$f->addContent($sp.$l->print());
 		
 		$this->mainFooter = $f->print();
@@ -124,7 +122,6 @@ class publicSite extends \html\pagePublic{
 				$css .= '-current';	
 			}
 				
-			//$m->addContent(
 			$l = $this->links->menuLink($caption,$viewMode,$viewId,$css);
 			$this->links->addLink($l);
 		}		
@@ -177,8 +174,7 @@ class publicSite extends \html\pagePublic{
 			$linkText = $row["link_text"];
 			$linkUrl = $row["link_url"];
 			if (strlen($linkText) > 0 && strlen($linkUrl) > 0){
-				$l = $this->links->buildLink($linkUrl, $linkText, 'none');
-				// target="_blank" not available via buildLink
+				$l = $this->links->buildLink($linkUrl, $linkText, 'none', '_blank');
 				$p = new \html\_p('none','public-detail-link');
 				$p->addContent($l->print());
 				$d->addContent($p->print());

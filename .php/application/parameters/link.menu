@@ -45,9 +45,10 @@ class linkMenu extends \framework\_echo{
 		$this->nameList = $name.'-list';
 	}
 	
-	public function getLink(url &$u,string $caption,$css = 'menu-links-item'){
+	public function getLink(url &$u,string $caption,$css = 'menu-links-item', $target = '_self'){
 		$l = new link($u,$caption);
 		$l->setCSS($css);
+		$l->setTarget($target);
 		return $l;
 	}
 	public function makeLink(url &$u,string $caption, $css = 'menu-links-item'){
@@ -56,9 +57,10 @@ class linkMenu extends \framework\_echo{
 		$this->addLink($l);
 	}
 	
-	public function buildLink(string $page, string $caption, $css = 'link-item'){
+	public function buildLink(string $page, string $caption, $css = 'link-item', $target = '_self'){
 		$u = new url($page);
-		return $this->getLink($u, $caption, $css);
+		$l = $this->getLink($u, $caption, $css, $target);
+		return $l;
 	}
 	
 	final public function addLink(link $l){
