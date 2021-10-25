@@ -24,6 +24,7 @@ interface Ifield{
 	public function fetchEnabled(bool $use = false);
 	public function envEnabled(bool $use = false);
 	public function displayEnabled(bool $use = false);
+	public function displayBrAfter(bool $use = true);
 	public function listEnabled(bool $use = false);
 	public function inputEnabled(bool $use = false);
  	public function set($value);

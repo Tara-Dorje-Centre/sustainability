@@ -77,24 +77,35 @@ class projectFields extends \application\forms\fields{
   		
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
-    	$this->_register('pctDone', $this->pctDone);	
-    	$this->_register('priority', $this->priority);	
-		$this->_register('started', $this->started);
-		$this->_register('updated', $this->updated);
-   		$this->_register('highlight', $this->highlight);
-   		$this->_register('parent', $this->parent);
 		$this->_register('type', $this->type);
    		$this->_register('location', $this->location);
+		$this->location->displayBrAfter(true);
+		
+		
 		$this->_register('description', $this->description);
+   		$this->_register('parent', $this->parent);
+		$this->parent->displayBrAfter(true);
+		
+    	$this->_register('pctDone', $this->pctDone);	
+    	$this->_register('priority', $this->priority);	
+    	$this->_register('showAlways', $this->showAlways);
+		$this->_register('started', $this->started);
+		$this->_register('updated', $this->updated);
+		$this->updated->displayBrAfter(true);
+		
+   		$this->_register('highlight', $this->highlight);
+
+		$this->_register('hoursEstimated', $this->hoursEstimated);
+    	//$this->_register('hoursActual', $this->hoursActual);
+    	$this->_register('budgetEstimated', $this->budgetEstimated);	 
+		$this->budgetEstimated->displayBrAfter(true);
+
+
   		$this->_register('summary', $this->summary);
     	$this->_register('goals', $this->goals);
 		$this->_register('purpose', $this->purpose);	
-    	$this->_register('lessons', $this->lessons);	 
-		$this->_register('showAlways', $this->showAlways);
-		$this->_register('hoursEstimated', $this->hoursEstimated);
-    	//$this->_register('hoursActual', $this->hoursActual);
+    	$this->_register('lessons', $this->lessons);	
 		$this->_register('hoursNotes', $this->hoursNotes);	
-    	$this->_register('budgetEstimated', $this->budgetEstimated);	 
 		$this->_register('budgetNotes', $this->budgetNotes);
 		
    }

@@ -18,6 +18,7 @@ namespace application\forms;
  	protected  $_envEnabled = false;
  	protected  $_listEnabled = false;
  	protected  $_displayEnabled = false;
+ 	protected  $_displayBrAfter = false;
   	protected  $_inputEnabled = true;
   	protected  $_validation = 'none';
 	protected  $_tooltip = 'none';
@@ -104,6 +105,10 @@ namespace application\forms;
  	}
 	public function displayEnabled(bool $use = false){
  		$this->_displayEnabled = $use;
+ 	}
+ 	
+ 	public function displayBrAfter(bool $use = true){
+ 		$this->_displayBrAfter = $use;
  	}
 	public function listEnabled(bool $use = false){
  		$this->_listEnabled = $use;
@@ -293,6 +298,10 @@ namespace application\forms;
  			$d->addContent($c->print());
  			$d->addContent($v->print());
  			$value = $d->print();
+ 			if ($this->_displayBrAfter == true){
+ 				$br = new \html\_br();
+ 				$value .= $br->print();
+ 			}
  		}
  		return $value;
  	}

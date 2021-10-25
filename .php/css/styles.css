@@ -142,7 +142,9 @@ p{
 	list-style-type:none;
 	font-size: 16px;
 }
-
+.display-hotlinks{
+    float:right;
+}
 div.testing-frame{
 	margin:0;
 	padding:0;

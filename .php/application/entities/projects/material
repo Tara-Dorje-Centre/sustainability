@@ -236,6 +236,10 @@ class material extends \application\entity{
 		
 		$this->edit->required->input($this->f->doneBy);
 		$this->edit->required->input($this->f->paidTo);
+		
+		$m = new \application\entities\reference\location;
+		$select = $m->options($this->f->location->id->value(),$this->f->location->id->env->variable());
+		$this->edit->required->inputChoice($this->f->location->id,$select->print());
 		$this->edit->required->br();
 		
 		$this->edit->required->input($this->f->quantity);
@@ -249,9 +253,7 @@ class material extends \application\entity{
 		$this->edit->required->input($this->f->costEstimated);
 
 
-		$m = new \application\entities\reference\location;
-		$select = $m->options($this->f->location->id->value(),$this->f->location->id->env->variable());
-		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
+
 		
 		$this->edit->optional->input($this->f->linkUrl);
 		$this->edit->optional->input($this->f->linkText);

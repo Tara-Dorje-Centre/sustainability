@@ -69,28 +69,35 @@ extends \application\forms\fields{
 	private function registerFields(){
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
+		$this->_register('type', $this->type);
+		$this->_register('reported', $this->reported);
+		$this->_register('updated', $this->updated);
+		$this->updated->displayBrAfter(true);
+		
+   		$this->_register('highlight', $this->highlight);
 		
 		$this->_register('project', $this->project);
 		$this->_register('task', $this->task);
 		$this->_register('activity', $this->activity);
-		$this->_register('location', $this->location);
-		$this->_register('type', $this->type);
-   		$this->_register('highlight', $this->highlight);
-		 		
-		$this->_register('description', $this->description);
-		$this->_register('reported', $this->reported);
-		$this->_register('updated', $this->updated);
+		$this->activity->displayBrAfter(true);
+		 	
 		$this->_register('doneBy', $this->doneBy);
 		$this->_register('paidTo', $this->paidTo);
+		$this->_register('location', $this->location);
+		$this->location->displayBrAfter(true);
+		
 		$this->_register('quantity',$this->quantity);
 		$this->_register('quantityType',$this->quantityType);
-		
 		$this->_register('costUnit',$this->costUnit);
 		$this->_register('costActual',$this->costActual);
 		$this->_register('costEstimated',$this->costEstimated);
+		$this->costEstimated->displayBrAfter(true);
 		
 		$this->_register('linkUrl', $this->linkUrl);
 		$this->_register('linkText', $this->linkText);
+		$this->linkText->displayBrAfter(true);
+		
+		$this->_register('description', $this->description);
 		$this->_register('notes', $this->notes);
 
 	}
@@ -109,6 +116,10 @@ private function disableFields(){
         $this->highlight->listEnabled(false);
         
         $this->highlight->displayEnabled(false);
+        $this->project->displayEnabled(false);
+        $this->task->displayEnabled(false);
+        $this->activity->displayEnabled(false);
+        
     }
 
 

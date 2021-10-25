@@ -29,6 +29,13 @@ class _idName implements Ifield{
 		$this->id->setEnabled($fetch,false,false,$env);
 		$this->name->setEnabled($fetch,$show,$list,false);
 	}
+	
+	public function displayBrAfter(bool $use = true){
+		$this->name->displayBrAfter($use);
+	}
+	
+	
+	
 	public function fetchEnabled(bool $use = false){
  		$this->id->fetchEnabled($use);
  		$this->name->fetchEnabled($use);

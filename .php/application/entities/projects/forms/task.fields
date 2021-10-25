@@ -59,18 +59,26 @@ class taskFields extends \application\forms\fields{
 		$this->_register('name', $this->name);
 		$this->_register('started', $this->started);
 		$this->_register('updated', $this->updated);
+		$this->updated->displayBrAfter(true);
+		
 		$this->_register('pctDone', $this->pctDone);
-		$this->_register('description', $this->description);
- 		$this->_register('summary', $this->summary);
-   		//$this->_register('parent', $this->parent);
+		$this->_register('hoursActual', $this->hoursActual);
+		$this->_register('hoursEstimated', $this->hoursEstimated);
+		$this->hoursEstimated->displayBrAfter(true);
+		
 		$this->_register('project', $this->project);
 		$this->_register('type', $this->type);
    		$this->_register('highlight', $this->highlight);
 		$this->_register('frequency', $this->frequency);
 		$this->_register('location', $this->location);
-		$this->_register('hoursActual', $this->hoursActual);
-		$this->_register('hoursEstimated', $this->hoursEstimated);
+		$this->location->displayBrAfter(true);
+		
+		
+		$this->_register('description', $this->description);
+ 		$this->_register('summary', $this->summary);
 		$this->_register('hoursNotes', $this->hoursNotes);
+		$this->hoursNotes->displayBrAfter(true);
+		
 		$this->_register('materialsAuthProject', $this->materialsAuthProject);
 		$this->_register('materialsAuthBy', $this->materialsAuthBy);
 		$this->_register('receiptsAuthProject', $this->receiptsAuthProject);

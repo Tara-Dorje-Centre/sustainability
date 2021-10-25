@@ -219,8 +219,8 @@ class task extends \application\entity{
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),$this->f->project->id->value(),0);
 		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
-		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->taskOrder);
+		$this->edit->required->input($this->f->name);
 		$this->edit->required->input($this->f->started);
 		$this->edit->required->br();
 

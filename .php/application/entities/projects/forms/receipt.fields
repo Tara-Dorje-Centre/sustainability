@@ -62,25 +62,29 @@ extends \application\forms\fields{
 	private function registerFields(){
 		$this->_register('id', $this->id);
 		$this->_register('name', $this->name);
+		$this->_register('type', $this->type);
+		$this->_register('highlight', $this->highlight);
+		$this->_register('reported', $this->reported);
+		$this->_register('updated', $this->updated);
+		$this->updated->displayBrAfter(true);
+		
 		
 		$this->_register('project', $this->project);
 		$this->_register('task', $this->task);
 		$this->_register('activity', $this->activity);
-								
-		$this->_register('type', $this->type);
-		$this->_register('highlight', $this->highlight);
-		   		
-		$this->_register('description', $this->description);
-		$this->_register('reported', $this->reported);
-		$this->_register('updated', $this->updated);
+		$this->activity->displayBrAfter(true);
+
 		$this->_register('receivedBy',$this->receivedBy);
 		$this->_register('receivedFrom',$this->receivedFrom);
+		$this->receivedFrom->displayBrAfter(true);
 		
 		$this->_register('quantity',$this->quantity);
 		$this->_register('quantityType',$this->quantityType);
 		$this->_register('costUnit',$this->costUnit);
 		$this->_register('costActual',$this->costActual);
+		$this->costActual->displayBrAfter(true);
 
+		$this->_register('description', $this->description);
 		$this->_register('notes', $this->notes);
 	}
 	
@@ -99,6 +103,9 @@ private function disableFields(){
 		$this->highlight->listEnabled(false);
         
         $this->highlight->displayEnabled(false);
+		$this->project->displayEnabled(false);
+        $this->task->displayEnabled(false);
+        $this->activity->displayEnabled(false);
         
     }
 	

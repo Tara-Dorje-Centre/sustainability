@@ -54,21 +54,29 @@ extends \application\forms\fields{
 	private function registerFields(){
 	
 		$this->_register('id', $this->id);
+		$this->_register('activityOrder', $this->activityOrder);
 		$this->_register('name', $this->name);
+		$this->_register('started', $this->started);
+		$this->_register('startDate', $this->startDate);
+		$this->_register('updated', $this->updated);
+		$this->updated->displayBrAfter(true);
+		
    		$this->_register('project', $this->project);
 		$this->_register('projectType', $this->projectType);
 		$this->_register('task', $this->task);
 		$this->_register('type', $this->type);
+		$this->type->displayBrAfter(true);
+		
    		$this->_register('highlight', $this->highlight);
 		$this->_register('doneBy', $this->doneBy);
-		$this->_register('started', $this->started);
-		$this->_register('startDate', $this->startDate);
-		$this->_register('updated', $this->updated);
-   		$this->_register('activityOrder', $this->activityOrder);
 		$this->_register('hoursEstimated',$this->hoursEstimated);
 		$this->_register('hoursActual',$this->hoursActual);
+		$this->hoursActual->displayBrAfter(true);
+		
 		$this->_register('linkUrl', $this->linkUrl);
 		$this->_register('linkText', $this->linkText);
+		$this->linkText->displayBrAfter(true);
+		
     	$this->_register('comments',$this->comments);
     }
 	
@@ -80,8 +88,8 @@ extends \application\forms\fields{
 		//$this->name->envEnabled(false);
 		$this->id->displayEnabled(false);
 		$this->highlight->displayEnabled(false);
-		$this->started->displayEnabled(false);
-		$this->activityOrder->displayEnabled(false);
+		$this->startDate->displayEnabled(false);
+		$this->activityOrder->displayEnabled(true);
 		$this->id->listEnabled(false);
 		$this->name->listEnabled(false);
 		$this->highlight->listEnabled(false);
