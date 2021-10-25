@@ -90,6 +90,7 @@ extends \application\forms\fields{
 		$this->highlight->displayEnabled(false);
 		$this->startDate->displayEnabled(false);
 		$this->activityOrder->displayEnabled(true);
+		$this->linkUrl->displayEnabled(false);
 		$this->id->listEnabled(false);
 		$this->name->listEnabled(false);
 		$this->highlight->listEnabled(false);

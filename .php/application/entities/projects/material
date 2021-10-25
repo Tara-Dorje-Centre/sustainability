@@ -115,7 +115,7 @@ class material extends \application\entity{
 	
 	
 	public function display(){
-	
+		$this->detailBuildLink();
 		$detail = parent::display();
 
 		return $detail;
@@ -153,6 +153,16 @@ class material extends \application\entity{
 		return $link->print();
 	}
 	
+	protected function detailBuildLink(){
+	
+		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
+		// build link and display in linkText
+			$link = $this->links->buildLink($this->f->linkUrl->value(), $this->f->linkText->value(),'link-txt','_blank');
+			$this->f->linkText->set($link->print());
+		}
+	
+	}
+	
 	public function listRowFormat(){
 		$this->f->project->name->set($this->projectRowlink());
 		$this->f->task->name->set($this->taskRowlink());
@@ -163,11 +173,9 @@ class material extends \application\entity{
 		$td->addContent($this->listRowLink());
 		$tr->addContent($td->print());
 		
-		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
-		// build link and display in linkText
-			$link = $this->links->buildLink($this->f->linkUrl->value(), $this->f->linkText->value());
-			$this->f->linkText->set($link->print());
-		}
+		$this->detailBuildLink();
+		
+		
 		
 		$tr->addContent($this->f->listDetail());
 	

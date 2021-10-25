@@ -114,7 +114,8 @@ private function disableFields(){
         $this->description->listEnabled(false);
         $this->notes->listEnabled(false);
         $this->highlight->listEnabled(false);
-        
+        $this->linkUrl->displayEnabled(false);
+        $this->linkUrl->listEnabled(false);
         $this->highlight->displayEnabled(false);
         $this->project->displayEnabled(false);
         $this->task->displayEnabled(false);

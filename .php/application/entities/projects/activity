@@ -100,6 +100,15 @@ extends \application\entity{
 		return $link->print();
 	}
 	
+	protected function detailBuildLink(){
+	
+		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
+		// build link and display in linkText
+			$link = $this->links->buildLink($this->f->linkUrl->value(), $this->f->linkText->value(),'link-text','_blank');
+			$this->f->linkText->set($link->print());
+		}
+	}
+	
 	public function listRowFormat(){
 		if ($this->myActivity != 'NO'){
 			$this->f->task->name->set($this->taskRowlink());
@@ -118,12 +127,8 @@ extends \application\entity{
 		$td->addContent($this->listRowLink());
 		$tr->addContent($td->print());
 		
-
-		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
-		// build link and display in linkText
-			$link = $this->links->buildLink($this->f->linkUrl->value(), $this->f->linkText->value());
-			$this->f->linkText->set($link->print());
-		}
+		$this->detailBuildLink();
+		
 		
 		$tr->addContent($this->f->listDetail());
 	
@@ -217,6 +222,8 @@ extends \application\entity{
 		
 	protected function display(){
 		$this->_display = new \html\displayDetails($this->entity,$this->pageMode,$this->entityTitle.':  Details');
+		//if a link exists, build it
+		$this->detailBuildLink();
 		$this->_display->addContent($this->f->displayDetail());
 		$br = new \html\_br(2);
 		$this->_display->addContent($br->print());
