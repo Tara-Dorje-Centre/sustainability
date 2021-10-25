@@ -19,7 +19,7 @@ font-family: Arial, Myriad Pro, Helvetica;
 	background-color:darkBlue;
 	padding:5px;
 }
-#site-heading-links a {
+#site-heading-links a, .site-menu-links-item .menu-links-item{
 	color: white;
 	font-size: 15px;
 	font-weight=: bold;

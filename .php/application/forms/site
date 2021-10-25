@@ -162,7 +162,7 @@ implements Isite{
 	
 	protected function getNoticeLoginName(){
 		if (isset($_SESSION['login-name'])){
-			$loginName = $_SESSION['login-name'];
+			$loginName = 'Logged in as '.$_SESSION['login-name'];
 		} else {
 			$loginName = 'Not logged in.';	
 		}

@@ -55,12 +55,6 @@ class systemMenu extends \framework\_echo{
 			case 'CALENDAR':
 				$title = 'Calendar';
 				break;
-			case 'SYSTEM-UPDATES':
-				$title = 'System Updates';
-				break;
-			case 'TESTING':
-				$title = 'Testing';
-				break;
 			case 'MY_LINKS':
 				$title = 'My Links';
 				break;
@@ -114,13 +108,7 @@ class systemMenu extends \framework\_echo{
 				break;
 			case 'MY_LINKS':
 				$content = $this->displayMyLinks();
-				break;
-			case 'SYSTEM-UPDATES':
-				$content = $this->displaySystemUpdates();
-				break;
-			case 'TESTING':
-				$content = $this->displayTesting();		
-				break;				
+				break;		
 			default:
 				$content = $this->displayModuleLinks();
 		}
@@ -196,7 +184,7 @@ class systemMenu extends \framework\_echo{
 		$e = new entities\reference\links\receiptTypeLinks();
 		$this->main->addLink($e->contextList('Receipt Types'));
 
-		//if ($_SESSION['is-admin'] == 'yes'){
+		if ($_SESSION['is-admin'] == 'yes'){
 			$e = new system\links\userLinks();
 			$this->main->addLink($e->contextList('User Profiles'));
 
@@ -206,7 +194,7 @@ class systemMenu extends \framework\_echo{
 			$e = new system\links\siteSettingsLinks();
 			$this->main->addLink($e->contextList('Site Settings'));
 
-		//}
+		}
 		
 		$this->main->addLink($this->main->calendars());
 		return $this->main->print();
@@ -236,36 +224,13 @@ class systemMenu extends \framework\_echo{
 			$prevYear = $this->year->value();
 		}
 
-		//$menuL = new \application\links\linkMenu('LIST','menu');
+
 		$p = $this->links->calendars('Previous', $prevYear, $prevMonth);
 		$n = $this->links->calendars('Next', $nextYear, $nextMonth);
 
 		$c = new forms\calendar($this->year->value(),$this->month->value(),'Calendar');	
 		$c->setLinks($n->print(), $p->print());
 		return $c->buildCalendar();
-	}
-
-	private function displayTesting(){
-	
-		include_once("sys_UnitTesting_Class.php");
-		$tests = new _UnitTest;
-		$tests->setDetails($this->displayMode->value,$this->year->value,$this->month->value);
-		$content = $tests->display();
-		
-		return $content;
-	
-	}
-
-	private function displaySystemUpdates(){
-	
-		include_once("sys_SystemUpdates.php");
-		$update = new _SystemUpdate;
-		$update->setDetails($this->displayMode->value,$this->year->value,$this->month->value);
-		$content = $update->display();
-		
-		return $content;
-	
-		
 	}
 
 }

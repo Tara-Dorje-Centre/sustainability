@@ -60,10 +60,6 @@ class systemMenuLinks extends linkMenu {
 		$this->addLink($this->myLinks());
 		$this->addLink($this->calendars());
 		
-		if ($_SESSION['is-admin'] == 'yes'){
-			$this->addLink($this->updates());
-			$this->addLink($this->testing());
-		}
 		return $this->print();			
 	}
 }
