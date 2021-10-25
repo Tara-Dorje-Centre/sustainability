@@ -160,6 +160,10 @@ class measure extends \application\entity {
 		parent::setDefaults();
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);
+	 		
+	 		$a = new activity();
+			$name = 'Measure for: '.$a->getActivityName($this->idParent);
+			$this->f->name->set($name);
 	 		$this->f->reported->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
 			$this->setSessionDefaults();
@@ -196,18 +200,22 @@ class measure extends \application\entity {
 		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),$this->f->activity->id->value(),0);
 		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
 		
+		
+		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->doneBy);
+		$this->edit->required->input($this->f->reported);
+		$this->edit->required->br();
+		
 		$m = new \application\entities\reference\measureTypeUnit;
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
+		$this->edit->required->input($this->f->value);
+		
 		
 		$m = new \application\entities\reference\location;
 		$select = $m->options($this->f->location->id->value(),$this->f->location->id->env->variable());
 		$this->edit->optional->inputChoice($this->f->location->id,$select->print());
-		
-		$this->edit->required->input($this->f->name);
-		$this->edit->required->input($this->f->value);
-		$this->edit->required->input($this->f->doneBy);
-		$this->edit->required->input($this->f->reported);
+		$this->edit->optional->br();
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);

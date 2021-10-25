@@ -18,6 +18,16 @@ class inputFormSection extends \html\_div{
 	public function inputChoice(Ifield $f,string $options){
 		$this->addContent($f->inputChoice($options));
 	}
+	
+	public function hr(){
+		$hr = new \html\_hr();
+		$this->addContent($hr->print());
+	}
+	
+	public function br(){
+		$br = new \html\_br();
+		$this->addContent($br->print());
+	}
 }
 
 ?>

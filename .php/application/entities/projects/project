@@ -149,11 +149,14 @@ class project extends \application\entity{
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 
 		$this->edit->required->input($this->f->started);
+		$this->edit->required->br();
+		
 		$this->edit->required->input($this->f->priority);
 		$this->edit->required->input($this->f->hoursEstimated);
 		$this->edit->required->input($this->f->budgetEstimated);
-		
 		$this->edit->required->input($this->f->pctDone);
+		$this->edit->required->input($this->f->showAlways);
+		$this->edit->required->br();
 		
 		$m = new \application\entities\reference\location;
 		$select = $m->options($this->f->location->value(),$this->f->location->id->env->variable(),'Location');
@@ -165,8 +168,7 @@ class project extends \application\entity{
 		$select = $this->options($this->f->parent->value(),$this->f->parent->id->env->variable(),'Parent Project');
 		$this->edit->required->inputChoice($this->f->parent->id,$select->print());
 		
-		
-		$this->edit->required->input($this->f->showAlways);
+
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->summary);

@@ -230,19 +230,25 @@ class user extends \application\entity{
 		$this->f->pwd->setValidation(@$this->validationMessages['password']);
 		$this->edit->required->input($this->f->pwd);
 		$this->edit->required->input($this->f->pwdConfirm);
-		
+		$this->edit->required->br();
+	
 		$this->f->email->setvalidation(@$this->validationMessages['email']);
 		$this->edit->required->input($this->f->email);
-		$this->edit->optional->input($this->f->nameFirst);
-		$this->edit->optional->input($this->f->nameLast);
+		$this->edit->required->br();
+		
+		$this->edit->required->input($this->f->nameFirst);
+		$this->edit->required->input($this->f->nameLast);
+
 
 		$m = new UserType;
 		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
-		$this->edit->optional->inputChoice($this->f->type->id,$select->print());
-		
+		$this->edit->required->inputChoice($this->f->type->id,$select->print());
+		$this->edit->required->hr();
+	
 		$this->edit->optional->input($this->f->focus);
 		$this->edit->optional->input($this->f->interests);
-	
+		$this->edit->optional->hr();
+		
 		if ($_SESSION['is-admin'] == 'yes' AND $_SESSION['user-id'] != $this->id){
 			//if admin and not editing self allow setting admin
 			//prevents admins from disabling their own accounts

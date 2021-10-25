@@ -178,6 +178,7 @@ class material extends \application\entity{
 	protected function setDefaults(){
 		parent::setDefaults();
 		if ($this->pageMode == 'ADD'){
+
 	 		$this->f->reset(true);
 	 		$this->f->reported->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
@@ -230,9 +231,12 @@ class material extends \application\entity{
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 		
 		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->reported);
+		$this->edit->required->br();
+		
 		$this->edit->required->input($this->f->doneBy);
 		$this->edit->required->input($this->f->paidTo);
-		$this->edit->required->input($this->f->reported);
+		$this->edit->required->br();
 		
 		$this->edit->required->input($this->f->quantity);
 
@@ -251,6 +255,8 @@ class material extends \application\entity{
 		
 		$this->edit->optional->input($this->f->linkUrl);
 		$this->edit->optional->input($this->f->linkText);
+		$this->edit->required->br();
+		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);
 		

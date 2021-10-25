@@ -241,7 +241,7 @@ extends \application\entity{
 	 		$this->f->started->set($this->f->currentTimestamp);
 	 		$this->f->doneBy->set($this->f->currentUser);
 	 		$this->f->hoursEstimated->set($hours);
-	 		$this->f->hoursActual->set(1);
+	 		$this->f->hoursActual->set(0);
 	 	}
 	}
 	
@@ -275,7 +275,8 @@ extends \application\entity{
 		//$changeJS = null;
 		$select = $m->optionsByProject($taskId,'task-id',$projectId,'Task',$changeJS);
 		$this->edit->required->inputChoice($this->f->task->id,$select->print());
-		
+		$this->edit->required->input($this->f->started);
+		$this->edit->required->br();
 		
 		
 		//force activity order with sql lookup before running insert
@@ -286,19 +287,20 @@ extends \application\entity{
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 		
 		$this->edit->required->input($this->f->name);
-		$this->edit->required->input($this->f->hoursEstimated);
+		$this->edit->required->br();
 		
+		$this->edit->required->input($this->f->hoursEstimated);
 		$tooltip = 'Hint: Set actual hours to 0 to create a scheduled activity';
 		$this->f->hoursActual->setTooltip($tooltip);
 		$this->edit->required->input($this->f->hoursActual);
-		$this->edit->required->input($this->f->started);
 		$this->edit->required->input($this->f->doneBy);
+		
+		
 		$this->edit->optional->input($this->f->linkUrl);
 		$this->edit->optional->input($this->f->linkText);
+		$this->edit->required->br();
+		
 		$this->edit->optional->input($this->f->comments);
-
-
-
 		
 		$this->edit->hidden->inputHidden($this->f->id);
 		//comment after ajax calls are done

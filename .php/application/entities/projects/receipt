@@ -169,6 +169,10 @@ class receipt extends \application\entity{
 		parent::setDefaults();
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);
+	 		
+	 		$a = new activity();
+			$name = 'Receipt for: '.$a->getActivityName($this->idParent);
+			$this->f->name->set($name);
 	 		$this->f->reported->set($this->f->currentTimestamp);
 	 		$this->f->receivedBy->set($this->f->currentUser);
 	 		$this->f->quantity->set(1);
@@ -183,9 +187,9 @@ class receipt extends \application\entity{
 		if (isset($_SESSION['last-receipt-quantity-type-id'])){
 			$this->f->quantityType->id->set($_SESSION['last-receipt-quantity-type-id']);
 		}
-		if (isset($_SESSION['last-receipt-received-from'])){
-			$this->f->receivedFrom->set($_SESSION['last-receipt-received-from']);
-		}
+		//if (isset($_SESSION['last-receipt-received-from'])){
+		//	$this->f->receivedFrom->set($_SESSION['last-receipt-received-from']);
+		//}
 		if (isset($_SESSION['last-receipt-received-by'])){
 			$this->f->receivedBy->set($_SESSION['last-receipt-received-by']);
 		}
@@ -198,7 +202,7 @@ class receipt extends \application\entity{
 		//called by collectPostValues
 		$_SESSION['last-receipt-type-id'] = $this->f->type->id->value();
 		$_SESSION['last-receipt-quantity-type-id'] = $this->f->quantityType->id->value();
-		$_SESSION['last-receipt-received-from'] = $this->f->receivedFrom->value();
+		//$_SESSION['last-receipt-received-from'] = $this->f->receivedFrom->value();
  		$_SESSION['last-receipt-received-by'] = $this->f->receivedBy->value();
  		$_SESSION['last-receipt-reported'] = $this->f->reported->value();
 	}
@@ -217,10 +221,12 @@ class receipt extends \application\entity{
 		$this->edit->required->inputChoice($this->f->type->id,$select->print());
 		
 		$this->edit->required->input($this->f->name);
+		$this->edit->required->input($this->f->reported);
+		$this->edit->required->br();
 
-		$this->edit->optional->input($this->f->receivedBy);
 		$this->edit->required->input($this->f->receivedFrom);
-		$this->edit->optional->input($this->f->reported);
+		$this->edit->required->input($this->f->receivedBy);
+		$this->edit->required->br();
 		
 		$this->edit->required->input($this->f->quantity);
 
@@ -230,6 +236,8 @@ class receipt extends \application\entity{
 		
 		$this->edit->required->input($this->f->costUnit);
 		$this->edit->required->input($this->f->costActual);
+		
+		
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);
