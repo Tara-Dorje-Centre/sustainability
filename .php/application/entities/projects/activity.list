@@ -160,7 +160,7 @@ extends \application\entityList{
 		
 		//get baseUrl as url object
 		//allows for adding month parameters
-		$baseUrl = $this->base->links->urlActivityList(-1, 0, $this->showCalendar, $this->myActivity, 0,$this->projectId);
+		$baseUrl = $this->base->links->urlActivityList(-1, $this->showCalendar, $this->myActivity, 0,$this->projectId);
 		
 		$links = new \html\_div('calendar-links');
 		$this->prevCalendarLink = '';

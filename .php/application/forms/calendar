@@ -99,6 +99,9 @@ class calendar{
 	
 	public function addItem($dayIndex, $text, $css = 'calendar-item'){
 		//add an item to internal array of day contents
+		if (is_null($css)){
+			$css = 'calendar-item';
+		}
 		$li = new \html\_li($text,$css);
 		$this->days[$dayIndex]->addListItem($li);
 	}
