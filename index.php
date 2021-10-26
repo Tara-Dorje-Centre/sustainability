@@ -10,7 +10,8 @@
 //  without showing the user the .php/ directory
 
 include(".php/index.php");
-//   the /css folder in the /.php directory is for developent purposes only
+//   rename .php folder to the directory  to access the coe
+//   for example, rename to projectManager
 //   the current code assumes all php scripts are in docroot
 //   if working code is in htdocs/dev/sustainability
 //   use [server]/dev/sustainability/.php/index.php for testing and development.
