@@ -225,11 +225,13 @@ extends \application\entity{
 		//if a link exists, build it
 		$this->detailBuildLink();
 		$this->_display->addContent($this->f->displayDetail());
-		$br = new \html\_br(2);
-		$this->_display->addContent($br->print());
+
+		/*
 		$links = new \html\_div('display-hotlinks','display-hotlinks');
 		$links->addContent($this->listRowHotLinks());
 		$this->_display->addContent($links->print());
+		*/
+		//add materials, receipts and measure lists
 		return $this->_display->print();
 	}
 	
