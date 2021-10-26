@@ -97,17 +97,23 @@ implements IPage{
 	
 	protected function formatLogo(){
 		$l = new _div('site-footer-logo');
-		$l->setContent($this->logo);
+		if ($this->logo != 'none'){
+			$l->setContent($this->logo);
+		}
 		return $l->print();
 	}
 	protected function formatNotices(){
 		$n = new _div('site-footer-notices');
-		$n->setContent($this->notices);
+		if ($this->notices != 'none'){
+			$n->setContent($this->notices);
+		}
 		return $n->print();
 	}
 	protected function formatLinksFooter(){	
 		$l = new _div('site-footer-links');
-		$l->setContent($this->linksFooter);
+		if ($this->linksFooter != 'none'){
+			$l->setContent($this->linksFooter);
+		}
 		return $l->print();
 	}
 
