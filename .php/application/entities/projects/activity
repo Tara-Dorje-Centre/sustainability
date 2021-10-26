@@ -7,6 +7,9 @@ extends \application\entity{
 
 	public $myActivity = 'NO';
 	public $projectId = 0;
+	private $materialResultsPage = 1;
+	private $receiptResultsPage = 1;
+	private $measureResultsPage = 1;
 	
 	public function __construct(){
 		parent::__construct();
@@ -25,6 +28,22 @@ extends \application\entity{
 		if ($this->id > 0 AND $this->idParent == 0){
 			$this->idParent = $this->getTaskId($this->id);
 		}
+		
+		$var = 'material-results-page';
+		if (isset($_GET[$var])){
+			$this->materialResultsPage = $_GET[$var];
+		}
+		
+		$var = 'receipt-results-page';
+		if (isset($_GET[$var])){
+			$this->receiptResultsPage = $_GET[$var];
+		}
+		
+		$var = 'measure-results-page';
+		if (isset($_GET[$var])){
+			$this->measureResultsPage = $_GET[$var];
+		}
+		
 
 	}
 	
@@ -226,13 +245,58 @@ extends \application\entity{
 		$this->detailBuildLink();
 		$this->_display->addContent($this->f->displayDetail());
 
-		/*
+		//float links to the right with css
 		$links = new \html\_div('display-hotlinks','display-hotlinks');
 		$links->addContent($this->listRowHotLinks());
 		$this->_display->addContent($links->print());
-		*/
+		
 		//add materials, receipts and measure lists
-		return $this->_display->print();
+		//need to add unique paging variables to support
+		//paging 3 child lists
+		//modify pagedListing on entityLinks
+		//and getRequest on entity
+		//and listingStart on entityList
+		//add override to getRequestPaging from baseEntity
+		$detail = $this->_display->print();
+		
+		//display materiallist with correct paging link
+		$mt = new materialList();
+		$mt->setActivityId($this->id);
+		$mt->setDisplayLevel('ACTIVITY');
+		$mt->setIdsByDisplayLevel();
+		$mt->setFoundCount();
+		$mt->setPaging($this->materialResultsPage,5);
+		$u = $this->links->viewUrl($this->id);
+		if ($mt->found > 0){
+			$detail .= $mt->getListing($u);
+		}
+		
+		
+		//display receiptlist with correct paging link
+		$r = new receiptList();
+		$r->setActivityId($this->id);
+		$r->setDisplayLevel('ACTIVITY');
+		$r->setIdsByDisplayLevel();
+		$r->setFoundCount();
+		$r->setPaging($this->receiptResultsPage,5);
+		$u = $this->links->viewUrl($this->id);
+		if ($r->found > 0){
+			$detail .= $r->getListing($u);
+		}
+		
+		//display measurelist with correct paging link
+		$me = new measureList();
+		$me->setActivityId($this->id);
+		$me->setDisplayLevel('ACTIVITY');
+		$me->setIdsByDisplayLevel();
+		$me->setFoundCount();
+		$me->setPaging($this->measureResultsPage,5);
+		$u = $this->links->viewUrl($this->id);
+		if ($me->found > 0){
+			$detail .= $me->getListing($u);
+		}
+		return $detail;
+		
 	}
 	
 	protected function nextActivityOrder(){

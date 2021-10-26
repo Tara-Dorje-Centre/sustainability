@@ -165,6 +165,7 @@ class task extends \application\entity{
 	protected function display(){
 		$detail = parent::display();
 		//$detail .= $this->totals->display();
+		
 		//display activitylist with correct paging link
 		$a = new activityList();
 		$a->idParent = $this->id;

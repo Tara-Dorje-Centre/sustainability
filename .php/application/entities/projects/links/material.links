@@ -53,7 +53,7 @@ class materialLinks extends \application\links\entityLinks {
 	}
 	
 	public function pagedListing(\application\links\url $altUrl = NULL, $count = 0, $page = 1, $rows = 10, $idActivity = 0, $idTask = 0,$idProject = 0,$showSummary = 'NO',$displayLevel='ACTIVITY'){
-		$p = new \application\links\linkMenuPaged($rows,'results-page');
+		$p = new \application\links\linkMenuPaged($rows,'material-results-page');
 		if (is_null($altUrl)){
 			$url = $this->urlMaterialList($idActivity,$idTask,$idProject,$showSummary,$displayLevel);
 		} else {

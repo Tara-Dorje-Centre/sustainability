@@ -4,7 +4,7 @@ namespace application;
 abstract class entityList extends entity{
 	public $found = 0;
 	public $base;
-	//protected $_list;
+	
 	public function __construct(){
 		parent::__construct();
 		

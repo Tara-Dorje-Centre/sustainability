@@ -57,6 +57,21 @@ class receiptList extends \application\entityList{
 
 	}
 	
+	public function getRequestPaging(){
+	 	$page = 1;
+	 	$rows = 10;
+	 	
+	 	$var = 'receipt-results-page';
+	 	if (isset($_GET[$var])){
+			$page = $_GET[$var];
+		}
+		if (isset($_GET['perPage'])){
+			$rows = $_GET['perPage'];
+		}
+		
+		$this->setPaging($page,$rows);
+	}
+	
 	public function setIdsByDisplayLevel(){
 	
 		if ($this->displayLevel == 'ACTIVITY'){
@@ -171,7 +186,7 @@ class receiptList extends \application\entityList{
 	
 	private function getSummary(){
 		$summary = new \html\_div('summary');
-		$details = new \html\_fieldset('summary',$this->displayLevel.' Totals','summary-fieldset');
+		$details = new \html\_fieldset('summary',$this->displayLevel.' Receipt Totals','summary-fieldset');
 		
 		if ($this->displayLevel == 'ACTIVITY'){
 			$sql = $this->base->sql->summaryActivity($this->activityId);

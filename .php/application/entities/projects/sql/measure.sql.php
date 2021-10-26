@@ -77,7 +77,7 @@ extends \application\sql\entitySQL{
 
 	public function countActivity($id){
 		$q = "SELECT count(*) as count_details ";
-		$q .= "FROM materials AS m ";
+		$q .= "FROM measures AS m ";
 		$q .= "WHERE m.activity_id = ".$id;
 		return $q;
 	}

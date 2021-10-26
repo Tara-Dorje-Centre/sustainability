@@ -8,7 +8,7 @@ class linkMenuPaged extends linkMenu{
 	protected $recordCount = 0;
 	protected $info = 'display results';
 	protected $paramPaging = 'results-page';
-	public function __construct($perPage = 10,string $paramPaging = 'resultsPage'){
+	public function __construct($perPage = 10,string $paramPaging = 'results-page'){
 		parent::__construct('paging-linkset','DIV','paging');
 		$this->perPage = $perPage;
 		$this->paramPaging = $paramPaging;

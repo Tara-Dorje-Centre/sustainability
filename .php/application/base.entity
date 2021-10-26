@@ -64,14 +64,17 @@ implements IbaseEntity{
 		$this->isPagingSet = true;
 		$this->echoState_paging(true, 'setPaging');
 	 }
+	 
 	 public function getRequestPaging(){
 	 	$page = 1;
 	 	$rows = 10;
-	 	if (isset($_GET['results-page'])){
-			$page = $_GET["results-page"];
+	 	
+	 	$var = 'results-page';
+	 	if (isset($_GET[$var])){
+			$page = $_GET[$var];
 		}
 		if (isset($_GET['perPage'])){
-			$rows = $_GET["perPage"];
+			$rows = $_GET['perPage'];
 		}
 		
 		$this->setPaging($page,$rows);
