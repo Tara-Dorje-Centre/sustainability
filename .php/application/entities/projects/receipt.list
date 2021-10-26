@@ -212,11 +212,11 @@ class receiptList extends \application\entityList{
 	protected function listingStart(\application\links\url $altUrl = NULL){
 		
 		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage, $this->activityId,$this->taskId,$this->projectId,$this->showSummary,$this->displayLevel);	
-		$add = $this->getSummary();
+		$add = '';
 		if ($this->showSummary == 'NO' AND $this->displayLevel == 'ACTIVITY'){
 			$add .= $this->base->addForm($this->activityId);	
 		}
-
+		$add .= $this->getSummary();
 		$entity = $this->base->entity;
 		$legend = $this->entityTitle.':  Listing';
 		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
