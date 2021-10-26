@@ -56,8 +56,8 @@ implements IbaseEntity{
 		
 		$action = $this->_GET('page-action','VIEW');
 		$id = $this->_GET('id',0);
-		$idParent = $this->_GET('idParent',0);
-		$idType = $this->_GET('idType',0);
+		$idParent = $this->_GET('id-parent',0);
+		$idType = $this->_GET('id-type',0);
 		
 		
 		$this->setIdentifiers($action,$id,$idParent,$idType);
