@@ -246,9 +246,10 @@ extends \application\entity{
 		$this->_display->addContent($this->f->displayDetail());
 
 		//float links to the right with css
-		$links = new \html\_div('display-hotlinks','display-hotlinks');
-		$links->addContent($this->listRowHotLinks());
-		$this->_display->addContent($links->print());
+		//links have 0 for parent values
+		//$links = new \html\_div('display-hotlinks','display-hotlinks');
+		//$links->addContent($this->listRowHotLinks());
+		//$this->_display->addContent($links->print());
 		
 		//add materials, receipts and measure lists
 		//need to add unique paging variables to support
