@@ -103,6 +103,16 @@ return $q;
 		$sql .= 'where id = '.$id;
 		return $sql;
 	}
+	
+	
+	public function getLocationId($id){
+		$sql = 'select location_id from projects ';
+		$sql .= 'where id = '.$id;
+		return $sql;
+	}
+	
+	
+	
 
 public function countByActivityDoneBy($doneBy, $status){
 $q = " SELECT  count(*) total_projects ";

@@ -128,6 +128,13 @@ class project extends \application\entity{
 		return $id;
 	}
 
+	public function getLocationId($id){
+		$sql = $this->sql->getLocationId($id);
+		$id = $this->sql->getScalar($sql,'location_id','0');
+		return $id;
+	}
+
+
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
 	 		$this->f->reset(true);

@@ -98,7 +98,7 @@ class task extends \application\entity{
 		$td->addContent($this->listRowHotLinks());
 		$tr->addContent($td->print());
 		
-		if ($this->periodicTasks != 'NO'){
+		if ($this->periodicTasks == 'YES'){
 			$td = new \html\_td();
 			$td->addContent($this->listRowProjectLink());
 			$tr->addContent($td->print());
@@ -211,6 +211,11 @@ class task extends \application\entity{
 	 		$this->f->reset(true);
 	 		$this->f->taskOrder->set($this->nextTaskOrder());
 	 		$this->f->started->set($this->f->currentTimestamp);
+	 		
+	 		$p = new project();
+	 		$locationId = $p->getLocationId($this->idParent);
+	 		$this->f->location->id->set($locationId);
+	 		
 	 	}
 	}
 	
