@@ -116,7 +116,7 @@ class taskList extends \application\entityList{
 	//to hide quickedit on periodic tasks
 	protected function listingStart(\application\links\url $altUrl = NULL){
 
-		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent,$this->statusComplete,$this->periodicTasks);	
+		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent,$this->taskStatus,$this->periodicTasks);	
 		$add = '';
 		if ($this->periodicTasks != 'YES'){
 			$add = $this->base->addForm($this->idParent);	
