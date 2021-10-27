@@ -23,6 +23,7 @@ class task extends \application\entity{
 		$this->links = new links\taskLinks();
 		//$this->totals = new forms\summaryTotals();
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 

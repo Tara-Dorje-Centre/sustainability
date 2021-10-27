@@ -18,6 +18,7 @@ class measure extends \application\entity {
 		$this->links = new links\measureLinks();
 		$this->sql = new sql\measureSQL();
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 

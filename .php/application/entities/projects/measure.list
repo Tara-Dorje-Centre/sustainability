@@ -8,12 +8,12 @@ class measureList extends \application\entityList{
 	public $taskId = 0;
 	public $activityId = 0;
 
-
 	public function __construct(){
 		parent::__construct();
      	$this->entityTitle = 'Measures';
 		$this->base = new measure();
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 
@@ -37,8 +37,6 @@ class measureList extends \application\entityList{
 	}
 	
 	public function getRequestPaging(){
-	 	$page = 1;
-	 	$rows = 10;
 	 	
 	 	$var = 'measure-results-page';
 		$page = $this->_GET($var,1);

@@ -12,6 +12,7 @@ extends \application\entityList{
      	$this->entityTitle = 'Activities';
 		$this->base = new activity();
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 		//push identifiers to base object

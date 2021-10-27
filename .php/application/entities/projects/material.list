@@ -47,6 +47,7 @@ class materialList extends \application\entityList{
 		$page = $this->_GET($var,1);
 		
 		$rows = $this->_GET('perPage',10);
+		
 		$this->setPaging($page,$rows);
 	}
 	
