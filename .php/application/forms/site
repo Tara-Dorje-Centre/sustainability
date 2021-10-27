@@ -183,7 +183,9 @@ implements Isite{
 		if (($orgUrl == '') || is_null($orgUrl)){
 			$content = $org;
 		} else {
-			$l = new \html\_href($orgUrl, $org, 'menu-links-item', '_blank');
+			$l = new \html\_href($orgUrl, $org);
+			$l->setCSS('link-item');
+			$l->setTarget('_blank');
 			$content = $l->print();
 		}
 		$o->addContent($content);
@@ -200,7 +202,9 @@ implements Isite{
 	protected function getFooterLinks(){
 		$url = 'https://sourceforge.net/projects/sustainability';
 		$text = 'Sustainability OpenSource';
-		$l = new \html\_href($url,$text,'menu-links-item','_blank');
+		$l = new \html\_href($url,$text);
+		$l->setCSS('link-item');
+		$l->setTarget('_blank');
 		return $l->print();
 	}
 	
