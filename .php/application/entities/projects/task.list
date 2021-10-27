@@ -45,17 +45,17 @@ class taskList extends \application\entityList{
 	}
 	
 	protected function makePageTitle(){
-		$title = 'Periodic Tasks: ';
+
 		$br = new \html\_br();
-		if ($this->periodicTasks == 'NO'){
+		if ($this->periodicTasks == 'YES'){
+			$title = 'Periodic Tasks: ';
+			$title .= $this->taskStatus;
+		} else {
 			$p = new project();
 			$name = $p->getProjectName($this->idParent);
 			$title = 'Project: '.$name.$br->print();
 			$title .= 'All Tasks';
-		} else {
-		
-			$title .= $this->taskStatus;
-		}
+		} 
 		$this->_pageTitle = $title;
 	}
 	
@@ -68,15 +68,15 @@ class taskList extends \application\entityList{
 		
 		$p = new links\projectLinks();
 		
-		if ($this->periodicTasks == 'NO'){
+		if ($this->periodicTasks == 'YES'){
+			$this->base->links->addLink($this->base->links->periodicTasks(!$this->statusComplete));
+			$this->base->links->addLink($p->contextList('Active Projects'));
+		} else {
 			$this->base->links->addLink($p->view('View Project',$this->idParent));
 			$this->base->links->addLink($this->base->links->list('List Tasks',0,$this->idParent,0));
 			$this->base->links->addLink($this->base->links->add('New Task',$this->idParent));
-
-		} else {
-			$this->base->links->addLink($this->base->links->periodicTasks(!$this->statusComplete));
-			$this->base->links->addLink($p->contextList('Active Projects'));
 		}
+			
 		$this->_pageMenu = $this->base->links->print();
 	}
 
@@ -116,9 +116,9 @@ class taskList extends \application\entityList{
 	//to hide quickedit on periodic tasks
 	protected function listingStart(\application\links\url $altUrl = NULL){
 
-		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent);	
+		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent,$this->statusComplete,$this->periodicTasks);	
 		$add = '';
-		if ($this->periodicTasks == 'NO'){
+		if ($this->periodicTasks != 'YES'){
 			$add = $this->base->addForm($this->idParent);	
 		}
 		$entity = $this->base->entity;
