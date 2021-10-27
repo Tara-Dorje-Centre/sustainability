@@ -248,7 +248,7 @@ class measure extends \application\entity {
 			$sql .= " m.description = '".$this->f->description->value()."', ";
 			$sql .= " m.notes = '".$this->f->notes->value()."', ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " m.doneBy = ".$this->f->doneBy->value().", ";
+			$sql .= " m.done_by = '".$this->f->doneBy->value()."', ";
 			$sql .= " m.value = ".$this->f->value->value().", ";
 			$sql .= " m.date_reported = '".$this->f->reported->value()."', ";
 			$sql .= " m.location_id = ".$this->f->location->id->value().", ";

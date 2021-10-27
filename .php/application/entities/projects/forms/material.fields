@@ -111,6 +111,9 @@ private function disableFields(){
         $this->updated->listEnabled(false);
         $this->reported->listEnabled(false);
         $this->name->listEnabled(false);
+        $this->project->listEnabled(false);
+        $this->task->listEnabled(false);
+        $this->activity->listEnabled(false);
         $this->description->listEnabled(false);
         $this->notes->listEnabled(false);
         $this->highlight->listEnabled(false);
