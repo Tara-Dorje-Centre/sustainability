@@ -48,6 +48,7 @@ class project extends \application\entity{
 		//$detail .= $this->totals->display();
 		//display tasklist with correct paging link
 		$t = new taskList();
+		$t->setPeriodic('NO');
 		$t->idParent = $this->id;
 		$t->base->idParent = $this->id;
 		$t->setFoundCount();

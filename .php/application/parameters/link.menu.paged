@@ -32,6 +32,7 @@ class linkMenuPaged extends linkMenu{
 	}
 	protected function makePageLink($pageIndex,$caption,$css='paging-links-item'){
 		$this->baseUrl->makeParameter($this->paramPaging,$pageIndex);
+		$this->baseUrl->makeParameter('per-page',$this->perPage);
 		$this->makeLink($this->baseUrl, $caption,$css);
 	}
 	protected function showResultsInfo(){

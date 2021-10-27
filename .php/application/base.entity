@@ -74,7 +74,7 @@ implements IbaseEntity{
 	 public function getRequestPaging(){
 
 		$page = $this->_GET('results-page',1);
-		$rows = $this->_GET('perPage',10);
+		$rows = $this->_GET('per-page',10);
 		
 		$this->setPaging($page,$rows);
 	}

@@ -169,6 +169,14 @@ class measureList extends \application\entityList{
 		$legend = $this->entityTitle.':  Listing';
 		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
 
+
+		if ($this->displayLevel == 'TASK'){
+			$this->base->f->activity->listEnabled(true);
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$this->base->f->activity->listEnabled(true);
+			$this->base->f->task->listEnabled(true);
+		}
+
 	}
 	
 	

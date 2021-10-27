@@ -12,6 +12,7 @@ class taskList extends \application\entityList{
 		$this->base = new task();
 
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 		//push identifiers to base object
@@ -89,30 +90,27 @@ class taskList extends \application\entityList{
 	}
 	
 	public function setFoundCount(){
-		if ($this->periodicTasks == 'NO'){
-			$sql = $this->base->sql->countProject($this->idParent);
-		} else {
+	
+		if ($this->periodicTasks == 'YES'){
 			$sql = $this->base->sql->countPeriodic($this->getPeriodicTasksComplete());
+		} else {
+			$sql = $this->base->sql->countProject($this->idParent);
 		}
 		
 		$this->found = $this->base->sql->getCount($sql,'count_details');
 		
 	}
-	/*
-	protected function listingPagingLinks($pagingBaseLink = 'USE_LISTING'){
 	
-		if ($pagingBaseLink == 'USE_LISTING'){
-			$base = $this->base->links->listing($this->idParent,$this->periodicTasks);
-		} else { 
-			$base = $pagingBaseLink;
-		 }
-		$pagingLinks = $this->base->links->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
-		return $pagingLinks;
+	public function listingSQL(){
 	
+		if ($this->periodicTasks == 'YES'){
+			$sql = $this->base->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
+		} else {
+			$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
+		}
+		
+		return $sql;
 	}
-	
-	
-	*/
 	
 	//override listing start 
 	//to hide quickedit on periodic tasks
@@ -127,19 +125,15 @@ class taskList extends \application\entityList{
 		$legend = $this->entityTitle.':  Listing';
 		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
 
+
+		if ($this->periodicTasks == 'YES'){
+			$this->base->f->project->listEnabled(true);
+		}
+
 	}
 	
 	
-	public function listingSQL(){
 	
-		if ($this->periodicTasks == 'NO'){
-			$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
-		} else {
-			$sql = $this->base->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
-		}
-		
-		return $sql;
-		}
 		
 }
 ?>

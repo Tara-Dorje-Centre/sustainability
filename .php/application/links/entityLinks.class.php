@@ -133,7 +133,7 @@ abstract class entityLinks implements IentityLinks {
 	public function pagedListing(\application\links\url $altUrl = NULL, $count = 0, $page = 1, $rows = 10, $id=0, $idParent = 0){
 		$p = new linkMenuPaged($rows,'results-page');
 		if (is_null($altUrl)){
-			$url = $this->request->getUrlEntityList('LIST',$id,$idParent,$idType);
+			$url = $this->request->getUrlEntityList('LIST',$id,$idParent);
 		} else {
 			$url = $altUrl;
 		}
