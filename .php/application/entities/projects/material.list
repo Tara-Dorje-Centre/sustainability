@@ -22,36 +22,19 @@ class materialList extends \application\entityList{
 		//sets quickEdit form default idParent
 		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-		$display = 'ACTIVITY';
-		if (isset($_GET['display-level'])){
-			$display = $_GET['display-level'];
-		}
+		$display = $this->_GET('display-level','ACTIVITY');
 		$this->setDisplayLevel($display);
 
-		$show = 'NO';
-		if (isset($_GET['show-summary'])){
-			$show = $_GET['show-summary'];
-		}
+		$show = $this->_GET('show-summary','NO');
 		$this->setShowSummary($show);
 
-		$id = 0;
-		if (isset($_GET['project-id'])){
-			$id = $_GET['project-id'];
-		}
+		$id = $this->_GET('project-id',0);
 		$this->setProjectId($id);
 		
-		$id = 0;
-		if (isset($_GET['task-id'])){
-			$id = $_GET['task-id'];
-		}
+		$id = $this->_GET('task-id',0);
 		$this->setTaskId($id);
 		
-		$id = 0;
-		if (isset($_GET['activity-id'])){
-			$id = $_GET['activity-id'];
-		} else {
-			$id = $this->idParent;
-		}
+		$id = $this->_GET('activity-id',$this->idParent);
 		$this->setActivityId($id);
 		
 		$this->setIdsByDisplayLevel();
@@ -59,17 +42,11 @@ class materialList extends \application\entityList{
 	}
 	
 	public function getRequestPaging(){
-	 	$page = 1;
-	 	$rows = 10;
 	 	
 	 	$var = 'material-results-page';
-	 	if (isset($_GET[$var])){
-			$page = $_GET[$var];
-		}
-		if (isset($_GET['perPage'])){
-			$rows = $_GET['perPage'];
-		}
+		$page = $this->_GET($var,1);
 		
+		$rows = $this->_GET('perPage',10);
 		$this->setPaging($page,$rows);
 	}
 	

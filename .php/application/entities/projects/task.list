@@ -18,29 +18,24 @@ class taskList extends \application\entityList{
 		//sets quickEdit form default idParent
 		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-		$p = 'NO';
-		if (isset($_GET['periodic-tasks'])){
-			$p = $_GET['periodic-tasks'];
-		}
+		$p = $this->_GET('periodic-tasks','NO');
 		$this->setPeriodic($p);
-		$this->base->setPeriodic($p);
-		
-		$s = 'INCOMPLETE';
-		if (isset($_GET['task-status'])){
-			$s = $_GET['task-status'];
-		}
+
+		$s = $this->_GET('task-status','INCOMPLETE');
 		$this->setStatus($s);
-		$this->base->setStatus($s);
 		
 	}
 	
 	
 	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
+		$this->base->setPeriodic($p);
 	}
 	
 	public function setStatus($status = 'INCOMPLETE'){
 		$this->taskStatus = $status;
+		$this->base->setStatus($s);
+		
 		if ($status == 'COMPLETE'){
 			$this->statusComplete = true;
 		} else {

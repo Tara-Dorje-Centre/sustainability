@@ -18,30 +18,26 @@ extends \application\entityList{
 		//sets quickEdit form default idParent
 		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-		$my = 'NO';
-		if (isset($_GET['my-activity'])){
-			$my = $_GET['my-activity'];
-		}
-		$this->setMyActivity($my);
-		$this->base->setMyActivity($my);
+		$my = $this->_GET('my-activity','NO');
 		
+		$this->setMyActivity($my);
+
 		//showCalendar set in baseEntity
 		$this->base->setShowCalendar($this->showCalendar);
 		
-		$id = 0;
-		if (isset($_GET['project-id'])){
-			$id = $_GET['project-id'];
-		}
+		$id = $this->_GET('project-id',0);
 		$this->setProjectId($id);
-		$this->base->setProjectId($id);
+
 	}
 	
 	public function setMyActivity($my = 'NO'){
 		$this->myActivity = $my;
+		$this->base->setMyActivity($my);
 	}
 	
 	public function setProjectId($id = 0){
 		$this->projectId = $id;
+		$this->base->setProjectId($id);
 	}
 	
 	protected function makePageTitle(){

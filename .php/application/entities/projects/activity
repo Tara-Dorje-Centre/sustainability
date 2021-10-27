@@ -30,20 +30,13 @@ extends \application\entity{
 		}
 		
 		$var = 'material-results-page';
-		if (isset($_GET[$var])){
-			$this->materialResultsPage = $_GET[$var];
-		}
-		
+		$this->materialResultsPage = $this->_GET($var, 1);
+			
 		$var = 'receipt-results-page';
-		if (isset($_GET[$var])){
-			$this->receiptResultsPage = $_GET[$var];
-		}
+		$this->receiptResultsPage = $this->_GET($var, 1);
 		
 		$var = 'measure-results-page';
-		if (isset($_GET[$var])){
-			$this->measureResultsPage = $_GET[$var];
-		}
-		
+		$this->measureResultsPage = $this->_GET($var, 1);
 
 	}
 	
@@ -122,7 +115,7 @@ extends \application\entity{
 	protected function detailBuildLink(){
 	
 		if (($this->f->linkText->value() != '') AND ($this->f->linkUrl->value() != '')){
-		// build link and display in linkText
+			// build link and display in linkText
 			$link = $this->links->buildLink($this->f->linkUrl->value(), $this->f->linkText->value(),'link-text','_blank');
 			$this->f->linkText->set($link->print());
 		}

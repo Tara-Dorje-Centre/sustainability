@@ -5,7 +5,6 @@ class siteSettings
 extends \application\entity{
 
  	public function __construct(){
-
 		parent::__construct();
      
 		$this->entity = 'site-settings';
@@ -24,8 +23,6 @@ extends \application\entity{
 		parent::setDetails();
 		$this->setSessionDetails();	
 	}
-    
-
 	
 	protected function verifySettings(){
 		$sql = $this->sql->count();

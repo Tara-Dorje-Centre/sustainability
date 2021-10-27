@@ -4,18 +4,13 @@ namespace application\system;
 
 class userList extends \application\entityList{
 
-
-
-	//public $userTypeId = 0;
  	public function __construct(){
-
 		parent::__construct();
 
 		$this->entityTitle = 'UserProfiles';
 	 	$this->base = new user();
 
 	}
-	
 	
 	protected function makePageMenu(){
 	
