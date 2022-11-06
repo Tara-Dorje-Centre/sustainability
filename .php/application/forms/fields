@@ -19,21 +19,27 @@ namespace application\forms;
 abstract class fields extends \framework\_contentWriter{
 
 	public $entity = 'fieldset';
-	protected $currentTimestamp = '';
-	protected $currentUser = '';
+	public $currentTimestamp = '';
+	public $currentUser = '';
 	protected $fields = array();
 	
 	public function __construct(){
 		//$this->setEntity($entity);
 		global $sessionTime;
 		$this->currentTimestamp = $sessionTime;
-		$this->currentUserName = $_SESSION['login-name'];
+		if (isset($_SESSION['login-name'])){
+			$this->currentUser = $_SESSION['login-name'];
+		} else {
+			$this->currentUser = 'no-user';
+		}
 	}
 	protected function _register(string $fieldName, Ifield $field){
 		$this->_fields[$fieldName] = $field;
 	}
 	
-	abstract public function setDefaults();
+	public function setDefaults(){
+		$this->reset(true);
+	}
 	public function removeField(string $name){
 		unset($this->_fields[$name]);
 	}
@@ -93,6 +99,7 @@ abstract class fields extends \framework\_contentWriter{
 		foreach ($this->_fields as $f){
 			$f->read();
 		}
+		//$this->echoFieldState();
 	}
 	public function write(){
 		foreach ($this->_fields as $f){
@@ -105,7 +112,11 @@ abstract class fields extends \framework\_contentWriter{
 		}
 	}
 	public function echoFieldState(){
-	
+		
+		foreach ($this->_fields as $f){
+			$this->echoValue(true,$f->getEnvironmentVariable(),$f->value());
+		}
+		
 	
 	}
 }

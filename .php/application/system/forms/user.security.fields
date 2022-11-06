@@ -10,14 +10,15 @@ class userSecurityFields extends \application\forms\fields{
 	public $_mustUpdatePwd;
 	public $_clientTimeZone;
 	public $_isLoggedIn;
-		public function __construct(){
-	    $this->_loginMessages = new \application\forms\textField('not-used','login-messages','Login'); 
-    	$this->_currentUser = new \application\forms\_user('login_name','login-name','no.caption'); 
-		$this->_currentUserId = new \application\forms\_id('id','user-id','no.caption'); 
-		$this->_isAdmin = new \application\forms\yesNoField('is_admin','is-admin','no.caption');
-  		$this->_mustUpdatePwd = new \application\forms\yesNoField('must_update_pwd','must-update-pwd','no.caption');
-    	$this->_clientTimeZone = new \application\forms\textField('not_used','client-time-zone','Login'); 
-    	$this->_isLoggedIn = new \application\forms\booleanField('not_used','logged-in','no.caption'); 
+	
+	public function __construct(){
+	    $this->_loginMessages = new \application\forms\_description('not-used','login-messages','Login'); 
+    	$this->_currentUser = new \application\forms\_user('login_name','login-name','not-used'); 
+		$this->_currentUserId = new \application\forms\_id('id','user-id','not-used'); 
+		$this->_isAdmin = new \application\forms\_yesNo('is_admin','is-admin','not-used');
+  		$this->_mustUpdatePwd = new \application\forms\_yesNo('must_update_pwd','must-update-pwd','not-used');
+    	$this->_clientTimeZone = new \application\forms\_text('not-used','client-time-zone','Login'); 
+    	$this->_isLoggedIn = new \application\forms\_boolean('not-used','logged-in','not-used'); 
     	$this->_register('_loginMessages',$this->_loginMessages);
     	$this->_register('_currentUser',$this->_currentUser);
     	$this->_register('_currentUserId',$this->_currentUserId);

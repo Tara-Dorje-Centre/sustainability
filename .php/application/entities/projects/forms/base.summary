@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\projects\forms;
 
-class baseSummary{
+class summaryBase{
 	public $count = 0;
 	public $estimated = 0;
 	public $actual = 0;

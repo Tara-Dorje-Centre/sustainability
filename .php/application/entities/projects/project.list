@@ -1,5 +1,5 @@
 <?php
-namespace application\entities;
+namespace application\entities\projects;
 
 class projectList extends \application\entityList{
 	public $showMyProjects = 'NO';
@@ -13,9 +13,13 @@ class projectList extends \application\entityList{
 	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
-
-
+		
+		$this->setStatus($this->_GET('project-status','OPEN'));
+		
+		$this->setMyProjects($this->_GET('my-projects','NO'));
+		
 	}
+	
 	public function setMyProjects($showMyProjects = 'NO'){
 		$this->showMyProjects = $showMyProjects;
 	}
@@ -24,9 +28,8 @@ class projectList extends \application\entityList{
 		$this->status = $projectStatus;	
 	}
 	
-	
 	protected function makePageTitle(){
-
+		$title = '';
 		if ($this->showMyProjects == 'YES'){
 			$title .= 'My ';
 		}
@@ -35,40 +38,40 @@ class projectList extends \application\entityList{
 		$this->_pageTitle = $title;	
 	}
 
-	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
 	
-		//$activityL = new ActivityLinks($menuType,$menuStyle);
-
-		$menu = $this->base->links->openMenu('section-heading-links');
+	protected function makePageMenu(){
+		$showClosed = false;
+		$showMy = false;
 		
-		if ($this->status == 'CLOSED'){
-			$menu .= $this->base->links->listingAllProjects(true);	
-		} else {
-			$menu .= $this->base->links->listingAllProjects();
+		if ($this->status != 'CLOSED'){
+			$showClosed = true;
 		}
-	$menu .= $this->base->links->resetMenu();		
-		if ($this->status == 'CLOSED'){
-		$menu .= $this->base->links->listingMyProjects(true);
-		} else {
-			$menu .= $this->base->links->listingMyProjects();	
+
+		$l = $this->base->links->allProjects($showClosed);	
+		$this->base->links->addLink($l);
+			
+		if ($this->showMyProjects == 'YES'){
+			$l = $this->base->links->myProjects($showClosed);
+			$this->base->links->addLink($l);
 		}
-	$menu .= $this->base->links->resetMenu();
-	$menu .= $this->base->links->detailAddHref();					
-	$menu .= $this->base->links->closeMenu();
-		$this->_pageMenu = $menu;			
+		
+		$l = $this->base->links->add('New Project');
+		$this->base->links->addLink($l);
+		
+		$this->_pageMenu = $this->base->links->print();	
+
 	}
 	
 	
 	public function setFoundCount(){
 		if ($this->showMyProjects == 'YES'){
-			$sql = $this->base->sql->countByDoneBy($_SESSION['login-name'],$this->status);
+			$sql = $this->base->sql->countByActivityDoneBy($_SESSION['login-name'],$this->status);
 		} else {
 			$sql = $this->base->sql->countByStatus($this->status);
 		}
-		$this->found = dbGetCount($sql, 'total_projects');
+
+		$this->found = $this->base->sql->getCount($sql,'total_projects');
+		
 	}
 	
 	//override adds status and showMyProject
@@ -76,19 +79,12 @@ class projectList extends \application\entityList{
 		$l = $this->base->links->listingPaged($this->status,$this->showMyProjects, $this->found,$this->resultPage,$this->perPage);	
 		return $l;
 	}
-	/*
 	
-	protected function listingQuickEdit(){
-		$quickEdit =$this->base->addForm();		
-		return $quickEdit;
-	}
-	*/
 	protected function listingSQL(){
-	
 	
 		if ($this->showMyProjects == 'YES'){
 			$user = $_SESSION['login-name'];
-			$sql = $this->base->sql->listByDoneBy($user,$this->status,$this->resultPage,$this->perPage);
+			$sql = $this->base->sql->listByActivityDoneBy($user,$this->status,$this->resultPage,$this->perPage);
 		} else {
 			$sql = $this->base->sql->listByStatus($this->status,$this->resultPage,$this->perPage);
 		}

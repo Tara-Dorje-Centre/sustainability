@@ -1,0 +1,17 @@
+<?php
+namespace html\inputs;
+
+class selectQuery extends _select{
+
+	public function __construct($name, $value, $sql, $caption, $onChangeJS = null){
+		parent::__construct($name,$value,$caption,$onChangeJS);
+		$this->optionsByQuery($sql);
+	}
+	
+}
+
+class selectSQL extends selectQuery{
+
+}
+
+?>

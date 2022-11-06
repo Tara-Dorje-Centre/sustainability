@@ -2,8 +2,12 @@
 namespace application\system\forms;
 
 
-class userFields extends \application\forms\entityFields{
-	
+class userFields extends \application\forms\fields{
+	public $id;
+	public $name;
+	public $created;
+    public $updated;
+    public $highlight;
     public $loginName;
     public $pwd;
     public $pwdConfirm;
@@ -20,19 +24,38 @@ class userFields extends \application\forms\entityFields{
 
 	public function __construct(){
 		parent::__construct();
+		
+		$this->id = new \application\forms\_id('id','id','not-used');
+    	$this->name = new \application\forms\_name('name','name','Name');
+    	$this->updated = new \application\forms\_date('updated','updated','Updated');
+    	$this->created = new \application\forms\_date('created','created','Created');
+        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
     	$this->nameFirst = new \application\forms\_name('name_first','name-first','First Name'); 
 		$this->nameLast = new \application\forms\_name('name_last','name-last','Last Name'); 
 		$this->email = new \application\forms\_email('email','email','Email Address'); 
 		$this->focus = new \application\forms\_notes('focus','focus','Focus Area');
 		$this->interests = new \application\forms\_notes('interests','interests','Interests');
-		$this->pwd = new \application\forms\_password('not_used','login-pwd','login-password');
-		$this->pwdConfirm = new \application\forms\_password('not_used','pwd-confirm','confirm-password');
-		$this->loginName = new \application\forms\_user('login_name','login-name','login-name');
-		$this->lastLogin = new \application\forms\dateField('last_login','last-login','Last Login'); 
-		$this->isAdmin = new \application\forms\yesNoField('is_admin','is-admin','Administrator');
-		$this->isActive = new \application\forms\yesNoField('is_active','is-active','Active Profile');
-		$this->mustUpdatePwd = new \application\forms\yesNoField('must_update_pwd', 'must-update-pwd','Must Update Password');
+		$this->pwd = new \application\forms\_password('not-used','login-pwd','login-password');
+		$this->pwdConfirm = new \application\forms\_password('not-used','pwd-confirm','confirm-password');
+		$this->loginName = new \application\forms\_user('login_name','login-name','Login Name');
+		$this->lastLogin = new \application\forms\_date('last_login','last-login','Last Login'); 
+		$this->isAdmin = new \application\forms\_yesNo('is_admin','is-admin','Administrator');
+		$this->isActive = new \application\forms\_yesNo('is_active','is-active','Active Profile');
+		$this->mustUpdatePwd = new \application\forms\_yesNo('must_update_pwd', 'must-update-pwd','Must Update Password');
 		$this->type = new \application\forms\_idName('type_id','id-type','Type', 'type_name');
+   		
+   		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
+   		
+   		
+   		$this->_register('id', $this->id);
+		$this->_register('name', $this->name);
+   		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+   		$this->_register('highlight', $this->highlight);
    		$this->_register('nameFirst', $this->nameFirst);
 		$this->_register('nameLast', $this->nameLast);
 		$this->_register('email', $this->email);
@@ -42,13 +65,35 @@ class userFields extends \application\forms\entityFields{
 		$this->_register('pwd', $this->pwd);
 		$this->_register('pwdConfirm', $this->pwdConfirm);
 		$this->_register('lastLogin', $this->lastLogin);
-		$this->_register('lastLogin', $this->lastLogin);
 		$this->_register('isAdmin', $this->isAdmin);
 		$this->_register('isActive', $this->isActive);
 		$this->_register('mustUpdatePwd', $this->mustUpdatePwd);
 		$this->_register('type', $this->type);
-	}
+		
+		
+   }
    
+	private function disableFields(){
+		$this->lastLogin->envEnabled(false);
+		$this->created->envEnabled(false);
+		$this->updated->envEnabled(false);
+		
+		$this->name->fetchEnabled(false);
+		$this->pwdConfirm->listEnabled(false);
+		$this->pwd->listEnabled(false);
+		$this->created->listEnabled(false);
+		$this->updated->listEnabled(false);
+		$this->focus->listEnabled(false);
+		$this->interests->listEnabled(false);
+		$this->id->listEnabled(false);
+		$this->highlight->listEnabled(false);
+		
+		$this->highlight->displayEnabled(false);
+		$this->id->displayEnabled(false);
+		$this->pwdConfirm->displayEnabled(false);
+		$this->pwd->displayEnabled(false);
+				
+	}
     
 	protected function formatUserName($last,$first = 'not-given'){
 		$name = $this->nameLast->value();
@@ -59,7 +104,7 @@ class userFields extends \application\forms\entityFields{
 	}
 	public function fetch($row){
 		parent::fetch($row);
-		$this->name->set($this->formatUserName($this->nameLast.value,$this->namFirst->value));
+		$this->name->set($this->formatUserName($this->nameLast->value(),$this->nameFirst->value()));
 		
 	}
 	public function setDefaults(){
@@ -70,7 +115,6 @@ class userFields extends \application\forms\entityFields{
 		
 	}
 	
-
 }
 
 

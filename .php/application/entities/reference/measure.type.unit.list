@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\reference;
 
-class measureTypeUnitList extends \application\entityList{
+class measureTypeUnitList extends \application\entityTypeList{
 	public $measureType;
 	public $sql;
 	public function __construct(){
@@ -10,121 +10,6 @@ class measureTypeUnitList extends \application\entityList{
 		$this->entityTitle = 'Measure Type Units';
 		$this->base = new measureTypeUnit();
 	}
-	
-	public function getRequestArguments(){
 
-
-
-	}
-	
-	public function setDetails(){
-	
-		
-		//$this->measureType->setDetails();
-		$this->setFoundCount();
-	}
-	
-	
-	protected function makePageTitle(){
-
-		if ($this->measureType->id > 0){
-			$title = $this->measureType->name.br();
-		} else {
-			$title = 'All Measure Types:'.br();
-		}
-		$title .= 'Measure Type Units';
-
-		$this->_pageTitle = $title;	
-	}	
-
-	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
-		$units = new UnitOfMeasureLinks($menuType,$menuStyle);
-		$measureTypes = new MeasureTypeLinks($menuType,$menuStyle);
-		$measureTypeUnits = new MeasureTypeUnitLinks($menuType,$menuStyle);
-
-		
-		$menu = $units->openMenu('section-heading-links');
-	
-		$mtul = new MeasureTypeUnitLinks;
-		$mtl = new MeasureTypeLinks;
-		$uml = new UnitOfMeasureLinks;			
-
-		if ($this->measureTypeId > 0){
-			$menu .= $measureTypeUnits->detailAddHref($this->measureType->id);
-		}
-		$menu .= $measureTypeUnits->listingHref($this->measureType->id,'Refresh');
-		$menu .= $units->resetMenu();
-		
-		$menu .= $measureTypeUnits->listingHref(0);
-		$menu .= $units->resetMenu();
-		$menu .= $measureTypes->listingHref();
-		$menu .= $units->listingHref();		
-		
-		$menu .= $units->closeMenu();	
-		$this->_pageMenu = $menu;			
-	}	
-	
-	
-	
-	
-	public function setFoundCount(){
-		//$s = new MeasureTypeUnitSQL;
-		$sql = $this->sql->count($this->measureType);
-		$this->found = dbGetCount($sql, 'total_units');
-	}		
-	
-	
-	
-	public function getListing(){
-		//$s = new MeasureTypeUnitSQL;
-		$sql = $this->sql->list($this->measureType->id,$this->resultPage,$this->perPage);
-
-		
-		$ml = new MeasureTypeUnitLinks;
-		$pagingLinks = $ml->listingPaged($this->measureType->id, $this->found,$this->resultPage,$this->perPage);
-		if ($this->measureType->id > 0){
-			$mtu = new MeasureTypeUnit('ADD', 0, $this->measureType->id);
-			$mtu->setDetails();
-			$quickEdit = $mtu->editForm();
-		} else {
-			$quickEdit = NULL;
-		}
-		$list = openDisplayList('measure-type-unit','Measure Type Units',$pagingLinks,$quickEdit);
-
-		$heading =  wrapTh('Measure Type');
-		$heading .=  wrapTh('Unit Type');
-		$heading .=  wrapTh('Unit of Measure');
-		$heading .=  wrapTh('Unit Symbol');
-		$list .=  wrapTr($heading);
-
-		$result = dbGetResult($sql);
-		if($result){
-		while ($row = $result->fetch_assoc())
-		{	
-			$m = new MeasureTypeUnit;
-			$m->id = $row["id"];
-			$m->measureTypeId = $row["measure_type_id"];
-			$m->unitOfMeasureId = $row["unit_measure_id"];
-			$m->measureTypeName = ($row["measure_type"]);
-			$m->unitType = ($row["unit_type"]);
-			$m->unitOfMeasure = ($row["unit_of_measure"]);
-			$m->unitSymbol = ($row["unit_symbol"]);
-			
-			$link = $ml->detailViewEditHref($m->id,$m->getMeasureTypeAndUnitSymbol());
-			$detail =  wrapTd($link);
-			$detail .=  wrapTd($m->unitType);
-			$detail .=  wrapTd($m->unitOfMeasure);
-			$detail .=  wrapTd($m->unitSymbol);
-			$list .=  wrapTr($detail);
-		}
-		$result->close();
-		}
-
-		$list .=  closeDisplayList();
-		return $list;
-	}
 }
 ?>

@@ -7,16 +7,63 @@ class receiptLinks extends \application\links\entityLinks {
 		$context = 'receipt';
 		parent::__construct($context);
 	}
+	
 	public function setRequest(){
-		$this->request = new receiptRequest($this->entityContext,$this->portalPage);
+		$this->request = new receiptRequest($this->entityContext,$this->pagePortal);
 	}
 	
-	public function linkProjectReceipts($projectId){
-		return $this->listingHref(0,'ProjectReceipts',$projectId,'PROJECT','yes');	
+	public function urlReceiptList($idActivity,$idTask,$idProject,$showSummary = 'NO',$displayLevel= 'ACTIVITY'){
+		$url = $this->request->getUrlReceiptList($idActivity,$idTask,$idProject,$showSummary,$displayLevel);
+		return $url;
 	}
-	public function linkTaskReceipts($idParent){
-		return $this->listingHref($idParent,'TaskReceipts',0,'TASK','no');	
+	
+	public function projectReceipts($idProject){
+		$u = $this->urlReceiptList(0, 0, $idProject,'NO','PROJECT');
+		$caption = 'Project Receipts';
+		return $this->getLink($u,$caption);
 	}
+	
+	public function taskReceipts($idTask){
+		$u = $this->urlReceiptList(0, $idTask, 0, 'NO','TASK');
+		$caption = 'Task Receipts';
+		return $this->getLink($u,$caption);
+	}
+	
+	public function activityReceipts($idActivity){
+		$u = $this->urlReceiptList($idActivity, 0, 0, 'NO','ACTIVITY');
+		$caption = 'Activity Receipts';
+		return $this->getLink($u,$caption);
+	}
+	
+	public function projectReceiptsSummary($idProject){
+		$u = $this->urlReceiptsList(0, 0, $idProject,'YES','PROJECT');
+		$caption = 'Project Receipts';
+		return $this->getLink($u,$caption);
+	}
+	
+	public function taskReceiptsSummary($idTask){
+		$u = $this->urlReceiptList(0, $idTask, 0, 'YES','TASK');
+		$caption = 'Task Receipts';
+		return $this->getLink($u,$caption);
+	}
+	
+	public function activityReceiptsSummary($idActivity){
+		$u = $this->urlReceiptList($idActivity, 0, 0, 'YES','ACTIVITY');
+		$caption = 'Activity Receipts';
+		return $this->getLink($u,$caption);
+	}
+	
+	public function pagedListing(\application\links\url $altUrl = NULL, $count = 0, $page = 1, $rows = 10, $idActivity = 0, $idTask = 0,$idProject = 0,$showSummary = 'NO',$displayLevel= 'ACTIVITY'){
+		$p = new \application\links\linkMenuPaged($rows,'receipt-results-page');
+		if (is_null($altUrl)){
+			$url = $this->urlReceiptList($idActivity,$idTask,$idProject,$showSummary,$displayLevel);
+		} else {
+			$url = $altUrl;
+		}
+		
+		return $p->makePagedLinks($url, $count,$page);
+	}
+	
 	
 }
 ?>

@@ -1,23 +1,75 @@
 <?php
 namespace application\entities\reference\forms;
 
-
+		
  class measureTypeUnitFields extends \application\forms\entityFields{
+	
+	 public $id;
+	 public $name;
+	 public $created;
+     public $updated;
+	public $highlight;
+	public $displayOrder;
 	 public $measureType;
 	 public $unitType;
 
+	 public $unitGroup;		
+	 public $unitSymbol;		
+
  public function __construct(){
-	$this->measureType = new \application\forms\_fieldIdName('measure_type_id','measure-type-id','Measure Type','measure_type_name');
-	$this->unitType = new \application\forms\_fieldIdName('unit_type','unit-type-id','Unit Type','unit_type_name');
-	$this->_register('measureType',$this->measureType);
-	$this->_register('unit_type',$this->unitType);
- }
- //set additional fields
- public function setDefaults(){
- 	parent::setDefaults();
+ 
+ 		$this->id = new \application\forms\_id('id','id','Id');
+		
+		$this->updated = new \application\forms\_date('updated','updated','Updated');
+    	$this->created = new \application\forms\_date('created','created','Created');
+
+		$this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
+		$this->displayOrder = new \application\forms\_number('display_order','display-order','Display Order');
+
+		$this->measureType = new \application\forms\_idName('measure_type_id','measure-type-id','Measure Type','measure_type');
+		$this->quantityType = new \application\forms\_idName('unit_measure_id','unit-measure-id','Unit Type','unit_of_measure');
+	
+     	$this->name = new \application\forms\_name('name','not-used','Name');
+     	$this->unitSymbol = new \application\forms\_name('unit_symbol','not-used','Unit Symbol');
+ 
+ 		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
+		//define field ordering for display and list
+		$this->_register('id', $this->id);
+		$this->_register('displayOrder', $this->displayOrder);
+		$this->_register('measureType',$this->measureType);
+		$this->_register('quantityType',$this->quantityType);
+		$this->_register('name', $this->name);
+		$this->_register('unitSymbol', $this->unitSymbol);
+		$this->_register('highlight', $this->highlight);
+		
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+	}
+    
+    
+	private function disableFields(){
+		$this->id->listEnabled(false);
+		$this->id->displayEnabled(false);
+		$this->name->listEnabled(false);
+		$this->name->displayEnabled(false);
+		$this->updated->envEnabled(false);
+        $this->created->envEnabled(false);
+        $this->name->envEnabled(false);
+        $this->unitSymbol->envEnabled(false);
+        $this->updated->listEnabled(false);
+        $this->created->listEnabled(false);
+    	
+	}
+
+	public function setDefaults(){
+ 		parent::setDefaults();
  	
  	
- }
+ 	}
 
 }
 

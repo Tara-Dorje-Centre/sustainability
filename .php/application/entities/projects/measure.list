@@ -3,91 +3,182 @@ namespace application\entities\projects;
 
 class measureList extends \application\entityList{
 
+	public $displayLevel = 'ACTIVITY';
+	public $projectId = 0;
+	public $taskId = 0;
+	public $activityId = 0;
+
 	public function __construct(){
 		parent::__construct();
-
+     	$this->entityTitle = 'Measures';
 		$this->base = new measure();
 	}
+	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
 
+		//push identifiers to base object
+		//sets quickEdit form default idParent
+		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
+		
+		$display = $this->_GET('display-level','ACTIVITY');
+		$this->setDisplayLevel($display);
 
+		$id = $this->_GET('project-id',0);
+		$this->setProjectId($id);
+
+		$id = $this->_GET('task-id',0);
+		$this->setTaskId($id);
+
+		$id = $this->_GET('activity-id',$this->idParent);
+		$this->setActivityId($id);
+		
+		$this->setIdsByDisplayLevel();
 	}
 	
+	public function getRequestPaging(){
+	 	
+	 	$var = 'measure-results-page';
+		$page = $this->_GET($var,1);
+
+		$rows = $this->_GET('perPage',10);
 		
+		$this->setPaging($page,$rows);
+	}
+	
+	public function setIdsByDisplayLevel(){
+	
+		if ($this->displayLevel == 'ACTIVITY'){
+			$a = new activity();
+			$this->taskId = $a->getTaskId($this->activityId);
+			$this->projectId = $a->getProjectId($this->activityId);
+		} elseif ($this->displayLevel == 'TASK'){
+			$t = new task();
+			$this->projectId = $t->getProjectId($this->taskId);
+		} 
+	}
+	
+	
+	public function setDisplayLevel($display = 'ACTIVITY'){
+		$this->displayLevel = $display;
+		$this->base->setDisplayLevel($display);
+	}
+	
+	public function setProjectId($id = 0){
+		$this->projectId = $id;
+		$this->base->setProjectId($id);
+	}
+	
+	public function setTaskId($id = 0){
+		$this->taskId = $id;
+		$this->base->setTaskId($id);
+	}
+	
+	public function setActivityId($id = 0){
+		$this->activityId = $id;
+		$this->base->setActivityId($id);
+	}
+	
 	protected function makePageTitle(){
+		
+		$br = new \html\_br();
+		if ($this->displayLevel == 'ACTIVITY'){
+			$a = new activity();
+			$title = 'Project: '.$a->getProjectName($this->activityId).$br->print();
+			$title .= 'Task: '.$a->getTaskName($this->activityId).$br->print();
+			$title .= 'Activity: '.$a->getActivityName($this->activityId).$br->print();
+			$title .= 'Activity Measures';
+		} elseif ($this->displayLevel == 'TASK'){
+			$t = new task();
+			$title = 'Project: '.$t->getProjectName($this->taskId).$br->print();
+			$title .= 'Task: '.$t->getTaskName($this->taskId).$br->print();
+			$title .= 'Task Measures';
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$p = new project();
+			$title = 'Project: '.$p->getProjectName($this->projectId).$br->print();
+			$title .= 'Project Measures';
+		}
 
-		$title = $this->task->project->name.br();
-		$title .= 'Task: '.$this->task->name;
-
-		$this->_pageTitle = $title;	
+		$this->_pageTitle = $title;
 	}	
 
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
-		
-		$projects = new ProjectLinks($menuType,$menuStyle);
-		$tasks = new TaskLinks($menuType,$menuStyle);
-		$measures = new MeasureLinks($menuType,$menuStyle);
-					
-		$menu = $projects->openMenu('section-heading-links');
-		
-
-		$menu .= $tasks->detailViewHref($this->task->id);
-		$menu .= $projects->detailViewHref($this->task->project->id);
-		
-		$menu .= $projects->resetMenu();
-		
-		$menu .= $measures->detailAddHref($this->task->id);
-		$menu .= $measures->listingHref($this->task->id);		
-		
-		$menu .= $projects->closeMenu();	
+		$menu = '';
+		$p = new links\projectLinks();
+		$t = new links\taskLinks();
+		$a = new links\activityLinks();
+		if ($this->displayLevel == 'ACTIVITY'){
+			$this->base->links->addLink($p->view('View Project',$this->projectId));
+			$this->base->links->addLink($t->view('View Task',$this->taskId));
+			$this->base->links->addLink($a->view('View Activity',$this->activityId));
+			$this->base->links->addLink($this->base->links->add('New Measure',$this->activityId));
+		} elseif ($this->displayLevel == 'TASK'){
+			$this->base->links->addLink($p->view('View Project',$this->projectId));
+			$this->base->links->addLink($t->view('View Task',$this->taskId));
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$this->base->links->addLink($p->view('View Project',$this->projectId));
+		}
+		$menu = $this->base->links->print();
 		$this->_pageMenu = $menu;			
 	}	
 	
-	public function setFoundCount(){
-		$sql = $this->sql->countTask($this->task->id);
-		$this->found = dbGetCount($sql, 'total_measures');
-	}
-		
-	public function getListing($pagingBaseLink = 'USE_LISTING'){
-		$sql = $this->sql->listTask($this->task->id,$this->resultPage,$this->perPage);
-
-		
-		$ml = new MeasureLinks;		
-		if ($pagingBaseLink == 'USE_LISTING'){
-			$base = $ml->listing($this->task->id);
-		} else { 
-			$base = $pagingBaseLink;
-		}
-		$pagingLinks = $ml->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
-		$m = new Measure('ADD', 0, $this->task->id);
-		$m->setDetails();
-		$quickEdit = $m->editForm();
-		$list = openDisplayList('measure','Measures',$pagingLinks,$quickEdit);
-
 	
-
-		$list .=  wrapTr($heading);
-
-
-		$result = dbGetResult($sql);
-		if($result){
-	  	while ($row = $result->fetch_assoc())
-		{	
-			$m = new Measure(FETCH);
-		
-			
-		
-			
-			$list .=  wrapTr($detail);
+	public function setFoundCount(){
+		$this->echoState(true, 'setFoundCount');
+		$this->echoValue(true, 'displayLevel',$this->displayLevel, 'setFoundCount');
+		if ($this->displayLevel == 'ACTIVITY'){
+			$sql = $this->base->sql->countActivity($this->activityId);
+		} elseif ($this->displayLevel == 'TASK'){
+			$sql = $this->base->sql->countTask($this->taskId);
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$sql = $this->base->sql->countProject($this->projectId);
 		}
-		$result->close();
-		}
+		$this->found = $this->base->sql->getCount($sql,'count_details');
 		
-		$list .= closeDisplayList();
-		return $list;
 	}
+		
+	
+	
+	
+	
+	protected function listingSQL(){
+	
+		if ($this->displayLevel == 'ACTIVITY'){
+			$sql = $this->base->sql->listActivity($this->activityId,$this->resultPage,$this->perPage);
+		} elseif ($this->displayLevel == 'TASK'){
+			$sql = $this->base->sql->listTask($this->taskId,$this->resultPage,$this->perPage);
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$sql = $this->base->sql->listProject($this->projectId,$this->resultPage,$this->perPage);
+		}
+	
+		return $sql;
+	}
+	
+	
+	
+	//override listing start 
+	//to add args to paged listing
+	protected function listingStart(\application\links\url $altUrl = NULL){
+		
+		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage, $this->activityId,$this->taskId,$this->projectId,$this->displayLevel);	
+		$add = '';
+		if ($this->displayLevel == 'ACTIVITY'){
+			$add = $this->base->addForm($this->activityId);	
+		}
+		$entity = $this->base->entity;
+		$legend = $this->entityTitle.':  Listing';
+		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
+
+
+		if ($this->displayLevel == 'TASK'){
+			$this->base->f->activity->listEnabled(true);
+		} elseif ($this->displayLevel == 'PROJECT'){
+			$this->base->f->activity->listEnabled(true);
+			$this->base->f->task->listEnabled(true);
+		}
+
+	}
+	
+	
 }
 ?>

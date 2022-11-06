@@ -1,0 +1,18 @@
+
+
+
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(1, 'unit testing', 'Another', 'Described clearly', '2017-07-29 21:32:30', '2017-06-30 17:20:08', 1, 'text-green');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(2, 'preparing', '', '', '2017-07-05 16:36:57', '2017-06-30 17:43:26', 2, 'highlight-turquoise');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(3, 'Digging', '', '', '2017-07-29 21:32:12', '2017-07-29 21:32:12', 3, 'highlight-khaki');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(4, 'Carrying Water', '', '', '2017-07-29 21:32:48', '2017-07-29 21:32:48', 4, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(5, 'Cutting Wood', '', '', '2017-07-29 21:33:07', '2017-07-29 21:33:07', 5, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(6, 'Planning', '', '', '2017-07-29 21:33:25', '2017-07-29 21:33:25', 6, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(7, 'Design', '', '', '2017-07-29 21:33:35', '2017-07-29 21:33:35', 7, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(8, 'Pruning', '', '', '2017-07-29 21:35:49', '2017-07-29 21:33:55', 8, 'highlight-turquoise');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(9, 'Watering Plants', '', '', '2017-07-29 21:34:08', '2017-07-29 21:34:08', 9, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(10, 'Development', '', '', '2017-07-29 21:34:38', '2017-07-29 21:34:38', 10, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(11, 'Setup', '', '', '2017-07-29 21:34:47', '2017-07-29 21:34:47', 11, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(12, 'Research', '', '', '2017-07-29 21:34:57', '2017-07-29 21:34:57', 12, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(13, 'Documentation', '', '', '2017-07-29 21:35:12', '2017-07-29 21:35:12', 13, 'none');
+INSERT INTO activity_types (id, name, notes, description, updated, created, display_order, highlight_style) VALUES(14, 'DataEntry', '', '', '2017-07-29 21:35:22', '2017-07-29 21:35:22', 14, 'none');
+

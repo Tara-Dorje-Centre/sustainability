@@ -1,0 +1,11 @@
+
+
+
+
+INSERT INTO task_type_frequencies (frequency, description, display_order) VALUES('no', 'Not Periodic', 1);
+INSERT INTO task_type_frequencies (frequency, description, display_order) VALUES('daily', 'Periodic Daily', 2);
+INSERT INTO task_type_frequencies (frequency, description, display_order) VALUES('weekly', 'Periodic Weekly', 3);
+INSERT INTO task_type_frequencies (frequency, description, display_order) VALUES('monthly', 'Periodic Monthly', 4);
+INSERT INTO task_type_frequencies (frequency, description, display_order) VALUES('quarterly', 'Periodic Quarterly', 5);
+INSERT INTO task_type_frequencies (frequency, description, display_order) VALUES('annual', 'Periodic Annually', 6);
+

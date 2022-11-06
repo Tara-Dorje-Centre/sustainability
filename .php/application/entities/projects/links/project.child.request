@@ -3,8 +3,8 @@ namespace application\entities\projects\links;
 
 class projectChildRequest extends projectRequest{
 
-	protected function setUrlParametersProjectChild(\application\links\url &$u, $id){
-		$this->setUrlParameter($u,'project-id',$id);
+	protected function setUrlParametersProjectChild(\application\links\url &$url, $id){
+		$this->setUrlParameter($url,'project-id',$id);
 	}
 	
 }

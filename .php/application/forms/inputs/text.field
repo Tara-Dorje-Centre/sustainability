@@ -1,17 +1,14 @@
 <?php 
-
 namespace application\forms;
 
-class textField extends field {
-
+class _text extends field{
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
 		$this->_datatype = 'TEXT';
 	}
-	
 }
 
-class hiddenTextField extends textField{
+class _hiddenText extends _text{
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used'){
 		parent::__construct($dbCol,$envVar,'no-caption');
 	}
@@ -19,36 +16,13 @@ class hiddenTextField extends textField{
 		return $this->inputHidden();
 	}
 }
-class hiddenNumberField extends textField{
+
+class _hiddenNumber extends _text{
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used'){
 		parent::__construct($dbCol,$envVar,'no-caption');
 	}
 	public function input(){
 		return $this->inputHidden();
-	}
-}
-class requestVariableNumber extends hiddenTextField{
-	public function __construct(string $envVar = 'post-var',$value){
-		parent::__construct('not_used',$envVar,'no-caption');
-		$this->set($value);
-	}
-}
-class requestVariable extends hiddenTextField{
-	public function __construct(string $envVar = 'post-var',$value){
-		parent::__construct('not_used',$envVar,'no-caption');
-		$this->set($value);
-	}
-}
-class requestPageMode extends requestVariable{
-	public function __construct($value){
-		parent::__construct('pageMode',$value);
-
-	}
-}
-class requestPageAction extends requestVariable{
-	public function __construct($value){
-		parent::__construct('pageAction',$value);
-
 	}
 }
 

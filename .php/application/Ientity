@@ -12,17 +12,13 @@ interface IbaseEntity{
 
 interface Ientity extends IbaseEntity{
 	public function setDetails();
-	public function getListing();
+	//public function getListing();
 	public function editForm();
-	public function addForm();
-
-
+	public function addForm($idParent = 0);
 	public function options($selectedId = 0, $name = 'id-type', $onChangeJS = NULL);
-	
 	public function collectPostValues();
 	public function saveChanges();
-	
-	public function getRequestValues();
+	public function getRequestArguments();
 	public function printPage();
 	public function printRequest();
 }

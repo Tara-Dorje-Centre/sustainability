@@ -1,0 +1,23 @@
+
+
+
+
+
+
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-blue', 'lightblue', 'blue');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-green', 'lightgreen', 'blue');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-yellow', 'yellow', 'black');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-grey', 'lightgrey', 'black');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-red', 'red', 'white');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-purple', 'thistle', 'black');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-pink', 'lightpink', 'black');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('text-purple', 'white', 'purple');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('text-green', 'white', 'green');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('text-blue', 'white', 'blue');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('text-red', 'white', 'red');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('text-grey', 'white', 'darkgrey');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-turquoise', 'turquoise', 'black');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-peach', 'peach', 'black');
+INSERT INTO css_highlight_styles (style_name, background_color, text_color) VALUES('highlight-khaki', 'khaki', 'black');
+
+

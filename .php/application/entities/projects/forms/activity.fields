@@ -1,25 +1,118 @@
 <?php
 namespace application\entities\projects\forms;
-use application\forms as f;
 
-class activityFields extends taskChildFields{
+
+class activityFields 
+extends \application\forms\fields{
+    	
+    public $id;
+    public $name;
+    
+    public $project;
+    public $projectType;
+    public $task;
+    
+	public $type;
+	public $highlight;
+
+	public $doneBy;
+	public $started;
+	public $startDate;
+    public $updated;
+ 	public $activityOrder;
 	public $hoursEstimated;
 	public $hoursActual;
  	public $comments;
+	public $linkUrl;
+ 	public $linkText;
+ 	
+ 	public function __construct(){
+		parent::__construct();
+    	
+		$this->id = new \application\forms\_id('id','id','not-used');
+    	$this->name = new \application\forms\_name('name','name','Name');
+    	$this->task = new \application\forms\_idName('task_id','task-id','Task','task_name');
+    	$this->type = new \application\forms\_idName('type_id','type-id','Type','type_name');
+        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
+    	$this->project = new \application\forms\_idName('project_id','project-id','Project','project_name');
+    	$this->projectType = new \application\forms\_idName('project_type_id','project-type-id','Project Type','project_type_name');
+    	$this->doneBy = new \application\forms\_user('done_by','done-by','Done By');
+    	$this->started = new \application\forms\_date('started','started','Started');
+    	$this->startDate = new \application\forms\_text('start_date','not-used','Start Date');
+		$this->updated = new \application\forms\_date('updated','updated','Updated');
+		$this->activityOrder = new \application\forms\_number('activity_order','activity-order','Activity Order');
+    	$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Effort Estimate');
+    	$this->hoursActual = new \application\forms\hours('hours_actual','hours-actual','Effort Actual');
+    	$this->linkUrl = new \application\forms\_url('link_url','link-url','LinkUrl');
+		$this->linkText = new \application\forms\_text('link_text','link-text','LinkText');
+		$this->comments = new \application\forms\_comments('comments','comments','Comments');
+		
+		$this->registerFields();
+		$this->disableFields();
+	}
 	
-    public function __construct(){
-    	$this->hoursActual = new f\_numberField('hours_actual','hours-actual','Effort Actual');
-    	$this->hoursEstimated = new f\_numberField('hours_estimate','hours-estimate','Effort Estimate');
-    	$this->comments = new f\commentsField('comments','comments','Effort Comments');
-    	$this->_register('hoursActual',$this->hoursActual);
-    	$this->_register('hoursEstimated',$this->hoursEstimated);
+	private function registerFields(){
+	
+		$this->_register('id', $this->id);
+		$this->_register('activityOrder', $this->activityOrder);
+		$this->_register('name', $this->name);
+		$this->_register('started', $this->started);
+		$this->_register('startDate', $this->startDate);
+		$this->_register('updated', $this->updated);
+		$this->updated->displayBrAfter(true);
+		
+   		$this->_register('project', $this->project);
+		$this->_register('projectType', $this->projectType);
+		$this->_register('task', $this->task);
+		$this->_register('type', $this->type);
+		$this->type->displayBrAfter(true);
+		
+   		$this->_register('highlight', $this->highlight);
+		$this->_register('doneBy', $this->doneBy);
+		$this->_register('hoursEstimated',$this->hoursEstimated);
+		$this->_register('hoursActual',$this->hoursActual);
+		$this->hoursActual->displayBrAfter(true);
+		
+		$this->_register('linkUrl', $this->linkUrl);
+		$this->_register('linkText', $this->linkText);
+		$this->linkText->displayBrAfter(true);
+		
     	$this->_register('comments',$this->comments);
     }
 	
+	
+	private function disableFields(){
+	
+	$this->updated->envEnabled(false);
+        $this->startDate->envEnabled(false);
+		//$this->name->envEnabled(false);
+		$this->id->displayEnabled(false);
+		$this->highlight->displayEnabled(false);
+		$this->startDate->displayEnabled(false);
+		$this->activityOrder->displayEnabled(true);
+		$this->linkUrl->displayEnabled(false);
+		$this->id->listEnabled(false);
+		$this->name->listEnabled(false);
+		$this->highlight->listEnabled(false);
+		$this->activityOrder->listEnabled(false);
+        $this->updated->listEnabled(false);
+        $this->started->listEnabled(false);
+        $this->comments->listEnabled(false);
+        $this->linkUrl->listEnabled(false);
+    }
+	
+	
 	public function setDefaults(){
 		parent::setDefaults();
-		$this->hoursActual->setDefault(0);
-		$this->hoursEstimated->setDefault(1);
+		
+		$this->started->setDefault($this->currentTimestamp);
+		$this->doneBy->setDefault($this->currentUser);
+		$this->linkUrl->setDefault('');
+		$this->linkText->setDefault('');
+		$this->comments->setDefault('');
+		$this->hoursEstimated->setDefault(0);
+		$this->hoursActual->setDefault(1);
+		
 	}
 	
 }

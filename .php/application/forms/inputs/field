@@ -2,73 +2,50 @@
 
 namespace application\forms;
 
-interface Ifield{
-	public const dtTEXT = 'TEXT';
-	public const dtNUMBER = 'NUMBER';
-	public const dtDATE = 'DATE';
-	public const dtBOOLEAN = 'BOOLEAN';
-	
- 	public function setCaption(string $caption = 'no caption');
-	public function setEntity(string $entity);
-	public function setEnvironment(string $env= 'POST');
- 	public function setEnvironmentVariable(string $var = 'not-used');
- 	public function setFetchColumn(string $dbCol = 'not_used');
- 	public function setEnabled(
- 		bool $fetch = false, 
- 		bool $display = false, 
- 		bool $list = false, 
- 		bool $env = false,
- 		bool $input = false);
-	public function fetchEnabled(bool $use = false);
-	public function envEnabled(bool $use = false);
-	public function displayEnabled(bool $use = false);
-	public function listEnabled(bool $use = false);
-	public function inputEnabled(bool $use = false);
- 	public function set($value);
- 	public function setDefault($value);
- 	public function reset(bool $useDefault = false);
- 	public function get();
-   	public function value();
- 	public function valueSQL();
- 	public function valueRaw();
- 	public function read();
- 	public function write();
-	public function fetch($row);
-	public function format();
- 	public function listCaption();
- 	public function listDetail();
- 	public function displayDetail();
- 	public function input();
- }
-
  abstract class field extends \framework\_contentWriter
  implements Ifield{
  	public $env;
- 	protected $_default = NULL;
- 	protected $_dbCol = 'not_used';
- 	protected $_caption = 'no caption';
+ 	protected  $_default = NULL;
+ 	protected  $_dbCol = 'not-used';
+ 	protected  $_caption = 'not-used';
  	protected  $_dataType = 'TEXT';
- 	protected 	$_raw = NULL;
+ 	protected  $_raw = NULL;
  	protected  $_number = 0;
  	protected  $_text = '';
  	protected  $_date = '';
- 	protected $_boolean = false;
+ 	protected  $_boolean = false;
  	protected  $_fetchEnabled = false;
  	protected  $_envEnabled = false;
  	protected  $_listEnabled = false;
  	protected  $_displayEnabled = false;
-  	protected  $_inputEnabled = false;
-  	protected $_validation = '';
-	protected $_tooltip = '';
+ 	protected  $_displayBrAfter = false;
+  	protected  $_inputEnabled = true;
+  	protected  $_validation = 'none';
+	protected  $_tooltip = 'none';
  	public function __construct(
- 		string $dbCol = 'not_used', 
+ 		string $dbCol = 'not-used', 
  		string $envVar = 'not-used', 
- 		string $caption = 'no caption')
+ 		string $caption = 'not-used')
  	{
  		$this->env = new _environmentVariable($envVar,'POST');
  		$this->setFetchColumn($dbCol);
  		$this->setCaption($caption);
- 		$this->enabled(true);
+ 		$this->enabled(false);
+ 		if ($dbCol != 'not-used'){
+ 			$this->fetchEnabled(true);
+ 			//$this->inputEnabled(true);
+ 		}
+ 		
+ 		if ($envVar != 'not-used'){
+ 			$this->envEnabled(true);
+ 		}
+ 		
+ 		if ($caption != 'not-used' OR $caption != 'hidden'){
+ 			$this->displayEnabled(true);
+ 			$this->listEnabled(true);
+ 			//$this->inputEnabled(true);
+ 		}
+ 		
  	}
  	public function echoFieldState(){
 	
@@ -94,25 +71,31 @@ interface Ifield{
  	public function setEnvironmentVariable(string $var = 'not-used'){
  		$this->env->setEnvironmentVariable($var);
  	}
+ 	public function getEnvironmentVariable(){
+ 		return $this->env->variable();
+ 	}
  	public function setFetchColumn(string $dbCol = 'not_used'){
  	 	 	$this->_dbCol = $dbCol;
+ 	}
+
+	public function getFetchColumn(){
+ 	 	 	return $this->_dbCol;
  	}
 
  	public function setEnabled(
  		bool $fetch = false, 
  		bool $display = false, 
  		bool $list = false, 
- 		bool $env = false,
- 		bool $input = false)
- 	{
+ 		bool $env = false){
+ 		
  		$this->fetchEnabled($fetch);
  		$this->displayEnabled($display);
  		$this->listEnabled($list);
  		$this->envEnabled($env);
- 		$this->inputEnabled($input);
+ 		//$this->inputEnabled($input);
  	}
  	public function enabled(bool $use = false){
- 		$this->setEnabled($use,$use,$use,$use,$use);
+ 		$this->setEnabled($use,$use,$use,$use);
  	}
 	public function fetchEnabled(bool $use = false){
  		$this->_fetchEnabled = $use;
@@ -122,6 +105,10 @@ interface Ifield{
  	}
 	public function displayEnabled(bool $use = false){
  		$this->_displayEnabled = $use;
+ 	}
+ 	
+ 	public function displayBrAfter(bool $use = true){
+ 		$this->_displayBrAfter = $use;
  	}
 	public function listEnabled(bool $use = false){
  		$this->_listEnabled = $use;
@@ -148,15 +135,14 @@ interface Ifield{
  		 		$this->_text = $this->_raw ;
 		}
 	}
-	public function setDefault($value){
-		//if (!is_null($value)){
+	public function setDefault($value = NULL){
+		if (!is_null($value)){
 			$this->_default = $value;
 			$this->reset(true);
-		//} else {
-		//	$this->_default = $this->getDataTypeDefault();
-		//}
-			//$this->set(false);
-		//}
+		} else {
+			$this->reset(false);
+		}
+
 	}
  	public function reset(bool $useDefault = false){
 		if ($useDefault == true){
@@ -259,8 +245,11 @@ interface Ifield{
    		}
    		
  		if ($quoted == true){
- 		   	$v = new _sqlClause();
-    		$value = $v->encloseString($baseValue);
+ 			//todo: this adds an extra / to escaped values
+ 		   	//global $conn;
+			//$dbValue = $conn->getEscapeString($baseValue);
+    		$dbValue = \addslashes($baseValue);
+    		$value = $this->encloseString($dbValue);
  		} else {
  			$value = $baseValue;
  		}
@@ -281,44 +270,45 @@ interface Ifield{
 	}
 
 	public function listCaption(){
-
+		$value = '';
 		if ($this->_listEnabled){
 			$th = new \html\_th($this->_caption);
  			$value = $th->print();
-		} else {
-			$value = '';
 		}
 		return $value;
  	}
  	
  	public function listDetail(){
- 	 	
+ 	 	$value = '';
  		if ($this->_listEnabled){
   		    $this->format();
   		    $td = new \html\_td($this->value());
   		    $value = $td->print();
-  		} else {
-  			$value = '';
   		}
  		return $value;
  	}
 
  	public function displayDetail(){
- 		$d = new \html\_div('none','display-detail');
-
+ 	 	$value = '';
  		if ($this->_displayEnabled){
+ 		 	$d = new \html\_div('none','display-detail');
  			$this->format();
  			$c = new \html\_anyDiv($this->_caption,'display-detail-caption');
  			$v = new \html\_anyDiv($this->value(),'display-detail-value');
  			$d->addContent($c->print());
  			$d->addContent($v->print());
+ 			$value = $d->print();
+ 			if ($this->_displayBrAfter == true){
+ 				$br = new \html\_br();
+ 				$value .= $br->print();
+ 			}
  		}
- 		return $d->print();
+ 		return $value;
  	}
  	
  	public function write(){
  	  	if ($this->_envEnabled){
- 	  		//writeTeimestampDate
+ 	  		
  			$this->env->set($this->value(),true);
  		}
  	}
@@ -330,7 +320,8 @@ interface Ifield{
  		$this->env->remove();
  	}
  	private function writeTimestampPostValues($name,$value){
- 		$t = new _timestamp($value);
+ 		$t = new \framework\_timestamp($value);
+		
 		$_POST[$name.'_YYYY'] = $t->year();
 		$_POST[$name.'_MM'] = $t->month();
 		$_POST[$name.'_DD'] = $t->date();
@@ -345,7 +336,8 @@ interface Ifield{
 		$date = $_POST[$name.'_DD'];
 		$hour = $_POST[$name.'_HH'];
 		$minute = $_POST[$name.'_mm'];
-		$time = new _timestamp();
+		
+		$time = new \framework\_timestamp();
 		$time->setParts($year,$month,$date,$hour,$minute);
 		return $time->getTimestamp();
 
@@ -382,18 +374,16 @@ interface Ifield{
     			case 'NUMBER':
         			break;
     			case 'DATE':
-  		  			//$this->_date = \html\getTimestampDate($this->_raw);
+  		  			$this->_date = $this->_raw;
         			break;
-    			/*
     			case 'TEXT':
-  		  			$this->_text = displayLines($this->_raw);
+  		  			$this->_text = \nl2br($this->_raw);
         			break;
-        		*/
         		case 'BOOLEAN':
         			$this->booleanSetText();
         			break;
     			default:
-  		  			$this->_text = \html\displayLines($this->_raw);
+  		  			$this->_text = \nl2br($this->_raw);
 			}
   		$this->convertNull();
  		
@@ -412,15 +402,22 @@ interface Ifield{
 		$this->_datatype = 'TEXT';
 	}
 	public function input( ){
-		if ($this->_inputEnabled){
-			return $this->inputFreeText();
-		}
+		
+		return $this->inputFreeText();
+		
 	}
 	
 	protected function inputFreeText( ){
-		$i = new \html\_inputText($this->env->variable(),$this->value(),$this->_caption);
+		$i = new \html\inputs\text($this->env->variable(),$this->value(),$this->_caption);
+		$i->setTooltip($this->_tooltip);
+		$i->setValidation($this->_validation);
 		return $i->print();
 		
+	}
+	
+	protected function inputNoCaption( ){
+		$i = new \html\inputs\text($this->env->variable(),$this->value(),$this->_caption);
+		return $i->printNoCaption();
 	}
 	
 	public function inputHidden( ){
@@ -428,7 +425,10 @@ interface Ifield{
 		return $i->print();
 	}
 	
-	
+	public function inputChoice(string $options){
+	    return $options;
+		//return $this->id->inputChoice($options);
+	}
  	
  	
 }

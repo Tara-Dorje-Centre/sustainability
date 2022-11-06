@@ -1,0 +1,6 @@
+
+
+
+INSERT INTO users (id, name_first, name_last, email, focus, interests, login_name, login_pwd, last_login, created, updated, type_id, is_admin, must_update_pwd, is_active) VALUES(1, 'dev', 'harper', 'gaiansentience@gmail.com', 'technical support', '', 'dev', 'c3bca1be0e684b3aa62a4e0c3732f53b', '2021-09-29 22:02:19', NULL, '2021-09-29 22:02:19', 0, 'yes', 'no', 'yes');
+
+

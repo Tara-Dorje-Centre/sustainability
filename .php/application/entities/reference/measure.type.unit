@@ -1,7 +1,8 @@
 <?php
 namespace application\entities\reference;
  
-class measureTypeUnit extends \application\entity{
+class measureTypeUnit 
+extends \application\entityType{
 
  	public function __construct($mode = 'VIEW', $id = 0, $idParent = 0){
 		parent::__construct($mode, $id, $idParent);
@@ -9,102 +10,43 @@ class measureTypeUnit extends \application\entity{
 		$this->entityTitle = 'Measure Type Unit';
 		$this->f = new forms\measureTypeUnitFields();
 		$this->f->setEntity($this->entity);
-		$this->l = new links\measureTypeUnitLinks();
+		$this->links = new links\measureTypeUnitLinks();
 		$this->sql = new sql\measureTypeUnitSQL();
 		
-	}
-	public function getRequestArguments(){
-	
-	
-	}
-	protected function makePageTitle(){	
-		$title = openDiv('section-heading-title','none');
-		
-		
-		//$title .= 'Measure Type:&nbsp;'.$this->measureType->name.br();
-		$title .= 'Units:'.$this->unitOfMeasure;		
-		$title .= closeDiv();
-		$this->_pageTitle = $title;
 	}
 	
 	
 	protected function makePageMenu(){
-		
-		$mtul = new MeasureTypeUnitLinks;
-		
-		$menu = openDiv('section-heading-links','menu-links-list');
-		if ($this->pageMode == 'VIEW'){
-			$menu .= $mtul->detailEditHref($this->id,'Edit');
-		}
-		if ($this->pageMode == 'EDIT'){
-			$menu .= $mtul->detailViewHref($this->id,'View');
-		}
-		if ($this->pageMode != 'ADD'){
-			$menu .= $mtul->detailAddHref($this->measureType->id);
-		}
-		$menu .= $mtul->listingHref($this->measureType->id,'MeasureType Units');
-		$menu .= $mtul->listingHref(0,'All MeasureType Units');
+		$s = new \application\links\systemMenuLinks();
+		$this->links->addLink($s->reference());
+		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 
-		$menu .= closeDiv();
-		return $menu;
-	}
-	/*
 		
-	public function getMeasureTypeAndUnitSymbol(){
-		$text = $this->measureTypeName.'('.$this->unitSymbol.')';
-		return $text;
+		$this->_pageMenu = $this->links->print();
+		
 	}
 	
-*/
-	
-	
-
-	public function options(
-		$selectedValue = 0, 
-		$idName = 'measureTypeUnitId', 
-		$disabled = 'false',
-		$showLink = false,
-		$changeJS = NULL){
-		
-		$sql = $this->sql->options($selectedValue,$disabled);
-		
-		$defaultValue = '0';
-		$defaultCaption = '-select Measure Type Units';
-		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
-		
-		$select = getSelectList($idName,$allOptions,'none',$disabled,$changeJS);
-		if ($showLink === true){
-			$l = new MeasureTypeUnitLinks;
-			$links =$l->detailViewEditHref($selectedValue);
-			$select .= $links;
-		}
-		return $select;
-	}
-		
 	public function editForm(){
 		
-		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
-		
-		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
-		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
+		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
 	
+		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
+		
 		$base = new measureType();;
-		$select = $base->options($this->measureType->id->value(),$this->measureType->id->env->variable());
-		$this->edit->required->choice($this->measureType->id, $select);
+		$select = $base->options($this->f->measureType->id->value(),$this->f->measureType->id->env->variable());
+		$this->edit->required->inputChoice($this->f->measureType->id, $select->print());
 		
 		$base = new quantityType();;
-		$select = $base->options($this->quantityType->id->value(),$this->quantityType->id->env->variable());
-		$this->edit->required->choice($this->quantityType->id, $select);
+		$select = $base->options($this->f->quantityType->id->value(),$this->f->quantityType->id->env->variable());
+		$this->edit->required->inputChoice($this->f->quantityType->id, $select->print());
 		
-		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
-		//$this->edit->hidden->inputHidden($this->measureType->id);
+		//$this->edit->hidden->inputHidden($this->f->measureType->id);
+		
 		$this->edit->hidden->inputHidden($this->f->id);
+		$this->edit->setRequestMode($this->pageMode);
+		$this->edit->setSubmitButtons();
 		
-		$this->edit->submit->addContent(getSaveChangesResetButtons());
-		
-		
-		return $this->edit->close();
-	
+		return $this->edit->print();
 	}
 
 	protected function saveUpdate(){
@@ -112,11 +54,11 @@ class measureTypeUnit extends \application\entity{
 			$sql = " UPDATE measure_type_units m ";
 			$sql .= " SET ";
 			$sql .= " m.measure_type_id = ".$this->f->measureType->id->value().", ";
-			$sql .= " m.unit_measure_id = ".$this->f->unitType->id->value().", ";
+			$sql .= " m.unit_measure_id = ".$this->f->quantityType->id->value().", ";
 			$sql .= " m.updated = CURRENT_TIMESTAMP ";
 			$sql .= " WHERE m.id = ".$this->id." ";
 
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 	}
 			
 	protected function saveInsert(){
@@ -127,17 +69,15 @@ class measureTypeUnit extends \application\entity{
 			$sql .= " updated, ";
 			$sql .= " created) ";
 			$sql .= " VALUES (";
-			$sql .= " ".$this->measureType->id->value().", ";
-			$sql .= " ".$this->unitType->id->value().", ";
+			$sql .= " ".$this->f->measureType->id->value().", ";
+			$sql .= " ".$this->f->quantityType->id->value().", ";
 			$sql .= " CURRENT_TIMESTAMP, ";
 			$sql .= " CURRENT_TIMESTAMP) ";
 			
-			$result = dbRunSQL($sql);
+			$result = $this->sql->runStatement($sql);
 			
-			$this->id = dbInsertedId();
+			$this->id = $this->sql->getInsertedId();
 	}
-	
-	
-	
+
 } 
 ?>

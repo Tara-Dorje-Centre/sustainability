@@ -11,32 +11,31 @@ class _idName implements Ifield{
 		string $caption = 'caption',
 		string $dbColName = 'entity_name')
 	{
-		$this->id = new _id($dbCol, $envVar,'not-used');
+		$this->id = new _id($dbCol, $envVar,$caption);
 		$this->name = new _name($dbColName,'not-used',$caption);
 		
 		$this->enabled(true);
 	}
 	public function enabled(bool $use = false){
-		if ($use == true){
- 	//public function setEnabled( $fetch,  $show,  $list,  $post, $input ){
-			$this->name->setEnabled(true,true,true,false,false);
-			$this->id->setEnabled(true,false,false,true,true);
-		
-		} else {
-			$this->name->enabled($use);
-			$this->id->enabled($use);
-		}
+		$this->name->enabled($use);
+		$this->id->enabled($use);
 	}
  	public function setEnabled(
  		bool $fetch = false, 
  		bool $show = false, 
  		bool $list = false, 
- 		bool $post = false,
- 		bool $input = false)
+ 		bool $env = false)
  	{
-		$this->id->setEnabled($fetch,false,false,$post,$input);
-		$this->name->setEnabled($fetch,$show,$list,false,false);
+		$this->id->setEnabled($fetch,false,false,$env);
+		$this->name->setEnabled($fetch,$show,$list,false);
 	}
+	
+	public function displayBrAfter(bool $use = true){
+		$this->name->displayBrAfter($use);
+	}
+	
+	
+	
 	public function fetchEnabled(bool $use = false){
  		$this->id->fetchEnabled($use);
  		$this->name->fetchEnabled($use);
@@ -55,7 +54,6 @@ class _idName implements Ifield{
  	}
 	public function inputEnabled(bool $use = false){
  		$this->id->inputEnabled($use);
- 		$this->name->inputEnabled(false);
  	}
  	public function setCaption(string $caption = 'no caption'){
  		$this->name->setCaption($caption);
@@ -69,6 +67,9 @@ class _idName implements Ifield{
  	public function setEnvironmentVariable(string $var = 'not-used'){
  	 		$this->id->setEnvironmentVariable($var);
  	}
+ 	public function getEnvironmentVariable(){
+ 		return $this->id->env->variable();
+ 	}
  	public function env(){
  	
  		return $this->id->env();
@@ -79,10 +80,16 @@ class _idName implements Ifield{
  	public function setFetchColumn(string $dbCol = 'query_alias|column_name'){
  	 	 	$this->id->setFetchColumn($dbCol);
  	}
+ 	
+	public function getFetchColumn(){
+ 	 	 	return $this->id->getFetchColumn();
+ 	}
+ 	
+ 	
 	public function set($value){
 	 	$this->id->set($value);
 	}
-	public function setDefault($value){
+	public function setDefault($value = NULL){
 	 	$this->id->setDefault($value);
  	 	$this->name->setDefault('');
 	}
@@ -119,14 +126,14 @@ class _idName implements Ifield{
  	}
  	
  	public function read(){
- 	 	$this->id->env->read();
+ 	 	$this->id->read();
  	}
  	 	
  	public function write(){
- 	 	$this->id->env->write();
+ 	 	$this->id->write();
  	}
  	public function remove(){
- 	 	$this->id->env->remove();
+ 	 	$this->id->remove();
  	}
  	public function format(){
  		return $this->name->format();

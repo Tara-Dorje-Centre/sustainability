@@ -1,24 +1,68 @@
 <?php 
 namespace application\forms;
 
-abstract class entityTypeFields extends entityFields{
-	
+abstract class entityTypeFields extends fields{
+	//standard entity type fields
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
 	public $displayOrder;
 	public $notes;
 	
-	
 	public function __construct(){
 		parent::__construct();
-		$this->notes = new _notes('notes','notes','Notes',true);
-		$this->displayOrder = new numberField('display_order','display-order','Display Order');
-  
-  		$this->_register('notes', $this->notes);
+		
+		$this->id = new _id('id','id','not-used');
+    	$this->name = new _name('name','name','Name');
+    	$this->description = new _description('description','description','Description');
+		$this->updated = new _date('updated','updated','Updated');
+    	$this->created = new _date('created','created','Created');
+        $this->highlight = new _cssHighlight('highlight_style','highlight','Highlight');
+        $this->notes = new _notes('notes','notes','Notes');
+		$this->displayOrder = new order('display_order','display-order','Display Order');
+    
+		$this->registerFields();
+		$this->disableFields();
+	}
+	
+	private function registerFields(){
+	//define field ordering for display and list
+		$this->_register('id', $this->id);
 		$this->_register('displayOrder', $this->displayOrder);
-    }
+		$this->_register('name', $this->name);
+		$this->_register('description', $this->description);
+		$this->_register('notes', $this->notes);
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+   		$this->_register('highlight', $this->highlight);
+	}
+    
+    
+	private function disableFields(){
+		$this->id->listEnabled(false);
+        $this->id->displayEnabled(false);
+		$this->updated->envEnabled(false);
+        $this->created->envEnabled(false);
+        $this->updated->listEnabled(false);
+        $this->created->listEnabled(false);
+    	$this->description->listEnabled(false);
+    	$this->notes->listEnabled(false);
+	}
+    
 	public function setDefaults(){
     	parent::setDefaults();
+		$this->id->setDefault(0);
+		$this->name->setDefault('');
+		$this->description->setDefault('');
+		$this->created->setDefault($this->_currentTimestamp);
+		$this->updated->setDefault($this->_currentUser);
+		$this->highlight->setDefault('none');
 		$this->displayOrder->setDefault(0);
 		$this->notes->setDefault('');
+
     }
 
 }

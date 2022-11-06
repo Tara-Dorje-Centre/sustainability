@@ -1,14 +1,14 @@
 <?php
 namespace application\entities\projects\forms;
 
-
-class baseSummaryEffort extends baseSummary{
+class summaryEffort extends summaryBase{
 
 	public function setProjectTotals($id){
 		$this->isProject = true;
-		$s = new TaskSQL;
+		$s = new \application\entities\projects\sql\taskSQL;
 		$sql = $s->summaryProject($id);
-		$result = dbGetResult($sql);
+		global $conn;
+$result = $conn->getResult($sql);
 		if($result){
 	  	while ($row = $result->fetch_assoc())
 		{	
@@ -25,10 +25,11 @@ class baseSummaryEffort extends baseSummary{
 	
 	public function setTaskTotals($id){
 			$this->isTask = true;
-		$s = new ActivitySQL;
+		$s = new \application\entities\projects\sql\activitySQL;
 		$sql = $s->summaryTask($id);
 		
-		$result = dbGetResult($sql);
+		global $conn;
+$result = $conn->getResult($sql);
 		if ($result){
 		while ($row = $result->fetch_assoc())
 		{
@@ -78,6 +79,7 @@ class baseSummaryEffort extends baseSummary{
 	}
 	
 } 
+
 
 
 

@@ -9,16 +9,14 @@ class locationList extends \application\entityList{
 	}
 	
 	public function getRequestArguments(){
-
-
-
+		parent::getRequestArguments();
+		$this->base->getRequestArguments();
 	}
 	protected function makePageTitle(){
 
 		if ($this->idParent <= 0){	
 			$title = 'All Locations';
 		} else {
-		//	$l = new Location;
 			$title = 'Sub Locations: '.$this->base->getSortKey($this->idParent);
 		}
 
@@ -26,99 +24,45 @@ class locationList extends \application\entityList{
 	}
 	
 	protected function makePageMenu(){
-		$menuType = 'LIST';
-		$menuStyle = 'menu';
 		
-		$this->base->links->saveMenuSettings();
-		$this->base->links->setType($menuType);
-		$this->base->links->setStyle($menuStyle);
-		$menuL = new MenuLinks($menuType,$menuStyle);
+		$s = new \application\links\systemMenuLinks();
+		$this->base->links->addLink($s->reference());
+		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
 		
-		$menu = $this->base->links->openMenu('section-heading-links');
- 		$menu .= $menuL->linkReference();
-		$menu .= $this->base->links->resetMenu();
-		if ($this->idParent > 0){
-			$menu .= $this->base->links->view('Up',$this->idParent);	
-		} else {
-			$menu .= $this->base->links->add();
-		}
-		$menu .= $this->base->links->list('AllLocations',-1);
-				
-		if ($this->idParent > 0){
-			$menu .= $this->base->links->resetMenu();
-			//showing sub locations for a parent
-			if ($this->found != 0){	
-				$caption = 'SubLocations ['.$this->found.']';
-				$menu .= $this->base->links->list($caption,$this->id);
-			} else {
-				$menu .= 'No Sublocations';
-			}
-			//add new sublocation to current parent
-			$menu .= $this->base->links->add('addSubLocation',$this->idParent);
-		}
-		
-		$menu .= $this->base->links->closeMenu();
-		
-				$this->base->links->restoreMenuSettings();
-				
-		$this->_pageMenu = $menu;			
+		$this->_pageMenu = $this->base->links->print();
 	}
 	
-	public function setCount(){
-		if ($this->idParent == -1){
-			// idParent is -1, list all locatons
+	public function setFoundCount(){
+		if ($this->idParent <= 0){
+			// idParent is -1 or 0, list all locatons
 			$sql = $this->base->sql->count();
 			$this->echoPrint(true, 'count all locations','setCount');
 		} else {
-			// id parent is 0 -- list primary locatons
-			// f id s positive -- listdirect children
+			// f id is positive -- listdirect children
 			$sql = $this->base->sql->countChildren($this->idParent);
-
-			$this->echoPrint(true, ' count child locations');
+			$this->echoPrint(true, 'count child locations');
 		} 
-			//locationid = 0, listing on add?
-			
-			
-		//	$l = new Location;
-		//	$sortKey = $l->getSortKey($this->idParent);
-		
-		
-		//if ($this->id != 0){
-			$this->found = dbGetCount($sql, 'total_locations');
-			
-		//} else {
-			//$this->found = 0;
-		//}
 
+		$this->found = $this->base->sql->getCount($sql, 'count_details');
 	}
 	
 	protected function listingQuickEdit(){
-		$this->base->idParent =$this->idParent;
-		// new Location('ADD', 0, $this->id);
-		$quickEdit =$this->base->addForm();			
+		$quickEdit = $this->base->addForm($this->idParent);		
 		return $quickEdit;
 	}
 	
 	protected function listingSQL(){
 	
-		
-		 if ($this->idParent == -1){
-		 $this->echoPrint(true, 'fetching all','getListingRows');
-
-		 $sql = $this->base->sql->list($this->resultPage,$this->perPage);
+		 if ($this->idParent <= 0){
+		 	$this->echoPrint(true, 'fetching all','getListingRows');
+		 	$sql = $this->base->sql->list($this->resultPage,$this->perPage);
 		 } else {
-		 $this->echoPrint(true, 'fetching children','getListingRows');
-
-		 $sql = $this->base->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
-		 //$l = new Location;
-		 //$sortKey = $l->getSortKey($this->idParent);
+		 	$this->echoPrint(true, 'fetching children','getListingRows');
+		 	$sql = $this->base->sql->listChildren($this->idParent,$this->resultPage,$this->perPage);
 		 }
 		 
 		 return $sql;
-		 
 	}
 	
-
-
 }
 ?>

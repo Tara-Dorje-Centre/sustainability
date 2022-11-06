@@ -1,0 +1,23 @@
+
+
+
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(1, 'real', 'Noted', 'Desc...', '2017-07-29 21:24:46', '2017-06-30 17:58:54', 'highlight-red', 1);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(2, 'imaginary', '', '', '2021-09-30 19:50:10', '2017-06-30 17:59:10', 'text-green', 2);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(3, 'dreamstate', 'Dreaming', 'Dreamscape', '2021-09-29 17:23:42', '2017-07-01 02:27:21', 'highlight-purple', 3);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(4, 'work', '', '', '2017-07-05 05:25:23', '2017-07-01 02:27:35', 'none', 4);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(5, 'home', 'Think about where', 'The place you call.', '2017-07-05 16:33:49', '2017-07-01 02:27:46', 'highlight-green', 5);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(6, 'workshop', '', 'Place to build things', '2017-07-31 16:47:20', '2017-07-01 02:28:06', 'none', 6);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(7, 'garden', '', '', '2017-07-01 02:28:20', '2017-07-01 02:28:20', '-no highlighting', 7);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(8, 'classroom', '', '', '2017-07-01 02:28:34', '2017-07-01 02:28:34', '-no highlighting', 8);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(9, 'studio', '', '', '2017-07-01 02:28:48', '2017-07-01 02:28:48', '-no highlighting', 9);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(10, 'library', '', '', '2017-07-01 02:29:00', '2017-07-01 02:29:00', '-no highlighting', 10);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(11, 'theater', '', 'Stage type of setting', '2017-07-31 16:45:49', '2017-07-01 02:29:17', 'highlight-pink', 11);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(12, 'stage', '', '', '2017-08-06 01:47:46', '2017-07-01 02:29:27', 'highlight-purple', 12);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(13, 'process point', '', '', '2021-09-29 19:54:14', '2017-07-01 02:29:44', 'highlight-yellow', 13);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(14, 'storage', '', '', '2017-07-05 04:35:53', '2017-07-05 04:35:53', 'none', 14);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(15, 'vision art state', '', '', '2017-07-31 16:47:45', '2017-07-29 21:27:28', 'text-blue', 15);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(121, 'Website', '', '', '2021-09-29 19:55:38', '2021-09-29 19:55:38', 'none', 16);
+INSERT INTO location_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(122, 'Internet', '', '', '2021-09-29 19:55:58', '2021-09-29 19:55:58', 'none', 17);
+
+
+

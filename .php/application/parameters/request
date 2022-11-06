@@ -20,34 +20,34 @@ class request{
 		$this->setUrlParameter($u, 'month',$month);
 	} 
 	
-	public function getUrlBase(string $page = 'index.php',string $scope,string $context){
+	public function getUrlBase(string $page,string $scope,string $context){
 		$u = $this->getUrl($page);
 		$this->setUrlBaseParameters($u,$scope,$context);
 		return $u;
 	}
-	public function setUrlBaseParameters(url &$u,$scope,$context){
+	public function setUrlBaseParameters(url &$u,string $scope,string $context){
 		$this->setUrlParameter($u,'scope',$scope);
 		$this->setUrlParameter($u,'context',$context);
 	} 
 	
-	public function getUrlMenu($page = 'index.php',$context){
+	public function getUrlMenu(string $page,string $context){
 		$scope = 'menu';
-		$url = $this->getUrlBase($page,$scope,$context);
+		$url = $this->getUrlBase($page, $scope, $context);
 		return $url;
 	}
-	public function getUrlList($page = 'index.php',$context){
+	public function getUrlList(string $page,string $context){
 		$scope = 'list';
-		$url = $this->getUrlBase($page,$scope,$context);
+		$url = $this->getUrlBase($page, $scope, $context);
 		return $url;
 	}
-	public function getUrlDetail($page = 'index.php',string $context){
+	public function getUrlDetail(string $page,string $context){
 		$scope = 'detail';
-		$url = $this->getUrlBase($page,$scope,$context);
+		$url = $this->getUrlBase($page, $scope, $context);
 		return $url;
 	}
-	public function getUrlSave($page = 'index.php',string $context){
+	public function getUrlSave(string $page,string $context){
 		$scope = 'save';
-		$url = $this->getUrlBase($page,$scope,$context);
+		$url = $this->getUrlBase($page, $scope, $context);
 		return $url;
 	}
 	

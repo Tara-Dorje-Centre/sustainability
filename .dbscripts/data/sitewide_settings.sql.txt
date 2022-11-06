@@ -1,0 +1,6 @@
+
+
+
+INSERT INTO sitewide_settings (site_title, organization, contact_email, contact_name, site_url, organization_url, login_notice, organization_description, public_fill_color, public_site_color, public_page_color, public_menu_color, public_menu_color_hover, public_text_color, public_text_color_hover, public_font_family, public_font_size_title, public_font_size_menu, public_font_size_text, public_font_size_heading, show_public_site, show_cost_reports, show_revenue_reports) VALUES('Dev projects', 'Taradorje', 'Me@mine', 'That\'s me', 'Site.org', 'Mine.org', 'Yo mofo', 'Described', '', '', 'red', '', '', 'black', '', 'Verdana, sans-serif', 18, 12, 14, 16, 'yes', 'no', 'no');
+
+

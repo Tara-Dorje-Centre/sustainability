@@ -6,7 +6,7 @@ class materialType extends \application\entityType {
 		parent::__construct();
 		$this->entity = 'material-type';
   		$this->entityTitle = 'Material Type';
-  		$this->pageSave = 'pr_MaterialType_Save.php';
+  		//$this->pageSave = 'pr_MaterialType_Save.php';
 		$this->f = new forms\materialTypeFields();
 		$this->f->setEntity($this->entity);
 		$this->sql = new sql\materialTypeSQL();
