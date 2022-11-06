@@ -1,8 +1,0 @@
-<?php
-namespace application\system\forms;
-
-class userTypeFields extends \application\forms\entityTypeFields{
-
-}
-
-?>

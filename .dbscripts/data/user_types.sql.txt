@@ -1,9 +1,0 @@
-
-
-
-INSERT INTO user_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(1, 'basic', '', '', '2021-09-29 22:15:51', '2017-06-30 18:03:01', 'highlight-yellow', 1);
-INSERT INTO user_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(2, 'advanced', '', '', '2021-09-29 22:20:58', '2017-06-30 18:03:17', 'highlight-red', 2);
-INSERT INTO user_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(3, 'honorary', '', '', '2017-07-30 00:09:56', '2017-07-30 00:09:56', 'none', 3);
-INSERT INTO user_types (id, name, notes, description, updated, created, highlight_style, display_order) VALUES(4, 'Staff', '', '', '2017-07-30 00:10:32', '2017-07-30 00:10:06', 'highlight-peach', 4);
-
-

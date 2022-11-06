@@ -1,8 +1,0 @@
-<?php
-namespace application\entities\reference\forms;
-
-class locationTypeFields extends \application\forms\entityTypeFields{
-
-}
-
-?>

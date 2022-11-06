@@ -1,7 +1,0 @@
-<?php
-
-include_once('reference/manifest');
-include_once('projects/manifest');
-
-
-?>
