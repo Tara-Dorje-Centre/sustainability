@@ -8,20 +8,16 @@ class portalRequest extends \framework\_echo{
 	protected $response;
 	
 	public function __construct(){
-		$this->entity = new forms\_text('not-used','context');
-		$this->scope = new forms\_text('not-used','scope');
+		$this->entity = new forms\textField('not-used','context');
+		$this->scope = new forms\textField('not-used','scope');
 
-		$this->entity->envEnabled(true);
-		$this->scope->envEnabled(true);
+		$this->entity->setDefault('system-menu');
+		$this->scope->setDefault('view');
 
-		$this->entity->env->setEnvironment('GET');
-		$this->scope->env->setEnvironment('GET');
+		$this->entity->env->read();
+		$this->scope->env->read();
 
-		$this->entity->read();
-		$this->scope->read();
 
-		$this->echoValue(true,'context',$this->entity->value());
-		$this->echoValue(true,'scope',$this->scope->value());
 		
 	}
 	
@@ -31,11 +27,11 @@ class portalRequest extends \framework\_echo{
 		//is user currently logged in?
 		if (isset($_SESSION['logged-in']) and ($_SESSION['logged-in'] == true)){
 			$status = true;
-			$this->echoValue(true,'logged in','authorized session','loginStatus');
+			$this->echoValue(true,'logged in','authorized session');
 		} else {
 			//not logged in
 			$status = false;
-			$this->echoValue(true,'not logged in','unauthorized session','loginStatus');
+			$this->echoValue(true,'not logged in','unauthorized session');
 		}
 	
 		//did user just select login
@@ -48,32 +44,53 @@ class portalRequest extends \framework\_echo{
 	
 	public function load(){
 	
-		if ($this->scope->value() == 'logout') {
-			$this->loadLogout();
-			exit;
-		}
+		$this->echoValue(true,'context',$this->entity->value());
+		$this->echoValue(true,'scope',$this->scope->value());
+		
+		
 	
 		if ($this->loginStatus() == false) { 
+
+			$this->echoValue(true,'not logged in...scope',$this->scope->value());
 			$this->loadLogin();
 			exit;
+
+
 		}
+	//exit;
 			
 		switch ($this->entity->value()){
-			//system pages
-			case 'system-menu':
-				$this->loadSystemMenu();
+			case 'logout':
+				$this->loadLogout();
 				break;
-			case 'siteSettings':
-				$this->loadSiteSettings();
-				break;
+		
+			case 'system':
+
+	
+
+			case 'login':
+				//$this->loadLogin();
+				//break;
+			
+		
 			case 'user';
 				$this->loadUserProfiles();
 				break;
 			case 'userType':
 				$this->loadUserType();
 				break;
-			//entity pages
-			case 'project':
+			case 'siteSettings':
+				$this->loadSiteSettings();
+				break;
+
+			case 'system-menu':
+				$this->loadSystemMenu();
+				break;
+			
+	
+	
+
+		case 'project':
 				$this->loadProject();
 				break;
 			case 'task':
@@ -94,7 +111,6 @@ class portalRequest extends \framework\_echo{
 			case 'location':
 				$this->loadLocation();
 				break;
-			//reference pages
 			case 'locationType':
 				$this->loadLocationType();
 				break;
@@ -119,39 +135,215 @@ class portalRequest extends \framework\_echo{
 			case 'measureType':
 				$this->loadMeasureType();
 				break;
-				
-			case 'measureTypeUnit':
-				$this->loadMeasureTypeUnit();
-				break;
 			default:
 				$this->loadDefault();
 		}
 	
 	}
-	
 	protected function loadLogin(){
-		$this->echoPrint(true,'starting','loadLogin');
 		$u = new \application\system\userLogin('VALIDATE');
 		$u->validate();
-		
-		if ($this->loginStatus() == true) {
-			$this->loadDefault();
-		} else {
-			$site = new site('LOGIN');
-			$site->set();
-			$site->print();
-		}
-	}
-	
-	protected function loadLogout(){
-		$this->echoPrint(true,'starting','loadLogout');
-		$sw = new \application\system\siteSettings;
-		$sw->unsetSessionDetails();
+
 		$site = new site('LOGIN');
 		$site->set();
 		$site->print();
 	}
+	protected function loadLogout(){
 	
+	//should be $u = NEW userLogin('LOGOUT');
+	//$u->logout();
+		unset($_SESSION['logged-in']);
+		unset($_SESSION['client-time-zone']);
+		unset($_SESSION['login-name']);
+		unset($_SESSION['user-id']);
+		unset($_SESSION['is-admin']);
+		unset($_SESSION['must-update-pwd']);	
+		
+		//module specific globals
+		unset($_SESSION['currentCropPlanId']);
+		unset($_SESSION['currentProjectId']);
+		unset($_SESSION['currentTaskId']);	
+		unset($_SESSION['currentView']);
+		
+		$sw = new siteSettings;
+		$sw->unsetSessionDetails();
+		$site = new site();
+		//site should have sessiondetails...
+		//$site->settings->unsetSessionDetails();
+		$site->set();
+		$site->print();
+	}
+	protected function runSave(Ientity $e){
+	
+		$e->collectPostValues();
+		$e->saveChanges();
+		$this->scope = 'list';
+	}
+	protected function loadProject(){
+		if ($this->scope == 'save'){
+			$s = new entities\projects\project();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$p = new entities\projects\project();
+		} else {
+			$p = new entities\projects\projectList();
+		}
+		$p->printRequest();
+	}
+	protected function loadTask(){
+		if ($this->scope == 'save'){
+			$s = new entities\projects\task();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\projects\task();
+		} else {
+			$t = new entities\projects\taskList();
+		}
+		$t->printRequest();
+	}
+	protected function loadActivity(){
+		if ($this->scope == 'save'){
+			$s = new entities\projects\activity();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\projects\activity();
+		} else {
+			$t = new entities\projects\activityList();
+		}
+		$t->printRequest();
+	}
+	protected function loadQuantityType(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\quantityType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\quantityType();
+		} else {
+			$t = new entities\reference\quantityTypeList();
+		}
+		$t->printRequest();
+	}
+	protected function loadLocation(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\location();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\location();
+		} else {
+			$t = new entities\reference\locationList();
+		}
+		$t->printRequest();
+	}
+	protected function loadLocationType(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\locationType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\locationType();
+		} else {
+			$t = new entities\reference\locationTypeList();
+		}
+		$t->printRequest();
+	}
+	protected function loadProjectType(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\projectType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\projectType();
+		} else {
+			$t = new entities\reference\projectTypeList();
+		}
+		$t->printRequest();
+	}
+	protected function loadTaskType(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\taskType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\taskType();
+		} else {
+			$t = new entities\reference\taskTypeList();
+		}
+		$t->printRequest();
+	}
+	protected function loadActivityType(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\activityType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\activityType();
+		} else {
+			$t = new entities\reference\activityTypeList();
+		}
+		$t->printRequest();
+	}
+	protected function loadMaterialType(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\materialType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\materialType();
+	
+		} else {
+			$t = new entities\reference\materialTypeList();
+		}
+		
+		$t->printRequest();
+	
+	}
+	protected function loadReceiptType(){
+		if ($this->scope == 'save'){
+			$s = new entities\reference\receiptType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\receiptType();
+		} else {
+			$t = new entities\reference\receiptTypeList();
+		}
+		$t->printRequest();
+	}
+	protected function loadMeasureType(){
+	
+		if ($this->scope == 'save'){
+			$s = new entities\reference\measureType();
+			$this->runSave($s);
+		}
+		if ($this->scope == 'detail'){
+			$t = new entities\reference\measureType();
+		} else {
+			$t = new entities\reference\measureTypeList();
+		}
+		
+		$t->printRequest();
+	}
+	protected function loadSiteSettings(){
+	
+		switch ($this->scope){
+			case 'save':
+				$s = new system\siteSettings();
+			$this->runSave($s);
+			case 'list':
+			case 'detail':
+
+			default:
+				$t = new system\siteSettings();
+				$t->getRequestArguments();
+				$t->setDetails();
+				$t->printPage();
+		}
+	}
 	protected function loadDefault(){
 		$this->loadSystemMenu();
 	}
@@ -163,269 +355,40 @@ class portalRequest extends \framework\_echo{
 	protected function loadSystemMenu(){
 		$t = new systemMenu();
 		$t->printRequest();
+
 	}
-	
-	protected function save(\application\Ientity $e, $scope = 'list'){
-		$e->collectPostValues();
-		$e->SaveChanges();
-		$this->scope->set($scope);
-	}
-	
-	protected function loadSiteSettings(){
-		if ($this->scope->value() == 'save'){
-			$s = new system\siteSettings();
-			$this->save($s);
-		}
-		$t = new system\siteSettings();
-		$t->printRequest();
-	}
-	
 	protected function loadUserProfiles(){
-		if ($this->scope->value()  == 'save'){
-			$s = new system\user();
-			$this->save($s);
+		switch ($this->scope){
+			case 'detail':
+				$t = new system\user();
+				break;
+			case 'save':
+				$um = new system\user();
+				$um->collectPostValues();
+				$um->saveChanges();
+			case 'list':
+
+			default:
+				$t = new system\userList();
 		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new system\user();
-		} else {
-			$t = new system\userList();
-		}
+
 		$t->printRequest();
 	}
-	
-	
 	protected function loadUserType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new system\userType();
-			$this->save($s);
+		switch ($this->scope){
+			case 'detail':
+				$t = new system\userType();
+				break;
+			case 'save':
+				$um = new system\userType();
+				$um->collectPostValues();
+				$um->saveChanges();
+			case 'list':
+
+			default:
+				$t = new system\userTypeList();
 		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new system\userType();
-		} else {
-			$t = new system\userTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	
-	protected function loadProject(){
-		$save = false;
-		if ($this->scope->value() == 'save'){
-			$s = new entities\projects\project();
-			$this->save($s, 'detail');
-			$save = true;
-		}
-		if ($this->scope->value() == 'detail'){
-			if ($save == true){
-				$_GET['id'] = $s->id;
-				$_GET['page-action'] = 'VIEW';
-			}
-			$t = new entities\projects\project();
-		} else {
-			$t = new entities\projects\projectList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadTask(){
-		$save = false;
-		if ($this->scope->value() == 'save'){
-			$s = new entities\projects\task();
-			$this->save($s, 'list');
-			//$save = true;
-		}
-		if ($this->scope->value() == 'detail'){
-			//if ($save == true){
-				//$_GET['id'] = $s->id;
-				//$_GET['page-action'] = 'VIEW';
-			//}
-			$t = new entities\projects\task();
-		} else {
-			$t = new entities\projects\taskList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadActivity(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\projects\activity();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\projects\activity();
-		} else {
-			$t = new entities\projects\activityList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadMaterial(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\projects\material();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\projects\material();
-		} else {
-			$t = new entities\projects\materialList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadReceipt(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\projects\receipt();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\projects\receipt();
-		} else {
-			$t = new entities\projects\receiptList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadMeasure(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\projects\measure();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\projects\measure();
-		} else {
-			$t = new entities\projects\measureList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadQuantityType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\quantityType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\quantityType();
-		} else {
-			$t = new entities\reference\quantityTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadLocation(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\location();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\location();
-		} else {
-			$t = new entities\reference\locationList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadLocationType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\locationType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\locationType();
-		} else {
-			$t = new entities\reference\locationTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadProjectType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\projectType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\projectType();
-		} else {
-			$t = new entities\reference\projectTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadTaskType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\taskType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\taskType();
-		} else {
-			$t = new entities\reference\taskTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadActivityType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\activityType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\activityType();
-		} else {
-			$t = new entities\reference\activityTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadMaterialType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\materialType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\materialType();
-	
-		} else {
-			$t = new entities\reference\materialTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadReceiptType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\receiptType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\receiptType();
-		} else {
-			$t = new entities\reference\receiptTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadMeasureType(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\measureType();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\measureType();
-		} else {
-			$t = new entities\reference\measureTypeList();
-		}
-		$t->printRequest();
-	}
-	
-	protected function loadMeasureTypeUnit(){
-		if ($this->scope->value()  == 'save'){
-			$s = new entities\reference\measureTypeUnit();
-			$this->save($s);
-		}
-		if ($this->scope->value()  == 'detail'){
-			$t = new entities\reference\measureTypeUnit();
-		} else {
-			$t = new entities\reference\measureTypeUnitList();
-		}
+
 		$t->printRequest();
 	}
 

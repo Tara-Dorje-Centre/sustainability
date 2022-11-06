@@ -2,138 +2,109 @@
 namespace application\entities\projects;
 
 class taskList extends \application\entityList{
-
+//protected $project;
 	public $periodicTasks = 'NO';
-	public $taskStatus = 'INCOMPLETE';
-	public $statusComplete = false;
+
 	public function __construct(){
 		parent::__construct();
 		$this->entityTitle = 'Tasks';
 		$this->base = new task();
 
 	}
-	
 	public function getRequestArguments(){
 		parent::getRequestArguments();
-		//push identifiers to base object
-		//sets quickEdit form default idParent
-		$this->base->setIdentifiers($this->pageMode,$this->id,$this->idParent,$this->idType);
-		
-		$p = $this->_GET('periodic-tasks','NO');
-		$this->setPeriodic($p);
 
-		$s = $this->_GET('task-status','INCOMPLETE');
-		$this->setStatus($s);
-		
 	}
-	
-	
 	public function setPeriodic($periodic = 'NO'){
 		$this->periodicTasks = $periodic;
-		$this->base->setPeriodic($periodic);
-	}
-	
-	public function setStatus($status = 'INCOMPLETE'){
-		$this->taskStatus = $status;
-		$this->base->setStatus($status);
-		
-		if ($status == 'COMPLETE'){
-			$this->statusComplete = true;
-		} else {
-			$this->statusComplete = false;
-		}
 	}
 	
 	protected function makePageTitle(){
 
-		$br = new \html\_br();
-		if ($this->periodicTasks == 'YES'){
-			$title = 'Periodic Tasks: ';
-			$title .= $this->taskStatus;
+		if ($this->periodicTasks == 'NO'){
+			$title = $this->base->f->nameProject.br();
+			$title .= 'Project Tasks';
 		} else {
-			$p = new project();
-			$name = $p->getProjectName($this->idParent);
-			$title = 'Project: '.$name.$br->print();
-			$title .= 'All Tasks';
-		} 
-		$this->_pageTitle = $title;
+			$title .= 'Periodic Tasks';
+		}
+
+		$this->_pageTitle = $title.'[task list]';
 	}
-	
 	
 	protected function makePageMenu(){
-		$s = new \application\links\systemMenuLinks();
-		$this->base->links->addLink($s->modules());
-		$this->base->links->addLink($s->reference());
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
 		
-		
-		$p = new links\projectLinks();
-		
-		if ($this->periodicTasks == 'YES'){
-			$this->base->links->addLink($this->base->links->periodicTasks(!$this->statusComplete));
-			$this->base->links->addLink($p->contextList('Active Projects'));
-		} else {
-			$this->base->links->addLink($p->view('View Project',$this->idParent));
-			$this->base->links->addLink($this->base->links->list('List Tasks',0,$this->idParent,0));
-			$this->base->links->addLink($this->base->links->add('New Task',$this->idParent));
-		}
-			
-		$this->_pageMenu = $this->base->links->print();
-	}
+	//	$projectL = new ProjectLinks($menuType,$menuStyle);
 
+		
+		$menu = $this->base->links->openMenu('section-heading-links');
+		if ($this->periodicTasks == 'NO'){
+			$menu .= $this->base->links->add($this->idProject);
+			$menu .= $this->base->links->listingHref($this->base->idProject);
+			$menu .= $this->project->links->detailViewHref($this->base->idProject);	
+		} else {
+			
+			//$menu .= $taskL->linksPeriodicTasks();
+			//$menu .= $taskL->formatOptionsLink();
+			//$menu .= $projectL->listingAllProjects();
+							
+		}
+		$menu .= $this->base->links->closeMenu();
+		$this->_pageMenu = $menu;			
+	}
 	
 	private function getPeriodicTasksComplete(){
-		$complete = 'NO';
-		if ($this->statusComplete == true){
+		if ($this->periodicTasks == 'COMPLETE'){
 			$complete = 'YES';
+		} elseif ($this->periodicTasks == 'INCOMPLETE'){
+			$complete = 'NO';
 		}
 		return $complete;		
 	}
 	
 	public function setFoundCount(){
-	
-		if ($this->periodicTasks == 'YES'){
-			$sql = $this->base->sql->countPeriodic($this->getPeriodicTasksComplete());
-		} else {
+		if ($this->periodicTasks == 'NO'){
 			$sql = $this->base->sql->countProject($this->idParent);
+		} else {
+			$sql = $this->base->sql->countPeriodic($this->getPeriodicTasksComplete());
 		}
-		
-		$this->found = $this->base->sql->getCount($sql,'count_details');
+		$this->found = dbGetCount($sql, 'total_tasks');			
 		
 	}
 	
-	public function listingSQL(){
+	protected function listingPagingLinks($pagingBaseLink = 'USE_LISTING'){
 	
-		if ($this->periodicTasks == 'YES'){
-			$sql = $this->base->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
-		} else {
+		if ($pagingBaseLink == 'USE_LISTING'){
+			$base = $this->base->links->listing($this->idParent,$this->periodicTasks);
+		} else { 
+			$base = $pagingBaseLink;
+		 }
+		$pagingLinks = $this->base->links->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
+		return $pagingLinks;
+	
+	}
+	
+	protected function listingQuickEdit(){
+	//override to set add form
+		//$at = new Task('ADD', 0,
+		// $this->base->idParent = $this->idParent;
+		$quickEdit =$this->base->addForm($this->idParent);		
+		return $quickEdit;
+	}
+	
+	
+	public function getListingSQL(){
+	
+
+		if ($this->periodicTasks == 'NO'){
 			$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
+		} else {
+			$sql = $this->base->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
 		}
 		
 		return $sql;
-	}
-	
-	//override listing start 
-	//to hide quickedit on periodic tasks
-	protected function listingStart(\application\links\url $altUrl = NULL){
-
-		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent,$this->taskStatus,$this->periodicTasks);	
-		$add = '';
-		if ($this->periodicTasks != 'YES'){
-			$add = $this->base->addForm($this->idParent);	
 		}
-		$entity = $this->base->entity;
-		$legend = $this->entityTitle.':  Listing';
-		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
-
-
-		if ($this->periodicTasks == 'YES'){
-			$this->base->f->project->listEnabled(true);
-		}
-
-	}
-	
-	
-	
 		
 }
 ?>

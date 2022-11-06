@@ -1,21 +1,14 @@
 <?php 
 namespace application\forms;
 
-class _description extends _text{
+class _description extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
 	}
 	public function input( ){
 		$i = new \html\inputs\description($this->env->variable(),$this->value(),$this->_caption);
-		$i->setTooltip($this->_tooltip);
-		$i->setValidation($this->_validation);
 		return $i->print();
-	}
-	
-	public function inputNoCaption( ){
- 		$i = new \html\inputs\description($this->env->variable(),$this->value(),$this->_caption);
-		return $i->printNoCaption();
 	}
 }
 

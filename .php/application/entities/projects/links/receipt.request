@@ -2,18 +2,20 @@
 namespace application\entities\projects\links;
 
 
-class receiptRequest extends activityChildRequest{
+class receiptRequest extends taskChildRequest{
 		
-	public function setUrlParametersReceipt(\application\links\url &$u,$idActivity,$idTask,$idProject,$showSummary,$displayLevel){
-		$this->setUrlParameter($u,'show-summary',$showSummary);
-		$this->setUrlParameter($u,'display-level',$displayLevel);
-		$this->setUrlParametersActivityChild($u,$idActivity,$idTask,$idProject);
+	public function setUrlParametersReceipt(url &$u,string $projectStatus,string $myProjects){
+		$this->setUrlParameter($u,'approved-receipts',$projectStatus);
+		$this->setUrlParameter($u,'my-projects',$myProjects);
 		return $u;
-	}
+	} 
 	
-	public function getUrlReceiptList($idActivity,$idTask,$idProject,$showSummary,$displayLevel){
-		$u = $this->getUrlEntityList('LIST',0,$idActivity);
-		$this->setUrlParametersReceipt($u, $idActivity,$idTask,$idProject,$showSummary,$displayLevel);
+	public function getUrlReceiptDetail($action,$id,$idParent,$idType){
+		return $this->getUrlEntityDetail($action,$id,$idParent,$idType);
+	}
+	public function getUrlReceiptList($action,$id,$idParent,$idType, string $projectStatus,string $myProjects){
+		$u = $this->getUrlEntityList($action,$id,$idParent,$idType);
+		$this->setUrlParametersReceipt($u, $projectStatus, $myProjects);
 		return $u;
 	}
 	

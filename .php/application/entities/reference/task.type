@@ -3,10 +3,13 @@ namespace application\entities\reference;
 
 class taskType extends \application\entityType{
 	public function __construct(){
+
+
 		parent::__construct();
   		
   		$this->entity = 'task-type';
   		$this->entityTitle = 'Task Type';
+     	$this->pageSave = 'pr_TaskType_Save.php';
 		
 		$this->f = new forms\taskTypeFields();
 		$this->f->setEntity($this->entity);
@@ -14,42 +17,44 @@ class taskType extends \application\entityType{
 		$this->links = new links\taskTypeLinks();
 	}
 	
-	public function optionsFrequency($selected = 'none', $id = 'frequency'){
+	public function optionsFrequency($selectedValue = 'none', $idName = 'frequency', $disabled = 'false'){
+		$sql = "SELECT f.frequency value, f.description caption ";
+		$sql .= "FROM task_type_frequencies f ";
+		if ($disabled == 'true'){
+			$sql = " WHERE f.frequency = '".$selectedValue."' ";	
+		}
+		$sql .= " ORDER BY f.display_order ";
 		
-		$sql = $this->sql->optionsFrequency();
+		$defaultValue = 'none';
+		$defaultCaption = '-not set';
+		$allOptions = getSelectOptionsSQL($sql,$selectedValue,$disabled,$defaultValue,$defaultCaption);		
 		
-		$s = new \html\inputs\selectQuery($id,$selected,$sql, 'Task Frequency');
-		$s->defaultOption('none','-Not set');
-		return $s;
-	
+		$select = getSelectList($idName,$allOptions,'none',$disabled );
+		return $select;
 	}	
 	
 	
-	public function editForm(){
+	protected function editForm(){
 
-		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
-	
-		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$this->contextMenu);
 		
 		$this->edit->required->input($this->f->name);
 		
 		$select = $this->optionsFrequency($this->f->frequency->value(),$this->f->frequency->env->variable());
-		$this->edit->required->inputChoice($this->f->frequency,$select->print());
-		
+		$this->edit->required->choice($this->f->frequency, $select);
 		
 		$this->edit->required->input($this->f->displayOrder);
 		$this->edit->required->input($this->f->highlight);
 		
 		$this->edit->optional->input($this->f->description);
 		$this->edit->optional->input($this->f->notes);
-		
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		$this->edit->hidden->inputHidden($this->f->id);
-		$this->edit->setRequestMode($this->pageMode);
-		$this->edit->setSubmitButtons();
-		
-		return $this->edit->print();
-
-
+		$this->edit->submit->addContent(getSaveChangesResetButtons());
+		return $this->edit->close();
+	
 	}
 	
 	protected function saveUpdate(){
@@ -64,7 +69,7 @@ class taskType extends \application\entityType{
 			$sql .= " p.highlight_style = '".$this->f->highlight->value()."', ";
 			$sql .= " p.notes = '".$this->f->notes->value()."' ";
 			$sql .= " WHERE p.id = ".$this->f->id->value()."  ";			
-			$result = $this->sql->runStatement($sql);
+			$result = dbRunSQL($sql);
 	}
 	
 	protected function saveInsert(){
@@ -87,14 +92,13 @@ class taskType extends \application\entityType{
 			$sql .= " '".$this->f->description->value()."', ";
 			$sql .= " '".$this->f->highlight->value()."', ";
 			$sql .= " '".$this->f->notes->value()."') ";
-			$result = $this->sql->runStatement($sql);
+			$result = dbRunSQL($sql);
 			
-			$this->id = $this->sql->getInsertedId();
+			$this->id = dbInsertedId();
 			$this->f->id->set($this->id);
 			
 	}
 } 
-
 class taskTypeList extends \application\entityTypeList{
  	public function __construct(){
 		parent::__construct();

@@ -41,25 +41,11 @@ implements IbaseEntity{
 		$this->idType = $idType;
 		$this->echoState_ids(true, 'setIdentifiers');
 	}
-	
-	protected function _GET($variable, $default = null){
-		$value = $default;
-		if (isset($_GET[$variable])){
-			$value = $_GET[$variable];
-		}
-
-		return $value;
-	
-	}
-	
 	protected function getRequestIdentifiers(){
-		
-		$action = $this->_GET('page-action','VIEW');
-		$id = $this->_GET('id',0);
-		$idParent = $this->_GET('id-parent',0);
-		$idType = $this->_GET('id-type',0);
-		
-		
+		$action = $_GET['pageAction'];
+		$id = $_GET['id'];
+		$idParent = $_GET['idParent'];
+		$idType = $_GET['idType'];
 		$this->setIdentifiers($action,$id,$idParent,$idType);
 	}
 	
@@ -70,12 +56,9 @@ implements IbaseEntity{
 		$this->isPagingSet = true;
 		$this->echoState_paging(true, 'setPaging');
 	 }
-	 
 	 public function getRequestPaging(){
-
-		$page = $this->_GET('results-page',1);
-		$rows = $this->_GET('per-page',10);
-		
+		$page = $_GET['resultPage'];
+		$rows = $_GET['perPage'];
 		$this->setPaging($page,$rows);
 	}
 	
@@ -98,11 +81,9 @@ implements IbaseEntity{
 		$this->echoState_calendar(true, 'setCalendar');
 	}
 	protected function getRequestCalendar(){
-
-		$year = $this->_GET('year',-1);
-		$month = $this->_GET('month',-1);
-		$show = $this->_GET('show-calendar','NO');
-		
+		$year = $_GET['year'];
+		$month = $_GET['month'];
+		$show = $_GET['showCalendar'];
 		$this->setCalendar($year,$month,$show);
 	}
 	
@@ -158,7 +139,7 @@ implements IbaseEntity{
 	protected function echoState_paging($show = true, $f = '-use-current-', $c= '-use-current-'){
 
 		if ($this->isPagingSet == true){
-			$s = $show;
+			$s = false;
 			$this->echoLocale($f, $c);
 			$this->echoValue($s, 'resultPage', $this->resultPage);
 			$this->echoValue($s, 'perPage', $this->perPage);

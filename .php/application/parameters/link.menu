@@ -19,7 +19,7 @@ class linkMenu extends \framework\_echo{
 	}
 	public function initialize(string $name, string $type, string $css='menu'){
 		$this->setName($name);
-		$this->setCSS($css);
+		$this->setCss($css);
 		$this->setType($type);
 		
 		$this->_menuDiv = new \html\_div($this->name,$this->cssMenu);
@@ -28,12 +28,12 @@ class linkMenu extends \framework\_echo{
 		}
 	}
 
-	protected function setCSS(string $css = 'menu'){
+	protected function setCss(string $css){
 		$this->css = $css;
 		$this->cssMenu = $css.'-links';
-		$this->cssMenuItem = $css.'-links-item';
-		$this->cssList = $css.'-links-list';
-		$this->cssListItem = $css.'-links-list-item';
+		$this->cssMenuItem = $css.'-item';
+		$this->cssList = $css.'-list';
+		$this->cssListItem = $css.'-list-item';
 	}
 
 	protected function setType(string $type){
@@ -45,44 +45,30 @@ class linkMenu extends \framework\_echo{
 		$this->nameList = $name.'-list';
 	}
 	
-	public function getLink(url &$u,string $caption,$css = 'menu-links-item', $target = '_self'){
+	public function getLink(url &$u,string $caption){
 		$l = new link($u,$caption);
-		$l->setCSS($css);
-		$l->setTarget($target);
 		return $l;
+
 	}
-	public function makeLink(url &$u,string $caption, $css = 'menu-links-item'){
-		//$css passed uses $cssMenuItem...should use menu or list item
-		$l = $this->getLink($u,$caption,$css);
+	public function makeLink(url &$u,string $caption){
+		$l = $this->getLink($u,$caption,$this->cssItem);
 		$this->addLink($l);
 	}
 	
-	public function buildLink(string $page, string $caption, $css = 'link-item', $target = '_self'){
-		$u = new url($page);
-		$l = $this->getLink($u, $caption, $css, $target);
-		return $l;
-	}
-	
-	final public function addLink(link $l){
+	public function addLink(link $l){
 		$this->_links[] = $l;
 	}
 	
-	final public function buildTextItem(string $text,$css='menu-links-item-text'){
-		$s = new \html\_span($css);
-		$s->setContent($text);
-		return $s;
-	}
-	
-	final public function addSpan(\html\_span $s){
+	public function addSpan(\html\_span $s){
 		$this->_links[] = $s;
 	}
 	
-	final public function addTextItem(string $text,$css='menu-links-item-text'){
-		$s = $this->buildTextItem($text, $css);
+	public function addTextItem(string $text,$css='-text'){
+		$s = new \html\_span($text,$this->cssMenuItem.$css);
 		$this->addSpan($s);
 	}
 	
-	final protected function printLinks(){
+	protected function printLinks(){
 		foreach ($this->_links as $l){
 			$item = $l->print();
 			$this->printItem($item);
@@ -101,6 +87,10 @@ class linkMenu extends \framework\_echo{
 		}
 		
 	}
+	
+	
+
+	
 	
 	public function print(){
 		$this->printLinks();

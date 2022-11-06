@@ -3,28 +3,25 @@ namespace application\system;
 
 class user extends \application\entity{
 	public $validationMessages;
-	
-	
 	public function __construct(){
 		parent::__construct();
 		$this->entity = 'user';
 		$this->entityTitle = 'User Profile';
 
-		$this->f = new forms\UserFields();
+		$this->f = new UserFields();
 		$this->f->setEntity($this->entity);
-		$this->sql = new sql\UserSQL();
-		$this->links = new links\UserLinks();
-		
+		$this->sql = new UserSQL();
+		$this->links = new UserLinks();
 	}
 	
 	public function getRequestArguments(){
-		parent::getRequestArguments();
+	
+	parent::getRequestArguments();
 	
 	}
 	
 	public function display(){
-		$detail = parent::display();
-		//allow admin to request password change
+		$detail = parent::display;
 		if (($_SESSION['is-admin'] == 'yes') && ($_SESSION['user-id'] != $this->id)){		
 			$detail .= $this->requestPasswordResetForm();
 		}
@@ -41,9 +38,9 @@ class user extends \application\entity{
 	protected function makePageTitle(){
 
 		if ($this->pageMode != 'ADD'){
-			$heading = $this->pageMode.' User Profile: '.$this->f->loginName->value();
-			if (($_SESSION['user-id'] == $this->id) AND ($_SESSION['must-update-pwd'] == 'yes')){
-				$heading .= '<br/>Please update your profile password.';
+			$heading = $this->f->loginName->value();
+			if (($_SESSION['user-id'] == $this->id) && ($_SESSION['must-update-pwd'] == 'yes')){
+				$heading .= br().'Please update your profile password.';
 			}
 
 		} else {
@@ -55,26 +52,29 @@ class user extends \application\entity{
 	
 	
 	protected function makePageMenu(){
-	
-		$s = new \application\links\systemMenuLinks();
-		$this->links->addLink($s->reference());
-
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		$userL = new UserLinks($menuType,$menuStyle);		
+		$menuL = new MenuLinks($menuType,$menuStyle);
+		
+		$menu = $userL->openMenu('section-heading-links');
+		$menu .= $menuL->linkReference();
+		$menu .= $userL->resetMenu();
 		if ($this->pageMode == 'VIEW'){
-			if ($_SESSION['is-admin'] == 'yes' OR $_SESSION['user-id'] == $this->id){
+			if ($_SESSION['is-admin'] == 'yes' || $_SESSION['user-id'] == $this->id){
 				//user is admin or self, show edit link
-				$this->links->addLink($this->links->edit('Edit Profile',$this->id));
+				$menu .= $userL->edit('edit profile',$this->id);
 			}
 		} elseif ($this->pageMode == 'EDIT'){
-			$this->links->addLink($this->links->view('View Profile',$this->id));
+			$menu .= $userL->view('view',$this->id);
 		}
-		if ($_SESSION['is-admin'] == 'yes'){
-			$this->links->addLink($this->links->add('Add Profile'));
-		}
-		$this->links->addLink($this->links->contextList('All Profiles'));
-	
-		$this->_pageMenu = $this->links->print();
+		$menu .= $userL->listingHref();
+		
+		$menu .= $userL->closeMenu();
+		$this->_pageMenu = $menu;
 	}
 	
+
 	public function getPageDetails(){			
 		if ($_SESSION['is-admin'] == 'yes'){
 			//is admin allow edit others and add users
@@ -83,17 +83,15 @@ class user extends \application\entity{
 			if ($this->pageMode == 'ADD'){
 				//non admin trying to add a user
 				//revert to viewing self
-				$this->id = $_SESSION['user-id'];
-				$this->pageMode = 'VIEW';
-				$this->setDetails();
-			} elseif ($this->pageMode == 'EDIT' AND $_SESSION['user-id'] == $this->id){
+				$this->setDetails($_SESSION['user-id'],0,'VIEW');
+			} elseif ($this->pageMode == 'EDIT' && $_SESSION['user-id'] == $this->id){
 				//editing self, ok
 			} else {
 				$this->pageMode = 'VIEW';
 			}	 
 		}
 
-		if ($this->pageMode == 'EDIT' OR $this->pageMode == 'ADD'){
+		if ($this->pageMode == 'EDIT' or $this->pageMode == 'ADD'){
 			$details = $this->editForm();
 		} else {
 			$details = $this->display();
@@ -102,8 +100,28 @@ class user extends \application\entity{
 		
 	}
 	
-	/*
-	//use for admin password reset, needs button and form
+
+
+
+	private function generatePassword($length = 11) {
+		$chars = '.!%^&*#@';
+		$clen = mb_strlen($chars);
+		$base = md5(microtime());
+		$password = substr(base_convert(substr($base,1),16,36),0,$length);
+		$len = mb_strlen($password);
+		for($i = 0;$i < $len;$i++)
+		{
+			if(rand(0,1) && 1){
+				$password[$i] = strtoupper($password[$i]);
+			} elseif(rand(0,2) && 1 && $clen){
+				$password[$i] = $chars[rand(0,$clen - 1)];
+			}
+		}
+		return $password;
+	}
+	
+	
+	
 	public function resetPassword($loginName, $loginEmail){
 		
 		//verify that login and email exist for an active account
@@ -112,12 +130,12 @@ class user extends \application\entity{
 			$this->f->email->set($loginEmail);
 		
 			$newPass = $this->generatePassword();
-			$newPassCrypt = $this->obfuscate($this->sql->getEscapeString($newPass),$loginName);
+			$newPassCrypt = $this->obfuscate(dbEscapeString($newPass),$loginName);
 		
 		
 			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
 		
-			$result = $this->sql->runStatement($sql);
+			$result = dbRunSQL($sql);
 			
 			$links = new UserLinks;	
 			$message = $_SESSION['site-title'].br();
@@ -128,27 +146,34 @@ class user extends \application\entity{
 			$message .= $links->formatHref($_SESSION['site-url'],$_SESSION['site-url']).br();
 			$this->mailUser($message,'Password Reset');
 			$_SESSION['login-messages'] = 'Profile password reset';
-	
-	
-		} else {
+	/*	} else {
 			$_SESSION['login-messages'] = 'Active profile not found, contact an administrator';	
-		}
+		}*/
 	}
-    */
-    
-    
-    
-    
+
 	private function mailUser($message = '', $subject = 'User Notification'){
 
-		\application\mailUser($message, $subject);
-		
+		$fromAddress = ini_get('sendmail_from');
+		$headers = "From: ".$fromAddress."\n";
+		$headers .= "X-Mailer: PHP/".phpversion()."\n"; 
+		$headers .= "MIME-Version: 1.0\n"; 
+		$headers .= "Content-Type: text/html; charset=utf-8\n"; 
+		$headers .= "Content-Transfer-Encoding: 8bit\n"; 
+		$newSubject = $_SESSION['site-title'].':'.$subject;
+		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
 	}
+	
+	private function obfuscate($pass,$login){
+		//$salt = crypt($login);
+		$hash = md5($pass.$login);
+		return $hash;	
+	}
+
 	
 	private function setSecurity($loginName){
 		$sql = $this->sql->securityUser($loginName);
 
-		$result = $this->sql->getResult($sql);
+		$result = dbGetResult($sql);
 		if($result){
 	  		while ($row = $result->fetch_assoc())
 			{
@@ -161,50 +186,58 @@ class user extends \application\entity{
 			
 	}
 	
+	private function getLoginMessages(){
+		if (isset($_SESSION['login-messages']) && $_SESSION['login-messages'] != ''){
+			$messages = $_SESSION['login-messages'].br();
+			unset($_SESSION['login-messages']);
+		} else {
+			$messages = '';
+		}
+		return $messages;
+	}
+	
 	public function requestPasswordResetForm(){
 		$entity = 'user-password-reset';
-		
-		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
-	
-		$request = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$entity,false);
-		
-		$request->hidden->inputHidden($this->f->id);
-		$request->hidden->inputHidden($this->f->email);	
-		$request->hidden->inputHidden($this->f->loginName);
+		$contextMenu = null;
+		$request = new _editForm($entity,$this->pageMode,$this->pageSave);
+		$request->open($contextMenu,$this->_titleEntity);
 
-		$_submit = new \application\forms\submitButton('request-pwd-reset','Request Reset'); 
-		$request->submit->addContent($_submit->button());	
+		$request->hidden->addContent($this->f->id->inputHidden());
+		$request->hidden->addContent($this->f->email->inputHidden());	
+		$request->hidden->addContent($this->f->loginName->inputHidden());
+		$request->submit->addContent(getSubmitButton('Request Reset','submit-pwd-reset'));
+		$request->submit->addContent($this->getLoginMessages());
 
-		return $request->print();
+		return $request->close();
+		
 	}
 	
 	//overrride entity.listrowlink to limit editing to administrators or self edit
 	protected function listRowLink(){
 
-		if (($_SESSION['is-admin'] == 'yes') OR ($_SESSION['user-id'] == $this->f->id->value())){
-			$link = $this->links->viewEdit($this->f->loginName->value(),$this->f->id->value());
+		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] == $this->f->id->value)){
+			$link = $this->links->itemViewEdit($this->f->loginName->value(),$this->f->id->value());
 		} else {
-			$link = $this->links->view($this->f->loginName->value(),$this->f->id->value())->print();
+			$link = $this->links->view($this->f->loginName->value(),$this->f->id->value());
 		}
 			return $link;
 	}
 		
 	public function addForm($idParent = 0){
-		$form = '';
 		if ($_SESSION['is-admin'] == 'yes'){
 			$this->pageMode = 'ADD';
 			$this->setDefaults();
 			$form = $this->editForm();
 		} else {
-			$form = 'Please request Administrator assistance to add users';
+			$quickEdit = 'Please request Administrator assistance to add users';
 		}
 		return $form;
 	}
 
 	
-	public function editForm(){
+	protected function editForm(){
 	
-		if (($_SESSION['is-admin'] == 'yes') OR ($_SESSION['user-id'] == $this->id)){
+		if (($_SESSION['is-admin'] == 'yes') || ($_SESSION['user-id'] != $this->id)){
 			$form = $this->secureEditForm();
 		} else {
 			$form = $this->display();
@@ -215,41 +248,40 @@ class user extends \application\entity{
 	protected function secureEditForm(){
 		$this-> echoState(true,'secureEditForm');
 
-		$url = $this->links->request->getUrlEntitySave($this->f->id->value(),0,0);
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
-		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
-		
 		if ($this->pageMode == 'ADD'){
 			$this->f->loginName->setValidation(@$this->validationMessages['login']);			
 			$this->edit->required->input($this->f->loginName);
 		} else {
-			$this->edit->hidden->inputHidden($this->f->loginName);
+			$input = $this->f->loginName->inputHidden();
 			$this->edit->required->addContent('Login name ['.$this->f->loginName->value().'] cannot be changed');
 		}
+		$this->f->loginPwd->setValidation(@$this->validationMessages['password']);
+		$this->edit->required->inputPassword($this->f->pwd);
+		$this->edit->required->inputPassword($this->f->pwdConfirm);
 		
-		$this->f->pwd->setValidation(@$this->validationMessages['password']);
-		$this->edit->required->input($this->f->pwd);
-		$this->edit->required->input($this->f->pwdConfirm);
-		$this->edit->required->br();
-	
+
 		$this->f->email->setvalidation(@$this->validationMessages['email']);
 		$this->edit->required->input($this->f->email);
-		$this->edit->required->br();
-		
-		$this->edit->required->input($this->f->nameFirst);
-		$this->edit->required->input($this->f->nameLast);
+		$this->edit->optional->input($this->f->nameFirst);
+		$this->edit->optional->input($this->f->nameLast);
 
 
 		$m = new UserType;
-		$select = $m->options($this->f->type->id->value(),$this->f->type->id->env->variable());
-		$this->edit->required->inputChoice($this->f->type->id,$select->print());
-		$this->edit->required->hr();
-	
+		$select = $m->options($this->f->typeEntity->id->value(),$this->f->typeEntity->id->env->variable());
+		$this->edit->optional->choice($this->f->type->id,$select);
+		
+
 		$this->edit->optional->input($this->f->focus);
 		$this->edit->optional->input($this->f->interests);
-		$this->edit->optional->hr();
+	
 		
-		if ($_SESSION['is-admin'] == 'yes' AND $_SESSION['user-id'] != $this->id){
+		
+		if ($_SESSION['is-admin'] == 'yes' && $_SESSION['user-id'] != $this->id){
 			//if admin and not editing self allow setting admin
 			//prevents admins from disabling their own accounts
 			$this->edit->optional->input($this->f->isAdmin);
@@ -259,81 +291,57 @@ class user extends \application\entity{
 			$this->edit->optional->inputHidden($this->f->isAdmin);
 			$this->edit->optional->inputHidden($this->f->isActive);
 			$this->edit->optional->inputHidden($this->f->mustUpdatePwd);
-		}		
+		}				
 		
-		$this->edit->hidden->inputHidden($this->f->id);
-		$this->edit->setRequestMode($this->pageMode);
-		$this->edit->setSubmitButtons();
-		
-		return $this->edit->print();
+		$edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
+		$edit->hidden->inputHidden($this->f->id);
 
+		$edit->submit->addContent( getSaveChangesResetButtons());
+		return $edit->close();
 	}
 	
-	private function requestPasswordReset($id){
-	    $this->echoPrint(true, 'requesting password reset for id= '.$id, 'requestPasswordReset');
-	    $sql = "UPDATE users u ";
-	    $sql .= "SET u.must_update_pwd = 'yes', ";
-	    $sql .= "u.updated = CURRENT_TIMESTAMP ";
-	    $sql .= "WHERE u.id = ".$id;
-	    
-	    $result = $this->sql->runStatement($sql);
-	}
 	
 	public function collectPostValues(){
-	
-		if (isset($_POST['request-pwd-reset'])) {
-    		$this->echoPrint(true, 'PRESSED REQUEST PWD RESET', 'collectPostValues');
-    		$id = $_POST['id'];
-    		$this->requestPasswordReset($id);
-		} else {
-    		$this->echoPrint(true, 'PRESSED SUBMIT', 'collectPostValues');
-	
-			parent::collectPostValues();
-		
-			//get password for local validation
-			$pwd = $this->sql->getEscapeString($_POST['login-pwd']);
-			$pwdConfirm = $this->sql->getEscapeString($_POST['pwd-confirm']);
-			//clear the password from post variables if canceling form post
-			$_POST['login-pwd'] = 'password';
-			$_POST['pwd-confirm'] = 'password';
+		parent::collectPostValues();
+		//get password for local validation
+		$pwd = dbEscapeString($_POST['loginPwd']);
+		$pwdConfirm = dbEscapeString($_POST['loginPwdConfirm']);
+		//clear the password from post variables if canceling form post
+		$_POST['loginPwd'] = 'password';
+		$_POST['loginPwdConfirm'] = 'password';
 
-			//validate login name
-			if (($this->f->loginName->value() == '') || is_null($this->f->loginName->value())){
-				$this->cancelPost('Login name cannot be blank','login');
-			}
-			//validate email address
-			if (($this->f->email->value() != '') && (filter_var($this->f->email->value(), FILTER_VALIDATE_EMAIL) !== false)) {
-    			// $email contains a valid email
+		//validate login name
+		if (($this->f->loginName->value() == '') || is_null($this->f->loginName->value())){
+			$this->cancelPost('Login name cannot be blank','login');
+		}
+		//validate email address
+		if (($this->f->email->value() != '') && (filter_var($this->f->email->value(), FILTER_VALIDATE_EMAIL) !== false)) {
+    		// $email contains a valid email
+		} else {
+			if ($this->f->email->value() == ''){
+				$validation = 'Email address cannot be blank';
 			} else {
-				if ($this->f->email->value() == ''){
-					$validation = 'Email address cannot be blank';
-				} else {
-					$validation = 'Email address is not valid';
-				}
-				$this->cancelPost($validation,'email');
+				$validation = 'Email address is not valid';
 			}
-			//validate password
-			if (($pwd != '') && ($pwd == $pwdConfirm) && ($pwd != 'password')){
-				$this->f->pwd->set($this->f->pwd->obfuscate($pwd, $this->f->loginName->value()));
-			} else {
-				if ($pwd == '' || is_null($pwd) || is_null($pwdConfirm) || $pwdConfirm == ''){
-					$validation = 'Password cannot be blank';
-				} elseif ($pwd != $pwdConfirm){
-					$validation = 'Passwords do not match';
-				}
-				$this->cancelPost($validation,'password'); 
+			$this->cancelPost($validation,'email');
+		}
+		//validate password
+		if (($pwd != '') && ($pwd == $pwdConfirm) && ($pwd != 'password')){
+			$this->f->loginPwd->set($this->obfuscate($pwd, $this->f->loginName-value));
+		} else {
+			if ($pwd == '' || is_null($pwd) || is_null($pwdConfirm) || $pwdConfirm == ''){
+				$validation = 'Password cannot be blank';
+			} elseif ($pwd != $pwdConfirm){
+				$validation = 'Passwords do not match';
 			}
-		
+			$this->cancelPost($validation,'password'); 
 		}
 	}
 	
 	protected function cancelPost($message, $validation){
-		$this->echoPrint(true, 'in cancel post:'.$message);
+		//echo 'in cancel post:'.$message;
 		//set validation message
-		$s = new \html\_span('highlight-validation');
-		$s->setContent($message);
-		$this->validationMessages[$validation] = $s->print();
-
+		$this->validationMessages[$validation] = span($message,'highlight-validation');
 		//display editing form with current validation state
 		$this->printPage();
 		die;
@@ -348,16 +356,15 @@ class user extends \application\entity{
 			$sql .= " u.email = '".$this->f->email->value()."', ";
 			$sql .= " u.focus = '".$this->f->focus->value()."', ";
 			$sql .= " u.interests = '".$this->f->interests->value()."', ";
-			$sql .= " u.login_name = '".$this->f->loginName->value()."', ";
-			$sql .= " u.login_pwd = '".$this->f->pwd->value()."', ";
+			$sql .= " u.login_name = '".$this->f->loginName->value."', ";
+			$sql .= " u.login_pwd = '".$this->f->loginPwd->value()."', ";
 			$sql .= " u.is_admin = '".$this->f->isAdmin->value()."', ";
 			$sql .= " u.is_active = '".$this->f->isActive->value()."', ";
-			$sql .= " u.updated = CURRENT_TIMESTAMP, ";
-			$sql .= " u.must_update_pwd = 'no', ";
+			$sql .= " u.must_update_pwd = '".$this->f->mustUpdatePwd->value()."', ";
 			$sql .= " u.type_id = ".$this->f->type->id->value()." ";
 			$sql .= " WHERE u.id = ".$this->f->id->value()."  ";			
 
-			$result = $this->sql->runStatement($sql);
+			$result = dbRunSQL($sql);
 
 			$this->mailUser('Your User Profile Has Been Updated');
 			
@@ -380,7 +387,6 @@ class user extends \application\entity{
 			$sql .= " is_active, ";
 			$sql .= " must_update_pwd, ";
 			$sql .= " created, ";
-			$sql .= " updated, ";
 			$sql .= " type_id) ";
 			$sql .= " VALUES (";
 			$sql .= " '".$this->f->nameFirst->value()."', ";
@@ -389,20 +395,16 @@ class user extends \application\entity{
 			$sql .= " '".$this->f->focus->value()."', ";
 			$sql .= " '".$this->f->interests->value()."', ";
 			$sql .= " '".$this->f->loginName->value()."', ";
-			$sql .= " '".$this->f->pwd->value()."', ";
-			$sql .= " '".$this->f->isAdmin->value()."', ";
-			$sql .= " '".$this->f->isActive->value()."', ";
+			$sql .= " '".$this->f->loginPwd->value()."', ";
+			$sql .= " '".$this->f>isAdmin-value()."', ";
+			$sql .= " '".$this->f->isActive>value()."', ";
 			$sql .= " '".$this->f->mustUpdatePwd->value()."', ";
-			$sql .= " CURRENT_TIMESTAMP, ";		
 			$sql .= " CURRENT_TIMESTAMP, ";			
 			$sql .= " ".$this->f->type->id->value().") ";
 			
-			$result = $this->sql->runStatement($sql);
+			$result = dbRunSQL($sql);
 
-			$id = $this->sql->getInsertedId();
-			$this->f->id->set($id);
-			$this->id = $this->f->id->value();
-			
+			$this->id = dbInsertedId();
 	}
 	
 	

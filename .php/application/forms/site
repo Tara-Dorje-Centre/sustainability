@@ -12,13 +12,13 @@ implements Isite{
 	protected $pageMode = 'VIEW';
 
 	public function __construct($mode = 'VIEW'){
-	
+		
 		$this->pageMode = $mode;
 		$this->settings = new system\siteSettings();
 		$this->verifyLoginState();
 	}
-	
 	public function set(string $heading = 'page heading', string $details = 'page details'){
+
 		$this->settings->setDetails();
 		$this->setDocumentValues();
 		$links = $this->getLinks();
@@ -61,7 +61,7 @@ implements Isite{
 		} else {
 			
 			
-			$m = new links\systemMenuLinks('site-menu','LIST','site-menu');
+			$m = new links\systemMenuLinks('site-menu','LIST','menu');
 			
 			$p = new \application\entities\projects\links\projectLinks();
 			
@@ -69,11 +69,9 @@ implements Isite{
 			
 			$a = new \application\entities\projects\links\activityLinks();
 			
-			if ($this->settings->f->showPublicSite->value() == 'yes'){
+			if ($this->settings->f->showPublicSite->value == 'yes'){
 				$m->addLink($m->library());
 			}
-		
-		$m->addLink($m->modules());
 		
 		if (isset($_SESSION['currentView'])){
 		switch($_SESSION['currentView']){
@@ -105,18 +103,21 @@ implements Isite{
 		//always show projects link
 		$m->addLink($p->allProjects(false));
 		$m->addLink($m->logout());
+		//detailHref();	
+		//
 		
 		$content = $m->print();
 		
 	}
 	
 
-	return $content;
+return $content;
 }
 
 	protected function setContents($heading,$details){ 
 
 		if ($this->validLogin == false){
+
 			$l = new system\userLogin('LOGIN-FORM');
 			$content = $l->loginForm();
 		} else {
@@ -140,13 +141,7 @@ implements Isite{
 	}
 	
 	protected function getNoticeTiming(){
-		
-		global $conn, $sessionTime, $sessionTimeZone;
-		$conn->setSessionTimeZone();
-		$sessionTimeZone = $conn->getSessionTimeZone();
-		$sessionTime = $conn->getSessionTime();
-		
-		$timezone = '';
+		global $sessionTime, $sessionTimeZone;
 		$timing = 'Request Time: '.$sessionTime.'(UTC'.$sessionTimeZone.')';
 		$t = new \html\_div('display-request-time');
 		$t->setContent($timing);
@@ -156,13 +151,12 @@ implements Isite{
 		} else {
 			$timeZone = ' Time Zone set to UTC';	
 		}
-		$t->addContent($timeZone);
+		$t->addContent($timezone);
 		return $t->print();
 	}
-	
 	protected function getNoticeLoginName(){
 		if (isset($_SESSION['login-name'])){
-			$loginName = 'Logged in as '.$_SESSION['login-name'];
+			$loginName = $_SESSION['login-name'];
 		} else {
 			$loginName = 'Not logged in.';	
 		}
@@ -175,20 +169,14 @@ implements Isite{
 		$org = $this->settings->f->organization->value();
 		$orgUrl = $this->settings->f->organizationUrl->value();
 		
-		$year = date('Y',time());
-		$copyright = '&copy;'.$year;
-		$copyright.= \html\spacer();
-		$o->addContent($copyright);
-		
 		if (($orgUrl == '') || is_null($orgUrl)){
 			$content = $org;
 		} else {
-			$l = new \html\_href($orgUrl, $org);
-			$l->setCSS('link-item');
-			$l->setTarget('_blank');
+			$l = new \html\_href($orgUrl,$org, 'menu-links-item', '_blank');
+			//$content = getHref($orgUrl, $org, 'menu-links-item', '_blank');
 			$content = $l->print();
 		}
-		$o->addContent($content);
+		$o->setContent($content);
 		return $o->print();
 	}
 	protected function getFooterNotices(){
@@ -202,9 +190,8 @@ implements Isite{
 	protected function getFooterLinks(){
 		$url = 'https://sourceforge.net/projects/sustainability';
 		$text = 'Sustainability OpenSource';
-		$l = new \html\_href($url,$text);
-		$l->setCSS('link-item');
-		$l->setTarget('_blank');
+		$l = new \html\_href($url,$text,'menu-links-item','_blank');
+		//$l = getHref(,'Sustainability','menu-links-item','_blank');
 		return $l->print();
 	}
 	
@@ -238,9 +225,8 @@ implements Isite{
 
 		//use external stylesheet
 		$css = new \html\_cssLink('./css/styles.css');
-		$content = $css->print();
-		
 		$override = new \html\_cssLink('./css/override.css');
+		$content = $css->print();
 		$content .= $override->print();
 		
 		return $content;

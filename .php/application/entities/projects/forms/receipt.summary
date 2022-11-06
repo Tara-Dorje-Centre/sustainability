@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\projects\forms;
 
-class summaryReceipts extends summaryBaseCost{
+class receiptsSummary extends baseSummaryCost{
 
 	public function setProjectTotals($id){
 		$this->isProject = true;
@@ -44,45 +44,6 @@ class summaryReceipts extends summaryBaseCost{
 	 
 	 
 	}
-	//copied from project
-	private function setReceiptSummaryByType(){
-
-		$costs = openTable('receipt-info','displayListTable');
-		
-		if ($this->totals->receipts->count > 0){
-			$heading = wrapTh('Receipt Type');
-			$heading .= wrapTh('Received');
-			$costs .= wrapTr($heading);
-		
-			$s = new ReceiptSQL;
-			$sql = $s->summaryProjectReceiptype($this->id, 'yes');
-			
-			$result = $this->sql->getResult($sql);
-			
-			if($result){
-		  	while ($row = $result->fetch_assoc())
-			{	
-				$type = ($row["receipt_type"]);
-				$costActual = $row["sum_cost_actual"];
-				$item = wrapTd($type);
-				$item .= wrapTd($costActual);
-				$costs .= wrapTr($item);
-			}
-			$result->close();
-			}
-			
-			$item = wrapTh('Totals');
-			$item .= wrapTd($this->receiptsCost);
-			$costs .= wrapTr($item);
-		} else {
-			$costs .= wrapTr(wrapTh('No Income Received'));
-		}
-		$costs .= closeTable();
-		$this->receiptsSummary = $costs;
-		
-	}
-
-	
 }
 
 

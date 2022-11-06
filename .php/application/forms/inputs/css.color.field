@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-class _cssColor extends _text{
+class cssColorField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -13,8 +13,7 @@ class _cssColor extends _text{
 }
 
 
- class cssColorField extends _cssColor{
- }
+ 
  
  
 ?>

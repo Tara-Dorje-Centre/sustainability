@@ -7,43 +7,6 @@ class locationLinks extends \application\links\entityTypeLinks{
 		parent::__construct($context);
 
 	}
-	
-	
-	public function listingLinks(string $mode = 'LIST',$id = 0,$idParent = 0,$idType = 0){
-		
-		$this->addLink($this->list('List All',0,-1,0));
-		if ($idParent <= 0){
-			$this->addLink($this->add('New Location', 0));
-		} else {
-			$this->addLink($this->add('New Sub Location', $idParent));
-		}
-	}
-	
-	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
-
-		switch ($mode){
-			case 'VIEW':
-				$this->addLink($this->list('List All',0,-1,0));
-				$this->addLink($this->list('List Sublocations',0,$id,0));
-				$this->addLink($this->edit('Edit',$id));
-				$this->addLink($this->add('Add Sub Location',$id));
-				
-				break;
-			case 'EDIT':
-				$this->addLink($this->list('List All',0,-1,0));
-				$this->addLink($this->list('List Sublocations',0,$id,0));
-				$this->addLink($this->view('View',$id));
-				$this->addLink($this->add('Add Sub Location',$id));
-				break;
-			case 'ADD':
-				$this->addLink($this->list('List All',0,-1,0));
-				break;
-			default:
-				$this->addLink($this->list('List All',0,-1,0));
-		}
-		
-	}
-	
 }
 
 ?>

@@ -8,46 +8,40 @@ abstract class entityRequest extends request {
 	
 	public function __construct(string $context = 'undefined'){
 		$this->entityContext = $context;
+
 	}
 		
-	public function setUrlParametersEntity(url &$u, string $action, $id = 0, $idParent = 0, $idType = 0){
-		/*
+	public function setUrlParametersEntity(url &$u,string $action,$id,$idParent,$idType){
 		$this->setUrlParameter($u,'pageAction',$action);
 		$this->setUrlParameter($u,'id',$id);
 		$this->setUrlParameter($u,'idParent',$idParent);
 		$this->setUrlParameter($u,'idType',$idType);
-		*/
-		
-		$this->setUrlParameter($u,'page-action',$action);
-		$this->setUrlParameter($u,'id',$id);
-		$this->setUrlParameter($u,'id-parent',$idParent);
-		$this->setUrlParameter($u,'id-type',$idType);
-		
 	} 
 	
-	public function getUrlEntityDetail(string $action, $id = 0, $idParent = 0, $idType = 0){
+	public function getUrlEntityDetail($action,$id,$idParent,$idType){
 		$url = $this->getUrlDetail($this->basePage,$this->entityContext);
 		$this->setUrlParametersEntity($url,$action,$id,$idParent,$idType);
 		return $url;
 	}
 	
-	public function getUrlEntityList(string $action, $id = 0, $idParent = 0, $idType = 0){
+	public function getUrlEntityList($id,$idParent,$idType){
 		$url = $this->getUrlList($this->basePage,$this->entityContext);
 		$this->setUrlParametersEntity($url,'LIST',$id,$idParent,$idType);
 		return $url;
+	
 	}
 	
-	public function  getUrlEntityMenu($id = 0, $idParent = 0, $idType = 0){
-		$url = $this->getUrlMenu($this->basePage,$this->entityContext);
-		$this->setUrlParametersEntity($url,'MENU',$id,$idParent,$idType);
-		return $url;
-	}
+	public function  getUrlEntityMenu($id,$idParent,$idType){
+			$url = $this->getUrlMenu($this->basePage,$this->entityContext);
+			$this->setUrlParametersEntity($url,'MENU',$id,$idParent,$idType);
+			return $url;
+		}
 		
-	public function getUrlEntitySave($id = 0, $idParent = 0, $idType = 0){
-		$url = $this->getUrlSave($this->basePage,$this->entityContext);
-		$this->setURLparametersEntity($url,'SAVE',$id,$idParent,$idType);
-		return $url;
-	}
+		public function getUrlEntitySave($id,$idParent,$idType){
+			$url = $this->getUrlSave($this->basePage,$this->entityContext);
+			$this->setURLparametersEntity($url,'SAVE',$id,$idParent,$idType);
+			return $url;
+		}
 	
 }
 

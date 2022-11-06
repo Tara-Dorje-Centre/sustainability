@@ -2,146 +2,36 @@
 namespace application\entities\projects\forms;
 
 
-class materialFields 
-extends \application\forms\fields{
+class materialFields extends taskChildFields{
 
-	public $id;
-	public $name;		
-
-	public $project;
-	public $task;
-	public $activity;
-	public $location;
-	
-	public $type;
-	public $highlight;
-
-	public $description;
-	public $reported;
-    public $updated;
-    public $doneBy;
-    public $paidTo;
-	public $quantity;
-	public $quantityType;
-	
-	public $costUnit;	
- 	public $costEstimated;
- 	public $costActual;
  
-	public $linkUrl;
- 	public $linkText;
-	public $notes;
-	
+ public $paidTo;
+ //public $quantity;	
+ //public $quantityType;
+ public $costUnit;	
+ public $costEstimated;
+ public $costActual;
+ 
 
-	public function __construct(){
-		parent::__construct();
-    	
-		$this->id = new \application\forms\_id('id','id','not-used');
-    	$this->name = new \application\forms\_name('name','name','Material');
-    	
-    	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
-    	$this->task = new \application\forms\_idName('task_id','id-task','Task','task_name');
-    	$this->activity = new \application\forms\_idName('activity_id','id-activity','Activity','activity_name');
-    	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
-    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
-    	$this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-    	    	    	
-    	$this->description = new \application\forms\_description('description','description','Description');
-		$this->reported = new \application\forms\_date('date_reported','date-reported','Reported');
-		$this->updated = new \application\forms\_date('updated','updated','Updated');
-		$this->doneBy = new \application\forms\_user('done_by','done-by','Done By');
-		$this->paidTo= new \application\forms\_user('paid_to','paid-to','Paid To');
-		$this->quantity = new \application\forms\_number('quantity','quantity','Quantity');
-		$this->quantityType = new \application\forms\_idName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
-		
-		$this->costUnit = new \application\forms\currency('cost_unit','cost-unit','Cost Per Unit');
-		$this->costEstimated = new \application\forms\currency('cost_estimated','cost-est','Cost Estimated');			
-		$this->costActual = new \application\forms\currency('cost_actual','cost-actual','Cost Actual');
+public function __construct(){
 
-    	$this->linkUrl = new \application\forms\_url('link_url','link-url','LinkUrl');
-		$this->linkText = new \application\forms\_text('link_text','link-text','LinkText');
-		$this->notes = new \application\forms\_notes('notes','notes','Notes');
+	$this->paidTo = new _nameField('paid_to','paid-to','Paid To');
+	$this->costEstimated = new _numberField('cost_estimated','cost-est','Cost Estimated');			
+	$this->costActual = new _numberField('cost_actual','cost-actual','Cost Actual');
+	$this->costUnit = new _numberField('cost_unit','cost-unit','Cost Per Unit');
+	$this->_register('paidTo',$this->paidTo);
+	$this->_register('costUnit',$this->costUnit);
+	$this->_register('costEstimated',$this->costEstimated);
+	$this->_register('costActual',$this->costActual);
 
-		$this->registerFields();
-		$this->disableFields();
-	}
-	
-	private function registerFields(){
-		$this->_register('id', $this->id);
-		$this->_register('name', $this->name);
-		$this->_register('type', $this->type);
-		$this->_register('reported', $this->reported);
-		$this->_register('updated', $this->updated);
-		$this->updated->displayBrAfter(true);
-		
-   		$this->_register('highlight', $this->highlight);
-		
-		$this->_register('project', $this->project);
-		$this->_register('task', $this->task);
-		$this->_register('activity', $this->activity);
-		$this->activity->displayBrAfter(true);
-		 	
-		$this->_register('doneBy', $this->doneBy);
-		$this->_register('paidTo', $this->paidTo);
-		$this->_register('location', $this->location);
-		$this->location->displayBrAfter(true);
-		
-		$this->_register('quantity',$this->quantity);
-		$this->_register('quantityType',$this->quantityType);
-		$this->_register('costUnit',$this->costUnit);
-		$this->_register('costActual',$this->costActual);
-		$this->_register('costEstimated',$this->costEstimated);
-		$this->costEstimated->displayBrAfter(true);
-		
-		$this->_register('linkUrl', $this->linkUrl);
-		$this->_register('linkText', $this->linkText);
-		$this->linkText->displayBrAfter(true);
-		
-		$this->_register('description', $this->description);
-		$this->_register('notes', $this->notes);
+}
+	public function getRequestArguments(){
+
+
 
 	}
-
-private function disableFields(){
-		$this->id->listEnabled(false);
-		$this->id->displayEnabled(false);
-		$this->updated->envEnabled(false);
-        //$this->reported->envEnabled(false);
-        
-        $this->updated->listEnabled(false);
-        $this->reported->listEnabled(false);
-        $this->name->listEnabled(false);
-        $this->project->listEnabled(false);
-        $this->task->listEnabled(false);
-        $this->activity->listEnabled(false);
-        $this->description->listEnabled(false);
-        $this->notes->listEnabled(false);
-        $this->highlight->listEnabled(false);
-        $this->linkUrl->displayEnabled(false);
-        $this->linkUrl->listEnabled(false);
-        $this->highlight->displayEnabled(false);
-        $this->project->displayEnabled(false);
-        $this->task->displayEnabled(false);
-        $this->activity->displayEnabled(false);
-        
-    }
-
-
-
 public function setDefaults(){
-		parent::setDefault();
-
-
-		
-		$this->reported->setDefault($this->currentTimestamp);
-		$this->doneBy->setDefault($this->currentUser);
-		$this->linkUrl->setDefault('');
-		$this->linkText->setDefault('');
-		$this->notes->setDefault('');
-		$this->quantity->setDefault(1);
-		$this->quantityType->setDefault(0);
-
-	$this->paidTo->setDefault('');
+	$this->paidTo->setDefault(1);
 	$this->costUnit->setDefault(0);
 	$this->costEstimated->setDefault(0);
 	$this->costActual->setDefault(0);		

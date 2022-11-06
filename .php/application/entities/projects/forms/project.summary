@@ -1,9 +1,9 @@
 <?php
 namespace application\entities\projects\forms;
 
-class summaryTotals extends summaryProject{}
+class summaryTotals extends projectSummary{}
 
-class summaryProject{
+class projectSummary{
 	public $tasks;
 	public $materials;
 	public $receipts;

@@ -4,7 +4,7 @@ namespace application;
 abstract class entityList extends entity{
 	public $found = 0;
 	public $base;
-	
+	protected $_list;
 	public function __construct(){
 		parent::__construct();
 		
@@ -19,20 +19,20 @@ abstract class entityList extends entity{
 	
 	protected function setFoundCount(){
 		$sql = $this->base->sql->count();
-		$this->found = $this->base->sql->getCount($sql, 'count_details');
-		$this->echoValue(true, 'count', $this->found,'setFoundCount');
+		global $conn;
+		$this->found = $conn->getCount($sql, 'count_details');
 	}
-	
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
-		$this->base->links->addLink($s->modules());
-		$this->base->links->addLink($s->reference());
-		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->_pageMenu = $this->base->links->print();
+		$this->base->links->menu->addLink($s->modules());
+		$this->base->links->menu->addLink($s->reference());
+		$this->base->links->makeListingMenu($this->pageMode,$this->id,$this->idParent,$this->idType);
+		
+		$this->_pageMenu = $this->base->links->menu->print();
 	}
-	
 	protected function setPageTitle(){
 		$this->_pageTitle = $this->entityTitle;
+		
 	}
 	
 	//overrides _entity.getPageDetails for listing query
@@ -41,15 +41,18 @@ abstract class entityList extends entity{
 		return $details;
 	}
 	
-	protected function listingStart(\application\links\url $altUrl = NULL){
-
-		$paging = $this->base->links->pagedListing($altUrl, $this->found,$this->resultPage,$this->perPage,$this->id, $this->idParent);	
-		
-		$add = $this->base->addForm($this->idParent);	
+	protected function listingStart(){
+	
+		//entity.links.pagedListing($count, $page, $rows, $idParent, $idType){
+		$paging = $this->base->links->pagedListing($this->found,$this->resultPage,$this->perPage);	
+		$add = $this->base->addForm();	
 		$entity = $this->base->entity;
-		$legend = $this->entityTitle.':  Listing';
-		$this->_display = new \html\displayList($entity,$paging,$legend,$add,'none');
+		$legend = $this->titleEntity.':  Details';
+		
+		
+		$this->_display = new \html\displayList($entity,$paging,$legend,$add,true);
 
+		
 	}
 	
 	protected function listingSQL(){
@@ -59,9 +62,10 @@ abstract class entityList extends entity{
 	
 	protected function listingRows(){
 		$sql = $this->listingSQL();
-
-		$result = $this->base->sql->getResult($sql);
+		global $conn;
+		$result = $conn->getResult($sql);
 		if($result){
+			
 			$this->_display->addRow($this->base->listHeading());
 		  	while ($row = $result->fetch_assoc())
 			{	
@@ -70,16 +74,22 @@ abstract class entityList extends entity{
 			$result->close();
 		} else {
 			$this->_display->makeRow('No results found');
+			
 		}
+		
 	}
 	
-	public function getListing(\application\links\url $altUrl = NULL){
-		$this->listingStart($altUrl);
+	public function getListing(){
+
+		
+		$this->listingStart();
+		
 		$this->listingRows();
+		
 		return $this->_display->print();
 	}
 	
-	public function editForm(){
+	protected function editForm(){
 		return 'editForm not available';
 	}
 

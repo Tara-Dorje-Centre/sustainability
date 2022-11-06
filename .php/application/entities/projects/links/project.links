@@ -9,57 +9,8 @@ class projectLinks extends \application\links\entityLinks {
 		parent::__construct($context);
 	}
 	public function setRequest(){
-		$this->request = new projectRequest($this->entityContext,$this->pagePortal);
+		$this->request = new projectRequest($this->entityContext,$this->portalPage);
 	}
-	
-	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
-		switch ($mode){
-			case 'VIEW':
-				$this->addLink($this->list('List Projects',0,0,0));
-				$this->addLink($this->edit('Edit Project',$id));
-				$this->addLink($this->add('Add Project',0,0,0));
-				//$this->addLink($this->add('AddChild',$id));
-				//$this->addLink($this->add('AddSibling',$idParent));
-				$this->addLink($this->copy('Copy Project',$id));
-				
-
-				
-				break;
-			case 'EDIT':
-				$this->addLink($this->list('List Projects',0,$idParent,0));
-				$this->addLink($this->view('View Project',$id));
-				
-				break;
-			case 'ADD':
-				$this->addLink($this->list('List',0,$idParent,0));
-				break;
-			default:
-				$this->addLink($this->list('List',0,$idParent,0));
-				$this->addLink($this->view('View Project',$id));
-		
-		}
-		
-		if ($mode == 'VIEW'){
-			$t = new taskLinks();
-			$this->addLink($t->list('List Tasks', 0, $id));
-			$this->addLink($t->add('Add Task',$id));
-			
-			// after these links are tested
-			$a= new activityLinks();
-			$this->addLink($a->projectCalendar($id));
-			$this->addLink($a->projectActivity($id));		
-			
-			$m = new materialLinks();
-			$this->addLink($m->projectMaterials($id));
-			$r = new receiptLinks();
-			$this->addLink($r->projectReceipts($id));
-			$m = new measureLinks();
-			$this->addLink($m->projectMeasures($id));
-				
-		}
-		
-	}
-	
 	
 	public function allProjects($showClosed = false){
 
@@ -73,9 +24,9 @@ class projectLinks extends \application\links\entityLinks {
 		
 		$myProjects = 'NO';
 		
-		$u = $this->request->getUrlProjectList('LIST',0,0,0,$status, $myProjects);
+		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
 
-		return $this->getLink($u,$caption);
+		return $this->menu->getLink($u,$caption);
 	}
 	
 	public function myProjects($showClosed = false){
@@ -89,10 +40,10 @@ class projectLinks extends \application\links\entityLinks {
 		
 		$myProjects = 'YES';
 			
-		$u = $this->request->getUrlProjectList('LIST',0,0,0,$status, $myProjects);
+		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
 	
 
-		return $this->getLink($u,$caption);
+		return $this->menu->getLink($u,$caption);
 		
 	}
 }

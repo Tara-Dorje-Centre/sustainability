@@ -1,10 +1,10 @@
 <?php
 namespace application\system;
 
-class siteSettings 
-extends \application\entity{
+class siteSettings extends \application\entity{
 
  	public function __construct(){
+
 		parent::__construct();
      
 		$this->entity = 'site-settings';
@@ -23,6 +23,8 @@ extends \application\entity{
 		parent::setDetails();
 		$this->setSessionDetails();	
 	}
+    
+
 	
 	protected function verifySettings(){
 		$sql = $this->sql->count();
@@ -45,41 +47,16 @@ extends \application\entity{
 		 $this->f->write();	
 	}
 	
-	public function unsetSessionDetails(){
+	protected function unsetSessionDetails(){
 		$this->f->setEnvironment('SESSION');
+		
 		$this->f->remove();
 		
-		$this->echoPrint(true, 'DUMP SESSION VARIABLES', 'unsetSessionDetails');
-		foreach ($_SESSION as $key=>$val){
-			$this->echoPrint(true, $key.': '.$val);
-			unset($_SESSION[$key]);
-		}
-		
-		$_SESSION['logged-in'] = false;
-		
-		$this->echoPrint(true, 'SESSION VARIABLES AFTER UNSET');
-		foreach ($_SESSION as $key=>$val){
-			$this->echoPrint(true, $key.': '.$val);
-		}
-		
-		//session_destroy();
-	
 	}
 	protected function makePageTitle(){
 	
-	$this->_title = $this->entityTitle;
+	
 	}
-	
-	
-	protected function makePageMenu(){
-		$s = new \application\links\systemMenuLinks();
-		//$this->links->addLink($s->modules());
-		$this->links->addLink($s->reference());
-		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->_pageMenu = $this->links->print();
-	}
-	
-	
 	
 	protected function display(){
 		$detail = parent::display();
@@ -91,7 +68,7 @@ extends \application\entity{
 
 		//$styles = openFieldset('Public Site Presentation Styles');
 		//need disabled swtch for relevant inputs
-		$styles = $this->f->publicFillColor->input();
+		$styles .= $this->f->publicFillColor->input();
 		$styles .= $this->f->publicSiteColor->input();
 		$styles .= $this->f->publicPageColor->input();
 		$styles .= $this->f->publicMenuColor->input();
@@ -186,41 +163,32 @@ extends \application\entity{
 		return $x;		
 	}
 	
-	public function editForm(){
+	protected function editForm(){
 		
-		$url = $this->links->request->getUrlEntitySave(0,0,0);
+		//$this->entity = 'site-settings';
+		//$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		//$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		//$this->edit->open($this->entity,$this->pageMode,$contextMenu);
 	
-		$this->edit = new \application\forms\inputForm($url->print(), $this->entityTitle,$this->pageMode,$this->entity,true);
-		
 		$this->edit->required->input($this->f->siteTitle);
 		$this->edit->required->input($this->f->siteUrl);	
 		$this->edit->required->input($this->f->contactName);
 		$this->edit->required->input($this->f->contactEmail);
-		$this->edit->required->input($this->f->organization);
-		$this->edit->required->input($this->f->organizationUrl);
-		$this->edit->required->input($this->f->organizationDescription);
-		$this->edit->required->input($this->f->loginNotice);
-		$this->edit->required->input($this->f->showCostReports);
-		$this->edit->required->input($this->f->showRevenueReports);
-		$this->edit->required->input($this->f->showPublicSite);	
+		$this->edit->optional->input($this->f->organization);
+		$this->edit->optional->input($this->f->organizationUrl);
+		$this->edit->optional->input($this->f->organizationDescription);
+		$this->edit->optional->input($this->f->loginNotice);
+		$this->edit->optional->input($this->f->showCostReports);
+		$this->edit->optional->input($this->f->showRevenueReports);
+		$this->edit->optional->input($this->f->showPublicSite);	
 		
-		$this->edit->optional->input($this->f->publicFillColor);
-		$this->edit->optional->input($this->f->publicSiteColor);
-		$this->edit->optional->input($this->f->publicPageColor);
-		$this->edit->optional->input($this->f->publicMenuColor);
-		$this->edit->optional->input($this->f->publicMenuColorHover);
-		$this->edit->optional->input($this->f->publicTextColor);
-		$this->edit->optional->input($this->f->publicTextColorHover);
-		$this->edit->optional->input($this->f->publicFontSizeTitle);
-		$this->edit->optional->input($this->f->publicFontSizeHeading);
-		$this->edit->optional->input($this->f->publicFontSizeMenu);
-		$this->edit->optional->input($this->f->publicFontSizeText);
-		$this->edit->optional->input($this->f->publicFontFamily);
+		$this->edit->optional->addContent($this->getPublicSiteStylesFieldset('false'));
 
-		$this->edit->setRequestMode($this->pageMode);
-		$this->edit->setSubmitButtons();
+		$this->edit->hidden->addContent(getHiddenInput('mode', $this->pageMode));
 		
-		return $this->edit->print();
+		//$this->edit->submit->addContent(getSaveChangesResetButtons());
+		return $this->edit->close();
 	}
 	
 
@@ -228,7 +196,7 @@ extends \application\entity{
 	private function createSettings(){
 
 		
-		$sql = new \framework\sql\_sqlWriter('INSERT');
+		$sql = new _sqlWriter('INSERT');
 
 		$sql->editField($this->f->siteTitle);
 		$sql->editField($this->f->siteUrl);
@@ -254,14 +222,14 @@ extends \application\entity{
 		$sql->editField($this->f->showCostReports);
 		$sql->editField($this->f->showRevenueReports);
 		
-		$result = $this->sql->runStatement($sql->editStatement('sitewide_settings'));
+		$result = dbRunSQL($sql->editStatement('sitewide_settings'));
 		
 
 	}
 
 
 	protected function saveUpdate(){
-		$sql = new \framework\sql\_sqlWriter('UPDATE');
+		$sql = new _sqlWriter('UPDATE');
 
 		$sql->editField($this->f->siteTitle);
 		$sql->editField($this->f->siteUrl);
@@ -285,11 +253,11 @@ extends \application\entity{
 		$sql->editField($this->f->publicFontSizeText);
 		$sql->editField($this->f->showPublicSite);
 		$sql->editField($this->f->showCostReports);
-		$sql->editField($this->f->showRevenueReports);
+		$sql->editField($this->f->showRevenueReports,true);
 		
-		$result = $this->sql->runStatement($sql->editStatement('sitewide_settings'));
+		$result = dbRunSQL($sql->editStatement('sitewide_settings'));
 		
-		$this->setSessionDetails();
+		$this->f->setSessionDetails();
 		
 	
 	}

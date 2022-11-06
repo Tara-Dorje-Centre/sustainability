@@ -6,7 +6,7 @@ class receiptType extends \application\entityType{
 		parent::__construct();
 		$this->entity = 'receipt-type';
   		$this->entityTitle = 'Receipt Type';
-  		//$this->pageSave = 'pr_ReceiptType_Save.php';
+  		$this->pageSave = 'pr_ReceiptType_Save.php';
 		
 		$this->f = new forms\receiptTypeFields();
 		$this->f->setEntity($this->entity);

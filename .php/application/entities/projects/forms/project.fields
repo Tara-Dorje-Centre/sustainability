@@ -1,158 +1,52 @@
 <?php
 namespace application\entities\projects\forms;
-
-class projectFields extends \application\forms\fields{
+class projectFields extends 
+\application\forms\entityChildFields{
   /*
- _currentUser set to $_SESSION['login-name']
- _currentTimestamp set to $sessionTime
+ ^_currentUser set to $_SESSION['login-name']
+ °_currentTimestamp set to $sessionTime
  
+ _fieldsetEntityChild
+   id, name, description
+ created°, updated°, highlight
+ parentEntity, typeEntity
 */
-
-
-	public $id;
-	public $name;		
-    public $updated;
+  	public $summary;
 	public $started;
-	public $highlight;
-	public $parent;
-	public $type;
-	public $location;
     public $pctDone;	
     public $priority;	
-	public $description;
-  	public $summary;
     public $goals;
 	public $purpose;	
     public $lessons;	 
 	public $showAlways;
-
-	public $hoursEstimated;
-	//public $hoursActual;
-	public $hoursNotes;
-	public $budgetEstimated;
-	public $budgetNotes;
-	
+	public $location;
 	
 	public function __construct(){
 		parent::__construct();
-		
-		/*
-		$c .= " p.parent_id, ";
-		//parent_name missing in sql...dummy field for now
-		*/
-	
-	    
-		$this->id = new \application\forms\_id('id','id','not-used');
-    	$this->name = new \application\forms\_name('name','name','Name');
-    	$this->description = new \application\forms\_description('description','description','Description');
-		$this->updated = new \application\forms\_date('updated','updated','Updated');
-    	$this->started = new \application\forms\_date('started','started','Started');
-        $this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-		$this->parent = new \application\forms\_idName('parent_id','idParent','Parent','parent_name');
-    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
-		$this->location = new \application\forms\_idName('location_id','location-id','Location','location_name');
-
-		$this->summary = new \application\forms\_notes('summary','summary','Summary');
-    	$this->pctDone = new \application\forms\percent('pct_done','pct-done','Percent.Done');
-    	$this->priority = new \application\forms\priority('priority','priority','Priority');
-		$this->goals = new \application\forms\_notes('goals','goals','Goals');
-		$this->purpose = new \application\forms\_notes('purpose','purpose','Purpose');
-		$this->lessons = new \application\forms\_notes('lessons_learned','lessons-learned','Lessons Learned');
-		$this->showAlways = new \application\forms\_yesNo('show_always','show-always','Show.Always');
-
-  		
-  		$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Hours Estimated');
-	 	//$this->hoursActual = new \application\forms\hours('hours_actual','hours-actual','Hours Actual');
-	    $this->hoursNotes = new \application\forms\_notes('hours_notes','hours-notes','Hours Notes');
-	    $this->budgetEstimated = new \application\forms\currency('budget_estimated','budget-estimated','Budget Estimated');
-		$this->budgetNotes = new \application\forms\_notes('budget_notes','budget-notes','Budget Notes');
-	
-  		
-  		
-		$this->registerFields();
-		$this->disableFields();
-	}
-	
-	private function registerFields(){
-  		
-		$this->_register('id', $this->id);
-		$this->_register('name', $this->name);
-		$this->_register('type', $this->type);
-   		$this->_register('location', $this->location);
-		$this->location->displayBrAfter(true);
-		
-		
-		$this->_register('description', $this->description);
-   		$this->_register('parent', $this->parent);
-		$this->parent->displayBrAfter(true);
-		
+		$this->created->enabled(false);
+		$this->summary = new _notesField('summary','summary','Summary');
+		$this->started = new _dateField('started','started','Started');
+    	$this->pctDone = new _numberField('pct_done','pct-done','Percent.Done');
+    	$this->priority = new _numberField('priority','priority','Priority');
+		$this->goals = new _notesField('goals','goals','Goals');
+		$this->purpose = new _notesField('purpose','purpose','Purpose');
+		$this->lessons = new _notesField('lessons_learned','lessons-learned','Lessons Learned');
+		$this->showAlways = new _yesNoField('show_always','show-always','Show.Always');
+		$this->location = new _fieldIdName('location_id','location-id','Location','location_name');
+  		$this->_register('summary', $this->summary);
+		$this->_register('started', $this->started);
     	$this->_register('pctDone', $this->pctDone);	
     	$this->_register('priority', $this->priority);	
-    	$this->_register('showAlways', $this->showAlways);
-		$this->_register('started', $this->started);
-		$this->_register('updated', $this->updated);
-		$this->updated->displayBrAfter(true);
-		
-   		$this->_register('highlight', $this->highlight);
-
-		$this->_register('hoursEstimated', $this->hoursEstimated);
-    	//$this->_register('hoursActual', $this->hoursActual);
-    	$this->_register('budgetEstimated', $this->budgetEstimated);	 
-		$this->budgetEstimated->displayBrAfter(true);
-
-
-  		$this->_register('summary', $this->summary);
     	$this->_register('goals', $this->goals);
 		$this->_register('purpose', $this->purpose);	
-    	$this->_register('lessons', $this->lessons);	
-		$this->_register('hoursNotes', $this->hoursNotes);	
-		$this->_register('budgetNotes', $this->budgetNotes);
-		
-   }
-   
-	private function disableFields(){
-		
-		
-		$this->updated->envEnabled(false);
-      //  $this->started->envEnabled(false);
-        
-        $this->updated->listEnabled(false);
-        $this->started->listEnabled(false);
-        
-        
-        $this->id->listEnabled(false);
-        $this->parent->listEnabled(false);
-        $this->highlight->listEnabled(false);
-        $this->description->listEnabled(false);
-        $this->purpose->listEnabled(false);
-        $this->summary->listEnabled(false);
-        $this->goals->listEnabled(false);
-        $this->lessons->listEnabled(false);
-        $this->hoursNotes->listEnabled(false);
-        $this->budgetNotes->listEnabled(false);
-        
-        $this->showAlways->listEnabled(false);
-        $this->hoursEstimated->listEnabled(false);
-        //$this->hoursActual->listEnabled(false);
-        $this->budgetEstimated->listEnabled(false);          
-                
-        $this->id->displayEnabled(false);
-        $this->highlight->displayEnabled(false);
-        
+    	$this->_register('lessons', $this->lessons);	 
+		$this->_register('showAlways', $this->showAlways);
+		$this->_register('location', $this->location);
     }
-    
 	public function setDefaults(){
 		parent::setDefaults();
-		
-		$this->id->setDefault(0);
-    	$this->id->setDefault(0);
-		$this->name->setDefault('');
-		$this->description->setDefault('');
-		$this->started->setDefault($this->currentTimestamp);
-		$this->updated->setDefault($this->currentTimestamp);
-		$this->highlight->setDefault('none');
-		$this->parent->setDefault(0);
-    	$this->type->setDefault(0);
+		global $sessionTime;
+		$this->started->setDefault($this->currentTimestamp);	
 		$this->location->setDefault(0);
 		$this->showAlways->setDefault('yes');
 		$this->priority->seDefault(1);

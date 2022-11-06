@@ -3,8 +3,7 @@ namespace application\system;
 
 
 class userLogin extends \framework\_contentWriter{
-//use \application\sql\connectionFunctions;
-
+use \application\sql\connectionFunctions;
 	private $_form = 'LOGIN';
 	protected $myClassName = 'userLogin';
 	private $f;
@@ -27,7 +26,6 @@ class userLogin extends \framework\_contentWriter{
 
 
 	}
-	
 	public function resetPassword(){
 		$this->f->_loginEmail->read();
 		$this->f->_loginName->read();
@@ -39,31 +37,21 @@ class userLogin extends \framework\_contentWriter{
 			$this->f->_loginEmail->set($loginEmail);
 		
 			$newPass = $this->f->_loginPassword->generate();
-			$newPassCrypt = $this->f->_loginPassword->obfuscate($this->sql->getEscapeString($newPass),$loginName);
+			$newPassCrypt = $this->obfuscate(dbEscapeString($newPass),$loginName);
 		
 		
-			$sql = $this->sql->updatePass($loginName, $newPassCrypt);
+			$sql = $this->sql>updatePass($loginName, $newPassCrypt);
+			global $conn;
+			$result = $conn->runStatement($sql);
 			
-			$result = $this->sql->runStatement($sql);
-			
-			$links = new links\userLinks;	
-			$br = new \html\_br();
-			$m = new \html\_div();
-			$m->addContent($_SESSION['site-title'].$br->print());
-			
-			$l = $links->buildLink($_SESSION['organization-url'],$_SESSION['organization'],);
-			$m->addContent($l->print().$br->print());
-			
-			$m->addContent("Profile password has been reset".$br->print());
-			$m->addContent("Login Name = ".$loginName.$br->print());
-			$m->addContent("New Password = ".$newPass.$br->print());
-			
-			$l = $links->buildLink($_SESSION['site-title'],$_SESSION['site-url']);
-			$m->addContent($l->print());
-			$message = $m->print();
-			//echo $message;
+			$links = new UserLinks;	
+			$message = $_SESSION['site-title'].br();
+			$message .= $links->formatHref($_SESSION['site-org'],$_SESSION['site-org-url']).br();
+			$message .= "Profile password has been reset".br();
+			$message .= "Login Name = ".$loginName.br();
+			$message .= "New Password = ".$newPass.br();
+			$message .= $links->formatHref($_SESSION['site-url'],$_SESSION['site-url']).br();
 			$this->mailUser($message,'Password Reset');
-			
 			$_SESSION['login-messages']  = 'Profile password reset';
 		} else {
 			$_SESSION['login-messages'] = 'Active profile not found, contact an administrator';	
@@ -72,33 +60,46 @@ class userLogin extends \framework\_contentWriter{
 
 	private function mailUser($message = '', $subject = 'User Notification'){
 
-		\application\mailUser($message, $subject);
-
+		$fromAddress = ini_get('sendmail_from');
+		$headers = "From: ".$fromAddress."\n";
+		$headers .= "X-Mailer: PHP/".phpversion()."\n"; 
+		$headers .= "MIME-Version: 1.0\n"; 
+		$headers .= "Content-Type: text/html; charset=utf-8\n"; 
+		$headers .= "Content-Transfer-Encoding: 8bit\n"; 
+		$newSubject = $_SESSION['site-title'].':'.$subject;
+		mail($this->f->email,$newSubject,$message,$headers, '-f '.$fromAddress);
 	}
 	
+	private function obfuscate($pass,$login){
+		//$salt = crypt($login);
+		$hash = md5($pass.$login);
+		return $hash;	
+	}
+
 	public function validateLoginAndEmail($loginName, $loginEmail){
 		$valid = false;
 		$sql = $this->sql->validateLoginAndEmail($loginName,$loginEmail);
+		global $conn;
 		
-		$found = $this->sql->getCount($sql,'user_count');
+		$found = $conn->getCount($sql,'user_count');
 		
+
 		if ($found == 1){
 			$valid = true;
 		} 
 		return $valid;
 	}
-	
 	public function validate(){
 	
 		$this->f->read();
 		$this->s->read();
 
-		if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)){
-			$this->s->_isLoggedIn->remove();
-			unset($_SESSION['logged-in']);
-			$this->echoPrint(true,'apparently logged in ','validate');
-			$this->echoSecurity();
-		}
+			if (isset($_SESSION['logged-in']) && ($_SESSION['logged-in'] == true)){
+				$this->s->_isLoggedIn->remove();
+				unset($_SESSION['logged-in']);
+				$this->echoPrint(true,'apparently logged in ','validate');
+				$this->echoSecurity();
+			}
 		$this->echoPrint(true,'…………check submit vars ','validate');
 		$this->echoPrint(true,'mode= '.$this->_form,'validate');
 		
@@ -106,14 +107,11 @@ class userLogin extends \framework\_contentWriter{
 			$this->echoPrint(true, '………………submit login pushed','validate');
 			$this->validateLogin();
 		}
-		
 		if ($this->f->_resetPasswordSubmit->exists() == true){
 			$this->echoPrint(true, 'reset pasword pushed','validate');
 			$this->resetPassword( );
 		}
-		
-	}
-
+}
 	private function validateLogin(){
 		$this->echoPrint(true, 'checking name-password','validateLogin');
 		//$this->f->read();
@@ -121,11 +119,11 @@ class userLogin extends \framework\_contentWriter{
 		$login = $this->f->_loginName->value();
 		$pass = $this->f->_loginPassword->value();
 			
-		$loginPwdCrypt = $this->f->_loginPassword->obfuscate($this->sql->getEscapeString($pass),$login);
+		$loginPwdCrypt = $this->obfuscate($pass,$login);
 		$validUser = false;
 		$sql = $this->sql->validateUser($login, $loginPwdCrypt);
-		
-		$found = $this->sql->getCount($sql,'user_count');
+		global $conn;
+		$found = $conn->getCount($sql,'user_count');
 	
 		
 		$this->echoValue(true, 'foundUser?', $found, 'validateLogin');
@@ -134,10 +132,11 @@ class userLogin extends \framework\_contentWriter{
 		//FORCE LOGIN SUCCESS TO SETUP FIRST USER
 		//then comment this line
 		//printLine('forcing login');
-		//$found = 1;
-		//$this->echoValue(true, '......foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
-		
+		$found = 1;
+		$this->echoValue(true, '......foundUser', $found, 'DEVELOPMENT Forcing result validateLogin');
 		if ($found == 1){
+		
+		
 		
 			$validUser = true;
 			$this->echoPrint(true,'.....?valid login.updatingLastLogin');
@@ -146,15 +145,16 @@ class userLogin extends \framework\_contentWriter{
 			$this->setSecurity($login);
 			
 			$_SESSION['logged-in'] = true;
-			$_SESSION['client-time-zone'] = $_POST['client-time-zone'];
+			//$_SESSION['client-time-zone'] = $_POST['client-time-zone'];
 			
-			//$this->s->_LoginMessages->write();
+
+			//$this->f->_sLoginMessages->write();
 			
 		} else {
 			//$_SESSION['login-messages'] = 'Could not validate login';
-			//$this->s->remove();
+			$this->s->remove();
 			$this->s->_loginMessages->set('Could not validate login');
-			$this->s->_loginMessages->write();
+			$this->f->_loginMessages->write();
 			
 		}
 		
@@ -166,9 +166,8 @@ class userLogin extends \framework\_contentWriter{
 	private function setSecurity($loginName){
 		$this->echoPrint(true, 'begin','setSecurity');
 		$sql = $this->sql->securityUser($loginName);
-		
-		
-		$result = $this->sql->getResult($sql);
+		global $conn;
+		$result = $conn->getResult($sql);
 		if($result){
 			$this->echoPrint(true, 'found user profile','setSecurity');
 	  		while ($row = $result->fetch_assoc())
@@ -199,12 +198,12 @@ class userLogin extends \framework\_contentWriter{
 		$this->echoValue(true, 'clientTimeZone?', $this->s->_clientTimeZone->value());
 		$this->echoValue(true, 'loginMessages?', $this->s->_loginMessages->value());
 	}
-	public function updateLastLogin(string $loginName = 'unknkownId'){
+	private function updateLastLogin(string $loginName = 'unknkownId'){
 		
 		$sql = $this->sql->updateLastLogin($loginName);
+		global $conn;
+		$result = $conn->runStatement($sql);
 		
-		
-		$result = $this->sql->runStatement($sql);
 	}
 	
 	public function loginForm(){
@@ -214,8 +213,10 @@ class userLogin extends \framework\_contentWriter{
 		$entity = 'site-login';
 		$this->f->setEntity($entity);
 
-		$formUrl = 'portal.php?context=system&scope=login';
-		$login = new \application\forms\inputForm($formUrl,'Login','LOGIN',$entity,true);
+
+
+		$login = new \application\forms\inputForm('portal.php?context=system&scope=login','Login','LOGIN',$entity,true);
+		
 		
 		$login->required->input($this->f->_loginName);
 		$login->required->input($this->f->_loginPassword);
@@ -223,16 +224,16 @@ class userLogin extends \framework\_contentWriter{
 		$login->optional->input($this->f->_loginEmail);
 		$login->optional->button($this->f->_resetPasswordSubmit);
 
-		$br = new \html\_br();
-		$msg = 'To reset password, enter your login name and profile email.'.$br->print();
+		$msg = 'To reset password, enter your login name and profile email.'.\html\br();
 		$msg .= 'To register, please contact an administrator.';
 		$login->optional->addContent('Lost Password:'.$msg);
 		$this->f->_clientTimeZone->set('0');
 		$login->hidden->inputHidden($this->f->_clientTimeZone);
-		
+		//= getHiddenInput('client-time-zone','');
 		$login->submit->button($this->f->_loginSubmit);
+
 		
-		$login->submit->addContent($_SESSION['site-login-notice']);
+		$login->submit->addContent('+'.$_SESSION['site-login-notice']);
 
 		$this->echoPrint(true, 'returning login form','loginForm');
 		return $login->print();		
@@ -251,7 +252,11 @@ class userLogin extends \framework\_contentWriter{
 	}
 	
 	
-}
+} 
+
+
+
+
 
 
 ?>

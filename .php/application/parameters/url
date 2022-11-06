@@ -9,16 +9,14 @@ class url {
 		$this->basePage = $basePage;
 
 	}
-	
 	public function getBasePage(){
 		return $this->basePage;
 	}
-	
 	public function print(){
 		$this->printParameters();
-		$urlString = $this->basePage.$this->arguments;
+		$url = $this->basePage.$this->arguments;
 		
-		return $urlString;
+		return $url;
 	}
 	
 	public function addParameter(parameter $p){

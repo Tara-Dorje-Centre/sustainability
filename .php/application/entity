@@ -1,14 +1,12 @@
 <?php 
 namespace application;
 
-abstract class entity 
-extends baseEntity
-implements \application\Ientity{
-
+abstract class entity extends baseEntity{
+//use sql\connectionFunctions;
 	protected $entity;
 	protected $entityTitle = 'Undefined Entity';
 	protected $site;
-	protected $pageSave = 'portal.php';
+	
   	public $f;
     public $sql;
 	public $links;
@@ -21,13 +19,11 @@ implements \application\Ientity{
  	public function __construct(){
 		parent::__construct();
 	}
-	
 	final public function printRequest(){
 		$this->getRequestArguments();
 		$this->setDetails();
 		$this->printPage();
 	}
-	
 	public function getRequestArguments(){
 		$this->getRequestIdentifiers();
 		$this->getRequestPaging();
@@ -36,17 +32,17 @@ implements \application\Ientity{
 	
 	protected function makePageMenu(){
 		$s = new \application\links\systemMenuLinks();
-		$this->links->addLink($s->modules());
-		$this->links->addLink($s->reference());
+		$this->links->menu->addLink($s->modules());
+		$this->links->menu->addLink($s->reference());
 		$this->links->editingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
-		$this->_pageMenu = $this->links->print();
+		$this->_pageMenu = $this->links->menu->print();
 	}
 	
 	protected function makePageTitle(){
 		$this->_pageTitle = $this->entityTitle;
 	}
 	
-	abstract public function editForm();
+	abstract protected function editForm();
 	/*implement per entity*/
 	
 	
@@ -57,9 +53,8 @@ implements \application\Ientity{
 	public function setDetails(){
 		if ($this->id > 0){
 			$sql = $this->sql->info($this->id);
-			
-			$result = $this->sql->getResult($sql);
-			
+			global $conn;
+			$result = $conn->getResult($sql);
 			if($result){
 				while ($row = $result->fetch_assoc())
 				{	
@@ -73,45 +68,34 @@ implements \application\Ientity{
 		
 	}	
 	
-	public function options(
-		$selected = 0, 
-		$id = 'id-type',
-		$caption = 'use-entity',
-		$onChangeJS = null){
-		
-		if ($caption == 'use-entity'){
-			$c = '--'.$this->entityTitle;
-		} else {
-			$c = $caption;
-		}
+	public function options($selected, $id = 'id-type'){
 		$sql = $this->sql->options($selected);
-		$s = new \html\inputs\selectQuery($id,$selected,$sql, $c, $onChangeJS);
-		$s->defaultOption(0,$c);
+		$s = new \html\inputs\selectQuery($id,$selected,$sql);
+		$s->makeDefault(0,'-select '.$this->entityTitle);
 		return $s;
 	}	
 	
 	public function optionsField(_field &$f){
+		//$m = new receiptType('OPTIONS');
 		$s = $this->options($f->value(),$f->env->variable());
 		return $f->setSelect($s);
 	}
 	
-	 public function listHeading(): \html\_tr{
+	 public function listHeading(){
 		$tr = new \html\_tr('table-headings');
 
-		$tr->makeHeading('View [Edit]',$this->entityTitle);
+		$tr->makeHeading($this->entityTitle);
 
 		$tr->addContent($this->f->listCaption());
 		return $tr;
 	}
 	
-	protected function listRowLink(){
-		$link = $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
-		return $link;
+	 protected function listRowLink(){
+		return $this->links->viewEdit($this->f->name->value(),$this->f->id->value());
 	}
 	
-	protected function listRowFormat(){
-		$css = $this->f->highlight->value();
-		$tr = new \html\_tr($css);
+	 protected function listRowFormat(){
+		$tr = new \html\_tr('data-row',$this->f->highlight->value());
 
 		$tr->makeData($this->listRowLink());
 		$tr->addContent($this->f->listDetail());		
@@ -124,12 +108,14 @@ implements \application\Ientity{
 	}
 
 	protected function display(){
-		$this->_display = new \html\displayDetails($this->entity,$this->pageMode,$this->entityTitle.':  Details');
+		$this->_display = new \html\displayDetails($this->entity,$this->pageMode,$this->titleEntity.':  Details');
 
 		$this->_display->setContent($this->f->displayDetail());
 
 		return $this->_display->print();
 	}
+	
+	
 	
 	protected function setDefaults(){
 		if ($this->pageMode == 'ADD'){
@@ -137,39 +123,29 @@ implements \application\Ientity{
 	 	}
 	}
 
-	public function addForm($idParent = 0){
+	 public function addForm($idParent = 0){
 		$this->pageMode = 'ADD';
 		$this->setDefaults();
-		$this->idParent = $idParent;
-		if (isset($this->f->parent->id) AND ($idParent >= 0)){
-			$this->f->parent->id->set($idParent);
+		if (!is_null($this->f->parentEntity)){
+			$this->f->parentEntity->set($idParent);
 		}
-		
-		$edit = $this->editForm();
-		if (is_null($edit)){
-		     $edit = '';
-		}
-
-		return $edit;
+		return $this->editForm();
 	}
 
 	 public function collectPostValues(){
-		$this->pageMode = $_POST['page-mode'];	
+		$this->pageMode = $_POST['mode'];	
 		$this->f->setEnvironment('POST');
 		$this->f->read();
 		$this->getFieldIds();
 		$this->echoState(true,'collectPostValues');
-		
-		$this->f->echoFieldState();
 	}
 				
 	protected function getFieldIds(){
-		if(isset($this->f->id)){
+		if(!is_null($this->f->id)){
 			$this->id = $this->f->id->value();
 		}
-		
-		if (isset($this->f->parent->id)){
-			$this->idParent = $this->f->parent->id->value();
+		if (!is_null($this->f->parentEntity)){
+			$this->idParent = $this->f->parentEntity->id->value();
 		}
 	}
 	
@@ -209,7 +185,7 @@ implements \application\Ientity{
 			$details = $this->display();
 			break;
 		case 'ADD':
-			$details = $this->addForm($this->idParent);
+			$details = $this->addForm();
 			break;
 		case 'EDIT':
 			$details = $this->editForm();
@@ -238,17 +214,14 @@ implements \application\Ientity{
 	
 	final public function saveChanges(){
 		$this->echoState(true, 'saveChanges');
-
-		$this->echoValue(true,'pageMode',$this->pageMode);
 		switch($this->pageMode){
 			case 'COPY':
-				$this->copy();
-				break;
+			
 			case 'EDIT':
-				$this->saveUpdate();
-				break;
+			$this->saveUpdate();
+			break;
 			case 'ADD':
-				$this->saveInsert();
+			$this->saveInsert();
 		}
 	}
 	

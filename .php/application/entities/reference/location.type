@@ -8,7 +8,7 @@ class locationType extends \application\entityType{
 		parent::__construct();
 		$this->entity = 'location-type';
   	 	$this->entityTitle = 'Location Type';
-	 	//$this->pageSave = 'pr_LocationType_Save.php';
+	 	$this->pageSave = 'pr_LocationType_Save.php';
 		$this->f = new forms\locationTypeFields();
 		$this->sql = new sql\locationTypeSQL();
 		$this->links = new links\locationTypeLinks();

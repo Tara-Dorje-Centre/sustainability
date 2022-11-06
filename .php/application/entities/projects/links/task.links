@@ -9,21 +9,21 @@ extends \application\links\entityLinks {
 
 	}
 	public function setRequest(){
-		$this->request = new taskRequest($this->entityContext,$this->pagePortal);
+		$this->request = new taskRequest($this->entityContext,$this->portalPage);
 	}
 	
 	public function periodicTasks(bool $closed = false){
 		if ($closed == true){
 			$status = 'COMPLETE';
-			$caption = 'Tasks Done';
+			$caption = 'Done';
 		} else {
 			$status = 'INCOMPLETE';
-			$caption = 'Tasks To Do';
+			$caption = 'To Do';
 		}
 		$periodic = 'YES';
-		$url = $this->request->getUrlTaskList('LIST',-1,0, $status, $periodic);
+		$url = $this->request->getUrlTaskList('LIST',-1,0,0, $status, $periodic);
 
-		$l = $this->getLink($url,$caption);
+		$l = $this->menu->getLink($url,$caption);
 		return $l;	
 	}
 	public function periodicTasksOpen(){
@@ -31,54 +31,6 @@ extends \application\links\entityLinks {
 	}
 	public function periodicTasksClosed(){
 		return $this->periodicTasks(true);
-	}
-	
-	public function editingLinks(string $mode = 'VIEW', $id = 0,$idParent = 0,$idType = 0){
-		
-		$p = new projectLinks();
-		$this->addLink($p->view('View Project',$idParent));
-		
-		switch ($mode){
-			case 'VIEW':
-				$this->addLink($this->list('List Tasks',0,$idParent,0));
-				$this->addLink($this->edit('Edit Task',$id));
-				$this->addLink($this->add('New Task',$idParent));
-				
-				//$this->addLink($this->copy('Copy',$id));
-				$a = new activityLinks();
-				$this->addLink($a->list('List Activities',0,$id));
-				$m = new materialLinks();
-				$this->addLink($m->taskMaterials($id));
-				$r = new receiptLinks();
-				$this->addLink($r->taskReceipts($id));
-				$m = new measureLinks();
-				$this->addLink($m->taskMeasures($id));
-				break;
-			case 'EDIT':
-				$this->addLink($this->list('List Tasks',0,$idParent,0));
-				$this->addLink($this->view('View Task',$id));
-				
-				break;
-			case 'ADD':
-				$this->addLink($this->list('List Tasks',0,$idParent,0));
-				break;
-			default:
-				$this->addLink($this->list('List Tasks',0,$idParent,0));
-				$this->addLink($this->view('View Task',$id));
-		
-		}
-		
-	}
-	
-	
-	public function pagedListing(\application\links\url $altUrl = NULL, $count = 0, $page = 1, $rows = 10, $id=0, $idParent = 0, string $taskStatus = 'INCOMPLETE',string $periodic = 'NO'){
-		$p = new \application\links\linkMenuPaged($rows,'results-page');
-		if (is_null($altUrl)) {
-			$url = $this->request->getUrlTaskList('LIST',$id,$idParent, $taskStatus, $periodic);
-		} else {
-			$url = $altUrl;
-		}
-		return $p->makePagedLinks($url, $count,$page);
 	}
 	
 }

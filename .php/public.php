@@ -1,22 +1,11 @@
 <?php
 include_once("_includes.php");
 
-$viewMode = 'MAIN';
-if (isset($_GET['viewMode'])){
-$viewMode = $_GET['viewMode'];
-}
+$viewMode = sessionVariableGET('viewMode', 'MAIN');
+$viewId = sessionVariableGET('viewId', 0);
+$paging = sessionVariableGET('paging', 0);
 
-$viewId = 0;
-if (isset($_GET['viewId'])){
-$viewId = $_GET['viewId'];
-}
-
-$paging = 0;
-if (isset($_GET['paging'])){
-$paging = $_GET['paging'];
-}
-
-$site = new \application\publicSite;
+$site = new _publicSite;
 $site->setDetails($viewMode,$viewId,$paging);
 $site->print();
 ?>

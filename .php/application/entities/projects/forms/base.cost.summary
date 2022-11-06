@@ -1,7 +1,7 @@
 <?php
 namespace application\entities\projects\forms;
 
-class summaryBaseCost extends summaryBase{
+class baseSummaryCost extends baseSummary{
 
 	public function display(){
 

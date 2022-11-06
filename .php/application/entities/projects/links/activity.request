@@ -4,21 +4,26 @@ namespace application\entities\projects\links;
 
 class activityRequest extends taskChildRequest {
 	
+	
 	public function setUrlParametersActivity(\application\links\url &$u,string $showCalendar,string $myActivity,$idTask,$idProject){
 		$this->setUrlParameter($u,'show-calendar',$showCalendar);
 		$this->setUrlParameter($u,'my-activity',$myActivity);
 		
 		$this->setUrlParametersTaskChild($u,$idTask,$idProject);
 
+		
 		return $u;
 	} 
 	
-	public function getUrlActivityList($idParent,string $showCalendar,string $myActivity,$idTask,$idProject){
-		$u = $this->getUrlEntityList('LIST',0,$idParent);
+	
+	public function getUrlActivityList($action,$id,$idParent,$idType, string $showCalendar,string $myActivity,$idTask,$idProject){
+		$u = $this->getUrlEntityList($action,$id,$idParent,$idType);
 		$this->setUrlParametersActivity($u, $showCalendar, $myActivity,$idTask,$idProject);
 		return $u;
 	}
 
+	
+	
 }
 
 ?>

@@ -16,7 +16,7 @@ class userLoginFields extends \application\forms\fields {
 		$this->_loginName = new \application\forms\_user('not-used','login-name','LoginName'); 
 		$this->_loginEmail = new \application\forms\_email('not-used','login-email','Email'); 
 		$this->_loginPassword = new \application\forms\_password('not-used','login-pwd','Password'); 
-		$this->_clientTimeZone = new \application\forms\_text('not-used','client-time-zone','Login'); 
+		$this->_clientTimeZone = new \application\forms\textField('not-used','client-time-zone','Login'); 
     	$this->_loginSubmit = new \application\forms\submitButton('submit-login','Login'); 
     	$this->_resetPasswordSubmit = new \application\forms\submitButton('submit-pwd-reset','Reset Password'); 
 

@@ -2,127 +2,41 @@
 namespace application\entities\projects\forms;
 
 
-class receiptFields 
-extends \application\forms\fields{
+class receiptFields extends taskChildFields{
 
-	public $id;
-	public $name;		
-
-	public $project;
-	public $task;
-	public $activity;
-
-	public $type;
-	public $highlight;
-
-	public $description;
-	public $reported;
-    public $updated;
-    public $receivedBy;
-    public $receivedFrom;
-    
-	public $quantity;
-	public $quantityType;
-	public $costUnit;	
- 	public $costActual;
- 
-	public $notes;
+	public $receivedBy;
+	public $receivedFrom;
+ /*   public $quantity;
+	public $quantityType;*/
+    public $costUnit;
+	public $costActual;
  
     
 	public function __construct(){
 		parent::__construct();
-    	
-		$this->id = new \application\forms\_id('id','id','not-used');
-    	$this->name = new \application\forms\_name('name','name','Receipt');
-    	
-    	$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
-    	$this->task = new \application\forms\_idName('task_id','id-task','Task','task_name');
-    	$this->activity = new \application\forms\_idName('activity_id','id-activity','Activity','activity_name');
-    	    	
-    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
-    	$this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-    	    	
-    	$this->description = new \application\forms\_description('description','description','Description');
-		$this->reported = new \application\forms\_date('date_reported','date-reported','Reported');
-		$this->updated = new \application\forms\_date('updated','updated','Updated');
-		$this->receivedBy = new \application\forms\_user('received_by','received-by','Received By');
-		$this->receivedFrom = new \application\forms\_user('received_from','received-from','Received From');
-
-		$this->quantity = new \application\forms\_number('quantity','quantity','Quantity');
-		$this->quantityType = new \application\forms\_idName('qty_unit_measure_id','qty-type','Quantity Type','qty_unit_measure_name');
-		$this->costUnit = new \application\forms\currency('cost_unit','cost-unit','Unit Amount');
-		$this->costActual = new \application\forms\currency('cost_actual','cost-actual','Amount Actual');
-
-		$this->notes = new \application\forms\_notes('notes','notes','Notes');
-
-		$this->registerFields();
-		$this->disableFields();
-	}
+		$this->f->reported->setDbColumn('date_reported');
 	
-	private function registerFields(){
-		$this->_register('id', $this->id);
-		$this->_register('name', $this->name);
-		$this->_register('type', $this->type);
-		$this->_register('highlight', $this->highlight);
-		$this->_register('reported', $this->reported);
-		$this->_register('updated', $this->updated);
-		$this->updated->displayBrAfter(true);
-		
-		
-		$this->_register('project', $this->project);
-		$this->_register('task', $this->task);
-		$this->_register('activity', $this->activity);
-		$this->activity->displayBrAfter(true);
+		$this->f->receivedBy = new _userField('received_by','received-by','Received By');
+		$this->f->receivedFrom = new _userField('received_from','received-from','Received From');
 
+
+		$this->f->costUnit = new _numberField('cost_unit','cost-unit','Unit Amount');
+		$this->f->costActual = new _numberField('cost_actual','cost-actual','Amount Actual');
 		$this->_register('receivedBy',$this->receivedBy);
 		$this->_register('receivedFrom',$this->receivedFrom);
-		$this->receivedFrom->displayBrAfter(true);
-		
-		$this->_register('quantity',$this->quantity);
-		$this->_register('quantityType',$this->quantityType);
+
+
 		$this->_register('costUnit',$this->costUnit);
 		$this->_register('costActual',$this->costActual);
-		$this->costActual->displayBrAfter(true);
-
-		$this->_register('description', $this->description);
-		$this->_register('notes', $this->notes);
 	}
-	
-private function disableFields(){
-		$this->id->listEnabled(false);
-		$this->id->displayEnabled(false);
-		$this->updated->envEnabled(false);
-        //$this->reported->envEnabled(false);
-        
-        $this->updated->listEnabled(false);
-        $this->reported->listEnabled(false);
-        $this->name->listEnabled(false);
-        $this->project->listEnabled(false);
-        $this->task->listEnabled(false);
-        $this->activity->listEnabled(false);
-        $this->description->listEnabled(false);
-        $this->notes->listEnabled(false);
-        
-		$this->highlight->listEnabled(false);
-        
-        $this->highlight->displayEnabled(false);
-		$this->project->displayEnabled(false);
-        $this->task->displayEnabled(false);
-        $this->activity->displayEnabled(false);
-        
-    }
-	
 	
 	public function setDefaults(){
 		parent::setDefault();
 		
-		$this->reported->setDefault($this->currentTimestamp);
-		$this->receivedBy->setDefault($this->currentUser);
-		$this->notes->setDefault('');
-		$this->quantity->setDefault(1);
-		$this->quantityType->setDefault(0);
+		
 		$this->costUnit->setDefault(0);
 		$this->costActual->setDefault(0);		
+		$this->receivedBy->setDefault($_SESSION['login-name']);
 	}
 	
 	

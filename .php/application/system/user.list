@@ -4,7 +4,11 @@ namespace application\system;
 
 class userList extends \application\entityList{
 
+
+
+	public $userTypeId = 0;
  	public function __construct(){
+
 		parent::__construct();
 
 		$this->entityTitle = 'UserProfiles';
@@ -12,19 +16,8 @@ class userList extends \application\entityList{
 
 	}
 	
-	protected function makePageMenu(){
 	
-		$s = new \application\links\systemMenuLinks();
-		$this->base->links->addLink($s->reference());
-
-
-		if ($_SESSION['is-admin'] == 'yes'){
-			$this->base->links->addLink($this->base->links->add('Add Profile'));
-		}
-		$this->base->links->addLink($this->base->links->contextList('All Profiles'));
 	
-		$this->_pageMenu = $this->base->links->print();
-	}
 
 	
 	protected function listingQuickEdit(){ 
@@ -37,7 +30,7 @@ class userList extends \application\entityList{
 	}
 	
 	protected function listingSQL(){
-		$s = $this->base->sql->list($this->base->f->type->id->value(),$this->resultPage,$this->perPage);
+		$s = $this->base->sql->listUsers($this->base->f->typeEntity->id->value(),$this->resultPage,$this->perPage);
 		return $s;
 	}
 			

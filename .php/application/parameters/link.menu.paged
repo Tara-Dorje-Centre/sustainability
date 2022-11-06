@@ -7,72 +7,71 @@ class linkMenuPaged extends linkMenu{
 	protected $currentPage = 1;
 	protected $recordCount = 0;
 	protected $info = 'display results';
-	protected $paramPaging = 'results-page';
-	public function __construct($perPage = 10,string $paramPaging = 'results-page'){
-		parent::__construct('paging-linkset','DIV','paging');
+	protected $paramNamePaging = 'results-page';
+	public function __construct($perPage = 10,string $paramNamePaging = 'results-page'){
+		parent::__construct('paged-linkset','DIV','paged');
 		$this->perPage = $perPage;
-		$this->paramPaging = $paramPaging;
-		$this->setCSS('paging');
+		$this->paramNamePaging = $paramNamePaging;
 	}
 	
 	protected function setPageCount(){
-		$count = $this->recordCount;
-		$per = $this->perPage;
-	
-		if ($per == 0){
-			$per = 10;
-		}
+	$count = $this->recordCount;
+	$per = $this->perPage;
 		$a = ($count/$per);
 
 		if (floor($a) == $a){
 			$this->pageCount = $a;
+
 		} else {
 			$this->pageCount = floor($a) + 1;
+
 		}
 	}
-	protected function makePageLink($pageIndex,$caption,$css='paging-links-item'){
-		$this->baseUrl->makeParameter($this->paramPaging,$pageIndex);
-		$this->baseUrl->makeParameter('per-page',$this->perPage);
-		$this->makeLink($this->baseUrl, $caption,$css);
+	protected function makePageLink($pageIndex,$caption){
+		$this->baseUrl->makeParameter($this->paramNamePaging,$pageIndex);
+		$this->makeLink($this->baseUrl, $caption);
 	}
 	protected function showResultsInfo(){
 		$b = new \html\_br();
 		if ($this->pageCount > 1){
 			$this->info = 'Found '.$this->recordCount.' results.';
-			$this->info .= ' Displaying page '.$this->currentPage.' of '.$this->pageCount;
 			$this->info .= $b->print();
+			$this->info .= '  Page '.$this->currentPage.' of '.$pageCount;
 		} else {
 			$this->info = 'Displaying '.$this->recordCount.' results. ';
 		}
-		$this->addTextItem($this->info, 'paging-links-text');
+		$this->addTextItem($this->info);
 	}
 	protected function makePrevLink(){
 		if ($this->currentPage > 1){
 			$caption = 'Prev';
-			$pageIndex = $this->currentPage - 1;
+			$pageIndex = $currentPage - 1;
 			$this->makePageLink($pageIndex, $caption);
 		}
 	}
 	protected function makeNextLink(){
 		if ($this->currentPage < $this->pageCount){
 			$caption = 'Next';
-			$pageIndex = $this->currentPage + 1;
+			$pageIndex = $currentPage + 1;
 			$this->makePageLink($pageIndex, $caption);
 		}
 	}
 	protected function makeFirstLink($minDisplayPage){
+
 		if ($minDisplayPage > 1){
 			$this->makePageLink(1, 'First');
-			//$this->addTextItem('...');
+			$this->makeTextItem('...');
 		}
+
 	}
 	protected function makeLastLink($maxDisplayPage){
+
 		if ($maxDisplayPage < $this->pageCount){
-			//$this->addTextItem('...');
-			$this->makePageLink($this->pageCount, 'Last('.$this->pageCount.')');
+			$this->addTextItem('...');
+			$this->makePageLink($this->pageCount, 'Last');
 		}
+
 	}
-	/*
 	protected function getPageRecordRange($pageIndex){
 	
 			$minRecord = (($pageIndex - 1) * $this->perPage) + 1;
@@ -86,53 +85,51 @@ class linkMenuPaged extends linkMenu{
 				$recordRange = $minRecord.' to '.$maxRecord;
 			}
 			return $recordRange;
+	
 	}
-	*/
 	public function makePagedLinks(url $u, $recordCount = 1, $currentPage = 1){
 		$this->recordCount = $recordCount;
 		$this->currentPage = $currentPage;
-		$this->echoValue(true, 'recordCount', $this->recordCount,'makePagedLinks');
-		$this->echoValue(true, 'currentPage', $this->currentPage,'makePagedLinks');
 		$this->setPageCount();
 		$this->showResultsInfo();
 		$this->baseUrl = $u;
-		if ($this->pageCount > 1){
-			//skip paging links for single page results
-		
-		
-		//dont print more than four links foreward or backward
-		$minDisplayPage = $this->currentPage - 4;
-		$maxDisplayPage = $this->currentPage + 4;
-		if ($minDisplayPage < 1){
-			$minDisplayPage = 1;
-		}
-		if ($maxDisplayPage > $this->pageCount){
-			$maxDisplayPage = $this->pageCount;
-		}
+
+		$minDisplayPage = $this->currentPage - 5;
+		$maxDisplayPage = $this->currentPage + 5;
 		
 		$this->makeFirstLink($minDisplayPage);
 		$this->makePrevLink();
-		
-		$i = $minDisplayPage - 1;
-		while ($i < $maxDisplayPage){
+		$i = 0;
+		while ($i <= $this->pageCount){
 			$i++;
 
-			if ($i == $this->currentPage){
-				//highlight current page with square brackets and skip hyperlink
-				$caption = '[Page '.$i.']';
-				$css = 'paging-links-item-current';
-				$this->addTextItem($caption, $css);
+			
+			if (($i < $minDisplayPage) or ($i > $maxDisplayPage)){
+				//dont print more than five links foreward or backward
+				$showLinks = false;
 			} else {
-				$caption = $i;
-				$css = 'paging-links-item';
-				$this->makePageLink($i, $caption,$css);
+			
+				//highlight current page with square brackets and skip hyperlink
+				if ($i == $currentPage){
+				//$linkCaption = ' ['.$recordRange.'] ';
+					$caption = '['.$i.']';
+					$css = $this->cssItem.'-current';
+					$this->makeTextItem($caption);
+					//,$this->cssItem.'-current');	
+					//$this->addSpan($s);
+				} else {
+					//$linkCaption = '('.$recordRange.')';	
+					$caption = $i;
+				
+					$this->makePageLink($i, $caption);
+				}
+			
 			}
+			
 		}
-		
 		$this->makeNextLink();
 		$this->makeLastLink($maxDisplayPage);
 		
-		}
 		return $this->print();
 	}
 	

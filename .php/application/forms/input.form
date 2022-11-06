@@ -1,8 +1,6 @@
 <?php 
 namespace application\forms;
 
-
-
 class inputForm {
 	protected $_form;
 	protected $_fields;
@@ -30,8 +28,6 @@ class inputForm {
 		$this->setDisplayObjects();
 		$this->required = new inputFormSection('form-required','show');
 		$this->optional = new inputFormSection('form-optional','hide');
-		//force optional fields to start hidden
-		$this->optional->setStyle('display:none');
 		$this->hidden = new inputFormSection('form-hidden','hide');
 		$this->submit = new inputFormSection('form-submit','show');
 	}
@@ -105,10 +101,5 @@ class inputForm {
 	}
 
 }
-
-class _inputForm extends inputForm{
-
-}
-
 
 ?>

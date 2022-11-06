@@ -1,140 +1,51 @@
 <?php
 namespace application\entities\projects\forms;
 
-class taskFields extends \application\forms\fields{
-
-	public $id;
+class taskFields extends projectChildFields{
+	
+	
 	public $taskOrder;
-	public $name;		
-	public $started;
-    public $updated;
-    public $pctDone ;	
-	public $description;
     public $summary;
-	public $project;
-	public $type;
-	public $highlight;
-	public $frequency;
-	public $location;
-	public $hoursActual;
+    public $pctDone ;	
     public $hoursEstimated ;
+    public $hoursActual;
     public $hoursNotes;	
 	public $materialsAuthProject;
 	public $materialsAuthBy;
 	public $receiptsAuthProject;
 	public $receiptsAuthBy;
 	
-	public function __construct(){
-		parent::__construct();
-	
-		$this->id = new \application\forms\_id('id','id','not-used');
-    	$this->taskOrder = new \application\forms\order('task_order','task-order','Task Order');						
-    	$this->name = new \application\forms\_name('name','name','Name');
-    	$this->started = new \application\forms\_date('started','started','Started');
-		$this->updated = new \application\forms\_date('updated','updated','Updated');
-		$this->pctDone = new \application\forms\percent('pct_done','pct-done','pct Done');	
-		$this->description = new \application\forms\_description('description','description','Description');
-		$this->summary = new \application\forms\_description('summary','summary','Summary');
-		$this->project = new \application\forms\_idName('project_id','id-project','Project','project_name');
-    	$this->type = new \application\forms\_idName('type_id','idType','Type','type_name');
-    	$this->highlight = new \application\forms\_cssHighlight('highlight_style','highlight','Highlight');
-    	$this->frequency = new \application\forms\_name('frequency','frequency','Frequency');
-    	$this->location = new \application\forms\_idName('location_id','id-location','Location', 'location_name');
-		$this->hoursActual = new \application\forms\hours('hours_actual','hours-actual','Hours Actual');
-		$this->hoursEstimated = new \application\forms\hours('hours_estimated','hours-estimated','Hours Estimated');
-		$this->hoursNotes = new \application\forms\_notes('hours_notes','hours-notes','Hours Notes');			
-		$this->materialsAuthProject = new \application\forms\_yesNo('materials_auth_project','materials-auth-project','Materials Authorized');
-		$this->materialsAuthBy = new \application\forms\_user('materials_auth_by','materials-auth-by','Materials Authorized By');
-		$this->receiptsAuthProject = new \application\forms\_yesNo('receipts_auth_project','receipts-auth-project','Receipts Authorized');
-		$this->receiptsAuthBy = new \application\forms\_user('receipts_auth_by','receipts-auth-by','Receipts Authorized By');
-	
-		$this->registerFields();
-		$this->disableFields();
-	}
-	
-	private function registerFields(){
-	
-		$this->_register('id', $this->id);
+public function __construct(){
+	parent::__construct();
+	$this->taskOrder = new _numberField('task_order','task-order','task_order');						
+	$this->summary = new _textField('summary','summary','summary');
+	$this->pctDone = new _numberField('pct_done','pct-done','pct_done');	
+	$this->hoursEstimated = new _numberField('hours_estimated','hours-estimated','hours_estimated');
+	$this->hoursActual = new _numberField('hours_actual','hours-actual','hours_actual');
+	$this->hoursNotes = new _notesField('hours_notes','hours-notes','hours_notes');			
+	$this->materialsAuthProject = new _yesNoField('materials_auth_project','materials-auth-project','materials_auth_project');
+	$this->materialsAuthBy = new _textField('materials_auth_by','materials-auth-by','materials_auth_by');
+	$this->receiptsAuthProject = new _yesNoField('receipts_auth_project','receipts-auth-project','receipts_auth_project');
+	$this->receiptsAuthBy = new _textField('receipts_auth_by','receipts-auth-by','receipts_auth_by');
 		$this->_register('taskOrder', $this->taskOrder);
-		$this->_register('name', $this->name);
-		$this->_register('started', $this->started);
-		$this->_register('updated', $this->updated);
-		$this->updated->displayBrAfter(true);
-		
-		$this->_register('pctDone', $this->pctDone);
-		$this->_register('hoursActual', $this->hoursActual);
-		$this->_register('hoursEstimated', $this->hoursEstimated);
-		$this->hoursEstimated->displayBrAfter(true);
-		
-		$this->_register('project', $this->project);
-		$this->_register('type', $this->type);
-   		$this->_register('highlight', $this->highlight);
-		$this->_register('frequency', $this->frequency);
-		$this->_register('location', $this->location);
-		$this->location->displayBrAfter(true);
-		
-		
-		$this->_register('description', $this->description);
  		$this->_register('summary', $this->summary);
+		$this->_register('pctDone', $this->pctDone);
+		$this->_register('hoursEstimated', $this->hoursEstimated);
+		$this->_register('hoursActual', $this->hoursActual);
 		$this->_register('hoursNotes', $this->hoursNotes);
-		$this->hoursNotes->displayBrAfter(true);
-		
 		$this->_register('materialsAuthProject', $this->materialsAuthProject);
 		$this->_register('materialsAuthBy', $this->materialsAuthBy);
 		$this->_register('receiptsAuthProject', $this->receiptsAuthProject);
 		$this->_register('receiptsAuthBy', $this->receiptsAuthBy);
-   }
-   
-	private function disableFields(){
 		
-		$this->updated->envEnabled(false);
-       // $this->started->envEnabled(false);
-        $this->hoursActual->envEnabled(false);
-       
-       
-
-        
-        $this->id->displayEnabled(false);
-        $this->project->displayEnabled(false);
-        $this->highlight->displayEnabled(false);
-        
-        $this->id->listEnabled(false);
-        $this->description->listEnabled(false);
-        $this->summary->listEnabled(false);
-        $this->highlight->listEnabled(false);
-        //$this->hoursActual->listEnabled(false);
-        $this->hoursEstimated->listEnabled(false);
-        $this->hoursNotes->listEnabled(false);
-        $this->updated->listEnabled(false);
-        $this->started->listEnabled(false);
-        $this->project->listEnabled(false);
-        
-        $this->materialsAuthProject->listEnabled(false);
-        $this->materialsAuthBy->listEnabled(false);
-        $this->receiptsAuthProject->listEnabled(false);
-        $this->receiptsAuthBy->listEnabled(false);
-        
-        
     }
 	public function setDefaults(){
     	parent::setDefaults();
-    	
-    	$this->id->setDefault(0);
-    	$this->taskOrder->setDefault(0);
-		$this->name->setDefault('');
-		$this->started->setDefault($this->currentTimestamp);
-		$this->updated->setDefault($this->currentTimestamp);
-    	$this->pctDone->setDefault(0);
-		$this->description->setDefault('');
     	$this->summary->setDefault('');
-		
-		$this->project->setDefault(0);
-    	$this->projectType->setDefault(0);
-    	$this->type->setDefault(0);
-    	$this->highlight->setDefault('none');
-    	$this->location->setDefault(0);
-    	
+    	$this->pctDone->setDefault(0);
+    	$this->taskOrder->setDefault(0);
     	$this->hoursEstimated->setDefault(0);
+    	$this->hoursActual->setDefault(0);
     	$this->hoursNotes->setDefault('');
     	$this->materialsAuthProject->setDefault('no');
     	$this->materialsAuthBy->setDefault('n/a');

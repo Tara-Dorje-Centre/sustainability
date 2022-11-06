@@ -1,0 +1,22 @@
+<?php 
+namespace application\entities\projects\forms;
+
+abstract class activityChildFields extends taskChildFields{
+
+	public $activity;
+	
+	
+    public function __construct(){
+    	parent::__construct();
+    	$this->activity = new _idNameField('activity_id','id-activity','Activity','activity_name' );
+  		$this->_register('activity', $this->activity);
+    }
+	public function setDefaults(){
+    	parent::setDefaults();
+		//$this->parentActivity->setDefault(0);
+    }
+    
+}
+
+
+?>

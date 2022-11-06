@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-class _fontFamily extends _text{
+class fontFamilyField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -11,9 +11,5 @@ class _fontFamily extends _text{
 		return $i->print();
 	}
 }
-
-class fontFamilyField extends _fontFamily{
-}
-
-
+ 
 ?>

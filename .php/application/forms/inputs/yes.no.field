@@ -1,7 +1,7 @@
 <?php 
 namespace application\forms;
 
-class _yesNo extends _text{
+class yesNoField extends textField{
 
  	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
@@ -12,9 +12,6 @@ class _yesNo extends _text{
 	}
 	
 }
-
-//class yesNoField extends _yesNo{
-//}
  
 
 ?>

@@ -1,0 +1,63 @@
+<?php
+namespace html\inputs;
+
+abstract class _select extends \html\_element{
+use caption, validation, tooltip, disabled;
+
+	protected $selectedValue;
+
+	public function __construct(string $name, $value, $caption, $onChangeJS = NULL){
+		$css = 'editing-input-select';
+		parent::__construct('select', $name, $css);
+		$this->setCaption($caption);
+		if (!is_null($onChangeJS)){
+			$this->makeAttribute('onChange',$onChangeJS);	
+		}
+		$this->setSelectedValue($value);
+	}
+	public function setSelectedValue($value){
+		$this->selectedValue = $value;
+	}
+	public function setOptions($options){
+		$this->setContent($options);
+	}
+	public function addOption(_selectOption $o){
+		$o->isSelected($this->selectedValue);
+		$this->addContent($o->print());
+	}
+	public function makeOption($value,$display,bool $selected = false){
+		$o = new _selectOption($value,$display,$selected);
+		$this->addOption($o);
+	}
+	public function defaultOption($value,$display){
+		$this->makeOption($value,$display);
+	}
+	public function optionsByQuery($sql){
+		global $conn;
+		
+		$result = $conn->getResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+			{	
+				$value = $row["value"];
+				$display = $row["caption"];
+				$this->makeOption($value, $display);
+			}
+		$result->close();
+		}
+	}
+	
+	public function print(){
+		$i = new \html\_div('none','edit-input');
+		$i->addContent($this->printCaption());
+		$i->addContent($this->printValidation());
+		$i->addContent(parent::print());
+		return $i->print();
+	}
+}
+
+
+
+
+
+?>

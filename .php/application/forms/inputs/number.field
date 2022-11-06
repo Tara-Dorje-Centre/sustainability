@@ -4,103 +4,16 @@ namespace application\forms;
 
 
 
-class _number extends field{
+class numberField extends field{
 
 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
 		parent::__construct($dbCol, $envVar, $caption);
 		$this->_datatype = 'NUMBER';
 	}
 	public function input(){
-		$i = new \html\inputs\number($this->env->variable(),$this->value(),$this->_caption);
-		$i->setTooltip($this->_tooltip);
-		$i->setValidation($this->_validation);
+		$i = new \html\inputs\_inputNumber($this->env->variable(),$this->value(),$this->_caption);
 		return $i->print();
 	}
-	
-	public function inputNoCaption(){
-		$i = new \html\inputs\number($this->env->variable(),$this->value(),$this->_caption);
-		return $i->printNoCaption();
-	}
-	
-}
-
-class currency extends _number{
-
-	public function input(){
-		$i = new \html\inputs\currency($this->env->variable(),$this->value(),$this->_caption);
-		$i->setTooltip($this->_tooltip);
-		$i->setValidation($this->_validation);
-		return $i->print();
-	}
-	
-	public function inputNoCaption(){
-		$i = new \html\inputs\currency($this->env->variable(),$this->value(),$this->_caption);
-		return $i->printNoCaption();
-	}
-}
-
-class order extends _number{
-
-	public function input(){
-		$i = new \html\inputs\order($this->env->variable(),$this->value(),$this->_caption);
-		$i->setTooltip($this->_tooltip);
-		$i->setValidation($this->_validation);
-		return $i->print();
-	}
-	
-	public function inputNoCaption(){
-		$i = new \html\inputs\order($this->env->variable(),$this->value(),$this->_caption);
-		return $i->printNoCaption();
-	}
-	
-}
-
-class percent extends _number{
-
-	public function input(){
-		$i = new \html\inputs\percent($this->env->variable(),$this->value(),$this->_caption);
-		$i->setTooltip($this->_tooltip);
-		$i->setValidation($this->_validation);
-		return $i->print();
-	}
-	
-	public function inputNoCaption(){
-		$i = new \html\inputs\percent($this->env->variable(),$this->value(),$this->_caption);
-		return $i->printNoCaption();
-	}
-}
-
-
-class hours extends _number{
-
-	public function input(){
-		$i = new \html\inputs\hours($this->env->variable(),$this->value(),$this->_caption);
-		$i->setTooltip($this->_tooltip);
-		$i->setValidation($this->_validation);
-		return $i->print();
-	}
-	
-	public function inputNoCaption(){
-		$i = new \html\inputs\hours($this->env->variable(),$this->value(),$this->_caption);
-		return $i->printNoCaption();
-	}
-	
-}
-
-class priority extends _number{
-
-	public function input(){
-		$i = new \html\inputs\priority($this->env->variable(),$this->value(),$this->_caption);
-		$i->setTooltip($this->_tooltip);
-		$i->setValidation($this->_validation);
-		return $i->print();
-	}
-	
-	public function inputNoCaption(){
-		$i = new \html\inputs\priority($this->env->variable(),$this->value(),$this->_caption);
-		return $i->printNoCaption();
-	}
-	
 }
 
 
