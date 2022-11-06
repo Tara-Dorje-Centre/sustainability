@@ -1,0 +1,173 @@
+
+/* Add Google Font Support for Amatic */
+@import url(http://fonts.googleapis.com/css?family=Amatic+SC);
+#site-heading-title {
+	color: #white;
+	font-family: 'Amatic SC', Myriad Pro, Helvetica;
+	font-size: 50px;
+	font-style: normal;
+	width: 100%;
+	float: none;
+	text-align: center;
+	background-color: #86a600;
+}
+#site-organization {
+font-family: 'Amatic SC', Myriad Pro, Helvetica;	
+}
+#site-heading-links {
+	background-color:darkOliveGreen;
+	padding:5px;
+}
+#site-heading-links a {
+	color:white;
+	font-size:13px;
+	line-height:150%;
+}
+
+body {
+	font-family: Myriad Pro, Tahoma, Arial, san serif;
+}
+/* Site Headings */
+legend.display-caption {
+	font-family: 'Amatic SC', Myriad Pro, Helvetica;
+	font-weight: normal;
+	font-variant: normal;
+	width: 100%;
+	font-size: 30px;
+	border-bottom: 1px solid #ccc;
+	color: #444;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+legend.display-caption {
+	display: block;
+}
+/* Style Micro Add Form */
+#formOptional {
+	display: none;
+	clear: both;
+}
+#formRequired .captioned-input {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+#formOptional .captioned-input {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;	
+}
+
+.input-label{
+	font-size:10px;
+	line-height:normal;
+	color:black;	
+}
+
+#formRequired .captioned-input .input-value select {
+	height: 40px;
+	min-width: 40px;
+	background-color: silver;
+	color: black;
+	padding: 9px;
+	font-size: 12px;
+	line-height: 12px;
+	border: none;
+	-webkit-appearance: none;
+	line-height:1;
+}
+#formRequired .captioned-input .input-value input {
+	height: 33px;
+	background-color: silver;
+	color: black;
+	padding: 4px;
+	font-size: 12px;
+	border: none;
+}
+#formRequired .captioned-input .input-value textarea {
+	height: 33px;
+	background-color: silver;
+	color: black;
+	padding: 4px;
+	font-size: 12px;
+	border: none;
+}
+
+#formOptional .captioned-input .input-value select {
+	height: 40px;
+	min-width: 40px;
+	background-color: gray;
+	color: black;
+	padding: 9px;
+	font-size: 12px;
+	line-height: 1;
+	border: none;
+	-webkit-appearance: none;
+	line-height:12px;
+
+}
+#formOptional .captioned-input .input-value input {
+	height: 33px;
+	background-color: gray;
+	color: black;
+	padding: 4px;
+	font-size: 12px;
+	border: none;
+}
+#formOptional #captioned-input .input-value textarea {
+	height: 33px;
+	background-color: gray;
+	color: black;
+	padding: 4px;
+	font-size: 12px;
+	border: none;
+}
+
+#formSubmit {
+	float: right;
+	margin-top: 5px;
+}
+.editing-button {
+	color: #fff;
+	min-width: 70px;
+	max-width: 150px;
+	height: 40px;
+	font-size: 16px;
+	background-color: #86a600;
+	border: 0px;
+}
+
+.editing-button:active .editing-button:hover {
+	background-color: #5c7300;
+}
+
+#formSubmit #reset {
+	display: none;
+}
+/* Global Body */
+#site-content {
+	border: none;
+	padding: none;
+}
+#section-heading-links {
+	width: auto;
+	display: block;
+}
+#section-heading-title {
+	font-family: 'Amatic SC', Myriad Pro, Helvetica;
+	font-weight: normal;
+	font-variant: normal;
+	width: 100%;
+	font-size: 30px;
+	color: #444;
+	padding-bottom: 15px;
+	margin-bottom: 15px;
+}
+.display-details {
+	width: 100%;
+}
+fieldset {
+	border: none;
+	margin: 0px;
+	padding: 0px;
+}

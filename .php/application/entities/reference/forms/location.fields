@@ -1,0 +1,23 @@
+<?php
+namespace application\entities\reference\forms;
+
+
+class locationFields extends locationChildFields{
+
+	public $sortKeyParent;
+	public $sortKey;
+	
+	public function __construct(){
+		parent::__construct();
+
+    	$this->sortKey = new f\_textField('sort_key','not-used','Sort Key'); 
+		$this->sortKeyParent = new f\_textField('parent_sort_key'); 
+		$this->_register('sortKey',$this->sortKey);
+		$this->_register('sortKeyParent',$this->sortKeyParent);
+    }
+	
+	
+}
+
+
+?>

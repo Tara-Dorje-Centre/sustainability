@@ -1,0 +1,108 @@
+<?php 
+namespace application\links;
+
+class linkMenu extends \framework\_echo{
+	protected $_menuDiv;
+	protected $_menuList;
+	protected $_links = array();
+	protected $css = 'menu';
+	protected $cssMenu = 'menu-links';
+	protected $cssMenuItem = 'menu-links-item';
+	protected $cssList = 'menu-links-list';
+	protected $cssListItem = 'menu-links-list-item';
+	protected $type = 'DIV';
+	protected $name = 'menu';  
+	protected $nameList = 'menu-list';
+
+	public function __construct(string $name = 'menu', string $type = 'LIST', string $css = 'menu'){
+		$this->initialize($name,$type,$css);
+	}
+	public function initialize(string $name, string $type, string $css='menu'){
+		$this->setName($name);
+		$this->setCss($css);
+		$this->setType($type);
+		
+		$this->_menuDiv = new \html\_div($this->name,$this->cssMenu);
+		if ($this->type == 'LIST'){
+			$this->_menuList = new \html\_ul($this->nameList, $this->cssList);
+		}
+	}
+
+	protected function setCss(string $css){
+		$this->css = $css;
+		$this->cssMenu = $css.'-links';
+		$this->cssMenuItem = $css.'-item';
+		$this->cssList = $css.'-list';
+		$this->cssListItem = $css.'-list-item';
+	}
+
+	protected function setType(string $type){
+		$this->type = $type;
+	}
+	
+	protected function setName(string $name){
+		$this->name = $name;
+		$this->nameList = $name.'-list';
+	}
+	
+	public function getLink(url &$u,string $caption){
+		$l = new link($u,$caption);
+		return $l;
+
+	}
+	public function makeLink(url &$u,string $caption){
+		$l = $this->getLink($u,$caption,$this->cssItem);
+		$this->addLink($l);
+	}
+	
+	public function addLink(link $l){
+		$this->_links[] = $l;
+	}
+	
+	public function addSpan(\html\_span $s){
+		$this->_links[] = $s;
+	}
+	
+	public function addTextItem(string $text,$css='-text'){
+		$s = new \html\_span($text,$this->cssMenuItem.$css);
+		$this->addSpan($s);
+	}
+	
+	protected function printLinks(){
+		foreach ($this->_links as $l){
+			$item = $l->print();
+			$this->printItem($item);
+		}
+	
+	}
+	
+	protected function printItem($content){
+		$i = new \html\_anyDiv($content,$this->cssMenuItem);
+
+		if ($this->type == 'LIST'){
+			$li = new \html\_li($i->print(),$this->cssListItem);
+			$this->_menuList->addListItem($li);
+		} else {
+			$this->_menuDiv->addContent($i->print());
+		}
+		
+	}
+	
+	
+
+	
+	
+	public function print(){
+		$this->printLinks();
+		if ($this->type == 'LIST'){
+			$this->_menuDiv->addContent($this->_menuList->print());
+		} 
+		//$this->close();
+		return $this->_menuDiv->print();
+	}
+	
+	
+	
+}
+
+?>

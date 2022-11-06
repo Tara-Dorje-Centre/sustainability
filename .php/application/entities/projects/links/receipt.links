@@ -1,0 +1,22 @@
+<?php
+namespace application\entities\projects\links;
+
+
+class receiptLinks extends \application\links\entityLinks {
+	public function __construct(){
+		$context = 'receipt';
+		parent::__construct($context);
+	}
+	public function setRequest(){
+		$this->request = new receiptRequest($this->entityContext,$this->portalPage);
+	}
+	
+	public function linkProjectReceipts($projectId){
+		return $this->listingHref(0,'ProjectReceipts',$projectId,'PROJECT','yes');	
+	}
+	public function linkTaskReceipts($idParent){
+		return $this->listingHref($idParent,'TaskReceipts',0,'TASK','no');	
+	}
+	
+}
+?>

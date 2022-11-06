@@ -1,0 +1,64 @@
+<?php
+namespace application\entities;
+
+class cropPlantingLinks extends _entityLinks {
+	public function __construct($menuType = 'DIV',$styleBase = 'menu'){
+		parent::__construct($menuType,$styleBase);
+	}
+	public function listingHref($cropPlanId,$caption = 'Plantings',$sortMethod = 'CROP',$showCalendar = 'NO'){
+		$link = $this->listing($cropPlanId,$sortMethod,$showCalendar);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	private function detailHref($pageAction = 'VIEW', $cropPlantingId = 0, $cropPlanId=0,$caption = 'Planting'){
+		$link = $this->detail($pageAction,$cropPlantingId,$cropPlanId);
+		$href = $this->formatHref($caption,$link);
+		return $href;	
+	}
+	
+	public function listing($cropPlanId, $sortMethod = 'CROP',$showCalendar = 'NO'){
+		$link = 'cp_CropPlanting_List.php?cropPlanId='.$cropPlanId;
+		$link .= '&sortMethod='.$sortMethod;
+		if ($showCalendar == 'YES'){
+			$link .= '&showCalendar=YES';	
+		}
+		return $link;
+	}
+	
+	public function listingPaged($baseLink,$found, $resultPage, $perPage){
+		$l = $baseLink.'&resultsPage=';
+		$ls = $this->getPagedLinks($l, $found,$perPage,$resultPage);
+		return $ls;
+	}
+	
+	public function detail($pageAction, $cropPlantingId = 0, $cropPlanId = 0){
+		$link = 'cp_CropPlanting_Detail.php?pageAction='.$pageAction;
+		if ($cropPlantingId != 0){
+			$link .= '&cropPlantingId='.$cropPlantingId;
+		}
+		if ($cropPlanId != 0){
+			$link .= '&cropPlanId='.$cropPlanId;
+		}
+		return $link;
+	}	
+	public function detailAddHref($cropPlanId,$caption = '+Planting'){
+		$l = $this->detailHref('ADD',0,$cropPlanId,$caption);
+		return $l;	
+	}
+	public function detailViewHref($cropPlantingId,$caption = 'ViewPlanting'){
+		$l = $this->detailHref('VIEW',$cropPlantingId,0,$caption);
+		return $l;	
+	}
+	public function detailEditHref($cropPlantingId,$caption = 'EditPlanting'){
+		$l = $this->detailHref('EDIT',$cropPlantingId,0,$caption);
+		return $l;	
+	}
+	public function detailViewEditHref($cropPlantingId = 0, $viewCaption = 'Planting Details'){
+		
+		$links = $this->detailViewHref($cropPlantingId,$viewCaption);
+		$links .= $this->detailEditHref($cropPlantingId,'#');
+		return $links;
+	}	
+	
+}
+?>

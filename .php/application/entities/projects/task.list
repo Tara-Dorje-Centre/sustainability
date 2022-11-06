@@ -1,0 +1,110 @@
+<?php
+namespace application\entities\projects;
+
+class taskList extends \application\entityList{
+//protected $project;
+	public $periodicTasks = 'NO';
+
+	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Tasks';
+		$this->base = new task();
+
+	}
+	public function getRequestArguments(){
+		parent::getRequestArguments();
+
+	}
+	public function setPeriodic($periodic = 'NO'){
+		$this->periodicTasks = $periodic;
+	}
+	
+	protected function makePageTitle(){
+
+		if ($this->periodicTasks == 'NO'){
+			$title = $this->base->f->nameProject.br();
+			$title .= 'Project Tasks';
+		} else {
+			$title .= 'Periodic Tasks';
+		}
+
+		$this->_pageTitle = $title.'[task list]';
+	}
+	
+	protected function makePageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+	//	$projectL = new ProjectLinks($menuType,$menuStyle);
+
+		
+		$menu = $this->base->links->openMenu('section-heading-links');
+		if ($this->periodicTasks == 'NO'){
+			$menu .= $this->base->links->add($this->idProject);
+			$menu .= $this->base->links->listingHref($this->base->idProject);
+			$menu .= $this->project->links->detailViewHref($this->base->idProject);	
+		} else {
+			
+			//$menu .= $taskL->linksPeriodicTasks();
+			//$menu .= $taskL->formatOptionsLink();
+			//$menu .= $projectL->listingAllProjects();
+							
+		}
+		$menu .= $this->base->links->closeMenu();
+		$this->_pageMenu = $menu;			
+	}
+	
+	private function getPeriodicTasksComplete(){
+		if ($this->periodicTasks == 'COMPLETE'){
+			$complete = 'YES';
+		} elseif ($this->periodicTasks == 'INCOMPLETE'){
+			$complete = 'NO';
+		}
+		return $complete;		
+	}
+	
+	public function setFoundCount(){
+		if ($this->periodicTasks == 'NO'){
+			$sql = $this->base->sql->countProject($this->idParent);
+		} else {
+			$sql = $this->base->sql->countPeriodic($this->getPeriodicTasksComplete());
+		}
+		$this->found = dbGetCount($sql, 'total_tasks');			
+		
+	}
+	
+	protected function listingPagingLinks($pagingBaseLink = 'USE_LISTING'){
+	
+		if ($pagingBaseLink == 'USE_LISTING'){
+			$base = $this->base->links->listing($this->idParent,$this->periodicTasks);
+		} else { 
+			$base = $pagingBaseLink;
+		 }
+		$pagingLinks = $this->base->links->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
+		return $pagingLinks;
+	
+	}
+	
+	protected function listingQuickEdit(){
+	//override to set add form
+		//$at = new Task('ADD', 0,
+		// $this->base->idParent = $this->idParent;
+		$quickEdit =$this->base->addForm($this->idParent);		
+		return $quickEdit;
+	}
+	
+	
+	public function getListingSQL(){
+	
+
+		if ($this->periodicTasks == 'NO'){
+			$sql = $this->base->sql->listProject($this->idParent,$this->resultPage,$this->perPage);
+		} else {
+			$sql = $this->base->sql->listPeriodic($this->getPeriodicTasksComplete(),$this->resultPage,$this->perPage);	
+		}
+		
+		return $sql;
+		}
+		
+}
+?>

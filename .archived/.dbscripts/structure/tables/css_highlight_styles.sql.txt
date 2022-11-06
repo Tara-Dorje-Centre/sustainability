@@ -1,0 +1,8 @@
+CREATE TABLE css_highlight_styles (
+  style_name varchar(100) NOT NULL,
+  background_color varchar(100) NOT NULL,
+  text_color varchar(100) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE css_highlight_styles
+  ADD PRIMARY KEY (style_name);

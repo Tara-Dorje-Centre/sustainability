@@ -1,0 +1,50 @@
+<?php
+namespace application\entities\projects\links;
+
+
+class projectLinks extends \application\links\entityLinks {
+
+	public function __construct(){
+		$context = 'project';
+		parent::__construct($context);
+	}
+	public function setRequest(){
+		$this->request = new projectRequest($this->entityContext,$this->portalPage);
+	}
+	
+	public function allProjects($showClosed = false){
+
+		if ($showClosed == true){
+			$status = 'CLOSED';
+			$caption = 'Archive';
+		} else {
+			$status = 'OPEN';
+			$caption = 'Active Projects';
+		}
+		
+		$myProjects = 'NO';
+		
+		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
+
+		return $this->menu->getLink($u,$caption);
+	}
+	
+	public function myProjects($showClosed = false){
+		if ($showClosed == true){
+			$status = 'CLOSED';
+			$caption = 'My Archive';
+		} else {
+			$status = 'OPEN';
+			$caption = 'My Projects';
+		}		
+		
+		$myProjects = 'YES';
+			
+		$u = $this->request->getUrlProjectList('LIST',0,$idParent,$idType,$status, $myProjects);
+	
+
+		return $this->menu->getLink($u,$caption);
+		
+	}
+}
+?>

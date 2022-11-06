@@ -1,0 +1,11 @@
+<?php 
+namespace application\forms;
+ 
+class idQueryField extends _id{
+	use queryField;
+
+
+
+}
+
+?>

@@ -1,0 +1,13 @@
+<?php
+namespace html;
+
+class _form extends _element{
+	public function __construct($action = 'none', $idName = 'none', $css = 'none'){
+		parent::__construct('form', $idName, $css);
+		$this->makeAttribute('enctype', 'multipart/form-data');
+		$this->makeAttribute('action', $action);
+		$this->makeAttribute('method', 'post');
+	}
+}
+
+?>

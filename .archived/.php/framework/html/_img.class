@@ -1,0 +1,21 @@
+<?php
+namespace html;
+
+class _img extends _element{
+	public function __construct($src,$alt,$idName = 'none', $css = 'none'){
+		parent::__construct('img', $idName, $css);
+		$this->setSource($src,$alt);
+	}
+	
+	public function setSource($src, $alt){
+		$e->makeAttribute('src',$src);
+		$e->makeAttribute('alt',$alt);
+	}
+	public function setDim($width = 0, $height = 0, $border = 0){
+		$e->makeAttribute('width',$width);
+		$e->makeAttribute('height',$height);
+		$e->makeAttribute('border',$border);
+	}
+}
+
+?>

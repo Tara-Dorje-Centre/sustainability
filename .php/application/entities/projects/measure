@@ -1,0 +1,164 @@
+<?php
+namespace application\entities\projects;
+
+class measure extends \application\entity {
+	public function __construct(){
+		parent::__construct();
+
+		$this->entity = 'measure';
+		$this->entityTitle = 'Measurement';
+	 // 	$this->pageSave = 'portal.php';
+		
+		$this->f = new forms\measureFields();
+		$this->links = new links\measureLinks();
+		$this->sql = new sql\measureSQL();
+	}
+	public function getRequestArguments(){
+		parent::getRequestArguments();
+
+
+	}
+		
+	public function setDetails(){
+		parent::setDetails();
+		$this->setParentTask();			
+		
+	}	
+	
+	public function setParentTask(){
+		$this->task->setDetails($this->pageMode, $this->task->id->value());
+	}
+		
+	protected function makePageTitle(){	
+		
+		$title .= $this->task->project->name->value().br();
+		$title .= 'Task: '.$this->task->name->value();		
+
+		$this->_pageTitle = $title;
+	}
+	
+	
+	protected function makePageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$projects = new ProjectLinks($menuType,$menuStyle);
+		$tasks = new TaskLinks($menuType,$menuStyle);
+		$measures = new MeasureLinks($menuType,$menuStyle);
+					
+		$menu = $projects->openMenu('section-heading-links');
+
+		$menu .= $tasks->detailViewHref($this->task->id);
+		$menu .= $projects->detailViewHref($this->task->project->id);			
+		//$menu .= $measures->listingHref($this->task->id);
+		$menu .= $projects->resetMenu();
+		if ($this->pageMode == 'VIEW'){
+			$menu .= $measures->detailEditHref($this->id);
+		}
+		if ($this->pageMode == 'EDIT'){
+			$menu .= $measures->detailViewHref($this->id);
+		}
+		
+		$menu .= $projects->closeMenu();
+		$this->_pageMenu = $menu;
+	}
+		
+
+	public function getMeasureTypeAndUnitSymbol(){
+		$t = $this->measureType.'('.$this->unitSymbol.')';
+		return $t;
+	}
+	
+	
+	public function editForm(){
+		
+
+		
+		$contextMenu = $this->links->formatToggleLink('formOptional','+Options');		
+		$this->f->setEntity($this->entity);
+		$this->edit = new _inputForm($this->pageSave, $this->titleEntity);
+		$this->edit->open($this->entity,$this->pageMode,$contextMenu);
+	
+		
+		$m = new measureType('OPTIONS');
+		$fields .= $m->optionsField($this->f->typeEntity->id);
+		 //->value(),$this->typeEntity->id->env->variable());
+		//$fields .=$this->f->typeEntity->id->inputChoice($select);
+		
+		
+		$fields .= $this->value->input();
+
+		$m = new MeasureTypeUnit;
+		$fields .= $m->optionsField($this->measureTypeUnit->id);
+		//>value(),$this->measureTypeUnit->id->env->variable());
+		//$fields .= $this->measureTypeUnit->id->inputChoice($select);
+
+		$fields .= $this->reported->input();
+		$fields = $this->name->input();
+		$fields .= $this->description->input();
+		$fields .= $this->notes->input();
+
+
+
+		//hidden fields and submit,reset buttons
+		$hidden = getHiddenInput('mode', $this->pageMode);
+		$hidden .= $this->task->id->inputHidden();
+		$hidden .= $this->location->id->inputHidden();
+
+		$hidden .= $this->id->inputHidden();
+		
+		
+		$edit->submit->addContent(getSaveChangesResetButtons());
+
+		return $edit->close();
+	}
+
+	protected function saveUpdate(){
+	
+
+			
+			$sql = " UPDATE measures m ";
+			$sql .= " SET ";
+			$sql .= " m.name = '".$this->name."', ";
+			$sql .= " m.description = '".$this->description."', ";
+			$sql .= " m.notes = '".$this->notes."', ";
+			$sql .= " m.updated = CURRENT_TIMESTAMP, ";
+			$sql .= " m.value = ".$this->value.", ";
+			$sql .= " m.date_reported = '".$this->dateReported."', ";
+			$sql .= " m.location_id = ".$this->locationId.", ";
+			$sql .= " m.measure_type_unit_id = ".$this->measureTypeUnitId." ";
+			$sql .= " WHERE m.id = ".$this->id." ";
+
+			$result = dbRunSQL($sql);
+			
+	}
+	
+	protected function saveInsert(){
+	
+			$sql = " INSERT INTO measures ";
+			$sql .= " (name, ";
+			$sql .= " task_id, ";
+			$sql .= " location_id, ";
+			$sql .= " measure_type_unit_id, ";
+			$sql .= " date_reported, ";
+			$sql .= " value, ";
+			$sql .= " description, ";
+			$sql .= " notes) ";
+			$sql .= " VALUES (";
+			$sql .= "'".$this->name."', ";
+			$sql .= " ".$this->task->id.", ";
+			$sql .= " ".$this->locationId.", ";
+			$sql .= "".$this->measureTypeUnitId.", ";
+			$sql .= " '".$this->dateReported."', ";
+			$sql .= "".$this->value.", ";
+			$sql .= "'".$this->description."', ";
+			$sql .= "'".$this->notes."') ";
+			
+			$result = dbRunSQL($sql);
+			
+			$this->id = dbInsertedId();
+	
+	}
+	
+} 
+?>

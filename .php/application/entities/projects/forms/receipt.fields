@@ -1,0 +1,48 @@
+<?php
+namespace application\entities\projects\forms;
+
+
+class receiptFields extends taskChildFields{
+
+	public $receivedBy;
+	public $receivedFrom;
+ /*   public $quantity;
+	public $quantityType;*/
+    public $costUnit;
+	public $costActual;
+ 
+    
+	public function __construct(){
+		parent::__construct();
+		$this->f->reported->setDbColumn('date_reported');
+	
+		$this->f->receivedBy = new _userField('received_by','received-by','Received By');
+		$this->f->receivedFrom = new _userField('received_from','received-from','Received From');
+
+
+		$this->f->costUnit = new _numberField('cost_unit','cost-unit','Unit Amount');
+		$this->f->costActual = new _numberField('cost_actual','cost-actual','Amount Actual');
+		$this->_register('receivedBy',$this->receivedBy);
+		$this->_register('receivedFrom',$this->receivedFrom);
+
+
+		$this->_register('costUnit',$this->costUnit);
+		$this->_register('costActual',$this->costActual);
+	}
+	
+	public function setDefaults(){
+		parent::setDefault();
+		
+		
+		$this->costUnit->setDefault(0);
+		$this->costActual->setDefault(0);		
+		$this->receivedBy->setDefault($_SESSION['login-name']);
+	}
+	
+	
+	
+	
+}
+
+
+?>

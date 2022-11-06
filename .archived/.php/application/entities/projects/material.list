@@ -1,0 +1,619 @@
+<?php
+namespace application\entities\projects;
+
+class materialList extends \application\entityList{
+	//public $task;
+	
+
+	private $displayProject = 'TASK';
+	private $approved = 'no';
+	public $costActual = 0;
+	public $costEstimated = 0;
+	
+ 	public function __construct(){
+		parent::__construct();
+		$this->base = new material();
+	}
+	public function getRequestArguments(){
+		parent::getRequestArguments();
+
+
+	}
+	public function afterSetDetails(){
+	
+		//$this->task->setDetails();
+		//$this->setFoundCount();
+		$this->setSummary();
+	}
+	
+	public function setApproved($approved = 'no'){
+		$this->approved = $approved;
+	}
+	public function setDisplay($display = 'TASK'){
+		$this->displayProject = $display;
+	}
+
+	protected function makePageTitle(){
+		$title .= $this->task->project->name.br();
+
+		if ($this->displayProject == 'TASK'){
+			$title .= 'Task: '.$this->task->name.br();
+		}
+		if ($this->year > 0 && $this->month > 0){
+			$title .= $this->year.'-'.$this->month.br();
+		}
+
+		if ($this->displayProject == 'TASK'){
+			if ($this->task->materialsAuthProject == 'yes'){
+				$title .= 'Materials Cost Approved = '.$this->costActual;
+			} else {
+				$title .= 'Materials Cost Estimated = '.$this->costEstimated;
+			}
+		} elseif ($this->displayProject == 'PROJECT'){
+			$title .= 'Materials Cost Approved = '.$this->costActual;
+		}
+		
+
+		$this->_pageTitle = $title;
+	}	
+
+	protected function makePageMenu(){
+		$menuType = 'LIST';
+		$menuStyle = 'menu';
+		
+		$projects = new ProjectLinks($menuType,$menuStyle);
+		$tasks = new TaskLinks($menuType,$menuStyle);
+		$materials = new MaterialLinks($menuType,$menuStyle);
+					
+		$menu = $projects->openMenu('section-heading-links');
+		
+		$menu .= $projects->detailViewHref($this->task->project->id);		
+		$menu .= $projects->resetMenu();	
+			
+//		if ($this->task->project->materialsCount > 0){		
+			$menu .= $materials->linkProjectMaterialsSummary($this->task->project->id);
+			$menu .= $materials->linkProjectMaterials($this->task->project->id);
+//		}
+
+		if ($this->displayProject == 'TASK' or $this->displayProject == 'TASK-SUMMARY'){
+			$menu .= $projects->resetMenu();	
+			$menu .= $tasks->detailViewHref($this->task->id);
+//			if ($this->found > 0){
+			$menu .= $projects->resetMenu();	
+
+				$menu .= $materials->linkTaskMaterialsSummary($this->task->id);		
+				$menu .= $materials->linkTaskMaterials($this->task->id);		
+//			}
+			$menu .= $projects->resetMenu();	
+			$menu .= $materials->detailAddHref($this->task->id);
+		}
+		$menu .= $projects->closeMenu();	
+		$this->_pageMenu = $menu;			
+	}	
+	
+	
+	public function setFoundCount(){
+		if ($this->displayProject == 'PROJECT'){
+			$sql = $this->sql->countMaterialsByProject($this->task->project->id,$this->year,$this->month);
+		} elseif ($this->displayProject == 'PROJECT-SUMMARY'){
+			$sql = $this->sql->countMaterialsByProject($this->task->project->id,$this->year,$this->month);
+		} elseif ($this->displayProject == 'TASK-SUMMARY'){
+			$sql = $this->sql->countMaterialsByTask($this->task->id,$this->year,$this->month);
+		} else {
+			$sql = $this->sql->countMaterialsByTask($this->task->id,$this->year,$this->month);
+		}
+		$this->found = getSQLCount($sql, 'total_materials');
+	}
+	
+	private function setSummary(){
+		if ($this->displayProject == 'PROJECT'){
+			$sql = $this->sql->summaryByProject($this->task->project->id);
+
+		} elseif ($this->displayProject == 'PROJECT-SUMMARY'){
+			$sql = $this->sql->summaryByProjectMaterialType($this->task->project->id, $this->year,$this->month);
+
+		} elseif ($this->displayProject == 'TASK-SUMMARY'){
+			$sql = $this->sql->summaryByTask($this->task->id, $this->year,$this->month);
+		} else {
+			$sql = $this->sql->summaryByTask($this->task->id,$this->year,$this->month);
+		}
+		
+		$result = dbGetResult($sql);
+
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+	  	{
+			$this->costActual = $row["sum_cost_actual"];
+			$this->costEstimated = $row["sum_cost_estimated"];
+		}
+		$result->close();
+		}
+	
+	}
+
+
+	private function getCalendarLinks($baseUrl){
+		$l = new MaterialLinks('DIV','paged');
+//		$baseUrl = $l->listing($this->task->id,$this->task->project->id,$this->displayProject,$this->approved);
+		$links = $l->openMenu('calendar-links');
+				
+		$this->prevCalendarLink = '';
+		$this->nextCalendarLink = '';
+		$foundCurrent = false;
+		$foundNext = false;
+				
+		if ($this->displayProject == 'PROJECT' or $this->displayProject == 'PROJECT-SUMMARY') {
+			$sql = $this->sql->calendarLinksProject($this->task->project->id);
+		} else { 
+		 //if ($this->displayProject == 'TASK' 
+		//or $this->displayProject == 'TASK-SUMMARY') {
+			$sql = $this->sql->calendarLinksTask($this->task->id);			
+		}
+
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$month = $row["month"];
+			$year = $row["year"];
+			$caption = $year.'-'.$month;
+			if ($year == $this->year && $month == $this->month){
+				//skip link and show caption if link for current display monthyear
+				$link = span($caption,$l->cssItem.'-current');
+				$foundCurrent = true;
+			} else {
+				$link = $l->formatCalendarHref($caption,$baseUrl,$year,$month);
+				if ($foundCurrent == false){
+					$this->prevCalendarLink = $l->formatCalendarHref('Previous',$baseUrl,$year,$month);
+				} else {
+					if ($foundNext == false){
+						$this->nextCalendarLink = $l->formatCalendarHref('Next',$baseUrl,$year,$month);
+						$foundNext = true;
+					}
+				}
+			}
+			$links .= $link;
+		}
+		$result->close();
+		}
+		
+		if ($foundCurrent == false && $this->year > 0 && $this->month > 0){
+			$caption = $this->year.'-'.$this->month;
+			$link = $l->formatCalendarHref($caption,$baseUrl,$this->year,$this->month);
+			$links .= $link;
+		}
+		$caption = 'All';
+		if ($this->year == -1 && $this->month == -1){
+			$link = span($caption,$l->cssItem.'-current');
+		} else {
+			$link = $l->formatCalendarHref($caption,$baseUrl,-1,-1);
+		}
+		$links .= $link;			
+
+		$links .= $l->closeMenu();
+		return $links;
+	}
+
+
+	
+	
+	private function getBaseUrl($baseUrl = 'USE_LISTING'){
+
+		$materialL = new MaterialLinks;
+		
+		if ($baseUrl == 'USE_LISTING'){
+			$link = $materialL->listing($this->task->id, $this->task->project->id,$this->displayProject,$this->approved);
+		} else { 
+			$link = $baseUrl;
+		}
+		return $link;
+	}
+
+	private function getSummaryTaskMonthly($pagingBaseLink = 'USE_LISTING'){
+
+		
+		$sql = $this->sql->summaryByTask($this->task->id,$this->year,$this->month);		
+		
+		$result = mysql_query($sql) or die(mysql_error());		
+
+		$base = $this->getBaseUrl($pagingBaseLink);
+		$pagingLinks = $this->getCalendarLinks($base);					
+		$quickEdit = NULL;
+		
+		$list = openDisplayList('material','Task Materials Summary',$pagingLinks,$quickEdit);
+
+		$heading = wrapTh('Type');
+		$heading .=  wrapTh('Cost Est');
+		$heading .=  wrapTh('Cost Actual');
+		$list .=  wrapTr($heading);
+		
+		$sql = $this->sql->listMaterialSummaryByTask($this->task->id,$this->task->project->id,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{
+			$type = $row['material_type'];
+			$est = $row['sum_cost_estimated'];
+			$act = $row['sum_cost_actual'];
+			if ($this->costEstimated == 0){
+				$estPercent = 0;
+			} else {
+				$estPercent = round($est / $this->costEstimated,2) * 100;
+			}
+			if ($this->costActual == 0){
+			$actPercent = 0;
+			} else {
+			$actPercent = round($act / $this->costActual,2) * 100;
+			}
+			$detail = wrapTd($type.'('.$estPercent.'%)');			
+
+			$detail .= wrapTd($est);
+			$detail .= wrapTd($act);
+			$cssItem = 'none';
+			$list .=  wrapTr($detail, $cssItem);
+		}
+		$result->close();
+		}
+		
+		$detail = wrapTh('Totals');			
+		$detail .= wrapTh($this->costEstimated);
+		$detail .= wrapTh($this->costActual);
+		$list .=  wrapTr($detail);
+
+		$list .= closeDisplayList();
+
+//		$base = $this->getBaseUrl($pagingBaseLink);
+		$pagingLinks = NULL;
+		$quickEdit = NULL;		
+		$list .= openDisplayList('material','Done By Summary',$pagingLinks,$quickEdit);
+
+		$heading = wrapTh('Done By');
+		$heading .=  wrapTh('Cost Est');
+		$heading .=  wrapTh('Cost Actual');
+		$list .=  wrapTr($heading);
+
+
+		$sql = $this->sql->summaryByTaskDoneBy($this->task->id,$this->task->project->id,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{
+			$type = $row['done_by'];
+			$est = $row['sum_cost_estimated'];
+			$act = $row['sum_cost_actual'];
+			if ($this->costEstimated == 0){
+				$estPercent = 0;
+			} else {
+				$estPercent = round($est / $this->costEstimated,2) * 100;
+			}
+			if ($this->costActual == 0){
+			$actPercent = 0;
+			} else {
+			$actPercent = round($act / $this->costActual,2) * 100;
+			}
+			$detail = wrapTd($type.'('.$estPercent.'%)');			
+			$detail .= wrapTd($est);
+			$detail .= wrapTd($act);
+			$cssItem = 'none';
+			$list .=  wrapTr($detail, $cssItem);
+		}
+		$result->close();
+		}
+		
+		$detail = wrapTh('Totals');			
+		$detail .= wrapTh($this->costEstimated);
+		$detail .= wrapTh($this->costActual);
+		$list .=  wrapTr($detail);
+
+		$list .= closeDisplayList();
+		
+		return $list;
+	}
+
+	private function getSummaryProjectMonthly($pagingBaseLink = 'USE_LISTING'){
+
+		$id = $this->task->idParent;
+						
+		$base = $this->getBaseUrl($pagingBaseLink);
+		$pagingLinks = $this->getCalendarLinks($base);					
+		$quickEdit = NULL;
+
+		$list = openDisplayList('material','Project Materials Summary',$pagingLinks,$quickEdit);
+
+		$heading = wrapTh('Type');
+		$heading .=  wrapTh('Cost Est');
+		$heading .=  wrapTh('Cost Actual');
+		$list .=  wrapTr($heading);
+		
+		$sql = $this->sql->summaryByProject($id, $this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{
+			$type = $row['material_type'];
+			$est = $row['sum_cost_estimated'];
+			$act = $row['sum_cost_actual'];
+			if ($this->costEstimated == 0){
+				$estPercent = 0;
+			} else {
+				$estPercent = round($est / $this->costEstimated,2) * 100;
+			}
+			if ($this->costActual == 0){
+			$actPercent = 0;
+			} else {
+			$actPercent = round($act / $this->costActual,2) * 100;
+			}
+			$detail = wrapTd($type.'('.$estPercent.'%)');			
+
+			$detail .= wrapTd($est);
+			$detail .= wrapTd($act);
+			$cssItem = 'none';
+			$list .=  wrapTr($detail, $cssItem);
+		}
+		$result->close();
+		}
+		
+		$detail = wrapTh('Totals');			
+		$detail .= wrapTh($this->costEstimated);
+		$detail .= wrapTh($this->costActual);
+		$list .=  wrapTr($detail);
+		$list .= closeDisplayList();
+
+
+//		$base = $this->getBaseUrl($pagingBaseLink);
+		$pagingLinks = NULL;
+		$quickEdit = NULL;		
+		$list .= openDisplayList('material','Done By Summary',$pagingLinks,$quickEdit);
+
+		$heading = wrapTh('Done By');
+		$heading .=  wrapTh('Cost Est');
+		$heading .=  wrapTh('Cost Actual');
+		$list .=  wrapTr($heading);
+		
+		$sql = $this->sql->summaryByProjectDoneBy($this->task->project->id,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{
+			$type = $row['done_by'];
+			$est = $row['sum_cost_estimated'];
+			$act = $row['sum_cost_actual'];
+			
+			if ($this->costEstimated == 0){
+				$estPercent = 0;
+			} else {
+				$estPercent = round($est / $this->costEstimated,2) * 100;
+			}
+			if ($this->costActual == 0){
+			$actPercent = 0;
+			} else {
+			$actPercent = round($act / $this->costActual,2) * 100;
+			}
+			$detail = wrapTd($type.'('.$estPercent.'%)');			
+			$detail .= wrapTd($est);
+			$detail .= wrapTd($act);
+			$cssItem = 'none';
+			$list .=  wrapTr($detail, $cssItem);
+		}
+		$result->close();
+		}
+		
+		$detail = wrapTh('Totals');			
+		$detail .= wrapTh($this->costEstimated);
+		$detail .= wrapTh($this->costActual);
+		$list .=  wrapTr($detail);
+
+		$list .= closeDisplayList();
+
+		return $list;
+	}
+
+
+	private function getListingProject($pagingBaseLink = 'USE_LISTING'){
+
+
+		
+		$materialL = new MaterialLinks;
+		$taskL = new TaskLinks;
+
+
+		$base = $this->getBaseUrl($pagingBaseLink);
+		$pagingLinks = $this->getCalendarLinks($base);			
+		$base = $materialL->formatCalendarLink($base,$this->year,$this->month);
+		
+		$pagingLinks .= $materialL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
+						
+		//on project materials report dont show editing form
+		$quickEdit = NULL;
+		//}
+		$list = openDisplayList('material','Materials',$pagingLinks,$quickEdit);
+
+		$heading = '';
+
+		$heading = wrapTh('Task');	
+		
+		$list .=  wrapTr($heading);
+		
+		
+		$sql = $this->sql->listByProject($this->task->idParent, $this->resultPage, $this->perPage,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
+		if($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$m = new Material;
+			$m->id = $row["id"];
+			$m->task->id = $row["task_id"];
+			$m->task->name = $row["task_name"];
+			$m->locationId = $row["location_id"];
+			$m->name = stripslashes($row["name"]);
+			$m->typeName = stripslashes($row["type_name"]);
+			//$m->description = stripslashes($row["description"]);
+			$m->dateReported = $row["date_reported"];
+			$m->doneBy = stripslashes($row["done_by"]);
+			$m->paidTo = stripslashes($row["paid_to"]);
+			$m->updated = $row["updated"];	
+			$m->quantityUnitMeasureName = stripslashes($row["qty_unit_measure_name"]);
+			$m->quantity = $row["quantity"];	
+			$m->costEstimated = $row["cost_estimated"];						
+			$m->costActual = $row["cost_actual"];
+			$m->costUnit = $row["cost_unit"];
+			//$m->notes = stripslashes($row["notes"]);
+			$m->linkText = stripslashes($row["link_text"]);
+			$m->linkUrl = stripslashes($row["link_url"]);
+			$cssItem = stripslashes($row["highlight_style"]);
+
+			$m->formatForDisplay();
+			
+			$detail = '';
+			//if ($this->displayProject == 'PROJECT'){
+			$link = $taskL->detailViewEditHref($m->task->id, $m->task->name);
+			$detail = wrapTd($link);
+			//}
+			$link = $materialL->detailViewEditHref($m->id,$m->name);
+			$detail .= wrapTd($link);
+		
+			if ($m->linkText != '' && $m->linkUrl != ''){
+				$link = $materialL->formatHref($m->linkText,$m->linkUrl,'_blank');
+				$detail .= wrapTd($link);
+			} else {
+				$detail .= wrapTd(spacer());
+			}
+
+			$list .=  wrapTr($detail, $cssItem);
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();
+
+		return $list;
+	
+	}
+
+	private function getListingTask($pagingBaseLink = 'USE_LISTING'){
+		
+		$materialL = new MaterialLinks;
+		$taskL = new TaskLinks;
+
+		$base = $this->getBaseUrl($pagingBaseLink);
+		$pagingLinks = $this->getCalendarLinks($base);			
+		$base = $materialL->formatCalendarLink($base,$this->year,$this->month);
+
+		$pagingLinks .= $materialL->listingPaged($base,$this->found,$this->resultPage,$this->perPage);		
+
+						
+		//on task materials list, show quick edit form (only if on materials listing page)
+		if ($pagingBaseLink == 'USE_LISTING'){
+		$m = new Material('ADD', 0, $this->task->id);
+		$m->setDetails();
+		$quickEdit = $m->editForm();
+		} else {
+			$quickEdit = NULL;
+		}
+		$list = openDisplayList('material','Materials',$pagingLinks,$quickEdit);
+
+		$heading = '';
+		$heading .=  wrapTh('Material');
+		$heading .= wrapTh('Type');
+		$heading .=  wrapTh('Date Reported');
+		$heading .=  wrapTh('Done By');
+		$heading .= wrapTh('Qty Units');
+		$heading .=  wrapTh('Qty');
+		$heading .=  wrapTh('Unit Cost');
+		$heading .=  wrapTh('Cost Est');
+		$heading .= wrapTh('Paid To');
+		//$heading .=  wrapTh('Cost Actual');
+		$heading .=  wrapTh('Links');		
+		$list .=  wrapTr($heading);
+		
+		
+		$sql = $this->sql->listByTask($this->task->id,$this->resultPage,$this->perPage,$this->year,$this->month);		
+		
+		$result = dbGetResult($sql);
+		if ($result){
+	  	while ($row = $result->fetch_assoc())
+		{	
+			$m = new Material;
+			$m->id = $row["id"];
+			$m->task->id = $row["task_id"];
+			$m->task->name = $row["task_name"];
+			$m->locationId = $row["location_id"];
+			$m->name = ($row["name"]);
+			$m->typeName = ($row["type_name"]);
+			//$m->description = ($row["description"]);
+			$m->dateReported = $row["date_reported"];
+			$m->doneBy = ($row["done_by"]);
+			$m->paidTo = ($row["paid_to"]);
+			$m->updated = $row["updated"];	
+			$m->quantityUnitMeasureName = ($row["qty_unit_measure_name"]);
+			$m->quantity = $row["quantity"];	
+			$m->costEstimated = $row["cost_estimated"];						
+			$m->costActual = $row["cost_actual"];
+			$m->costUnit = $row["cost_unit"];
+			//$m->notes = ($row["notes"]);
+			$m->linkText = ($row["link_text"]);
+			$m->linkUrl = ($row["link_url"]);
+			$cssItem = ($row["highlight_style"]);
+
+			$m->formatForDisplay();
+			
+			$detail = '';
+			if ($this->displayProject == 'PROJECT'){
+				$link = $taskL->detailViewEditHref($m->task->id, $m->task->name);
+				$detail = wrapTd($link);
+			}
+			$link = $materialL->detailViewEditHref($m->id,$m->name);
+			$detail .= wrapTd($link);
+			$detail .= wrapTd($m->typeName);			
+			$detail .= wrapTd($m->dateReported);
+			$detail .= wrapTd($m->doneBy);
+			$detail .= wrapTd($m->quantityUnitMeasureName);
+			$detail .= wrapTd($m->quantity);
+			$detail .= wrapTd($m->costUnit);
+			$detail .= wrapTd($m->costEstimated);
+			$detail .= wrapTd($m->paidTo);
+			//$detail .= wrapTd($m->costActual);
+			if ($m->linkText != '' && $m->linkUrl != ''){
+				$link = $materialL->formatHref($m->linkText,$m->linkUrl,'_blank');
+				$detail .= wrapTd($link);
+			} else {
+				$detail .= wrapTd(spacer());
+			}
+
+			$list .=  wrapTr($detail, $cssItem);
+		}
+		$result->close();
+		}
+
+		$list .= closeDisplayList();
+		
+		
+		return $list;
+		
+	
+	}
+	
+	
+		
+	public function getListing($pagingBaseLink = 'USE_LISTING'){
+
+
+		if ($this->displayProject == 'PROJECT-SUMMARY'){
+			$list = $this->getSummaryProjectMonthly($pagingBaseLink);			
+		} elseif ($this->displayProject == 'PROJECT'){ 
+			$list = $this->getListingProject($pagingBaseLink);		
+		} elseif ($this->displayProject == 'TASK-SUMMARY'){ 
+			$list = $this->getSummaryTaskMonthly($pagingBaseLink);		
+		} else  {  //if ($this->displayProject == 'TASK'){
+			$list = $this->getListingTask($pagingBaseLink);
+		}
+		
+		return $list;
+	}
+}
+?>

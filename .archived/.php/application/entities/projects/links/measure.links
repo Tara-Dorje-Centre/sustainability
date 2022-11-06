@@ -1,0 +1,16 @@
+<?php
+namespace application\entities\projects\links;
+
+class measureLinks extends \application\links\entityLinks {
+	public function __construct(){
+		$context = 'measure';
+		parent::__construct($context);
+	}
+	public function setRequest(){
+		$this->request = new measureRequest($this->entityContext,$this->portalPage);
+	}
+	
+	
+
+}
+?>

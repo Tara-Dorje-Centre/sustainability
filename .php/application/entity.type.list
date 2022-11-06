@@ -1,0 +1,26 @@
+<?php 
+namespace application;
+
+abstract class entityTypeList extends entityList{
+
+	public function __construct(){
+		parent::__construct();
+	}
+	
+	protected function makePageTitle(){
+		$this->_pageTitle = $this->entityTitle;
+	}
+	protected function makePageMenu(){
+
+		$s = new \application\links\systemMenuLinks();
+		$this->base->links->menu->addLink($s->reference());
+		$this->base->links->listingLinks($this->pageMode,$this->id,$this->idParent,$this->idType);
+		$this->_pageMenu = $this->base->links->menu->print();
+	}
+	
+	
+}
+
+
+
+?>

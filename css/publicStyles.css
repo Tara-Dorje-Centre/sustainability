@@ -1,0 +1,119 @@
+﻿body {
+	font-family:Verdana, Arial, Helvetica, sans-serif;
+	font-size:15px;
+	color:blue;
+	background-color:purple;
+	margin:0;
+	padding:0;
+	border:none;
+}
+div{
+	margin:0;
+	padding:0;
+	border-width:0;
+	border-color:none;
+	border-style:none;
+}
+p{
+	margin:0;
+	padding:0;
+	border:none;	
+}
+.site-links-list{
+	margin:0;
+	padding:0;	
+	border:none;	
+}
+.site-links-list-ul{
+	margin:0;
+	padding:0;	
+	list-style-type:none;
+}
+.site-links-item-li{
+}
+.site-links-item{
+	display:block;
+	text-decoration:none;	
+	color:black;
+	width:100%;
+	text-align:left;
+	padding:2px;
+}
+.site-links-item:hover{
+	text-decoration:none;
+	color:white;
+	background-color:green;
+}
+#public-site-container {
+	position:relative;
+	margin:20px;
+	padding:20px;
+	min-height: 400px;
+	background-color:yellow;
+}
+#public-site-heading{
+	min-height:75px;
+	vertical-align: top;	
+	position:relative;
+	width: 100%;
+	clear:both;
+}
+#public-site-content{
+	position:relative;
+	width: 100%;
+	clear:both;
+}
+#public-site-title{
+	margin-left:150px;
+	position:relative;
+	padding:10px;
+	font-size:20px;
+	font-style:italic;
+}
+#public-site-image{
+	width:150px;
+	float:left;
+}
+#public-site-footer{
+	min-height:30px;
+	vertical-align: top;	
+	position:relative;
+	width: 100%;
+	clear:both;
+}
+#public-site-menu{
+	float:left;
+	vertical-align: top;	
+	position:relative;
+	width: 150px;
+	background-color:lightgreen;
+}
+#public-page-container {
+	position:relative;
+	margin-left:150px;
+	padding:10px;
+	min-height:350px;
+	background-color: white;
+}
+#public-page-title {
+	position:relative;
+	padding:10px;
+	font-size:20px;
+	font-style:bold;
+}
+#public-page-content {
+	position:relative;
+}
+#public-page-details {
+	position:relative;
+}
+.public-detail-title{
+	font-size:12px;
+	font-style:bold;
+	margin:2px;
+}
+.public-detail-item{
+	font-size:14px;
+	font-style:normal;
+	margin:2px;
+}

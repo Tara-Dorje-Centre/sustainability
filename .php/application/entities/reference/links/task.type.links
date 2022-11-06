@@ -1,0 +1,13 @@
+<?php
+namespace application\entities\reference\links;
+
+class taskTypeLinks extends \application\links\entityTypeLinks{
+	
+	public function __construct(){
+		$context = 'taskType';
+		parent::__construct($context);
+
+	}
+}
+
+?>

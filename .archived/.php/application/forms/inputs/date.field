@@ -1,0 +1,22 @@
+<?php 
+
+namespace application\forms;
+
+
+class dateField extends field{
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'DATE';
+	}
+	
+	public function input(){
+		$i = new \html\inputs\_inputTimestamp($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print();
+	}
+	
+
+}
+
+
+?>

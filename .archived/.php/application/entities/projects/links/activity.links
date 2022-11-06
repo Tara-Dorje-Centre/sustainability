@@ -1,0 +1,98 @@
+<?php
+namespace application\entities\projects\links;
+
+
+
+class activityLinks extends \application\links\entityLinks {
+	public function __construct(){
+		$context = 'activity';
+		parent::__construct($context);
+	}
+	public function setRequest(){
+		$this->request = new activityRequest($this->entityContext,$this->portalPage);
+	}
+	
+	public function urlActivityList($idParent, $idType, $showCalendar, $myActivity, $idTask,$idProject){
+		$url = $this->request->getUrlActivityList('LIST',0,$idParent,$idType, $showCalendar, $myActivity,$idTask,$idProject);
+		//$url = parent::urlList($idParent,$idType);
+	//	$this->setActivityParametersList($url, $showCalendar, $myActivity, $idTask,$idProject);
+		return $url;
+	}
+	
+	public function urlActivityDetail($action = 'VIEW', $id, $idParent,$showCalendar,$myActivity,$idTask,$idProject){
+
+		$url = parent::urlDetail($action,$id,$idParent);
+		$this->setActivityParametersDetail($url, $showCalendar, $myActivity, $idTask,$idProject);
+		return $url;
+	}	
+	
+	
+	
+	public function myActivity(){
+		$showCalendar = 'NO';
+		$myActivity = 'YES';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+		$caption = 'My History';
+				$l = $this->menu->getLink($u, $caption);
+		return $l;
+		//his->getLink($u,$caption);
+	}
+	public function groupActivity(){
+		$showCalendar = 'NO';
+		$myActivity = 'GROUP';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+		$caption = 'Group History';
+		
+		return $this->menu->getLink($u,$caption);
+	}
+	public function myCalendar(){
+		$showCalendar = 'YES';
+		$myActivity = 'YES';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+		$caption = 'My Calendar';
+		return $this->menu->getLink($u,$caption);
+	}
+	public function groupCalendar(){
+		$showCalendar = 'YES';
+		$myActivity = 'GROUP';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0, 0);
+		$caption = 'Group Calendar';
+		return $this->menu->getLink($u,$caption);
+	}
+	
+	public function projectActivity($idProject){
+		$showCalendar = 'NO';
+		$myActivity = 'PROJECT';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
+		$caption = 'Project History';
+		return $this->menu->getLink($u,$caption);
+	}
+	
+	public function projectCalendar($idProject){
+		$showCalendar = 'YES';
+		$myActivity = 'PROJECT';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, 0,$idProject);
+		$caption = 'Project Calendar';
+		return $this->menu->getLink($u,$caption);
+	}
+	
+	
+	public function taskActivity($idTask){
+		$showCalendar = 'NO';
+		$myActivity = 'TASK';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask,0);
+		$caption = 'Task History';
+		return $this->getLink($u,$caption);
+	}
+	public function taskCalendar($idTask){
+		$showCalendar = 'YES';
+		$myActivity = 'TASK';
+		$u = $this->urlActivityList(-1, 0, $showCalendar, $myActivity, $idTask,0);
+		$caption = 'Task Calendar';
+		return $this->getLink($u,$caption);
+	}
+	
+	
+	
+}
+?>

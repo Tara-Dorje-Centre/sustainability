@@ -1,0 +1,26 @@
+<?php
+namespace application\entities\reference\forms;
+
+
+class quantityTypeFields extends \application\forms\entityTypeFields{
+    public $symbol;	
+    public $type;
+    
+	public function __construct(){
+		parent::__construct();
+		$this->symbol = new f\_nameField('symbol','symbol','Symbol');
+		$this->type = new f\_nameField('type','unit-type','Unit Type');
+		$this->_register('symbol',$this->symbol);
+		$this->_register('type',$this->type);
+	}
+	
+	public function setDefaults(){
+		parent::setDefaults();
+		$this->type->setDefault('unit');
+		$this->symbol->setDefault('unit');
+	}
+}
+
+
+
+?>

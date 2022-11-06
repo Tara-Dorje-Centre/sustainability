@@ -1,0 +1,28 @@
+<?php
+namespace application\entities\projects\forms;
+use application\forms as f;
+
+class activityFields extends taskChildFields{
+	public $hoursEstimated;
+	public $hoursActual;
+ 	public $comments;
+	
+    public function __construct(){
+    	$this->hoursActual = new f\_numberField('hours_actual','hours-actual','Effort Actual');
+    	$this->hoursEstimated = new f\_numberField('hours_estimate','hours-estimate','Effort Estimate');
+    	$this->comments = new f\commentsField('comments','comments','Effort Comments');
+    	$this->_register('hoursActual',$this->hoursActual);
+    	$this->_register('hoursEstimated',$this->hoursEstimated);
+    	$this->_register('comments',$this->comments);
+    }
+	
+	public function setDefaults(){
+		parent::setDefaults();
+		$this->hoursActual->setDefault(0);
+		$this->hoursEstimated->setDefault(1);
+	}
+	
+}
+
+
+?>

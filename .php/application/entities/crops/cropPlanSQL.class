@@ -1,0 +1,63 @@
+<?php
+namespace application\entities;
+
+class CropPlanSQL{                        
+	public function columnsCropPlans(){
+		$c = " c.id, "; 
+		$c .= " c.plan_name, "; 
+		$c .= " c.plan_year, ";
+		$c .= " c.plan_number, "; 
+		$c .= " c.description, ";
+		$c .= " c.started, "; 
+		$c .= " c.updated, "; 
+		$c .= " c.mature, "; 
+		$c .= " c.transplanted, "; 
+		$c .= " c.plan_type, "; 
+		$c .= " c.finished "; 
+		return $c;	
+	}
+
+	public function infoCropPlan($cropPlanId){
+		$q = " SELECT ";	
+		$q .= $this->columnsCropPlans();
+		$q .= " FROM crop_plans c ";
+		$q .= " WHERE  ";
+		$q .= " c.id = ".$cropPlanId." ";
+		return $q;
+	}
+
+	public function listCropPlans($resultPage, $rowsPerPage){
+		$q = " SELECT ";	
+		$q .= $this->columnsCropPlans();
+		$q .= " FROM crop_plans c ";
+		$q .= " ORDER BY plan_year, plan_number ";
+		$q .= sqlLimitClause($resultPage, $rowsPerPage);
+		return $q;	
+	}
+
+	public function countCropPlans(){
+		$q = " SELECT ";	
+		$q .= " COUNT(*) total_plans ";
+		$q .= " FROM crop_plans c ";
+		return $q;	
+	}
+
+	public function selectOptions_CropPlanTypes(){
+		$q = " SELECT ";
+		$q .= " cpt.plan_type value, ";
+		$q .= " cpt.plan_type caption ";
+		$q .= " FROM crop_plan_types cpt ";
+		$q .= " ORDER BY cpt.plan_type ";
+		return $q;
+	}
+
+	public function listCropPlanTypes(){
+		$q = " SELECT ";
+		$q .= " cpt.plan_type, ";
+		$q .= " cpt.description ";
+		$q .= " FROM crop_plan_types cpt ";
+		$q .= " ORDER BY cpt.plan_type ";
+		return $q;	
+	}
+}
+?>

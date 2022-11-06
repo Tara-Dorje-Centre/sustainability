@@ -1,0 +1,29 @@
+<?php
+namespace application\entities\projects\links;
+
+class materialLinks extends \application\links\entityLinks {
+	public function __construct(){
+		$context = 'material';
+		parent::__construct($context);
+	}
+	public function setRequest(){
+		$this->request = new materialRequest($this->entityContext,$this->portalPage);
+	}
+	
+	
+	
+	public function linkProjectMaterials($projectId){
+		return $this->listingHref(0,'ProjectMaterials',$projectId,'PROJECT','yes');	
+	}
+	public function linkTaskMaterials($taskId){
+		return $this->listingHref($taskId,'TaskMaterials',0,'TASK','no');	
+	}
+	public function linkProjectMaterialsSummary($projectId){
+		return $this->listingHref(0,'ProjectSummary',$projectId,'PROJECT-SUMMARY','yes');	
+	}
+	public function linkTaskMaterialsSummary($taskId){
+		return $this->listingHref($taskId,'TaskSummary',0,'TASK-SUMMARY','no');	
+	}
+	
+}
+?>

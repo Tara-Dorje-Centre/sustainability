@@ -1,0 +1,25 @@
+<?php
+namespace application\entities\reference;
+
+class receiptType extends \application\entityType{
+ 	public function __construct(){
+		parent::__construct();
+		$this->entity = 'receipt-type';
+  		$this->entityTitle = 'Receipt Type';
+  		$this->pageSave = 'pr_ReceiptType_Save.php';
+		
+		$this->f = new forms\receiptTypeFields();
+		$this->f->setEntity($this->entity);
+		$this->sql = new sql\receiptTypeSQL;
+		$this->links = new links\receiptTypeLinks();
+	}
+} 
+class receiptTypeList extends \application\entityTypeList{
+ 	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Receipt Types';
+		$this->base = new receiptType();
+	}
+}
+
+?>

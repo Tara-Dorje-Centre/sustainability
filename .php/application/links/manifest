@@ -1,0 +1,6 @@
+<?php
+include_once("IEntityLinks.class");
+include_once("entityLinks.class");
+include_once("entityTypeLinks.class");
+include_once("systemMenuLinks.class");
+?>

@@ -1,0 +1,26 @@
+<?php
+namespace application\entities\reference;
+
+class activityType extends \application\entityType{
+ 	public function __construct(){
+		parent::__construct();
+		
+		$this->entity = 'activity-type';
+	 	$this->entityTitle = 'Activity Type';
+	 	$this->pageSave = 'pr_ActivityType_Save.php';
+		
+		$this->f = new activityTypeFields();
+		$this->f->setEntity($this->entity);
+		$this->sql = New activityTypeSQL();
+		$this->links = new activityTypeLinks();
+	}
+}
+class activityTypeList extends \application\entityTypeList{    
+	public function __construct(){
+		parent::__construct();
+		$this->entityTitle = 'Activity Types';
+		$this->base = new activityType();
+	}
+	
+}
+?>

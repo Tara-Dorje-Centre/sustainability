@@ -1,0 +1,13 @@
+<?php 
+namespace application\forms;
+
+class _url extends textField{
+
+	public function input( ){
+		$i = new \html\inputs\url($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print();
+	}
+}
+
+
+?>

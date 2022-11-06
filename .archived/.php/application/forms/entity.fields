@@ -1,0 +1,49 @@
+<?php 
+namespace application\forms;
+
+abstract class entityFields extends fields{
+	public $_submit;
+	public $_reset;
+	
+	public $id;
+	public $name;		
+	public $created;
+    public $updated;
+	public $description;
+	public $highlight;
+	
+
+    public function __construct(){
+    	parent::__construct();
+    	
+    	
+		
+    	$this->id = new _id('id','id','Id');
+    	$this->name = new _name('name','name','Name');
+    	$this->description = new _description('description','description','Description');
+		$this->updated = new dateField('updated','updated','Updated');
+    	$this->created = new dateField('created','created','Created');
+        $this->highlight = new cssHighlightField('highlight_style','highlight','Highlight');
+        
+		$this->_register('id', $this->id);
+		$this->_register('name', $this->name);
+		$this->_register('description', $this->description);
+		$this->_register('created', $this->created);
+		$this->_register('updated', $this->updated);
+		$this->_register('highlight', $this->highlight);
+    }
+	
+	public function setDefaults(){
+    	$this->id->setDefault(0);
+		$this->name->setDefault('');
+		$this->description->setDefault('');
+		$this->created->setDefault($this->_currentTimestamp);
+		$this->updated->setDefault($this->_currentUser);
+		$this->highlight->setDefault('none');
+    }
+
+}
+ 
+
+
+?>

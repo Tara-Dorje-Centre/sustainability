@@ -1,0 +1,19 @@
+<?php 
+namespace application\forms;
+
+class cssColorField extends textField{
+
+ 	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+	}
+	public function input(){
+		$i = new \html\inputs\selectColor($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print();
+	}
+}
+
+
+ 
+ 
+ 
+?>

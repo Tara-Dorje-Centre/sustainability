@@ -1,0 +1,23 @@
+<?php
+namespace application\system\links;
+
+class userRequest extends \application\links\entityRequest{
+
+}
+
+class userLinks extends \application\links\entityLinks {
+
+	public function __construct(){
+		$context = 'user';
+		
+		parent::__construct($context);
+	//	$this->setEntityContext($context);
+	}
+	
+	
+	public function setRequest(){
+		$this->request = new userRequest($this->entityContext);
+	}
+	
+}
+?>

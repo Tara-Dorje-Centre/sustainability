@@ -1,0 +1,20 @@
+<?php 
+
+namespace application\forms;
+
+
+
+class numberField extends field{
+
+	public function __construct(string $dbCol = 'not_used', string $envVar = 'not-used', string $caption = 'no caption'){
+		parent::__construct($dbCol, $envVar, $caption);
+		$this->_datatype = 'NUMBER';
+	}
+	public function input(){
+		$i = new \html\inputs\_inputNumber($this->env->variable(),$this->value(),$this->_caption);
+		return $i->print();
+	}
+}
+
+
+?>

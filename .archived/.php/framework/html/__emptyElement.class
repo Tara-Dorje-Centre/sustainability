@@ -1,0 +1,12 @@
+<?php
+namespace html;
+
+class _emptyElement extends _element{
+//addContent and printContent should raise exceptions
+	public function print(){
+		return $this->emptyElement();
+	}
+	
+}
+
+?>

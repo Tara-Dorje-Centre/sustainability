@@ -1,0 +1,23 @@
+<?php
+namespace application\entities\projects\links;
+
+class materialRequest extends taskChildRequest{
+	
+	public function setUrlParametersMaterial(url &$u,string $projectStatus,string $myProjects){
+		$this->setUrlParameter($u,'project-status',$projectStatus);
+		$this->setUrlParameter($u,'my-projects',$myProjects);
+		return $u;
+	} 
+	
+	public function getUrlMaterialDetail($action,$id,$idParent,$idType){
+		return $this->getUrlEntityDetail($action,$id,$idParent,$idType);
+	}
+	public function getUrlMaterialList($action,$id,$idParent,$idType, string $projectStatus,string $myProjects){
+		$u = $this->getUrlEntityList($action,$id,$idParent,$idType);
+		$this->setUrlParametersMaterial($u, $projectStatus, $myProjects);
+		return $u;
+	}
+	
+}
+
+?>

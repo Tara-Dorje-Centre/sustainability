@@ -1,0 +1,8 @@
+<?php
+namespace application\entities\reference\forms;
+
+class projectTypeFields extends \application\forms\entityTypeFields{
+
+}
+
+?>

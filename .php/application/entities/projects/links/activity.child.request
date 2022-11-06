@@ -1,0 +1,13 @@
+<?php
+namespace application\entities\projects\links;
+
+class activityChildRequest extends activityRequest{
+
+	protected function setUrlParametersActivityChild(\application\links\url &$url, $idActivity,$idTask,$idProject){
+		$this->setUrlParameter($u,'activity-id',$id);
+		$this->setUrlParametersTaskChild($u,$idTask,$idProject);
+	}
+	
+}
+
+?>

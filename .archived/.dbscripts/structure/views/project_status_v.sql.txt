@@ -1,0 +1,19 @@
+DROP TABLE IF EXISTS `project_status_v`;
+
+
+CREATE OR REPLACE VIEW project_status_v AS 
+select 'OPEN' AS `status`,
+count(distinct p.id) AS projects,
+count(0) AS project_tasks,
+sum(t.hours_estimated) AS task_hours_estimated,
+sum(t.hours_actual) AS task_hours_actual 
+from (projects p join tasks t on((p.id = t.project_id))) 
+where (p.pct_done < 1) 
+union 
+select 'DONE' AS `status`,
+count(distinct p.id) AS projects,
+count(0) AS project_tasks,
+sum(t.hours_estimated) AS task_hours_estimated,
+sum(t.hours_actual) AS task_hours_actual 
+from projects p join tasks t on p.id = t.project_id
+where (p.pct_done = 1);
